@@ -696,7 +696,7 @@
     <string name="pairingCodeErrorTitle">Earráid Chód Péireála</string>
     <string name="pairingCodeErrorDescription">Ní féidir cód péireála a fháil. Ní thacaítear leis an ngné seo ach do mhic léinn.</string>
 
-    <string name="launchSpeedgrader">Oscail LuasMharcálaí</string>
+    <string name="launchSpeedgrader">Oscail SpeedGrader</string>
 
     <string name="search_todo">le déanamh le déanamh le déanamh liosta le déanamh</string>
     <string name="search_course">cúrsaí cúrsa rang ranganna</string>

@@ -68,7 +68,6 @@ import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -135,6 +134,10 @@ fun CalendarScreen(
                             .focusable()
                             .focusRequester(focusRequester)
                     )
+                    // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
+                    LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
+                        focusRequester.requestFocus()
+                    })
                 }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
@@ -192,14 +195,6 @@ fun CalendarScreen(
                 )
             }
         )
-    }
-
-    if (showToolbar) {
-        // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
-        LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
-            delay(1000)
-            focusRequester.requestFocus()
-        })
     }
 }
 

@@ -16,6 +16,7 @@
 package com.instructure.student.ui.interaction
 
 import android.os.Build
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -32,6 +33,7 @@ import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -71,9 +73,9 @@ class CourseInteractionTest : StudentTest() {
         pageListPage.selectRegularPage(page)
 
         // Click the link inside the webview
-        onWebView()
-                .withElement(findElement(Locator.ID, course2LinkElementId))
-                .perform(webClick())
+        onWebView(withId(R.id.contentWebView))
+            .withElement(findElement(Locator.ID, course2LinkElementId))
+            .perform(webClick())
 
         // Make sure that you have navigated to course2
         courseBrowserPage.assertTitleCorrect(course2)

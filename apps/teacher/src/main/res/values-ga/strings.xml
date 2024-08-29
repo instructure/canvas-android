@@ -300,7 +300,7 @@
     <string name="settings">Socruithe</string>
     <string name="edit_courses">Cuir Cúrsaí in Eagar</string>
     <string name="start_annotating">Tosaigh ag Scríobh Nóta Mínithe</string>
-    <string name="empty_speedgrader_content">Amharc LuasMharcálaí folamh, Dearadh de Dhíth</string>
+    <string name="empty_speedgrader_content">Amharc SpeedGrader folamh, Dearadh de Dhíth</string>
 
     <!--Course Settings-->
     <string name="course_settings">Socruithe Cúrsa</string>
@@ -864,7 +864,7 @@
     <string name="filterSubmissionsLowercase">Scag uaslódálcha</string>
     <string name="latePenalty">Pionós déanach</string>
     <string name="finalGrade">Marc Deiridh</string>
-    <string name="moderatedGradingUnsupported">Ní thacaítear le marcáil modhnaithe i LuasMharcálaí móibíleach faoi láthair.</string>
+    <string name="moderatedGradingUnsupported">Ní thacaítear le marcáil modhnaithe i SpeedGrader móibíleach faoi láthair.</string>
     <plurals name="latePolicyPenalty">
         <item quantity="one">-%s pt</item>
         <item quantity="other">-%s pte</item>
