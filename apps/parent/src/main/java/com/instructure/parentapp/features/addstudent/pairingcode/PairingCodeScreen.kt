@@ -109,6 +109,7 @@ private fun PairingScreenContent(
             })
         if (uiState.isError) {
             Text(
+                modifier = Modifier.testTag("errorText"),
                 text = stringResource(id = R.string.pairingCodeDialogError),
                 style = TextStyle(color = colorResource(id = R.color.textDanger))
             )
@@ -122,6 +123,7 @@ private fun PairingScreenContent(
                 )
             }
             TextButton(
+                modifier = Modifier.testTag("okButton"),
                 onClick = { uiState.onStartPairing(pairingCode) },
             ) {
                 Text(
