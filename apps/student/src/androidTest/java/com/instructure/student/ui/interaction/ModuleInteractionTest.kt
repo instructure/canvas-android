@@ -126,7 +126,7 @@ class ModuleInteractionTest : StudentTest() {
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module, topicHeader!!.title!!)
         modulesPage.clickModuleItem(module, topicHeader!!.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader!!)
+        discussionDetailsPage.assertToolbarDiscussionTitle(topicHeader!!.title!!)
     }
 
     @Test

@@ -26,7 +26,14 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.dataseeding.api.ConversationsApi
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.espresso.ViewUtils
+import com.instructure.teacher.BuildConfig
+import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.openLeftSideMenu
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,6 +45,86 @@ class SettingsE2ETest : TeacherTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testPronounsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(courses = 1, students = 1)
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG,"Enter domain: 'mobileqa.beta.instructure.com'.")
+        loginFindSchoolPage.enterDomain("mobileqa.beta.instructure.com")
+
+        Log.d(PREPARATION_TAG,"Enroll '${BuildConfig.PRONOUN_TEACHER_TEST_USER}' teacher to '${course.name}' course.")
+        val pronounTeacherId: Long = 12594806
+        EnrollmentsApi.enrollUserAsTeacher(course.id, pronounTeacherId)
+
+        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(STEP_TAG, "Log in with the dedicated teacher for testing the pronouns.")
+        loginSignInPage.loginAs(BuildConfig.PRONOUN_TEACHER_TEST_USER, BuildConfig.PRONOUN_TEACHER_TEST_PASSWORD)
+        dashboardPage.waitForRender()
+
+        Log.d(PREPARATION_TAG,"Seed an email from the '${student.name}' student to Pronoun Teacher.")
+        ConversationsApi.createConversation(student.token, listOf(pronounTeacherId.toString()))[0]
+
+        Log.d(STEP_TAG, "Open the Left Side Menu.")
+        dashboardPage.openLeftSideMenu()
+
+        val testPronoun = "(He/Him)"
+        Log.d(STEP_TAG, "Assert that the corresponding user info, so does the 'Pronoun Teacher (He/Him)' as username and 'pronounteacher@gmail.com' as user email are displayed.")
+        leftSideNavigationDrawerPage.assertUserInfo("Pronoun Teacher $testPronoun", "pronounteacher@gmail.com")
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Open Profile Settings Page.")
+        settingsPage.openProfileSettingsPage()
+        profileSettingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the '$testPronoun' pronouns are displayed on the Profile Settings Page.")
+        profileSettingsPage.assertPronouns(testPronoun)
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard Page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG, "Select '${course.name}' course and open 'People' tab.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.openPeopleTab()
+        peopleListPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the '$testPronoun' pronouns are displayed next to the 'Pronoun Teacher' user's name.")
+        peopleListPage.assertPersonPronouns("Pronoun Teacher", testPronoun)
+
+        Log.d(STEP_TAG, "Click on the 'Pronoun Teacher' user.")
+        peopleListPage.clickPerson("Pronoun Teacher $testPronoun")
+
+        Log.d(STEP_TAG, "Assert that the Person Context Page also displays the '$testPronoun' pronouns besides all the corresponding information about the user.")
+        personContextPage.assertDisplaysCourseInfo(course)
+        personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
+        personContextPage.assertPersonPronouns(testPronoun)
+
+        CoursesApi.concludeCourse(course.id) // Need to conclude the course because otherwise there would be too much course with time on the dedicated user's dashboard.
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
+        ViewUtils.pressBackButton(3)
+
+        Log.d(STEP_TAG, "Open the Left Side Menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Click on 'Change User' menu and assert on the Login Landing Page that the '$testPronoun' pronouns are displayed besides the 'Pronoun Teacher' user's name.")
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
+        loginLandingPage.assertPreviousLoginUserDisplayed("Pronoun Teacher $testPronoun")
+    }
 
     @E2E
     @Test

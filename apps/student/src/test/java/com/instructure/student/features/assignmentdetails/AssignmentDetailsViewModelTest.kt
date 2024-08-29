@@ -20,6 +20,7 @@ package com.instructure.student.features.assignmentdetails
 import android.app.Application
 import android.content.res.Resources
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -37,6 +38,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
@@ -44,7 +46,6 @@ import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.AssignmentDetailAction
 import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
@@ -52,17 +53,24 @@ import com.instructure.student.features.assignments.details.ReminderChoice
 import com.instructure.student.features.assignments.details.ReminderViewData
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateSubmissionEntity
+import com.instructure.student.util.getStudioLTITool
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -78,7 +86,7 @@ class AssignmentDetailsViewModelTest {
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val assignmentDetailsRepository: AssignmentDetailsRepository = mockk(relaxed = true)
@@ -88,6 +96,7 @@ class AssignmentDetailsViewModelTest {
     private val application: Application = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val database: StudentDb = mockk(relaxed = true)
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
 
     @Before
@@ -108,8 +117,13 @@ class AssignmentDetailsViewModelTest {
 
         every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData()
         every { apiPrefs.user } returns User(id = 1)
+
+        every {
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf())
     }
 
+    @After
     fun tearDown() {
         unmockkAll()
     }
@@ -117,6 +131,7 @@ class AssignmentDetailsViewModelTest {
     private fun getViewModel() = AssignmentDetailsViewModel(
         savedStateHandle,
         assignmentDetailsRepository,
+        submissionHelper,
         resources,
         htmlContentFormatter,
         colorKeeper,
@@ -126,7 +141,7 @@ class AssignmentDetailsViewModelTest {
         database
     )
 
-    private fun getDbSubmission() = com.instructure.student.Submission(
+    private fun getDbSubmission() = CreateSubmissionEntity(
         id = 0,
         submissionEntry = "",
         lastActivityDate = null,
@@ -154,8 +169,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(ViewState.Error(expected), viewModel.state.value)
-        Assert.assertEquals(expected, (viewModel.state.value as? ViewState.Error)?.errorMessage)
+        assertEquals(ViewState.Error(expected), viewModel.state.value)
+        assertEquals(expected, (viewModel.state.value as? ViewState.Error)?.errorMessage)
     }
 
     @Test
@@ -170,8 +185,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(ViewState.Error(authError), viewModel.state.value)
-        Assert.assertEquals(authError, (viewModel.state.value as? ViewState.Error)?.errorMessage)
+        assertEquals(ViewState.Error(authError), viewModel.state.value)
+        assertEquals(authError, (viewModel.state.value as? ViewState.Error)?.errorMessage)
     }
 
     @Test
@@ -184,8 +199,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(true, viewModel.data.value?.fullLocked)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(true, viewModel.data.value?.fullLocked)
     }
 
     @Test
@@ -205,9 +220,9 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(false, viewModel.data.value?.fullLocked)
-        Assert.assertEquals(lockedExplanation, viewModel.data.value?.lockedMessage)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(false, viewModel.data.value?.fullLocked)
+        assertEquals(lockedExplanation, viewModel.data.value?.lockedMessage)
     }
 
     @Test
@@ -222,8 +237,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(expected, viewModel.data.value?.assignmentName)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(expected, viewModel.data.value?.assignmentName)
     }
 
     @Test
@@ -238,8 +253,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(expected, viewModel.data.value?.assignmentName)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(expected, viewModel.data.value?.assignmentName)
     }
 
     @Test
@@ -250,13 +265,13 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(isDraft = true))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(isDraft = true)))
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(true, viewModel.data.value?.hasDraft)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(true, viewModel.data.value?.hasDraft)
     }
 
     @Test
@@ -277,7 +292,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(3, viewModel.data.value?.attempts?.size)
+        assertEquals(3, viewModel.data.value?.attempts?.size)
     }
 
     @Test
@@ -298,8 +313,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(expectedGradeCell, viewModel.data.value?.selectedGradeCellViewData)
-        Assert.assertEquals(GradeCellViewData.State.EMPTY, viewModel.data.value?.selectedGradeCellViewData?.state)
+        assertEquals(expectedGradeCell, viewModel.data.value?.selectedGradeCellViewData)
+        assertEquals(GradeCellViewData.State.EMPTY, viewModel.data.value?.selectedGradeCellViewData?.state)
     }
 
     @Test
@@ -321,10 +336,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        Assert.assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        Assert.assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        Assert.assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
+        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
+        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
     }
 
     @Test
@@ -343,10 +358,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        Assert.assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        Assert.assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        Assert.assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
+        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
+        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
     }
 
     @Test
@@ -371,10 +386,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        Assert.assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        Assert.assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        Assert.assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
+        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
+        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
     }
 
     @Test
@@ -396,10 +411,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        Assert.assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        Assert.assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        Assert.assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
+        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
+        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
     }
 
     @Test
@@ -432,8 +447,8 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onAttemptSelected(2)
 
-        Assert.assertEquals(3, viewModel.data.value?.attempts?.size)
-        Assert.assertEquals(expectedGradeCellViewData, viewModel.data.value?.selectedGradeCellViewData)
+        assertEquals(3, viewModel.data.value?.attempts?.size)
+        assertEquals(expectedGradeCellViewData, viewModel.data.value?.selectedGradeCellViewData)
     }
 
     @Test
@@ -448,7 +463,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onLtiButtonPressed(expected)
 
-        Assert.assertEquals(expected, (viewModel.events.value?.peekContent() as AssignmentDetailAction.NavigateToLtiScreen).url)
+        assertEquals(expected, (viewModel.events.value?.peekContent() as AssignmentDetailAction.NavigateToLtiScreen).url)
     }
 
     @Test
@@ -461,7 +476,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onGradeCellClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
     }
 
     @Test
@@ -472,14 +487,13 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(submissionType = "online_text_entry"))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_text_entry")))
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
         viewModel.onGradeCellClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
     }
 
     @Test
@@ -490,14 +504,13 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(submissionType = "online_upload"))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_upload")))
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
         viewModel.onGradeCellClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUploadStatusScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUploadStatusScreen)
     }
 
     @Test
@@ -508,14 +521,13 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(submissionType = "online_url"))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_url")))
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
         viewModel.onGradeCellClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
     }
 
     @Test
@@ -531,7 +543,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToQuizScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToQuizScreen)
     }
 
     @Test
@@ -545,7 +557,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToDiscussionScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToDiscussionScreen)
     }
 
     @Test
@@ -565,7 +577,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowSubmitDialog)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowSubmitDialog)
     }
 
     @Test
@@ -579,7 +591,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
     }
 
     @Test
@@ -593,7 +605,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
     }
 
     @Test
@@ -607,7 +619,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToAnnotationSubmissionScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToAnnotationSubmissionScreen)
     }
 
     @Test
@@ -621,7 +633,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowMediaDialog)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowMediaDialog)
     }
 
     @Test
@@ -635,7 +647,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
-        Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToLtiLaunchScreen)
+        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToLtiLaunchScreen)
     }
 
     @Test
@@ -645,22 +657,21 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
+        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
+
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission())
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns liveData
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
 
-        Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
+        liveData.postValue(listOf(getDbSubmission()))
 
-        every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(errorFlag = true))
+        assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
 
-        viewModel.queryResultsChanged()
+        liveData.postValue(listOf(getDbSubmission().copy(errorFlag = true)))
 
-        Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isFailed!!)
+        assertTrue(viewModel.data.value?.attempts?.first()?.data?.isFailed!!)
     }
 
     @Test
@@ -672,25 +683,24 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
+        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
+
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission())
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns liveData
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
 
-        Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
+        liveData.postValue(listOf(getDbSubmission()))
 
-        every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf()
+        assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
 
         val assignment = Assignment(submission = Submission(submissionHistory = listOf(expected)))
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
-        viewModel.queryResultsChanged()
+        liveData.postValue(emptyList())
 
-        Assert.assertEquals(expected, viewModel.data.value?.attempts?.last()?.data?.submission)
+        assertEquals(expected, viewModel.data.value?.attempts?.last()?.data?.submission)
     }
 
     @Test
@@ -705,7 +715,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals("20 pts", viewModel.data.value?.points)
+        assertEquals("20 pts", viewModel.data.value?.points)
     }
 
     @Test
@@ -721,7 +731,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals("", viewModel.data.value?.points)
+        assertEquals("", viewModel.data.value?.points)
     }
 
     @Test
@@ -733,7 +743,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertFalse(viewModel.showContent(viewModel.state.value))
+        assertFalse(viewModel.showContent(viewModel.state.value))
     }
 
     @Test
@@ -745,7 +755,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertTrue(viewModel.showContent(viewModel.state.value))
+        assertTrue(viewModel.showContent(viewModel.state.value))
     }
 
     @Test
@@ -758,7 +768,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertFalse(viewModel.data.value?.submitVisible!!)
+        assertFalse(viewModel.data.value?.submitVisible!!)
     }
 
     @Test
@@ -772,7 +782,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertFalse(viewModel.data.value?.submitVisible!!)
+        assertFalse(viewModel.data.value?.submitVisible!!)
     }
 
     @Test
@@ -785,7 +795,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertFalse(viewModel.data.value?.submitVisible!!)
+        assertFalse(viewModel.data.value?.submitVisible!!)
     }
 
     @Test
@@ -798,7 +808,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertFalse(viewModel.data.value?.showReminders!!)
+        assertFalse(viewModel.data.value?.showReminders!!)
     }
 
     @Test
@@ -815,7 +825,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertTrue(viewModel.data.value?.showReminders!!)
+        assertTrue(viewModel.data.value?.showReminders!!)
     }
 
     @Test
@@ -839,7 +849,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(
+        assertEquals(
             reminderEntities.map { ReminderViewData(it.id, "${it.text} Before") },
             viewModel.data.value?.reminders?.map { it.data }
         )
@@ -862,11 +872,11 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        Assert.assertEquals(0, viewModel.data.value?.reminders?.size)
+        assertEquals(0, viewModel.data.value?.reminders?.size)
 
         remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000))
 
-        Assert.assertEquals(ReminderViewData(1, "1 day Before"), viewModel.data.value?.reminders?.first()?.data)
+        assertEquals(ReminderViewData(1, "1 day Before"), viewModel.data.value?.reminders?.first()?.data)
     }
 
     @Test
@@ -885,7 +895,7 @@ class AssignmentDetailsViewModelTest {
 
         viewModel.onAddReminderClicked()
 
-        Assert.assertEquals(AssignmentDetailAction.ShowReminderDialog, viewModel.events.value?.peekContent())
+        assertEquals(AssignmentDetailAction.ShowReminderDialog, viewModel.events.value?.peekContent())
     }
 
     @Test
@@ -929,7 +939,7 @@ class AssignmentDetailsViewModelTest {
 
         viewModel.onReminderSelected(ReminderChoice.Custom)
 
-        Assert.assertEquals(AssignmentDetailAction.ShowCustomReminderDialog, viewModel.events.value?.peekContent())
+        assertEquals(AssignmentDetailAction.ShowCustomReminderDialog, viewModel.events.value?.peekContent())
     }
 
     @Test
@@ -951,7 +961,7 @@ class AssignmentDetailsViewModelTest {
 
         viewModel.onReminderSelected(ReminderChoice.Day(3))
 
-        Assert.assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
+        assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
     }
 
     @Test
@@ -977,6 +987,89 @@ class AssignmentDetailsViewModelTest {
 
         viewModel.onReminderSelected(ReminderChoice.Day(3))
 
-        Assert.assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
+        assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
     }
+
+    @Test
+    fun `studio disabled if not allowed in assignment`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        mockkStatic(Long::getStudioLTITool)
+        coEvery { course.id.getStudioLTITool() } returns DataResult.Fail()
+
+        val assignment = Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_upload"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        val result = viewModel.isStudioAccepted()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `studio disabled if online upload submission type is not allowed`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        mockkStatic(Long::getStudioLTITool)
+        coEvery { course.id.getStudioLTITool() } returns DataResult.Success(mockk())
+
+        val assignment = Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_text_entry"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        val result = viewModel.isStudioAccepted()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `studio disabled if no audio visual extension is allowed`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        mockkStatic(Long::getStudioLTITool)
+        coEvery { course.id.getStudioLTITool() } returns DataResult.Success(mockk())
+
+        mockkStatic(MimeTypeMap::getSingleton)
+        every { MimeTypeMap.getSingleton() } returns mockk()
+        every { MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf") } returns "application/pdf"
+
+        val assignment = Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_upload"), allowedExtensions = listOf("pdf"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        val result = viewModel.isStudioAccepted()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `studio enabled if audio visual extension are allowed`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        mockkStatic(Long::getStudioLTITool)
+        coEvery { course.id.getStudioLTITool() } returns DataResult.Success(mockk())
+
+        mockkStatic(MimeTypeMap::getSingleton)
+        every { MimeTypeMap.getSingleton() } returns mockk()
+        every { MimeTypeMap.getSingleton().getMimeTypeFromExtension("mp4") } returns "video/mp4"
+        every { MimeTypeMap.getSingleton().getMimeTypeFromExtension("mp3") } returns "audio/mp3"
+        every { MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf") } returns "application/pdf"
+
+        val assignment = Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_upload"), allowedExtensions = listOf("pdf", "mp3", "mp4"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        val result = viewModel.isStudioAccepted()
+
+        assert(result)
+    }
+
 }

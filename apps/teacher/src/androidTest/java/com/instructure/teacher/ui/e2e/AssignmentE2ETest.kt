@@ -221,7 +221,7 @@ class AssignmentE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Refresh the page. Assert that the name and description of the assignment has been changed to $newAssignmentName.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.waitForRender()
-        assignmentDetailsPage.assertAssignmentNameChanged(newAssignmentName)
+        assignmentDetailsPage.assertAssignmentName(newAssignmentName)
         assignmentDetailsPage.assertDisplaysDescription("assignment test description")
 
         Log.d(STEP_TAG,"Edit $newAssignmentName assignment's points to 20.")

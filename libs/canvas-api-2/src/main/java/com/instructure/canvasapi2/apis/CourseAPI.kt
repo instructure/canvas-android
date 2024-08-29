@@ -51,6 +51,9 @@ object CourseAPI {
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available&include[]=tabs&include[]=settings")
         suspend fun getFirstPageCourses(@Tag params: RestParams): DataResult<List<Course>>
 
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&enrollment_state=active")
+        suspend fun getFirstPageCoursesCalendar(@Tag params: RestParams): DataResult<List<Course>>
+
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=settings&state[]=completed&state[]=available&state[]=unpublished")
         suspend fun getFirstPageCoursesTeacher(@Tag params: RestParams): DataResult<List<Course>>
 
@@ -111,6 +114,9 @@ object CourseAPI {
         @GET("courses?state[]=completed&state[]=available&state[]=unpublished")
         fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String): Call<List<Course>>
 
+        @GET("courses?state[]=completed&state[]=available")
+        suspend fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String, @Tag params: RestParams): DataResult<List<Course>>
+
         // TODO: Set up pagination when API is fixed and remove per_page query parameterø
         @GET("courses/{courseId}/grading_periods?per_page=100")
         fun getGradingPeriodsForCourse(@Path("courseId") courseId: Long): Call<GradingPeriodResponse>
@@ -167,6 +173,9 @@ object CourseAPI {
 
         @GET("courses?include[]=total_scores&include[]=current_grading_period_scores&include[]=grading_periods&include[]=course_image&include[]=settings&enrollment_state=active")
         fun getFirstPageCoursesWithGrades(): Call<List<Course>>
+
+        @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=observed_users&include[]=settings&include[]=grading_scheme&enrollment_state=active")
+        suspend fun firstPageObserveeCourses(@Tag params: RestParams): DataResult<List<Course>>
     }
 
     @Throws(IOException::class)

@@ -31,17 +31,29 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_STUDIO_WEB_VIEW
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
-import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
 import org.apache.commons.text.StringEscapeUtils
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_STUDIO_WEB_VIEW)
+@AndroidEntryPoint
 class StudioWebViewFragment : InternalWebviewFragment() {
     val assignmentId: Long by LongArg(key = Const.ASSIGNMENT_ID)
     val assignmentName: String by StringArg(key = Const.ASSIGNMENT_NAME)
+
+    @Inject
+    lateinit var submissionHelper: SubmissionHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +98,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
             }
 
             override fun permissionsGranted(): Boolean {
-                return if (PermissionUtils.hasPermissions(requireActivity(), *PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE))) {
+                return if (PermissionUtils.hasPermissions(requireActivity().getFragmentActivity(), *PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA))) {
                     true
                 } else {
                     requestFilePermissions()
@@ -111,7 +123,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun requestFilePermissions() {
-        requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA), PermissionUtils.PERMISSION_REQUEST_CODE)
+        requireContext().getFragmentActivity().requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA), PermissionUtils.PERMISSION_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -134,7 +146,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
                 url = StringEscapeUtils.unescapeJava(url)
 
                 // Upload the url as a submission
-                SubmissionService.startStudioSubmission(requireContext(), canvasContext, assignmentId, assignmentName, url)
+                submissionHelper.startStudioSubmission(canvasContext, assignmentId, assignmentName, url)
 
                 // Close this page
                 navigation?.popCurrentFragment()

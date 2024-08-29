@@ -17,22 +17,20 @@
 package com.instructure.teacher.ui.utils
 
 import android.app.Activity
-import android.util.Log
 import android.view.View
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.ui.espresso.TeacherHiltTestApplication_Application
 import com.instructure.teacher.ui.pages.AboutPage
 import com.instructure.teacher.ui.pages.AddMessagePage
 import com.instructure.teacher.ui.pages.AnnouncementsListPage
@@ -41,7 +39,6 @@ import com.instructure.teacher.ui.pages.AssignmentDetailsPage
 import com.instructure.teacher.ui.pages.AssignmentDueDatesPage
 import com.instructure.teacher.ui.pages.AssignmentListPage
 import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
-import com.instructure.teacher.ui.pages.CalendarEventPage
 import com.instructure.teacher.ui.pages.ChooseRecipientsPage
 import com.instructure.teacher.ui.pages.CommentLibraryPage
 import com.instructure.teacher.ui.pages.CourseBrowserPage
@@ -60,7 +57,6 @@ import com.instructure.teacher.ui.pages.EditSyllabusPage
 import com.instructure.teacher.ui.pages.FileListPage
 import com.instructure.teacher.ui.pages.HelpPage
 import com.instructure.teacher.ui.pages.InboxMessagePage
-import com.instructure.teacher.ui.pages.InboxPage
 import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.teacher.ui.pages.LegalPage
 import com.instructure.teacher.ui.pages.LoginFindSchoolPage
@@ -89,12 +85,8 @@ import com.instructure.teacher.ui.pages.SyllabusPage
 import com.instructure.teacher.ui.pages.TodoPage
 import com.instructure.teacher.ui.pages.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.WebViewLoginPage
-import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
-import org.junit.Before
-import org.junit.Rule
-import javax.inject.Inject
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -104,26 +96,6 @@ abstract class TeacherTest : CanvasTest() {
     override val isTesting = BuildConfig.IS_TESTING
 
     val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    @get:Rule(order = 0)
-    var hiltRule = HiltAndroidRule(this)
-
-    @Before
-    fun baseSetup() {
-        try {
-            hiltRule.inject()
-        } catch (e: IllegalStateException) {
-            // Catch this exception to avoid multiple injection
-            Log.w("Test Inject", e.message ?: "")
-        }
-
-        val originalActivity = activityRule.activity
-        val application = originalActivity.application as? TeacherHiltTestApplication_Application
-        application?.workerFactory = workerFactory
-    }
 
     /**
      * Required for auto complete of page objects within tests
@@ -136,7 +108,6 @@ abstract class TeacherTest : CanvasTest() {
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assignmentSubmissionListPage = AssignmentSubmissionListPage()
     val postSettingsPage = PostSettingsPage()
-    val calendarEventPage = CalendarEventPage()
     val chooseRecipientsPage = ChooseRecipientsPage()
     val commentLibraryPage = CommentLibraryPage()
     val courseBrowserPage = CourseBrowserPage()
@@ -151,7 +122,7 @@ abstract class TeacherTest : CanvasTest() {
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
     val editProfileSettingsPage = EditProfileSettingsPage()
-    val discussionsDetailsPage = DiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
+    val discussionDetailsPage = DiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val discussionsListPage = DiscussionsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val editAnnouncementDetailsPage = EditAnnouncementDetailsPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()

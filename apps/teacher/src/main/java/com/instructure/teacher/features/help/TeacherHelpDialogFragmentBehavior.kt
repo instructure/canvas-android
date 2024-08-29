@@ -16,29 +16,31 @@
  */
 package com.instructure.teacher.features.help
 
+import android.content.Intent
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.InternalWebViewActivity
 
-class TeacherHelpDialogFragmentBehavior(private val activity: FragmentActivity) : HelpDialogFragmentBehavior {
-
+class TeacherHelpDialogFragmentBehavior(private val parentActivity: FragmentActivity) : HelpDialogFragmentBehavior {
     override fun reportProblem() {
-        val dialog = ErrorReportDialog()
-        dialog.arguments = ErrorReportDialog.createBundle(activity.getString(R.string.appUserTypeTeacher))
-        dialog.show(activity.supportFragmentManager, ErrorReportDialog.TAG)
+        ErrorReportDialog().apply {
+            arguments = ErrorReportDialog.createBundle(parentActivity.getString(R.string.appUserTypeStudent))
+            show(parentActivity.supportFragmentManager, ErrorReportDialog.TAG)
+        }
     }
 
     override fun rateTheApp() {
-        Utils.goToAppStore(AppType.TEACHER, activity)
+        Utils.goToAppStore(AppType.TEACHER, parentActivity)
     }
 
     override fun askInstructor() = Unit
 
     override fun openWebView(url: String, title: String) {
-        activity.startActivity(InternalWebViewActivity.createIntent(activity, url, title, false))
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+        parentActivity.startActivity(intent)
     }
 }

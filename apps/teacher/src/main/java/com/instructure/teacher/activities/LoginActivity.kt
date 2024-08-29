@@ -28,6 +28,7 @@ import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LOGIN
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -52,7 +53,7 @@ class LoginActivity : BaseLoginInitActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Check to see if we are switching users from an external QR scan
-        if(QRLogin.verifySSOLoginUri(intent.data, true)) {
+        if(QRLogin.verifySSOLoginUri(intent.data, AppType.TEACHER)) {
             startActivity(RouteValidatorActivity.createIntent(this, intent.data!!))
             finish()
         }

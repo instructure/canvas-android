@@ -16,14 +16,17 @@
  */
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.SubmissionStateTypeAdapter
+import kotlinx.parcelize.Parcelize
 
 /**
  * If this class is expanded with other fields, the type adapter should be updated as well.
  */
 @JsonAdapter(SubmissionStateTypeAdapter::class)
+@Parcelize
 data class SubmissionState(
     @SerializedName("submitted")
     val submitted: Boolean = false,
@@ -41,4 +44,4 @@ data class SubmissionState(
     val withFeedback: Boolean = false,
     @SerializedName("redo_request")
     val redoRequest: Boolean = false
-)
+): Parcelable

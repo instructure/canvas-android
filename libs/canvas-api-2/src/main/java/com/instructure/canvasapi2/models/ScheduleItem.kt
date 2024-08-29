@@ -49,6 +49,8 @@ data class ScheduleItem(
         val htmlUrl: String? = null,
         @SerializedName("context_code")
         val contextCode: String? = null,
+        @SerializedName("context_name")
+        val contextName: String? = null,
         @SerializedName("effective_context_code")
         val effectiveContextCode: String? = null,
         @SerializedName("hidden")
@@ -58,6 +60,15 @@ data class ScheduleItem(
         @SerializedName("important_dates")
         val importantDates: Boolean = false,
         val type: String = "",
+        @SerializedName("series_natural_language")
+        val seriesNaturalLanguage: String? = null,
+        val rrule: String? = null,
+        @SerializedName("series_head")
+        val seriesHead: Boolean = false,
+        @IgnoredOnParcel
+        val duplicates: List<CalendarEventWrapper> = ArrayList(),
+        @SerializedName("workflow_state")
+        val workflowState: String? = null,
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
@@ -117,6 +128,9 @@ data class ScheduleItem(
 
     @IgnoredOnParcel
     val startDate: Date? get() = startAt?.toDate()
+
+    @IgnoredOnParcel
+    val isRecurring: Boolean get() = !rrule.isNullOrEmpty()
 
     val contextId: Long
         get() {
@@ -213,6 +227,36 @@ data class ScheduleItem(
         }
     }
 
+    data class CalendarEventWrapper(
+        @SerializedName("calendar_event")
+        val calendarEvent: ScheduleItem
+    )
+
+    data class ScheduleItemParams(
+        @SerializedName("context_code")
+        val contextCode: String?,
+        val title: String?,
+        val description: String?,
+        @SerializedName("start_at")
+        val startAt: String?,
+        @SerializedName("end_at")
+        val endAt: String?,
+        @SerializedName("all_day")
+        val isAllDay: Boolean?,
+        val rrule: String?,
+        @SerializedName("location_name")
+        val locationName: String?,
+        @SerializedName("location_address")
+        val locationAddress: String?,
+        @SerializedName("time_zone_edited")
+        val timeZoneEdited: String?
+    )
+
+    data class ScheduleItemParamsWrapper(
+        @SerializedName("calendar_event")
+        val calendarEvent: ScheduleItemParams
+    )
+
     companion object {
         fun createSyllabus(title: String?, description: String?): ScheduleItem =
                 ScheduleItem(
@@ -223,5 +267,60 @@ data class ScheduleItem(
                 )
 
         const val TYPE_EVENT = "event"
+    }
+}
+
+fun List<ScheduleItem>.toPlannerItems(type: PlannableType): List<PlannerItem> {
+    return mapNotNull {
+        val plannableType = if (type == PlannableType.ASSIGNMENT) {
+            when {
+                it.assignment?.getSubmissionTypes()
+                    ?.contains(Assignment.SubmissionType.DISCUSSION_TOPIC) == true -> PlannableType.DISCUSSION_TOPIC
+
+                it.assignment?.getSubmissionTypes()?.contains(Assignment.SubmissionType.ONLINE_QUIZ) == true -> PlannableType.QUIZ
+                else -> PlannableType.ASSIGNMENT
+            }
+        } else {
+            type
+        }
+        val plannableDate = if (type == PlannableType.ASSIGNMENT) it.assignment?.dueDate else it.startDate
+        val plannableId = if (plannableType == PlannableType.DISCUSSION_TOPIC && it.assignment?.discussionTopicHeader?.id != null) {
+            it.assignment?.discussionTopicHeader?.id!!
+        } else {
+            it.id
+        } // Plannable id is the discussion id for the students so we make this the same for the teachers as well.
+
+        if (plannableDate == null) {
+            null
+        } else {
+            PlannerItem(
+                if (it.courseId != -1L) it.courseId else null,
+                if (it.groupId != -1L) it.groupId else null,
+                if (it.userId != -1L) it.userId else null,
+                it.contextType?.apiString,
+                it.contextName,
+                plannableType,
+                Plannable(
+                    plannableId,
+                    it.title.orEmpty(),
+                    it.courseId,
+                    it.groupId,
+                    it.userId,
+                    null,
+                    if (type == PlannableType.ASSIGNMENT) it.assignment?.dueDate else null,
+                    it.assignment?.id,
+                    null,
+                    it.startDate,
+                    it.endDate,
+                    it.description,
+                    it.isAllDay
+                ),
+                plannableDate,
+                it.htmlUrl,
+                null,
+                null,
+                null,
+            )
+        }
     }
 }

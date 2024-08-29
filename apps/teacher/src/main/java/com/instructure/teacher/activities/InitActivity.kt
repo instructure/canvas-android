@@ -37,6 +37,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -59,6 +60,7 @@ import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.pandautils.dialogs.RatingDialog
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
@@ -100,7 +102,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(),
     InitActivityView, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
-    MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener, OnUnreadCountInvalidated {
+    MasqueradingDialog.OnMasqueradingSet, OnUnreadCountInvalidated {
 
     private val binding by viewBinding(ActivityInitBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
@@ -123,14 +125,22 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 addCoursesFragment()
                 COURSES_TAB
             }
+
+            R.id.tab_calendar -> {
+                addCalendarFragment()
+                CALENDAR_TAB
+            }
+
             R.id.tab_inbox -> {
                 addInboxFragment()
                 INBOX_TAB
             }
+
             R.id.tab_todo -> {
                 addToDoFragment()
                 TODO_TAB
             }
+
             else -> return@OnNavigationItemSelectedListener false
         }
 
@@ -143,7 +153,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private val isDrawerOpen: Boolean
         get() = binding.drawerLayout.isDrawerOpen(GravityCompat.START)
 
-    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        val intent = Intent(Const.COURSE_THING_CHANGED)
+        intent.putExtras(Bundle().apply { putBoolean(Const.COURSE_FAVORITES, true) })
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+    }
 
     override fun onStart() {
         super.onStart()
@@ -259,8 +273,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         fakeToolbar.setBackgroundColor(ThemePrefs.primaryColor)
         when (selectedTab) {
             0 -> addCoursesFragment()
-            1 -> addToDoFragment()
-            2 -> addInboxFragment()
+            1 -> addCalendarFragment()
+            2 -> addToDoFragment()
+            3 -> addInboxFragment()
         }
 
         // Set initially selected item
@@ -292,7 +307,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         binding.drawerLayout.closeDrawer(GravityCompat.START)
     }
 
-    private fun openNavigationDrawer() {
+    fun openNavigationDrawer() {
         binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
@@ -338,7 +353,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
     }
 
-    fun attachNavigationDrawer(toolbar: Toolbar) = with(navigationDrawerBinding) {
+    fun attachToolbar(toolbar: Toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+        toolbar.setNavigationOnClickListener { openNavigationDrawer() }
+    }
+
+    fun attachNavigationDrawer() = with(navigationDrawerBinding) {
         // Navigation items
         navigationDrawerItemFiles.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemGauge.setOnClickListener(navDrawerOnClick)
@@ -355,10 +376,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         // App version
         navigationDrawerVersion.text = getString(R.string.version, BuildConfig.VERSION_NAME)
-
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-        toolbar.setNavigationOnClickListener { openNavigationDrawer() }
 
         setupUserDetails(ApiPrefs.user)
 
@@ -475,7 +492,15 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             container.setGone()
             middleTopDivider.setBackgroundColor(ThemePrefs.primaryColor)
         }
+    }
 
+    private fun addCalendarFragment() = with(binding) {
+        if (supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName) == null) {
+            setBaseFragment(CalendarFragment())
+        } else if (resources.getBoolean(R.bool.isDeviceTablet)) {
+            container.visibility = View.VISIBLE
+            masterDetailContainer.visibility = View.GONE
+        }
     }
 
     override fun addFragment(route: Route) {
@@ -642,33 +667,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     //endregion
 
-    override fun onTicketPost() {
-        dismissHelpDialog()
-        Toast.makeText(applicationContext, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {
-        dismissHelpDialog()
-        Toast.makeText(applicationContext, R.string.errorOccurred, Toast.LENGTH_LONG).show()
-    }
-
-    private fun dismissHelpDialog() {
-        val fragment = supportFragmentManager.findFragmentByTag(HelpDialogFragment.TAG)
-        if (fragment is HelpDialogFragment) {
-            try {
-                fragment.dismiss()
-            } catch (e: IllegalStateException) {
-                Logger.e("Committing a transaction after activities saved state was called: " + e)
-            }
-        }
-    }
-
     companion object {
         private const val SELECTED_TAB = "selectedTab"
 
         private const val COURSES_TAB = 0
-        private const val TODO_TAB = 1
-        private const val INBOX_TAB = 2
+        private const val CALENDAR_TAB = 1
+        private const val TODO_TAB = 2
+        private const val INBOX_TAB = 3
 
         fun createIntent(context: Context, intentExtra: Bundle?): Intent =
             Intent(context, InitActivity::class.java).apply {

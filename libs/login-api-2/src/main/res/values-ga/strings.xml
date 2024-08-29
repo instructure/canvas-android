@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Dia duit domhan!</string>
+    <string name="action_settings">Socruithe</string>
+    <string name="mobileVerifyGeneral">Níl an aip seo údaraithe le húsáid</string>
+    <string name="mobileVerifyDomainUnauthorized">Níl an freastalaí a d\'iontráil tú údaraithe don aip seo.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Tá gníomhaire úsáideora an aip seo neamhúdaraithe.</string>
+    <string name="mobileVerifyUnknownError">Níorbh fhéidir linn an freastalaí a fhíorú lena úsáid leis an aip seo.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Tharla earráid gan choinne.</string>
+    <string name="pageNotFound">Ní bhfuarthas an leathanach.</string>
+    <string name="confirm">Deimhnigh</string>
+    <string name="cancel">Cealaigh</string>
+    <string name="help">Cabhair</string>
+    <string name="enterURL">Cuir isteach do URL Canvas:</string>
+    <string name="signIntoCanvasNetwork">Ag iarraidh síniú isteach i Líonra Canvas?</string>
+    <string name="remove">Bain</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID an úsáideora</string>
+    <string name="domain">Fearann</string>
+    <string name="actAsUser">Gníomhú mar Úsáideoir</string>
+    <string name="stopActAsUser">Stop ag Gníomhú mar Úsáideoir</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">An bhfuil fonn ort an t-úsáideoir seo a bhaint?</string>
+    <string name="removedForever">Beidh ort síniú isteach san úsáideoir seo arís chun teacht ar a n-ábhar.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Lógó Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: AR SIÚL</string>
+    <string name="canvasLoginOff">Canvas_Login: MÚCHTHA</string>
+    <string name="siteAdminLogin">Logáil Isteach Riarthóir an tSuímh: AR SIÚL</string>
+
+    <string name="username">Ainm úsáideora</string>
+    <string name="password">Pasfhocal</string>
+    <string name="authenticationRequired">Fíordheimhniú de dhíth</string>
+    <string name="invalidEmailPassword">Ríomhphost nó pasfhocal neamhbhailí</string>
+    <string name="login">Logáil isteach</string>
+    <string name="logout">Logáil Amach</string>
+    <string name="matchingSchools">Scoileanna ag Meaitseáil</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">An bhfuil tú cinnte gur mhaith leat logáil amach?</string>
+    <string name="logout_yes">Tá</string>
+    <string name="logout_no">Níl</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">In aice leat</string>
+    <string name="loginCanvasNetwork">Líonra Canvas</string>
+    <string name="loginRightBehindYou">Díreach taobh thiar duit</string>
+    <string name="loginCanvasHelp">Ní fheiceann tú do scoil? Cuir isteach URL na scoile nó tapáil anseo chun cabhair a fháil.</string>
+    <string name="loginCanvasHelpWithUser">Cuir isteach URL na scoile nó tapáil anseo chun cabhair a fháil.</string>
+    <string name="loginHint">Aimsigh do scoil nó do cheantar</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Tuairiscigh Fadhb</string>
+    <string name="errorReportSubject">Ábhar</string>
+    <string name="errorReportDescription">Cur síos</string>
+    <string name="errorReportSend">Seol</string>
+    <string name="errorReportThankyou">Go raibh maith agat as do cheist a thuairisciú dár bhFoireann Tacaíochta.  Gheobhaidh tú deimhniú agus nuashonruithe trí ríomhphost.</string>
+    <string name="errorReportSeverityText">Cén tionchar atá aige seo ort?</string>
+    <string name="errorSeverityCasualQuestion">Níl ann ach ceist ócáideach, ráiteas, smaoineamh, moladh&#8230;</string>
+    <string name="errorSeverityNeedHelp">Tá roinnt cabhrach de dhíth orm ach níl sé práinneach.</string>
+    <string name="errorSeveritySomethingsBroken">Tá rud éigin briste ach is féidir liom oibriú timpeall air chun an méid a theastaíonn uaim a dhéanamh.</string>
+    <string name="errorSeverityCantGetThingsDone">Ní féidir liom rudaí a dhéanamh go dtí go gcloisim ar ais uait.</string>
+    <string name="errorSeverityExtremelyCritical">ÉIGEANDÁIL FÍORCHRITICIÚIL!!</string>
+
+    <string name="errorReportEmailAddress">Seoladh Ríomhphoist</string>
+    <string name="errorReportUnknown">Anaithnid</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; míle 1 (1.6 km)</string>
+    <string name="oneMile">Míle 1 (1.6 km)</string>
+    <string name="miles">míle</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Gléas</string>
+    <string name="osVersion">Leagan OS</string>
+
+    <string name="previousLoginTitle">Logáil Isteach Roimhe Seo</string>
+    <string name="findMySchool">Aimsigh mo scoil</string>
+    <string name="loginWithQRCode">Cód MF</string>
+    <string name="locateQRCode">Aimsigh Cód MF</string>
+    <string name="qrCodeExplanation">Gheobhaidh tú an cód MF ar an ngréasán i do phróifíl chuntais. Cliceáil \'MF le haghaidh Logáil Isteach Soghluaiste\' sa liosta.</string>
+    <string name="qrCodeScanningPrompt">Scan cód MF ó Canvas chun logáil isteach</string>
+    <string name="loginWithQRCodeError">Tharla earráid agus logáil isteach. Gin Cód MF eile le do thoil agus bain triail eile as.</string>
+    <string name="invalidQRCodeError">Scan cód MF ginte ag Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Gabháil scáileáin a thaispeánann suíomh giniúna an chóid MF sa bhrabhsálaí</string>
+    <string name="whatsYourSchoolName">Cén t-ainm atá ar do scoil?</string>
+    <string name="next">Ar aghaidh</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Bain Úsáideoir Roimhe Seo</string>
+    <string name="accountDomainFooter">Nach féidir leat do scoil a aimsiú? Bain triail as URL iomlán na scoile a chlóscríobh.</string>
+    <string name="accountDomainFooterLoginHelp">Tapáil anseo le haghaidh cabhair logáil isteach.</string>
+
+    <string name="login_noInternetConnectionTitle">Gan nasc Idirlín</string>
+    <string name="login_noInternetConnectionMessage">Teastaíonn nasc idirlín leis an ngníomh seo.</string>
+    <string name="empty_feedback">Teastaíonn ábhar agus cur síos chun aiseolas a chur isteach.</string>
+    <string name="versionNum">Uimhir Leagan</string>
+    <string name="scrollInstructions">Scrollaigh chun na sonraí go léir a fheiceáil</string>
+
+    <string name="masqueradeErrorUserId">Ní mór duit id an úsáideora a chur isteach.</string>
+    <string name="masqueradeErrorDomain">Ní mór duit fearann bailí a chur isteach.</string>
+    <string name="masqueradeError">Earráid ag iarraidh gníomhú mar úsáideoir.</string>
+    <string name="masqueradeInfo">Tá \"gníomh mar\" go bunúsach ag logáil isteach mar úsáideoir seo gan phasfhocal. Beidh tú in ann aon bheart a dhéanamh amhail is gur tusa an t-úsáideoir seo, agus ó dhearcadh úsáideoirí eile, beidh sé mar a rinne an t-úsáideoir seo iad. Mar sin féin, taifeadann logaí iniúchta gurb tusa an té a rinne na gníomhartha thar ceann an úsáideora seo.</string>
+    <string name="masqueradingAs">Tá tú ag gníomhú mar %s</string>
+    <string name="stopActingAsTitle">Stop ag gníomhú mar&#8230;</string>
+    <string name="stopActingAsMessage">Stopfaidh tú ag gníomhú mar %s agus fillfidh tú ar do chuntas.</string>
+    <string name="weMadeChanges">Rinneamar roinnt athruithe.</string>
+    <string name="whatsNewText">Féach ar an méid atá nua</string>
+    <string name="findAnotherSchool">Aimsigh scoil eile</string>
+</resources>

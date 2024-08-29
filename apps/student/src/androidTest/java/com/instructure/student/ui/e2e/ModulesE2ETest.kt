@@ -95,7 +95,7 @@ class ModulesE2ETest: StudentTest() {
         Log.d(PREPARATION_TAG,"Associate '${quiz1.title}' page with '${module2.name}' module.")
         ModulesApi.createModuleItem(course.id, teacher.token, module2.id, page1.title, ModuleItemTypes.PAGE.stringVal, pageUrl = page1.url)
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -186,7 +186,7 @@ class ModulesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${discussionTopic1.title}' discussion topic module item's details page is displayed.")
         assignmentDetailsPage.moduleItemInteractions.clickOnNextArrow()
-        discussionDetailsPage.assertTitleText(discussionTopic1.title)
+        discussionDetailsPage.assertModulesToolbarDiscussionTitle(discussionTopic1.title)
 
         Log.d(STEP_TAG, "Assert that the second module name, '${module2.name}' is displayed at the bottom.")
         discussionDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module2.name)

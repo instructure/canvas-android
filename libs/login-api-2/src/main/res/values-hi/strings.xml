@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">हैलो वर्ल्ड!</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="mobileVerifyGeneral">यह ऐप उपयोग के लिए अधिकृत नहीं है</string>
+    <string name="mobileVerifyDomainUnauthorized">आपके द्वारा दर्ज किया गया सर्वर इस ऐप के लिए अधिकृत नहीं है।</string>
+    <string name="mobileVerifyUserAgentUnauthorized">इस ऐप के लिए उपयोगकर्ता एजेंट अधिकृत नहीं है।</string>
+    <string name="mobileVerifyUnknownError">हम इस ऐप के उपयोग के लिए सर्वर को सत्यापित करने में असमर्थ थे।</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">एक अप्रत्याशित त्रुटि हुई।</string>
+    <string name="pageNotFound">पेज नहीं मिला।</string>
+    <string name="confirm">पुष्टि करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="help">मदद</string>
+    <string name="enterURL">अपना Canvas URL दर्ज करें:</string>
+    <string name="signIntoCanvasNetwork">Canvas Network में साइन इन करने का प्रयास कर रहे हैं?</string>
+    <string name="remove">निकालें</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">उपयोगकर्ता आईडी</string>
+    <string name="domain">डोमेन</string>
+    <string name="actAsUser">उपयोगकर्ता के रूप में काम करें</string>
+    <string name="stopActAsUser">उपयोगकर्ता के रूप में कार्य करना बंद करें</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">इस उपयोगकर्ता को निकालें?</string>
+    <string name="removedForever">उनकी सामग्री को ऐक्सेस करने के लिए आपको इस उपयगकर्ता को फिर से साइन इन करना होगा।</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas लोगो</string>
+
+    <string name="canvasLoginOn">Canvas_Login: चालू</string>
+    <string name="canvasLoginOff">Canvas_Login: बंद</string>
+    <string name="siteAdminLogin">साइट व्यवस्थापक लॉगिन: चालू</string>
+
+    <string name="username">उपयोगकर्ता नाम</string>
+    <string name="password">पासवर्ड</string>
+    <string name="authenticationRequired">प्रमाणीकरण आवश्यक है</string>
+    <string name="invalidEmailPassword">अमान्य ईमेल या पासवर्ड</string>
+    <string name="login">लॉग इन करें</string>
+    <string name="logout">लॉग आउट करें</string>
+    <string name="matchingSchools">मेल खाते स्कूल</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">क्या आप सच में लॉग आउट करना चाहते हैं?</string>
+    <string name="logout_yes">हां</string>
+    <string name="logout_no">नहीं</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">आपके निकट</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">ठीक आपके पीछे</string>
+    <string name="loginCanvasHelp">क्या आपको अपना स्कूल नहीं दिख रहा? स्कूल का URL दर्ज करें या मदद के लिए यहां टैप करें।</string>
+    <string name="loginCanvasHelpWithUser">स्कूल का URL दर्ज करें या मदद के लिए यहां टैप करें।</string>
+    <string name="loginHint">अपना स्कूल या डिस्ट्रिक्ट ढूंढें</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">समस्या की रिपोर्ट करें</string>
+    <string name="errorReportSubject">विषय</string>
+    <string name="errorReportDescription">विवरण</string>
+    <string name="errorReportSend">भेजें</string>
+    <string name="errorReportThankyou">हमारी सपोर्ट टीम को अपनी समस्या की रिपोर्ट करने के लिए धन्यवाद।  आपको ईमेल के माध्यम से सत्यापन और अपडेट प्राप्त होंगे।</string>
+    <string name="errorReportSeverityText">इसका आप पर क्या प्रभाव पड़ रहा है?</string>
+    <string name="errorSeverityCasualQuestion">बस एक अनौपचारिक प्रश्न, टिप्पणी, आइडिया, सुझाव...</string>
+    <string name="errorSeverityNeedHelp">मुझे कुछ मदद की ज़रूरत है, लेकिन यह अत्यावश्यक नहीं है।</string>
+    <string name="errorSeveritySomethingsBroken">एक समस्या है, लेकिन काम को पूरा करने के लिए कोई समाधान निकाल लिया जाएगा।</string>
+    <string name="errorSeverityCantGetThingsDone">जब तक आपसे प्रतिक्रिया नहीं मिल जाती, काम पूरा नहीं किया जा सकता।</string>
+    <string name="errorSeverityExtremelyCritical">अत्यधिक गंभीर आपातकालीन स्थिति!!</string>
+
+    <string name="errorReportEmailAddress">ईमेल पता</string>
+    <string name="errorReportUnknown">अज्ञात</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 मील (1.6 किमी)</string>
+    <string name="oneMile">1 मील (1.6 किमी)</string>
+    <string name="miles">मील</string>
+    <string name="kilometers">किमी</string>
+    <!-- String for submitting tickets -->
+    <string name="device">डिवाइस</string>
+    <string name="osVersion">OS संस्करण</string>
+
+    <string name="previousLoginTitle">पिछले लॉगिन</string>
+    <string name="findMySchool">मेरा स्कूल ढूंढें</string>
+    <string name="loginWithQRCode">QR कोड</string>
+    <string name="locateQRCode">QR कोड का पता लगाएं</string>
+    <string name="qrCodeExplanation">आपको वेब पर अपनी खाता प्रोफ़ाइल में QR कोड मिलेगा। सूची में \'मोबाइल लॉगिन के लिए QR\' पर क्लिक करें।</string>
+    <string name="qrCodeScanningPrompt">लॉग इन करने के लिए Canvas से QR कोड स्कैन करें</string>
+    <string name="loginWithQRCodeError">लॉग इन करने में त्रुटि हुई। कृपया कोई अन्य QR कोड जेनरेट करें और फिर से कोशिश करें।</string>
+    <string name="invalidQRCodeError">ककृपया Canvas द्वारा जेनरेट किए गए QR कोड को स्कैन करें</string>
+    <string name="qrCodeScreenshotContentDescription">ब्राउज़र में QR कोड जेनरेशन का स्थान दिखाने वाला स्क्रीनशॉट</string>
+    <string name="whatsYourSchoolName">आपके स्कूल का नाम क्या है?</string>
+    <string name="next">अगला</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">पिछला उपयोगकर्ता निकालें</string>
+    <string name="accountDomainFooter">क्या आपको अपना स्कूल नहीं मिल रहा? पूरे स्कूल का URL टाइप करके देखें।</string>
+    <string name="accountDomainFooterLoginHelp">लॉग इन में मदद के लिए यहां टैप करें।</string>
+
+    <string name="login_noInternetConnectionTitle">इंटरनेट कनेक्शन नहीं है</string>
+    <string name="login_noInternetConnectionMessage">इस कार्य के लिए इंटरनेट कनेक्शन की आवश्यकता है।</string>
+    <string name="empty_feedback">फ़ीडबैक सबमिट करने के लिए विषय और विवरण की ज़रूरत होती है।</string>
+    <string name="versionNum">संस्करण संख्या</string>
+    <string name="scrollInstructions">सभी विवरण देखने के लिए स्क्रॉल करें</string>
+
+    <string name="masqueradeErrorUserId">आपको कोई उपयोगकर्ता आईडी दर्ज करनी चाहिए।</string>
+    <string name="masqueradeErrorDomain">आपको कोई मान्य डोमेन दर्ज करना चाहिए।</string>
+    <string name="masqueradeError">उपयोगकर्ता के रूप में कार्य करने का प्रयास करने में त्रुटि हुई।</string>
+    <string name="masqueradeInfo">\"इस रूप में कार्य करें\" अनिवार्य रूप से बिना पासवर्ड के इस उपयोगकर्ता के रूप में लॉग इन करना है। आपके पास ऐसे कार्य करने की क्षमता होगी जैसे कि आप यह उपयोगकर्ता थे, और अन्य उपयोगकर्ताओं को ऐसा प्रतीत होगा जैसे कि इस उपयोगकर्ता ने कार्य किए हैं। हालांकि, ऑडिट लॉग रिकॉर्ड बताते हैं कि वो आप ही थे जिन्होंने इस उपयोगकर्ता की ओर से कार्रवाई की थी।</string>
+    <string name="masqueradingAs">आप %s के रूप में कार्य कर रहे हैं</string>
+    <string name="stopActingAsTitle">इसके रूप में कार्य करना बंद करें&#8230;</string>
+    <string name="stopActingAsMessage">आप %s के रूप में कार्य करना बंद कर देंगे और अपने खाते में वापस आ जाएंगे।</string>
+    <string name="weMadeChanges">हमने कुछ बदलाव किए हैं।</string>
+    <string name="whatsNewText">देखें, क्या नया है</string>
+    <string name="findAnotherSchool">कोई अन्य स्कूल ढूंढें</string>
+</resources>

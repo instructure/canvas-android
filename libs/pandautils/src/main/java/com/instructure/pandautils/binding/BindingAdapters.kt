@@ -156,11 +156,11 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
 fun bindHtmlContent(webViewWrapper: CanvasWebViewWrapper, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
     webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty())
     if (onLtiButtonPressed != null) {
-        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "ltiTool")
+        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), Const.LTI_TOOL)
     }
 
     if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "googleDocs")
+        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), Const.GOOGLE_DOCS)
     }
 }
 
@@ -333,4 +333,15 @@ fun bindOnClickWithNetworkCheck(view: View, clickListener: OnClickListener) {
 @BindingAdapter("onPageChangeListener")
 fun addOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageChangeListener?) {
     listener?.let { viewPager.addOnPageChangeListener(it) }
+}
+
+@BindingAdapter("rotationAnim")
+fun rotationAnim(view: View, rotation: Int) {
+    if (view.rotation == rotation.toFloat()) return
+    view.animate().setDuration(300).rotation(rotation.toFloat()).start()
+}
+
+@BindingAdapter("expandCollapseAnim")
+fun expandCollapseAnim(view: View, visible: Boolean) {
+    if (visible) view.expand() else view.collapse()
 }

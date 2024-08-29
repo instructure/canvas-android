@@ -121,6 +121,14 @@
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
 
+    <!-- Student Colors -->
+    <color name="studentBlue">#FF007BC2</color>
+    <color name="studentPurple">#FF5F4DCE</color>
+    <color name="studentPink">#FFBF32A4</color>
+    <color name="studentRed">#FFE9162E</color>
+    <color name="studentOrange">#FFD34503</color>
+    <color name="studentGreen">#FF008A12</color>
+
     <!-- Attachment View colors -->
     <color name="attachmentColorDoc">#2ca3de</color>
     <color name="attachmentColorPdf">#f2422e</color>

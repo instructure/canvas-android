@@ -31,14 +31,17 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ACCOUNT_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
-import com.instructure.student.activity.LoginActivity
 import com.instructure.student.databinding.FragmentAccountPreferencesBinding
 import com.instructure.student.databinding.SettingsSpinnerBinding
 import com.instructure.student.databinding.SettingsSpinnerItemBinding
-import java.util.*
+import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_ACCOUNT_PREFERENCES)
 @PageView(url = "profile/settings")
@@ -125,7 +128,7 @@ class AccountPreferencesFragment : ParentFragment() {
                 .setPositiveButton(R.string.yes) { _, _ ->
                     // Set the language
                     ApiPrefs.selectedLocale = languages[position].first
-                    LocaleUtils.restartApp(requireContext(), LoginActivity::class.java)
+                    LocaleUtils.restartApp(requireContext())
                 }
                 .setNegativeButton(R.string.no, null)
                 .setCancelable(true)

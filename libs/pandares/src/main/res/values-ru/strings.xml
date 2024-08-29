@@ -1534,7 +1534,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Сбой синхронизации автономного содержимого</string>
     <string name="syncProgress_cancelConfirmationTitle">Отменить синхронизацию?</string>
     <string name="syncProgress_cancelConfirmationMessage">Это приведет к остановке синхронизации офлайн-контента. Вы можете сделать это еще раз позднее.</string>
-    <string name="syncProgress_syncErrorSubtitle">Не удалось синхронизировать один или более файлов. Проверьте подключение к Интернету и повторите отправку.</string>
+    <string name="syncProgress_syncErrorSubtitle">Не удалось синхронизировать один или более элементов. Проверьте интернет-подключение и выполните синхронизацию еще раз.</string>
     <string name="syncProgress_downloadStarting">Скачивание запускается</string>
     <string name="coursesCannotBeFavoritedOffline">Курсы не могут быть добавлены в избранное в автономном режиме.</string>
     <string name="allCoursesScreenHeader">Все курсы</string>

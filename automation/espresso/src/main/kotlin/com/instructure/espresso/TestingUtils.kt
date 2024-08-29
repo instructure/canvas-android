@@ -16,10 +16,21 @@
 package com.instructure.espresso
 
 import android.os.Build
+import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import org.apache.commons.lang3.StringUtils
+import org.hamcrest.Matcher
+import org.junit.Assert
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.Random
+import java.util.TimeZone
 
 private val RANDOM = Random()
 private val DIGITS = "0123456789"
@@ -51,6 +62,17 @@ fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
     return "$monthString $dayString, $yearString"
 }
 
+
+fun getCurrentDateInCanvasCalendarFormat(): String {
+    val calendar = Calendar.getInstance()
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+    var dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+
+    if (day in 1..9) dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
+
+    return dateFormat.format(Date())
+}
+    
 fun getCustomDateCalendar(dayDiffFromToday: Int): Calendar {
     val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     cal.add(Calendar.DATE, dayDiffFromToday)
@@ -106,4 +128,26 @@ fun extractInnerTextById(html: String, id: String): String? {
     val pattern = "<[^>]*?\\bid=\"$id\"[^>]*?>(.*?)</[^>]*?>".toRegex(RegexOption.DOT_MATCHES_ALL)
     val matchResult = pattern.find(html)
     return matchResult?.groupValues?.getOrNull(1)
+}
+
+fun waitForWebElement(
+    webViewMatcher: Matcher<View>,
+    locator: Locator,
+    value: String,
+    timeoutMillis: Long = 5000,
+    intervalMillis: Long = 500
+) {
+    val endTime = System.currentTimeMillis() + timeoutMillis
+
+    while (System.currentTimeMillis() < endTime) {
+        try {
+            Web.onWebView(webViewMatcher)
+                .withElement(DriverAtoms.findElement(locator, value))
+            return
+        } catch (e: Exception) {
+            Thread.sleep(intervalMillis)
+        }
+    }
+
+    Assert.fail("Element not found: $locator=$value within $timeoutMillis ms")
 }

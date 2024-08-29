@@ -27,13 +27,19 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.BooleanPref
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.GsonMapPref
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.canvasapi2.utils.weave.resumeSafely
 import com.instructure.pandautils.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import kotlin.math.absoluteValue
 
 private const val PREFERENCE_FILE_NAME = "color_keeper_prefs"
 
@@ -68,6 +74,31 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
             }
             else -> ThemedColor(ThemePrefs.primaryColor) // defaultColor is already themed so we don't need 3 different colors
         }
+    }
+
+    fun getOrGenerateUserColor(user: User?): ThemedColor {
+       return if (user == null) {
+           ThemedColor(ThemePrefs.primaryColor)
+       } else {
+           cachedThemedColors.getOrElse(user.contextId) { generateUserColor(user) }
+       }
+    }
+
+    val userColors = listOf(
+        R.color.studentBlue,
+        R.color.studentPurple,
+        R.color.studentPink,
+        R.color.studentRed,
+        R.color.studentOrange,
+        R.color.studentGreen
+    )
+
+    private fun generateUserColor(user: User): ThemedColor {
+        val index = user.id.absoluteValue % userColors.size
+        val color = ContextCompat.getColor(ContextKeeper.appContext, userColors[index.toInt()])
+        val themedColor = createThemedColor(color)
+        cachedThemedColors += user.contextId to themedColor
+        return themedColor
     }
 
     /** Adds all colors in the given [CanvasColor] object to the color cache **/
@@ -219,7 +250,7 @@ object ColorApiHelper {
     suspend fun awaitSync(): Boolean = suspendCancellableCoroutine { cr -> performSync { cr.resumeSafely(it) } }
 }
 
-private fun createThemedColor(@ColorInt color: Int): ThemedColor {
+fun createThemedColor(@ColorInt color: Int): ThemedColor {
     val light = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.white))
     val darkBackgroundColor = ColorUtils.correctContrastForButtonBackground(color, ContextKeeper.appContext.getColor(R.color.backgroundDarkMode), ContextKeeper.appContext.getColor(R.color.white))
     val darkTextAndIconColor = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.elevatedDarkColor))

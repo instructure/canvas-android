@@ -58,10 +58,11 @@ class SyllabusE2ETest: StudentTest() {
         dashboardPage.waitForRender()
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that the syllabus body string is displayed, and there are no tabs yet.")
+        Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that the syllabus body string is displayed, and there are no tabs yet, and the toolbar subtitle is the '${course.name}' course name.")
         courseBrowserPage.selectSyllabus()
         syllabusPage.assertNoTabs()
         syllabusPage.assertSyllabusBody("this is the syllabus body")
+        syllabusPage.assertToolbarCourseTitle(course.name)
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, submissionTypes = listOf(SubmissionType.ON_PAPER), withDescription = true, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601)

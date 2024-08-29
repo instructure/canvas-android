@@ -18,13 +18,30 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
+import com.instructure.canvasapi2.managers.ThemeManager
+import com.instructure.canvasapi2.managers.UnreadCountManager
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.BecomeUserPermission
+import com.instructure.canvasapi2.models.CanvasColor
+import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.SelfRegistration
+import com.instructure.canvasapi2.models.TermsOfService
+import com.instructure.canvasapi2.models.UnreadConversationCount
+import com.instructure.canvasapi2.models.UnreadNotificationCount
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -33,16 +50,19 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AppType
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
-import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
@@ -129,7 +149,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             if (!ApiPrefs.isMasquerading) {
                 // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
-                val crashlytics = FirebaseCrashlytics.getInstance();
+                val crashlytics = FirebaseCrashlytics.getInstance()
                 crashlytics.setUserId("")
             }
 
@@ -172,9 +192,6 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType) {
             //store the theme
             response.body()?.let { ThemePrefs.applyCanvasTheme(it, this@CallbackActivity) }
-
-            // Update Flutter with the theme
-            FlutterComm.sendUpdatedTheme()
         }
     }
 
@@ -193,7 +210,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             val shouldRestartForLocaleChange = setupUser(user, type)
             if (shouldRestartForLocaleChange) {
                 if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
-                LocaleUtils.restartApp(this@CallbackActivity, LoginActivity::class.java)
+                LocaleUtils.restartApp(this@CallbackActivity)
             } else {
                 loadInitialData()
             }

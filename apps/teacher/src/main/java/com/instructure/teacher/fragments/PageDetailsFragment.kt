@@ -151,14 +151,14 @@ class PageDetailsFragment : BasePresenterFragment<
             }
         }
 
-        canvasWebViewWraper.webView.webChromeClient = (object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
+        canvasWebViewWraper.webView.addVideoClient(requireActivity())
+        canvasWebViewWraper.webView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
+            override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
                 if (newProgress >= 100) {
                     loading.setGone()
                 }
             }
-        })
+        }
 
         canvasWebViewWraper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, getString(R.string.utils_externalToolTitle), true))

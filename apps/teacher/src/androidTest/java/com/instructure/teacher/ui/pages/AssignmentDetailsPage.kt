@@ -224,7 +224,7 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
      *
      * @param newAssignmentName
      */
-    fun assertAssignmentNameChanged(newAssignmentName: String) {
+    fun assertAssignmentName(newAssignmentName: String) {
         assignmentNameTextView.assertHasText(newAssignmentName)
     }
 

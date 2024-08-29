@@ -35,11 +35,13 @@ import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.StorageUtils
+import com.instructure.pandautils.utils.ThemePrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.threeten.bp.Clock
 import javax.inject.Singleton
 
 /**
@@ -119,5 +121,16 @@ class ApplicationModule {
         fileFolderApi: FileFolderAPI.FilesFoldersInterface
     ): HtmlParser {
         return HtmlParser(localFileDao, apiPrefs, fileFolderDao, context, fileSyncSettingsDao, fileFolderApi)
+    }
+
+    @Provides
+    fun provideClock(): Clock {
+        return Clock.systemDefaultZone()
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemePrefs(): ThemePrefs {
+        return ThemePrefs
     }
 }

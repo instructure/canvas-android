@@ -38,6 +38,9 @@ object UserAPI {
         @GET("users/self/colors")
         fun getColors(): Call<CanvasColor>
 
+        @GET("users/self/colors")
+        suspend fun getColors(@Tag params: RestParams): DataResult<CanvasColor>
+
         @GET("users/self/profile")
         fun getSelf(): Call<User>
 
@@ -67,6 +70,13 @@ object UserAPI {
 
         @PUT("users/self/colors/{context_id}")
         fun setColor(@Path("context_id") contextId: String, @Query(value = "hexcode") color: String): Call<CanvasColor>
+
+        @PUT("users/self/colors/{context_id}")
+        suspend fun setColor(
+            @Path("context_id") contextId: String,
+            @Query(value = "hexcode") color: String,
+            @Tag restParams: RestParams
+        ): DataResult<ColorChangeResponse>
 
         @PUT("users/self")
         fun updateUserShortName(@Query("user[short_name]") shortName: String, @Body body: String): Call<User>

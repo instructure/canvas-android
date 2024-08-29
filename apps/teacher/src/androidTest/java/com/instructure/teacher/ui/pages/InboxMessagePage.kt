@@ -89,21 +89,20 @@ class InboxMessagePage: BasePage() {
     }
 
     /**
-     * Opens the option menu for the specified item.
-     *
-     * @param itemName The name of the item to open the option menu for.
+     * Archives the conversation.
      */
-    fun openOptionMenuFor(itemName: String) {
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-        Espresso.onView(ViewMatchers.withText(itemName))
-            .perform(ViewActions.click());
+    fun archive() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext())
+        Espresso.onView(ViewMatchers.withText("Archive")).perform(ViewActions.click())
     }
 
     /**
      * Deletes the conversation.
      */
     fun deleteConversation() {
-        openOptionMenuFor("Delete")
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext())
+        Espresso.onView(ViewMatchers.withText("Delete"))
+            .perform(ViewActions.click())
         Espresso.onView(Matchers.allOf(ViewMatchers.isAssignableFrom(AppCompatButton::class.java),
             containsTextCaseInsensitive("DELETE"))).click()
     }

@@ -1,0 +1,1602 @@
+﻿<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="noFilesFound">फ़ाइलें नहीं मिलीं</string>
+    <string name="searchFilesHint">फ़ाइलें खोजें</string>
+    <string name="fileSearchInstructions">तीन या अधिक कैरेक्टर वाला खोज शब्द दर्ज करें</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">"कोई मेल खाती आइटमें नहीं मिलीं"</item>
+        <item quantity="one">"%d मेल खाती आइटम मिली"</item>
+        <item quantity="other">"%d मेल खाती आइटमें मिलीं"</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">चोगे में उड़ता हुआ पांडा</string>
+    <string name="troubleLoggingIn">लॉग इन करने में समस्या हो रही है?</string>
+    <string name="requestLoginHelp">लॉगिन मदद का अनुरोध करें</string>
+    <string name="loginHelpSubject">मुझे लॉग इन करने में समस्या हो रही है</string>
+    <string name="errorReportInvalidEmail">कृपया मान्य ईमेल पता दर्ज करें</string>
+    <string name="announcementSections">अनुभाग: %s</string>
+    <string name="selectedListItem">चयनित: %s</string>
+
+    <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">असाइनमेंट विवरण</string>
+    <string name="submission_types">सबमिशन प्रकार</string>
+    <string name="noAssignmentDescriptionStudent">कोई सामग्री नहीं</string>
+    <string name="dueLabel">नियत</string>
+    <string name="submissionStatusSuccessTitle">सफलतापूर्वक सबमिट किया गया!</string>
+    <string name="submissionStatusSuccessSubtitle">आपका सबमिशन ग्रेड होने की प्रतीक्षा में है</string>
+    <string name="submissionStatusUploadingTitle">सबमिशन अपलोड किया जा रहा है&#8230;</string>
+    <string name="submissionStatusUploadingSubtitle">प्रगति देखने के लिए टैप करें</string>
+    <string name="submissionStatusFailedTitle">सबमिशन विफल रहा</string>
+    <string name="submissionStatusFailedSubtitle">विवरण देखने के लिए टैप करें</string>
+    <string name="submissionAndRubric">सबमिशन और रुब्रिक</string>
+    <string name="commentsAndRubric">टिप्पणियां और रुब्रिक</string>
+    <string name="errorLoadingAssignment">यह असाइनमेंट लोड करने में समस्या आई थी। कृपया अपने कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+    <string name="submitted">सबमिट किया गया</string>
+    <string name="notSubmitted">सबमिट नहीं किया गया</string>
+    <string name="allowedFileTypes">स्वीकार्य फ़ाइल प्रकार</string>
+    <string name="attempts">प्रयास</string>
+    <string name="attemptsAllowedLabel">स्वीकृत प्रयास</string>
+    <string name="attemptsUsedLabel">उपयोग किए गए प्रयास</string>
+    <string name="noAttemptsLeft">कोई प्रयास नहीं बचा</string>
+    <string name="resubmitAssignment">असाइनमेंट पुनः सबमिट करें</string>
+    <string name="launchingExternalTool">बाहरी उपकरण लॉन्च किया जा रहा है&#8230;</string>
+    <string name="launchExternalTool">बाहरी उपकरण लॉन्च करें</string>
+    <string name="preview">पूर्वावलोकन</string>
+    <string name="submissionUploadFailedMessage">एक या अधिक फ़ाइलें अपलोड होने में विफल। अपना इंटरनेट कनेक्शन जांचें और सबमिट करने का पुनः प्रयास करें।</string>
+    <string name="submissionUploadByteProgress">%2$s में से %1$s</string>
+    <string name="submissionSuccessTitle">सबमिशन सफल!</string>
+    <string name="submissionSuccessMessage">आपकी असाइनमेंट सफलतापूर्वक सबमिट कर दी गई थी। अपने दिन का आनंद लें!</string>
+    <string name="submissionDeleteTitle">सबमिशन रद्द करें</string>
+    <string name="submissionDeleteMessage">इस तरह से आपका सबमिशन मिट जाएगा।</string>
+    <string name="submissionDeleted">सबमिशन मिटाया गया</string>
+    <string name="missingSubmissionLabel">लापता</string>
+    <string name="gradedSubmissionLabel">ग्रेड किए गए</string>
+
+    <string name="reminderTitle">अनुस्मारक</string>
+    <string name="reminderDescription">इस डिवाइस पर इस असाइनमेंट के बारे में नियत तिथि अनुस्मारक सूचनाएं जोड़ें।</string>
+    <string name="a11y_addReminder">अनुस्मारक जोड़ें</string>
+    <string name="a11y_removeReminder">अनुस्मारक निकालें</string>
+    <string name="reminderBefore">%s से पहले</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 मिनट</item>
+        <item quantity="other">%d मिनट</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 घंटा</item>
+        <item quantity="other">%d घंटे</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 दिन</item>
+        <item quantity="other">%d दिन</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 सप्ताह</item>
+        <item quantity="other">%d सप्ताह</item>
+    </plurals>
+    <string name="reminderCustom">कस्टम</string>
+    <string name="customReminderTitle">कस्टम अनुस्मारक</string>
+    <string name="customReminderQuantityHint">मात्रा</string>
+    <string name="customReminderMinutes">मिनट पहले</string>
+    <string name="customReminderHours">घंटे पहले</string>
+    <string name="customReminderDays">दिन पहले</string>
+    <string name="customReminderWeeks">सप्ताह पहले</string>
+    <string name="reminderNotificationChannelName">अनुस्मारक सूचनाएं</string>
+    <string name="reminderNotificationChannelDescription">असाइनमेंट अनुस्मारकों के लिए Canvas सूचनाएं।</string>
+    <string name="reminderNotificationTitle">नियत तिथि अनुस्मारक</string>
+    <string name="reminderNotificationDescription">यह असाइनमेंट %sमें नियत है: %s</string>
+    <string name="reminderInPast">कृपया अपने अनुस्मारक के लिए आगामी समय चुनें!</string>
+    <string name="reminderAlreadySet">आपने पहले ही इस समय के लिए अनुस्मारक निर्धारित कर दिया है</string>
+    <string name="deleteReminderTitle">अनुस्मारक मिटाएं</string>
+    <string name="deleteReminderMessage">क्या आप वाकई इस अनुस्मारक को मिटाना चाहते हैं?</string>
+    <string name="reminderPermissionNotGrantedError">आपको इस कार्रवाई के लिए सटीक अलार्म अनुमति सक्षम करने की आवश्यकता है</string>
+    <!-- Student Submission -->
+    <string name="submissionUrlClearTextError">\'http://\' का उपयोग करने वाले URL के लिए कोई पूर्वावलोकन उपलब्ध नहीं है</string>
+    <string name="submissionUrlNotAUrlError">कृपया मान्य URL दर्ज करें</string>
+    <string name="enterAUrlHereForYourSubmission">अपने सबमिशन के लिए यहां एक URL दर्ज करें</string>
+    <string name="addFileFabContentDesc">फ़ाइल जोड़ें विकल्प दिखाएं</string>
+    <string name="recordAudio">ऑडियो रिकॉर्ड करें</string>
+    <string name="recordVideo">वीडियो रिकॉर्ड करें</string>
+    <string name="a11y_textSubmissionEditor">पाठ सबमिशन संपादक</string>
+
+    <!-- Student Submission -->
+    <string name="submissionWrite">लिखें&#8230;</string>
+    <string name="textSubmissionFailureMessage">सबमिट अपलोड करने पर कुछ गड़बड़ी हुई। फिर से सबमिट करें।</string>
+
+    <!-- Student Submission Details -->
+    <string name="submission">सबमिशन</string>
+    <string name="submissionVersions">सबमिशन संस्करण</string>
+    <string name="submissionDetailsFileTabName">फ़ाइलें (%d)</string>
+    <string name="rubric">रुब्रिक</string>
+    <string name="submissionDetailsErrorTitle">सबमिशन त्रुटि</string>
+    <string name="urlSubmissionDisclaimer">यह सबमिशन एक बाहरी पेज का URL था। हमने एक स्नैपशॉट संलग्न किया है जिसमें दिखाया गया है कि सबमिशन के समय पेज कैसा दिखाई देता था।</string>
+    <string name="submissionDetailsNoSubmissionYet">अभी तक कोई सबमिशन नहीं</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">आपकी असाइनमेंट %1$s को %2$s बजे लॉक की गई थी</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">आपकी असाइनमेंट %1$s को %2$s बजे अनलॉक होगी</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">आपकी असाइनमेंट \"%1$s\" मॉड्यूल द्वारा लॉक की गई है</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">आपकी असाइनमेंट मॉड्यूल आवश्यकता द्वारा लॉक की गई है</string>
+    <string name="submissionDetailsAssignmentLocked">असाइनमेंट लॉक है</string>
+    <string name="submissionDetailsNoSubmissionAllowed">किसी सबमिशन की अनुमति नहीं है</string>
+    <string name="webPreview">दर्ज किए गए URL का पूर्वावलोकन</string>
+    <string name="websiteUrl">वेबसाइट URL</string>
+    <string name="noneContentMessage">यह असाइनमेंट ऑनलाइन सबमिशन की अनुमति नहीं देती है</string>
+    <string name="onPaperContentMessage">यह असाइनमेंट ऑनलाइन सबमिशन की अनुमति नहीं देती है</string>
+    <string name="noOnlineSubmissions">कोई ऑनलाइन सबमिशन नहीं</string>
+    <string name="speedGraderExternalToolMessage">यह असाइनमेंट सबमिशन के लिए बाहरी उपकरण से लिंक करती है।</string>
+    <string name="openTool">उपकरण खोलें</string>
+    <string name="a11y_submissionText">सबमिशन पाठ</string>
+
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">%s पॉइंट्स में से</string>
+    <string name="outOfPointsAbbreviatedFormatted">%s पॉइंट्स में से</string>
+    <string name="gradeExcused">माफ़ किया</string>
+    <string name="finalGradeFormatted">अंतिम ग्रेड: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%2$s पॉइंट्स में से %1$s</string>
+    <string name="enterWhatIfScore">क्या-अगर अंक दर्ज करें</string>
+    <string name="scoreStatisticsLow">निम्न: %s</string>
+    <string name="scoreStatisticsMean">माध्य: %s</string>
+    <string name="scoreStatisticsHigh">उच्च: %s</string>
+
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">कस्टम अंक</string>
+    <string name="rubricEmptyMessage">इस असाइनमेंट के लिए कोई रुब्रिक नहीं है</string>
+    <string name="rubricViewLongDescription">लंबा विवरण देखें</string>
+
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">%2$d में से %1$d फ़ाइल अपलोड की जा रही है</string>
+    <string name="assignmentSubmissionCommentUpload">%s के लिए टिप्पणी अपलोड की जा रही है</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">मीडिया फ़ाइल अपलोड की जा रही है</string>
+    <string name="assignmentSubmissionCommentError">%s के लिए टिप्पणी अपलोड करना विफल रहा</string>
+    <string name="chooseFileForCommentSubtext">नीचे दिए गए विकल्प पर टैप करके अपनी टिप्पणी में फ़ाइलें संलग्न करें</string>
+    <string name="emptySubmissionCommentsSubtext">क्या आपको अपनी असाइनमेंट के बारे में कोई प्रश्न पूछना है? \nअपने प्रशिक्षक को संदेश भेजें।</string>
+    <string name="submissionCommentErrorMessage">यह संदेश भेजा नहीं जा सका। फिर से कोशिश करने के लिए टैप करें।</string>
+    <string name="mediaUpload">मीडिया अपलोड</string>
+    <string name="mediaUploadAudio">मीडिया अपलोड - ऑडियो</string>
+    <string name="mediaUploadVideo">मीडिया अपलोड - वीडियो</string>
+    <string name="commentSubmissionTypeText">पाठ सबमिशन</string>
+    <string name="commentSubmissionTypeExternalTool">बाहरी उपकरण सबमिशन</string>
+    <string name="commentSubmissionTypeDiscussion">चर्चा सबमिशन</string>
+    <string name="commentSubmissionTypeQuiz">प्रश्नोत्तरी सबमिशन</string>
+    <string name="commentSubmissionTypeQuizAttempt">प्रयास %d</string>
+    <string name="commentSubmissionTypeMediaFile">मीडिया फ़ाइल</string>
+    <string name="commentSubmissionTypeAudio">ऑडियो</string>
+    <string name="commentSubmissionTypeVideo">वीडियो</string>
+
+    <!-- Profile Fragment Strings -->
+    <string name="canvasVersionNum">संस्करण:</string>
+
+    <!-- Content Descriptions -->
+    <string name="canvasLogo">Canvas लोगो</string>
+    <string name="enterURL">अपना Canvas URL दर्ज करें:</string>
+    <string name="enterValue">कोई मान दर्ज करें</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">Canvas Network में साइन इन करने का प्रयास कर रहे हैं?</string>
+    <string name="mobileVerifyGeneral">यह ऐप उपयोग के लिए अधिकृत नहीं है</string>
+    <string name="mobileVerifyDomainUnauthorized">आपके द्वारा दर्ज किया गया सर्वर इस ऐप के लिए अधिकृत नहीं है।</string>
+    <string name="mobileVerifyUserAgentUnauthorized">इस ऐप के लिए उपयोगकर्ता एजेंट अधिकृत नहीं है।</string>
+    <string name="mobileVerifyUnknownError">हम इस ऐप के उपयोग के लिए सर्वर को सत्यापित करने में असमर्थ थे।</string>
+    <string name="okay">ठीक है</string>
+    <string name="options">विकल्प</string>
+
+    <string name="discussionAttachment">फ़ाइल संलग्न करें</string>
+    <string name="discussionPostEditing">संपादित करें</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">इस उपयोगकर्ता को निकालें?</string>
+    <string name="removedForever">उनकी सामग्री को ऐक्सेस करने के लिए आपको इस उपयगकर्ता को फिर से साइन इन करना होगा।</string>
+
+    <string name="bookmarksTitle">बुकमार्क</string>
+    <string name="addBookmark">बुकमार्क जोड़ें</string>
+    <string name="bookmarkName">लेबल</string>
+    <string name="bookmarkTitleRequired">लेबल की आवश्यकता है</string>
+    <string name="bookmarkAddedSuccess">बुकमार्क बनाया गया</string>
+    <string name="bookmarkAddedFailure">बुकमार्क नहीं बनाया जा सका</string>
+    <string name="bookmarkShortcut">बुकमार्क चुनें</string>
+    <string name="bookmarkDeleted">बुकमार्क निकाला गया</string>
+    <string name="bookmarkDelete">बुकमार्क निकालें?</string>
+    <string name="bookmarkEdit">बुकमार्क संपादित करें</string>
+    <string name="bookmarkUpdated">बुकमार्क अपडेट किया गया</string>
+    <string name="no_bookmarks">कोई बुकमार्क बनाएं और फिर उसे यहां देखें!</string>
+
+    <!-- Date strings -->
+    <string name="today">आज</string>
+    <string name="past">अतीत</string>
+    <string name="noDate">कोई तिथि नहीं</string>
+    <string name="future">भविष्य</string>
+    <string name="next7Days">अगले 7 दिन</string>
+    <string name="submissionDetailsDueTodayAt">आज %s बजे नियत है</string>
+    <string name="submissionDetailsDueTomorrowAt">कल %s बजे नियत है</string>
+    <string name="submissionDetailsDueYesterdayAt">बीते कल %s बजे नियत था</string>
+    <string name="submissionDetailsHasNoDueDate">आपकी असाइनमेंट की कोई नियत तिथि नहीं है</string>
+    <string name="submissionDetailsDueAt">%1$s को %2$s बजे नियत</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">पूर्वाह्न</string>
+    <string name="lowercasePM">अपराह्न</string>
+
+
+    <!-- Assignments -->
+    <string name="assignmentLocked">लॉक किया गया</string>
+    <string name="assignments">असाइनमेंट</string>
+    <string name="noDescription">इस असाइनमेंट के लिए कोई विवरण नहीं है</string>
+    <string name="noAssignmentsInGroup">इस ग्रुप में कोई असाइनमेंट नहीं है</string>
+    <string name="excusedAssignment">इस असाइनमेंट को छूट दी गई है और समग्र गणना में इस पर विचार नहीं किया जाएगा।</string>
+    <string name="excused">EX</string>
+    <string name="sortByDialogTitle">इसके अनुसार क्रमबद्ध करें:</string>
+    <string name="sortByDialogTimeOption">समय</string>
+    <string name="sortByDialogTypeOption">प्रकार</string>
+    <string name="sortByTime">समय के अनुसार क्रमबद्ध करें</string>
+    <string name="sortByType">प्रकार के अनुसार क्रमबद्ध करें</string>
+    <string name="sortByDialogCancel">रद्द करें</string>
+    <string name="assignmentsListAllGradingPeriods">सभी</string>
+    <string name="a11y_sortByTimeButton">असाइनमेंट क्रमबद्ध करें बटन, समय के अनुसार क्रमबद्ध करें</string>
+    <string name="a11y_sortByTypeButton">असाइनमेंट क्रमबद्ध करें बटन, प्रकार के अनुसार क्रमबद्ध करें</string>
+    <string name="a11y_assignmentsSortedByTime">असाइनमेंट समय के अनुसार क्रमबद्ध की गईं</string>
+    <string name="a11y_assignmentsSortedByType">असाइनमेंट प्रकार के अनुसार क्रमबद्ध की गईं</string>
+
+    <!-- Assignment editing -->
+    <string name="points">पॉइंट्स\u0020</string>
+    <string name="save">सहेजें</string>
+    <string name="cancel">रद्द करें</string>
+
+    <!-- Discussions -->
+    <string name="forbidden">उत्तर केवल उन लोगों को दिखाई देते हैं जिन्होंने कम से कम एक उत्तर पोस्ट किया है।</string>
+    <string name="fileCurrentlyLocked">यह फ़ाइल वर्तमान में लॉक की गई है</string>
+    <string name="a11y_discussionReplyEditor">चर्चा उत्तर संपादक</string>
+
+    <!-- Events -->
+    <string name="Starts">इस समय शुरू हो रहा है:</string>
+    <string name="Ends">इस समय समाप्त हो रहा है:</string>
+    <string name="allDayEvent">दिन भर की घटना</string>
+    <string name="at">यहां:</string>
+    <string name="PersonalCalendar">व्यक्तिगत कैलेंडर</string>
+    <string name="noLocation">कोई स्थान निर्दिष्ट नहीं</string>
+
+    <string name="discussion">चर्चाएं</string>
+    <string name="closed_discussion">टिप्पणियों के लिए बंद</string>
+    <string name="discussionUploadDialog">चर्चा अपलोड</string>
+    <string name="totalScore">कुल:</string>
+    <string name="noGradeText">N/A</string>
+    <string name="checkBoxFinalGradeOption">ग्रेड की गई असाइनमेंट के आधार पर</string>
+    <string name="checkBoxWhatIfGradeOption">क्या-अगर अंक दिखाएं</string>
+    <string name="whatIfDialogText">क्या-अगर अंक</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%2$s पॉइंट्स में से %1$s, %3$s</string>
+    <string name="inbox">इनबॉक्स</string>
+    <string name="unread">अपठित</string>
+    <string name="archived">संग्रहीत किया गया</string>
+    <string name="sent">भेजा गया</string>
+    <string name="grade">ग्रेड</string>
+    <string name="clearFilter">फ़िल्टर साफ़ करें</string>
+    <string name="addMessage">संदेश जोड़ें</string>
+    <string name="monologue">एकालाप</string>
+    <string name="noItemsToDisplayShort">दिखाने के लिए कोई आइटम नहीं</string>
+    <string name="Todo">करने के लिए</string>
+    <string name="todoFilter">पाठ्यक्रम फ़िल्टर करें</string>
+    <string name="filterByEllipsis">इसके अनुसार फ़िल्टर करें...</string>
+    <string name="favoritedCoursesLabel">पसंदीदा किए गए पाठ्यक्रम</string>
+    <string name="Event">घटना</string>
+    <string name="eventSuccessfulDeletion">घटना सफलतापूर्वक मिटाई गई थी</string>
+    <string name="timeIconDescription">समय आइकन</string>
+    <string name="toDoTurnIn">यहां जाएं:</string>
+    <string name="toDoNoDueDate">कोई नियत तिथि नहीं</string>
+
+    <string name="dueAt">इस तिथि पर नियत:</string>
+    <string name="dueAtTime">%s बजे नियत</string>
+    <string name="toDoDue">नियत</string>
+    <string name="due">%1$s को नियत</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="one">%d को ग्रेडिंग की आवश्यकता है</item>
+        <item quantity="other">%d को ग्रेडिंग की आवश्यकता है</item>
+    </plurals>
+    <string name="createAFolder">फ़ोल्डर बनाएं</string>
+    <string name="createFolder">फ़ोल्डर बनाएं</string>
+    <string name="createAFile">फ़ाइल बनाएं</string>
+    <string name="createFileFolderFabContentDesc">फ़ाइल बनाएं और फ़ोल्डर बनाएं बटन दिखाएं</string>
+    <string name="hideCreateFileFolderFabContentDesc">फ़ाइल बनाएं और फ़ोल्डर बनाएं बटन छिपाएं</string>
+    <string name="folderCreationError">फ़ोल्डर बनाने के दौरान त्रुटि उत्पन्न हुई।</string>
+    <string name="rename">नाम बदलें</string>
+    <string name="renameFile">फ़ाइल का नाम बदलें</string>
+    <string name="renameFolder">फ़ोल्डर का नाम बदलें</string>
+    <string name="blankName">नाम खाली नहीं हो सकता</string>
+    <string name="confirmDeleteFile">क्या आप सच में \'%s\' फ़ाइल को मिटाना चाहते हैं? इस कार्यवाही को पूर्ववत नहीं किया जा सकता।</string>
+    <string name="confirmDeleteEmptyFolder">क्या आप सच में \'%s\' मिटाना चाहते हैं? इस कार्यवाही को पूर्ववत नहीं किया जा सकता।</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">क्या आप सच में \'%1$s\' फ़ोल्डर और उसमें शामिल %2$d आइटम मिटाना चाहते हैं? इस कार्यवाही को पूर्ववत नहीं किया जा सकता।</item>
+        <item quantity="other">क्या आप सच में \'%1$s\' फ़ोल्डर और उसमें शामिल %2$d आइटमें मिटाना चाहते हैं? इस कार्यवाही को पूर्ववत नहीं किया जा सकता।</item>
+    </plurals>
+
+    <string name="settings">सेटिंग्स</string>
+    <string name="name">नाम</string>
+    <string name="email">ईमेल</string>
+    <string name="username">उपयोगकर्ता नाम</string>
+    <string name="password">पासवर्ड</string>
+    <string name="authenticationRequired">प्रमाणीकरण आवश्यक है</string>
+    <string name="invalidEmailPassword">अमान्य ईमेल या पासवर्ड</string>
+    <string name="loginId">लॉगिन आईडी</string>
+    <string name="domain">डोमेन</string>
+    <string name="sendFeedback">फ़ीडबैक भेजें</string>
+    <string name="sendMail">ईमेल भेजें&#8230;</string>
+    <string name="edit">संपादित करें</string>
+    <plurals name="item_count">
+        <item quantity="one">%d आइटम</item>
+        <item quantity="other">%d आइटम</item>
+    </plurals>
+    <string name="addToHomescreen">होम में जोड़ें</string>
+    <string name="archive">संग्रहीत करें</string>
+    <string name="moveToInbox">इनबॉक्स में स्थानांतरित करें</string>
+    <string name="markAsUnread">अपठित के रूप में चिह्नित करें</string>
+    <string name="selectPeopleInbox">लोग चुनें</string>
+    <string name="delete">मिटाएं</string>
+    <string name="deleteEvent">घटना मिटाएं</string>
+    <string name="selected">चयनित</string>
+    <string name="errorSendingMessage">आपका संदेश भेजने का प्रयास करते समय त्रुटि उत्पन्न हुई। कृपया फिर से कोशिश करें।</string>
+    <string name="deletedConversation">वह बातचीत मिटा दी गई है।</string>
+    <string name="uploadAvatarFailMsg">नई अवतार तस्वीर अपलोड नहीं हो सकी</string>
+    <string name="editPhoto">फ़ोटो संपादित करें</string>
+    <string name="invalidUsername">वह उपयोगकर्ता नाम अमान्य है।</string>
+    <string name="usernameChangeSuccess">उपयोगकर्ता नाम सफलतापूर्वक अपडेट किया गया!</string>
+    <string name="takePhoto">फ़ोटो लें</string>
+    <string name="choosePhotoFromGallery">गैलरी से फ़ोटो चुनें</string>
+    <string name="fileNotFound">फ़ाइल नहीं मिली।</string>
+
+    <!-- Conversations -->
+    <string name="reply">उत्तर दें</string>
+    <string name="writeAMessage">संदेश लिखें&#8230;</string>
+    <string name="compose">लिखें</string>
+    <string name="composeMessage">संदेश लिखें</string>
+    <string name="successSendingMessage">संदेश सफलतापूर्वक भेजा गया।</string>
+    <string name="emptyMessage">संदेश खाली नहीं हो सकता!</string>
+    <string name="noRecipients">कोई प्राप्तकर्ता नहीं</string>
+    <string name="send">भेजें</string>
+    <string name="users">उपयोगकर्ता</string>
+    <string name="individually">व्यक्तिगत रूप से</string>
+    <string name="versionNum">संस्करण:</string>
+    <string name="version" formatted="false">v. %s</string>
+    <string name="allCourses">सभी पाठ्यक्रम</string>
+    <string name="allGroups">सभी ग्रुप्स</string>
+    <string name="courseOptions">पाठ्यक्रम विकल्प</string>
+    <string name="courseOptionsFormatted">%s के लिए पाठ्यक्रम विकल्प</string>
+    <string name="editNickname">उपनाम संपादित करें</string>
+    <string name="editCourseColor">पाठ्यक्रम रंग संपादित करें</string>
+    <string name="open">खोलें</string>
+    <string name="openAlternate">वैकल्पिक ऐप से खोलें</string>
+    <string name="opening">फ़ाइल खोली जा रही है&#8230;</string>
+    <string name="download">डाउनलोड करें</string>
+    <string name="messageAttachments">संदेश संलग्नक</string>
+    <string name="discussionAttachmentLabel">संलग्नक</string>
+    <string name="attachmentIcon">संलग्नक आइकन</string>
+    <string name="ok">ठीक है</string>
+    <string name="with">इसके साथ:</string>
+    <string name="starConversation">बातचीत तारांकित करें</string>
+    <string name="deleteConversation">बातचीत मिटाएं</string>
+    <string name="sharedWith">\u0020 के साथ साझा किया गया</string>
+    <string name="sharedWithYou">आपके साथ साझा किया गया</string>
+    <string name="inboxEmptyMessage">नई बातचीत बनाने के लिए \"+\" पर टैप करें।</string>
+    <string name="inboxAllMessages">सभी</string>
+    <string name="filterInbox">इनबॉक्स फ़िल्टर करें</string>
+    <string name="selectCanvasContext">कोई पाठ्यक्रम या ग्रुप चुनें</string>
+    <string name="inboxEmptyTitle">कोई संदेश नहीं</string>
+    <string name="removeAttachment">संलग्नक निकालें</string>
+    <string name="downloadAttachment">संलग्नक डाउनलोड करें</string>
+    <string name="messageOptions">संदेश विकल्प</string>
+    <string name="forward">आगे भेजें</string>
+    <string name="replyAll">सभी के लिए उत्तर दें</string>
+    <string name="unarchive">असंग्रहीत करें</string>
+    <string name="confirmDeleteMessage">क्या आप सच में इस संदेश की अपनी प्रति को मिटाना चाहते हैं? इस कार्यवाही को पूर्ववत नहीं किया जा सकता।</string>
+    <string name="confirmDeleteConversation">क्या आप सच में इस बातचीत की अपनी प्रति को मिटाना चाहते हैं? इस कार्यवाही को पूर्वत नहीं किया जा सकता।</string>
+    <string name="errorConversationGeneric">यह कार्यवाही करने में असमर्थ। कृपया अपने कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+    <string name="conversationArchived">बातचीत संग्रहीत की गई</string>
+    <string name="conversationUnarchived">बातचीत असंग्रहीत की गई</string>
+    <string name="messageDeleted">संदेश मिटाया गया</string>
+    <string name="sendIndividualMessage">प्रत्येक प्राप्तकर्ता को व्यक्तिगत संदेश भेजें</string>
+    <string name="invalidRecipients">आपको चयनित प्राप्तकर्ताओं में से एक या अधिक को संदेश भेजने की अनुमति नहीं है।</string>
+    <string name="newMessage">नया संदेश</string>
+    <string name="forwardMessage">अग्रेषित संदेश</string>
+    <string name="addMorePeopleToMessage">कोई अन्य प्राप्तकर्ता जोड़ें। केवल आपको संबोधित संदेश नहीं भेजे जा सकते।</string>
+    <string name="selectRecipients">प्राप्तकर्ता चुनें</string>
+
+    <plurals name="people_count">
+        <item quantity="one">%d व्यक्ति</item>
+        <item quantity="other">%d लोग</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">%d ग्रुप</item>
+        <item quantity="other">%d ग्रुप्स</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">सहेजे बिना बाहर निकलना है?</string>
+    <string name="exitWithoutSavingMessage">क्या आप सच में सहेजे बिना बाहर निकलना चाहते हैं?</string>
+    <string name="exitUnsaved">बाहर निकलें</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">ग्रुप संदेश?</string>
+    <string name="groupDialogMessage">सभी को एक ही ग्रुप बातचीत में जोड़ना है, या सभी को व्यक्तिगत रूप से संदेश भेजने हैं?</string>
+    <string name="group">ग्रुप</string>
+    <string name="groups">ग्रुप्स</string>
+    <string name="groupMembers">ग्रुप सदस्य</string>
+
+    <string name="loading">लोड किया जा रहा है&#8230;</string>
+    <string name="select_item_to_display">सूची से चयन करें</string>
+
+    <string name="syllabus">पाठ्यक्रम</string>
+    <string name="summary">संक्षिप्त विवरण</string>
+    <string name="coursePeople">लोग</string>
+    <string name="teachersTas">शिक्षक और TA</string>
+    <string name="students">छात्र</string>
+    <string name="observers">समीक्षक</string>
+    <string name="syllabusMissing">पाठ्यक्रम नहीं जोड़ा गया है।</string>
+    <string name="syllabusEventsError">आपके मॉड्यूल लोड करने में त्रुटि हुई।</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="chooseRecipient">प्राप्तकर्ता चुनें</string>
+    <string name="messageHasNoRecipients">फ़िलहाल इस संदेश का कोई प्राप्तकर्ता नहीं है।</string>
+    <string name="sendMessage">संदेश भेजें</string>
+    <string name="userAvatar">उपयोगकर्ता अवतार</string>
+
+    <string name="assignmentIcon">असाइनमेंट आइकन</string>
+    <string name="announcementIcon">घोषणा आइकन</string>
+    <string name="conversationIcon">बातचीत आइकन</string>
+    <string name="defaultIcon">डिफ़ॉल्ट आइकन</string>
+    <string name="discussionIcon">चर्चा आइकन</string>
+    <string name="gradesIcon">ग्रेड आइकन</string>
+    <string name="grades">ग्रेड</string>
+    <string name="allGradingPeriods">सभी ग्रेडिंग अवधियां</string>
+    <string name="calendar">कैलेंडर</string>
+    <string name="bookmarks">बुकमार्क</string>
+    <string name="showGrades">ग्रेड दिखाएं</string>
+    <string name="colorOverlay">रंग आवरण</string>
+    <string name="gradesAreHidden">इस पाठ्यक्रम के लिए ग्रेड दिखाई नहीं दे रहे हैं।</string>
+
+    <string name="entireGroupSelected">यह पूरा ग्रुप पहले ही चुना जा चुका है।</string>
+    <string name="noUsersInGroup">इस ग्रुप में कोई उपयोगकर्ता नहीं है</string>
+
+    <!-- Notifications -->
+    <string name="deleted">मिटाया गया</string>
+    <string name="gradeUpdated">ग्रेड अपडेट किया गया</string>
+
+    <string name="loadingCanvas">Canvas सामग्री लोड हो रही है&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">जो लिंक चुना गया है, वह उस डोमेन से अलग है, जिसमें आपने साइन इन किया है।</string>
+
+    <string name="pages">पेज</string>
+    <string name="noPageFound">पेज की कोई जानकारी उपलब्ध नहीं है।</string>
+    <string name="noPagesInContext">इसके लिए कोई पेज उपलब्ध नहीं है</string>
+    <string name="modified">अंतिम बार संशोधन का समय:</string>
+    <string name="lastModified">अंतिम बार संशोधन का समय: %1$s</string>
+
+    <string name="startMasquerading">उपयोगकर्ता के रूप में कार्य करना शुरू करें</string>
+    <string name="stopMasquerading">उपयोगकर्ता के रूप में कार्य करना बंद करें</string>
+    <string name="userId">उपयोगकर्ता आईडी</string>
+    <string name="masqueradeFail">उपयोगकर्ता के रूप में कार्य करने का प्रयास करते समय त्रुटि हुई</string>
+
+    <string name="emptyId">आईडी खाली नहीं हो सकती</string>
+
+    <string name="goToQuiz">प्रश्नोत्तरी पर जाएं</string>
+
+    <string name="quizzes">प्रश्नोत्तरी</string>
+
+    <string name="lastDiscussionPost">अंतिम पोस्ट</string>
+
+    <string name="newAnnouncement">नई घोषणा</string>
+    <string name="newDiscussion">नई चर्चा</string>
+    <string name="composeDiscussion">चर्चा बनाएं</string>
+    <string name="composeAnnouncement">घोषणा बनाएं</string>
+
+    <string name="postAnnouncement">घोषणा पोस्ट करें</string>
+    <string name="postDiscussion">चर्चा पोस्ट करें</string>
+
+    <string name="postAnnouncementSuccess">घोषणा सफलतापूर्वक पोस्ट की गई।</string>
+    <string name="postDiscussionSuccess">चर्चा सफलतापूर्वक पोस्ट की गई।</string>
+    <string name="updateDiscussionSuccess">चर्चा सफलतापूर्वक अपडेट की गई।</string>
+    <string name="draftDiscussionSuccess">चर्चा मसौदा सफलतापूर्वक बनाया गया।</string>
+
+    <string name="errorPostingAnnouncement">घोषणा पोस्ट करने में त्रुटि हुई।</string>
+    <string name="errorPostingDiscussion">चर्चा पोस्ट करने में त्रुटि हुई।</string>
+    <string name="allowThreading">थ्रेड किए गए उत्तरों की अनुमति दें</string>
+    <string name="usersMustPost">उपयोगकर्ताओं को उत्तर देखने से पहले पोस्ट करना होगा</string>
+    <string name="allowUserComments">उपयोगकर्ताओं को टिप्पणी करने की अनुमति दें</string>
+    <string name="message">संदेश</string>
+    <string name="title">शीर्षक</string>
+
+
+    <string name="messageBlank">संदेश खाली नहीं हो सकता।</string>
+
+    <string name="notAuthorizedAnnouncement">माफ़ करें। आप इस पाठ्यक्रम में घोषणाएं पोस्ट करने के लिए अधिकृत नहीं हैं।</string>
+    <string name="notAuthorizedDiscussion">माफ़ करें। आप इस पाठ्यक्रम में चर्चाएं पोस्ट करने के लिए अधिकृत नहीं हैं।</string>
+
+    <string name="announcements">घोषणाएं</string>
+
+    <string name="titleBlank">शीर्षक खाली नहीं हो सकता।</string>
+
+    <!-- Modules -->
+    <string name="modules">मॉड्यूल</string>
+    <string name="moduleItemMustView">यह आइटम देखें</string>
+    <string name="moduleItemViewed">आपने यह आइटम देखा है</string>
+    <string name="moduleItemSubmit">असाइनमेंट सबमिट करनी होगी</string>
+    <string name="moduleItemSubmitted">असाइनमेंट सबमिट की गई</string>
+    <string name="moduleItemContribute">इस पेज में योगदान करें</string>
+    <string name="moduleItemContributed">आपने योगदान दिया है</string>
+    <string name="moduleItemMinScore">कम से कम इतने अंक लाएं:</string>
+    <string name="moduleItemMinScoreMet">न्यूनतम अंक पूरा हुआ</string>
+    <string name="prerequisites">पूर्वावश्यकताएं:</string>
+    <string name="unlocked">अनलॉक किया गया:</string>
+    <string name="locked">लॉक किया गया</string>
+    <string name="lockedAssignmentDesc">यह असाइनमेंट मॉड्यूल %s का हिस्सा है और अभी तक अनलॉक नहीं की गई है।</string>
+    <string name="lockedPageDesc">यह पेज मॉड्यूल %s का हिस्सा है और अभी तक अनलॉक नहीं किया गया है।</string>
+    <string name="lockedFileDesc">यह फ़ाइल मॉड्यूल %s का हिस्सा है और अभी तक अनलॉक नहीं की गई है।</string>
+    <string name="lockedQuizDesc">यह प्रश्नोत्तरी मॉड्यूल %s का हिस्सा है और अभी तक अनलॉक नहीं की गई है।</string>
+    <string name="lockedDiscussionDesc">यह चर्चा मॉड्यूल %s का हिस्सा है और अभी तक अनलॉक नहीं की गई है।</string>
+    <string name="mustComplete">आपको पहले इसे पूरा करना चाहिए:</string>
+    <string name="unlockedAt">इसे इस समय अनलॉक किया जाएगा:</string>
+    <string name="goToModules">मॉड्यूल पर जाएं</string>
+    <string name="markDone">हो गया के रूप में चिह्नित करें</string>
+    <string name="moduleItemNotFound">मॉड्यूल आइटम नहीं मिली</string>
+    <string name="errorLoadingModules">आपके मॉड्यूल लोड करने में त्रुटि हुई।</string>
+
+    <string name="help">मदद</string>
+    <string name="instructor_question">प्रशिक्षक प्रश्न</string>
+    <string name="link">लिंक</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">यह असाइनमेंट लॉक है।</string>
+
+    <!-- New Course Layout Strings -->
+    <string name="myCourses">मेरे पाठ्यक्रम</string>
+
+
+    <!-- New Submission Strings -->
+    <string name="textEntry">पाठ प्रवेश</string>
+    <string name="onlineURL">ऑनलाइन URL</string>
+    <string name="oneFileOnly">यह सबमिशन केवल एक फ़ाइल अपलोड किया जाना स्वीकार करता है</string>
+    <string name="websiteEntry">वेबसाइट प्रविष्टि जोड़ें</string>
+    <string name="mediaRecordingEntry">मीडिया रिकॉर्डिंग</string>
+    <string name="submit">सबमिट करें</string>
+
+
+    <!-- DataLoss Fragment Strings -->
+    <string name="unsavedProgress">बिना सहेजी गई प्रगति</string>
+    <string name="informationLost">बिना सहेजी गई जानकारी गुम हो जाएगी। क्या आप जारी रखना चाहते हैं?</string>
+    <string name="slash"> / </string>
+
+    <!-- Delete Notification Strings -->
+    <string name="confirm">पुष्टि करें</string>
+
+    <!-- Dismiss To do String -->
+    <string name="markAsDone">हो गया के रूप में चिह्नित करें</string>
+
+    <!-- Submission Details Strings -->
+    <string name="next">अगला</string>
+    <string name="addComment">टिप्पणी जोड़ें&#8230;</string>
+
+    <string name="home">होम</string>
+    <string name="Notifications">सूचनाएं</string>
+
+    <string name="icon">आइकन</string>
+    <string name="rootUser">मूल उपयोगकर्ता फ़ोल्डर</string>
+    <string name="rootCourse">मूल पाठ्यक्रम फ़ोल्डर</string>
+    <string name="rootGroup">मूल ग्रुप फ़ोल्डर</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">निजी तौर पर उपलब्ध</string>
+    <string name="publiclyAvailable">सार्वजनिक तौर पर उपलब्ध</string>
+    <string name="starts">इस समय शुरू हो रहा है: \u0020</string>
+    <string name="courseCode">पाठ्यक्रम कोड: \u0020</string>
+    <string name="ends">इस समय समाप्त हो रहा है: \u0020</string>
+    <string name="visibility">दृश्यता: \u0020</string>
+    <string name="license">लाइसेंस: \u0020</string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">कोलैबोरेशंस</string>
+    <string name="conferences">कॉन्फ़्रेंस</string>
+    <string name="chat">चैट</string>
+    <string name="outcomes">परिणाम</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">पेज पर जाएं:</string>
+    <string name="clickToViewSubmission">सबमिट करने पर वेबसाइट का एक स्नैपशॉट लिया गया। पूरी छवि खोलने या डाउनलोड करने के लिए नीचे दी गई छवि को टैप करके रखें।</string>
+    <string name="urlSubmissionNoPreview">यह सबमिशन एक बाहरी पेज का URL था। ध्यान रखें कि मूल रूप से सबमिशन होने के बाद से यह पेज बदल गया होगा।</string>
+    <string name="contentDescriptionPreviewImage">सबमिट किए गए URL का पूर्वावलोकन</string>
+
+
+    <string name="isNotSupportedFeature">%1$s समर्थित नहीं हैं।</string>
+    <string name="isNotSupported">लिंक समर्थित नहीं है।</string>
+    <string name="openInBrowser">ब्राउज़र में खोलें</string>
+    <string name="unsupported">असमर्थित</string>
+
+
+    <!-- Profile Strings -->
+    <string name="profile">प्रोफ़ाइल</string>
+
+    <string name="noSubject">(कोई विषय नहीं)</string>
+    <string name="subject">विषय</string>
+    <string name="sadPanda">उदास पांडा की छवि</string>
+    <string name="panda_fact_string">पांडा तथ्य:&#160;</string>
+    <string name="remove">निकालें</string>
+    <string name="founders">संस्थापक</string>
+
+    <string name="EULA">EULA</string>
+    <string name="privacyPolicy">गोपनीयता नीति</string>
+    <string name="termsOfUse">उपयोग की शर्तें</string>
+    <string name="canvasOnGithub">GitHub पर Canvas</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">असाइनमेंट प्रश्नोत्तरी</string>
+    <string name="practiceQuizzes">अभ्यास प्रश्नोत्तरी</string>
+    <string name="gradedSurveys">ग्रेड किए गए सर्वेक्षण</string>
+    <string name="surveys">सर्वेक्षण</string>
+
+
+    <!-- Widget Strings -->
+    <string name="todoWidgetTitle">करने के लिए</string>
+    <string name="gradesWidgetTitle">ग्रेड</string>
+    <string name="notificationWidgetTitle">सूचनाएं</string>
+    <string name="todoWidgetTitleLong">Canvas - करने के लिए</string>
+    <string name="gradesWidgetTitleLong">Canvas - ग्रेड</string>
+    <string name="notificationWidgetTitleLong">Canvas - सूचनाएं</string>
+    <string name="notLoggedIn">आपने लॉग इन नहीं किया है</string>
+    <string name="widgetStyle">अपना विजेट स्टाइल चुनें</string>
+    <string name="widgetMinimumStyle">विजेट पर विवरण छिपाएं</string>
+    <string name="light">हल्का</string>
+    <string name="dark">गहरा</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">अपने प्रशिक्षक से प्रश्न पूछें</string>
+    <string name="askInstructorDetails">प्रश्न आपके प्रशिक्षक को सबमिट किए जाते हैं</string>
+    <string name="searchGuides">Canvas गाइड में खोजें</string>
+    <string name="canvasGuides">Canvas गाइड</string>
+    <string name="searchGuidesDetails">सामान्य प्रश्नों के उत्तर खोजें</string>
+    <string name="reportProblem">समस्या की रिपोर्ट करें</string>
+    <string name="reportProblemDetails">ऐप के दुर्व्यवहार करने पर हमें बताएं</string>
+    <string name="requestFeature">फ़ीचर का अनुरोध करें</string>
+    <string name="requestFeatureDetails">क्या आपके पास ऐप को बेहतर बनाने का कोई आइडिया है?</string>
+    <string name="shareYourLove">ऐप के लिए अपना प्यार साझा करें</string>
+    <string name="shareYourLoveDetails">हमें ऐप के अपने पसंदीदा हिस्सों के बारे में बताएं</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Canvas [Android] के लिए आइडिया</string>
+    <string name="understandRequest">निम्नलिखित जानकारी हमें आपके आइडिया को बेहतर ढंग से समझने में मदद करेगी:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">इस प्रश्न का संबंध किस पाठ्यक्रम से है?</string>
+    <string name="allTeachers">पाठ्यक्रम के सभी शिक्षकों और TA को यह संदेश भेजा जाएगा।</string>
+    <string name="sending">भेजा जा रहा है&#8230;</string>
+    <string name="error">त्रुटि</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">पाठ्यक्रम</string>
+    <string name="toDoList">करने के लिए सूची</string>
+    <string name="notifications">सूचनाएं</string>
+    <string name="pushNotifications">पुश सूचनाएं</string>
+    <string name="pushNotificationsError">इस डिवाइस के लिए पुश सूचनाएं पंजीकृत नहीं की गई हैं।</string>
+    <string name="profileSettings">प्रोफ़ाइल सेटिंग्स</string>
+    <string name="accountPreferences">खाता प्राथमिकताएं</string>
+    <string name="pinAndFingerprint">पिन और फ़िंगरप्रिंट</string>
+    <string name="pairWithObserver">समीक्षक के साथ पेयर करें</string>
+    <string name="pairWithObserverDetails">अपने साथ जोड़ने के लिए अपने माता-पिता से Canvas Parent ऐप से इस QR कोड को स्कैन करने को कहें। यह कोड सात दिनों में या एक उपयोग के बाद समाप्त हो जाएगा।</string>
+    <string name="pairingCodeLabel">पेयरिंग कोड:\u0020</string>
+    <string name="pairingCodeErrorTitle">पेयरिंग कोड त्रुटि</string>
+    <string name="pairingCodeErrorDescription">पेयरिंग कोड पुनर्प्राप्त करने में असमर्थ। यह फ़ीचर केवल छात्रों के लिए समर्थित है।</string>
+
+    <string name="launchSpeedgrader">SpeedGrader खोलें</string>
+
+    <string name="search_todo">करने के लिए करने के लिए करने के लिए करने के लिए सूची</string>
+    <string name="search_course">पाठ्यक्रम पाठ्यक्रम कक्षा कक्षाएं</string>
+    <string name="search_grades">ग्रेड ग्रेड</string>
+
+    <!-- ShareFileOptions Dialog -->
+    <string name="uploadTo">यहां अपलोड करें: </string>
+    <string name="uploadToCanvas">Canvas पर अपलोड करें</string>
+    <string name="uploadMyFiles">मेरी फ़ाइलें</string>
+    <string name="uploadCourseFiles">पाठ्यक्रम फ़ाइलें</string>
+    <string name="uploadToSubmissionComment">सबमिशन टिप्पणी पर अपलोड करें</string>
+    <!-- ChangeLog Dialog -->
+    <string name="changelog">चेंजलॉग</string>
+
+    <string name="editUserName">उपयोगकर्ता नाम संपादित करें</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">नई फ़ोटो लें</string>
+    <string name="chooseFromGallery">गैलरी से चुनें</string>
+    <string name="setToDefault">डिफ़ॉल्ट पर सेट करें</string>
+    <string name="chooseBackgroundImage">पृष्ठभूमि छवि चुनें</string>
+
+    <string name="no_courses">पाठ्यक्रम जोड़ने के लिए टैप करें</string>
+    <string name="no_courses_available">यहां कोई पाठ्यक्रम नहीं है, एक दिन की छुट्टी लें!</string>
+    <string name="no_courses_grades">कृपया अपने ग्रेड देखने के लिए किसी पाठ्यक्रम में नामांकन करें</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">नेविगेशन ड्रॉर खोलें</string>
+    <string name="navigation_drawer_close">नेविगेशन ड्रॉर बंद करें</string>
+
+    <string name="preferred_land_page">लैंडिंग पेज</string>
+    <string name="could_not_route_course">पाठ्यक्रम नामांकन नहीं मिल सका।</string>
+    <string name="could_not_route_group">ग्रुप नामांकन नहीं मिल सका।</string>
+    <string name="could_not_route_unknown">एक अप्रत्याशित त्रुटि हुई।</string>
+    <string name="could_not_route_locked">यह पेज छिपा हुआ या लॉक है और इसे एक्सेस नहीं किया जा सकता।</string>
+
+    <string name="close">बंद करें</string>
+    <string name="closed">बंद किया गया</string>
+
+    <string name="overdueAssignments">बाकी असाइनमेंट</string>
+    <string name="upcomingAssignments">आगामी असाइनमेंट</string>
+    <string name="undatedAssignments">अदिनांकित असाइनमेंट</string>
+    <string name="pastAssignments">पिछली असाइनमेंट</string>
+
+    <string name="could_not_find_course">इस आइटम के लिए पाठ्यक्रम प्राप्त करने में त्रुटि हुई।</string>
+    <string name="could_not_find_group">इस आइटम के लिए ग्रुप प्राप्त करने में त्रुटि हुई।</string>
+
+    <string name="selectBackground">कोई पृष्ठभूमि चुनें</string>
+
+    <string name="notoriousSubmissionInProgress">फ़ाइलें सबमिट करना&#8230; अपडेट के लिए सूचना पट्टी जांचें।</string>
+    <string name="notoriousSubmissionSuccessful">फ़ाइल सबमिट करना समाप्त हो गया</string>
+
+    <string name="bio">बायो</string>
+    <string name="draft">मसौदा</string>
+    <string name="publish">प्रकाशित करें</string>
+
+    <string name="createPandaAvatar">पांडा अवतार बनाएं</string>
+    <string name="back">वापस जाएं</string>
+    <string name="setAsAvatar">अवतार के रूप में सेट करें</string>
+    <string name="avatarSuccessfullySaved">पांडा अवतार को सफलतापूर्वक सहेजा गया था</string>
+    <string name="regularAvatarSuccessfullySaved">अवतार सफलतापूर्वक सहेजा गया।</string>
+    <string name="errorSavingAvatar">पांडा अवतार को सहेजने में त्रुटि हुई</string>
+    <string name="pandaAvatar">पांडा अवतार</string>
+    <string name="pandaHead">पांडा अवतार सिर</string>
+    <string name="pandaBody">पांडा अवतार शरीर</string>
+    <string name="pandaLegs">पांडा अवतार पैर</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">साझा करें</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">गेज</string>
+    <string name="content_description_speed_grader_slider">ग्रेड स्लाइडर</string>
+
+    <string name="createNewCalendarEvent">नई घटना बनाएं</string>
+    <string name="enableFunMode">पांडा बंद करें</string>
+
+    <string name="accountNotifications">घोषणाएं</string>
+    <string name="addAccount">खाता जोड़ें</string>
+
+    <string name="changeUser">उपयोगकर्ता बदलें</string>
+
+    <string name="no_data_connection">कृपया अपने डेटा कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_primary_inbox_title">Canvas सूचना</string>
+    <string name="notification_channel_name_primary">सामान्य Canvas सूचनाएं</string>
+    <string name="notification_channel_description_primary">सूचनाओं को Canvas सूचना प्राथमिकताएं अनुभाग के भीतर अतिरिक्त रूप से कॉन्फ़िगर किया जा सकता है।</string>
+
+    <string name="notification_cat_course_activities">पाठ्यक्रम गतिविधियां</string>
+    <string name="notification_cat_discussions">चर्चाएं</string>
+    <string name="notification_cat_conversations">बातचीत</string>
+    <string name="notification_cat_scheduling">समय निर्धारण</string>
+    <string name="notification_cat_groups">ग्रुप्स</string>
+    <string name="notification_cat_alerts">चेतावनियां</string>
+    <string name="notification_cat_conferences">कॉन्फ़्रेंस</string>
+
+    <string name="notification_pref_due_date">नियत तिथि</string>
+    <string name="notification_pref_grading_policies">ग्रेडिंग नीतियां</string>
+    <string name="notification_pref_course_content">पाठ्यक्रम सामग्री</string>
+    <string name="notification_pref_files">फ़ाइलें</string>
+    <string name="notification_pref_announcement">घोषणा</string>
+    <string name="notification_pref_announcement_created_by_you">आपके द्वारा बनाई गई घोषणा</string>
+    <string name="notification_pref_grading">ग्रेडिंग</string>
+    <string name="notification_pref_invitation">आमंत्रण</string>
+    <string name="notification_pref_all_submissions">सभी सबमिशन</string>
+    <string name="notification_pref_late_grading">विलंब ग्रेडिंग</string>
+    <string name="notification_pref_submission_comment">सबमिशन टिप्पणी</string>
+
+    <string name="notification_pref_discussion">चर्चा</string>
+    <string name="notification_pref_discussion_post">चर्चा पोस्ट</string>
+
+    <string name="notification_pref_add_to_conversation">बातचीत में जोड़ें</string>
+    <string name="notification_pref_conversation_message">बातचीत संदेश</string>
+    <string name="notification_pref_conversations_created_by_you">आपके द्वारा बनाई गई बातचीत</string>
+
+    <string name="notification_pref_student_appointment_signups">छात्र नियुक्ति साइन अप</string>
+    <string name="notification_pref_appointment_signups">नियुक्ति साइन अप</string>
+    <string name="notification_pref_appointment_cancelations">नियुक्ति रद्दीकरण</string>
+    <string name="notification_pref_appointment_availability">नियुक्ति की उपलब्धता</string>
+    <string name="notification_pref_calendar">कैलेंडर</string>
+
+    <string name="notification_pref_membership_update">सदस्यता पर अपडेट</string>
+    <string name="notification_pref_admin">व्यवस्थापक सूचनाएं</string>
+    <string name="notification_pref_recording_ready">रिकॉर्ड करने के लिए तैयार</string>
+
+    <string name="notification_pref_type_email">ईमेल</string>
+    <string name="notification_pref_type_push">डिवाइस</string>
+    <string name="notification_pref_type_sms">SMS</string>
+
+    <string name="notification_pref_dialog_title">डिवाइस सूचनाएं</string>
+    <string name="notification_pref_dialog_message">क्या आप डिवाइस सूचनाएं चालू करना चाहेंगे? इन सेटिंग्स को बाद में सेटिंग्स &gt; सूचनाएं &gt; सभी डिवाइसों के लिए में जाकर बदला जा सकता है</string>
+    <string name="notification_pref_toast_success">सूचनाएं सक्षम की गई हैं।</string>
+
+    <string name="notification_desc_due_date">असाइनमेंट की नियत तिथि बदलने पर सूचना पाएं।</string>
+    <string name="notification_desc_grading_policies">पाठ्यक्रम ग्रेडिंग नीतियां बदलने पर सूचना पाएं।</string>
+    <string name="notification_desc_course_content">विकी पेजों, प्रश्नोत्तरी और असाइनमेंट पर पाठ्यक्रम सामग्री बदलने पर सूचना पाएं।</string>
+    <string name="notification_desc_files">आपके पाठ्यक्रम में नई फ़ाइल जोड़े जाने पर सूचना पाएं।</string>
+    <string name="notification_desc_announcement">आपके पाठ्यक्रम में नई घोषणा किए जाने पर सूचना पाएं।</string>
+    <string name="notification_desc_announcement_created_by_you">घोषणा बनाने पर और आपकी घोषणा पर किसी व्यक्ति द्वारा उत्तर देने पर सूचना पाएं।</string>
+    <string name="notification_desc_grading">असाइनमेंट/सबमिशन को ग्रेड किए/बदले जाने पर और ग्रेड भार बदले जाने पर सूचना पाएं।</string>
+    <string name="notification_desc_invitation">वेब कॉन्फ़्रेंस, ग्रुप्स, कोलैबोरेशंस, सहकर्मी समीक्षाओं और अनुस्मारकों के लिए आमंत्रण मिलने पर सूचना पाएं।</string>
+    <string name="notification_desc_all_submissions">केवल प्रशिक्षक और व्यवस्थापक। असाइनमेंट को सबमिट या पुनः सबमिट करने पर सूचना पाएं।</string>
+    <string name="notification_desc_late_grading">केवल प्रशिक्षक और व्यवस्थापक। विलंब असाइनमेंट सबमिट किए जाने पर सूचना पाएं।</string>
+    <string name="notification_desc_submission_comment">आपके सबमिशन पर टिप्पणी किए जाने पर सूचना पाएं।</string>
+    <string name="notification_desc_discussion">आपके पाठ्यक्रम में नया चर्चा का विषय होने पर सूचना पाएं।</string>
+    <string name="notification_desc_discussion_post">आपकी सदस्यता वाली चर्चा में नई पोस्ट आने पर सूचना पाएं।</string>
+    <string name="notification_desc_add_to_conversation">बातचीत में आपको जोड़े जाने पर सूचना पाएं।</string>
+    <string name="notification_desc_conversation_message">इनबॉक्स में नया संदेश पाने पर सूचना पाएं।</string>
+    <string name="notification_desc_conversations_created_by_you">नई बातचीत बनाने पर सूचना पाएं।</string>
+    <string name="notification_desc_student_appointment_signups">केवल प्रशिक्षक और व्यवस्थापक। अपॉइंटमेंट साइनअप होने पर सूचना पाएं।</string>
+    <string name="notification_desc_appointment_signups">आपके कैलेंडर पर नया साइनअप होने पर सूचना पाएं।</string>
+    <string name="notification_desc_appointment_cancelations">अपॉइंटमेंट रद्द होने पर सूचना पाएं।</string>
+    <string name="notification_desc_appointment_availability">अपॉइंटमेंट स्लॉट उपलब्ध होने पर सूचना पाएं।</string>
+    <string name="notification_desc_calendar">नई और अपडेट की गई कैलेंडर आइटमों के बारे में सूचना पाएं।</string>
+    <string name="notification_desc_membership_update">केवल व्यवस्थापक, लंबित नामांकन सक्रिय। ग्रुप नामांकन के स्वीकार या अस्वीकार किए जाने पर सूचना पाएं।</string>
+    <string name="notification_desc_admin">केवल प्रशिक्षक और व्यवस्थापक। पाठ्यक्रम नामांकन, तैयार की गई रिपोर्ट, निर्यात की गई सामग्री, प्रवास रिपोर्ट, नए खाता उपयोगकर्ताओं और नए छात्र ग्रुप्स के बारे में सूचना पाएं।</string>
+    <string name="notification_desc_recording_ready">कॉन्फ़्रेंस रिकॉर्डिंग तैयार होने पर सूचना पाएं।</string>
+
+    <string name="unlimited">असीमित</string>
+
+    <string name="question">प्रश्न</string>
+    <plurals name="question_count">
+        <item quantity="one">%d प्रश्न</item>
+        <item quantity="other">%d प्रश्न</item>
+    </plurals>
+
+    <plurals name="pointCount">
+        <item quantity="one">%s पॉइंट</item>
+        <item quantity="other">%s पॉइंट्स</item>
+    </plurals>
+
+    <string name="timeLimit">समय सीमा</string>
+    <string name="newPushNotifications">%1$s नई सूचनाएं</string>
+    <string name="like">पसंद</string>
+    <string name="likeEntryLabel">प्रविष्टि पसंद करें</string>
+    <string name="likes">पसंद</string>
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s पसंद</item>
+        <item quantity="other">%s पसंद</item>
+    </plurals>
+
+    <string name="color_1">लाल</string>
+    <string name="color_2">सुर्ख गुलाबी</string>
+    <string name="color_3">लैवेंडर</string>
+    <string name="color_4">वायलेट</string>
+    <string name="color_5">बैंगनी</string>
+    <string name="color_6">स्लेट</string>
+    <string name="color_7">नीला</string>
+    <string name="color_8">सियान</string>
+    <string name="color_9">हरा</string>
+    <string name="color_10">शार्ट्रूज़</string>
+    <string name="color_11">पीला</string>
+    <string name="color_12">सुनहरा</string>
+    <string name="color_13">नारंगी</string>
+    <string name="color_14">गुलाबी</string>
+    <string name="color_15">सलेटी</string>
+
+    <string name="edit_course_nickname">पाठ्यक्रम का उपनाम संपादित करें</string>
+    <string name="courseNicknameError">इस समय पाठ्यक्रम का उपनाम सेट नहीं किया जा सका।</string>
+
+    <string name="colorPickerDialogTitle">पाठ्यक्रम का रंग</string>
+    <string name="colorPickerDialogMessage">नया रंग सेट करके अपने पाठ्यक्रम को निजीकृत बनाएं।</string>
+    <string name="colorPickerError">इस समय पाठ्यक्रम का रंग सेट नहीं किया जा सका।</string>
+
+    <string name="contentDescriptionColorCottonCandy">गुलाबी</string>
+    <string name="contentDescriptionColorBarbie">सुर्ख गुलाबी</string>
+    <string name="contentDescriptionColorBarneyPurple">वायलेट</string>
+    <string name="contentDescriptionColorEggplant">बैंगनी</string>
+    <string name="contentDescriptionColorUltramarine">गहरा नीला</string>
+    <string name="contentDescriptionColorOcean11">नीला</string>
+    <string name="contentDescriptionColorCyan">सियान</string>
+    <string name="contentDescriptionColorAquaMarine">एक्वा ब्लू</string>
+    <string name="contentDescriptionColorEmeraldGreen">एमराल्ड ग्रीन</string>
+    <string name="contentDescriptionColorFreshCutLawn">हरा</string>
+    <string name="contentDescriptionColorChartreuse">शार्ट्रूज़ </string>
+    <string name="contentDescriptionColorSunFlower">पीला</string>
+    <string name="contentDescriptionColorTangerine">नारंगी</string>
+    <string name="contentDescriptionColorBloodOrange">गहरा नारंगी</string>
+    <string name="contentDescriptionColorSriracha">लाल</string>
+
+    <string name="courseFavorited">पाठ्यक्रम %s, पसंदीदा।</string>
+    <string name="courseNotFavorited">पाठ्यक्रम %s, गैर-पसंदीदा।</string>
+    <string name="groupFavorited">ग्रुप %s, पसंदीदा।</string>
+    <string name="groupNotFavorited">ग्रुप %s, गैर-पसंदीदा।</string>
+    <string name="accountGroup">खाता ग्रुप</string>
+
+    <!-- Recents -->
+    <string name="recents_empty">पाठ्यक्रम अनुकूलन स्क्रीन से उन्हें यहां देखने के लिए कोई पाठ्यक्रम या ग्रुप जोड़ें।</string>
+
+    <string name="toolbar_close">टूलबार बंद करें</string>
+    <string name="favoriteDescription">\"मेरे पाठ्यक्रम\" में दिखाएं</string>
+    <string name="about">इसके बारे में</string>
+    <string name="courseShortcuts">अपने पाठ्यक्रम में शॉर्टकट जोड़ें</string>
+    <string name="courseNickname">पाठ्यक्रम उपनाम</string>
+
+    <string name="notAvailableOffline">ऑफ़लाइन होने पर कार्यक्षमता अनुपलब्ध है</string>
+    <string name="editDashboard">डैशबोर्ड संपादित करें</string>
+    <string name="editDashboardDescriptor">डैशबोर्ड पर आप कौन से पाठ्यक्रम देखना चाहते हैं, कृपया उनका चयन करें</string>
+    <string name="a11y_editYourCourseList">अपनी पाठ्यक्रम सूची संपादित करें</string>
+
+    <string name="dashboard">डैशबोर्ड</string>
+    <string name="previous">पिछला</string>
+    <string name="pageNum" formatted="false">पेज %d में से %d</string>
+    <string name="language">भाषा</string>
+    <string name="systemDefault">सिस्टम डिफ़ॉल्ट</string>
+    <string name="restartingCanvas">Canvas पुनः प्रारंभ हो रहा है</string>
+    <string name="languageDialogText">भाषा बदलने के लिए ऐप को पुनः आरंभ करने की आवश्यकता होगी, क्या आप ऐसा करना चाहते हैं?</string>
+    <string name="defaultLanguageWarning">आपके सिस्टम की डिफ़ॉल्ट भाषा के समर्थित होने की गारंटी नहीं है और इसे पुनः आरंभ करने की आवश्यकता होगी, क्या आप ऐसा करना चाहते हैं?</string>
+    <string name="locked_mastery_paths">\"%s\" के ग्रेड होने तक लॉक किया गया</string>
+    <string name="locked_icon">लॉक किया गया आइकन</string>
+    <string name="choose_assignment_group">असाइनमेंट ग्रुप चुनें</string>
+    <string name="chooseAssignmentPath">असाइनमेंट पथ चुनें</string>
+    <string name="select">चयन करें</string>
+    <string name="choice_position">विकल्प %d</string>
+    <string name="updating_module_info">मॉड्यूल की जानकारी अपडेट की जा रही है&#8230;</string>
+    <string name="pending_review">लंबित समीक्षा</string>
+    <string name="totalPoints">%s पॉइंट्स</string>
+    <string name="totalPointsText">कुल पॉइंट्स</string>
+    <string name="contentDescriptionPoints">%s पॉइंट्स</string>
+    <string name="score">अंक</string>
+    <string name="rangedRubricTotal" formatted="false">%s / %s पॉइंट्स</string>
+    <string name="seeAll">सभी देखें</string>
+    <string name="welcome">आपका स्वागत है!</string>
+    <string name="dismiss">खारिज करें</string>
+    <string name="tapToViewAnnouncement">घोषणा देखने के लिए टैप करें</string>
+    <string name="acceptCourseInvitation">स्वीकार करें</string>
+    <string name="declineCourseInvitation">अस्वीकार करें</string>
+    <string name="outOf">में से</string>
+
+    <!-- File Strings -->
+    <string name="noFilesSubtextCourse">इस पाठ्यक्रम से संबद्ध कोई फ़ाइल नहीं है।</string>
+    <string name="noFilesSubtextGroup">इस ग्रुप से संबद्ध कोई फ़ाइल नहीं है।</string>
+    <string name="fileTypeNotSupported">असमर्थित फ़ाइल प्रकार</string>
+    <string name="fileTypeNotSupportedBody">यह असाइनमेंट केवल कुछ फ़ाइल प्रकारों की अनुमति देती है: %s</string>
+
+    <array name="file_size_units">
+        <item>B</item>
+        <item>KB</item>
+        <item>MB</item>
+        <item>GB</item>
+        <item>TB</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">बाहरी ब्राउज़र में लिंक लॉन्च करें</string>
+    <string name="ltiLaunchFailure">इस समय LTI उपकरण लोड नहीं किया जा सका।</string>
+    <string name="urlSubmission">URL सबमिशन</string>
+
+    <string name="homePageIdForNotifications">हाल की गतिविधि</string>
+    <string name="homePageIdForModules">मॉड्यूल</string>
+    <string name="homePageIdForAssignments">असाइनमेंट</string>
+    <string name="homePageIdForSyllabus">पाठ्यक्रम</string>
+
+    <string name="contentDescriptionWidgetRefresh">विजेट रीफ़्रेश करें</string>
+
+    <string name="copy">प्रति बनाएं</string>
+    <string name="courseInviteTitle">आपको आमंत्रित किया गया है।</string>
+    <string name="inviteAccepted">आमंत्रण स्वीकार किया गया!</string>
+    <string name="inviteDeclined">आमंत्रण अस्वीकार किया गया।</string>
+    <string name="latePenalty">विलंब दंड (-%s)</string>
+    <string name="latePenaltyUpdated">विलंब दंड: -%s पॉइंट्स</string>
+    <string name="yourGrade">आपका ग्रेड: %s पॉइंट्स</string>
+    <string name="finalGrade">अंतिम ग्रेड</string>
+
+    <string name="max_count">99+</string>
+
+    <string name="opensInWebView">वेबव्यू में खुलता है</string>
+    <string name="unsupportedTabLabel">इस डिवाइस पर समर्थित नहीं है</string>
+
+    <string name="downloadingFile">डाउनलोड किया जा रहा है</string>
+    <string name="downloadFailed">डाउनलोड करना विफल रहा</string>
+    <string name="downloadSuccessful">डाउनलोड करना सफल रहा</string>
+
+    <string name="full_due_date_details">नियत तिथि का पूरा ब्यौरा</string>
+    <string name="submissions">सबमिशन</string>
+    <string name="attachment">संलग्नक</string>
+    <string name="contentDescription_back">वापस जाएं</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s पॉइंट</item>
+        <item quantity="other">%s पॉइंट्स</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s पॉइंट</item>
+        <item quantity="other">%s पॉइंट्स</item>
+    </plurals>
+    <string name="capitalTo">प्राप्तकर्ता</string>
+
+    <string name="unableToViewInBrowser">इस LTI उपकरण को देखने के लिए हमें कोई बाहरी ऐप नहीं मिल रहा है।</string>
+
+    <string name="commentUpload">टिप्पणी अपलोड करें</string>
+
+    <string name="frontPage">मुख पृष्ठ</string>
+    <string name="editPage">पेज संपादित करें</string>
+    <string name="description">विवरण</string>
+    <string name="pageSuccessfullyUpdated">पेज सफलतापूर्वक अपडेट किया गया।</string>
+    <string name="errorSavingPage">इस पेज को सहेजने का प्रयास करते समय त्रुटि उत्पन्न हुई। फिर से कोशिश करें।</string>
+    <string name="pageTitleMustBeSet">पेज का शीर्षक सेट होना चाहिए।</string>
+    <string name="pageDetails">पेज का ब्यौरा</string>
+    <string name="saving">सहेजा जा रहा है</string>
+    <string name="confirmDeleteEvent">क्या आप सच में इस घटना को मिटाना चाहते हैं?</string>
+    <string name="conferencesNotSupported">मोबाइल पर कॉन्फ़्रेंस अभी तक समर्थित नहीं हैं।</string>
+    <string name="filePreviewContentDescription">फ़ाइल पूर्वावलोकन छवि</string>
+    <string name="pdfError">इस PDF को लोड करने का प्रयास करते समय त्रुटि उत्पन्न हुई।</string>
+    <string name="featureNotAllowedInStudentView">हमें बहुत अफ़सोस है! छात्र दृश्य में इस फ़ीचर की अनुमति नहीं है।</string>
+    <string name="nothingToSeeHere">यहां देखने के लिए कुछ भी नहीं है</string>
+    <string name="unsupportedFeature">असमर्थित फ़ीचर</string>
+
+    <!-- Parent Strings -->
+    <string name="addChildTitle">छात्र जोड़ें</string>
+    <string name="addChildSubTitle">आपको प्रदान किया गया छात्र पेयरिंग कोड दर्ज करें।</string>
+    <string name="addChildHint">पेयरिंग कोड&#8230;</string>
+    <string name="addChildErrorMessage">पेयरिंग नहीं की जा सकी। सुनिश्चित करें कि आपका पेयरिंग कोड सही है और उपयोग की समय सीमा के भीतर है।</string>
+    <string name="gradeComplete">पूरा हुआ</string>
+    <string name="gradeIncomplete">अधूरा</string>
+
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">सेटिंग्स पोस्ट करें</string>
+    <string name="postGradesTab">ग्रेड पोस्ट करें</string>
+    <string name="hideGradesTab">ग्रेड छिपाएं</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">वर्तमान में %d ग्रेड पोस्ट किया गया</item>
+        <item quantity="other">वर्तमान में %d ग्रेड पोस्ट किए गए</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">वर्तमान में %d ग्रेड छिपा हुआ है</item>
+        <item quantity="other">वर्तमान में %d ग्रेड छिपे हुए हैं</item>
+    </plurals>
+    <string name="postPolicyPostTo">यहां पोस्ट करें&#8230;</string>
+    <string name="postPolicySections">विशिष्ट अनुभाग</string>
+    <string name="postToEveryoneTitle">सभी</string>
+    <string name="postToEveryoneMessage">सभी छात्रों को ग्रेड दिखाई देंगे</string>
+    <string name="postToGradedTitle">ग्रेड किए गए</string>
+    <string name="postToGradedMessage">ग्रेड किए गए सबमिशन वाले छात्रों को ग्रेड दिखाई देंगे</string>
+    <string name="postPolicyAllHiddenTitle">सभी छिपे हुए</string>
+    <string name="postPolicyAllHiddenMessage">सभी ग्रेड वर्तमान में छिपे हुए हैं।</string>
+    <string name="postPolicyAllPostedTitle">सभी पोस्ट किए गए</string>
+    <string name="postPolicyAllPostedMessage">सभी ग्रेड वर्तमान में पोस्ट किए गए हैं।</string>
+    <string name="postPolicyPostedToast">ग्रेड पोस्ट किए गए</string>
+    <string name="postPolicyHiddenToast">छिपे हुए ग्रेड</string>
+    <string name="postPolicyPostFailedToast">ग्रेड पोस्ट करने में विफल</string>
+    <string name="postPolicyHideFailedToast">ग्रेड छिपाने में विफल</string>
+    <string name="gradeBeforePosting">पोस्ट करने से पहले ग्रेड</string>
+    <string name="gradeAfterPosting">पोस्ट करने के बाद ग्रेड</string>
+    <string name="gradeOverride">ग्रेड अवहेलना</string>
+    <string name="currentGrade">वर्तमान ग्रेड</string>
+    <string name="opensInCanvasStudent">Canvas Student में खुलता है</string>
+    <string name="tab_student_view">छात्र दृश्य</string>
+    <string name="rateOnThePlayStore">प्ले स्टोर पर रेट करें</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">चुना गया सिर: %s</string>
+    <string name="content_description_chosen_body">चुना गया शरीर: %s</string>
+    <string name="content_description_chosen_feet">चुने गए पैर: %s</string>
+    <string name="content_description_panda_body_1">गुलाबी ट्रिम के साथ बैंगनी दिल वाली पोशाक</string>
+    <string name="content_description_panda_body_2">नीले रंग की ट्रिम के साथ हरी सितारे वाली पोशाक</string>
+    <string name="content_description_panda_body_3">नारंगी रंग की ट्रिम के साथ लाल सितारे वाली पोशाक</string>
+    <string name="content_description_panda_body_4">नीला ब्लेज़र, लाल बो-टाई और सलेटी रंग की पैंट</string>
+    <string name="content_description_panda_body_5">नारंगी बटन-अप और जींस</string>
+    <string name="content_description_panda_body_6">लाल बटन-अप और भूरे रंग की पैंट</string>
+    <string name="content_description_panda_body_7">पीले रंग के सूरज वाली ग्राफ़िक टी-शर्ट और सलेटी रंग की पैंट</string>
+    <string name="content_description_panda_body_8">टील रंग की बास्केटबॉल वाली ग्राफ़िक टी-शर्ट और सलेटी रंग की पैंट</string>
+    <string name="content_description_panda_body_9">नीले रंग की एंड्रॉइड वाली ग्राफ़िक टी-शर्ट और हरे रंग की पैंट</string>
+    <string name="content_description_panda_body_10">सफ़ेद रंग की Instructure वाली ग्राफ़िक टी-शर्ट और नीले रंग की पैंट</string>
+    <string name="content_description_panda_body_11">गहरे सलेटी रंग वाली थ्री-स्टार टी-शर्ट और टील रंग की पैंट</string>
+    <string name="content_description_panda_body_12">जादुई छड़ी के साथ बरगंडी रंग की जादूगर की वर्दी और काले रंग की पैंट</string>
+    <string name="content_description_panda_body_13">पांडा का नंगा धड़</string>
+    <string name="content_description_panda_head_2">टीयरड्रॉप एविएटर सनग्लासेज़ और लिपस्टिक</string>
+    <string name="content_description_panda_head_3">मेकअप और बैंगनी रंग का हेयर बो</string>
+    <string name="content_description_panda_head_4">मनमोहक मूंछें</string>
+    <string name="content_description_panda_head_5">हरे रंग के पार्टी चश्मे</string>
+    <string name="content_description_panda_head_6">भूरे रंग के धूप के चश्मे</string>
+    <string name="content_description_panda_head_7">सुनहरा छद्मवेष मास्क और लिपस्टिक</string>
+    <string name="content_description_panda_head_8">टीयरड्रॉप एविएटर सनग्लासेज़</string>
+    <string name="content_description_panda_head_9">झाई वाले गाल</string>
+    <string name="content_description_panda_head_10">चश्मा पहने, माथे पर निशान वाला जादूगर</string>
+    <string name="content_description_panda_feet_1">नंगे पैर</string>
+    <string name="content_description_panda_feet_2">बैंगनी रंग के बो के साथ गुलाबी रंग के जूते</string>
+    <string name="content_description_panda_feet_3">हरे रंग के बो के साथ नीले रंग के जूते</string>
+    <string name="content_description_panda_feet_4">नारंगी रंग के बो के साथ लाल रंग के जूते</string>
+    <string name="content_description_panda_feet_5">लाल रंग के जूते</string>
+    <string name="content_description_choose_head">सिर चुनें</string>
+    <string name="content_description_choose_body">शरीर चुनें</string>
+    <string name="content_description_choose_feet">पैर चुनें</string>
+
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00</string>
+    <string name="recordingTimerContentDescription">%1$d घंटे, %2$d मिनट, और %3$d सेकंड</string>
+    <string name="recordingTimerSpeechDivider">%2$s में से %1$s</string>
+    <string name="replay">रीप्ले करें</string>
+    <string name="stop">रुकें</string>
+    <string name="startRecordingAudio">ऑडियो रिकॉर्ड करना प्रारंभ करें</string>
+    <string name="stopRecordingAudio">ऑडियो रिकॉर्ड करना बंद करें</string>
+    <string name="startRecordingVideo">वीडियो रिकॉर्ड करना प्रारंभ करें</string>
+    <string name="stopRecordingVideo">वीडियो रिकॉर्ड करना बंद करें</string>
+    <string name="closeRecordingView">रिकॉर्डिंग दृश्य बंद करें</string>
+    <string name="deleteRecording">रिकॉर्डिंग मिटाएं</string>
+    <string name="videoCommentReplay">वीडियो टिप्पणी रीप्ले</string>
+    <string name="errorShowingVideoReplay">रीप्ले देखने का प्रयास करते समय त्रुटि हुई।</string>
+    <string name="errorSubmittingMediaComment">आपकी मीडिया टिप्पणी सबमिट करने का प्रयास करते समय त्रुटि हुई।</string>
+
+    <string name="addVideoComment">वीडियो टिप्पणी जोड़ें</string>
+    <string name="addAudioComment">ऑडियो टिप्पणी जोड़ें</string>
+    <string name="audioRecordingError">ऑडियो रिकॉर्ड करने का प्रयास करते समय एक अप्रत्याशित त्रुटि उत्पन्न हुई।</string>
+    <string name="videoRecordingError">वीडियो रिकॉर्ड करने का प्रयास करते समय एक अप्रत्याशित त्रुटि उत्पन्न हुई।</string>
+
+    <string name="quizQuestionLabel">प्रश्न:</string>
+    <string name="timeLimitLabel">समय सीमा:</string>
+    <string name="allowedAttemptsLabel">अनुमत प्रयास:</string>
+    <string name="instructions">निर्देश</string>
+    <string name="quizNoTimeLimit">कोई नहीं</string>
+    <string name="viewQuiz">प्रश्नोत्तरी देखें</string>
+    <string name="viewDiscussion">चर्चा देखें</string>
+    <string name="lockedModule">यह असाइनमेंट \"%1$s\" मॉड्यूल द्वारा लॉक की गई है।</string>
+    <string name="chooseMediaFile">मीडिया फ़ाइल चुनें</string>
+    <string name="discussions_unknown_author">अज्ञात लेखक</string>
+    <string name="discussions_unknown_date">अज्ञात तिथि</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. ऋण</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <string name="a11y_gradeCellContentDescriptionHint">आप यहां से सबमिशन विवरण खोल सकते हैं</string>
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">ग्रेड: %s</string>
+
+    <plurals name="minutes">
+        <item quantity="one">%s मिनट</item>
+        <item quantity="other">%s मिनट</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">कोई कॉन्फ़्रेंस नहीं</string>
+    <string name="noConferencesMessage">अभी तक प्रदर्शित करने के लिए कोई कॉन्फ़्रेंस नहीं है</string>
+    <string name="noConferenceDescription">इस कॉन्फ़्रेंस के लिए कोई विवरण नहीं है</string>
+    <string name="conferenceListError">आपकी कॉन्फ़्रेंस को लोड करने में त्रुटि हुई</string>
+    <string name="conferenceConcludedDateAtTime">%s को %s पर समाप्त किया गया</string>
+    <string name="conferenceStartedDateAtTime">%s को %s पर शुरू किया गया</string>
+    <string name="notStarted">शुरू नहीं किया गया</string>
+    <string name="inProgress">प्रगति में</string>
+    <string name="join">जॉइन करें</string>
+    <string name="newConferences">नई कॉन्फ़्रेंस</string>
+    <string name="concludedConferences">समाप्त कॉन्फ़्रेंस</string>
+    <string name="conferenceDetails">कॉन्फ़्रेंस विवरण</string>
+    <string name="recordings">रिकॉर्डिंग</string>
+    <string name="conferenceInProgress">कॉन्फ़्रेंस प्रगति में</string>
+
+    <string name="a11y_criterion_content_description">मानदंड रेटिंग %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">अधिक जानकारी</string>
+    <string name="a11y_create_file_folder_visible">फ़ाइल और फ़ोल्डर बनाएं बटन दृश्यमान</string>
+    <string name="a11y_create_file_folder_gone">फ़ाइल और फ़ोल्डर बनाएं बटन अदृश्य</string>
+    <string name="unselect_all">सभी अचयनित करें</string>
+    <string name="select_all">सभी चुनें</string>
+    <string name="all_courses">सभी पाठ्यक्रम</string>
+    <string name="all_groups">सभी ग्रुप्स</string>
+    <string name="edit_dashboard_course_description">डैशबोर्ड के लिए पाठ्यक्रम चुनें या पाठ्यक्रम विवरण पर नेविगेट करें।</string>
+    <string name="edit_dashboard_group_description">डैशबोर्ड के लिए ग्रुप्स चुनें या पाठ्यक्रम विवरण पर नेविगेट करें।</string>
+    <string name="current_enrollments">वर्तमान नामांकन</string>
+    <string name="past_enrollments">अतीत के नामांकन</string>
+    <string name="future_enrollments">आगामी नामांकन</string>
+    <string name="added_to_dashboard">डैशबोर्ड में जोड़ा गया</string>
+    <string name="removed_from_dashboard">डैशबोर्ड से निकाल दिया गया</string>
+    <string name="all_added_to_dashboard">सभी को डैशबोर्ड में जोड़ा गया</string>
+    <string name="all_removed_from_dashboard">सभी को डैशबोर्ड से निकाल दिया गया</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">निष्क्रिय पाठ्यक्रम डैशबोर्ड में नहीं जोड़े जा सके।</string>
+    <string name="edit_dashboard">डैशबोर्ड संपादित करें</string>
+    <string name="edit_dashboard_empty_title">यहां कोई पाठ्यक्रम नहीं है</string>
+    <string name="edit_dashboard_empty_message">इसे डैशबोर्ड में जोड़ने के लिए आपको पाठ्यक्रम में नामांकित होना होगा।</string>
+    <string name="a11y_content_description_remove_from_dashboard">डैशबोर्ड से निकालें</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">सभी को डैशबोर्ड से निकालें</string>
+    <string name="a11y_content_description_add_to_dashboard">डैशबोर्ड में जोड़ें</string>
+    <string name="a11y_content_description_add_all_to_dashboard">सभी को डैशबोर्ड में जोड़ें</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">खाता</string>
+    <string name="dashboardTabHomeroom">होमरूम</string>
+    <string name="dashboardTabSchedule">शेड्यूल</string>
+    <string name="dashboardTabGrades">ग्रेड</string>
+    <string name="dashboardTabResources">संसाधन</string>
+    <string name="homeroomWelcomeMessage">आपका स्वागत है, %1$s!</string>
+    <string name="homeroomMySubjects">मेरे विषय</string>
+    <string name="viewPreviousAnnouncements">पिछली घोषणाएं देखें</string>
+    <string name="homeroomError">होमरूम लोड करने में विफल</string>
+    <string name="homeroomRefreshFail">होमरूम रीफ़्रेश करने में विफल</string>
+    <string name="nothingDueToday">आज कुछ नियत नहीं है</string>
+    <string name="dueToday">%1$s आज नियत है</string>
+    <string name="missing">%1$s लापता</string>
+    <string name="homeroomEmptyTitle">आपका स्वागत है!</string>
+    <string name="homeroomEmptyMessage">आपके विषय यहां दिखते हैं।</string>
+    <string name="homeroomNoSubjects">आपके पास वर्तमान में कोई विषय नहीं है।</string>
+    <string name="settingsElementaryViewSubtitle">ऐप पुनः आरंभ करने की आवश्यकता है</string>
+    <string name="gradesSelect">चयन करें</string>
+    <string name="selectGradingPeriod">ग्रेडिंग अवधि चुनें</string>
+    <string name="currentGradingPeriod">वर्तमान ग्रेडिंग अवधि</string>
+    <string name="failedToLoadGrades">ग्रेड लोड करने में विफल</string>
+    <string name="failedToLoadGradesForGradingPeriod">ग्रेडिंग अवधि के लिए ग्रेड लोड करने में विफल</string>
+    <string name="failedToRefreshGrades">ग्रेड रीफ़्रेश करने में विफल</string>
+    <string name="noGradesToDisplay">दिखाने के लिए कोई ग्रेड नहीं</string>
+    <string name="notGraded">ग्रेड नहीं किया गया</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">ग्रेडिंग अवधि बदलें</string>
+    <string name="a11y_gradesNotAvailableContentDescription">ग्रेड उपलब्ध नहीं है</string>
+    <string name="bottomBarHomeroom">होमरूम</string>
+    <string name="settingsHomeroomView">होमरूम व्यू</string>
+    <string name="importantLinksTitle">महत्वपूर्ण लिंक</string>
+    <string name="studentApplications">छात्र ऐप्लिकेशन</string>
+    <string name="staffContactInfo">स्टाफ़ संपर्क जानकारी</string>
+    <string name="chooseACourse">पाठ्यक्रम चुनें</string>
+    <string name="webViewImportantLinksTitle">महत्वपूर्ण लिंक</string>
+    <string name="staffRoleTeacher">शिक्षक</string>
+    <string name="staffRoleTeacherAssistant">शिक्षण सहायक</string>
+    <string name="resourcesEmptyMessage">आपके संसाधन यहां दिखाई देते हैं।</string>
+    <string name="failedToLoadResources">संसाधन लोड करने में विफल</string>
+    <string name="failedToRefreshResources">संसाधन रीफ़्रेश करने में विफल</string>
+
+    <string name="open_alternate_view">अधिक पहुंच योग्य वैकल्पिक दृश्य खोलें</string>
+
+    <string name="a11y_content_description_message_recipients">प्राप्तकर्ता</string>
+    <string name="a11y_content_description_inbox_subject">विषय</string>
+    <string name="a11y_content_description_inbox_course_spinner">%s पाठ्यक्रम का चयन करें</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">इस छात्र की प्रतिक्रियाएं छिपी हुई हैं, क्योंकि यह असाइनमेंट अनाम है।</string>
+
+    <string name="schedule_marked_as_done">आपने इसे हो गया के रूप में चिह्नित किया है।</string>
+    <string name="error_saving_assignment_closed_grading_period">बंद ग्रेडिंग अवधि में नियत होने पर नियत तिथि को नहीं बदला जा सकता।</string>
+    <string name="a11y_content_description_schedule_jump_to_today">सीधे आज पर जाएं</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">संदेश भेजें</string>
+
+    <string name="somethingWentWrong">कुछ गड़बड़ हुई</string>
+    <string name="failedToLoadQuiz">प्रश्नोत्तरी लोड करने में विफल</string>
+    <string name="failedToLoadSubmission">सबमिशन लोड करने में विफल</string>
+    <string name="studentAnnotationToolbarTitle">छात्र एनोटेशन</string>
+    <string name="submissionTypeStudentAnnotation">छात्र एनोटेशन</string>
+    <string name="gradesNoDueDate">कोई नियत तिथि नहीं</string>
+    <string name="importantDatesNoDueDate">कोई नियत तिथि नहीं</string>
+    <string name="missingAssignment">लापता</string>
+    <string name="dontSave">सहेजें नहीं</string>
+    <string name="textSubmissionExitConfirmationTitle">मसौदा सहेजना है?</string>
+    <string name="textSubmissionExitConfirmationMessage">अन्यथा आपके परिवर्तन सहेजे नहीं जाएंगे</string>
+    <string name="submissionDraftAvailableSubtitle">जारी रखने के लिए यहां टैप करें</string>
+    <string name="submissionDraftAvailableTitle">मसौदा उपलब्ध है</string>
+    <string name="errorLoadingSubmission">सबमिशन लोड करते समय त्रुटि उत्पन्न हुई</string>
+    <string name="loadFullContent">पूर्ण सामग्री देखने के लिए टैप करें</string>
+    <string name="openLtiInExternalApp">बाहरी ऐप में खोलने के लिए टैप करें</string>
+    <string name="dashboardTabImportantDates">महत्वपूर्ण तिथियां</string>
+    <string name="importantDatesEmptyTitle">कोई महत्वपूर्ण तिथि नहीं</string>
+    <string name="important_dates">महत्वपूर्ण तिथियां</string>
+
+    <string name="toolbarCommentLibrary">टिप्पणी लाइब्रेरी</string>
+    <string name="commentLibraryNoSuggestions">कोई सुझाव उपलब्ध नहीं है</string>
+    <string name="speedGraderCommentHint">टिप्पणी</string>
+    <string name="a11y_schedule_marked_as_done">%s को हो गया के रूप में चिह्नित किया गया</string>
+    <string name="a11y_error_occured">त्रुटि उत्पन्न हुई, कृपया फिर से कोशिश करें।</string>
+    <string name="a11y_content_description_accept_invite">आमंत्रण स्वीकार करें</string>
+    <string name="a11y_content_description_decline_invite">आमंत्रण अस्वीकार करें</string>
+    <string name="no_notifications_to_show">दिखाने के लिए कोई सूचना नहीं</string>
+
+    <string name="documentScanningTitle">दस्तावेज़ स्कैन करना</string>
+    <string name="filter_name_color">रंग</string>
+    <string name="filter_name_grayscale">ग्रेस्केल</string>
+    <string name="filter_name_monochrome">मोनोक्रोम</string>
+    <string name="filter_name_original">मूल</string>
+    <string name="noCompatibleAppInstalled">आपकी डिवाइस में कोई भी ऐप्लिकेशन इंस्टॉल नहीं है जो इस लिंक को खोल सके।</string>
+
+    <string name="anonymousDiscussionNotSupported">अज्ञात चर्चाएं वर्तमान में मोबाइल पर समर्थित नहीं हैं। चर्चा देखने के लिए ब्राउज़र में खोलें।</string>
+    <string name="discussionOpenInBrowser">ब्राउज़र में खोलें</string>
+
+    <string name="dashboardSwitchToListView">सूची दृश्य पर स्विच करें</string>
+    <string name="dashboardSwitchToGridView">ग्रिड दृश्य पर स्विच करें</string>
+
+    <string name="selectAppTheme">ऐप थीम चुनें</string>
+    <string name="appThemeSettingsTitle">ऐप थीम</string>
+    <string name="appThemeLight">हल्का</string>
+    <string name="appThemeDark">गहरा</string>
+    <string name="appThemeSystem">डिवाइस के समान</string>
+
+    <string name="themeSelectorTitle">Canvas अब डार्क थीम में उपलब्ध है</string>
+    <string name="themeSelectorDescription">ऐप थीम चुनें</string>
+    <string name="themeSelectorLightTheme">हल्का थीम</string>
+    <string name="themeSelectorDarkTheme">गहरा थीम</string>
+    <string name="themeSelectorDeviceTheme">डिवाइस थीम के समान</string>
+    <string name="themeSelectorSave">सहेजें</string>
+    <string name="themeSelectorChangeLater">आप इसे बाद में ऐप सेटिंग्स में बदल सकते हैं</string>
+
+    <string name="grabAnnotationTool">पकड़ें</string>
+    <string name="fileUpload">फ़ाइल अपलोड करें</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s अपठित संदेश</item>
+        <item quantity="other">%s अपठित संदेश</item>
+    </plurals>
+
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s अपठित सूचना</item>
+        <item quantity="other">%s अपठित सूचनाएं</item>
+    </plurals>
+
+    <string name="noAnnotationSelected">कोई एनोटेशन चयनित नहीं</string>
+
+    <string name="emailNotifications">ईमेल सूचनाएं</string>
+    <string name="emailNotificationsImmediately">तुरंत</string>
+    <string name="emailNotificationsDaily">प्रतिदिन</string>
+    <string name="emailNotificationsWeekly">साप्ताहिक</string>
+    <string name="emailNotificationsNever">कभी नहीं</string>
+    <string name="selectFrequency">आवृत्ति का चयन करें</string>
+    <string name="a11y_closeProgress">प्रगति डायलॉग बंद करें</string>
+    <string name="fileUploadProgress">%2$s में से %1$s</string>
+    <string name="fileUploadProgressSubtitle">फ़ाइलों पर अपलोड किया जा रहा है</string>
+    <string name="fileUploadFailedSubtitle">एक या अधिक फ़ाइलें अपलोड होने में विफल। अपना इंटरनेट कनेक्शन जांचें और सबमिट करने का पुनः प्रयास करें।</string>
+    <string name="submissionProgressSubtitle">\"%s\" पर सबमिशन अपलोड किया जा रहा है</string>
+
+    <string name="dashboardNotificationUploadingSubmissionTitle">सबमिशन अपलोड किया जा रहा है</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">सबमिशन सफल हुआ</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">सबमिशन विफल रहा</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">फ़ाइल अपलोड की जा रही है</item>
+        <item quantity="other">फ़ाइलें अपलोड की जा रही हैं</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">फ़ाइल अपलोड करना सफल रहा</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">फ़ाइल अपलोड करना विफल रहा</string>
+    <string name="cancelSubmissionDialogTitle">सबमिशन रद्द करें</string>
+    <string name="cancelSubmissionDialogMessage">इस तरह से आपका सबमिशन मिट जाएगा।</string>
+    <string name="fileUploadError">फ़ाइल अपलोड करना विफल रहा</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">%s के लिए Canvas पर अपलोड करें।</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">मेरी फ़ाइलों पर अपलोड करें</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">असाइनमेंट सबमिट करें</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">पाठ्यक्रम चुनें</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">कोई पाठ्यक्रम चुनें, चयनित पाठ्यक्रम इस प्रकार से है: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">कोई असाइनमेंट चुनें</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">कोई असाइनमेंट चुनें, चयनित असाइनमेंट इस प्रकार से है: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">अपलोड रद्द करें?</string>
+    <string name="cancelFileUploadMessage">इस तरह से आपका अपलोड रद्द हो जाएगा।</string>
+    <string name="menuTitleFilterAssignments">असाइनमेंट फ़िल्टर करें</string>
+    <string name="filterAssignmentDialogTitle">असाइनमेंट फ़िल्टर करें</string>
+    <string name="filterAssignmentsDialogCancel">रद्द करें</string>
+    <string name="filterAssignmentAll">सभी</string>
+    <string name="filterAssignmentLate">विलंब</string>
+    <string name="filterAssignmentMissing">लापता</string>
+    <string name="filterAssignmentGraded">ग्रेड किए गए</string>
+    <string name="filterAssignmentUpcoming">आगामी</string>
+    <string name="createdByStudentView">छात्र दृश्य द्वारा बनाया गया</string>
+    <string name="discussionErrorToast">त्रुटि उत्पन्न हुई। हो सकता है कि विषय अब उपलब्ध न हो।</string>
+    <string name="cameraPermissionPermanentlyDenied">कैमरे की अनुमति स्थायी रूप से अस्वीकार कर दी गई थी। इसे अनुमति देने के लिए ऐप सेटिंग्स पर जाएं।</string>
+    <string name="unpublish_assignment_error">यदि छात्र सबमिशन हैं, तो असाइनमेंट को अप्रकाशित नहीं किया जा सकता।</string>
+    <string name="subscribeToCalendar">कैलेंडर फ़ीड की सदस्यता लें</string>
+    <string name="subscribeToCalendarMessage">आप इस डायलॉग में सदस्यता लें बटन पर क्लिक करके अपने Canvas कैलेंडर को अपने Google कैलेंडर खाते से सिंक कर सकते हैं। फिर, आपको अपनी डिवाइस पर Google कैलेंडर ऐप पर जाना होगा और नए कैलेंडर के लिए सेटिंग्स में सिंक सक्षम करना होगा।</string>
+    <string name="subscribeButton">सदस्यता लें</string>
+    <string name="switchToLightMode">लाइट मोड पर स्विच करें</string>
+    <string name="switchToDarkMode">डार्क मोड पर स्विच करें</string>
+    <string name="acceptableUsePolicyDescription">या तो आप नए उपयोगकर्ता हैं या स्वीकार्य उपयोग नीति तब से बदल गई है जब आप पिछली बार इसके लिए सहमत हुए थे। जारी रखने से पहले कृपया स्वीकार्य उपयोग नीति से सहमत हों।</string>
+    <string name="acceptableUsePolicyTitle">स्वीकार्य उपयोग नीति</string>
+    <string name="acceptableUsePolicyButton">स्वीकार्य उपयोग नीति</string>
+    <string name="acceptableUsePolicyAgree">मैं स्वीकार्य उपयोग नीति से सहमत हूं।</string>
+    <string name="acceptableUsePolicySubmit">सबमिट करें</string>
+    <string name="acceptFail">शर्तों की स्वीकृति सबमिट करने में विफल।</string>
+
+    <string name="attempt">प्रयास %d</string>
+    <string name="quizQuestions">प्रश्न: %d</string>
+    <string name="quizTimeLimit">समय सीमा: %s</string>
+    <string name="allowedAttempts">अनुमत प्रयास: %s</string>
+    <string name="usedAttempts">उपयोग किए गए प्रयास: %d</string>
+    <string name="generalUnexpectedError">एक अप्रत्याशित त्रुटि हुई।</string>
+
+    <string name="deleteSelected">मिटाएं</string>
+    <string name="archiveSelected">संग्रहीत करें</string>
+    <string name="unarchiveSelected">असंग्रहीत करें</string>
+    <string name="markAsReadSelected">पठित के रूप में चिह्नित करें</string>
+    <string name="markAsUnreadSelected">अपठित के रूप में चिह्नित करें</string>
+    <string name="starSelected">तारांकित करें</string>
+    <string name="unstarSelected">अतारांकित करें</string>
+
+    <string name="inboxOperationFailed">ऑपरेशन करने में विफल</string>
+    <string name="inboxDeletedConfirmation">%s मिटाया गया</string>
+    <string name="inboxArchivedConfirmation">%s संग्रहीत किया गया</string>
+    <string name="inboxUnarchivedConfirmation">%s असंग्रहीत किया गया</string>
+    <string name="inboxMarkAsReadConfirmation">%s को पठित के रूप में चिह्नित किया गया</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s को अपठित के रूप में चिह्नित किया गया</string>
+    <string name="inboxStarredConfirmation">%s को तारांकित किया गया</string>
+    <string name="inboxUnstarredConfirmation">%s को अतारांकित किया गया</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">यह बातचीत आपकी सभी डिवाइसों पर मौजूद इनबॉक्स से मिटा दी जाएगी। इस कार्यवाही को पूर्ववत नहीं किया जा सकता।</item>
+        <item quantity="other">ये बातचीत आपकी सभी डिवाइसों पर मौजूद इनबॉक्स से मिटा दी जाएंगी। इस कार्यवाही को पूर्ववत नहीं किया जा सकता।</item>
+    </plurals>
+    <string name="failedToLoadNextPage">अगला पेज लोड करने में विफल। अपना इंटरनेट कनेक्शन जांचें।</string>
+    <string name="conversationsRefreshFailed">बातचीत रीफ़्रेश करने में विफल अपना इंटरनेट कनेक्शन जांचें।</string>
+    <string name="inboxScopeInbox">इनबॉक्स</string>
+    <string name="inboxContextSelectorTitle">कोई पाठ्यक्रम या ग्रुप चुनें</string>
+    <string name="inboxClearFilter">साफ़ करें</string>
+    <string name="a11y_courseFilterContentDescription">पाठ्यक्रम फ़िल्टर: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">चयन करें</string>
+    <string name="a11y_itemSelectedSwipeForActions">बातचीत चयनित। चयन मोड सक्रिय किया गया। कार्रवाइयों के लिए नेविगेट करें।</string>
+    <string name="a11y_conversationSelected">बातचीत चयनित</string>
+    <string name="a11y_conversationDeselected">बातचीत अचयनित</string>
+    <string name="a11y_exitSelectionMode">चयन मोड से बाहर निकलें</string>
+    <string name="a11y_selectionModeDeactivated">चयन मोड निष्क्रिय किया गया।</string>
+    <string name="a11y_avatarContentDescription">%s का अवतार</string>
+    <string name="inboxUndo">पूर्ववत करें</string>
+    <string name="aboutAppTitle">ऐप</string>
+    <string name="aboutDomainTitle">डोमेन</string>
+    <string name="aboutLoginTitle">लॉगिन आईडी</string>
+    <string name="aboutEmailTitle">ईमेल</string>
+    <string name="aboutVersionTitle">संस्करण</string>
+    <string name="assignmentRefreshError">यह असाइनमेंट पुनः लोड करने में समस्या आई थी। कृपया अपने कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+    <string name="instructure_logo">Instructure लोगो</string>
+    <string name="preferences">वरीयताएं</string>
+    <string name="offlineContent">ऑफ़लाइन सामग्री</string>
+    <string name="offlineSyncSettingsTitle">सिंक्रनाइज़ेशन</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">ऑफ़लाइन सामग्री</string>
+    <string name="course_menu_manage_offline_content">ऑफ़लाइन सामग्री प्रबंधित करें</string>
+    <string name="offline_content_storage">भंडारण</string>
+    <string name="offline_content_storage_info">%s में से %s का उपयोग किया गया</string>
+    <string name="offline_content_other">अन्य ऐप्स</string>
+    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_remaining">शेष</string>
+    <string name="offline_content_all_courses">सभी पाठ्यक्रम</string>
+    <string name="offline_content_sync">सिंक करें</string>
+    <string name="offline_content_selected">%d चुना गया</string>
+    <string name="offline_content_select_all">सभी चुनें</string>
+    <string name="offline_content_deselect_all">सभी अचयनित करें</string>
+    <string name="offline_content_loading_error">सामग्री लोड करते समय त्रुटि उत्पन्न हुई।</string>
+    <string name="offline_content_empty_title">कोई पाठ्यक्रम नहीं</string>
+    <string name="offline_content_empty_message">आपके पाठ्यक्रम यहां सूचीबद्ध किए जाएंगे, और फिर आप उन्हें ऑफ़लाइन उपयोग के लिए उपलब्ध करा सकते हैं।</string>
+    <string name="offline_content_empty_course_title">कोई पाठ्यक्रम सामग्री नहीं</string>
+    <string name="offline_content_empty_course_message">पाठ्यक्रम सामग्री यहां सूचीबद्ध की जाएगी, और फिर आप उन्हें ऑफ़लाइन उपयोग के लिए उपलब्ध करा सकते हैं।</string>
+    <string name="offline_content_discard_dialog_title">बदलाव खारिज करें?</string>
+    <string name="offline_content_discard_dialog_message">यदि आप खारिज करते हैं, तो बदलाव सहेजे नहीं जाएंगे।</string>
+    <string name="offline_content_discard_dialog_positive">खारिज करें</string>
+    <string name="offline_content_sync_dialog_title">ऑफ़लाइन सामग्री सिंक करें?</string>
+    <string name="offline_content_sync_dialog_message">इस तरह से ~%s सामग्री सिंक हो जाएगी। यदि आप वाई-फ़ाई नेटवर्क से कनेक्ट नहीं हैं, तो इसके परिणामस्वरूप आपका डेटा प्रदाता आपसे अतिरिक्त शुल्क ले सकता है।</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">इस तरह से ~%s सामग्री केवल तभी सिंक होगी जब आप वाई-फ़ाई नेटवर्क से कनेक्ट होंगे।</string>
+    <string name="offline_content_sync_dialog_positive">सिंक करें</string>
+    <string name="offline_content_sync_loading_title">लोड किया जा रहा है...</string>
+    <string name="offline_content_sync_loading_message">थोड़ा इंतज़ार करें, हम आपके लिए चीज़ें तैयार कर रहे हैं।</string>
+    <string name="content_description_expand_content">सामग्री बढ़ाएं</string>
+    <string name="content_description_collapse_content">सामग्री संक्षिप्त करें</string>
+    <string name="syncSettings_autoContentSyncDescription">ऑटो कंटेंट सिंक को सक्षम करने से नीचे दी गई सेटिंग्स के आधार पर चयनित सामग्री डाउनलोड की जाएगी। ऐप्लिकेशन के नहीं चलने पर भी सामग्री का सिंक्रनाइज़ेशन किया जाएगा। सेटिंग के बंद किए जाने पर कोई सिंक्रनाइज़ेशन नहीं होगा। पहले से डाउनलोड की गई सामग्री को मिटाया नहीं जाएगा।</string>
+    <string name="syncSettings_syncFrequencyTitle">सिंक आवृत्ति</string>
+    <string name="syncSettings_autoContentSyncTitle">ऑटो कॉन्टेंट सिंक</string>
+    <string name="syncSettings_syncFrequencyDescription">सामग्री सिंक्रनाइज़ेशन की पुनरावृत्ति निर्दिष्ट करें। सिस्टम यहां निर्दिष्ट आवृत्ति के आधार पर चयनित सामग्री डाउनलोड करेगा।</string>
+    <string name="syncSettings_wifiOnlyTitle">सामग्री को केवल वाई-फ़ाई पर सिंक करें</string>
+    <string name="syncSettings_wifiOnlyDescription">यदि यह सेटिंग सक्षम है तो सामग्री सिंक्रनाइज़ेशन केवल तभी होगा जब डिवाइस वाई-फ़ाई नेटवर्क से कनेक्ट होगा, अन्यथा उसे वाई-फ़ाई नेटवर्क उपलब्ध होने तक स्थगित कर दिया जाएगा।</string>
+    <string name="syncSettings_toolbarTitle">सिंक्रनाइज़ेशन</string>
+    <string name="daily">प्रतिदिन</string>
+    <string name="weekly">साप्ताहिक</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">सिंक आवृत्ति</string>
+    <string name="syncSettings_wifiConfirmationTitle">केवल वाई-फ़ाई पर सामग्री सिंक करना बंद करें?</string>
+    <string name="synySettings_wifiConfirmationMessage">यदि यह सेटिंग सक्षम है तो सामग्री सिंक्रनाइज़ेशन केवल तभी होगा जब डिवाइस वाई-फ़ाई नेटवर्क से कनेक्ट होगा, अन्यथा उसे वाई-फ़ाई नेटवर्क उपलब्ध होने तक स्थगित कर दिया जाएगा।</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">बंद करें</string>
+    <string name="syncSettings_manualDescription">मैन्युअल</string>
+    <string name="offlineModeSnackbar">ऑफ़लाइन मोड</string>
+    <string name="notAvailableOfflineScreenTitle">ऑफ़लाइन उपलब्ध नहीं है</string>
+    <string name="notAvailableOfflineDescription">यह सामग्री ऑफ़लाइन मोड में उपलब्ध नहीं है।</string>
+    <string name="notAvailableOfflineDescriptionForTabs">यह सामग्री ऑफ़लाइन मोड में उपलब्ध नहीं है। यदि आप अपनी सेटिंग्स बदलना चाहते हैं, तो नेटवर्क उपलब्ध होने पर डैशबोर्ड से ऑफ़लाइन सामग्री स्क्रीन खोलें।</string>
+    <string name="offline">ऑफ़लाइन</string>
+    <string name="syncProgress_syncFailed">सिंक नहीं हो सका</string>
+    <string name="syncProgress_downloadProgress">%2$s में से %1$s को डाउनलोड किया जा रहा है</string>
+    <string name="syncProgress_syncQueued">कतारबद्ध</string>
+    <string name="syncProgress_offlineContentSyncCompleted">ऑफ़लाइन सामग्री सिंक करना पूरा हुआ</string>
+    <string name="syncProgress_offlineContentSyncFailed">ऑफ़लाइन सामग्री सिंक नहीं हो सकी</string>
+    <string name="syncProgress_cancelConfirmationTitle">सिंक रद्द करें?</string>
+    <string name="syncProgress_cancelConfirmationMessage">इस तरह से ऑफ़लाइन सिंक रुक जाएगा। आप इसे बाद में दोबारा कर सकते हैं।</string>
+    <string name="syncProgress_syncErrorSubtitle">एक या अधिक आइटमें सिंक होने में विफल रहीं। कृपया अपने इंटरनेट कनेक्शन की जांच करें और फिर से सिंक करने की कोशिश करें।</string>
+    <string name="syncProgress_downloadStarting">डाउनलोड शुरू हो रहा है</string>
+    <string name="coursesCannotBeFavoritedOffline">पाठ्यक्रमों को ऑफ़लाइन रहते हुए पसंदीदा में नहीं जोड़ा जा सकता।</string>
+    <string name="allCoursesScreenHeader">सभी पाठ्यक्रम</string>
+    <string name="allCoursesCourseHeader">पाठ्यक्रम</string>
+    <string name="allCoursesGroupHeader">ग्रुप्स</string>
+    <string name="dashboardAllCoursesButton">सभी पाठ्यक्रम</string>
+    <string name="allCoursesOfflineNote">डैशबोर्ड के लिए पाठ्यक्रमों का चयन केवल ऑनलाइन ही किया जा सकता है। ऑफ़लाइन रहते हुए पाठ्यक्रमों को पसंदीदा में नहीं जोड़ा जा सकता।</string>
+    <string name="allCoursesOfflineNoteTitle">ध्यान दें</string>
+    <string name="syncProgress_downloadSuccess">काम सफल हुआ! %2$s में से %1$s को डाउनलोड किया गया</string>
+    <string name="syncProgress_syncingOfflineContent">ऑफ़लाइन सामग्री को सिंक किया जा रहा है</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">सूचना खारिज करें</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">%d पाठ्यक्रम सिंक हो रहा है।</item>
+        <item quantity="other">%d पाठ्यक्रम सिंक हो रहे हैं।</item>
+    </plurals>
+    <string name="assignmentNoLongerAvailable">यह असाइनमेंट अब उपलब्ध नहीं है।</string>
+    <string name="editDashboardOfflineMode">आप ऑफ़लाइन हैं</string>
+    <string name="editDashboardOfflineModeMessage">फ़िलहाल आपके पास कोई भी ऐसा पाठ्यक्रम नहीं है, जो ऑफ़लाइन उपलब्ध हो।</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">ऑफ़लाइन सामग्री सिंक करना सफल हुआ</string>
+    <string name="offlineContentSyncFailureNotificationTitle">ऑफ़लाइन सामग्री सिंक नहीं हो सकी</string>
+    <string name="notificationChannelNameSyncUpdates">ऑफ़लाइन सिंक अपडेट</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">ऑफ़लाइन सिंक अपडेट के लिए Canvas सूचनाएं।</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="one">%d पाठ्यक्रम सिंक कर दिया गया है।</item>
+        <item quantity="other">%d पाठ्यक्रम सिंक कर दिए गए हैं।</item>
+    </plurals>
+    <string name="syncProgressAdditionalCourseContent">अतिरिक्त पाठ्यक्रम सामग्री</string>
+    <string name="failedToUpdateDashboardOrder">डैशबोर्ड कार्ड ऑर्डर अपडेट करने में विफल</string>
+    <string name="publishAllModulesAndItems">सभी मॉड्यूल और आइटमें प्रकाशित करें</string>
+    <string name="publishModulesOnly">केवल मॉड्यूल प्रकाशित करें</string>
+    <string name="unpublishAllModulesAndItems">सभी मॉड्यूल और आइटमें अप्रकाशित करें</string>
+    <string name="moduleOptions">मॉड्यूल विकल्प</string>
+    <string name="publishModuleAndItems">मॉड्यूल और सभी आइटमें प्रकाशित करें</string>
+    <string name="publishModuleOnly">केवल मॉड्यूल प्रकाशित करें</string>
+    <string name="unpublishModuleAndItems">मॉड्यूल और सभी आइटमें अप्रकाशित करें</string>
+    <string name="a11y_contentDescription_moduleOptions">%sके लिए मॉड्यूल विकल्प</string>
+    <string name="a11y_contentDescription_moduleItemOptions">%s के लिए मॉड्यूल आइटम विकल्प</string>
+    <string name="publishModuleItem">मॉड्यूल प्रकाशित करें</string>
+    <string name="unpublishModuleItem">मॉड्यूल आइटम अप्रकाशित करें</string>
+    <string name="publishDialogTitle">प्रकाशित करें?</string>
+    <string name="publishModuleDialogMessage">इस तरह से छात्रों को केवल मॉड्यूल ही दिखाई देगा।</string>
+    <string name="publishModuleAndItemsDialogMessage">इस तरह से मॉड्यूल और सभी आइटमें छात्रों को दिखाई देंगे।</string>
+    <string name="unpublishDialogTitle">अप्रकाशित करें?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">इस तरह से मॉड्यूल और सभी आइटमें छात्रों को नहीं दिखाई देंगे।</string>
+    <string name="publishModuleItemDialogMessage">इस तरह से छात्रों को केवल यह आइटम ही दिखाई देगी।</string>
+    <string name="unpublishModuleItemDialogMessage">इस तरह से छात्रों को केवल यह आइटम ही दिखाई नहीं देगी।</string>
+    <string name="publishModulesAndItemsDialogMessage">इस तरह से सभी मॉड्यूल और आइटमें छात्रों को दिखाई देंगे।</string>
+    <string name="publishModulesDialogMessage">इस तरह से छात्रों को केवल मॉड्यूल ही दिखाई देंगे।</string>
+    <string name="unpublishModulesAndItemsDialogMessage">इस तरह से सभी मॉड्यूल और आइटमें छात्रों को नहीं दिखाई देंगे।</string>
+    <string name="only_available_with_link">केवल लिंक के साथ उपलब्ध है</string>
+    <string name="schedule_availability">शेड्यूल उपलब्धता</string>
+    <string name="moduleItemPublished">आइटम प्रकाशित की गई</string>
+    <string name="moduleItemUnpublished">आइटम अप्रकाशित की गई</string>
+    <string name="onlyModulePublished">केवल मॉड्यूल प्रकाशित</string>
+    <string name="moduleAndAllItemsPublished">मॉड्यूल और सभी आइटमें प्रकाशित किए गए</string>
+    <string name="moduleAndAllItemsUnpublished">मॉड्यूल और सभी आइटमें अप्रकाशित किए गए</string>
+    <string name="onlyModulesPublished">केवल मॉड्यूल प्रकाशित</string>
+    <string name="allModulesAndAllItemsPublished">सभी मॉड्यूल और सभी आइटमें प्रकाशित किए गए</string>
+    <string name="allModulesAndAllItemsUnpublished">सभी मॉड्यूल और सभी आइटमें अप्रकाशित किए गए</string>
+    <string name="inherit_from_course">पाठ्यक्रम से विरासत में पाएं</string>
+    <string name="course_members">पाठ्यक्रम सदस्य</string>
+    <string name="institution_members">संस्थान सदस्य</string>
+    <string name="public_title">सार्वजनिक</string>
+    <string name="edit_permissions">अनुमतियां संपादित करें</string>
+    <string name="update">अपडेट करें</string>
+    <string name="availability_title">उपलब्धता</string>
+    <string name="visibility_title">दृश्यता</string>
+    <string name="available_from">इस तिथि से उपलब्ध:</string>
+    <string name="available_until">इस तिथि तक उपलब्ध:</string>
+    <string name="from">से</string>
+    <string name="until">इस समय तक:</string>
+    <string name="date">तिथि</string>
+    <string name="time">समय</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">से तिथि साफ़ करें</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">तक तिथि साफ़ करें</string>
+    <string name="progressMessage">इस प्रक्रिया में कुछ मिनट लग सकते हैं। आप इस प्रक्रिया के दौरान मोडल को बंद कर सकते हैं या पेज से दूर नेविगेट कर सकते हैं।</string>
+    <string name="noteTitle">ध्यान दें</string>
+    <string name="allModules">सभी मॉड्यूल्स</string>
+    <string name="allModulesAndItems">सभी मॉड्यूल और आइटमें</string>
+    <string name="selectedModulesAndItems">चयनित मॉड्यूल और आइटमें</string>
+    <string name="selectedModules">चयनित मॉड्यूल</string>
+    <string name="publishing">प्रकाशित किया जा रहा है</string>
+    <string name="unpublishing">अप्रकाशित किया जा रहा है</string>
+    <string name="moduleBulkUpdateNote">जो मॉड्यूल और आइटम पहले ही संसाधित हो चुके हैं, प्रक्रिया बंद होने पर अपनी पूर्वस्थिति में वापस नहीं आएंगे।</string>
+    <string name="success">काम सफल हुआ!</string>
+    <string name="updateFailed">अपडेट करना विफल हुआ</string>
+    <string name="updateCancelled">अपडेट रद्द हुआ</string>
+    <string name="a11y_hidden">छिपा हुआ</string>
+    <string name="a11y_scheduled">शेड्यूल किया गया</string>
+    <string name="a11y_published">प्रकाशित</string>
+    <string name="a11y_unpublished">अप्रकाशित</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f पॉइंट</item>
+        <item quantity="other">%.0f पॉइंट्स</item>
+    </plurals>
+    <string name="publishModuleItemAction">प्रकाशित करें</string>
+    <string name="unpublishModuleItemAction">अप्रकाशित करें</string>
+    <string name="publishDialogPositiveButton">प्रकाशित करें</string>
+    <string name="unpublishDialogPositiveButton">अप्रकाशित करें</string>
+    <string name="discussionMenuRefresh">रीफ़्रेश करें</string>
+</resources>

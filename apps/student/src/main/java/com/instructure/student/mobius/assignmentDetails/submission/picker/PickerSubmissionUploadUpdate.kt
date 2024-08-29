@@ -46,8 +46,9 @@ class PickerSubmissionUploadUpdate :
         }
         is PickerSubmissionUploadEvent.OnFileRemoved -> {
             val files = model.files.toMutableList()
+            val tempFilePath = files[event.fileIndex].fullPath
             files.removeAt(event.fileIndex)
-            Next.next(model.copy(files = files.toList()))
+            Next.next(model.copy(files = files.toList()), setOf(PickerSubmissionUploadEffect.RemoveTempFile(tempFilePath)))
         }
         is PickerSubmissionUploadEvent.OnFileAdded -> {
             val files = model.files.toMutableList()

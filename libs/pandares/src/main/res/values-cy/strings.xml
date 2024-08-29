@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Cysoni Cynnwys All-lein wedi Methu</string>
     <string name="syncProgress_cancelConfirmationTitle">Canslo Cysoni?</string>
     <string name="syncProgress_cancelConfirmationMessage">Bydd y stopio cysoni cynnwys all-lein. Gallwch chi ei wneud eto yn nes ymlaen.</string>
-    <string name="syncProgress_syncErrorSubtitle">Wedi methu cysoni un neu ragor o ffeiliau. Gwiriwch eich cysylltiad rhyngrwyd a rhoi cynnig arall ar gyflwyno.</string>
+    <string name="syncProgress_syncErrorSubtitle">Wedi methu cysoni un neu ragor o eitemau. Gwiriwch eich cysylltiad rhyngrwyd a rhoi cynnig arall ar gysoni.</string>
     <string name="syncProgress_downloadStarting">Yn dechrau llwytho i lawr</string>
     <string name="coursesCannotBeFavoritedOffline">Does dim modd ychwanegu cyrsiau at ffefrynau all-lein.</string>
     <string name="allCoursesScreenHeader">Pob Cwrs</string>

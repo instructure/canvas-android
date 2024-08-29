@@ -21,6 +21,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -51,6 +52,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Verify that a discussion header shows up properly after discussion creation
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionCreate_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
 
@@ -61,8 +63,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(topicName)
         discussionListPage.selectTopic(topicName)
-        discussionDetailsPage.assertTitleText(topicName)
-        discussionDetailsPage.assertDescriptionText(topicDescription)
+        nativeDiscussionDetailsPage.assertTitleText(topicName)
+        nativeDiscussionDetailsPage.assertDescriptionText(topicDescription)
     }
 
     // Tests the creation of a discussion with an attachment.
@@ -70,6 +72,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // so the attachment is done behind the scenes, after the fact.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionCreate_withAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -101,10 +104,10 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(topicName)
         discussionListPage.selectTopic(topicName)
-        discussionDetailsPage.assertTitleText(topicName)
-        discussionDetailsPage.assertDescriptionText(topicDescription)
-        discussionDetailsPage.assertMainAttachmentDisplayed()
-        discussionDetailsPage.previewAndCheckMainAttachment(
+        nativeDiscussionDetailsPage.assertTitleText(topicName)
+        nativeDiscussionDetailsPage.assertDescriptionText(topicDescription)
+        nativeDiscussionDetailsPage.assertMainAttachmentDisplayed()
+        nativeDiscussionDetailsPage.previewAndCheckMainAttachment(
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "-- Socrates")
         )
@@ -125,6 +128,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests that links to other Canvas content routes properly
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_linksRouteInApp() {
         val data = getToCourse(studentCount = 2, courseCount = 2, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -145,7 +149,7 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicName)
-        discussionDetailsPage.clickLinkInDescription(course2LinkElementId) // Should navigate to course2
+        nativeDiscussionDetailsPage.clickLinkInDescription(course2LinkElementId) // Should navigate to course2
 
         courseBrowserPage.assertTitleCorrect(course2)
     }
@@ -153,6 +157,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Replies automatically get marked as read as the user scrolls through the list
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_postsGetMarkedAsRead() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -180,8 +185,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.assertUnreadCount(topicHeader.title!!, 1)
         discussionListPage.selectTopic(topicHeader.title!!)
         sleep(3000) // let's allow time for the webview to become populated/visible before we scroll to it
-        discussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
-        discussionDetailsPage.waitForUnreadIndicatorToDisappear(discussionEntry)
+        nativeDiscussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
+        nativeDiscussionDetailsPage.waitForUnreadIndicatorToDisappear(discussionEntry)
         Espresso.pressBack() // Back to discussionListPage
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 0)
@@ -192,6 +197,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // NOTE: Very similar to testDiscussionCreate_withAttachment
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_previewAttachment() {
 
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
@@ -222,9 +228,9 @@ class DiscussionsInteractionTest : StudentTest() {
 
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
-        discussionDetailsPage.assertMainAttachmentDisplayed()
-        discussionDetailsPage.previewAndCheckMainAttachment(
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        nativeDiscussionDetailsPage.assertMainAttachmentDisplayed()
+        nativeDiscussionDetailsPage.previewAndCheckMainAttachment(
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "No matter where you go")
         )
@@ -234,6 +240,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests that users can like entries and the correct like count is displayed, if the liking is enabled
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionLikePost_base() {
 
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
@@ -262,19 +269,20 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.selectTopic(topicName)
 
         // Check that favoriting works as expected
-        discussionDetailsPage.assertFavoritingEnabled(discussionEntry)
-        discussionDetailsPage.assertLikeCount(discussionEntry, 0)
-        discussionDetailsPage.clickLikeOnEntry(discussionEntry)
+        nativeDiscussionDetailsPage.assertFavoritingEnabled(discussionEntry)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 0)
+        nativeDiscussionDetailsPage.clickLikeOnEntry(discussionEntry)
         sleep(1000) // Small wait to allow "like" to propagate
-        discussionDetailsPage.assertLikeCount(discussionEntry, 1, refreshesAllowed = 2)
-        discussionDetailsPage.clickLikeOnEntry(discussionEntry)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 1, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.clickLikeOnEntry(discussionEntry)
         sleep(1000) // Small wait to allow "unlike" to propagate
-        discussionDetailsPage.assertLikeCount(discussionEntry, 0)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 0)
     }
 
     // Tests that like count is shown if only graders can like
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionLikes_whenOnlyGradersCanRate() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -305,8 +313,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.selectTopic(topicName)
 
         // Check that ratings show
-        discussionDetailsPage.assertFavoritingDisabled(discussionEntry)
-        discussionDetailsPage.assertLikeCount(discussionEntry, 1)
+        nativeDiscussionDetailsPage.assertFavoritingDisabled(discussionEntry)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 1)
     }
 
     // Tests that discussion entry liking is not available when disabled
@@ -335,12 +343,13 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.assertTopicDisplayed(topicHeader.title!!)
         discussionListPage.selectTopic(topicHeader.title!!)
 
-        discussionDetailsPage.assertFavoritingDisabled(discussionEntry)
+        nativeDiscussionDetailsPage.assertFavoritingDisabled(discussionEntry)
     }
 
     // Test basic discussion view
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionView_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -355,12 +364,13 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(topicHeader.title!!)
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(topicHeader)
     }
 
     // Test that you can reply to a discussion (if enabled)
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionView_replies() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -380,14 +390,15 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertRepliesDisplayed()
+        nativeDiscussionDetailsPage.assertRepliesDisplayed()
 
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(discussionEntry)
     }
 
     // Test that replies are not possible when they are not enabled
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionView_repliesHiddenWhenNotPermitted() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -403,12 +414,13 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertRepliesDisabled()
+        nativeDiscussionDetailsPage.assertRepliesDisabled()
     }
 
     // Test that a reply is displayed properly
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -422,14 +434,14 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
-        discussionDetailsPage.assertRepliesEnabled()
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        nativeDiscussionDetailsPage.assertRepliesEnabled()
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
         val discussionEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(discussionEntry, refreshesAllowed = 2)
     }
 
     // Tests replying with an attachment.
@@ -437,6 +449,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // so we add the attachments programmatically.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_withAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -454,7 +467,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
 
         // Now let's append the attachment after-the-fact, since it is very hard
         // to manually attach anything via Espresso, since it would require manipulating
@@ -480,9 +493,9 @@ class DiscussionsInteractionTest : StudentTest() {
         Espresso.pressBack()
         discussionListPage.selectTopic(topicHeader.title!!)
 
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
-        discussionDetailsPage.assertReplyAttachment(discussionEntry)
-        discussionDetailsPage.previewAndCheckReplyAttachment(
+        nativeDiscussionDetailsPage.assertReplyDisplayed(discussionEntry)
+        nativeDiscussionDetailsPage.assertReplyAttachment(discussionEntry)
+        nativeDiscussionDetailsPage.previewAndCheckReplyAttachment(
             discussionEntry,
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "That's one small step")
@@ -492,6 +505,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests that we can make a threaded reply to a reply
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_threaded() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -509,19 +523,19 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
 
         // Verify that our reply has made it to the screen
         val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
 
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        discussionDetailsPage.replyToReply(replyEntry, replyReplyText)
+        nativeDiscussionDetailsPage.replyToReply(replyEntry, replyReplyText)
 
         // And verify that our reply-to-reply is showing
         val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
-        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyReplyEntry, refreshesAllowed = 2)
     }
 
     // Tests that we can make a threaded reply with an attachment
@@ -529,6 +543,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // so we add the attachments programmatically.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_threadedWithAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -546,15 +561,15 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
 
         // Make sure that the reply is displayed, so that we can reply to it
         val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
 
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        discussionDetailsPage.replyToReply(replyEntry, replyReplyText)
+        nativeDiscussionDetailsPage.replyToReply(replyEntry, replyReplyText)
 
         // And verify that our reply-to-reply is showing
         val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
@@ -580,9 +595,9 @@ class DiscussionsInteractionTest : StudentTest() {
         Espresso.pressBack()
         discussionListPage.selectTopic(topicHeader.title!!)
 
-        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
-        discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
-        discussionDetailsPage.previewAndCheckReplyAttachment(
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
+        nativeDiscussionDetailsPage.assertReplyAttachment(replyReplyEntry)
+        nativeDiscussionDetailsPage.previewAndCheckReplyAttachment(
             replyReplyEntry,
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear")
@@ -593,6 +608,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests a discussion with a linked assignment.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_linkedAssignment() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -628,12 +644,13 @@ class DiscussionsInteractionTest : StudentTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(discussion.title!!)
-        discussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
+        nativeDiscussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
     }
 
     // Tests a discussion with a linked assignment, show possible points if not restricted
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_showPointsIfNotRestricted() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -672,13 +689,14 @@ class DiscussionsInteractionTest : StudentTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(discussion.title!!)
-        discussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
+        nativeDiscussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
     }
 
 
     // Tests a discussion with a linked assignment, hide possible points if restricted
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_hidePointsIfRestricted() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -717,7 +735,7 @@ class DiscussionsInteractionTest : StudentTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(discussion.title!!)
-        discussionDetailsPage.assertPointsPossibleNotDisplayed()
+        nativeDiscussionDetailsPage.assertPointsPossibleNotDisplayed()
     }
 
     //

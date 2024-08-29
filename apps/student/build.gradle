@@ -21,21 +21,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'com.heapanalytics.android'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
-
-sqldelight {
-    StudentDb {
-        packageName = "com.instructure.student.db"
-        sourceFolders = ["db"]
-        schemaOutputDirectory = file("src/main/db/schemas")
-    }
-}
-
 
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
@@ -50,8 +40,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 260
-        versionName = '7.2.0'
+        versionCode = 265
+        versionName = '7.5.2'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -64,6 +54,14 @@ android {
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
 
         testBuildType = "debug"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
     }
 
     bundle {
@@ -87,9 +85,6 @@ android {
 
     lintOptions {
         abortOnError false
-        // Work around for AGP issue related to release mode, see:
-        // https://github.com/flutter/flutter/issues/58247#issuecomment-636253593
-        checkReleaseBuilds false
     }
 
     signingConfigs {
@@ -116,12 +111,10 @@ android {
                 mappingFileUploadEnabled false
             }
 
-            ndk {
-                // Filter for architectures supported by Flutter. Include x86 in debug builds so we don't crash on FTL.
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64', 'x86'
-            }
-
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+
+            buildConfigField "String", "PRONOUN_STUDENT_TEST_USER", "\"$pronounTestStudent\""
+            buildConfigField "String", "PRONOUN_STUDENT_TEST_PASSWORD", "\"$pronounTestStudentPassword\""
 
             ext {
                 heapEnabled = true
@@ -148,11 +141,6 @@ android {
                 nativeSymbolUploadEnabled true
                 strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
-            }
-
-            ndk {
-                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
@@ -226,8 +214,7 @@ android {
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
-                    new LocaleTransformer(project),
-                    new FlutterA11yOffsetTransformer()
+                    new LocaleTransformer(project)
             )
     )
 
@@ -250,6 +237,10 @@ android {
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
     }
+
+    sourceSets {
+        debug.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
 }
 
 dependencies {
@@ -262,12 +253,6 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
     implementation project(path: ':DocumentScanner')
-
-    /* Flutter embed */
-    implementation (project(path: ':flutter-student-embed')) {
-        exclude group: 'com.google.firebase'
-        exclude group: 'com.google.android.gms'
-    }
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')
@@ -322,9 +307,6 @@ dependencies {
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES
-
-    /* Database */
-    implementation Libs.SQLDELIGHT
 
     /* Qr Code */
     implementation (Libs.JOURNEY_ZXING) { transitive = false }

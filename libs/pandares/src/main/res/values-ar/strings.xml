@@ -1577,7 +1577,7 @@
     <string name="syncProgress_offlineContentSyncFailed">تعذرت مزامنة المحتوى دون اتصال</string>
     <string name="syncProgress_cancelConfirmationTitle">هل تريد إلغاء المزامنة؟</string>
     <string name="syncProgress_cancelConfirmationMessage">سيؤدي إلى إيقاف مزامنة المحتوى دون اتصال. يمكنك القيام بهذا مرة أخرى لاحقًا.</string>
-    <string name="syncProgress_syncErrorSubtitle">تعذرت مزامنة ملف واحد أو أكثر. تحقق من اتصالك بالإنترنت وأعد محاولة الإرسال.</string>
+    <string name="syncProgress_syncErrorSubtitle">تعذرت مزامنة عنصر واحد أو أكثر. يرجى التحقق من اتصالك بالإنترنت وإعادة محاولة المزامنة.</string>
     <string name="syncProgress_downloadStarting">جارٍ بدء التنزيل</string>
     <string name="coursesCannotBeFavoritedOffline">لا يمكن إضافة مساقات إلى المفضلة دون اتصال.</string>
     <string name="allCoursesScreenHeader">جميع المساقات</string>

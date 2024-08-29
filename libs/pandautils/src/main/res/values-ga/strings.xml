@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="chooseMedia">Roghnaigh Meáin</string>
+    <string name="takeVideo">Tóg Físeán</string>
+    <string name="noCameraOnDevice">Níl Ceamara Ann</string>
+    <string name="takePhoto">Glac Pictiúr</string>
+    <string name="choosePhotoFromGallery">Roghnaigh Grianghraf Ó Ghailearaí</string>
+
+    <string name="utils_edit">Cuir in eagar</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Ag uaslódáil chuig Canvas</string>
+    <string name="preparingUpload">Uaslódáil a ullmhú</string>
+    <string name="loadingFilesIndeterminate">Ag Lódáil Comhaid&#8230;</string>
+    <string name="fileUploadSuccess">Uaslódáil Rathúil</string>
+    <string name="noNetwork">Níl an gréasán ar fáil - bain triail eile as ar ball.</string>
+    <string name="uploadMessage">“Uaslódáil ar siúl. Seiceáil na fógraí le haghaidh stádas uaslódála.</string>
+    <string name="uploadingFile">Comhad&#8230; á uaslódáil</string>
+    <string name="errorUploadingFile">Tharla earráid agus do chomhad á uaslódáil. Bain triail as arís, le do thoil.</string>
+    <string name="fileSubmission">Cuir Comha(i)d isteach</string>
+    <string name="uploadFiles">Uaslódáil Comha(i)d</string>
+    <string name="upload">Uaslódáil</string>
+    <string name="errorSendingMessage">Tharla earráid agus do theachtaireacht a sheoladh. Bain triail as arís, le do thoil.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Fógraí Uaslódála</string>
+    <string name="notificationChannelNameFileUploadsDescription">Fógraí canvas le haghaidh uaslódálacha leanúnacha.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="addFile">Cuir Comhad leis</string>
+
+    <string name="fromCamera">Ceamara</string>
+    <string name="fromGallery">Gailearaí</string>
+    <string name="fromDevice">Gléas</string>
+    <string name="fromDocumentScanning">Scanóir</string>
+    <string name="fromOtherApplication">Eile</string>
+    <string name="Domain">Fearann</string>
+    <string name="files">Comhaid</string>
+    <string name="file">Comhad</string>
+    <string name="fileTalkBack">Comhad %s</string>
+    <string name="folderTalkBack">Fillteán %s</string>
+    <string name="addItem">Cuir Mír leis</string>
+    <string name="assignment">Tasc</string>
+    <string name="attachedFiles">Comhaid Ceangailte</string>
+    <string name="turnIn">Cuir isteach</string>
+    <string name="course">Cúrsa</string>
+    <string name="sending">Ag seoladh&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Rátáil Réalta a hAon</string>
+    <string name="star2">Rátáil Réalta a Dó</string>
+    <string name="star3">Rátáil Réalta a Trí</string>
+    <string name="star4">Rátáil Réalta a Ceathair</string>
+    <string name="star5">Rátáil Réalta a Cúig</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Tá do chuóta stórála comhad sáraithe agat faoi láthair.</string>
+    <string name="errorSubmittingFiles">Tharla earráid agus do chomhaid a chur isteach. Bain triail as arís, le do thoil.</string>
+    <string name="errorLoadingFiles">Tharla earráid agus do chomhad á lódáil. Seiceáil do cheangal idirlín agus bain triail eile as.</string>
+    <string name="filesUploadedSuccessfully">D\'éirigh le huaslódáil comhaid.</string>
+    <string name="filesSubmittedSuccessfully">D\'éirigh le comhaid a chuir isteach.</string>
+    <string name="messageSentSuccessfully">D\'éirigh leis an teachtaireacht a sheoladh.</string>
+    <string name="shareWithCanvas">Is féidir le haipeanna eile comhaid a roinnt le Canvas! Cuardaigh an deilbhín thíos in aipeanna agus tapáil ar Canvas.</string>
+    <string name="shareWithCanvas2">Osclóidh sé sin an aip seo. Ansin roghnaigh an cúrsa agus an tasc ar mhaith leat an comhad a chur isteach chuige.</string>
+    <string name="contentDescriptionSocialShare">Roinn deilbhín</string>
+    <string name="submitAssignment">Cuir Tasc Isteach</string>
+    <string name="assignmentHeader">Tasc :</string>
+    <string name="submittingAssignment">Ag cuir tasc&#8230; isteach</string>
+    <string name="conversations">Comhráite </string>
+    <string name="inbox">Bosca Isteach </string>
+    <string name="divider">Roinnteoir</string>
+    <string name="legal">Dlíthiúil</string>
+    <string name="completeHomework">CRÍOCHNAIGH do Obair Bhaile</string>
+    <string name="takeExam">Déan Scrúdú</string>
+    <string name="fileIcon">Deilbhín Comhaid</string>
+    <string name="uploadingFileNum" formatted="false">Ag uaslódáil %d de %d</string>
+    <string name="fileLocked" formatted="false">Cuireadh %s faoi ghlas.</string>
+    <string name="filePermissionGranted">Tá an comhad réidh le híoslódáil anois, bain triail eile as le do thoil.</string>
+    <string name="filePermissionDenied">Ní féidir an comhad a íoslódáil gan cead a thabhairt.</string>
+    <string name="pleaseTryAgain">Cead Tugtha, bain triail eile as le do thoil</string>
+    <string name="pickFile">Roghnaigh Comhad</string>
+    <string name="assignmentSubmissionUpload">Ag uaslódáil uaslódáil le haghaidh %s</string>
+    <string name="assignmentSubmissionError">Theip ar an uaslódáil le haghaidh %s</string>
+    <string name="assignmentSubmissionComplete">Cuireadh isteach %s go rathúil</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Tharla earráid gan choinne.</string>
+    <string name="serverError">Tharla earráid leis an bhfreastalaí.</string>
+    <string name="unauthorized">Níl cead agat rochtain a fháil ar seo. Níl ceadanna agat nó níl rochtain agat fós (mar níl do chúrsa tosaithe fós)</string>
+    <string name="fileNoLongerExists">Níl an comhad sin ann a thuilleadh.</string>
+    <string name="invalidAccessToken">Tá do sheisiún imithe in éag. Logáil isteach le do thoil chun tús a chur le seisiún nua.</string>
+    <string name="uploadingFromSourceFailed">Níorbh fhéidir uaslódáil comhad ón bhfoinse seo a chríochnú.</string>
+    <string name="errorGettingPhoto">Tharla earráid agus an grianghraf a fháil. Bain triail as arís, le do thoil.</string>
+    <string name="errorTextMissing">Cuir roinnt téacs leis chun teachtaireacht a sheoladh</string>
+
+    <string name="fileUploadNotSupported">Ní féidir leat comhaid a uaslódáil chuig an tasc roghnaithe.</string>
+    <string name="noCourseSelected">Roghnaigh cúrsa le do thoil</string>
+    <string name="selectCourse">Roghnaigh cúrsa</string>
+    <string name="selectAssignment">Roghnaigh tasc</string>
+    <string name="loadingAssignments">Tascanna a Lódáil&#8230;</string>
+    <string name="noAssignmentSelected">Roghnaigh tasc le do thoil</string>
+    <string name="noAssignmentsWithFileUpload">Níl aon tascanna ag an gcúrsa seo a cheadaíonn uaslódála comhaid.</string>
+    <string name="teacherNotAllowedFileSubmission">Mar mhúinteoir sa chúrsa seo, ní féidir leat comhaid a chur isteach</string>
+    <string name="noFilesUploaded">Níor roghnaigh tú aon chomhad.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Tá iarmhír comhaid ag comhad amháin nó níos mó nach bhfuil ceadaithe</string>
+    <string name="extensionNotAllowed">Ní cheadaítear an cineál comhaid roghnaithe.</string>
+    <string name="allowedExtensions">Eisínteachtaí ceadaithe:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Seiceáil do cheangal sonraí agus bain triail eile as. </string>
+    <string name="noApps">Níl aon fheidhmchláir suiteáilte ar do ghléas gur féidir an comhad seo a láimhseáil.</string>
+    <string name="noAppsShort">Ní féidir a oscailt</string>
+    <string name="unexpectedErrorOpeningFile">Tharla earráid gan choinne agus iarracht a dhéanamh an comhad a oscailt.</string>
+    <string name="unexpectedErrorDownloadingFile">Tharla earráid gan choinne agus an comhad a íoslódáil.</string>
+
+    <string name="done">Déanta</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Chun an ghné seo a úsáid, ní mór cead a thabhairt ar dtús.</string>
+    <string name="noConnection">Gan Ceangal</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Na cúrsaí is fearr leat &amp; Léiríonn grúpaí anseo.</string>
+    <string name="addCoursesGroups">Cuir Cúrsaí/Grúpaí leis</string>
+    <string name="noDiscussions">Níl aon Fhóraim</string>
+    <string name="noDiscussionsSubtext">Cuir tús le comhrá le daoine eile.</string>
+    <string name="noDiscussionsTeacher">Cuir tús le comhrá le do mhic léinn.</string>
+    <string name="nothingUnread">Bosca Isteach a Náid!</string>
+    <string name="nothingUnreadSubtext">Tá tú suas chun dáta ar fad!</string>
+    <string name="nothingStarred">Níl aon Teachtaireachtaí le Réiltín</string>
+    <string name="nothingStarredSubtext">Coinnigh teachtaireachtaí tábhachtacha sa ghrúpa seo trí thapáil an réalta i ngach teachtaireacht.</string>
+    <string name="nothingSent">Níl aon rud Seolta</string>
+    <string name="nothingSentSubtext">Níor sheol tú aon teachtaireacht.</string>
+    <string name="nothingArchived">Níl aon rud Curtha i gCartlann</string>
+    <string name="nothingArchivedSubtext">Níl aon teachtaireacht curtha i gcartlann agat.</string>
+    <string name="noQuizzes">Níl aon Quizeanna</string>
+    <string name="noQuizzesSubtext">Ár leithscéal, níl aon quizeanna an go fóill.</string>
+    <string name="noQuizzesTeacher">Níl aon quizeanna foilsithe le taispeáint.</string>
+    <string name="noAnnouncements">Gan Fógraí</string>
+    <string name="noAnnouncementsSubtext">Níl aon rud fógartha go fóill.</string>
+    <string name="noCourses">Níl aon Chúrsaí</string>
+    <string name="noCoursesSubtext">Tá an chuma ar an scéal nach bhfuil aon chúrsaí bainteach leis an gcuntas seo. Tabhair cuairt ar an ngréasán inniu chun cúrsa a chruthú.</string>
+    <string name="noAssignments">Níl aon Tascanna</string>
+    <string name="noAssignmentsSubtext">Tá an chuma ar an scéal nár cruthaíodh tascanna sa spás seo. Am le dul amach agus iniúchadh a dhéanamh.</string>
+    <string name="noAssignmentsTeacher">Is cosúil nach bhfuil aon tascanna foilsithe fós.</string>
+    <string name="noFiles">Níl aon Chomhaid</string>
+    <string name="noFilesForAssignment">Níl aon chomhaid ann don uaslódáil seo</string>
+    <string name="noFilesSubtext">Níl aon chomhaid bainteach leis an gcuntas seo.</string>
+    <string name="emptyFolder">Tá an fillteán seo folamh</string>
+    <string name="notSupported">Ní thacaítear leis</string>
+    <string name="noEvents">Níl aon Imeachtaí inniu!</string>
+    <string name="noEventsSubtext">Breathnaíonn sé cosúil le lá iontach chun sos a ghlacadh agus scíth a ligean.</string>
+    <string name="noSubmission">Níl aon Uaslódáil</string>
+    <string name="noSubmissionTeacher">Níl uaslódáil ag an mac léinn seo go fóill.</string>
+    <string name="locked">Faoi ghlas</string>
+    <string name="lockedSubtext">Tá an tasc seo faoi ghlas go dtí %1$s ag %2$s.</string>
+    <string name="chooseFile">Roghnaigh Comhad</string>
+    <string name="chooseFileSubtext">Ceangail comhad le d’uaslódáil trí rogha a thapáil thíos.</string>
+    <string name="chooseFileForUploadSubtext">Roghnaigh comhad le huaslódáil trí rogha a thapáil thíos</string>
+    <string name="noNotifications">Níl aon Fógraí</string>
+    <string name="noNotificationsSubtext">Níl aon rud le bheith curtha ar an eolas faoi go fóill.</string>
+    <string name="noTodos">An-Mhaith!</string>
+    <string name="noTodosSubtext">Tá do liosta le déanamh folamh. Am chun athluchtú.</string>
+    <string name="noSyllabus">Níl Siollabas Ann</string>
+    <string name="noSyllabusSubtext">Níl siollabas cruthaithe go fóill.</string>
+    <string name="noBookmarks">Níl aon Leabharmharcanna</string>
+    <string name="noBookmarksSubtext">Is aicearraí iad leabharmharcanna d’aon scáileán san aip. Cuir iad ar an scáileán ar mhaith leat a leabharmharcáil.</string>
+    <string name="noModules">Níl aon Mhodúil</string>
+    <string name="noModulesSubtext">Tá an chuma ar an scéal nach bhfuil aon mhodúil cruthaithe go fóill.</string>
+    <string name="noPages">Níl Leathanaigh Ann</string>
+    <string name="noPagesSubtext">Tá an chuma ar an scéal nár cruthaíodh aon leathanaigh go fóill.</string>
+    <string name="modulesLockedSubtext">Díchumasaíodh modúil don chúrsa seo.</string>
+    <string name="modulesLocked">Chuaigh rud eigin mícheart</string>
+
+    <!--General-->
+    <string name="yes">Tá</string>
+    <string name="no">Níl</string>
+
+    <string name="inbox_all">Bosca Isteach</string>
+    <string name="inbox_unread">Neamhléite</string>
+    <string name="inbox_starred">Réiltín curtha leis</string>
+    <string name="inbox_sent">Seolta</string>
+    <string name="inbox_archived">Cartlannaithe</string>
+
+    <string name="forbidden">Ní bhíonn freagraí le feiceáil ach ag na daoine sin a bhfuil freagra amháin ar a laghad postáilte acu.</string>
+
+    <string name="like">Is maith liom</string>
+    <string name="likes">Is maith liom</string>
+    <string name="lockedAssignmentNotModule">Tá an tasc seo faoi ghlas.</string>
+    <string name="deletedEntryNoChildren">Níl aon fhreagraí ar an iontráil fóraim scriosta seo.</string>
+    <string name="deleted">Scriosta</string>
+    <string name="deleted_by">[Scriosta ag %1$s]</string>
+    <string name="lockedDiscussionDesc">Tá an plé seo mar chuid den mhodúl %s agus níl sé díghlasáilte go fóill.</string>
+    <string name="gradedDiscussion">Plé Grádaithe</string>
+    <string name="pointsPossible">Pointí Indéanta</string>
+    <string name="sideCommentEntry">Sa chineál fóram seo, ní féidir leat ráiteas a dhéanamh ar aon iontráil ar an leibhéal seo.</string>
+
+    <string name="accessibility_overflow">Breis</string>
+
+    <string name="discussion_response">Ráiteas</string>
+    <string name="discussion_responses">Ráitis</string>
+    <string name="discussion_unread">Neamhléite</string>
+    <string name="discussion_reply">Freagair</string>
+    <string name="close">Dún</string>
+
+    <string name="noInternetConnectionTitle">Níl Nasc Idirlín</string>
+    <string name="noInternetConnectionMessage">Teastaíonn nasc idirlín don ghníomh seo.</string>
+    <string name="content_description_avatar">Abhatár</string>
+    <string name="a11y_avatarNameFormatted">%s Abhatár</string>
+    <string name="formattedAvatarAction">Féach ar shonraí úsáideora le haghaidh %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Múinteoir Canvas</string>
+    <string name="utils_canvasParent">Máthairchúrsa Canvas</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Conas atá ag éirí linn?</string>
+    <string name="utils_rateUs">Cén rátáil a thabharfá dúinn?</string>
+    <string name="utils_doBetter">Cad is féidir linn a dhéanamh níos fearr?</string>
+    <string name="utils_sendFeedback">Seol Aiseolas</string>
+    <string name="utils_suggestions">Moltaí le haghaidh Android</string>
+    <string name="utils_domain">Fearann</string>
+    <string name="utils_versionNum">Leagan:</string>
+    <string name="utils_userId">ID an úsáideora</string>
+    <string name="utils_email">Ríomhphost</string>
+    <string name="utils_dontShowAgain">Ná taispeáin arís</string>
+    <string name="utils_installDate">Dáta Suiteáile</string>
+    <string name="utils_device">Gléas</string>
+    <string name="utils_osVersion">Leagan OS</string>
+    <string name="loading">Ag lódáil</string>
+    <string name="save">Sábháil</string>
+    <string name="cropInstructions">Fáisc agus tarraing chun an íomhá a choigeartú.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">Freagra %s</item>
+        <item quantity="other">%s Freagra</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Scriosadh an freagra seo %s</string>
+    <string name="utils_discussionsUnknownAuthor">Údar Anaithnid</string>
+    <string name="utils_discussionsReply">Freagair</string>
+    <string name="utils_discussionsEdit">Cuir in eagar</string>
+    <string name="utils_discussionsDeleteWarning">An bhfuil tú cinnte gur mhaith leat an freagra seo a scriosadh?</string>
+    <string name="utils_availableToLabel">Ar fáil do:</string>
+    <string name="utils_availableFromLabel">Ar fáil ó:</string>
+    <string name="utils_dueDateHeaderLabel">Dlite</string>
+    <string name="utils_dueLabel">Dlite:</string>
+    <string name="utils_delete">Scrios</string>
+    <string name="utils_dueDateAtTime" formatted="false">Dlite %1s ag %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Infhaighteacht:</string>
+    <string name="utils_pinnedIcon">Deilbhín don fhóram pionnáilte</string>
+    <string name="utils_pinDiscussion">Pionnáil an Fóram</string>
+    <string name="utils_unpinDiscussion">Dí-phionnáil Fóram</string>
+    <string name="utils_discussionPinned">Fóram Pionáilte</string>
+    <string name="utils_pinnedDiscussions">Pionnáilte</string>
+    <string name="utils_discussionUnpinned">Fóraim</string>
+    <string name="utils_emptyDiscussions">Níl aon fhóraim le léiriú sa ghrúpa seo.</string>
+    <string name="utils_description">Cur síos</string>
+    <string name="utils_allowThreadedReplies">Ceadaigh freagraí snáithithe</string>
+    <string name="utils_usersMustPost">Ní mór do mhic léinn postáil sula bhfeiceann siad freagraí</string>
+    <string name="utils_discussionsClosed">Dúnta le haghaidh Ráitis</string>
+    <string name="utils_discussionsOpen">Oscailte le haghaidh Ráitis</string>
+    <string name="utils_discussionsPin">Pionnáil</string>
+    <string name="utils_discussionsUnpin">Dí-phionnáil</string>
+    <string name="utils_discussionsOptions">Roghanna</string>
+    <string name="utils_discussionsDeleteTitle">Scrios Fóram?</string>
+    <string name="utils_discussionsDelete">Scrios Fóram</string>
+    <string name="utils_discussionsDeleteMessage">Scriosfaidh sé seo an fóram agus an snáithe iomlán.</string>
+    <string name="utils_discussionSentSuccess">D’éirigh leis an bhfreagra ar an bhfóram.</string>
+    <string name="utils_discussionUpdateSuccess">D’éirigh leis an eagarthóireacht fóraim.</string>
+    <string name="utils_discussionSentEmpty">Ní féidir leis an bhfreagra fóraim a bheith folamh.</string>
+    <string name="utils_discussionSentFailure">Níorbh fhéidir an freagra fóraim a sheoladh faoi láthair.</string>
+    <string name="utils_createDiscussion">Plé Nua</string>
+    <string name="utils_editDiscussion">Cuir Fóram in Eagar</string>
+    <string name="utils_discussionDetails">Sonraí Plé</string>
+    <string name="utils_discussionSuccessfullyUpdated">D\'éirigh leis an bhfóra a nuashonrú.</string>
+    <string name="utils_saving">Ag Sábháil</string>
+    <string name="utils_discussionSuccessfullyCreated">D\'éirigh le fóram a chruthú.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">Níorbh fhéidir an ceangaltán a chur leis an bhfóram seo. Seiceáil cuóta do chomhaid agus bain triail eile as.</string>
+    <string name="utils_noTitle">Gan Teideal</string>
+    <string name="utils_discussionsReplies_Title">Freagraí</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Tuilleadh roghanna</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Postáil deireanach %s</string>
+    <string name="utils_postedOnDate">Postáilte ar %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Ní bhíonn freagraí le feiceáil ach ag na daoine sin a bhfuil freagra amháin ar a laghad postáilte acu.</string>
+    <string name="utils_createAnnouncementDelayPosting">Moill ar Postáil</string>
+    <string name="utils_postAt">Postáil Ag</string>
+    <string name="utils_postDate">Dáta Postála</string>
+    <string name="utils_postTime">Am Postála</string>
+    <string name="utils_editAnnouncementTitle">Cuir Fógra in Eagar</string>
+    <string name="utils_createAnnouncementTitle">Fógra Nua</string>
+    <string name="utils_announcementDetails">Sonraí an Fhógra</string>
+    <string name="utils_createAnnouncementNoDescription">Tá cur síos ag teastáil</string>
+    <string name="utils_errorSavingAnnouncement">Tharla earráid agus an fógra seo á shábháil. Déan iarracht arís.</string>
+    <string name="utils_announcementSuccessfullyUpdated">D\'éirigh leis an bhfógra a nuashonrú.</string>
+    <string name="utils_announcementSuccessfullyCreated">D\'éirigh leis an bhfógra a chruthú.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s Neamhléite</item>
+        <item quantity="other">%s Neamhléite</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Cuir Ceangaltán leis</item>
+        <item quantity="one">Cuir Ceangaltán leis</item>
+        <item quantity="other">Cuir Ceangaltáin leis</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+
+    <string name="utils_unlockAfterDueDateError">Ní féidir an dáta díghlasála a bheith tar éis an dáta dlite</string>
+    <string name="utils_lockBeforeDueDateError">Ní féidir an dáta glasála a bheith roimh an dáta dlite</string>
+    <string name="utils_lockAfterUnlockError">Ní féidir an dáta glasála a bheith roimh an dáta díghlasála</string>
+    <string name="utils_assigneeBlankError">Ní féidir leis an sannaí a bheith bán</string>
+    <string name="utils_assignTo">Sann Chun</string>
+    <string name="utils_availableFrom">Ar fáil ó</string>
+    <string name="utils_availableTo">Ar Fáil Go Dtí</string>
+    <string name="utils_availableFromDate">Ar Fáil Ó Dáta</string>
+    <string name="utils_availableFromTime">Ar Fáil Ó Am</string>
+    <string name="utils_availableToDate">Ar Fáil Go Dáta</string>
+    <string name="utils_availableToTime">Ar Fáil Go Am</string>
+    <string name="utils_dueDate">Dáta dlite</string>
+    <string name="utils_dueTime">Am Dlite</string>
+    <string name="utils_addNew">Cuir Nua leis</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Íoslódáil Ceangal</string>
+    <string name="utils_removeAttachment">Bain ceangaltán</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Lean ort gan sábháil?</string>
+    <string name="utils_continueWithoutSavingMessage">An bhfuil tú cinnte gur mhaith leat leanúint ar aghaidh gan sábháil?</string>
+    <string name="utils_continueUnsaved">Lean ar aghaidh</string>
+    <string name="utils_exitWithoutSavingTitle">Scoir gan sábháil?</string>
+    <string name="utils_exitWithoutSavingMessage">An bhfuil tú cinnte gur mhaith leat scoir gan sábháil?</string>
+    <string name="utils_exitUnsaved">Scoir</string>
+    <string name="utils_cancel">Cealaigh</string>
+
+    <string name="utils_contentDescriptionFiles">Deilbhín comhaid</string>
+    <string name="utils_turn_in">Cuir isteach</string>
+    <string name="utils_upload">Uaslódáil</string>
+    <string name="utils_okay">Ceart go leor</string>
+    <string name="utils_loadingFilesIndeterminate">Comhaid&#8230; á Lódáil</string>
+    <string name="utils_allowedExtensions">Eisínteachtaí ceadaithe:&#160;</string>
+    <string name="utils_extensionNotAllowed">Ní cheadaítear an cineál comhaid roghnaithe.</string>
+    <string name="utils_errorUploadingFile">Tharla earráid agus do chomhad á uaslódáil. Bain triail as arís, le do thoil.</string>
+    <string name="utils_filesUploadedSuccessfully">D\'éirigh le huaslódáil comhaid.</string>
+    <string name="utils_uploadingFiles">Comhaid&#8230; a uaslódáil</string>
+    <string name="utils_uploadingFile">Comhad&#8230; a uaslódáil</string>
+    <string name="utils_noApps">Níl aon fheidhmchláir suiteáilte ar do ghléas gur féidir leis an gcomhad seo a láimhseáil.</string>
+    <string name="utils_errorGettingPhoto">Tharla earráid agus an grianghraf a fháil. Bain triail as arís, le do thoil.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Tá síneadh comhad ag comhad amháin nó níos mó nach bhfuil ceadaithe</string>
+    <string name="utils_fileUploadNotSupported">Ní féidir leat comhaid a uaslódáil chuig an tasc roghnaithe.</string>
+    <string name="utils_noFilesUploaded">Níl aon chomhad roghnaithe agat.</string>
+    <string name="utils_attachments">Ceangaltáin</string>
+    <string name="utils_uploadTo">Uaslódáil Go </string>
+    <string name="utils_uploadToCanvas">Uaslódáil Go Canvas</string>
+    <string name="utils_uploadMyFiles">Mo Chomhaid</string>
+    <string name="utils_uploadCourseFiles">Comhaid an Chúrsa</string>
+    <string name="utils_uploadGroupFiles">Comhaid Ghrúpa</string>
+    <string name="utils_uploadToSubmissionComment">Uaslódáil chuig Ráiteas Uaslódála</string>
+    <string name="utils_attachFile">Ceangail comhad</string>
+    <string name="utils_with">le</string>
+
+    <string name="notificationPrimaryInboxTitle">Fógra Canvas</string>
+    <string name="notificationChannelNamePrimary">Fógraí Ginearálta Canvas</string>
+    <string name="notificationChannelDescriptionPrimary">Is féidir tuilleadh cumraíochta fógraí a dhéanamh laistigh den ghrúpa Roghanna Fógraí Canvas.</string>
+    <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
+        <item quantity="other">%d fógra nua</item>
+    </plurals>
+
+    <string name="copyLinkAddress">Cóipeáil seoladh naisc</string>
+    <string name="copyLink">Cóipeáil Nasc</string>
+    <string name="linkCopied">Cóipeáladh an nasc</string>
+    <string name="link">Nasc</string>
+    <string name="fileExists">Tá Comhad Ann</string>
+    <string name="replace">Ionadaigh</string>
+    <string name="shareLink">Roinn nasc</string>
+
+    <string name="utils_launchExternalTool">Seol Uirlis Sheachtrach</string>
+    <string name="utils_externalToolTitle">Uirlis Sheachtrach</string>
+    <string name="utils_placeholderTitle">Uirlis Sheachtrach</string>
+    <string name="utils_placeholderDescription">Tabhair cuairt ar do chuntas gréasáin Canvas chun an uirlis sheachtrach seo a chur in eagar.</string>
+    <string name="utils_unableToViewInBrowser">Ní féidir linn aip sheachtrach a aimsiú chun an uirlis LTI seo a amharc.</string>
+
+    <string name="utils_unsupportedFileMessage">Níorbh fhéidir an comhad seo a thaispeáint. Úsáid an cnaipe thíos chun an comhad a oscailt le haip eile ar do ghléas.</string>
+    <string name="utils_openWithAnotherApp">Oscail Le&#8230;</string>
+    <string name="utils_couldNotPlayFormat">Ní thacaítear leis an bhformáid meáin seo</string>
+    <string name="utils_fullscreen">scáileán iomlán</string>
+
+    <string name="utils_dataUsageWarningTitle">Rabhadh maidir le Úsáid Sonraí</string>
+    <string name="utils_dataUsageWarningMessage">D’fhéadfadh go n-ídíonn an gníomh seo cuid mhór sonraí, agus d’fhéadfadh go mbeadh táillí ró-chosúla i gceist. Ar mhaith leat leanúint ar aghaidh?</string>
+    <string name="utils_doNotShowMessageAgain">Ná taispeáin an teachtaireacht seo arís</string>
+
+    <string name="utils_no_data_connection">Seiceáil do cheangal sonraí agus bain triail eile as.</string>
+    <string name="utils_playMedia">Seinn meáin</string>
+    <string name="utils_tryAgain">Déan iarracht arís</string>
+    <string name="image_uploading">Íomhá á Uaslódáil...</string>
+    <string name="image_upload_error">Earráid Uaslódála Íomhá</string>
+    <string name="retry">Bain triail eile as</string>
+    <string name="search">Cuardaigh</string>
+    <string name="searchAssignmentsHint">Cuardaigh Tascanna</string>
+    <string name="searchAnnouncementsHint">Cuardaigh Fógraí</string>
+    <string name="searchDiscussionsHint">Cuardaigh Fóraim</string>
+    <string name="searchPagesHint">Cuardaigh Leathanaigh</string>
+    <string name="searchQuizzesHint">Cuardaigh Quizeanna</string>
+    <string name="noItemsMatchingQuery">Ní mheaitseálann aon mhíreanna le \"%s\"</string>
+
+    <string name="selected">Roghnaithe</string>
+
+    <string name="notificationChannelNameInAppUpdate">Fógraí nuashonruithe aip</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Fógraí canvas le haghaidh nuashonruithe in-aip.</string>
+    <string name="appUpdateReadyTitle">Aip réidh le nuashonrú</string>
+    <string name="appUpdateReadyDescription">Atosaigh an app chun an leagan nua a shuiteáil</string>
+    <string name="nothing_planned_yet">Níl aon rud beartaithe go fóill</string>
+    <string name="schedule_tag_graded">Grádaithe</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">Freagra %d</item>
+        <item quantity="other">%d Freagraí></item>
+    </plurals>
+    <string name="schedule_tag_feedback">Aiseolas</string>
+    <string name="schedule_tag_late">Mall</string>
+    <string name="schedule_tag_redo">Athdhéan</string>
+    <string name="schedule_tag_excused">Leithscéal Faighte</string>
+    <string name="tomorrow">Amárach</string>
+    <string name="yesterday">Inné</string>
+    <string name="schedule_calendar_event_due_text">Ag %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s go %2$s</string>
+    <string name="schedule_todo_due_text">Le Déanamh: %s</string>
+    <string name="schedule_due_text">Dlite: %s</string>
+    <string name="show_missing_items_title">Taispeáin %d mír atá ar iarraidh</string>
+    <string name="hide_missing_items_title">Folaigh %d mír atá in easnamh</string>
+    <string name="schedule_error_message">Ní féidir do sceideal a fháil</string>
+    <string name="schedule_todo_title">Le Déanamh</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s ptí</item>
+    </plurals>
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f pointe</item>
+        <item quantity="one">%.1f pointe</item>
+        <item quantity="other">%.1f pointe</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">An Lá ar fad</string>
+    <string name="schedule_tag_missing">Ar Iarraidh</string>
+    <string name="previous_week">Seachtain roimhe sin</string>
+    <string name="next_week">An tseachtain seo chugainn</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Cúrsa %s</string>
+    <string name="a11y_announcement">Fógra</string>
+    <string name="a11y_discussion_topic">Plé</string>
+    <string name="a11y_calendar_event">Imeacht féilire</string>
+    <string name="a11y_assignment">Tasc</string>
+    <string name="a11y_planner_note">Nóta pleanálaí</string>
+    <string name="a11y_quiz">Quiz</string>
+    <string name="a11y_todo">Le Déanamh</string>
+    <string name="a11y_page">Leathanach</string>
+    <string name="a11y_marked_as_done">Marcáilte mar déanta</string>
+    <string name="a11y_not_marked_as_done">Níl sé marcáilte mar dhéanta</string>
+    <string name="error_loading_course_details">Uh oh! Tharla earráid agus sonraí an chúrsa á lódáil.</string>
+    <string name="a11y_schedule_marked_as_not_done">Níl %s marcáilte mar neamhdhéanta</string>
+    <string name="a11y_markAsDoneWithName">%s Marcáil mar dhéanta</string>
+    <string name="a11y_markAsNotDoneWithName">%s Marcáil mar neamhdhéanta</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+</resources>

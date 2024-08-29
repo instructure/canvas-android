@@ -133,6 +133,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODEL
+    implementation project(':rceditor')
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT
@@ -154,7 +155,12 @@ dependencies {
 
     api Libs.ANDROID_SVG
 
-    api Libs.EXOPLAYER
+    api Libs.MEDIA3
+    api Libs.MEDIA3_UI
+    api Libs.MEDIA3_SMOOTH_STREAMING
+    api Libs.MEDIA3_HLS
+    api Libs.MEDIA3_DASH
+
     api (Libs.SCALE_IMAGE_VIEW) {
         exclude group: "androidx.exifinterface"
     }
@@ -202,17 +208,21 @@ dependencies {
 
     /* Compose */
     def composeBom = platform(Libs.COMPOSE_BOM)
-    implementation composeBom
-    androidTestImplementation composeBom
+    api composeBom
+    androidTestApi composeBom
 
-    implementation Libs.COMPOSE_BOM
-    implementation Libs.COMPOSE_MATERIAL
-    implementation Libs.COMPOSE_PREVIEW
-    debugImplementation Libs.COMPOSE_TOOLING
-    implementation Libs.COMPOSE_VIEW_MODEL
-    implementation Libs.COMPOSE_UI
+    api Libs.COMPOSE_BOM
+    api Libs.COMPOSE_MATERIAL
+    api Libs.COMPOSE_PREVIEW
+    debugApi Libs.COMPOSE_TOOLING
+    api Libs.COMPOSE_VIEW_MODEL
+    api Libs.COMPOSE_UI
+    api Libs.COMPOSE_ACTIVITY
+    api Libs.COMPOSE_GLIDE
 
     implementation Libs.FLEXBOX_LAYOUT
+
+    implementation Libs.RRULE
 
     // We need to add this dependency if we update ExoPlayer to 2.12.0
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905

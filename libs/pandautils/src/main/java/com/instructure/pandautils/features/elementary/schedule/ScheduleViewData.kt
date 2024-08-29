@@ -73,7 +73,8 @@ enum class PlannerItemType(@DrawableRes val iconRes: Int) {
     PEER_REVIEW(R.drawable.ic_peer_review),
     CALENDAR_EVENT(R.drawable.ic_calendar),
     PAGE(R.drawable.ic_pages),
-    TO_DO(R.drawable.ic_calendar)
+    TO_DO(R.drawable.ic_calendar),
+    ASSESSMENT_REQUEST(R.drawable.ic_assignment)
 }
 
 enum class ScheduleItemViewModelType(val viewType: Int) {

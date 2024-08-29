@@ -27,19 +27,21 @@ import com.instructure.canvas.espresso.mockCanvas.addAssignmentCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @HiltAndroidTest
-class ImportantDatesInteractionTest : StudentTest() {
+class ImportantDatesInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
@@ -49,7 +51,7 @@ class ImportantDatesInteractionTest : StudentTest() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
 
-        val event = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
+        val event = data.addCourseCalendarEvent(course, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
         goToImportantDatesTab(data)
         importantDatesPage.assertItemDisplayed(event.title!!)
@@ -90,10 +92,10 @@ class ImportantDatesInteractionTest : StudentTest() {
     fun testPullToRefresh() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
-        val existedEventBeforeRefresh = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
+        val existedEventBeforeRefresh = data.addCourseCalendarEvent(course, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
         goToImportantDatesTab(data)
-        val eventToCheck = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event 2", "Important event 2 description", true)
+        val eventToCheck = data.addCourseCalendarEvent(course, 2.days.fromNow.iso8601, "Important event 2", "Important event 2 description", true)
 
         importantDatesPage.assertRecyclerViewItemCount(1)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(existedEventBeforeRefresh.startDate))
@@ -111,7 +113,8 @@ class ImportantDatesInteractionTest : StudentTest() {
     fun testOpenCalendarEvent() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
-        val event = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
+        data.coursePermissions[course.id] = CanvasContextPermission(manageCalendar = true)
+        val event = data.addCourseCalendarEvent(course, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
         goToImportantDatesTab(data)
 
@@ -120,8 +123,8 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         //Opening the calendar event
         importantDatesPage.clickImportantDatesItem(event.title!!)
-        calendarEventPage.verifyTitle(event.title!!)
-        calendarEventPage.verifyDescription(event.description!!)
+        calendarEventDetailsPage.assertEventTitle(event.title!!)
+        calendarEventDetailsPage.verifyDescription(event.description!!)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(event.startDate))
     }
 
@@ -154,7 +157,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
         data.addAssignmentCalendarEvent(course.id, 2.days.fromNow.iso8601, assignment.name!!, assignment.description!!, true, assignment)
-        val calendarEvent = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
+        val calendarEvent = data.addCourseCalendarEvent(course, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
         val items = data.courseCalendarEvents
 
@@ -179,9 +182,9 @@ class ImportantDatesInteractionTest : StudentTest() {
         val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
         val twoDaysFromNowEvent = data.addAssignmentCalendarEvent(course.id,
             2.days.fromNow.iso8601, "Important event two days later", "Important event two days later description", true, assignment)
-        val threeDaysFromNowEvent = data.addCourseCalendarEvent(course.id,
+        val threeDaysFromNowEvent = data.addCourseCalendarEvent(course,
             3.days.fromNow.iso8601, "Important event three days later", "Important event three days later description", true)
-        val todayEvent = data.addCourseCalendarEvent(course.id,
+        val todayEvent = data.addCourseCalendarEvent(course,
             0.days.fromNow.iso8601, "Important event Today", "Important event today description", true)
 
         val items = data.courseCalendarEvents

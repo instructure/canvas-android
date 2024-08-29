@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.util.PatternsCompat
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.apis.ErrorReportAPI
@@ -34,6 +35,7 @@ import com.instructure.canvasapi2.models.ErrorReport
 import com.instructure.canvasapi2.models.ErrorReportPreFill
 import com.instructure.canvasapi2.models.ErrorReportResult
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
@@ -42,12 +44,20 @@ import com.instructure.loginapi.login.databinding.DialogErrorReportBinding
 import com.instructure.loginapi.login.databinding.ErrorReportSverityItemBinding
 import com.instructure.loginapi.login.util.Const
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class ErrorReportDialog : DialogFragment() {
-
     private val binding by viewBinding(DialogErrorReportBinding::bind)
 
     private val severityOptions by lazy {
@@ -64,8 +74,6 @@ class ErrorReportDialog : DialogFragment() {
     private val useDefaultDomain: Boolean by BooleanArg(key = Const.USE_DEFAULT_DOMAIN)
     private val appName: String by StringArg(key = Const.APP_NAME)
     private val preFillData: ErrorReportPreFill by ParcelableArg(key = Const.PRE_FILL_DATA)
-
-    private var resultListener: ErrorReportDialogResultListener? = null
 
     private val installDateString: String
         get() {
@@ -84,20 +92,6 @@ class ErrorReportDialog : DialogFragment() {
     @Suppress("UNCHECKED_CAST")
     private val selectedSeverity: Pair<ErrorReportAPI.Severity, String>
         get() = (binding.severitySpinner.selectedItem as? Pair<ErrorReportAPI.Severity, String>) ?: severityOptions[0]
-
-    interface ErrorReportDialogResultListener {
-        fun onTicketPost()
-        fun onTicketError()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            resultListener = context as ErrorReportDialogResultListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("${context::class.java.name} must implement ErrorReportDialogResultListener")
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.dialog_error_report, container, false)
@@ -227,18 +221,43 @@ class ErrorReportDialog : DialogFragment() {
                     severity = severity
             )
 
+            cancelButton.setInvisible()
+            sendButton.setInvisible()
+            progressBar.setVisible()
+
             try {
-                cancelButton.setInvisible()
-                sendButton.setInvisible()
-                progressBar.setVisible()
                 awaitApi<ErrorReportResult> { ErrorReportManager.postErrorReport(report, useDefaultDomain, it) }
-                resultListener?.onTicketPost()
-                dismiss()
+
+                onTicketPost()
             } catch (e: Throwable) {
-                resultListener?.onTicketError()
-                cancelButton.setVisible()
-                sendButton.setVisible()
-                progressBar.setGone()
+                onTicketError()
+            }
+        }
+    }
+
+    private fun onTicketPost() {
+        dismiss()
+        dismissHelpDialog()
+        Toast.makeText(activity, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
+    }
+
+    private fun onTicketError() = with(binding) {
+        cancelButton.setVisible()
+        sendButton.setVisible()
+        progressBar.setGone()
+
+        dismiss()
+        dismissHelpDialog()
+        Toast.makeText(activity, R.string.errorOccurred, Toast.LENGTH_LONG).show()
+    }
+
+    private fun dismissHelpDialog() {
+        val fragment = activity?.supportFragmentManager?.findFragmentByTag(HelpDialogFragment.TAG)
+        if (fragment is HelpDialogFragment) {
+            try {
+                fragment.dismiss()
+            } catch (e: IllegalStateException) {
+                Logger.e("Committing a transaction after activities saved state was called: " + e)
             }
         }
     }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,22 +14,23 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/fullWindowFrame"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/translucentBlack"
-        tools:ignore="UnusedAttribute"/>
+        tools:ignore="UnusedAttribute" />
 
     <LinearLayout
         android:id="@+id/controlsContainer"
@@ -40,39 +40,46 @@
         android:background="@color/translucentBlack"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingTop="4dp">
 
-            <ImageButton
-                android:id="@id/exo_rew"
-                style="@style/ExoMediaButton.Rewind"
-                tools:ignore="ContentDescription"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-            <ImageButton
-                android:id="@id/exo_play"
-                style="@style/ExoMediaButton.Play"
-                tools:ignore="ContentDescription"/>
+                <ImageButton
+                    android:id="@id/exo_rew"
+                    style="@style/ExoMediaButton.Rewind"
+                    tools:ignore="ContentDescription" />
 
-            <ImageButton
-                android:id="@id/exo_pause"
-                style="@style/ExoMediaButton.Pause"
-                tools:ignore="ContentDescription"/>
+                <ImageButton
+                    android:id="@id/exo_play_pause"
+                    style="@style/ExoStyledControls.Button.Center.PlayPause"
+                    tools:ignore="ContentDescription" />
 
-            <ImageButton
-                android:id="@id/exo_ffwd"
-                style="@style/ExoMediaButton.FastForward"
-                tools:ignore="ContentDescription"/>
+                <ImageButton
+                    android:id="@id/exo_ffwd"
+                    style="@style/ExoMediaButton.FastForward"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/fullscreenButton"
                 style="@style/ExoMediaButton.Fullscreen"
-                tools:ignore="ContentDescription"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
-        </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,13 +97,13 @@
                 android:paddingRight="4dp"
                 android:textColor="@color/tiara"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-            <com.google.android.exoplayer2.ui.DefaultTimeBar
+            <androidx.media3.ui.DefaultTimeBar
                 android:id="@id/exo_progress"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@id/exo_duration"
@@ -107,7 +114,7 @@
                 android:paddingRight="4dp"
                 android:textColor="@color/tiara"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 

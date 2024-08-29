@@ -30,7 +30,10 @@ import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.BottomSheetInteractions
 import com.instructure.interactions.InitActivityInteractions
 import com.instructure.interactions.MasterDetailInteractions
@@ -39,29 +42,77 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.RouteUtils
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.*
+import com.instructure.teacher.activities.BottomSheetActivity
+import com.instructure.teacher.activities.FullscreenActivity
+import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.activities.MasterDetailActivity
+import com.instructure.teacher.activities.SpeedGraderActivity
+import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
-import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
-import com.instructure.teacher.fragments.*
+import com.instructure.teacher.fragments.AddMessageFragment
+import com.instructure.teacher.fragments.AnnouncementListFragment
+import com.instructure.teacher.fragments.AssigneeListFragment
+import com.instructure.teacher.fragments.AttendanceListFragment
+import com.instructure.teacher.fragments.ChooseRecipientsFragment
+import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
+import com.instructure.teacher.fragments.CourseBrowserFragment
+import com.instructure.teacher.fragments.CourseSettingsFragment
+import com.instructure.teacher.fragments.CreateDiscussionFragment
+import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
+import com.instructure.teacher.fragments.CreateOrEditPageDetailsFragment
+import com.instructure.teacher.fragments.DashboardFragment
+import com.instructure.teacher.fragments.DiscussionsListFragment
+import com.instructure.teacher.fragments.DiscussionsUpdateFragment
+import com.instructure.teacher.fragments.DueDatesFragment
+import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
+import com.instructure.teacher.fragments.EditFileFolderFragment
+import com.instructure.teacher.fragments.EditQuizDetailsFragment
 import com.instructure.teacher.fragments.FileListFragment
-import java.util.*
+import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
+import com.instructure.teacher.fragments.InternalWebViewFragment
+import com.instructure.teacher.fragments.LtiLaunchFragment
+import com.instructure.teacher.fragments.MessageThreadFragment
+import com.instructure.teacher.fragments.PageDetailsFragment
+import com.instructure.teacher.fragments.PageListFragment
+import com.instructure.teacher.fragments.PeopleListFragment
+import com.instructure.teacher.fragments.ProfileEditFragment
+import com.instructure.teacher.fragments.ProfileFragment
+import com.instructure.teacher.fragments.QuizDetailsFragment
+import com.instructure.teacher.fragments.QuizListFragment
+import com.instructure.teacher.fragments.QuizPreviewWebviewFragment
+import com.instructure.teacher.fragments.SettingsFragment
+import com.instructure.teacher.fragments.SpeedGraderQuizWebViewFragment
+import com.instructure.teacher.fragments.ViewHtmlFragment
+import com.instructure.teacher.fragments.ViewImageFragment
+import com.instructure.teacher.fragments.ViewMediaFragment
+import com.instructure.teacher.fragments.ViewPdfFragment
+import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
+import java.util.Locale
 
 object RouteMatcher : BaseRouteMatcher() {
 
@@ -205,6 +256,8 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(EditDashboardFragment::class.java)
         fullscreenFragments.add(CourseBrowserFragment::class.java)
         fullscreenFragments.add(ModuleProgressionFragment::class.java)
+        fullscreenFragments.add(ToDoFragment::class.java)
+        fullscreenFragments.add(EventFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)
@@ -213,7 +266,6 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(EditQuizDetailsFragment::class.java)
         bottomSheetFragments.add(QuizPreviewWebviewFragment::class.java)
         bottomSheetFragments.add(AddMessageFragment::class.java)
-        bottomSheetFragments.add(DiscussionsReplyFragment::class.java)
         bottomSheetFragments.add(DiscussionsUpdateFragment::class.java)
         bottomSheetFragments.add(ChooseRecipientsFragment::class.java)
         bottomSheetFragments.add(CreateDiscussionFragment::class.java)
@@ -227,6 +279,8 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(CreateOrEditPageDetailsFragment::class.java)
         bottomSheetFragments.add(EditSyllabusFragment::class.java)
         bottomSheetFragments.add(PostPolicyFragment::class.java)
+        bottomSheetFragments.add(CreateUpdateToDoFragment::class.java)
+        bottomSheetFragments.add(CreateUpdateEventFragment::class.java)
     }
 
     private fun routeUrl(activity: FragmentActivity, url: String) {
@@ -438,7 +492,6 @@ object RouteMatcher : BaseRouteMatcher() {
             AnnouncementListFragment::class.java.isAssignableFrom(cls) -> fragment = AnnouncementListFragment
                 .newInstance(canvasContext!!) // This needs to be above DiscussionsListFragment because it extends it
             DiscussionsListFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionsListFragment.newInstance(canvasContext!!)
-            DiscussionsDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getDiscussionDetailsFragment(canvasContext, route)
             DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionDetailsWebViewFragment.newInstance(route)
             DiscussionRouterFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionRouterFragment.newInstance(canvasContext!!, route)
             InboxFragment::class.java.isAssignableFrom(cls) -> fragment = InboxFragment.newInstance(route)
@@ -449,8 +502,6 @@ object RouteMatcher : BaseRouteMatcher() {
             ViewMediaFragment::class.java.isAssignableFrom(cls) -> fragment = ViewMediaFragment.newInstance(route.arguments)
             ViewHtmlFragment::class.java.isAssignableFrom(cls) -> fragment = ViewHtmlFragment.newInstance(route.arguments)
             ViewUnsupportedFileFragment::class.java.isAssignableFrom(cls) -> fragment = ViewUnsupportedFileFragment.newInstance(route.arguments)
-            cls.isAssignableFrom(DiscussionsReplyFragment::class.java) -> fragment = DiscussionsReplyFragment
-                .newInstance(canvasContext!!, route.arguments)
             cls.isAssignableFrom(DiscussionsUpdateFragment::class.java) -> fragment = DiscussionsUpdateFragment
                 .newInstance(canvasContext!!, route.arguments)
             ChooseRecipientsFragment::class.java.isAssignableFrom(cls) -> fragment = ChooseRecipientsFragment.newInstance(route.arguments)
@@ -526,27 +577,6 @@ object RouteMatcher : BaseRouteMatcher() {
             val pageId = route.paramsHash[RouterParams.PAGE_ID]
             val args = PageDetailsFragment.makeBundle(pageId ?: "")
             PageDetailsFragment.newInstance(canvasContext!!, args)
-        }
-    }
-
-    private fun getDiscussionDetailsFragment(canvasContext: CanvasContext?, route: Route): DiscussionsDetailsFragment {
-        return when {
-            route.arguments.containsKey(DiscussionsDetailsFragment.DISCUSSION_TOPIC_HEADER) -> DiscussionsDetailsFragment.newInstance(
-                canvasContext!!,
-                route.arguments
-            )
-            route.arguments.containsKey(DiscussionsDetailsFragment.DISCUSSION_TOPIC_HEADER_ID) -> {
-                val discussionTopicHeaderId = route.arguments.getLong(DiscussionsDetailsFragment.DISCUSSION_TOPIC_HEADER_ID)
-                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeaderId)
-                DiscussionsDetailsFragment.newInstance(canvasContext!!, args)
-            }
-            else -> {
-                // Parse the route to get the discussion id
-                val discussionTopicHeaderId = route.paramsHash[RouterParams.MESSAGE_ID]?.toLong() ?: 0L
-                val entryId = route.queryParamsHash[RouterParams.ENTRY_ID]?.toLong() ?: 0L
-                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeaderId, entryId)
-                DiscussionsDetailsFragment.newInstance(canvasContext!!, args)
-            }
         }
     }
 

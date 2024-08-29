@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">पूर्ववत करें</string>
+    <string name="rce_contentDescription_redo">फिर से करें</string>
+    <string name="rce_contentDescription_bold">बोल्ड प्रारूप</string>
+    <string name="rce_contentDescription_italic">इटैलिक प्रारूप</string>
+    <string name="rce_contentDescription_strikethrough">स्ट्राइक थ्रू</string>
+    <string name="rce_contentDescription_underline">अंडरलाइन</string>
+    <string name="rce_contentDescription_format_text_color">टेक्स्ट कलर प्रारूप</string>
+    <string name="rce_contentDescription_border_color">टेक्स्ट बॉर्डर कलर प्रारूप</string>
+    <string name="rce_contentDescription_indent_increase">इंडेंट में बढ़ोतरी</string>
+    <string name="rce_contentDescription_indent_decrease">इंडेंट में कमी</string>
+    <string name="rce_contentDescription_align_left">बाईं ओर अलाइन करें</string>
+    <string name="rce_contentDescription_align_right">दाईं ओर अलाइन करें</string>
+    <string name="rce_contentDescription_align_center">मध्य में अलाइन करें</string>
+    <string name="rce_contentDescription_insert_bullets">बुलेट सूची डालें</string>
+    <string name="rce_contentDescription_insert_numbers">क्रमांकित सूची डालें</string>
+    <string name="rce_contentDescription_insert_photo">फ़ोटो डालें</string>
+    <string name="rce_contentDescription_upload_photo">डिवाइस से फ़ोटो अपलोड करें</string>
+    <string name="rce_contentDescription_insert_link">लिंक डालें</string>
+    <string name="rce_contentDescription_block_quote">ब्लॉक कोट</string>
+
+    <string name="rce_contentDescription_color_none">कोई रंग नहीं</string>
+    <string name="rce_contentDescription_color_white">सफ़ेद रंग</string>
+    <string name="rce_contentDescription_color_black">काला रंग</string>
+    <string name="rce_contentDescription_color_blue">नीला रंग</string>
+    <string name="rce_contentDescription_color_red">लाल रंग</string>
+    <string name="rce_contentDescription_color_green">हरा रंग</string>
+    <string name="rce_contentDescription_color_gray">सलेटी रंग</string>
+    <string name="rce_contentDescription_color_magenta">मैजेंटा रंग</string>
+    <string name="rce_contentDescription_color_cyan">सियान रंग</string>
+    <string name="rce_contentDescription_color_orange">नारंगी रंग</string>
+    <string name="rce_contentDescription_color_yellow">पीला रंग</string>
+    <string name="rce_contentDescription_color_purple">बैंगनी रंग</string>
+
+    <string name="rce_editTextUrlHint">लिंक</string>
+    <string name="rce_editTextALTHint">पाठ</string>
+    <string name="rce_dialogDone">हो गया</string>
+    <string name="rce_dialogCancel">रद्द करें</string>
+    <string name="rce_insertLink">लिंक डालें</string>
+    <string name="rce_insertImage">छवि डालें</string>
+    <string name="rce_uploadImage">छवि अपलोड करें</string>
+
+    <string name="rce_done">हो गया</string>
+    <string name="rce_cancel">रद्द करें</string>
+    <string name="rce_exit">बाहर निकलें</string>
+    <string name="rce_dialog_exit_title">असाइनमेंट संपादन से बाहर निकलें?</string>
+    <string name="rce_dialog_exit_message">क्या आप सच में बाहर निकलना चाहते हैं? कोई भी असहेजा गया डेटा गुम हो जाएगा।</string>
+    <string name="rce_empty_message">संदेश</string>
+    <string name="rce_empty_description">विवरण जोड़ें</string>
+    <string name="rce_scrollInstructions">सभी संपादन उपकरणों के लिए स्क्रॉल करें</string>
+
+    <string name="rce_emptyUrlError">URL खाली नहीं हो सकता</string>
+    <string name="rce_httpNotAllowed">केवल https url स्वीकार किए जाते हैं</string>
+    <string name="rce_dialogAltText">स्क्रीन रीडर्स के लिए वैकल्पिक पाठ जोड़ें</string>
+</resources>

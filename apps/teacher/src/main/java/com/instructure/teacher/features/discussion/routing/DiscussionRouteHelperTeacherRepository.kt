@@ -9,12 +9,8 @@ import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelp
 class DiscussionRouteHelperTeacherRepository(
     private val networkDataSource: DiscussionRouteHelperNetworkDataSource
 ): DiscussionRouteHelperRepository {
-    override suspend fun getEnabledFeaturesForCourse(
-        canvasContext: CanvasContext,
-        forceNetwork: Boolean
-    ): Boolean {
-        return networkDataSource.getEnabledFeaturesForCourse(canvasContext, forceNetwork)
-    }
+
+    override suspend fun shouldShowDiscussionRedesign(): Boolean = true
 
     override suspend fun getDiscussionTopicHeader(
         canvasContext: CanvasContext,

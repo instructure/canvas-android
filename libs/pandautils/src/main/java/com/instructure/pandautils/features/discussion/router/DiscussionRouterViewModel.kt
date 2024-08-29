@@ -32,7 +32,7 @@ class DiscussionRouterViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                val discussionRedesignEnabled = discussionRouteHelper.isDiscussionRedesignEnabled(canvasContext)
+                val shouldShowDiscussionRedesign = discussionRouteHelper.shouldShowDiscussionRedesign()
                 val header = discussionTopicHeader ?: discussionRouteHelper.getDiscussionHeader(
                     canvasContext,
                     discussionTopicHeaderId
@@ -46,11 +46,11 @@ class DiscussionRouterViewModel @Inject constructor(
                             it.first,
                             it.second,
                             groupDiscussionHeader,
-                            discussionRedesignEnabled
+                            shouldShowDiscussionRedesign
                         )
-                    } ?: routeToDiscussion(canvasContext, header, discussionRedesignEnabled, isAnnouncement)
+                    } ?: routeToDiscussion(canvasContext, header, shouldShowDiscussionRedesign, isAnnouncement)
                 } else {
-                    routeToDiscussion(canvasContext, header, discussionRedesignEnabled, isAnnouncement)
+                    routeToDiscussion(canvasContext, header, shouldShowDiscussionRedesign, isAnnouncement)
                 }
 
             } catch (e: Exception) {
@@ -64,7 +64,7 @@ class DiscussionRouterViewModel @Inject constructor(
         group: Group,
         discussionTopicHeaderId: Long,
         discussionTopicHeader: DiscussionTopicHeader,
-        isRedesignEnabled: Boolean
+        shoudShowDiscussionRedesign: Boolean
     ) {
         _events.postValue(
             Event(
@@ -72,7 +72,7 @@ class DiscussionRouterViewModel @Inject constructor(
                     group,
                     discussionTopicHeaderId,
                     discussionTopicHeader,
-                    isRedesignEnabled
+                    shoudShowDiscussionRedesign
                 )
             )
         )
@@ -81,14 +81,14 @@ class DiscussionRouterViewModel @Inject constructor(
     private fun routeToDiscussion(
         canvasContext: CanvasContext,
         header: DiscussionTopicHeader,
-        discussionRedesignEnabled: Boolean,
+        shouldShowDiscussionRedesign: Boolean,
         isAnnouncement: Boolean
     ) {
         _events.postValue(
             Event(
                 DiscussionRouterAction.RouteToDiscussion(
                     canvasContext,
-                    discussionRedesignEnabled,
+                    shouldShowDiscussionRedesign,
                     header,
                     isAnnouncement
                 )

@@ -9,7 +9,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
+
+const val PLANNER_API_SERIALIZE_NULLS = "PLANNER_API_SERIALIZE_NULLS"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -241,5 +244,31 @@ class ApiModule {
     @Provides
     fun provideFileDownloadApi(): FileDownloadAPI {
         return RestBuilder().build(FileDownloadAPI::class.java, RestParams())
+    }
+
+    @Provides
+    fun providePlannerApiInterface(): PlannerAPI.PlannerInterface {
+        return RestBuilder().build(PlannerAPI.PlannerInterface::class.java, RestParams())
+    }
+
+    @Provides
+    @Named(PLANNER_API_SERIALIZE_NULLS)
+    fun providePlannerApiInterfaceSerializeNulls(): PlannerAPI.PlannerInterface {
+        return RestBuilder().buildSerializeNulls(PlannerAPI.PlannerInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideThemeApi(): ThemeAPI.ThemeInterface {
+        return RestBuilder().build(ThemeAPI.ThemeInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideObserverApi(): ObserverApi {
+        return RestBuilder().build(ObserverApi::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideUnreadCountApi(): UnreadCountAPI.UnreadCountsInterface {
+        return RestBuilder().build(UnreadCountAPI.UnreadCountsInterface::class.java, RestParams())
     }
 }

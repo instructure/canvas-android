@@ -98,6 +98,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
+    private val filteredSubmissionIds: LongArray by lazy { intent.extras?.getLongArray(FILTERED_SUBMISSION_IDS) ?: longArrayOf() }
     private val filter: SubmissionListFilter by lazy {
         intent.extras!!.getSerializable(
             FILTER
@@ -140,6 +141,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         submissionId,
         discussionTopicHeader,
         repository,
+        filteredSubmissionIds,
         filter,
         filterValue
     )
@@ -381,14 +383,16 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
         const val FILTER = "filter"
         const val FILTER_VALUE = "filter_value"
+        const val FILTERED_SUBMISSION_IDS = "filtered_submission_ids"
 
         fun makeBundle(
             courseId: Long,
             assignmentId: Long,
             selectedIdx: Int,
             anonymousGrading: Boolean? = null,
-            filter: SubmissionListFilter,
-            filterValue: Double
+            filteredSubmissionIds: LongArray = longArrayOf(),
+            filter: SubmissionListFilter? = null,
+            filterValue: Double = 0.0
         ): Bundle {
             return Bundle().apply {
                 putLong(Const.COURSE_ID, courseId)
@@ -397,6 +401,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 putBoolean(Const.ANONYMOUS_GRADING, anonymousGrading ?: false)
                 putSerializable(FILTER, filter)
                 putDouble(FILTER_VALUE, filterValue)
+                putLongArray(FILTERED_SUBMISSION_IDS, filteredSubmissionIds)
             }
         }
 

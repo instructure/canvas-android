@@ -53,4 +53,8 @@ class FileUploadUtilsHelper(
             }
         }
     }
+
+    fun deleteTempFile(fileName: String) {
+        fileUploadUtils.deleteTempFile(fileName)
+    }
 }
