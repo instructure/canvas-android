@@ -48,6 +48,7 @@ class CanvasAuthenticator : Authenticator {
             EventBus.getDefault().post(CanvasAuthError("No client id or secret for refresh token"))
             return null // Indicate authentication was not successful
         }
+
         val refreshTokenResponse =  OAuthManager.refreshToken()
 
         refreshTokenResponse.onSuccess {

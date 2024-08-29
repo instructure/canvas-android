@@ -42,7 +42,6 @@ class HtmlParser(
     private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
     private val studioIframeRegex = Regex("<iframe[^>]*custom_arc_media_id%3D([^%]*)%[^>]*>[^<]*</iframe>")
 
-    // TODO Handle captions elsewhere
     private val videoTagReplacement = """
         <video controls playsinline preload="auto" poster="{posterPath}">
           <source src="{srcPath}" type="{mimeType}" />
