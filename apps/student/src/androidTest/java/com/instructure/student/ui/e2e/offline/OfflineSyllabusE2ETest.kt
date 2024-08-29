@@ -37,7 +37,7 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class OfflineSyllabusTestE2E : StudentTest() {
+class OfflineSyllabusE2ETest : StudentTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -49,7 +49,8 @@ class OfflineSyllabusTestE2E : StudentTest() {
     fun testOfflineSyllabusE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "This is the syllabus body.")
+        val testSyllabusBody = "This is the syllabus body."
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = testSyllabusBody)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -86,7 +87,7 @@ class OfflineSyllabusTestE2E : StudentTest() {
 
         Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that the syllabus body string is displayed. Assert that the toolbar subtitle is the '${course.name}' course name.")
         courseBrowserPage.selectSyllabus()
-        syllabusPage.assertSyllabusBody("This is the syllabus body.")
+        syllabusPage.assertSyllabusBody(testSyllabusBody)
         syllabusPage.assertToolbarCourseTitle(course.name)
 
         Log.d(STEP_TAG,"Navigate to 'Summary' tab. Assert that all of the items, so '${assignment.name}' assignment is displayed.")

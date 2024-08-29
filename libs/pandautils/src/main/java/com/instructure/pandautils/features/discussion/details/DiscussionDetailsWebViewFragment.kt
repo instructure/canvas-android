@@ -94,7 +94,9 @@ class DiscussionDetailsWebViewFragment : Fragment() {
             }
 
             override fun routeInternallyCallback(url: String) {
-                if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
+                if (url.contains("discussion_topics") || url.contains("announcements")) {
+                    binding.discussionWebView.loadUrl(url)
+                } else if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
                     webViewRouter.routeExternally(url)
                 }
             }
