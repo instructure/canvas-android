@@ -25,6 +25,7 @@ data class AlertDialogState(
 
 sealed class InboxDetailsFragmentAction {
     data object CloseFragment : InboxDetailsFragmentAction()
+    data class ShowScreenResult(val message: String) : InboxDetailsFragmentAction()
 }
 
 sealed class InboxDetailsAction {

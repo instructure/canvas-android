@@ -44,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -103,7 +102,6 @@ private fun InboxMessageDetailsView(
             val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, true)
             AttachmentCard(
                 attachmentCardItem,
-                LocalContext.current,
                 onSelect = { actionHandler(MessageAction.OpenAttachment(attachment)) },
                 onRemove = {})
         }

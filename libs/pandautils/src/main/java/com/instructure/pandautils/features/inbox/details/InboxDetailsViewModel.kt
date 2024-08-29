@@ -1,19 +1,15 @@
 package com.instructure.pandautils.features.inbox.details
 
-import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
-import android.os.Environment
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
-import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.FileDownloader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -29,6 +25,7 @@ class InboxDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val repository: InboxDetailsRepository,
+    private val fileDownloader: FileDownloader
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
@@ -50,7 +47,7 @@ class InboxDetailsViewModel @Inject constructor(
             is MessageAction.ReplyAll -> handleAction(InboxDetailsAction.ReplyAll)
             is MessageAction.Forward -> handleAction(InboxDetailsAction.Forward)
             is MessageAction.DeleteMessage -> handleAction(InboxDetailsAction.DeleteMessage(conversationId ?: 0, action.message))
-            is MessageAction.OpenAttachment -> { downloadFileToDevice(action.attachment) }
+            is MessageAction.OpenAttachment -> { fileDownloader.downloadFileToDevice(action.attachment) }
         }
     }
 
@@ -129,7 +126,7 @@ class InboxDetailsViewModel @Inject constructor(
 
     private fun getMessageViewState(conversation: Conversation, message: Message): InboxMessageUiState {
         val author = conversation.participants.find { it.id == message.authorId }
-        val recipients = conversation.participants.filter { it.id != message.authorId }
+        val recipients = conversation.participants.filter { message.participatingUserIds.filter { it != message.authorId }.contains(it.id) }
         return InboxMessageUiState(
             message = message,
             author = author,
@@ -142,10 +139,10 @@ class InboxDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val result = repository.deleteConversation(conversationId)
             if (result.isSuccess) {
-                context.toast(context.getString(R.string.conversationDeleted))
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeleted)))
                 _events.send(InboxDetailsFragmentAction.CloseFragment)
             } else {
-                context.toast(context.getString(R.string.conversationDeletedFailed))
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)))
             }
         }
     }
@@ -155,7 +152,7 @@ class InboxDetailsViewModel @Inject constructor(
             val result = repository.deleteMessage(conversationId, listOf(message.id))
             val conversationResult = repository.getConversation(conversationId, true, true)
             if (result.isSuccess) {
-                context.toast(context.getString(R.string.messageDeleted))
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeleted)))
 
                 val conversation = conversationResult.dataOrNull
 
@@ -166,7 +163,7 @@ class InboxDetailsViewModel @Inject constructor(
                     )
                 }
             } else {
-                context.toast(context.getString(R.string.messageDeletedFailed))
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)))
             }
         }
     }
@@ -177,7 +174,7 @@ class InboxDetailsViewModel @Inject constructor(
             if (result.isSuccess) {
                 _uiState.update { it.copy(conversation = result.dataOrNull) }
             } else {
-                context.toast(context.getString(R.string.conversationUpdateFailed))
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
         }
     }
@@ -188,21 +185,8 @@ class InboxDetailsViewModel @Inject constructor(
             if (result.isSuccess) {
                 _uiState.update { it.copy(conversation = result.dataOrNull) }
             } else {
-                context.toast(context.getString(R.string.conversationUpdateFailed))
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
         }
-    }
-
-    private fun downloadFileToDevice(attachment: Attachment) {
-        val downloadManager = context.getSystemService(DownloadManager::class.java)
-
-        val request = DownloadManager.Request(Uri.parse(attachment.url))
-        request
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setTitle(attachment.filename)
-            .setMimeType(attachment.contentType)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${attachment.filename}")
-
-        downloadManager.enqueue(request)
     }
 }
