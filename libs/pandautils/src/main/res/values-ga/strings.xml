@@ -230,7 +230,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Múinteoir Canvas</string>
     <string name="utils_canvasParent">Máthairchúrsa Canvas</string>
-    <string name="utils_speedgrader">LuasMharcálaí</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->
     <string name="utils_howAreWeDoing">Conas atá ag éirí linn?</string>

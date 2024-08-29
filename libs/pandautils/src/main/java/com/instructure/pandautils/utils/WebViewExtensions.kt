@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -25,6 +26,7 @@ import androidx.webkit.WebViewFeature
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.Job
 
 /**
@@ -92,4 +94,11 @@ fun WebView.enableAlgorithmicDarkening() {
     if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
         WebSettingsCompat.setAlgorithmicDarkeningAllowed(settings, true)
     }
+}
+
+@SuppressLint("SetJavaScriptEnabled")
+fun loadUrlIntoHeadlessWebView(context: Context, url: String) {
+    val webView = CanvasWebView(context)
+    webView.settings.javaScriptEnabled = true
+    webView.loadUrl(url)
 }

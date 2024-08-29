@@ -21,6 +21,7 @@ import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.dataseeding.model.EnrollmentApiModel
 import com.instructure.dataseeding.model.FavoriteApiModel
+import com.instructure.dataseeding.model.ModuleApiModel
 
 // Data-seeding API
 object SeedApi {
@@ -41,7 +42,8 @@ object SeedApi {
         val locked: Boolean = false,
         val publishCourses: Boolean = true,
         val TAs: Int = 0,
-        val syllabusBody: String? = null
+        val syllabusBody: String? = null,
+        val modules: Int = 0
     )
 
     // Seed data object/model, made to look very much like the old proto-generated SeededData class
@@ -56,6 +58,7 @@ object SeedApi {
         val favoriteCoursesList = mutableListOf<FavoriteApiModel>()
         val discussionsList = mutableListOf<DiscussionApiModel>()
         val announcementsList = mutableListOf<DiscussionApiModel>()
+        val modulesList = mutableListOf<ModuleApiModel>()
 
         // Methods to add elements to lists
         fun addTeachers(teacher: CanvasUserApiModel) {
@@ -96,7 +99,9 @@ object SeedApi {
         fun addAllAnnouncements(announcements: Iterable<DiscussionApiModel>) {
             announcementsList.addAll(announcements)
         }
-
+        fun addAllModules(modules: Iterable<ModuleApiModel>) {
+            modulesList.addAll(modules)
+        }
 
     }
 
@@ -240,6 +245,13 @@ object SeedApi {
                     }
                 )
             }
+
+            // Seed modules
+            addAllModules(
+                (0 until request.modules).map {
+                    ModulesApi.createModule(coursesList[0].id, teachersList[0].token)
+                }
+            )
         }
 
         return seededData
