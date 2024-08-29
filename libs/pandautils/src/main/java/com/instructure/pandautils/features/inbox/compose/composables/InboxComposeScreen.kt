@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.pandautils.R
+import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
@@ -172,7 +172,7 @@ private fun InboxComposeScreenContent(
         }
 
         LabelSwitchRow(
-            label = stringResource(R.string.sendIndividualMessageToEachRecipient),
+            label = stringResource(R.string.sendIndividualMessage),
             checked = uiState.sendIndividual,
             onCheckedChange = {
                 actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
@@ -199,10 +199,24 @@ private fun InboxComposeScreenContent(
             onValueChange = {
                 actionHandler(InboxComposeActionHandler.BodyChanged(it))
             },
+            onIconClick = {
+                actionHandler(InboxComposeActionHandler.AddAttachmentSelected)
+            },
             focusRequester = bodyFocusRequester,
             modifier = Modifier
                 .defaultMinSize(minHeight = 100.dp)
         )
+
+        Column {
+            uiState.attachments.forEach { attachment ->
+                AttachmentCard(
+                    attachmentCardItem = attachment,
+                    onSelect = { actionHandler(InboxComposeActionHandler.OpenAttachment(attachment)) },
+                    onRemove = { actionHandler(InboxComposeActionHandler.RemoveAttachment(attachment)) },
+                    context = LocalContext.current,
+                )
+            }
+        }
     }
 }
 

@@ -14,17 +14,21 @@ data class InboxComposeUiState(
     val sendIndividual: Boolean = false,
     val subject: TextFieldValue = TextFieldValue(""),
     val body: TextFieldValue = TextFieldValue(""),
+    val attachments: List<AttachmentCardItem> = emptyList(),
     val screenState: ScreenState = ScreenState.Data,
     val showConfirmationDialog: Boolean = false,
 ) {
     val isSendButtonEnabled: Boolean
         get() = selectContextUiState.selectedCanvasContext != null &&
-                    recipientPickerUiState.selectedRecipients.isNotEmpty() &&
-                    subject.text.isNotEmpty() && body.text.isNotEmpty()
+                recipientPickerUiState.selectedRecipients.isNotEmpty() &&
+                subject.text.isNotEmpty() && body.text.isNotEmpty() &&
+                attachments.all { it.status == AttachmentStatus.UPLOADED }
 }
 
 sealed class InboxComposeViewModelAction {
     data object NavigateBack: InboxComposeViewModelAction()
+    data object OpenAttachmentPicker: InboxComposeViewModelAction()
+    data class ShowScreenResult(val message: String): InboxComposeViewModelAction()
 }
 
 sealed class InboxComposeActionHandler {
@@ -37,6 +41,9 @@ sealed class InboxComposeActionHandler {
     data class SendIndividualChanged(val sendIndividual: Boolean) : InboxComposeActionHandler()
     data class SubjectChanged(val subject: TextFieldValue) : InboxComposeActionHandler()
     data class BodyChanged(val body: TextFieldValue) : InboxComposeActionHandler()
+    data object AddAttachmentSelected : InboxComposeActionHandler()
+    data class RemoveAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
+    data class OpenAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
 }
 
 sealed class InboxComposeScreenOptions {

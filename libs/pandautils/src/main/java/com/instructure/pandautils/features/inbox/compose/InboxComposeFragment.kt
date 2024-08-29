@@ -4,22 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.work.WorkInfo
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreenWrapper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
+
 
 @AndroidEntryPoint
-class InboxComposeFragment : Fragment(), FragmentInteractions {
+class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogParent {
 
     private val viewModel: InboxComposeViewModel by viewModels()
 
@@ -53,10 +60,24 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
         return this
     }
 
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) { workInfo ->
+            viewModel.updateAttachments(uuid, workInfo)
+        }
+    }
+
     private fun handleAction(action: InboxComposeViewModelAction) {
         when (action) {
             is InboxComposeViewModelAction.NavigateBack -> {
                 activity?.supportFragmentManager?.popBackStack()
+            }
+            is InboxComposeViewModelAction.OpenAttachmentPicker -> {
+                val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
+                FileUploadDialogFragment.newInstance(bundle)
+                    .show(childFragmentManager, FileUploadDialogFragment.TAG)
+            }
+            is InboxComposeViewModelAction.ShowScreenResult -> {
+                Toast.makeText(requireContext(), action.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

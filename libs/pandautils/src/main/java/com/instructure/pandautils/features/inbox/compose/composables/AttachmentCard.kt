@@ -19,10 +19,12 @@ package com.instructure.pandautils.features.inbox.compose.composables
 import android.content.Context
 import android.text.format.Formatter
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,9 +38,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,21 +51,28 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.features.inbox.compose.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.compose.AttachmentStatus
 import com.instructure.pandautils.utils.iconRes
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun AttachmentCard(
-    attachment: Attachment,
-    status: AttachmentStatus,
-    onRemove: () -> Unit,
-    context: Context
+    attachmentCardItem: AttachmentCardItem,
+    context: Context,
+    onSelect: () -> Unit,
+    onRemove: () -> Unit
 ) {
+    val attachment = attachmentCardItem.attachment
+    val status = attachmentCardItem.status
+
     Card(
         border = BorderStroke(1.dp, colorResource(id = R.color.backgroundMedium)),
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
             .padding(horizontal = 16.dp)
+            .padding(vertical = 8.dp)
+            .clickable { onSelect() }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -77,25 +88,31 @@ fun AttachmentCard(
                     GlideImage(
                         model = attachment.thumbnailUrl,
                         contentDescription = null,
-                    ) {
-                        it.placeholder(attachment.iconRes)
-                    }
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 } else {
                     Icon(
                         painter = painterResource(id = attachment.iconRes),
                         contentDescription = null,
-                        tint = colorResource(id = R.color.textDark)
+                        tint = colorResource(id = R.color.textDark),
+                        modifier = Modifier.size(48.dp)
                     )
                 }
             }
 
             Spacer(Modifier.width(8.dp))
 
-            Column {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+            ){
                 Text(
                     attachment.filename ?: "",
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -103,11 +120,11 @@ fun AttachmentCard(
                 Text(
                     Formatter.formatFileSize(context, attachment.size),
                     color = colorResource(id = R.color.textDark),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 )
             }
 
-            Spacer(Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(8.dp))
 
             when (status) {
                 AttachmentStatus.UPLOADING -> {
@@ -129,22 +146,17 @@ fun AttachmentCard(
                 }
             }
 
+            Spacer(modifier = Modifier.width(8.dp))
+
             IconButton(onClick = { onRemove() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = null,
-                    tint = colorResource(id = R.color.textDark)
+                    tint = colorResource(id = R.color.textDark),
                 )
             }
         }
     }
-}
-
-enum class AttachmentStatus {
-    UPLOADING,
-    UPLOADED,
-    FAILED
-
 }
 
 @Composable
@@ -152,18 +164,21 @@ enum class AttachmentStatus {
 fun AttachmentCardPreview() {
     val context = LocalContext.current
     AttachmentCard(
-        Attachment(
-            id = 1,
-            contentType = "image/png",
-            filename = "image.png",
-            displayName = "image.png",
-            url = "https://www.example.com/image.png",
-            thumbnailUrl = null,
-            previewUrl = null,
-            size = 1024
+        AttachmentCardItem(
+            Attachment(
+                id = 1,
+                contentType = "image/png",
+                filename = "image.png",
+                displayName = "image.png",
+                url = "https://www.example.com/image.png",
+                thumbnailUrl = null,
+                previewUrl = null,
+                size = 1024
+            ),
+            AttachmentStatus.UPLOADED
         ),
-        AttachmentStatus.UPLOADED,
+        context,
         {},
-        context
+        {}
     )
 }
