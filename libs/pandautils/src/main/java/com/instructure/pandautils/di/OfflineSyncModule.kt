@@ -52,6 +52,7 @@ import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -76,9 +77,10 @@ class OfflineSyncModule {
     fun provideAggregateProgressObserver(
         @ApplicationContext context: Context,
         courseSyncProgressDao: CourseSyncProgressDao,
-        fileSyncProgressDao: FileSyncProgressDao
+        fileSyncProgressDao: FileSyncProgressDao,
+        studioMediaProgressDao: StudioMediaProgressDao
     ): AggregateProgressObserver {
-        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao)
+        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao, studioMediaProgressDao)
     }
 
     @Provides
@@ -187,10 +189,10 @@ class OfflineSyncModule {
         launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
         apiPrefs: ApiPrefs,
         studioApi: StudioApi,
-        fileSyncProgressDao: FileSyncProgressDao,
+        studioMediaProgressDao: StudioMediaProgressDao,
         fileDownloadApi: FileDownloadAPI,
         firebaseCrashlytics: FirebaseCrashlytics
     ): StudioSync {
-        return StudioSync(context, launchDefinitionsApi, apiPrefs, studioApi, fileSyncProgressDao, fileDownloadApi, firebaseCrashlytics)
+        return StudioSync(context, launchDefinitionsApi, apiPrefs, studioApi, studioMediaProgressDao, fileDownloadApi, firebaseCrashlytics)
     }
 }

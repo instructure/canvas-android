@@ -28,13 +28,16 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
+import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
 
 class AggregateProgressObserver(
     private val context: Context,
     courseSyncProgressDao: CourseSyncProgressDao,
-    fileSyncProgressDao: FileSyncProgressDao
+    fileSyncProgressDao: FileSyncProgressDao,
+    studioMediaProgressDao: StudioMediaProgressDao
 ) {
 
     val progressData: LiveData<AggregateProgressViewData?>
@@ -43,9 +46,11 @@ class AggregateProgressObserver(
 
     private var courseProgressLiveData: LiveData<List<CourseSyncProgressEntity>>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
+    private var studioMediaProgressLiveData: LiveData<List<StudioMediaProgressEntity>>? = null
 
     private var courseProgresses = mutableMapOf<Long, CourseSyncProgressEntity>()
     private var fileProgresses = mutableMapOf<Long, FileSyncProgressEntity>()
+    private var studioMediaProgresses = mutableListOf<StudioMediaProgressEntity>()
 
     private val courseProgressObserver = Observer<List<CourseSyncProgressEntity>> {
         courseProgresses = it.associateBy { it.courseId }.toMutableMap()
@@ -59,6 +64,11 @@ class AggregateProgressObserver(
         calculateProgress()
     }
 
+    private val studioMediaProgressObserver = Observer<List<StudioMediaProgressEntity>> {
+        studioMediaProgresses = it.toMutableList()
+        calculateProgress()
+    }
+
     init {
         Handler(Looper.getMainLooper()).post {
             courseProgressLiveData = courseSyncProgressDao.findAllLiveData()
@@ -66,6 +76,9 @@ class AggregateProgressObserver(
 
             fileProgressLiveData = fileSyncProgressDao.findAllLiveData()
             fileProgressLiveData?.observeForever(fileProgressObserver)
+
+            studioMediaProgressLiveData = studioMediaProgressDao.findAllLiveData()
+            studioMediaProgressLiveData?.observeForever(studioMediaProgressObserver)
         }
     }
 
@@ -78,35 +91,36 @@ class AggregateProgressObserver(
             return
         }
 
-        val totalSize = courseProgresses.sumOf { it.totalSize() } + fileProgresses.sumOf { it.fileSize }
+        val totalSize = courseProgresses.sumOf { it.totalSize() } + fileProgresses.sumOf { it.fileSize } + studioMediaProgresses.sumOf { it.fileSize }
         val downloadedTabSize = courseProgresses.sumOf { it.downloadedSize() }
         val downloadedFileSize = fileProgresses.sumOf { it.fileSize * (it.progress.toDouble() / 100.0)  }
-        val downloadedSize = downloadedTabSize + downloadedFileSize.toLong()
+        val downloadedStudioMediaSize = studioMediaProgresses.sumOf { it.fileSize * (it.progress.toDouble() / 100.0)  }
+        val downloadedSize = downloadedTabSize + downloadedFileSize.toLong() + downloadedStudioMediaSize.toLong()
         val progress = (downloadedSize.toDouble() / totalSize.toDouble() * 100.0).toInt()
 
         val itemCount = courseProgresses.size
 
+        val totalSizeString = NumberHelper.readableFileSize(context, totalSize)
+
+        val allProgressStates =
+            courseProgresses.map { it.progressState } + fileProgresses.map { it.progressState } + studioMediaProgresses.map { it.progressState }
         val viewData = when {
             courseProgresses.all { it.progressState == ProgressState.STARTING } -> {
                 AggregateProgressViewData(
                     title = context.getString(R.string.syncProgress_downloadStarting),
                     progressState = ProgressState.STARTING
                 )
-
             }
 
-            courseProgresses.all { it.progressState == ProgressState.COMPLETED } && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
-                val totalSizeString = NumberHelper.readableFileSize(context, totalSize)
+            allProgressStates.all { it == ProgressState.COMPLETED } -> {
                 AggregateProgressViewData(
                     progressState = ProgressState.COMPLETED,
                     title = context.getString(R.string.syncProgress_downloadSuccess, totalSizeString, totalSizeString),
                     progress = 100
                 )
-
             }
 
-            fileProgresses.all { it.progressState.isFinished() } && courseProgresses.all { it.progressState.isFinished() }
-                    && (courseProgresses.any { it.progressState == ProgressState.ERROR } || fileProgresses.any { it.progressState == ProgressState.ERROR }) -> {
+            allProgressStates.all { it.isFinished() } && allProgressStates.any { it == ProgressState.ERROR } -> {
                 AggregateProgressViewData(
                     progressState = ProgressState.ERROR,
                     title = context.getString(R.string.syncProgress_syncErrorSubtitle)
@@ -119,9 +133,9 @@ class AggregateProgressObserver(
                     title = context.getString(
                         R.string.syncProgress_downloadProgress,
                         NumberHelper.readableFileSize(context, downloadedSize),
-                        NumberHelper.readableFileSize(context, totalSize)
+                        totalSizeString
                     ),
-                    totalSize = NumberHelper.readableFileSize(context, totalSize),
+                    totalSize = totalSizeString,
                     progress = progress,
                     itemCount = itemCount,
                     progressState = ProgressState.IN_PROGRESS
@@ -135,6 +149,7 @@ class AggregateProgressObserver(
     fun onCleared() {
         courseProgressLiveData?.removeObserver(courseProgressObserver)
         fileProgressLiveData?.removeObserver(fileProgressObserver)
+        studioMediaProgressLiveData?.removeObserver(studioMediaProgressObserver)
     }
 }
 

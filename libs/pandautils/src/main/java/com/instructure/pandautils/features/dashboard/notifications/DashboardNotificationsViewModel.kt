@@ -60,6 +60,7 @@ import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -86,7 +87,8 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val fileUploadUtilsHelper: FileUploadUtilsHelper,
     private val aggregateProgressObserver: AggregateProgressObserver,
     private val courseSyncProgressDao: CourseSyncProgressDao,
-    private val fileSyncProgressDao: FileSyncProgressDao
+    private val fileSyncProgressDao: FileSyncProgressDao,
+    private val studioMediaProgressDao: StudioMediaProgressDao
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -481,6 +483,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         viewModelScope.launch {
             fileSyncProgressDao.deleteAll()
             courseSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
         }
     }
 

@@ -35,8 +35,8 @@ import com.instructure.canvasapi2.models.StudioCaption
 import com.instructure.canvasapi2.models.StudioLoginSession
 import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
+import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
 import com.instructure.pandautils.utils.poll
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,20 +56,28 @@ class StudioSync(
     private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
     private val apiPrefs: ApiPrefs,
     private val studioApi: StudioApi,
-    private val fileSyncProgressDao: FileSyncProgressDao,
+    private val studioMediaProgressDao: StudioMediaProgressDao,
     private val fileDownloadApi: FileDownloadAPI,
     private val firebaseCrashlytics: FirebaseCrashlytics
 ) {
 
+    private var dummyProgressId: Long? = null
+
     public suspend fun getStudioMetadata(courseIds: Set<Long>): List<StudioMediaMetadata> {
         val studioSession = authenticateStudio() ?: return emptyList()
-        return getAllVideosMetaData(courseIds, studioSession)
+        val metadata = getAllVideosMetaData(courseIds, studioSession)
+        // Create dummy progress so that when all the files are synced and the studio video sync haven't started we won't show the progress as completed.
+        if (metadata.isNotEmpty()) {
+            dummyProgressId = createAndInsertProgress(StudioMediaMetadata(-1, "", "", "", 0, emptyList(), ""))
+        }
+        return metadata
     }
 
     public suspend fun syncStudioVideos(allVideosMetadata: List<StudioMediaMetadata>, mediaIdsToSync: Set<String>) {
         val videosToSync = allVideosMetadata.filter { mediaIdsToSync.contains(it.ltiLaunchId) }
         val videosNeeded = cleanupAndCheckExistingVideos(videosToSync)
         downloadVideos(videosNeeded)
+        dummyProgressId?.let {updateProgress(it, 100, ProgressState.COMPLETED) }
     }
 
     private suspend fun authenticateStudio(): StudioLoginSession? {
@@ -136,8 +144,8 @@ class StudioSync(
         val syncData = mutableListOf<StudioVideoSyncData>()
 
         videos.forEach {
-//            val progressId = createAndInsertProgress(it) // TODO Handle progress
-            syncData.add(StudioVideoSyncData(-1, it.id, it.ltiLaunchId, it.title, it.url, it.captions, it.mimeType))
+            val progressId = createAndInsertProgress(it)
+            syncData.add(StudioVideoSyncData(progressId, it.ltiLaunchId, it.url, it.captions, it.mimeType))
         }
 
         val chunks = syncData.chunked(6)
@@ -152,18 +160,15 @@ class StudioSync(
     }
 
     private suspend fun createAndInsertProgress(studioVideoMetadata: StudioMediaMetadata): Long {
-        val progress = FileSyncProgressEntity(
-            studioVideoMetadata.id,
-            -1,
-            studioVideoMetadata.title,
+        val progress = StudioMediaProgressEntity(
+            studioVideoMetadata.ltiLaunchId,
             0,
-            studioVideoMetadata.size,
-            false, // TODO: Check if this is correct
+            0,
             ProgressState.IN_PROGRESS
         )
 
-        val rowId = fileSyncProgressDao.insert(progress)
-        return fileSyncProgressDao.findByRowId(rowId)?.id ?: -1L
+        val rowId = studioMediaProgressDao.insert(progress)
+        return studioMediaProgressDao.findByRowId(rowId)?.id ?: -1L
     }
 
     private fun cleanupAndCheckExistingVideos(videos: List<StudioMediaMetadata>): List<StudioMediaMetadata> {
@@ -198,7 +203,7 @@ class StudioSync(
                 .collect {
                     when (it) {
                         is DownloadState.InProgress -> {
-                            updateProgress(fileSyncData.progressId, it.progress, ProgressState.IN_PROGRESS)
+                            updateProgress(fileSyncData.progressId, it.progress, ProgressState.IN_PROGRESS, it.totalBytes)
                         }
 
                         is DownloadState.Success -> {
@@ -290,9 +295,12 @@ class StudioSync(
         }
     }
 
-    private suspend fun updateProgress(progressId: Long, progress: Int, progressState: ProgressState) {
-        val newProgress = fileSyncProgressDao.findById(progressId)?.copy(progress = progress, progressState = progressState)
-        newProgress?.let { fileSyncProgressDao.update(it) }
+    private suspend fun updateProgress(progressId: Long, progress: Int, progressState: ProgressState, fileSize: Long? = null) {
+        var newProgress = studioMediaProgressDao.findById(progressId)?.copy(progress = progress, progressState = progressState)
+        if (fileSize != null) {
+            newProgress = newProgress?.copy(fileSize = fileSize)
+        }
+        newProgress?.let { studioMediaProgressDao.update(it) }
     }
 
     private fun rewriteOriginalFile(tempFile: File): File {
@@ -306,9 +314,7 @@ class StudioSync(
 
 data class StudioVideoSyncData(
     val progressId: Long,
-    val fileId: Long,
     val ltiLaunchId: String,
-    val inputFileName: String,
     val fileUrl: String,
     val captions: List<StudioCaption> = emptyList(),
     val mimeType: String

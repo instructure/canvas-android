@@ -42,6 +42,7 @@ import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
@@ -74,7 +75,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val syncRouter: SyncRouter,
     private val courseSync: CourseSync,
     private val studioSync: StudioSync,
-    private val aggregateProgressObserver: AggregateProgressObserver
+    private val aggregateProgressObserver: AggregateProgressObserver,
+    private val studioMediaProgressDao: StudioMediaProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -89,14 +91,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
-        setForeground(createForegroundInfo())
-
-        withContext(Dispatchers.Main) {
-            aggregateProgressObserver.progressData.observeForever(progressObserver)
-        }
-
         courseSyncProgressDao.deleteAll()
         fileSyncProgressDao.deleteAll()
+        studioMediaProgressDao.deleteAll()
 
         if (!featureFlagProvider.offlineEnabled() || apiPrefs.user == null) return Result.success()
 
@@ -155,6 +152,14 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         coursesToSync.map { CourseSyncProgressEntity(it.courseId, it.courseName) }.let {
             courseSyncProgressDao.insertAll(it)
+        }
+
+        if (coursesToSync.isNotEmpty()) {
+            setForeground(createForegroundInfo())
+
+            withContext(Dispatchers.Main) {
+                aggregateProgressObserver.progressData.observeForever(progressObserver)
+            }
         }
 
         val courseIdsToSync = coursesToSync.map { it.courseId }.toSet()
