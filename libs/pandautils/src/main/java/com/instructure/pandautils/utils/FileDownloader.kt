@@ -8,14 +8,30 @@ import com.instructure.canvasapi2.models.Attachment
 
 class FileDownloader(private val context: Context) {
     fun downloadFileToDevice(attachment: Attachment) {
+        downloadFileToDevice(attachment.url, attachment.filename, attachment.contentType)
+    }
+
+    fun downloadFileToDevice(
+        downloadURL: String?,
+        filename: String?,
+        contentType: String?
+    ) {
+        downloadFileToDevice(Uri.parse(downloadURL), filename, contentType)
+    }
+
+    fun downloadFileToDevice(
+        downloadURI: Uri,
+        filename: String?,
+        contentType: String?
+    ) {
         val downloadManager = context.getSystemService(DownloadManager::class.java)
 
-        val request = DownloadManager.Request(Uri.parse(attachment.url))
+        val request = DownloadManager.Request(downloadURI)
         request
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setTitle(attachment.filename)
-            .setMimeType(attachment.contentType)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${attachment.filename}")
+            .setTitle(filename)
+            .setMimeType(contentType)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$filename")
 
         downloadManager.enqueue(request)
     }
