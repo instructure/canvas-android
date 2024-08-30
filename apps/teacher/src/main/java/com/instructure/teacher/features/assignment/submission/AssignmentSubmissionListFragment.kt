@@ -156,7 +156,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                     selectedIdx = selectedIdx,
                     anonymousGrading = assignment.anonymousGrading,
                     filter = presenter.getFilter(),
-                    filterValue = presenter.getFilterPoints()
+                    filterValue = presenter.getFilterPoints(),
+                    filteredSubmissionIds = filteredSubmissions.map { it.id }.toLongArray(),
                 )
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
