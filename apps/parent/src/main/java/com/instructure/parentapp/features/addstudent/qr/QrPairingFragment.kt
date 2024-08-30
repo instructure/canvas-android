@@ -92,4 +92,9 @@ class QrPairingFragment : Fragment() {
                 .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
         )
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.resetError()
+    }
 }

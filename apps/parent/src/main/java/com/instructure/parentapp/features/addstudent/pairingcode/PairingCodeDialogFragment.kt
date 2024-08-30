@@ -17,6 +17,7 @@
 package com.instructure.parentapp.features.addstudent.pairingcode
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -77,5 +78,10 @@ class PairingCodeDialogFragment : DialogFragment() {
             dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         }
         return dialog
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        addStudentViewModel.resetError()
     }
 }

@@ -73,7 +73,7 @@ class AddStudentViewModel @Inject constructor(
         }
     }
 
-    private fun resetError() {
+    fun resetError() {
         _uiState.value = _uiState.value.copy(isError = false)
     }
 }
