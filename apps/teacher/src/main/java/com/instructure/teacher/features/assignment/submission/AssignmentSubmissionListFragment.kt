@@ -207,8 +207,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     private fun setupListeners() = with(binding) {
         clearFilterTextView.setOnClickListener {
-            presenter.setFilter(SubmissionListFilter.ALL)
             presenter.clearFilterList()
+            presenter.setFilter(SubmissionListFilter.ALL)
             filterTitle.setText(R.string.all_submissions)
             clearFilterTextView.setGone()
         }
