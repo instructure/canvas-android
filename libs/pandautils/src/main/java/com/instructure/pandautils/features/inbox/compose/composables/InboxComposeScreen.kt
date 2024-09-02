@@ -52,6 +52,8 @@ import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.MultipleValuesRow
+import com.instructure.pandautils.compose.composables.MultipleValuesRowAction
 import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
@@ -156,15 +158,24 @@ private fun InboxComposeScreenContent(
 
         AnimatedVisibility(visible = uiState.selectContextUiState.selectedCanvasContext != null) {
             Column {
-                LabelMultipleValuesRow(
+                MultipleValuesRow(
                     label = stringResource(R.string.recipientsTo),
-                    selectedValues = uiState.recipientPickerUiState.selectedRecipients,
+                    uiState = uiState.inlineRecipientSelectorState,
                     itemComposable = {
                         RecipientChip(it) {
                             actionHandler(InboxComposeActionHandler.RemoveRecipient(it))
                         }
                     },
-                    addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
+                    actionHandler = { action ->
+                        when(action) {
+                            is MultipleValuesRowAction.AddValueClicked -> actionHandler(InboxComposeActionHandler.OpenRecipientPicker)
+                            is MultipleValuesRowAction.SearchValueSelected<*> -> {
+                                (action.value as? Recipient)?.let { actionHandler(InboxComposeActionHandler.AddRecipient(it)) }
+                            }
+                            is MultipleValuesRowAction.SearchQueryChanges -> actionHandler(InboxComposeActionHandler.SearchRecipientQueryChanged(action.searchQuery))
+                            is MultipleValuesRowAction.HideRecipientResults -> actionHandler(InboxComposeActionHandler.HideSearchResults)
+                        }
+                    }
                 )
 
                 CanvasDivider()

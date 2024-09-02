@@ -4,12 +4,17 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.pandautils.compose.composables.MultipleValuesRowState
 import com.instructure.pandautils.compose.composables.SelectContextUiState
 import java.util.EnumMap
 
 data class InboxComposeUiState(
     val selectContextUiState: SelectContextUiState = SelectContextUiState(),
     val recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
+    val inlineRecipientSelectorState: MultipleValuesRowState<Recipient> = MultipleValuesRowState(
+        isSearchEnabled = true,
+        searchResultToString = { it.name ?: "" },
+    ),
     val screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     val sendIndividual: Boolean = false,
     val subject: TextFieldValue = TextFieldValue(""),
@@ -34,7 +39,10 @@ sealed class InboxComposeViewModelAction {
 sealed class InboxComposeActionHandler {
     data object OpenContextPicker: InboxComposeActionHandler()
     data object OpenRecipientPicker: InboxComposeActionHandler()
+    data class AddRecipient(val recipient: Recipient): InboxComposeActionHandler()
     data class RemoveRecipient(val recipient: Recipient): InboxComposeActionHandler()
+    data class SearchRecipientQueryChanged(val searchValue: TextFieldValue): InboxComposeActionHandler()
+    data object HideSearchResults: InboxComposeActionHandler()
     data object Close: InboxComposeActionHandler()
     data class CancelDismissDialog(val isShow: Boolean): InboxComposeActionHandler()
     data object SendClicked : InboxComposeActionHandler()

@@ -8,6 +8,7 @@ import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
@@ -77,11 +78,8 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { it.copy(screenOption = InboxComposeScreenOptions.ContextPicker) }
             }
             is InboxComposeActionHandler.RemoveRecipient -> {
-                _uiState.update { it.copy(
-                    recipientPickerUiState = it.recipientPickerUiState.copy(
-                        selectedRecipients = it.recipientPickerUiState.selectedRecipients - action.recipient
-                    )
-                ) }
+                val newRecipients = uiState.value.recipientPickerUiState.selectedRecipients - action.recipient
+                updateSelectedRecipients(newRecipients)
             }
             is InboxComposeActionHandler.OpenRecipientPicker -> {
                 _uiState.update { it.copy(screenOption = InboxComposeScreenOptions.RecipientPicker) }
@@ -110,6 +108,52 @@ class InboxComposeViewModel @Inject constructor(
                 viewModelScope.launch {
                     fileDownloader.downloadFileToDevice(action.attachment.attachment)
                 }
+            }
+            is InboxComposeActionHandler.AddRecipient -> {
+                val newRecipients = uiState.value.recipientPickerUiState.selectedRecipients + action.recipient
+                updateSelectedRecipients(newRecipients)
+            }
+            is InboxComposeActionHandler.SearchRecipientQueryChanged -> {
+                _uiState.update { it.copy(
+                    inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                        searchQuery = action.searchValue
+                    )
+                ) }
+
+                if (action.searchValue.text.length > 1) {
+                    viewModelScope.launch {
+                        val recipients = getRecipientList(
+                            action.searchValue.text,
+                            uiState.value.selectContextUiState.selectedCanvasContext
+                                ?: return@launch
+                        ).dataOrNull.orEmpty().filterNot { uiState.value.recipientPickerUiState.selectedRecipients.contains(it) }
+
+                        _uiState.update {
+                            it.copy(
+                                inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                    searchResults = recipients,
+                                    isShowResults = recipients.isNotEmpty(),
+                                )
+                            )
+                        }
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                isShowResults = false,
+                            )
+                        )
+                    }
+                }
+            }
+
+            InboxComposeActionHandler.HideSearchResults -> {
+                _uiState.update { it.copy(
+                    inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                        isShowResults = false,
+                    )
+                ) }
             }
         }
     }
@@ -177,24 +221,13 @@ class InboxComposeViewModel @Inject constructor(
                 }
             }
             is RecipientPickerActionHandler.RecipientClicked -> {
-                if (uiState.value.recipientPickerUiState.selectedRecipients.contains(action.recipient)) {
-                    _uiState.update { it.copy(
-                        recipientPickerUiState = it.recipientPickerUiState.copy(
-                            selectedRecipients = it.recipientPickerUiState.selectedRecipients - action.recipient
-                        )
-                    ) }
-                    _uiState.update { it.copy(
-                        recipientPickerUiState = it.recipientPickerUiState.copy(
-                            selectedRecipients = it.recipientPickerUiState.selectedRecipients - action.recipient
-                        )
-                    ) }
+                val newRecipients = if (uiState.value.recipientPickerUiState.selectedRecipients.contains(action.recipient)) {
+                    uiState.value.recipientPickerUiState.selectedRecipients - action.recipient
                 } else {
-                    _uiState.update { it.copy(
-                        recipientPickerUiState = it.recipientPickerUiState.copy(
-                            selectedRecipients = it.recipientPickerUiState.selectedRecipients + action.recipient
-                        )
-                    ) }
+                    uiState.value.recipientPickerUiState.selectedRecipients + action.recipient
                 }
+
+                updateSelectedRecipients(newRecipients)
             }
             is RecipientPickerActionHandler.SearchValueChanged -> {
                 _uiState.update { it.copy(
@@ -233,7 +266,7 @@ class InboxComposeViewModel @Inject constructor(
             var recipients: List<Recipient> = emptyList()
             var newState: ScreenState = ScreenState.Empty
             try {
-                recipients = inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh).dataOrThrow
+                recipients = getRecipientList(searchQuery, context, forceRefresh).dataOrThrow
                 if (recipients.isEmpty().not()) { newState = ScreenState.Data }
             } catch (e: Exception) {
                 newState = ScreenState.Error
@@ -278,6 +311,11 @@ class InboxComposeViewModel @Inject constructor(
             ) }
         }
     }
+
+    private suspend fun getRecipientList(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false): DataResult<List<Recipient>> {
+        return inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh)
+    }
+
 
     private fun createConversation() {
         uiState.value.selectContextUiState.selectedCanvasContext?.let { canvasContext ->
@@ -358,5 +396,16 @@ class InboxComposeViewModel @Inject constructor(
         viewModelScope.launch {
             _events.send(InboxComposeViewModelAction.ShowScreenResult(message))
         }
+    }
+
+    private fun updateSelectedRecipients(newRecipientList: List<Recipient>) {
+        _uiState.update { it.copy(
+            recipientPickerUiState = it.recipientPickerUiState.copy(
+                selectedRecipients = newRecipientList
+            ),
+            inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                selectedValues = newRecipientList,
+            )
+        ) }
     }
 }
