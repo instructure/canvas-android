@@ -54,7 +54,7 @@ class HtmlParser(
         <track kind="captions" src="{captionsFileSource}" srclang="{captionsSrcLang}" />
     """.trimIndent()
 
-    suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long, studioMetadata: List<StudioMediaMetadata>): HtmlParsingResult {
+    suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long, studioMetadata: List<StudioMediaMetadata> = emptyList()): HtmlParsingResult {
         if (html == null) return HtmlParsingResult(null, emptySet(), emptySet(), emptySet())
 
         val imageParsingResult = parseAndReplaceImageTags(html, courseId)

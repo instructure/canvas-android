@@ -19,8 +19,7 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -32,6 +31,9 @@ import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AggregateProgressObserver(
     private val context: Context,
@@ -70,7 +72,7 @@ class AggregateProgressObserver(
     }
 
     init {
-        Handler(Looper.getMainLooper()).post {
+        GlobalScope.launch(Dispatchers.Main) {
             courseProgressLiveData = courseSyncProgressDao.findAllLiveData()
             courseProgressLiveData?.observeForever(courseProgressObserver)
 
@@ -146,6 +148,7 @@ class AggregateProgressObserver(
         _progressData.postValue(viewData)
     }
 
+    @MainThread
     fun onCleared() {
         courseProgressLiveData?.removeObserver(courseProgressObserver)
         fileProgressLiveData?.removeObserver(fileProgressObserver)

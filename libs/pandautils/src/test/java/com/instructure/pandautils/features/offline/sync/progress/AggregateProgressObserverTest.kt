@@ -27,6 +27,7 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
@@ -36,11 +37,17 @@ import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AggregateProgressObserverTest {
 
     @get:Rule
@@ -49,6 +56,9 @@ class AggregateProgressObserverTest {
     private val context: Context = mockk(relaxed = true)
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
+    private val studioMediaProgressDao: StudioMediaProgressDao = mockk(relaxed = true)
+
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var aggregateProgressObserver: AggregateProgressObserver
 
@@ -59,11 +69,14 @@ class AggregateProgressObserverTest {
         every { NumberHelper.readableFileSize(any<Context>(), capture(captor)) } answers {
             "${captor.captured} bytes"
         }
+
+        Dispatchers.setMain(testDispatcher)
     }
 
     @After
     fun teardown() {
         unmockkAll()
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -308,6 +321,6 @@ class AggregateProgressObserverTest {
     }
 
     private fun createObserver(): AggregateProgressObserver {
-        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao)
+        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao, studioMediaProgressDao)
     }
 }
