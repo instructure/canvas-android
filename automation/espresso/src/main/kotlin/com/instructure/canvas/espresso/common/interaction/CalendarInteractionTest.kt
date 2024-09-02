@@ -17,6 +17,7 @@ package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.StubLandscape
+import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
@@ -404,7 +405,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         calendarScreenPage.assertItemNotDisplayed(event.title!!)
         calendarScreenPage.assertItemNotDisplayed(todo.plannable.title)
 
-        calendarScreenPage.clickTodayButton()
+        clickTodayButton()
 
         calendarScreenPage.assertItemDetails(event.title!!, course.name)
         calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To Do")
@@ -421,4 +422,6 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
     abstract fun assertAssignmentDetailsTitle(title: String)
 
     abstract fun assertDiscussionDetailsTitle(title: String)
+    
+    abstract fun clickTodayButton()
 }

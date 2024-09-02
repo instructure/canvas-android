@@ -26,5 +26,5 @@ sealed class CoursesAction {
 }
 
 sealed class CoursesViewModelAction {
-    data class NavigateToCourseDetails(val navigationUrl: String) : CoursesViewModelAction()
+    data class NavigateToCourseDetails(val courseId: Long) : CoursesViewModelAction()
 }

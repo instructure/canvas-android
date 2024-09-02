@@ -25,6 +25,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.about.AboutFragment
+import com.instructure.pandautils.features.legal.LegalDialogFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -42,7 +43,6 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSettingsBinding
-import com.instructure.teacher.dialog.LegalDialog
 import com.instructure.teacher.factory.ProfileSettingsFragmentPresenterFactory
 import com.instructure.teacher.presenters.ProfileSettingsFragmentPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -71,7 +71,7 @@ class SettingsFragment : BasePresenterFragment<
         }
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), AppType.TEACHER) }
         aboutButton.onClick { AboutFragment.newInstance().show(childFragmentManager, null) }
-        legalButton.onClick { LegalDialog().show(requireFragmentManager(), LegalDialog.TAG) }
+        legalButton.onClick { LegalDialogFragment().show(requireFragmentManager(), null) }
         notificationPreferenesButton.onClick {
             RouteMatcher.route(
                 requireActivity(),

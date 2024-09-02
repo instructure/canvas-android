@@ -105,8 +105,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     // This will keep track of where we need to be.
     private var currentPos = 0
 
-    private var isDiscussionRedesignEnabled = false
-
     private var snycedTabs = emptySet<String>()
     private var syncedFileIds = emptyList<Long>()
     private var isOfflineEnabled = false
@@ -137,7 +135,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             isOfflineEnabled = repository.isOfflineEnabled()
             snycedTabs = repository.getSyncedTabs(canvasContext.id)
             syncedFileIds = repository.getSyncedFileIds(canvasContext.id)
-            isDiscussionRedesignEnabled = discussionRouteHelper.isDiscussionRedesignEnabled(canvasContext)
             loadModuleProgression(savedInstanceState)
         }
     }
@@ -643,7 +640,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             moduleItem!!,
             canvasContext as Course,
             modules[groupPos],
-            isDiscussionRedesignEnabled,
             navigatedFromModules,
             repository.isOnline() || !isOfflineEnabled, // If the offline feature is disabled we always use the online behavior
             snycedTabs,

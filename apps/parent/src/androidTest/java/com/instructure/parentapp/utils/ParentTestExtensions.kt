@@ -17,15 +17,15 @@
 
 package com.instructure.parentapp.utils
 
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import androidx.annotation.DrawableRes
+import androidx.compose.ui.test.SemanticsMatcher
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvasapi2.models.User
-import com.instructure.parentapp.R
+import com.instructure.pandautils.utils.DrawableId
 import com.instructure.parentapp.features.login.LoginActivity
 
 
-fun ParentTest.tokenLogin(domain: String, token: String, user: User) {
+fun CanvasTest.tokenLogin(domain: String, token: String, user: User, assertDashboard: Boolean = true) {
     activityRule.runOnUiThread {
         (originalActivity as LoginActivity).loginWithToken(
             token,
@@ -34,5 +34,10 @@ fun ParentTest.tokenLogin(domain: String, token: String, user: User) {
         )
     }
 
-    waitForMatcherWithSleeps(ViewMatchers.withId(R.id.toolbar), 20000).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    if (assertDashboard && this is ParentTest) {
+        dashboardPage.assertPageObjects()
+    }
 }
+
+fun hasDrawable(@DrawableRes id: Int): SemanticsMatcher =
+    SemanticsMatcher.expectValue(DrawableId, id)

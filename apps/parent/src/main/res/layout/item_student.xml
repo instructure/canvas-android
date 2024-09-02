@@ -20,7 +20,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.parentapp.features.main.StudentItemViewModel" />
+            type="com.instructure.parentapp.features.dashboard.StudentItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -18,7 +18,6 @@
 
 package com.instructure.pandautils.utils
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
@@ -27,7 +26,6 @@ import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -41,7 +39,6 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Transformation
 import android.view.inputmethod.InputMethodManager
@@ -58,7 +55,6 @@ import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
-import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -71,7 +67,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.signature.ObjectKey
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
@@ -827,91 +822,7 @@ fun Animation.addListener(onStart: (Animation?) -> Unit = {}, onEnd: (Animation?
     })
 }
 
-/**
- * Potentially animate showing a [BottomNavigationView].
- *
- * Abruptly changing the visibility leads to a re-layout of main content, animating
- * `translationY` leaves a gap where the view was that content does not fill.
- *
- * Instead, take a snapshot of the view, and animate this in, only changing the visibility (and
- * thus layout) when the animation completes.
- */
-fun BottomNavigationView.show() {
-    if (visibility == View.VISIBLE) return
-
-    this.post {
-        val parent = parent as ViewGroup
-        // View needs to be laid out to create a snapshot & know position to animate. If view isn't
-        // laid out yet, need to do this manually.
-        if (!isLaidOut) {
-            measure(
-                View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.AT_MOST)
-            )
-            layout(parent.left, parent.height - measuredHeight, parent.right, parent.height)
-        }
-
-        val drawable = BitmapDrawable(context.resources, drawToBitmap())
-        drawable.setBounds(left, parent.height, right, parent.height + height)
-        parent.overlay.add(drawable)
-        ValueAnimator.ofInt(parent.height, top).apply {
-            startDelay = 100L
-            duration = 300L
-            interpolator = AnimationUtils.loadInterpolator(
-                context,
-                android.R.interpolator.linear_out_slow_in
-            )
-            addUpdateListener {
-                val newTop = it.animatedValue as Int
-                drawable.setBounds(left, newTop, right, newTop + height)
-            }
-            doOnEnd {
-                parent.overlay.remove(drawable)
-                visibility = View.VISIBLE
-            }
-            start()
-        }
-    }
-}
-
-/**
- * Potentially animate hiding a [BottomNavigationView].
- *
- * Abruptly changing the visibility leads to a re-layout of main content, animating
- * `translationY` leaves a gap where the view was that content does not fill.
- *
- * Instead, take a snapshot, instantly hide the view (so content lays out to fill), then animate
- * out the snapshot.
- */
-fun BottomNavigationView.hide() {
-    if (visibility == View.GONE) return
-
-    this.post {
-        val drawable = BitmapDrawable(context.resources, drawToBitmap())
-        val parent = parent as ViewGroup
-        drawable.setBounds(left, top, right, bottom)
-        parent.overlay.add(drawable)
-        visibility = View.GONE
-        ValueAnimator.ofInt(top, parent.height).apply {
-            startDelay = 100L
-            duration = 200L
-            interpolator = AnimationUtils.loadInterpolator(
-                context,
-                android.R.interpolator.fast_out_linear_in
-            )
-            addUpdateListener {
-                val newTop = it.animatedValue as Int
-                drawable.setBounds(left, newTop, right, newTop + height)
-            }
-            doOnEnd {
-                parent.overlay.remove(drawable)
-            }
-            start()
-        }
-    }
-}
-
-fun View.expand(duration: Long = 300, startOffset: Long = 0L, interpolate: Boolean = false) {
+fun View.expand(duration: Long = 300) {
     if (visibility == View.VISIBLE) return
 
     this.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -931,21 +842,12 @@ fun View.expand(duration: Long = 300, startOffset: Long = 0L, interpolate: Boole
         override fun willChangeBounds(): Boolean = true
     }
 
-    animation.apply {
-        this.startOffset = startOffset
-        this.duration = duration
-        if (interpolate) {
-            this.interpolator = AnimationUtils.loadInterpolator(
-                context,
-                android.R.interpolator.linear_out_slow_in
-            )
-        }
-    }
+    animation.duration = duration
 
     this.startAnimation(animation)
 }
 
-fun View.collapse(duration: Long = 300, startOffset: Long = 0L, interpolate: Boolean = false) {
+fun View.collapse(duration: Long = 300) {
     if (visibility == View.GONE) return
 
     val initialHeight = this.measuredHeight
@@ -963,16 +865,7 @@ fun View.collapse(duration: Long = 300, startOffset: Long = 0L, interpolate: Boo
         override fun willChangeBounds(): Boolean = true
     }
 
-    animation.apply {
-        this.startOffset = startOffset
-        this.duration = duration
-        if (interpolate) {
-            this.interpolator = AnimationUtils.loadInterpolator(
-                context,
-                android.R.interpolator.fast_out_linear_in
-            )
-        }
-    }
+    animation.duration = duration
 
     this.startAnimation(animation)
 }

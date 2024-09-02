@@ -321,6 +321,26 @@ class InboxViewModelTest {
     }
 
     @Test
+    fun `Remove selected items from the list when marked as unread in archived scope`() {
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))), // We need an other call for the scope change
+            DataResult.Success(emptyList())
+        )
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
+
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
+        viewModel.itemViewModels.value!![0].onLongClick(View(context))
+        viewModel.itemViewModels.value!![1].onClick(View(context))
+        viewModel.markAsUnreadSelected()
+
+        assertTrue(viewModel.itemViewModels.value!!.isEmpty())
+        coVerify { inboxRepository.batchUpdateConversations(any(), eq("mark_as_unread")) }
+    }
+
+    @Test
     fun `Mark selected items as read`() {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }

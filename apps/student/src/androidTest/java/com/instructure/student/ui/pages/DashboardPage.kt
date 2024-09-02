@@ -426,6 +426,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.bottomNavigationNotifications)).check(matches(isNotEnabled()))
         onView(withId(R.id.bottomNavigationInbox)).check(matches(isNotEnabled()))
     }
+
+    fun goToDashboard() {
+        onView(withId(R.id.bottomNavigationHome)).click()
+    }
+
 }
 
 /**

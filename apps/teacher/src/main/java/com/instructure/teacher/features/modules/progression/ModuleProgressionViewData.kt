@@ -33,7 +33,7 @@ sealed class ModuleProgressionAction {
 sealed class ModuleItemViewData {
     data class Page(val pageUrl: String) : ModuleItemViewData()
     data class Assignment(val assignmentId: Long) : ModuleItemViewData()
-    data class Discussion(val isDiscussionRedesignEnabled: Boolean, val discussionTopicHeaderId: Long) : ModuleItemViewData()
+    data class Discussion(val discussionTopicHeaderId: Long) : ModuleItemViewData()
     data class Quiz(val quizId: Long) : ModuleItemViewData()
     data class External(val url: String, val title: String) : ModuleItemViewData()
     data class File(val fileUrl: String) : ModuleItemViewData()

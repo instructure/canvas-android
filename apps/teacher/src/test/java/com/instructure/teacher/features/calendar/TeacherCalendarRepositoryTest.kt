@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -51,8 +53,9 @@ class TeacherCalendarRepositoryTest {
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
+    private val calendarFilterDao: CalendarFilterDao = mockk(relaxed = true)
 
-    private val calendarRepository: CalendarRepository = TeacherCalendarRepository(plannerApi, coursesApi, calendarEventApi, apiPrefs, featuresApi)
+    private val calendarRepository: CalendarRepository = TeacherCalendarRepository(plannerApi, coursesApi, calendarEventApi, apiPrefs, featuresApi, calendarFilterDao)
 
     @Test(expected = Exception::class)
     fun `Throw exception when calendar event request fails`() = runTest {
@@ -205,5 +208,27 @@ class TeacherCalendarRepositoryTest {
         val result = calendarRepository.getCalendarFilterLimit()
 
         assertEquals(10, result)
+    }
+
+    @Test
+    fun `getCalendarFilters calls dao with the correct params and returns results frm db`() = runTest {
+        val filters = CalendarFilterEntity(1, "domain", "1", -1, setOf("filter1"))
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns filters
+        coEvery { apiPrefs.user } returns User(1, "Test User")
+        coEvery { apiPrefs.fullDomain } returns "domain"
+
+        val result = calendarRepository.getCalendarFilters()
+
+        assertEquals(filters, result)
+        coVerify { calendarFilterDao.findByUserIdAndDomain(1, "domain") }
+    }
+
+    @Test
+    fun `Update calendar filters updates db`() = runTest {
+        val filters = CalendarFilterEntity(1, "domain", "1", -1, setOf("filter1"))
+
+        calendarRepository.updateCalendarFilters(filters)
+
+        coVerify { calendarFilterDao.insertOrUpdate(filters) }
     }
 }

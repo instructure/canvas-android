@@ -20,6 +20,7 @@ package com.instructure.parentapp.utils
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
+import com.instructure.parentapp.ui.pages.DashboardPage
 
 
 abstract class ParentTest : CanvasTest() {
@@ -27,4 +28,6 @@ abstract class ParentTest : CanvasTest() {
     override val isTesting = BuildConfig.IS_TESTING
 
     override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
+
+    val dashboardPage = DashboardPage()
 }

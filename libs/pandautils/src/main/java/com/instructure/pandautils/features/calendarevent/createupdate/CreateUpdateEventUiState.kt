@@ -83,7 +83,7 @@ sealed class CreateUpdateEventAction {
     data class UpdateLocation(val location: String) : CreateUpdateEventAction()
     data class UpdateAddress(val address: String) : CreateUpdateEventAction()
     data class UpdateDetails(val details: String) : CreateUpdateEventAction()
-    data class Save(val modifyEventScope: CalendarEventAPI.ModifyEventScope) : CreateUpdateEventAction()
+    data class Save(val modifyEventScope: CalendarEventAPI.ModifyEventScope, val isSeriesEvent: Boolean = false) : CreateUpdateEventAction()
     data object SnackbarDismissed : CreateUpdateEventAction()
     data object ShowSelectCalendarScreen : CreateUpdateEventAction()
     data object HideSelectCalendarScreen : CreateUpdateEventAction()

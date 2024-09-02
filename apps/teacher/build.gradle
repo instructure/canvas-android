@@ -39,8 +39,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 69
-        versionName = '1.32.0'
+        versionCode = 70
+        versionName = '1.33.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -106,6 +106,9 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+
+            buildConfigField "String", "PRONOUN_TEACHER_TEST_USER", "\"$pronounTestTeacher\""
+            buildConfigField "String", "PRONOUN_TEACHER_TEST_PASSWORD", "\"$pronounTestTeacherPassword\""
 
             ext {
                 heapEnabled = true

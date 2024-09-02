@@ -17,7 +17,6 @@ package com.instructure.teacher.features.assignment.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
@@ -62,7 +61,6 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
@@ -280,14 +278,14 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         // Show progress bar while loading description
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
-        descriptionWebViewWrapper.webView.setWebChromeClient(object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
+        descriptionWebViewWrapper.webView.addVideoClient(requireActivity())
+        descriptionWebViewWrapper.webView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
+            override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
                 if (newProgress >= 100) {
                     descriptionProgressBar.setGone()
                 }
             }
-        })
+        }
 
         descriptionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {

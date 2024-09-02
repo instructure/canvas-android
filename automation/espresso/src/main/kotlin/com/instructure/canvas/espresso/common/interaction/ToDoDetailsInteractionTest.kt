@@ -25,8 +25,8 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsP
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPlannable
 import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.toDate
-import com.instructure.pandautils.utils.textAndIconColor
 import org.junit.Test
 import java.util.Date
 
@@ -39,12 +39,12 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
     @Test
     fun assertTitle() {
         val data = initData()
-        val student = data.students[0]
+        val user = getLoggedInUser()
         val course = data.courses.values.first()
         data.addPlannable(
             name = "Test Todo",
             course = course,
-            userId = student.id,
+            userId = user.id,
             type = PlannableType.PLANNER_NOTE,
             date = Date()
         )
@@ -58,12 +58,12 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
     @Test
     fun assertCanvasContext() {
         val data = initData()
-        val student = data.students[0]
+        val user = getLoggedInUser()
         val course = data.courses.values.first()
         data.addPlannable(
             name = "Test Todo",
             course = course,
-            userId = student.id,
+            userId = user.id,
             type = PlannableType.PLANNER_NOTE,
             date = Date()
         )
@@ -72,18 +72,17 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         calendarToDoDetailsPage.assertCanvasContext(course.name)
-        calendarToDoDetailsPage.assertTextColor(course.name, course.textAndIconColor)
     }
 
     @Test
     fun assertDate() {
         val data = initData()
-        val student = data.students[0]
+        val user = getLoggedInUser()
         val course = data.courses.values.first()
         data.addPlannable(
             name = "Test Todo",
             course = course,
-            userId = student.id,
+            userId = user.id,
             type = PlannableType.PLANNER_NOTE,
             date = Date()
         )
@@ -97,12 +96,12 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
     @Test
     fun assertDescription() {
         val data = initData()
-        val student = data.students[0]
+        val user = getLoggedInUser()
         val course = data.courses.values.first()
         data.addPlannable(
             name = "Test Todo",
             course = course,
-            userId = student.id,
+            userId = user.id,
             type = PlannableType.PLANNER_NOTE,
             date = Date(),
             details = "Test Description"
@@ -117,12 +116,12 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
     @Test
     fun openToDoEditPage() {
         val data = initData()
-        val student = data.students[0]
+        val user = getLoggedInUser()
         val course = data.courses.values.first()
         data.addPlannable(
             name = "Test Todo",
             course = course,
-            userId = student.id,
+            userId = user.id,
             type = PlannableType.PLANNER_NOTE,
             date = Date()
         )
@@ -140,12 +139,12 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
     @Test
     fun openToDoEditDialog() {
         val data = initData()
-        val student = data.students[0]
+        val user = getLoggedInUser()
         val course = data.courses.values.first()
         data.addPlannable(
             name = "Test Todo",
             course = course,
-            userId = student.id,
+            userId = user.id,
             type = PlannableType.PLANNER_NOTE,
             date = Date()
         )
@@ -163,12 +162,12 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
     @Test
     fun deleteToDo() {
         val data = initData()
-        val student = data.students[0]
+        val user = getLoggedInUser()
         val course = data.courses.values.first()
         data.addPlannable(
             name = "Test Todo",
             course = course,
-            userId = student.id,
+            userId = user.id,
             type = PlannableType.PLANNER_NOTE,
             date = Date()
         )
@@ -190,4 +189,6 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
     abstract fun goToToDoDetails(data: MockCanvas)
 
     abstract fun initData(): MockCanvas
+
+    abstract fun getLoggedInUser(): User
 }

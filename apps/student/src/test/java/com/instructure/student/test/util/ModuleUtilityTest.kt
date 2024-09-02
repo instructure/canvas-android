@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.files.details.FileDetailsFragment
@@ -69,9 +70,9 @@ class ModuleUtilityTest : TestCase() {
 
 
         var parentFragment = callGetFragment(moduleItem, course, moduleObject)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(FileDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(FileDetailsFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
 
         // Test module object is null
         moduleObject = null
@@ -80,9 +81,9 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putString(Const.FILE_URL, expectedUrl)
         expectedBundle.putInt(Const.FILE_ID, 0)
         parentFragment = callGetFragment(moduleItem, course, moduleObject)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(FileDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(FileDetailsFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
 
     }
 
@@ -102,8 +103,8 @@ class ModuleUtilityTest : TestCase() {
         val course = Course()
 
         val filDetailsFragment = callGetFragment(moduleItem, course, moduleObject, isOnline = false)
-        TestCase.assertNotNull(filDetailsFragment)
-        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, filDetailsFragment!!.javaClass)
+        assertNotNull(filDetailsFragment)
+        assertEquals(NotAvailableOfflineFragment::class.java, filDetailsFragment!!.javaClass)
     }
 
     @Test
@@ -123,9 +124,9 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putBoolean(PageDetailsFragment.NAVIGATED_FROM_MODULES, false)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(PageDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(PageDetailsFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -143,9 +144,9 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123456789)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -163,9 +164,9 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123456789)
 
         val parentFragment = callGetFragment(moduleItem, course, null, isOnline = false, tabs = setOf(Tab.ASSIGNMENTS_ID))
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -180,8 +181,8 @@ class ModuleUtilityTest : TestCase() {
         val course = Course()
 
         val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
-        TestCase.assertNotNull(fragment)
-        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
+        assertNotNull(fragment)
+        assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
     }
 
     @Test
@@ -199,9 +200,9 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123450000000006789)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -219,9 +220,9 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123450000000006789)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -245,16 +246,16 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putBoolean(com.instructure.pandautils.utils.Const.IS_UNSUPPORTED_FEATURE, true)
 
         var parentFragment = callGetFragment(moduleItem, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(InternalWebviewFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(InternalWebviewFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
         // test external tool type
 
         val moduleItem2 = moduleItem.copy(type = "ExternalTool")
         parentFragment = callGetFragment(moduleItem2, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(InternalWebviewFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(InternalWebviewFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -271,8 +272,8 @@ class ModuleUtilityTest : TestCase() {
         val course = Course()
 
         val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
-        TestCase.assertNotNull(fragment)
-        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
+        assertNotNull(fragment)
+        assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
     }
 
     @Test
@@ -308,9 +309,9 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putLong(Const.ID, 55)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(ModuleQuizDecider::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(ModuleQuizDecider::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -326,12 +327,10 @@ class ModuleUtilityTest : TestCase() {
         val expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putLong(DiscussionDetailsFragment.DISCUSSION_TOPIC_HEADER_ID, 123456789)
-        expectedBundle.putString(DiscussionDetailsFragment.DISCUSSION_TITLE, null)
-        expectedBundle.putBoolean(DiscussionDetailsFragment.GROUP_DISCUSSION, false)
         val parentFragment = callGetFragment(moduleItem, course, null)
-        TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(DiscussionDetailsFragment::class.java, parentFragment!!.javaClass)
-        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+        assertNotNull(parentFragment)
+        assertEquals(DiscussionDetailsWebViewFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 
     @Test
@@ -345,11 +344,11 @@ class ModuleUtilityTest : TestCase() {
 
         val course = Course()
         val fragment = callGetFragment(moduleItem, course, null, isOnline = false)
-        TestCase.assertNotNull(fragment)
-        TestCase.assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
+        assertNotNull(fragment)
+        assertEquals(NotAvailableOfflineFragment::class.java, fragment!!.javaClass)
     }
 
     private fun callGetFragment(moduleItem: ModuleItem, course: Course, moduleObject: ModuleObject?, isOnline: Boolean = true, tabs: Set<String> = emptySet(), files: List<Long> = emptyList()): Fragment? {
-        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, false, isOnline, tabs, files, context)
+        return ModuleUtility.getFragment(moduleItem, course, moduleObject, false, isOnline, tabs, files, context)
     }
 }

@@ -1,0 +1,1763 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+    <string name="noFilesFound">No Files Found</string>
+    <string name="searchFilesHint">Search files</string>
+    <string name="fileSearchInstructions">Enter a search term with three or more characters</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">"Found no matching items"</item>
+        <item quantity="one">"Found %d matching item"</item>
+        <item quantity="other">"Found %d matching items"</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">Flying panda in cape</string>
+    <string name="troubleLoggingIn">Having trouble logging in?</string>
+    <string name="requestLoginHelp">Request Login Help</string>
+    <string name="loginHelpSubject">I\'m having trouble logging in</string>
+    <string name="errorReportInvalidEmail">Please enter a valid email address</string>
+    <string name="announcementSections">Sections: %s</string>
+    <string name="selectedListItem">Selected: %s</string>
+
+    <!-- Student Strings -->
+
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Assignment Details</string>
+    <string name="submission_types">Submission Types</string>
+    <string name="noAssignmentDescriptionStudent">No Content</string>
+    <string name="dueLabel">Due</string>
+    <string name="submissionStatusSuccessTitle">Successfully submitted!</string>
+    <string name="submissionStatusSuccessSubtitle">Your submission is now waiting to be graded</string>
+    <string name="submissionStatusUploadingTitle">Submission Uploading…</string>
+    <string name="submissionStatusUploadingSubtitle">Tap to view progress</string>
+    <string name="submissionStatusFailedTitle">Submission Failed</string>
+    <string name="submissionStatusFailedSubtitle">Tap to view details</string>
+    <string name="submissionAndRubric">Submission &amp; Rubric</string>
+    <string name="commentsAndRubric">Comments &amp; Rubric</string>
+    <string name="errorLoadingAssignment">There was a problem loading this assignment. Please check your connection and try again.</string>
+    <string name="submitted">Submitted</string>
+    <string name="notSubmitted">Not Submitted</string>
+    <string name="allowedFileTypes">Allowable File Types</string>
+    <string name="attempts">Attempts</string>
+    <string name="attemptsAllowedLabel">Attempts Allowed</string>
+    <string name="attemptsUsedLabel">Attempts Used</string>
+    <string name="noAttemptsLeft">No attempts left</string>
+    <string name="resubmitAssignment">Resubmit Assignment</string>
+    <string name="launchingExternalTool">Launching External Tool…</string>
+    <string name="launchExternalTool">Launch External Tool</string>
+    <string name="preview">Preview</string>
+    <string name="submissionUploadFailedMessage">One or more files failed to upload. Check your internet connection and retry to submit.</string>
+    <string name="submissionUploadByteProgress">%1$s of %2$s</string>
+    <string name="submissionSuccessTitle">Submission Success!</string>
+    <string name="submissionSuccessMessage">Your assignment was successfully submitted. Enjoy your day!</string>
+    <string name="submissionDeleteTitle">Cancel Submission</string>
+    <string name="submissionDeleteMessage">This will cancel and delete your submission.</string>
+    <string name="submissionDeleted">Submission Deleted</string>
+    <string name="missingSubmissionLabel">Missing</string>
+    <string name="gradedSubmissionLabel">Graded</string>
+    <string name="reminderTitle">Reminder</string>
+    <string name="reminderDescription">Add due date reminder notifications about this assignment on this device.</string>
+    <string name="a11y_addReminder">Add reminder</string>
+    <string name="a11y_removeReminder">Remove reminder</string>
+    <string name="reminderBefore">%s Before</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minute</item>
+        <item quantity="other">%d Minutes</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Hour</item>
+        <item quantity="other">%d Hours</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Day</item>
+        <item quantity="other">%d Days</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Week</item>
+        <item quantity="other">%d Weeks</item>
+    </plurals>
+    <string name="reminderCustom">Custom</string>
+    <string name="customReminderTitle">Custom Reminder</string>
+    <string name="customReminderQuantityHint">Quantity</string>
+    <string name="customReminderMinutes">Minutes Before</string>
+    <string name="customReminderHours">Hours Before</string>
+    <string name="customReminderDays">Days Before</string>
+    <string name="customReminderWeeks">Weeks Before</string>
+    <string name="reminderNotificationChannelName">Reminder Notifications</string>
+    <string name="reminderNotificationChannelDescription">Canvas Notifications for assignment reminders.</string>
+    <string name="reminderNotificationTitle">Due Date Reminder</string>
+    <string name="reminderNotificationDescription">This assignment is due in %s: %s</string>
+    <string name="reminderInPast">Please choose a future time for your reminder!</string>
+    <string name="reminderAlreadySet">You have already set a reminder for this time</string>
+    <string name="deleteReminderTitle">Delete Reminder</string>
+    <string name="deleteReminderMessage">Are you sure you would like to delete this reminder?</string>
+    <string name="reminderPermissionNotGrantedError">You need to enable exact alarm permission for this action</string>
+
+    <!-- Student Submission -->
+    <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
+    <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
+    <string name="addFileFabContentDesc">Show Add File Options</string>
+    <string name="recordAudio">Record Audio</string>
+    <string name="recordVideo">Record Video</string>
+    <string name="a11y_textSubmissionEditor">Text Submission Editor</string>
+
+    <!-- Student Submission -->
+    <string name="submissionWrite">Write&#8230;</string>
+    <string name="textSubmissionFailureMessage">Something went wrong on submission upload. Submit again.</string>
+
+    <!-- Student Submission Details -->
+    <string name="submission">Submission</string>
+    <string name="submissionVersions">Submission versions</string>
+    <string name="submissionDetailsFileTabName">Files (%d)</string>
+    <string name="rubric">Rubric</string>
+    <string name="submissionDetailsErrorTitle">Submission Error</string>
+    <string name="urlSubmissionDisclaimer">This submission was a URL to an external page. We\'ve included a snapshot of what the page looked like when it was submitted.</string>
+    <string name="submissionDetailsNoSubmissionYet">No Submission Yet</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Your assignment was locked on %1$s at %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Your assignment will unlock on %1$s at %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Your assignment is locked by module \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Your assignment is locked by a module requirement</string>
+    <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
+    <string name="submissionDetailsNoSubmissionAllowed">No Submission Allowed</string>
+    <string name="webPreview">Preview of the entered URL</string>
+    <string name="websiteUrl">Website URL</string>
+    <string name="noneContentMessage">This assignment does not allow online submissions</string>
+    <string name="onPaperContentMessage">This assignment does not allow online submissions</string>
+    <string name="noOnlineSubmissions">No Online Submissions</string>
+    <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
+    <string name="openTool">Open Tool</string>
+    <string name="a11y_submissionText">Submission text</string>
+
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Out of %s points</string>
+    <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
+    <string name="gradeExcused">Excused</string>
+    <string name="finalGradeFormatted">Final Grade: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
+    <string name="enterWhatIfScore">Enter what-if score</string>
+    <string name="scoreStatisticsLow">Low: %s</string>
+    <string name="scoreStatisticsMean">Mean: %s</string>
+    <string name="scoreStatisticsHigh">High: %s</string>
+
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Custom score</string>
+    <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
+    <string name="rubricViewLongDescription">View long description</string>
+
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Uploading file %1$d of %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Uploading comment for %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Uploading media file</string>
+    <string name="assignmentSubmissionCommentError">Comment upload failed for %s</string>
+    <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
+    <string name="emptySubmissionCommentsSubtext">Have questions about your assignment?\nMessage your instructor.</string>
+    <string name="submissionCommentErrorMessage">This message could not be sent. Tap to try again.</string>
+    <string name="mediaUpload">Media Upload</string>
+    <string name="mediaUploadAudio">Media Upload - Audio</string>
+    <string name="mediaUploadVideo">Media Upload - Video</string>
+    <string name="commentSubmissionTypeText">Text Submission</string>
+    <string name="commentSubmissionTypeExternalTool">External Tool Submission</string>
+    <string name="commentSubmissionTypeDiscussion">Discussion Submission</string>
+    <string name="commentSubmissionTypeQuiz">Quiz Submission</string>
+    <string name="commentSubmissionTypeQuizAttempt">Attempt %d</string>
+    <string name="commentSubmissionTypeMediaFile">Media File</string>
+    <string name="commentSubmissionTypeAudio">Audio</string>
+    <string name="commentSubmissionTypeVideo">Video</string>
+
+    <!-- Profile Fragment Strings -->
+    <string name="canvasVersionNum">Version:</string>
+
+    <!-- Content Descriptions -->
+    <string name="canvasLogo">Canvas Logo</string>
+    <string name="enterURL">Enter your Canvas URL:</string>
+    <string name="enterValue">Enter a value</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
+    <string name="mobileVerifyGeneral">This app is not authorized for use</string>
+    <string name="mobileVerifyDomainUnauthorized">The server you entered is not authorized for this app.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">The user agent for this app is unauthorized.</string>
+    <string name="mobileVerifyUnknownError">We were unable to verify the server for use with this app.</string>
+    <string name="okay">Okay</string>
+    <string name="options">Options</string>
+
+    <string name="discussionAttachment">Attach a file</string>
+    <string name="discussionPostEditing">Edit</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Remove this user?</string>
+    <string name="removedForever">You\'ll have to sign into this user again to access their content.</string>
+
+    <string name="bookmarksTitle">Bookmarks</string>
+    <string name="addBookmark">Add Bookmark</string>
+    <string name="bookmarkName">Label</string>
+    <string name="bookmarkTitleRequired">A Label is Required</string>
+    <string name="bookmarkAddedSuccess">Bookmark Created</string>
+    <string name="bookmarkAddedFailure">Bookmark could not be created</string>
+    <string name="bookmarkShortcut">Select a Bookmark</string>
+    <string name="bookmarkDeleted">Bookmark Removed</string>
+    <string name="bookmarkDelete">Remove Bookmark?</string>
+    <string name="bookmarkEdit">Edit Bookmark</string>
+    <string name="bookmarkUpdated">Bookmark Updated</string>
+    <string name="no_bookmarks">Create a bookmark then view it here!</string>
+
+    <!-- Date strings -->
+    <string name="today">Today</string>
+    <string name="past">Past</string>
+    <string name="noDate">No Date</string>
+    <string name="future">Future</string>
+    <string name="next7Days">Next 7 Days</string>
+    <string name="submissionDetailsDueTodayAt">Due today at %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Due tomorrow at %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Due yesterday at %s</string>
+    <string name="submissionDetailsHasNoDueDate">Your assignment has no due date</string>
+    <string name="submissionDetailsDueAt">Due %1$s at %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
+
+
+    <!-- Assignments -->
+    <string name="assignmentLocked">Locked</string>
+    <string name="assignments">Assignments</string>
+    <string name="noDescription">There is no description for this assignment</string>
+    <string name="noAssignmentsInGroup">No Assignments in this group</string>
+    <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
+    <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sort by</string>
+    <string name="sortByDialogTimeOption">Time</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Sort by Time</string>
+    <string name="sortByType">Sort by Type</string>
+    <string name="sortByDialogCancel">Cancel</string>
+    <string name="assignmentsListAllGradingPeriods">All</string>
+    <string name="a11y_sortByTimeButton">Sort assignments button, sort by time</string>
+    <string name="a11y_sortByTypeButton">Sort assignments button, sort by type</string>
+    <string name="a11y_assignmentsSortedByTime">Assignments sorted by time</string>
+    <string name="a11y_assignmentsSortedByType">Assignments sorted by type</string>
+
+    <!-- Assignment editing -->
+    <string name="points">Points\u0020</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Discussions -->
+    <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
+    <string name="fileCurrentlyLocked">This file is currently locked</string>
+    <string name="a11y_discussionReplyEditor">Discussion Reply Editor</string>
+
+    <!-- Events -->
+    <string name="Starts">Starts</string>
+    <string name="Ends">Ends</string>
+    <string name="allDayEvent">All Day Event</string>
+    <string name="at">at</string>
+    <string name="PersonalCalendar">Personal Calendar</string>
+    <string name="noLocation">No Location Specified</string>
+
+    <string name="discussion">Discussions</string>
+    <string name="closed_discussion">Closed for Comments</string>
+    <string name="discussionUploadDialog">Discussion Upload</string>
+    <string name="totalScore">Total:</string>
+    <string name="noGradeText">N/A</string>
+    <string name="checkBoxFinalGradeOption">Base on graded assignments</string>
+    <string name="checkBoxWhatIfGradeOption">Show What-If Score</string>
+    <string name="whatIfDialogText">What-If Score</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s out of %2$s points, %3$s</string>
+    <string name="inbox">Inbox</string>
+    <string name="unread">Unread</string>
+    <string name="archived">Archived</string>
+    <string name="sent">Sent</string>
+    <string name="grade">Grade</string>
+    <string name="clearFilter">Clear filter</string>
+    <string name="addMessage">Add Message</string>
+    <string name="monologue">Monologue</string>
+    <string name="noItemsToDisplayShort">No items to display</string>
+    <string name="Todo">To Do</string>
+    <string name="todoFilter">Filter Courses</string>
+    <string name="filterByEllipsis">Filter by…</string>
+    <string name="favoritedCoursesLabel">Favorited Courses</string>
+    <string name="Event">Event</string>
+    <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
+    <string name="timeIconDescription">Time Icon</string>
+    <string name="toDoTurnIn">Turn in</string>
+    <string name="toDoNoDueDate">No Due Date</string>
+
+    <string name="dueAt">Due at</string>
+    <string name="dueAtTime">Due at %s</string>
+    <string name="toDoDue">Due</string>
+    <string name="due">Due %1$s</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="one">%d needs grading</item>
+        <item quantity="other">%d need grading</item>
+    </plurals>
+    <string name="createAFolder">Create A Folder</string>
+    <string name="createFolder">Create Folder</string>
+    <string name="createAFile">Create A File</string>
+    <string name="createFileFolderFabContentDesc">Show Create File and Create Folder Buttons</string>
+    <string name="hideCreateFileFolderFabContentDesc">Hide Create File and Create Folder Buttons</string>
+    <string name="folderCreationError">An error occurred during folder creation.</string>
+    <string name="rename">Rename</string>
+    <string name="renameFile">Rename file</string>
+    <string name="renameFolder">Rename folder</string>
+    <string name="blankName">Name cannot be blank</string>
+    <string name="confirmDeleteFile">Are you sure you want to delete the file \'%s\'? This action cannot be undone.</string>
+    <string name="confirmDeleteEmptyFolder">Are you sure you wish to delete the folder \'%s\'? This action cannot be undone.</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">Are you sure you wish to delete the folder \'%1$s\', including the %2$d item it contains? This action cannot be undone.</item>
+        <item quantity="other">Are you sure you wish to delete the folder \'%1$s\', including the %2$d items it contains? This action cannot be undone.</item>
+    </plurals>
+
+    <string name="settings">Settings</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="authenticationRequired">Authentication Required</string>
+    <string name="invalidEmailPassword">Invalid email or password</string>
+    <string name="loginId">Login ID</string>
+    <string name="domain">Domain</string>
+    <string name="sendFeedback">Send Feedback</string>
+    <string name="sendMail">Send Email&#8230;</string>
+    <string name="edit">Edit</string>
+    <plurals name="item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="addToHomescreen">Add to Home</string>
+    <string name="archive">Archive</string>
+    <string name="moveToInbox">Move to Inbox</string>
+    <string name="markAsUnread">Mark as Unread</string>
+    <string name="selectPeopleInbox">Select People</string>
+    <string name="delete">Delete</string>
+    <string name="deleteEvent">Delete Event</string>
+    <string name="selected">Selected</string>
+    <string name="errorSendingMessage">An error occurred trying to send your message. Please try again.</string>
+    <string name="deletedConversation">That conversation has been deleted.</string>
+    <string name="uploadAvatarFailMsg">New avatar picture failed to upload</string>
+    <string name="editPhoto">Edit Photo</string>
+    <string name="invalidUsername">That username is invalid.</string>
+    <string name="usernameChangeSuccess">Username successfully updated!</string>
+    <string name="takePhoto">Take photo</string>
+    <string name="choosePhotoFromGallery">Choose photo from Gallery</string>
+    <string name="fileNotFound">File not found.</string>
+
+    <!-- Conversations -->
+    <string name="reply">Reply</string>
+    <string name="writeAMessage">Write a message…</string>
+    <string name="compose">Compose</string>
+    <string name="composeMessage">Compose Message</string>
+    <string name="successSendingMessage">Message was successfully sent.</string>
+    <string name="emptyMessage">The message cannot be blank!</string>
+    <string name="noRecipients">No Recipients</string>
+    <string name="send">Send</string>
+    <string name="users">Users</string>
+    <string name="individually">Individually</string>
+    <string name="versionNum">Version:</string>
+    <string name="version" formatted="false">v. %s</string>
+    <string name="allCourses">All Courses</string>
+    <string name="allGroups">All Groups</string>
+    <string name="courseOptions">Course Options</string>
+    <string name="courseOptionsFormatted">Course options for %s</string>
+    <string name="editNickname">Edit nickname</string>
+    <string name="editCourseColor">Edit course color</string>
+    <string name="open">Open</string>
+    <string name="openAlternate">Open with alternate app</string>
+    <string name="opening">Opening File&#8230;</string>
+    <string name="download">Download</string>
+    <string name="messageAttachments">Message Attachments</string>
+    <string name="discussionAttachmentLabel">Attachment</string>
+    <string name="attachmentIcon">Attachment Icon</string>
+    <string name="ok">OK</string>
+    <string name="with">with</string>
+    <string name="starConversation">Star Conversation</string>
+    <string name="deleteConversation">Delete Conversation</string>
+    <string name="sharedWith">Shared with \u0020</string>
+    <string name="sharedWithYou">Shared with you</string>
+    <string name="inboxEmptyMessage">Tap the \"+\" to create a new conversation.</string>
+    <string name="inboxAllMessages">All</string>
+    <string name="filterInbox">Filter Inbox</string>
+    <string name="selectCanvasContext">Select a course or group</string>
+    <string name="inboxEmptyTitle">No messages</string>
+    <string name="removeAttachment">Remove attachment</string>
+    <string name="downloadAttachment">Download Attachment</string>
+    <string name="messageOptions">Message Options</string>
+    <string name="forward">Forward</string>
+    <string name="replyAll">Reply All</string>
+    <string name="unarchive">Unarchive</string>
+    <string name="confirmDeleteMessage">Are you sure you want to delete your copy of this message? This action cannot be undone.</string>
+    <string name="confirmDeleteConversation">Are you sure you want to delete your copy of this conversation? This action cannot be undone.</string>
+    <string name="errorConversationGeneric">Unable to perform this action. Please check your connection and try again.</string>
+    <string name="conversationArchived">Conversation archived</string>
+    <string name="conversationUnarchived">Conversation unarchived</string>
+    <string name="messageDeleted">Message deleted</string>
+    <string name="sendIndividualMessage">Send individual message to each recipient</string>
+    <string name="invalidRecipients">You are not allowed to send messages to one or more of the selected recipients.</string>
+    <string name="newMessage">New Message</string>
+    <string name="forwardMessage">Forward Message</string>
+    <string name="addMorePeopleToMessage">Add another recipient. Messages addressed only to yourself cannot be sent.</string>
+    <string name="selectRecipients">Select Recipients</string>
+
+    <plurals name="people_count">
+        <item quantity="one">%d person</item>
+        <item quantity="other">%d people</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">%d group</item>
+        <item quantity="other">%d groups</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">Exit without saving?</string>
+    <string name="exitWithoutSavingMessage">Are you sure you would like to exit without saving?</string>
+    <string name="exitUnsaved">Exit</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">Group Message?</string>
+    <string name="groupDialogMessage">Add everyone to a single group conversation, or message everyone individually?</string>
+    <string name="group">Group</string>
+    <string name="groups">Groups</string>
+    <string name="groupMembers">Group Members</string>
+
+    <string name="loading">Loading&#8230;</string>
+    <string name="select_item_to_display">Select from the list</string>
+
+    <string name="syllabus">Syllabus</string>
+    <string name="summary">Summary</string>
+    <string name="coursePeople">People</string>
+    <string name="teachersTas">Teachers &amp; TAs</string>
+    <string name="students">Students</string>
+    <string name="observers">Observers</string>
+    <string name="syllabusMissing">A syllabus not has been added.</string>
+    <string name="syllabusEventsError">There was an error loading your modules.</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="chooseRecipient">Choose Recipient(s)</string>
+    <string name="messageHasNoRecipients">This message currently has no recipients.</string>
+    <string name="sendMessage">Send Message</string>
+    <string name="userAvatar">User Avatar</string>
+
+    <string name="assignmentIcon">Assignment Icon</string>
+    <string name="announcementIcon">Announcement Icon</string>
+    <string name="conversationIcon">Conversation Icon</string>
+    <string name="defaultIcon">Default Icon</string>
+    <string name="discussionIcon">Discussion Icon</string>
+    <string name="gradesIcon">Grades Icon</string>
+    <string name="grades">Grades</string>
+    <string name="allGradingPeriods">All Grading Periods</string>
+    <string name="calendar">Calendar</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="showGrades">Show Grades</string>
+    <string name="colorOverlay">Color Overlay</string>
+    <string name="gradesAreHidden">Grades are not visible for this course.</string>
+
+    <string name="entireGroupSelected">This entire group has already been selected.</string>
+    <string name="noUsersInGroup">There are no users in this group</string>
+
+    <!-- Notifications -->
+    <string name="deleted">Deleted</string>
+    <string name="gradeUpdated">Grade updated</string>
+
+    <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">The link selected is for a different domain than the one you are signed into.</string>
+
+    <string name="pages">Pages</string>
+    <string name="noPageFound">There is no page information available.</string>
+    <string name="noPagesInContext">There are no pages available for this</string>
+    <string name="modified">Last Modified:</string>
+    <string name="lastModified">Last Modified: %1$s</string>
+
+    <string name="startMasquerading">Start Acting As User</string>
+    <string name="stopMasquerading">Stop Acting As User</string>
+    <string name="userId">User ID</string>
+    <string name="masqueradeFail">There was an error when trying to act as user</string>
+
+    <string name="emptyId">The ID cannot be blank</string>
+
+    <string name="goToQuiz">Go To Quiz</string>
+
+    <string name="quizzes">Quizzes</string>
+
+    <string name="lastDiscussionPost">Last post</string>
+
+    <string name="newAnnouncement">New Announcement</string>
+    <string name="newDiscussion">New Discussion</string>
+    <string name="composeDiscussion">Create Discussion</string>
+    <string name="composeAnnouncement">Create Announcement</string>
+
+    <string name="postAnnouncement">Post Announcement</string>
+    <string name="postDiscussion">Post Discussion</string>
+
+    <string name="postAnnouncementSuccess">The announcement was posted successfully.</string>
+    <string name="postDiscussionSuccess">The discussion was posted successfully.</string>
+    <string name="updateDiscussionSuccess">The discussion was updated successfully.</string>
+    <string name="draftDiscussionSuccess">Discussion draft created successfully.</string>
+
+    <string name="errorPostingAnnouncement">There was an error posting the announcement.</string>
+    <string name="errorPostingDiscussion">There was an error posting the discussion.</string>
+    <string name="allowThreading">Allow Threaded Replies</string>
+    <string name="usersMustPost">Users must post before seeing replies</string>
+    <string name="allowUserComments">Allow users to comment</string>
+    <string name="message">Message</string>
+    <string name="title">Title</string>
+
+
+    <string name="messageBlank">The message cannot be blank.</string>
+
+    <string name="notAuthorizedAnnouncement">Sorry. You are not authorized to post announcements in this course.</string>
+    <string name="notAuthorizedDiscussion">Sorry. You are not authorized to post discussions in this course.</string>
+
+    <string name="announcements">Announcements</string>
+
+    <string name="titleBlank">The title cannot be blank.</string>
+
+    <!-- Modules -->
+    <string name="modules">Modules</string>
+    <string name="moduleItemMustView">View this item</string>
+    <string name="moduleItemViewed">You have viewed this item</string>
+    <string name="moduleItemSubmit">Must submit assigment</string>
+    <string name="moduleItemSubmitted">Assignment submitted</string>
+    <string name="moduleItemContribute">Contribute to this page</string>
+    <string name="moduleItemContributed">You have contributed</string>
+    <string name="moduleItemMinScore">Score at least a</string>
+    <string name="moduleItemMinScoreMet">Minimum score met</string>
+    <string name="prerequisites">Prerequisites:</string>
+    <string name="unlocked">Unlocked:</string>
+    <string name="locked">Locked</string>
+    <string name="lockedAssignmentDesc">This assignment is part of the module %s and hasn\'t been unlocked yet.</string>
+    <string name="lockedPageDesc">This page is part of the module %s and hasn\'t been unlocked yet.</string>
+    <string name="lockedFileDesc">This file is part of the module %s and hasn\'t been unlocked yet.</string>
+    <string name="lockedQuizDesc">This quiz is part of the module %s and hasn\'t been unlocked yet.</string>
+    <string name="lockedDiscussionDesc">This discussion is part of the module %s and hasn\'t been unlocked yet.</string>
+    <string name="mustComplete">You must first complete:</string>
+    <string name="unlockedAt">It will be unlocked at:</string>
+    <string name="goToModules">Go To Modules</string>
+    <string name="markDone">Mark done</string>
+    <string name="moduleItemNotFound">Module Item Not Found</string>
+    <string name="errorLoadingModules">There was an error loading your modules.</string>
+
+    <string name="help">Help</string>
+    <string name="instructor_question">Instructor Question</string>
+    <string name="link">Link</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">This assignment is locked.</string>
+
+    <!-- New Course Layout Strings -->
+    <string name="myCourses">My Courses</string>
+
+
+    <!-- New Submission Strings -->
+    <string name="textEntry">Text Entry</string>
+    <string name="onlineURL">Online URL</string>
+    <string name="oneFileOnly">This submission only accepts one file upload</string>
+    <string name="websiteEntry">Add Website Entry</string>
+    <string name="mediaRecordingEntry">Media Recordings</string>
+    <string name="submit">Submit</string>
+
+
+    <!-- DataLoss Fragment Strings -->
+    <string name="unsavedProgress">Unsaved Progress</string>
+    <string name="informationLost">Unsaved information will be lost. Do you want to continue?</string>
+    <string name="slash"> / </string>
+
+    <!-- Delete Notification Strings -->
+    <string name="confirm">Confirm</string>
+
+    <!-- Dismiss To do String -->
+    <string name="markAsDone">Mark as done</string>
+
+    <!-- Submission Details Strings -->
+    <string name="next">Next</string>
+    <string name="addComment">Add a comment&#8230;</string>
+
+    <string name="home">Home</string>
+    <string name="Notifications">Notifications</string>
+
+    <string name="icon">Icon</string>
+    <string name="rootUser">Root User Folder</string>
+    <string name="rootCourse">Root Course Folder</string>
+    <string name="rootGroup">Root Group Folder</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">Privately available</string>
+    <string name="publiclyAvailable">Publicly available</string>
+    <string name="starts">Starts: \u0020</string>
+    <string name="courseCode">Course Code: \u0020</string>
+    <string name="ends">Ends: \u0020</string>
+    <string name="visibility">Visibility: \u0020</string>
+    <string name="license">License: \u0020</string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">Collaborations</string>
+    <string name="conferences">Conferences</string>
+    <string name="chat">Chat</string>
+    <string name="outcomes">Outcomes</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">Visit Page:</string>
+    <string name="clickToViewSubmission">A snapshot of the website was taken when you turned it in. Tap and hold the image below to open or download the full image.</string>
+    <string name="urlSubmissionNoPreview">This submission was a URL to an external page. Keep in mind that this page may have changed since the submission originally occurred.</string>
+    <string name="contentDescriptionPreviewImage">A preview of the submitted url</string>
+
+
+    <string name="isNotSupportedFeature">%1$s are not supported.</string>
+    <string name="isNotSupported">The link is not supported.</string>
+    <string name="openInBrowser">Open In Browser</string>
+    <string name="unsupported">Unsupported</string>
+
+
+    <!-- Profile Strings -->
+    <string name="profile">Profile</string>
+
+    <string name="noSubject">(No Subject)</string>
+    <string name="subject">Subject</string>
+    <string name="sadPanda">Sad Panda Image</string>
+    <string name="panda_fact_string">Panda Fact:&#160;</string>
+    <string name="remove">Remove</string>
+    <string name="founders">Founders</string>
+
+    <string name="EULA">EULA</string>
+    <string name="privacyPolicy">Privacy Policy</string>
+    <string name="termsOfUse">Terms of Use</string>
+    <string name="canvasOnGithub">Canvas on GitHub</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">Assignment Quizzes</string>
+    <string name="practiceQuizzes">Practice Quizzes</string>
+    <string name="gradedSurveys">Graded Surveys</string>
+    <string name="surveys">Surveys</string>
+
+
+    <!-- Widget Strings -->
+    <string name="todoWidgetTitle">To Do</string>
+    <string name="gradesWidgetTitle">Grades</string>
+    <string name="notificationWidgetTitle">Notifications</string>
+    <string name="todoWidgetTitleLong">Canvas - To Do</string>
+    <string name="gradesWidgetTitleLong">Canvas - Grades</string>
+    <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
+    <string name="notLoggedIn">You are not logged in</string>
+    <string name="widgetStyle">Choose your widget style</string>
+    <string name="widgetMinimumStyle">Hide details on widget</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">Ask Your Instructor a Question</string>
+    <string name="askInstructorDetails">Questions are submitted to your instructor</string>
+    <string name="searchGuides">Search the Canvas Guides</string>
+    <string name="canvasGuides">Canvas Guides</string>
+    <string name="searchGuidesDetails">Find answers to common questions</string>
+    <string name="reportProblem">Report a Problem</string>
+    <string name="reportProblemDetails">If the app misbehaves, let us know</string>
+    <string name="requestFeature">Request a Feature</string>
+    <string name="requestFeatureDetails">Have an idea to improve the app?</string>
+    <string name="shareYourLove">Share Your Love for the App</string>
+    <string name="shareYourLoveDetails">Tell us about your favorite parts of the app</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Idea for Canvas [Android]</string>
+    <string name="understandRequest">The following information will help us better understand your idea:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">Which course is this question about?</string>
+    <string name="allTeachers">This message will be sent to all Teachers and TAs in the course</string>
+    <string name="sending">Sending&#8230;</string>
+    <string name="error">Error</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">Courses</string>
+    <string name="toDoList">To Do List</string>
+    <string name="notifications">Notifications</string>
+    <string name="pushNotifications">Push Notifications</string>
+    <string name="pushNotificationsError">Push Notifications have not been registered for this device.</string>
+    <string name="profileSettings">Profile Settings</string>
+    <string name="accountPreferences">Account Preferences</string>
+    <string name="pinAndFingerprint">PIN and Fingerprint</string>
+    <string name="pairWithObserver">Pair with Observer</string>
+    <string name="pairWithObserverDetails">Have your parent scan this QR code from the Canvas Parent app to pair with you. This code will expire in seven days, or after one use.</string>
+    <string name="pairingCodeLabel">Pairing Code:\u0020</string>
+    <string name="pairingCodeErrorTitle">Pairing Code Error</string>
+    <string name="pairingCodeErrorDescription">Unable to retrieve a pairing code. This feature is only supported for students.</string>
+
+    <string name="launchSpeedgrader">Open Speedgrader</string>
+
+    <string name="search_todo">todo to do todos todo list</string>
+    <string name="search_course">course courses class classes</string>
+    <string name="search_grades">grade grades</string>
+
+    <!-- ShareFileOptions Dialog -->
+    <string name="uploadTo">Upload To </string>
+    <string name="uploadToCanvas">Upload To Canvas</string>
+    <string name="uploadMyFiles">My Files</string>
+    <string name="uploadCourseFiles">Course Files</string>
+    <string name="uploadToSubmissionComment">Upload to Submission Comment</string>
+    <!-- ChangeLog Dialog -->
+    <string name="changelog">Changelog</string>
+
+    <string name="editUserName">Edit Username</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">Take a new photo</string>
+    <string name="chooseFromGallery">Choose from gallery</string>
+    <string name="setToDefault">Set to default</string>
+    <string name="chooseBackgroundImage">Choose backdrop image</string>
+
+    <string name="no_courses">Tap to add a course</string>
+    <string name="no_courses_available">No courses here, take the day off!</string>
+    <string name="no_courses_grades">Please enroll in a course to see your grades</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="preferred_land_page">Landing Page</string>
+    <string name="could_not_route_course">Could not find the course enrollment.</string>
+    <string name="could_not_route_group">Could not find the group enrollment.</string>
+    <string name="could_not_route_unknown">An unexpected error occurred.</string>
+    <string name="could_not_route_locked">This page is hidden or locked and cannot be accessed.</string>
+
+    <string name="close">Close</string>
+    <string name="closed">Closed</string>
+
+    <string name="overdueAssignments">Overdue Assignments</string>
+    <string name="upcomingAssignments">Upcoming Assignments</string>
+    <string name="undatedAssignments">Undated Assignments</string>
+    <string name="pastAssignments">Past Assignments</string>
+
+    <string name="could_not_find_course">There was an error getting the course for this item.</string>
+    <string name="could_not_find_group">There was an error getting the group for this item.</string>
+
+    <string name="selectBackground">Select a backdrop</string>
+
+    <string name="notoriousSubmissionInProgress">Submitting files&#8230; Check notification bar for updates.</string>
+    <string name="notoriousSubmissionSuccessful">Finished submitting file</string>
+
+    <string name="bio">Bio</string>
+    <string name="draft">Draft</string>
+    <string name="publish">Publish</string>
+
+    <string name="createPandaAvatar">Create Panda Avatar</string>
+    <string name="back">Back</string>
+    <string name="setAsAvatar">Set as avatar</string>
+    <string name="avatarSuccessfullySaved">The panda avatar was successfully saved</string>
+    <string name="regularAvatarSuccessfullySaved">Avatar successfully saved.</string>
+    <string name="errorSavingAvatar">There was an error saving the panda avatar</string>
+    <string name="pandaAvatar">Panda Avatar</string>
+    <string name="pandaHead">Panda Avatar Head</string>
+    <string name="pandaBody">Panda Avatar Body</string>
+    <string name="pandaLegs">Panda Avatar Legs</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">Share</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">Gauge</string>
+    <string name="content_description_speed_grader_slider">Grade slider</string>
+
+    <string name="createNewCalendarEvent">Create New Event</string>
+    <string name="enableFunMode">Turn off the pandas</string>
+
+    <string name="accountNotifications">Announcements</string>`
+    <string name="addAccount">Add Account</string>
+
+    <string name="changeUser">Change User</string>
+
+    <string name="no_data_connection">Please check your data connection and try again.</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_primary_inbox_title">Canvas Notification</string>
+    <string name="notification_channel_name_primary">General Canvas Notifications</string>
+    <string name="notification_channel_description_primary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
+
+    <string name="notification_cat_course_activities">Course Activities</string>
+    <string name="notification_cat_discussions">Discussions</string>
+    <string name="notification_cat_conversations">Conversations</string>
+    <string name="notification_cat_scheduling">Scheduling</string>
+    <string name="notification_cat_groups">Groups</string>
+    <string name="notification_cat_alerts">Alerts</string>
+    <string name="notification_cat_conferences">Conferences</string>
+
+    <string name="notification_pref_due_date">Due Date</string>
+    <string name="notification_pref_grading_policies">Grading Policies</string>
+    <string name="notification_pref_course_content">Course Content</string>
+    <string name="notification_pref_files">Files</string>
+    <string name="notification_pref_announcement">Announcement</string>
+    <string name="notification_pref_announcement_created_by_you">Announcement Created By You</string>
+    <string name="notification_pref_grading">Grading</string>
+    <string name="notification_pref_invitation">Invitation</string>
+    <string name="notification_pref_all_submissions">All Submissions</string>
+    <string name="notification_pref_late_grading">Late Grading</string>
+    <string name="notification_pref_submission_comment">Submission Comment</string>
+
+    <string name="notification_pref_discussion">Discussion</string>
+    <string name="notification_pref_discussion_post">Discussion Post</string>
+
+    <string name="notification_pref_add_to_conversation">Add To Conversation</string>
+    <string name="notification_pref_conversation_message">Conversation Message</string>
+    <string name="notification_pref_conversations_created_by_you">Conversations Created By You</string>
+
+    <string name="notification_pref_student_appointment_signups">Student Appointment Signups</string>
+    <string name="notification_pref_appointment_signups">Appointment Signups</string>
+    <string name="notification_pref_appointment_cancelations">Appointment Cancelations</string>
+    <string name="notification_pref_appointment_availability">Appointment Availability</string>
+    <string name="notification_pref_calendar">Calendar</string>
+
+    <string name="notification_pref_membership_update">Membership Update</string>
+    <string name="notification_pref_admin">Administrative Notifications</string>
+    <string name="notification_pref_recording_ready">Recording Ready</string>
+
+    <string name="notification_pref_type_email">Email</string>
+    <string name="notification_pref_type_push">Device</string>
+    <string name="notification_pref_type_sms">SMS</string>
+
+    <string name="notification_pref_dialog_title">Device Notifications</string>
+    <string name="notification_pref_dialog_message">Would you like to turn on device notifications? These settings can be changed later in Settings &gt; Notifications &gt; For all Devices</string>
+    <string name="notification_pref_toast_success">Notifications have been enabled.</string>
+
+    <string name="notification_desc_due_date">Get notified when an assignment due date changes.</string>
+    <string name="notification_desc_grading_policies">Get notified when course grading policies change.</string>
+    <string name="notification_desc_course_content">Get notified when course content changes on WikiPages, Quizzes, and Assignments.</string>
+    <string name="notification_desc_files">Get notified when a new file is added to your course.</string>
+    <string name="notification_desc_announcement">Get notified when there is a new announcement in your course.</string>
+    <string name="notification_desc_announcement_created_by_you">Get notified when you create an announcement and when somebody replies to your announcement.</string>
+    <string name="notification_desc_grading">Get notified when an assignment/submission was graded/changed and when a grade weight was changed.</string>
+    <string name="notification_desc_invitation">Get notified for invitations to web conferences, groups, collaborations, peer reviews, and reminders.</string>
+    <string name="notification_desc_all_submissions">Instructor &amp; Admin only. Get notified when an assignment is submitted or resubmitted.</string>
+    <string name="notification_desc_late_grading">Instructor &amp; Admin only. Get notified when a late assignment is submitted.</string>
+    <string name="notification_desc_submission_comment">Get notified when a comment is made on your submission.</string>
+    <string name="notification_desc_discussion">Get notified when there’s a new discussion topic in your course.</string>
+    <string name="notification_desc_discussion_post">Get notified when there’s a new post in a discussion you’re subscribed to.</string>
+    <string name="notification_desc_add_to_conversation">Get notified when you’re added to a conversation.</string>
+    <string name="notification_desc_conversation_message">Get notified when you have a new inbox message.</string>
+    <string name="notification_desc_conversations_created_by_you">Get notified when you create a new conversation.</string>
+    <string name="notification_desc_student_appointment_signups">Instructor &amp; Admin only. Get notified when there’s an appointment signup.</string>
+    <string name="notification_desc_appointment_signups">Get notified when there’s a new signup on your calendar.</string>
+    <string name="notification_desc_appointment_cancelations">Get notified when there’s an appointment cancellation.</string>
+    <string name="notification_desc_appointment_availability">Get notified when an appointment slot becomes available.</string>
+    <string name="notification_desc_calendar">Get notified about new and updated calendar items.</string>
+    <string name="notification_desc_membership_update">Admin only, pending enrollment activated. Get notified when a group enrollment is accepted or rejected.</string>
+    <string name="notification_desc_admin">Instructor &amp; Admin only. Get notified about course enrollments, reports generated, content exported, migration reports, new account users, and new student groups.</string>
+    <string name="notification_desc_recording_ready">Get notified when a conference recording is ready.</string>
+
+    <string name="unlimited">Unlimited</string>
+
+    <string name="question">Question</string>
+    <plurals name="question_count">
+        <item quantity="one">%d question</item>
+        <item quantity="other">%d questions</item>
+    </plurals>
+
+    <plurals name="pointCount">
+        <item quantity="one">%s point</item>
+        <item quantity="other">%s points</item>
+    </plurals>
+
+    <string name="timeLimit">Time Limit</string>
+    <string name="newPushNotifications">%1$s New Notifications</string>
+    <string name="like">like</string>
+    <string name="likeEntryLabel">Like Entry</string>
+    <string name="likes">likes</string>
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s like</item>
+        <item quantity="other">%s likes</item>
+    </plurals>
+
+    <string name="color_1">Red</string>
+    <string name="color_2">Hot Pink</string>
+    <string name="color_3">Lavender</string>
+    <string name="color_4">Violet</string>
+    <string name="color_5">Purple</string>
+    <string name="color_6">Slate</string>
+    <string name="color_7">Blue</string>
+    <string name="color_8">Cyan</string>
+    <string name="color_9">Green</string>
+    <string name="color_10">Chartreuse</string>
+    <string name="color_11">Yellow</string>
+    <string name="color_12">Gold</string>
+    <string name="color_13">Orange</string>
+    <string name="color_14">Pink</string>
+    <string name="color_15">Gray</string>
+
+    <string name="edit_course_nickname">Edit Course Nickname</string>
+    <string name="courseNicknameError">The course nickname could not be set at this time.</string>
+
+    <string name="colorPickerDialogTitle">Course Color</string>
+    <string name="colorPickerDialogMessage">Personalize your course by setting a new color.</string>
+    <string name="colorPickerError">The course color could not be set at this time.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Pink</string>
+    <string name="contentDescriptionColorBarbie">Hot Pink</string>
+    <string name="contentDescriptionColorBarneyPurple">Violet</string>
+    <string name="contentDescriptionColorEggplant">Purple</string>
+    <string name="contentDescriptionColorUltramarine">Dark Blue</string>
+    <string name="contentDescriptionColorOcean11">Blue</string>
+    <string name="contentDescriptionColorCyan">Cyan</string>
+    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
+    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
+    <string name="contentDescriptionColorFreshCutLawn">Green</string>
+    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
+    <string name="contentDescriptionColorSunFlower">Yellow</string>
+    <string name="contentDescriptionColorTangerine">Orange</string>
+    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
+    <string name="contentDescriptionColorSriracha">Red</string>
+
+    <string name="courseFavorited">Course %s, favorite.</string>
+    <string name="courseNotFavorited">Course %s, not favorite.</string>
+    <string name="groupFavorited">Group %s, favorite.</string>
+    <string name="groupNotFavorited">Group %s, not favorite.</string>
+    <string name="accountGroup">Account Group</string>
+
+    <!-- Recents -->
+    <string name="recents_empty">From the course customization screen add a course or group to view them here.</string>
+
+    <string name="toolbar_close">Toolbar close</string>
+    <string name="favoriteDescription">Show in \"My Courses\"</string>
+    <string name="about">About</string>
+    <string name="courseShortcuts">Add a shortcut to your course</string>
+    <string name="courseNickname">Course Nickname</string>
+
+    <string name="notAvailableOffline">Functionality unavailable while offline</string>
+    <string name="editDashboard">Edit Dashboard</string>
+    <string name="editDashboardDescriptor">Select which courses you would like to see on the Dashboard</string>
+    <string name="a11y_editYourCourseList">Edit your course list</string>
+
+    <string name="dashboard">Dashboard</string>
+    <string name="previous">Previous</string>
+    <string name="pageNum" formatted="false">Page %d of %d</string>
+    <string name="language">Language</string>
+    <string name="systemDefault">System Default</string>
+    <string name="restartingCanvas">Restarting Canvas</string>
+    <string name="languageDialogText">Changing the language will require the app to restart, are you sure?</string>
+    <string name="defaultLanguageWarning">Your system default language is not guaranteed to be supported and will require a restart, are you sure?</string>
+    <string name="locked_mastery_paths">Locked until \"%s\" is graded</string>
+    <string name="locked_icon">Locked Icon</string>
+    <string name="choose_assignment_group">Choose Assignment Group</string>
+    <string name="chooseAssignmentPath">Choose Assignment Path</string>
+    <string name="select">Select</string>
+    <string name="choice_position">Choice %d</string>
+    <string name="updating_module_info">Updating module information&#8230;</string>
+    <string name="pending_review">Pending review</string>
+    <string name="totalPoints">%s pts</string>
+    <string name="totalPointsText">Total Points</string>
+    <string name="contentDescriptionPoints">%s points</string>
+    <string name="score">Score</string>
+    <string name="rangedRubricTotal" formatted="false">%s / %s pts</string>
+    <string name="seeAll">See All</string>
+    <string name="welcome">Welcome!</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="tapToViewAnnouncement">Tap to view announcement</string>
+    <string name="acceptCourseInvitation">Accept</string>
+    <string name="declineCourseInvitation">Decline</string>
+    <string name="outOf">out of</string>
+
+    <!-- File Strings -->
+    <string name="noFilesSubtextCourse">There are no files associated with this course.</string>
+    <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
+    <string name="fileTypeNotSupported">Unsupported File Type</string>
+    <string name="fileTypeNotSupportedBody">This assignment only allows certain file types: %s</string>
+
+    <array name="file_size_units">
+        <item>B</item>
+        <item>KB</item>
+        <item>MB</item>
+        <item>GB</item>
+        <item>TB</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">Launch link in external browser</string>
+    <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
+    <string name="urlSubmission">URL Submission</string>
+
+    <string name="homePageIdForNotifications">Recent Activity</string>
+    <string name="homePageIdForModules">Modules</string>
+    <string name="homePageIdForAssignments">Assignments</string>
+    <string name="homePageIdForSyllabus">Syllabus</string>
+
+    <string name="contentDescriptionWidgetRefresh">Refresh widget</string>
+
+    <string name="copy">Copy</string>
+    <string name="courseInviteTitle">You have been invited.</string>
+    <string name="inviteAccepted">Invite accepted!</string>
+    <string name="inviteDeclined">Invite declined.</string>
+    <string name="latePenalty">Late penalty (-%s)</string>
+    <string name="latePenaltyUpdated">Late Penalty: -%s pts</string>
+    <string name="yourGrade">Your Grade: %s pts</string>
+    <string name="finalGrade">Final Grade</string>
+
+    <string name="max_count">99+</string>
+
+    <string name="opensInWebView">Opens in webview</string>
+    <string name="unsupportedTabLabel">Not supported on this device</string>
+
+    <string name="downloadingFile">Downloading</string>
+    <string name="downloadFailed">Download failed</string>
+    <string name="downloadSuccessful">Download successful</string>
+
+    <string name="full_due_date_details">Full due date details</string>
+    <string name="submissions">Submissions</string>
+    <string name="attachment">Attachment</string>
+    <string name="contentDescription_back">Go Back</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s point</item>
+        <item quantity="other">%s points</item>
+    </plurals>
+    <string name="capitalTo">To</string>
+
+    <string name="unableToViewInBrowser">We are unable to find an external app to view this LTI tool.</string>
+
+    <string name="commentUpload">Comment Upload</string>
+
+    <string name="frontPage">Front Page</string>
+    <string name="editPage">Edit Page</string>
+    <string name="description">Description</string>
+    <string name="pageSuccessfullyUpdated">Page successfully updated.</string>
+    <string name="errorSavingPage">An error occurred trying to save this page. Try again.</string>
+    <string name="pageTitleMustBeSet">Page title must be set.</string>
+    <string name="pageDetails">Page Details</string>
+    <string name="saving">Saving</string>
+    <string name="confirmDeleteEvent">Are you sure you wish to delete this event?</string>
+    <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
+    <string name="filePreviewContentDescription">File preview image</string>
+    <string name="pdfError">An error occurred trying to load this PDF.</string>
+    <string name="featureNotAllowedInStudentView">So sorry! This feature isn\'t allowed in student view.</string>
+    <string name="nothingToSeeHere">Nothing To See Here</string>
+    <string name="unsupportedFeature">Unsupported Feature</string>
+
+    <!-- Parent Strings -->
+    <string name="addChildTitle">Add Student</string>
+    <string name="addChildSubTitle">Input the student pairing code provided to you.</string>
+    <string name="addChildHint">Pairing Code…</string>
+    <string name="addChildErrorMessage">Pairing Failed. Make sure your pairing code is correct and within the time limit of use.</string>
+    <string name="gradeComplete">Complete</string>
+    <string name="gradeIncomplete">Incomplete</string>
+
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Post Settings</string>
+    <string name="postGradesTab">Post Grades</string>
+    <string name="hideGradesTab">Hide Grades</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d grade currently posted</item>
+        <item quantity="other">%d grades currently posted</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d grade currently hidden</item>
+        <item quantity="other">%d grades currently hidden</item>
+    </plurals>
+    <string name="postPolicyPostTo">Post to…</string>
+    <string name="postPolicySections">Specific Sections</string>
+    <string name="postToEveryoneTitle">Everyone</string>
+    <string name="postToEveryoneMessage">Grades will be made visible to all students</string>
+    <string name="postToGradedTitle">Graded</string>
+    <string name="postToGradedMessage">Grades will be made visible to students with graded submissions</string>
+    <string name="postPolicyAllHiddenTitle">All Hidden</string>
+    <string name="postPolicyAllHiddenMessage">All grades are currently hidden.</string>
+    <string name="postPolicyAllPostedTitle">All Posted</string>
+    <string name="postPolicyAllPostedMessage">All grades are currently posted.</string>
+    <string name="postPolicyPostedToast">Grades Posted</string>
+    <string name="postPolicyHiddenToast">Grades Hidden</string>
+    <string name="postPolicyPostFailedToast">Failed to post grades</string>
+    <string name="postPolicyHideFailedToast">Failed to hide grades</string>
+    <string name="gradeBeforePosting">Grade before posting</string>
+    <string name="gradeAfterPosting">Grade after posting</string>
+    <string name="gradeOverride">Grade override</string>
+    <string name="currentGrade">Current grade</string>
+    <string name="opensInCanvasStudent">Opens in Canvas Student</string>
+    <string name="tab_student_view">Student View</string>
+    <string name="rateOnThePlayStore">Rate on the Play Store</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+
+    <string name="content_description_chosen_head">Chosen head: %s</string>
+    <string name="content_description_chosen_body">Chosen body: %s</string>
+    <string name="content_description_chosen_feet">Chosen feet: %s</string>
+    <string name="content_description_panda_body_1">Purple heart dress with pink trim</string>
+    <string name="content_description_panda_body_2">Green star dress with blue trim</string>
+    <string name="content_description_panda_body_3">Red star dress with orange trim</string>
+    <string name="content_description_panda_body_4">Blue blazer, red bow-tie, and grey pants</string>
+    <string name="content_description_panda_body_5">Orange button-up and jeans</string>
+    <string name="content_description_panda_body_6">Red button-up and brown pants</string>
+    <string name="content_description_panda_body_7">Yellow sun graphic t-shirt and grey pants</string>
+    <string name="content_description_panda_body_8">Teal basketball graphic t-shirt and purple pants</string>
+    <string name="content_description_panda_body_9">Blue android graphic t-shirt and green pants</string>
+    <string name="content_description_panda_body_10">White instructure graphic t-shirt and blue pants</string>
+    <string name="content_description_panda_body_11">Dark grey three-star t-shirt and teal pants</string>
+    <string name="content_description_panda_body_12">Burgundy wizard uniform with magic wand and black pants</string>
+    <string name="content_description_panda_body_13">Bare panda torso</string>
+    <string name="content_description_panda_head_2">Teardrop aviator sunglasses and lipstick</string>
+    <string name="content_description_panda_head_3">Makeup and purple hair bow</string>
+    <string name="content_description_panda_head_4">Fancy moustache</string>
+    <string name="content_description_panda_head_5">Green party glasses</string>
+    <string name="content_description_panda_head_6">Brown spectacles</string>
+    <string name="content_description_panda_head_7">Golden masquerade mask and lipstick</string>
+    <string name="content_description_panda_head_8">Teardrop aviator sunglasses</string>
+    <string name="content_description_panda_head_9">Freckled cheeks</string>
+    <string name="content_description_panda_head_10">Bespectacled, forehead-scarred wizard</string>
+    <string name="content_description_panda_feet_1">Bare feet</string>
+    <string name="content_description_panda_feet_2">Pink shoes with purple bows</string>
+    <string name="content_description_panda_feet_3">Blue shoes with green bows</string>
+    <string name="content_description_panda_feet_4">Red shoes with orange bows</string>
+    <string name="content_description_panda_feet_5">Red shoes</string>
+    <string name="content_description_choose_head">Choose head</string>
+    <string name="content_description_choose_body">Choose body</string>
+    <string name="content_description_choose_feet">Choose feet</string>
+
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d hours, %2$d minutes, and %3$d seconds</string>
+    <string name="recordingTimerSpeechDivider">%1$s out of %2$s</string>
+    <string name="replay">Replay</string>
+    <string name="stop">Stop</string>
+    <string name="startRecordingAudio">Start recording audio</string>
+    <string name="stopRecordingAudio">Stop recording audio</string>
+    <string name="startRecordingVideo">Start recording video</string>
+    <string name="stopRecordingVideo">Stop recording video</string>
+    <string name="closeRecordingView">Close recording view</string>
+    <string name="deleteRecording">Delete recording</string>
+    <string name="videoCommentReplay">Video Comment Replay</string>
+    <string name="errorShowingVideoReplay">There was an error attempting to view the replay.</string>
+    <string name="errorSubmittingMediaComment">There was an error attempting to submit your media comment.</string>
+
+    <string name="addVideoComment">Add video comment</string>
+    <string name="addAudioComment">Add audio comment</string>
+    <string name="audioRecordingError">An unexpected error occurred while trying to record audio.</string>
+    <string name="videoRecordingError">An unexpected error occurred while trying to record video.</string>
+
+    <string name="quizQuestionLabel">Questions:</string>
+    <string name="timeLimitLabel">Time Limit:</string>
+    <string name="allowedAttemptsLabel">Allowed Attempts:</string>
+    <string name="instructions">Instructions</string>
+    <string name="quizNoTimeLimit">None</string>
+    <string name="viewQuiz">View Quiz</string>
+    <string name="viewDiscussion">View Discussion</string>
+    <string name="lockedModule">This assignment is locked by the module \"%1$s\".</string>
+    <string name="chooseMediaFile">Choose Media File</string>
+    <string name="discussions_unknown_author">Unknown Author</string>
+    <string name="discussions_unknown_date">Unknown Date</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Grade: %s</string>
+
+    <plurals name="minutes">
+        <item quantity="one">%s Minute</item>
+        <item quantity="other">%s Minutes</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">No Conferences</string>
+    <string name="noConferencesMessage">There are no conferences to display yet</string>
+    <string name="noConferenceDescription">There is no description for this conference</string>
+    <string name="conferenceListError">There was an error loading your conferences</string>
+    <string name="conferenceConcludedDateAtTime">Concluded %s at %s</string>
+    <string name="conferenceStartedDateAtTime">Started %s at %s</string>
+    <string name="notStarted">Not Started</string>
+    <string name="inProgress">In Progress</string>
+    <string name="join">Join</string>
+    <string name="newConferences">New Conferences</string>
+    <string name="concludedConferences">Concluded Conferences</string>
+    <string name="conferenceDetails">Conference Details</string>
+    <string name="recordings">Recordings</string>
+    <string name="conferenceInProgress">Conference in progress</string>
+
+    <string name="a11y_criterion_content_description">Criterion rating %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">more information</string>
+    <string name="a11y_create_file_folder_visible">Create File and Folder buttons visible</string>
+    <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
+    <string name="unselect_all">Unselect All</string>
+    <string name="select_all">Select All</string>
+    <string name="all_courses">All courses</string>
+    <string name="all_groups">All groups</string>
+    <string name="edit_dashboard_course_description">Select courses for Dashboard or navigate to course details.</string>
+    <string name="edit_dashboard_group_description">Select groups for Dashboard or navigate to course details.</string>
+    <string name="current_enrollments">Current enrollments</string>
+    <string name="past_enrollments">Past enrollments</string>
+    <string name="future_enrollments">Future enrollments</string>
+    <string name="added_to_dashboard">Added to Dashboard</string>
+    <string name="removed_from_dashboard">Removed from Dashboard</string>
+    <string name="all_added_to_dashboard">All added to Dashboard</string>
+    <string name="all_removed_from_dashboard">All removed from Dashboard</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inactive courses could not be added to Dashboard.</string>
+    <string name="edit_dashboard">Edit Dashboard</string>
+    <string name="edit_dashboard_empty_title">No courses here</string>
+    <string name="edit_dashboard_empty_message">You have to be enrolled in a course to add it to the Dashboard.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Remove from dashboard</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Remove all from dashboard</string>
+    <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Add all to dashboard</string>
+
+    <!-- K5 Strings -->
+    <string name="navDrawerAccount">Account</string>
+    <string name="dashboardTabHomeroom">Homeroom</string>
+    <string name="dashboardTabSchedule">Schedule</string>
+    <string name="dashboardTabGrades">Grades</string>
+    <string name="dashboardTabResources">Resources</string>
+    <string name="homeroomWelcomeMessage">Welcome, %1$s!</string>
+    <string name="homeroomMySubjects">My Subjects</string>
+    <string name="viewPreviousAnnouncements">View Previous Announcements</string>
+    <string name="homeroomError">Failed to load Homeroom</string>
+    <string name="homeroomRefreshFail">Failed to refresh Homeroom</string>
+    <string name="nothingDueToday">Nothing Due Today</string>
+    <string name="dueToday">%1$s due today</string>
+    <string name="missing">%1$s missing</string>
+    <string name="homeroomEmptyTitle">Welcome!</string>
+    <string name="homeroomEmptyMessage">Your subjects show up here.</string>
+    <string name="homeroomNoSubjects">You currently have no subjects.</string>
+    <string name="settingsElementaryViewSubtitle">Requires app restart</string>
+    <string name="gradesSelect">Select</string>
+    <string name="selectGradingPeriod">Select Grading Period</string>
+    <string name="currentGradingPeriod">Current Grading Period</string>
+    <string name="failedToLoadGrades">Failed to load grades</string>
+    <string name="failedToLoadGradesForGradingPeriod">Failed to load grades for grading period</string>
+    <string name="failedToRefreshGrades">Failed to refresh grades</string>
+    <string name="noGradesToDisplay">No grades to display</string>
+    <string name="notGraded">Not Graded</string>
+    <string name="a11y_gradingPeriodSelectorClickDescription">Change grading period</string>
+    <string name="a11y_gradesNotAvailableContentDescription">Grades not available</string>
+    <string name="bottomBarHomeroom">Homeroom</string>
+    <string name="settingsHomeroomView">Homeroom View</string>
+    <string name="importantLinksTitle">Important Links</string>
+    <string name="studentApplications">Student Applications</string>
+    <string name="staffContactInfo">Staff Contact Info</string>
+    <string name="chooseACourse">Choose a Course</string>
+    <string name="webViewImportantLinksTitle">Important Links</string>
+    <string name="staffRoleTeacher">Teacher</string>
+    <string name="staffRoleTeacherAssistant">Teaching Assistant</string>
+    <string name="resourcesEmptyMessage">Your resources show up here.</string>
+    <string name="failedToLoadResources">Failed to load resources</string>
+    <string name="failedToRefreshResources">Failed to refresh resources</string>
+
+    <string name="open_alternate_view">Open a more accessible alternative view</string>
+
+    <string name="a11y_content_description_message_recipients">Recipients</string>
+    <string name="a11y_content_description_inbox_subject">Subject</string>
+    <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
+
+    <string name="speedGraderAnonymousSubmissionMessage">This student\'s responses are hidden because this assignment is anonymous.</string>
+
+    <string name="schedule_marked_as_done">You\'ve marked it as done.</string>
+    <string name="error_saving_assignment_closed_grading_period">Cannot change the due date when due in a closed grading period.</string>
+    <string name="a11y_content_description_schedule_jump_to_today">Jump to Today</string>
+    <string name="a11y_contact_info_content_description">%1$s, %2$s</string>
+    <string name="a11y_contact_info_click_description">send message</string>
+
+    <string name="somethingWentWrong">Something went wrong</string>
+    <string name="failedToLoadQuiz">Failed to load quiz</string>
+    <string name="failedToLoadSubmission">Failed to load submission</string>
+    <string name="studentAnnotationToolbarTitle">Student Annotation</string>
+    <string name="submissionTypeStudentAnnotation">Student Annotation</string>
+    <string name="gradesNoDueDate">No due date</string>
+    <string name="importantDatesNoDueDate">No due date</string>
+    <string name="missingAssignment">Missing</string>
+    <string name="dontSave">Don\'t save</string>
+    <string name="textSubmissionExitConfirmationTitle">Save draft?</string>
+    <string name="textSubmissionExitConfirmationMessage">Your changes will not be saved otherwise</string>
+    <string name="submissionDraftAvailableSubtitle">Tap here to continue</string>
+    <string name="submissionDraftAvailableTitle">Draft Available</string>
+    <string name="errorLoadingSubmission">An error occurred while loading submission</string>
+    <string name="loadFullContent">Tap to see full content</string>
+    <string name="openLtiInExternalApp">Tap to open in external app</string>
+    <string name="dashboardTabImportantDates">Important Dates</string>
+    <string name="importantDatesEmptyTitle">No important dates</string>
+    <string name="important_dates">Important Dates</string>
+
+    <string name="toolbarCommentLibrary">Comment Library</string>
+    <string name="commentLibraryNoSuggestions">No suggestions available</string>
+    <string name="speedGraderCommentHint">Comment</string>
+    <string name="a11y_schedule_marked_as_done">%s marked as done</string>
+    <string name="a11y_error_occured">Error occured, please try again.</string>
+    <string name="a11y_content_description_accept_invite">Accept invite</string>
+    <string name="a11y_content_description_decline_invite">Decline invite</string>
+    <string name="no_notifications_to_show">No notifications to show</string>
+
+    <string name="documentScanningTitle">Document Scanning</string>
+    <string name="filter_name_color">Color</string>
+    <string name="filter_name_grayscale">Grayscale</string>
+    <string name="filter_name_monochrome">Monochrome</string>
+    <string name="filter_name_original">Original</string>
+    <string name="noCompatibleAppInstalled">Your device does not have any applications installed that can open this link.</string>
+
+    <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
+    <string name="discussionOpenInBrowser">Open in browser</string>
+
+    <string name="dashboardSwitchToListView">Switch to list view</string>
+    <string name="dashboardSwitchToGridView">Switch to grid view</string>
+
+    <string name="selectAppTheme">Select app theme</string>
+    <string name="appThemeSettingsTitle">App Theme</string>
+    <string name="appThemeLight">Light</string>
+    <string name="appThemeDark">Dark</string>
+    <string name="appThemeSystem">Same as device</string>
+
+    <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
+    <string name="themeSelectorDescription">Choose app theme</string>
+    <string name="themeSelectorLightTheme">Light theme</string>
+    <string name="themeSelectorDarkTheme">Dark theme</string>
+    <string name="themeSelectorDeviceTheme">Same as device theme</string>
+    <string name="themeSelectorSave">Save</string>
+    <string name="themeSelectorChangeLater">You can change it later in app settings</string>
+
+    <string name="grabAnnotationTool">Grab</string>
+    <string name="fileUpload">File Upload</string>
+
+    <plurals name="a11y_inboxUnreadCount">
+        <item quantity="one">%s unread message</item>
+        <item quantity="other">%s unread messages</item>
+    </plurals>
+
+    <plurals name="a11y_notificationsUnreadCount">
+        <item quantity="one">%s unread notification</item>
+        <item quantity="other">%s unread notifications</item>
+    </plurals>
+
+    <string name="noAnnotationSelected">No annotation selected</string>
+
+    <string name="emailNotifications">Email Notifications</string>
+    <string name="emailNotificationsImmediately">Immediately</string>
+    <string name="emailNotificationsDaily">Daily</string>
+    <string name="emailNotificationsWeekly">Weekly</string>
+    <string name="emailNotificationsNever">Never</string>
+    <string name="selectFrequency">Select frequency</string>
+    <string name="a11y_closeProgress">Close progress dialog</string>
+    <string name="fileUploadProgress">%1$s of %2$s</string>
+    <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="fileUploadFailedSubtitle">One or more files failed to upload. Check your internet connection and retry to submit.</string>
+    <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
+
+    <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submission Successful</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Submission Failed</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Uploading File</item>
+        <item quantity="other">Uploading Files</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">File Upload Successful</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">File Upload Failed</string>
+    <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
+    <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
+    <string name="fileUploadError">File Upload Failed</string>
+    <string name="a11y_shareExtensionTargetHeaderContentDescription">Upload to Canvas for %s.</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Upload to My Files</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Submit assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choose a course</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choose a course, selected course is: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choose an assignment</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choose an assignment, selected assignment is: %s</string>
+    <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
+    <string name="cancelFileUploadTitle">Cancel Upload?</string>
+    <string name="cancelFileUploadMessage">This will cancel your upload.</string>
+    <string name="menuTitleFilterAssignments">Filter assignments</string>
+    <string name="filterAssignmentDialogTitle">Filter Assignments</string>
+    <string name="filterAssignmentsDialogCancel">Cancel</string>
+    <string name="filterAssignmentAll">All</string>
+    <string name="filterAssignmentLate">Late</string>
+    <string name="filterAssignmentMissing">Missing</string>
+    <string name="filterAssignmentGraded">Graded</string>
+    <string name="filterAssignmentUpcoming">Upcoming</string>
+    <string name="createdByStudentView">Created by Student View</string>
+    <string name="discussionErrorToast">Error occurred. The topic may no longer be available.</string>
+    <string name="cameraPermissionPermanentlyDenied">Camera permission was permanently denied. Go to app settings to allow it.</string>
+    <string name="unpublish_assignment_error">Can’t unpublish assignment if there are student submissions.</string>
+    <string name="subscribeToCalendar">Subscribe to Calendar Feed</string>
+    <string name="subscribeToCalendarMessage">You can sync your Canvas calendar to your Google Calendar account by clicking the Subscribe button in this dialog. Then, you’ll need to go to the Google Calendar app on your device and enable sync in the settings for the new calendar.</string>
+    <string name="subscribeButton">Subscribe</string>
+    <string name="switchToLightMode">Switch to Light Mode</string>
+    <string name="switchToDarkMode">Switch to Dark Mode</string>
+    <string name="acceptableUsePolicyDescription">Either you\'re a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.</string>
+    <string name="acceptableUsePolicyTitle">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyButton">Acceptable Use Policy</string>
+    <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
+    <string name="acceptableUsePolicySubmit">Submit</string>
+    <string name="acceptFail">Failed to submit terms acceptance.</string>
+
+    <string name="attempt">Attempt %d</string>
+    <string name="quizQuestions">Questions: %d</string>
+    <string name="quizTimeLimit">Time limit: %s</string>
+    <string name="allowedAttempts">Allowed attempts: %s</string>
+    <string name="usedAttempts">Attempts used: %d</string>
+    <string name="generalUnexpectedError">An unexpected error occurred.</string>
+
+    <string name="deleteSelected">Delete</string>
+    <string name="archiveSelected">Archive</string>
+    <string name="unarchiveSelected">Unarchive</string>
+    <string name="markAsReadSelected">Mark as read</string>
+    <string name="markAsUnreadSelected">Mark as unread</string>
+    <string name="starSelected">Star</string>
+    <string name="unstarSelected">Unstar</string>
+
+    <string name="inboxOperationFailed">Failed to perform operation</string>
+    <string name="inboxDeletedConfirmation">%s deleted</string>
+    <string name="inboxArchivedConfirmation">%s archived</string>
+    <string name="inboxUnarchivedConfirmation">%s unarchived</string>
+    <string name="inboxMarkAsReadConfirmation">%s marked as read</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marked as unread</string>
+    <string name="inboxStarredConfirmation">%s starred</string>
+    <string name="inboxUnstarredConfirmation">%s unstarred</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">This conversation will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+        <item quantity="other">These conversations will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Failed to load next page. Check your internet connection.</string>
+    <string name="conversationsRefreshFailed">Failed to refresh conversations. Check your internet connection.</string>
+    <string name="inboxScopeInbox">Inbox</string>
+    <string name="inboxContextSelectorTitle">Select Course or Group</string>
+    <string name="inboxClearFilter">Clear</string>
+    <string name="a11y_courseFilterContentDescription">Course filter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">select</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversation selected. Selection mode activated. Navigate for actions.</string>
+    <string name="a11y_conversationSelected">Conversation selected</string>
+    <string name="a11y_conversationDeselected">Conversation deselected</string>
+    <string name="a11y_exitSelectionMode">Exit selection mode</string>
+    <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
+    <string name="a11y_avatarContentDescription">Avatar of %s</string>
+    <string name="inboxUndo">Undo</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domain</string>
+    <string name="aboutLoginTitle">Login ID</string>
+    <string name="aboutEmailTitle">Email</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
+    <string name="instructure_logo">Instructure logo</string>
+    <string name="preferences">Preferences</string>
+    <string name="offlineContent">Offline Content</string>
+    <string name="offlineSyncSettingsTitle">Synchronization</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">Offline Content</string>
+    <string name="course_menu_manage_offline_content">Manage Offline Content</string>
+    <string name="offline_content_storage">Storage</string>
+    <string name="offline_content_storage_info">%s of %s Used</string>
+    <string name="offline_content_other">Other Apps</string>
+    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_remaining">Remaining</string>
+    <string name="offline_content_all_courses">All Courses</string>
+    <string name="offline_content_sync">Sync</string>
+    <string name="offline_content_selected">%d Selected</string>
+    <string name="offline_content_select_all">Select All</string>
+    <string name="offline_content_deselect_all">Deselect All</string>
+    <string name="offline_content_loading_error">An error occurred while loading the content.</string>
+    <string name="offline_content_empty_title">No Courses</string>
+    <string name="offline_content_empty_message">Your courses will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_empty_course_title">No Course Content</string>
+    <string name="offline_content_empty_course_message">The course content will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_discard_dialog_title">Discard Changes?</string>
+    <string name="offline_content_discard_dialog_message">If you choose to discard, the changes will not be saved.</string>
+    <string name="offline_content_discard_dialog_positive">Discard</string>
+    <string name="offline_content_sync_dialog_title">Sync Offline Content?</string>
+    <string name="offline_content_sync_dialog_message">This will sync ~%s content. It may result in additional charges from your data provider, if you are not connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">This will sync ~%s content only while you are connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_positive">Sync</string>
+    <string name="offline_content_sync_loading_title">Loading...</string>
+    <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
+    <string name="content_description_expand_content">Expand content</string>
+    <string name="content_description_collapse_content">Collapse content</string>
+    <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off then no synchronization will happen. The already downloaded content will not be deleted.</string>
+    <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
+    <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
+    <string name="syncSettings_syncFrequencyDescription">Specify the recurrence of the content synchronization. The system will download the selected content based on the frequency specified here.</string>
+    <string name="syncSettings_wifiOnlyTitle">Sync Content Over Wi-Fi Only</string>
+    <string name="syncSettings_wifiOnlyDescription">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
+    <string name="syncSettings_toolbarTitle">Synchronization</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">Sync Frequency</string>
+    <string name="syncSettings_wifiConfirmationTitle">Turn Off Content Sync Over Wi-fi Only?</string>
+    <string name="synySettings_wifiConfirmationMessage">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">Turn Off</string>
+    <string name="syncSettings_manualDescription">Manual</string>
+    <string name="offlineModeSnackbar">Offline Mode</string>
+    <string name="notAvailableOfflineScreenTitle">Not Available Offline</string>
+    <string name="notAvailableOfflineDescription">This content is not available in offline mode.</string>
+    <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
+    <string name="offline">Offline</string>
+    <string name="syncProgress_syncFailed">Sync Failed</string>
+    <string name="syncProgress_downloadProgress">Downloading %1$s of %2$s</string>
+    <string name="syncProgress_syncQueued">Queued</string>
+    <string name="syncProgress_offlineContentSyncCompleted">Offline Content Sync Completed</string>
+    <string name="syncProgress_offlineContentSyncFailed">Offline Content Sync Failed</string>
+    <string name="syncProgress_cancelConfirmationTitle">Cancel Sync?</string>
+    <string name="syncProgress_cancelConfirmationMessage">It will stop offline content sync. You can do it again later.</string>
+    <string name="syncProgress_syncErrorSubtitle">One or more items failed to sync. Please check your internet connection and retry syncing.</string>
+    <string name="syncProgress_downloadStarting">Download starting</string>
+    <string name="coursesCannotBeFavoritedOffline">Courses cannot be added to favorites offline.</string>
+    <string name="allCoursesScreenHeader">All Courses</string>
+    <string name="allCoursesCourseHeader">Courses</string>
+    <string name="allCoursesGroupHeader">Groups</string>
+    <string name="dashboardAllCoursesButton">All Courses</string>
+    <string name="allCoursesOfflineNote">Selecting courses for Dashboard can only be done online. You can navigate to offline course details.</string>
+    <string name="allCoursesOfflineNoteTitle">Note</string>
+    <string name="syncProgress_downloadSuccess">Success! Downloaded %1$s of %2$s</string>
+    <string name="syncProgress_syncingOfflineContent">Syncing Offline Content</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">Dismiss notification</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">%d course is syncing.</item>
+        <item quantity="other">%d courses are syncing.</item>
+    </plurals>
+    <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
+    <string name="editDashboardOfflineMode">You are offline</string>
+    <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">Offline Content Sync Success</string>
+    <string name="offlineContentSyncFailureNotificationTitle">Offline Content Sync Failed</string>
+    <string name="notificationChannelNameSyncUpdates">Offline Sync updates</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">Canvas notifications for offline sync updates.</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="one">%d course has been synced.</item>
+        <item quantity="other">%d courses have been synced.</item>
+    </plurals>
+    <string name="syncProgressAdditionalCourseContent">Additional course content</string>
+    <string name="failedToUpdateDashboardOrder">Failed to update Dashboard cards order</string>
+    <string name="publishAllModulesAndItems">Publish all Modules and Items</string>
+    <string name="publishModulesOnly">Publish Modules only</string>
+    <string name="unpublishAllModulesAndItems">Unpublish all Modules and Items</string>
+    <string name="moduleOptions">Module Options</string>
+    <string name="publishModuleAndItems">Publish Module and all Items</string>
+    <string name="publishModuleOnly">Publish Module only</string>
+    <string name="unpublishModuleAndItems">Unpublish Module and all Items</string>
+    <string name="a11y_contentDescription_moduleOptions">Module options for %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Module item options for %s</string>
+    <string name="publishModuleItem">Publish Module Item</string>
+    <string name="unpublishModuleItem">Unpublish Module Item</string>
+    <string name="publishDialogTitle">Publish?</string>
+    <string name="publishModuleDialogMessage">This will make only the module visible to students.</string>
+    <string name="publishModuleAndItemsDialogMessage">This will make the module and all items visible to students.</string>
+    <string name="unpublishDialogTitle">Unpublish?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">This will make the module and all items invisible to students.</string>
+    <string name="publishModuleItemDialogMessage">This will make only this item visible to students.</string>
+    <string name="unpublishModuleItemDialogMessage">This will make only this item invisible to students.</string>
+    <string name="publishModulesAndItemsDialogMessage">This will make all modules and items visible to students.</string>
+    <string name="publishModulesDialogMessage">This will make only the modules visible to students.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">This will make all modules and items invisible to students.</string>
+    <string name="only_available_with_link">Only available with link</string>
+    <string name="schedule_availability">Schedule availability</string>
+    <string name="moduleItemPublished">Item published</string>
+    <string name="moduleItemUnpublished">Item unpublished</string>
+    <string name="onlyModulePublished">Only Module published</string>
+    <string name="moduleAndAllItemsPublished">Module and all Items published</string>
+    <string name="moduleAndAllItemsUnpublished">Module and all Items unpublished</string>
+    <string name="onlyModulesPublished">Only Modules published</string>
+    <string name="allModulesAndAllItemsPublished">All Modules and all Items published</string>
+    <string name="allModulesAndAllItemsUnpublished">All Modules and all Items unpublished</string>
+    <string name="inherit_from_course">Inherit from Course</string>
+    <string name="course_members">Course Members</string>
+    <string name="institution_members">Institution Members</string>
+    <string name="public_title">Public</string>
+    <string name="edit_permissions">Edit Permissions</string>
+    <string name="update">Update</string>
+    <string name="availability_title">Availability</string>
+    <string name="visibility_title">Visibility</string>
+    <string name="available_from">Available From</string>
+    <string name="available_until">Available Until</string>
+    <string name="from">From</string>
+    <string name="until">Until</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Clear From Date</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Clear Until Date</string>
+    <string name="progressMessage">This process could take a few minutes. You may close the modal or navigate away from the page during this process.</string>
+    <string name="noteTitle">Note</string>
+    <string name="allModules">All Modules</string>
+    <string name="allModulesAndItems">All Modules and Items</string>
+    <string name="selectedModulesAndItems">Selected Modules and Items</string>
+    <string name="selectedModules">Selected Modules</string>
+    <string name="publishing">Publishing</string>
+    <string name="unpublishing">Unpublishing</string>
+    <string name="moduleBulkUpdateNote">Modules and items that have already been processed will not be reverted to their previous state when the process is discontinued.</string>
+    <string name="success">Success!</string>
+    <string name="updateFailed">Update failed</string>
+    <string name="updateCancelled">Update cancelled</string>
+    <string name="a11y_hidden">Hidden</string>
+    <string name="a11y_scheduled">Scheduled</string>
+    <string name="a11y_published">Published</string>
+    <string name="a11y_unpublished">Unpublished</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f pt</item>
+        <item quantity="other">%.0f pts</item>
+    </plurals>
+    <string name="publishModuleItemAction">Publish</string>
+    <string name="unpublishModuleItemAction">Unpublish</string>
+    <string name="publishDialogPositiveButton">Publish</string>
+    <string name="unpublishDialogPositiveButton">Unpublish</string>
+    <string name="discussionMenuRefresh">Refresh</string>
+
+    <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
+    <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
+    <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
+    <string name="calendarNoEvents">No Events Today!</string>
+    <string name="calendarNoEventsDescription">It looks like a great day to rest, relax, and recharge.</string>
+    <string name="userCalendarToDo">To Do</string>
+    <string name="courseToDo">%s To Do</string>
+    <string name="calendarEventExcused">Excused</string>
+    <string name="calendarEventMissing">Missing</string>
+    <string name="calendarEventGraded">Graded</string>
+    <string name="calendarEventSubmitted">Submitted</string>
+    <string name="calendarEventPoints">%s pts</string>
+    <string name="calendarDueDate">Due %1$s at %2$s</string>
+    <string name="calendarAtDateTime">%1$s at %2$s</string>
+    <string name="calendarFromTo">%1$s from %2$s to %3$s</string>
+    <string name="calendarPageError">There was an error loading your calendar</string>
+    <string name="calendarRefreshFailed">Failed to refresh calendar</string>
+    <string name="calendarAddNewCalendarItemContentDescription">Add new calendar item</string>
+    <string name="calendarFilterCalendars">Calendars</string>
+    <string name="calendarFilterUser">User</string>
+    <string name="calendarFilterCourse">Courses</string>
+    <string name="calendarFilterGroup">Groups</string>
+    <string name="calendarFilterExplanationLimited">Select the calendars you want to see, up to %d.</string>
+    <string name="calendarFilterLimitSnackbar">You can only select up to %d calendars.</string>
+    <string name="calendarFilterTitle">Calendars</string>
+    <string name="calendarFiltersFailed">Failed to load filters</string>
+
+    <string name="todoScreenTitle">To Do</string>
+    <string name="todoDateLabel">Date</string>
+    <string name="todoDescriptionLabel">Description</string>
+    <string name="todoDeleteConfirmationTitle">Delete To Do?</string>
+    <string name="todoDeleteConfirmationText">This will permanently delete your To Do item.</string>
+    <string name="todoDeleteErrorMessage">There was an error deleting this To Do. Please check your connection and try again.</string>
+    <string name="createTodoScreenTitle">New To Do</string>
+    <string name="editTodoScreenTitle">Edit To Do</string>
+    <string name="createToDoTitleHint">Add title</string>
+    <string name="createToDoDateLabel">Date</string>
+    <string name="createToDoTimeLabel">Time</string>
+    <string name="createToDoCalendarLabel">Calendar</string>
+    <string name="createToDoDetailsLabel">Details</string>
+    <string name="todoSaveErrorMessage">There was an error saving this To Do. Please check your connection and try again.</string>
+    <string name="selectCalendarScreenTitle">Select Calendar</string>
+
+    <string name="errorContentRetryButton">Retry</string>
+
+    <string name="eventLocationLabel">Location</string>
+    <string name="eventAddressLabel">Address</string>
+    <string name="eventDetailsLabel">Details</string>
+    <string name="errorLoadingEvent">There was a problem loading this event. Please check your connection and try again.</string>
+    <string name="eventDeleteConfirmationTitle">Delete Event?</string>
+    <string name="eventDeleteConfirmationText">This will permanently delete your event.</string>
+    <string name="eventDeleteErrorMessage">There was an error deleting this event. Please check your connection and try again.</string>
+    <string name="a11y_calendarPreviousMonth">Previous month %s</string>
+    <string name="a11y_calendarPreviousWeek">Previous week starting on %s</string>
+    <string name="a11y_calendarNextMonth">Next month %s</string>
+    <string name="a11y_calendarNextWeek">Next week starting on %s</string>
+    <plurals name="a11y_calendar_day_event_count">
+        <item quantity="one">%d event</item>
+        <item quantity="other">%d events</item>
+    </plurals>
+    <string name="eventDeleteRecurringConfirmationTitle">Confirm Deletion</string>
+    <string name="eventDeleteScopeOne">This event</string>
+    <string name="eventDeleteScopeAll">All events</string>
+    <string name="eventDeleteScopeFollowing">This and all following events</string>
+    <string name="calendarAddToDo">Add To Do</string>
+    <string name="calendarAddEvent">Add Event</string>
+
+    <string name="createEventScreenTitle">New Event</string>
+    <string name="editEventScreenTitle">Edit Event</string>
+    <string name="createEventTitleHint">Add title</string>
+    <string name="createEventDateLabel">Date</string>
+    <string name="createEventStartTimeLabel">From</string>
+    <string name="createEventStartTimeNotSelected">Start Time</string>
+    <string name="createEventEndTimeLabel">To</string>
+    <string name="createEventEndTimeNotSelected">End Time</string>
+    <string name="createEventFrequencyLabel">Frequency</string>
+    <string name="createEventCalendarLabel">Calendar</string>
+    <string name="createEventLocationLabel">Location</string>
+    <string name="createEventAddressLabel">Address</string>
+    <string name="createEventDetailsLabel">Details</string>
+    <string name="eventSaveErrorMessage">There was an error saving this Event. Please check your connection and try again.</string>
+    <string name="eventFrequencyDialogTitle">Frequency</string>
+    <string name="eventFrequencyDoesNotRepeat">Does Not Repeat</string>
+    <string name="eventFrequencyDaily">Daily</string>
+    <string name="eventFrequencyWeekly">Weekly on %s</string>
+    <string name="eventFrequencyMonthlyFirst">First</string>
+    <string name="eventFrequencyMonthlySecond">Second</string>
+    <string name="eventFrequencyMonthlyThird">Third</string>
+    <string name="eventFrequencyMonthlyFourth">Fourth</string>
+    <string name="eventFrequencyMonthlyLast">Last</string>
+    <string name="eventFrequencyMonthly">Monthly on the %s %s</string>
+    <string name="eventFrequencyAnnually">Annually on %s</string>
+    <string name="eventFrequencyWeekdays">Every Weekday (Monday to Friday)</string>
+    <string name="eventFrequencyCustom">Custom</string>
+    <string name="eventCustomFrequencyScreenTitle">Custom Frequency</string>
+    <string name="eventCustomFrequencyScreenEnds">Ends</string>
+    <string name="eventCustomFrequencyScreenRepeatsOn">Repeats on</string>
+    <string name="eventCustomFrequencyScreenOn">On Date</string>
+    <string name="eventCustomFrequencyScreenAfter">After Occurrences</string>
+    <plurals name="eventCustomFrequencyScreenDay">
+        <item quantity="one">Day</item>
+        <item quantity="other">Days</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenWeek">
+        <item quantity="one">Week</item>
+        <item quantity="other">Weeks</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenMonth">
+        <item quantity="one">Month</item>
+        <item quantity="other">Months</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenYear">
+        <item quantity="one">Year</item>
+        <item quantity="other">Years</item>
+    </plurals>
+    <string name="eventCustomFrequencyScreenOnDay">on day %d</string>
+    <string name="eventCustomFrequencyScreenOnWeekday">on the %s %s</string>
+    <string name="numberOfOccurrencesDialogTitle">Number of Occurrences</string>
+    <string name="numberOfOccurrencesDialogDescription">How many times you would like to repeat?</string>
+    <string name="numberOfOccurrencesDialogSupportingText">Max 400</string>
+    <string name="eventUpdateRecurringTitle">Confirm Changes</string>
+    <string name="eventStartTimeError">Start time cannot be after end time.</string>
+    <string name="eventEndTimeError">End time cannot be before start time.</string>
+    <string name="calendarFiltersSelectAll">Select all</string>
+    <string name="calendarFiltersDeselectAll">Deselect all</string>
+    <string name="createEventTitleLabel">Title</string>
+    <string name="createToDoTitleLabel">Title</string>
+    <string name="a11y_selectedCalendar">%s, selected calendar</string>
+    <string name="a11y_calendarSelected">%s selected</string>
+    <string name="a11y_calendarOpenAddActions">Open actions</string>
+    <string name="a11y_calendarCloseAddActions">Close actions</string>
+    <string name="a11y_calendarActionsOpen">Actions open. Navigate forward for actions</string>
+    <string name="a11y_calendarActionsClosed">Actions closed</string>
+
+    <!--Parent-->
+    <string name="screenTitleAlerts">Alerts</string>
+    <string name="screenTitleCalendar">Calendar</string>
+    <string name="screenTitleCourses">Courses</string>
+    <string name="screenTitleInbox">Inbox</string>
+    <string name="screenTitleHelp">Help</string>
+    <string name="screenTitleManageStudents">Manage Students</string>
+    <string name="screenTitleSettings">Settings</string>
+    <string name="navigationDrawerSwitchUsers">Switch Users</string>
+    <string name="navigationDrawerLogOut">Log Out</string>
+    <string name="noStudentsError">No Students</string>
+    <string name="noStudentsErrorDescription">You are not observing any students.</string>
+    <string name="noGrade">No Grade</string>
+    <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
+    <string name="parentNoCourses">No Courses</string>
+    <string name="parentNoCoursesMessage">Your student’s courses might not be published yet.</string>
+    <string name="notAParentTitle">Not a parent?</string>
+    <string name="notAParentSubtitle">We couldn\'t find any students associated with your account</string>
+    <string name="returnToLogin">Return to login</string>
+    <string name="studentOrTeacherTitle">Are you a student or teacher?</string>
+    <string name="studentOrTeacherSubtitle">One of our other apps might be a better fit. Tap one to visit the Play Store</string>
+    <string name="studentApp">STUDENT</string>
+    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="teacherApp">TEACHER</string>
+    <string name="canvasTeacherApp">Canvas Teacher</string>
+</resources>

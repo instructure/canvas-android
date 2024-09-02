@@ -262,7 +262,7 @@ private fun ActionsSegment(
             },
             onConfirmation = {
                 showModifyScopeDialog = false
-                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.entries[it]))
+                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.entries[it], true))
             }
         )
     }
@@ -275,7 +275,7 @@ private fun ActionsSegment(
             if (uiState.isSeriesEvent) {
                 showModifyScopeDialog = true
             } else {
-                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE, false))
             }
         },
         enabled = saveEnabled,

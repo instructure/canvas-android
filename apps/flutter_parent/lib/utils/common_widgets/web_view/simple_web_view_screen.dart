@@ -19,12 +19,24 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class SimpleWebViewScreen extends StatefulWidget {
-  final String _url;
-  final String _title;
-  final String? _infoText;
+import '../../service_locator.dart';
+import '../../url_launcher.dart';
 
-  SimpleWebViewScreen(this._url, this._title, {String? infoText}) : _infoText = infoText;
+class SimpleWebViewScreen extends StatefulWidget {
+  final String url;
+  final String title;
+  final String? infoText;
+  final Map<dynamic, dynamic>? initialCookies;
+  final bool limitWebAccess;
+
+  SimpleWebViewScreen(
+    this.url,
+    this.title,
+    this.limitWebAccess, {
+    String? infoText,
+    Map<dynamic, dynamic>? initialCookies,
+  })  : this.infoText = infoText,
+        this.initialCookies = initialCookies;
 
   @override
   State<StatefulWidget> createState() => _SimpleWebViewScreenState();
@@ -43,7 +55,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
           backgroundColor: Colors.transparent,
           iconTheme: Theme.of(context).iconTheme,
           bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
-          title: Text(widget._title, style: Theme.of(context).textTheme.titleLarge),
+          title: Text(widget.title, style: Theme.of(context).textTheme.titleLarge),
         ),
         body: WebView(
           javascriptMode: JavascriptMode.unrestricted,
@@ -52,25 +64,42 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
           navigationDelegate: _handleNavigation,
           onWebViewCreated: (controller) {
             _controller = controller;
-            controller.loadUrl(widget._url);
+            controller.loadUrl(widget.url);
           },
           onPageFinished: _handlePageLoaded,
+          initialCookies: _getCookies(),
         ),
       ),
     );
   }
 
   NavigationDecision _handleNavigation(NavigationRequest request) {
-    if (!request.isForMainFrame || widget._url.startsWith(request.url)) return NavigationDecision.navigate;
+    if (request.url.contains('/download?download_frd=')) {
+      locator<UrlLauncher>().launch(request.url);
+      return NavigationDecision.prevent;
+    }
+    if (!request.isForMainFrame || widget.url.startsWith(request.url) || !widget.limitWebAccess) return NavigationDecision.navigate;
     return NavigationDecision.prevent;
   }
 
   void _handlePageLoaded(String url) async {
     // If there's no info to show, just return
-    if (widget._infoText == null || widget._infoText!.isEmpty) return;
+    if (widget.infoText == null || widget.infoText!.isEmpty) return;
 
     // Run javascript to show the info alert
     await _controller?.evaluateJavascript(_showAlertJavascript);
+  }
+
+  String _getDomain() {
+    final uri = Uri.parse(widget.url);
+    return uri.host;
+  }
+
+  List<WebViewCookie> _getCookies() {
+    return widget.initialCookies?.entries
+            .map((entry) => WebViewCookie(name: entry.key.toString(), value: entry.value.toString(), domain: _getDomain()))
+            .toList() ??
+        [];
   }
 
   String get _showAlertJavascript => """
@@ -79,7 +108,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
           <div class="ic-flash__icon">
             <i class="icon-info"></i>
           </div>
-          ${widget._infoText}
+          ${widget.infoText}
           <button type="button" class="Button Button--icon-action close_link">
             <i class="icon-x"></i>
           </button>

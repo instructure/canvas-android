@@ -24,6 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -56,14 +57,12 @@ import com.instructure.teacher.ui.pages.EditSyllabusPage
 import com.instructure.teacher.ui.pages.FileListPage
 import com.instructure.teacher.ui.pages.HelpPage
 import com.instructure.teacher.ui.pages.InboxMessagePage
-import com.instructure.teacher.ui.pages.InboxPage
 import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.teacher.ui.pages.LegalPage
 import com.instructure.teacher.ui.pages.LoginFindSchoolPage
 import com.instructure.teacher.ui.pages.LoginLandingPage
 import com.instructure.teacher.ui.pages.LoginSignInPage
 import com.instructure.teacher.ui.pages.ModulesPage
-import com.instructure.teacher.ui.pages.NativeDiscussionsDetailsPage
 import com.instructure.teacher.ui.pages.NavDrawerPage
 import com.instructure.teacher.ui.pages.NotATeacherPage
 import com.instructure.teacher.ui.pages.PageListPage
@@ -123,7 +122,6 @@ abstract class TeacherTest : CanvasTest() {
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
     val editProfileSettingsPage = EditProfileSettingsPage()
-    val nativeDiscussionsDetailsPage = NativeDiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val discussionDetailsPage = DiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val discussionsListPage = DiscussionsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val editAnnouncementDetailsPage = EditAnnouncementDetailsPage()

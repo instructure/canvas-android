@@ -24,6 +24,10 @@ import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.Alert
+import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertType
+import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.AnnotationMetadata
 import com.instructure.canvasapi2.models.AnnotationUrls
 import com.instructure.canvasapi2.models.Assignment
@@ -137,6 +141,11 @@ class MockCanvas {
 
     /** Map of user id to user object */
     val users = mutableMapOf<Long, User>()
+
+    var currentUser: User? = null
+        get() {
+            return field ?: users.values.first()
+        }
 
     /** Map of term id to term object */
     val terms = mutableMapOf<Long, Term>()
@@ -292,6 +301,10 @@ class MockCanvas {
     val latestAnnouncements = mutableMapOf<Long, DiscussionTopicHeader>()
 
     val commentLibraryItems = mutableMapOf<Long, List<String>>()
+
+    /** Map of userId to alerts */
+    var observerAlerts = mutableMapOf<Long, List<Alert>>()
+    val observerAlertThresholds = mutableMapOf<Long, List<AlertThreshold>>()
 
     //region Convenience functionality
 
@@ -2243,4 +2256,64 @@ fun MockCanvas.addPlannable(name: String, userId: Long, course: Course? = null, 
 
     todos.add(todo)
     return todo
+}
+
+fun MockCanvas.addObserverAlert(
+    observer: User,
+    student: User,
+    canvasContext: CanvasContext,
+    alertType: AlertType,
+    workflowState: AlertWorkflowState,
+    actionDate: Date,
+    htmlUrl: String?,
+    lockedForUser: Boolean,
+    threshold: String? = null,
+    observerAlertThresholdId: Long? = null
+): Alert {
+
+    val alerts = observerAlerts[student.id] ?: mutableListOf()
+
+    val thresholdId: Long = observerAlertThresholdId ?: newItemId()
+    if (!observerAlertThresholds.containsKey(thresholdId)) {
+        addObserverAlertThreshold(thresholdId, alertType, observer, student, threshold)
+    }
+
+    val alert = Alert(
+        id = newItemId(),
+        observerId = observer.id,
+        userId = student.id,
+        observerAlertThresholdId = thresholdId,
+        contextType = canvasContext.type.apiString,
+        contextId = canvasContext.id,
+        alertType = alertType,
+        workflowState = workflowState,
+        actionDate = actionDate,
+        title = Randomizer.randomAlertTitle(),
+        htmlUrl = htmlUrl,
+        lockedForUser = lockedForUser
+    )
+
+    val updatedList = alerts.toMutableList().apply {
+        add(alert)
+    }
+
+    observerAlerts[student.id] = updatedList
+
+    return alert
+}
+
+fun MockCanvas.addObserverAlertThreshold(id: Long, alertType: AlertType, observer: User, student: User, threshold: String?) {
+    val thresholds = observerAlertThresholds[student.id]?.toMutableList() ?: mutableListOf()
+
+    thresholds.add(
+        AlertThreshold(
+            id = id,
+            observerId = observer.id,
+            userId = student.id,
+            threshold = threshold,
+            alertType = alertType,
+        )
+    )
+
+    observerAlertThresholds[student.id] = thresholds
 }

@@ -66,7 +66,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     lateinit var sharedEvents: CalendarSharedEvents
 
     private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-        override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, viewModel.canvasContext)
+        override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, viewModel.getCanvasContext())
 
         override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
     }
@@ -117,7 +117,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     override fun title(): String = getString(R.string.Event)
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), viewModel.canvasContext.backgroundColor)
+        ViewStyler.setStatusBarDark(requireActivity(), viewModel.getCanvasContext().backgroundColor)
     }
 
     override fun getFragment(): Fragment {
@@ -134,7 +134,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private fun handleAction(action: EventViewModelAction) {
         when (action) {
-            is EventViewModelAction.OpenLtiScreen -> webViewRouter.openLtiScreen(viewModel.canvasContext, action.url)
+            is EventViewModelAction.OpenLtiScreen -> webViewRouter.openLtiScreen(viewModel.getCanvasContext(), action.url)
             is EventViewModelAction.OpenEditEvent -> eventRouter.openEditEvent(action.scheduleItem)
             is EventViewModelAction.RefreshCalendarDays -> {
                 navigateBack()
@@ -157,6 +157,8 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     companion object {
         const val SCHEDULE_ITEM = "schedule_item"
         const val SCHEDULE_ITEM_ID = "schedule_item_id"
+        const val CONTEXT_TYPE = "context_type"
+        const val CONTEXT_ID = "context_id"
 
         fun newInstance(route: Route) = EventFragment().withArgs(route.arguments)
 

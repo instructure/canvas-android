@@ -323,7 +323,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             setupDialogRow(
                 dialog,
                 dialogBinding.submissionEntryStudio,
-                (submissionTypes.contains(SubmissionType.ONLINE_UPLOAD) && assignment.isStudioEnabled)
+                viewModel.isStudioAccepted()
             ) {
                 navigateToStudioScreen(assignment, studioLTITool)
             }
@@ -383,6 +383,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setupDescriptionView() {
+        binding?.descriptionWebViewWrapper?.webView?.addVideoClient(requireActivity())
         binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
@@ -455,6 +456,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }
+            viewModel.checkingReminderPermission = false
         }
     }
 

@@ -17,7 +17,7 @@
 
 package com.instructure.pandautils.room.offline
 
-import com.instructure.pandautils.room.createMigration
+import com.instructure.pandautils.room.common.createMigration
 
 val offlineDatabaseMigrations = arrayOf(
 

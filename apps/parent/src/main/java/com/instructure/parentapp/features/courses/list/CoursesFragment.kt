@@ -17,7 +17,6 @@
 
 package com.instructure.parentapp.features.courses.list
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,15 +27,19 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class CoursesFragment : Fragment() {
 
     private val viewModel: CoursesViewModel by viewModels()
+
+    @Inject
+    lateinit var navigation: Navigation
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +59,7 @@ class CoursesFragment : Fragment() {
     private fun handleAction(action: CoursesViewModelAction) {
         when (action) {
             is CoursesViewModelAction.NavigateToCourseDetails -> {
-                findNavController().navigate(Uri.parse(action.navigationUrl))
+                navigation.navigate(activity, navigation.courseDetailsRoute(action.courseId))
             }
         }
     }

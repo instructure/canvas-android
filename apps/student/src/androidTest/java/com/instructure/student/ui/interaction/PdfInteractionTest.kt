@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
@@ -37,6 +38,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
@@ -46,7 +48,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
+import java.util.Date
 
 @HiltAndroidTest
 class PdfInteractionTest : StudentTest() {
@@ -164,9 +166,9 @@ class PdfInteractionTest : StudentTest() {
         assignmentDetailsPage.scrollToAssignmentDescription()
 
         // Click the url in the description to load the pdf
-        Web.onWebView()
-                .withElement(DriverAtoms.findElement(Locator.ID, pdfUrlElementId))
-                .perform(DriverAtoms.webClick())
+        Web.onWebView(withId(R.id.contentWebView))
+            .withElement(DriverAtoms.findElement(Locator.ID, pdfUrlElementId))
+            .perform(DriverAtoms.webClick())
         fileListPage.assertPdfPreviewDisplayed()
     }
 

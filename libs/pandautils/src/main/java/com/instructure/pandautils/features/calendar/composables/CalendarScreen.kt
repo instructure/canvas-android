@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.calendar.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -74,9 +77,13 @@ import org.threeten.bp.LocalDate
 fun CalendarScreen(
     title: String,
     calendarScreenUiState: CalendarScreenUiState,
+    triggerAccessibilityFocus: Boolean,
+    showToolbar: Boolean,
     actionHandler: (CalendarAction) -> Unit,
     navigationActionClick: () -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
         val localCoroutineScope = rememberCoroutineScope()
@@ -93,36 +100,45 @@ fun CalendarScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                CanvasThemedAppBar(
-                    title = title,
-                    actions = {
-                        if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
-                            Box(contentAlignment = Alignment.Center, modifier = Modifier
-                                .padding(horizontal = 12.dp)
-                                .semantics(mergeDescendants = true) { }
-                                .clickable {
-                                    actionHandler(CalendarAction.TodayTapped)
-                                }) {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_calendar_day),
-                                    contentDescription = stringResource(id = R.string.a11y_contentDescriptionCalendarJumpToToday),
-                                    tint = Color(ThemePrefs.primaryTextColor)
-                                )
-                                Text(
-                                    text = LocalDate.now().dayOfMonth.toString(),
-                                    fontSize = 9.sp,
-                                    modifier = Modifier
-                                        .padding(top = 4.dp)
-                                        .clearAndSetSemantics { },
-                                    color = Color(ThemePrefs.primaryTextColor),
-                                )
+                if (showToolbar) {
+                    CanvasThemedAppBar(
+                        title = title,
+                        actions = {
+                            if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
+                                Box(contentAlignment = Alignment.Center, modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .semantics(mergeDescendants = true) { }
+                                    .clickable {
+                                        actionHandler(CalendarAction.TodayTapped)
+                                    }) {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_calendar_day),
+                                        contentDescription = stringResource(id = R.string.a11y_contentDescriptionCalendarJumpToToday),
+                                        tint = Color(ThemePrefs.primaryTextColor)
+                                    )
+                                    Text(
+                                        text = LocalDate.now().dayOfMonth.toString(),
+                                        fontSize = 9.sp,
+                                        modifier = Modifier
+                                            .padding(top = 4.dp)
+                                            .clearAndSetSemantics { },
+                                        color = Color(ThemePrefs.primaryTextColor),
+                                    )
+                                }
                             }
-                        }
-                    },
-                    navigationActionClick = navigationActionClick,
-                    navIconRes = R.drawable.ic_hamburger,
-                    navIconContentDescription = stringResource(id = R.string.navigation_drawer_open)
-                )
+                        },
+                        navigationActionClick = navigationActionClick,
+                        navIconRes = R.drawable.ic_hamburger,
+                        navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
+                        modifier = Modifier
+                            .focusable()
+                            .focusRequester(focusRequester)
+                    )
+                    // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
+                    LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
+                        focusRequester.requestFocus()
+                    })
+                }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
             content = { padding ->
@@ -219,5 +235,5 @@ fun CalendarScreenPreview() {
                     )
                 )
             )
-        ), {}) {}
+        ), triggerAccessibilityFocus = false, showToolbar = true, actionHandler = {}) {}
 }

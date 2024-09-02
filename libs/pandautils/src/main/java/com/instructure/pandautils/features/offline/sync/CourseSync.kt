@@ -59,7 +59,6 @@ import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
-import com.instructure.pandautils.room.offline.entities.RemoteFileEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -334,10 +333,11 @@ class CourseSync(
         val enrollments = course.enrollments.orEmpty().flatMap {
             enrollmentsApi.getEnrollmentsForUserInCourse(courseId, it.userId, params).dataOrThrow
         }.toMutableList()
+        val courseSettings = courseApi.getCourseSettings(courseId, params).dataOrThrow
 
         course.syllabusBody = parseHtmlContent(course.syllabusBody, courseId)
 
-        courseFacade.insertCourse(course.copy(enrollments = enrollments))
+        courseFacade.insertCourse(course.copy(enrollments = enrollments, settings = courseSettings))
 
         val courseFeatures = featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull
         courseFeatures?.let {

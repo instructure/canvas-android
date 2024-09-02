@@ -218,6 +218,7 @@ dependencies {
     api Libs.COMPOSE_VIEW_MODEL
     api Libs.COMPOSE_UI
     api Libs.COMPOSE_ACTIVITY
+    api Libs.COMPOSE_GLIDE
 
     implementation Libs.FLEXBOX_LAYOUT
 

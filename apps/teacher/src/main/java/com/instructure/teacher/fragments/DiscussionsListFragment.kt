@@ -29,6 +29,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -37,7 +38,6 @@ import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
-import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
@@ -239,7 +239,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun discussionDeletedSuccessfully(discussionTopicHeader: DiscussionTopicHeader) {
-        DiscussionTopicHeaderDeletedEvent(discussionTopicHeader.id, (DiscussionsDetailsFragment::class.java.toString() + ".onPost()")).post()
+        DiscussionTopicHeaderDeletedEvent(discussionTopicHeader.id, (DiscussionDetailsWebViewFragment::class.java.toString() + ".onPost()")).post()
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)

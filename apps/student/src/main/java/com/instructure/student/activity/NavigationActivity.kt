@@ -49,6 +49,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -74,7 +76,6 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
-import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.binding.viewBinding
@@ -107,6 +108,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.post
 import com.instructure.pandautils.utils.postSticky
@@ -167,8 +169,7 @@ private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
-    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(),
-        ErrorReportDialog.ErrorReportDialogResultListener {
+    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
 
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
@@ -206,6 +207,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
+    lateinit var oAuthApi: OAuthAPI.OAuthInterface
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -379,6 +383,22 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         scheduleAlarms()
+
+        if (ApiPrefs.isFirstMasqueradingStart) {
+            loadAuthenticatedSession()
+            ApiPrefs.isFirstMasqueradingStart = false
+        }
+    }
+
+    private fun loadAuthenticatedSession() {
+        lifecycleScope.launch {
+            oAuthApi.getAuthenticatedSession(
+                ApiPrefs.fullDomain,
+                RestParams(isForceReadFromNetwork = true)
+            ).dataOrNull?.sessionUrl?.let {
+                loadUrlIntoHeadlessWebView(this@NavigationActivity, it)
+            }
+        }
     }
 
     private fun handleTokenCheck(online: Boolean?) {
@@ -995,6 +1015,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
         ft.show(fragment)
         ft.commitAllowingStateLoss()
+
+        if (fragment is CalendarFragment) {
+            fragment.calendarTabSelected()
+        }
     }
 
     private fun getBottomBarFragments(selectedFragmentName: String): List<Fragment> {
@@ -1224,15 +1248,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             root.addView(animation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             animation.playAnimation()
         }
-    }
-
-    override fun onTicketPost() {
-        // The message is a little longer than normal, so show it for LENGTH_LONG instead of LENGTH_SHORT
-        Toast.makeText(this, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {
-        toast(R.string.errorOccurred)
     }
 
     private fun createBottomNavFragment(name: String?): Fragment? {

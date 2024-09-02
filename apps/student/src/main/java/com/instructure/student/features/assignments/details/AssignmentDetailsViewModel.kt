@@ -56,6 +56,7 @@ import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
@@ -674,5 +675,15 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun getAlarmTimeInMillis(reminderChoice: ReminderChoice): Long? {
         val dueDate = assignment?.dueDate?.time ?: return null
         return dueDate - reminderChoice.getTimeInMillis()
+    }
+
+    fun isStudioAccepted(): Boolean {
+        if (assignment?.isStudioEnabled == false) return false
+
+        if (assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_UPLOAD) == false) return false
+
+        if (assignment?.allowedExtensions?.isEmpty() == true) return true
+
+        return assignment?.allowedExtensions?.any { isAudioVisualExtension(it) } ?: true
     }
 }

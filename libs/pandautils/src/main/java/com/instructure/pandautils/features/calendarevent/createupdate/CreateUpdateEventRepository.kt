@@ -70,48 +70,55 @@ abstract class CreateUpdateEventRepository(
         locationName: String,
         locationAddress: String,
         description: String,
-        modifyEventScope: CalendarEventAPI.ModifyEventScope
+        modifyEventScope: CalendarEventAPI.ModifyEventScope,
+        isSeriesEvent: Boolean = false
     ): List<ScheduleItem> {
-        if (modifyEventScope == CalendarEventAPI.ModifyEventScope.ONE && rrule.isEmpty()) {
-            val result = calendarEventApi.updateCalendarEvent(
-                eventId = eventId,
-                body = ScheduleItem.ScheduleItemParamsWrapper(
-                    ScheduleItem.ScheduleItemParams(
-                        contextCode = contextCode,
-                        title = title,
-                        description = description,
-                        startAt = startDate,
-                        endAt = endDate,
-                        isAllDay = startDate == endDate,
-                        rrule = rrule,
-                        locationName = locationName,
-                        locationAddress = locationAddress,
-                        timeZoneEdited = TimeZone.getDefault().id
-                    )
-                ),
-                restParams = RestParams()
-            ).dataOrThrow
-            return listOf(result)
-        } else {
-            return calendarEventApi.updateRecurringCalendarEvent(
-                eventId = eventId,
-                modifyEventScope = modifyEventScope.apiName,
-                body = ScheduleItem.ScheduleItemParamsWrapper(
-                    ScheduleItem.ScheduleItemParams(
-                        contextCode = contextCode,
-                        title = title,
-                        description = description,
-                        startAt = startDate,
-                        endAt = endDate,
-                        isAllDay = startDate == endDate,
-                        rrule = rrule,
-                        locationName = locationName,
-                        locationAddress = locationAddress,
-                        timeZoneEdited = TimeZone.getDefault().id
-                    )
-                ),
-                restParams = RestParams()
-            ).dataOrThrow
+        val body = ScheduleItem.ScheduleItemParamsWrapper(
+            ScheduleItem.ScheduleItemParams(
+                contextCode = contextCode,
+                title = title,
+                description = description,
+                startAt = startDate,
+                endAt = endDate,
+                isAllDay = startDate == endDate,
+                rrule = rrule,
+                locationName = locationName,
+                locationAddress = locationAddress,
+                timeZoneEdited = TimeZone.getDefault().id
+            )
+        )
+
+        val result = when {
+            isSeriesEvent && modifyEventScope == CalendarEventAPI.ModifyEventScope.ONE -> {
+                listOf(
+                    calendarEventApi.updateRecurringCalendarEventOneOccurrence(
+                        eventId = eventId,
+                        modifyEventScope = modifyEventScope.apiName,
+                        body = body,
+                        restParams = RestParams()
+                    ).dataOrThrow
+                )
+            }
+
+            rrule.isEmpty() -> {
+                listOf(
+                    calendarEventApi.updateCalendarEvent(
+                        eventId = eventId,
+                        body = body,
+                        restParams = RestParams()
+                    ).dataOrThrow
+                )
+            }
+
+            else -> {
+                calendarEventApi.updateRecurringCalendarEvent(
+                    eventId = eventId,
+                    modifyEventScope = modifyEventScope.apiName,
+                    body = body,
+                    restParams = RestParams()
+                ).dataOrThrow
+            }
         }
+        return result
     }
 }

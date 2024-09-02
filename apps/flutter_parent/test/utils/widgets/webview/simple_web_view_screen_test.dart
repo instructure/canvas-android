@@ -29,7 +29,7 @@ void main() {
     final url = 'https://www.google.com';
     final title = 'title';
 
-    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title), platformConfig: config));
+    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title, true), platformConfig: config));
     await tester.pump();
 
     expect(find.text(title), findsOneWidget);
@@ -39,7 +39,7 @@ void main() {
     final url = 'https://www.google.com';
     final title = 'title';
 
-    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title), platformConfig: config));
+    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title, true), platformConfig: config));
     await tester.pump();
 
     expect(find.byType(WebView), findsOneWidget);
@@ -51,7 +51,7 @@ void main() {
     final title = 'title';
 
     await TestApp.showWidgetFromTap(tester, (context) {
-      return Navigator.of(context).push(MaterialPageRoute(builder: (context) => SimpleWebViewScreen(url, title)));
+      return Navigator.of(context).push(MaterialPageRoute(builder: (context) => SimpleWebViewScreen(url, title, true)));
     }, config: config);
 
     expect(find.byType(WebView), findsOneWidget);
