@@ -835,6 +835,7 @@ class DashboardNotificationsViewModelTest {
         coVerify {
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
         }
     }
 

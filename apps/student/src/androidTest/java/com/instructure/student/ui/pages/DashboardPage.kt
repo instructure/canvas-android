@@ -274,7 +274,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private fun clickDashboardGlobalOverflowButton() {
         waitForViewToBeCompletelyDisplayed(withContentDescription("More options") + withAncestor(R.id.toolbar))
         // We need this, because sometimes after sync we have a sync notification that covers the overflow button for a couple of seconds.
-        retry(times = 10) {
+        retry(times = 20) {
             Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
         }
     }

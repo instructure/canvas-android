@@ -203,6 +203,7 @@ class SyncProgressViewModelTest {
         coVerify {
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
             offlineSyncHelper.syncOnce(listOf(1L))
         }
 
@@ -242,6 +243,7 @@ class SyncProgressViewModelTest {
             offlineSyncHelper.cancelRunningWorkers()
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
         }
 
         assertEquals(SyncProgressAction.Back, viewModel.events.value?.getContentIfNotHandled())
