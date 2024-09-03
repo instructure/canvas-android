@@ -51,6 +51,17 @@ data class DiscussionTopicEntryRequest(
 )
 
 data class DiscussionTopicEntryResponse(
+        val id: Long,
+        @SerializedName("message")
+        val message: String
+)
+
+data class DiscussionTopicEntryReplyRequest(
+        @SerializedName("message")
+        val message: String
+)
+
+data class DiscussionTopicEntryReplyResponse(
         val id: String,
         @SerializedName("message")
         val message: String

@@ -19,6 +19,8 @@ package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CreateDiscussionTopic
 import com.instructure.dataseeding.model.DiscussionApiModel
+import com.instructure.dataseeding.model.DiscussionTopicEntryReplyRequest
+import com.instructure.dataseeding.model.DiscussionTopicEntryReplyResponse
 import com.instructure.dataseeding.model.DiscussionTopicEntryRequest
 import com.instructure.dataseeding.model.DiscussionTopicEntryResponse
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
@@ -36,6 +38,9 @@ object DiscussionTopicsApi {
         @POST("courses/{courseId}/discussion_topics/{discussionId}/entries")
         fun createEntryToDiscussionTopic(@Path("courseId") courseId: Long, @Path("discussionId") discussionId: Long, @Body discussionTopicEntry: DiscussionTopicEntryRequest): Call<DiscussionTopicEntryResponse>
 
+        @POST("courses/{courseId}/discussion_topics/{discussionId}/entries/{entryId}/replies")
+        fun createReplyToDiscussionTopicEntry(@Path("courseId") courseId: Long, @Path("discussionId") discussionId: Long, @Path("entryId") entryId: Long, @Body discussionTopicEntry: DiscussionTopicEntryReplyRequest): Call<DiscussionTopicEntryReplyResponse>
+
     }
 
     private fun discussionTopicsService(token: String): DiscussionTopicsService
@@ -45,6 +50,14 @@ object DiscussionTopicsApi {
         val discussionTopicEntry = DiscussionTopicEntryRequest(replyMessage)
         return discussionTopicsService(token)
             .createEntryToDiscussionTopic(courseId, discussionId, discussionTopicEntry)
+            .execute()
+            .body()!!
+    }
+
+    fun createReplyToDiscussionTopicEntry(token: String, courseId: Long, discussionId: Long, entryId: Long, replyMessage: String): DiscussionTopicEntryReplyResponse {
+        val discussionTopicEntryReply = DiscussionTopicEntryReplyRequest(replyMessage)
+        return discussionTopicsService(token)
+            .createReplyToDiscussionTopicEntry(courseId, discussionId, entryId, discussionTopicEntryReply)
             .execute()
             .body()!!
     }
