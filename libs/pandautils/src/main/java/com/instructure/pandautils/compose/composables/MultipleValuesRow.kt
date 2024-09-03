@@ -18,6 +18,8 @@ package com.instructure.pandautils.compose.composables
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -27,9 +29,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -66,6 +70,7 @@ fun <T> MultipleValuesRow(
 ) {
     val animationLabel = "LabelMultipleValuesRowTransition"
     val searchFieldFocusRequester = remember { FocusRequester() }
+    val scrollState = rememberScrollState()
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -126,7 +131,11 @@ fun <T> MultipleValuesRow(
                         properties = PopupProperties(focusable = false),
                         onDismissRequest = { actionHandler(MultipleValuesRowAction.HideRecipientResults) }
                     ) {
-                        Column {
+                        Column(
+                            modifier = Modifier
+                                .heightIn(max = 300.dp)
+                                .scrollable(scrollState, Orientation.Vertical)
+                        ) {
                             uiState.searchResults.forEach { value ->
                                 Row(
                                     Modifier

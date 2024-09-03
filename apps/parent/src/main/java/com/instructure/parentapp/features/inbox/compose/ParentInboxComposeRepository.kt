@@ -44,7 +44,7 @@ class ParentInboxComposeRepository(
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return recipientAPI.getFirstPageRecipientList(
             searchQuery = searchQuery,
-            context = context.apiContext(),
+            context = context.contextId,
             restParams = params,
         ).depaginate {
             recipientAPI.getNextPageRecipientList(it, params)
