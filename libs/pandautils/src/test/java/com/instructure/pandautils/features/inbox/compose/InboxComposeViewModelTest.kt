@@ -9,6 +9,7 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import io.mockk.coEvery
@@ -45,6 +46,7 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
     }
 
     @After
@@ -271,13 +273,23 @@ class InboxComposeViewModelTest {
     }
 
     @Test
-    fun `Send Message action handler`() {
+    fun `Send Message action handler`() = runTest {
         val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(mockk(relaxed = true)))
 
         viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
 
         coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+        assertEquals(3, events.size)
+        assertEquals(InboxComposeViewModelAction.UpdateParentFragment, events[0])
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult(context.getString(R.string.messageSentSuccessfully)), events[1])
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events[2])
     }
 
     @Test
