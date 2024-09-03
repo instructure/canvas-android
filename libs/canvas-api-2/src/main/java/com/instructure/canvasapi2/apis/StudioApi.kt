@@ -19,11 +19,12 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Tag
 import retrofit2.http.Url
 
 interface StudioApi {
 
     @GET
-    suspend fun getStudioMediaMetadata(@Url url: String, @Tag params: RestParams): DataResult<List<StudioMediaMetadata>>
+    suspend fun getStudioMediaMetadata(@Url url: String, @Tag params: RestParams, @Header("Authorization") token: String): DataResult<List<StudioMediaMetadata>>
 }
