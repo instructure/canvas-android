@@ -316,7 +316,6 @@ class InboxComposeViewModel @Inject constructor(
         return inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh)
     }
 
-
     private fun createConversation() {
         uiState.value.selectContextUiState.selectedCanvasContext?.let { canvasContext ->
             viewModelScope.launch {
@@ -331,6 +330,8 @@ class InboxComposeViewModel @Inject constructor(
                         attachments = uiState.value.attachments.map { it.attachment },
                         isIndividual = uiState.value.sendIndividual
                     ).dataOrThrow
+
+                    _events.send(InboxComposeViewModelAction.UpdateParentFragment)
 
                     sendScreenResult(context.getString(R.string.messageSentSuccessfully))
 
