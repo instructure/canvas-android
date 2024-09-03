@@ -39,11 +39,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -69,7 +66,6 @@ fun <T> MultipleValuesRow(
     searchResultComposable: (@Composable (T) -> Unit)? = null,
 ) {
     val animationLabel = "LabelMultipleValuesRowTransition"
-    val searchFieldFocusRequester = remember { FocusRequester() }
     val scrollState = rememberScrollState()
 
     Row(
@@ -123,7 +119,6 @@ fun <T> MultipleValuesRow(
                         placeholder = stringResource(id = R.string.search),
                         modifier = Modifier
                             .padding(4.dp)
-                            .focusRequester(searchFieldFocusRequester)
                             .fillMaxWidth()
                     )
                     DropdownMenu(
