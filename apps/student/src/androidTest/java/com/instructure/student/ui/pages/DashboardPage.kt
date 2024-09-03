@@ -267,14 +267,17 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun openGlobalManageOfflineContentPage() {
        clickDashboardGlobalOverflowButton()
-       onView(withText(containsString("Manage Offline Content")))
-            .perform(click());
+        // We need this, because sometimes after sync we have a sync notification that covers the text for a couple of seconds.
+        retry(times = 10) {
+            onView(withText(containsString("Manage Offline Content")))
+                .perform(click());
+        }
     }
 
     private fun clickDashboardGlobalOverflowButton() {
         waitForViewToBeCompletelyDisplayed(withContentDescription("More options") + withAncestor(R.id.toolbar))
         // We need this, because sometimes after sync we have a sync notification that covers the overflow button for a couple of seconds.
-        retry(times = 20) {
+        retry(times = 10) {
             Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
         }
     }
