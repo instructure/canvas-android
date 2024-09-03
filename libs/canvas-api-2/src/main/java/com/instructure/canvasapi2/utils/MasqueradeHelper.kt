@@ -18,13 +18,10 @@ package com.instructure.canvasapi2.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.util.Log
 import android.webkit.CookieManager
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.User
 import com.jakewharton.processphoenix.ProcessPhoenix
@@ -117,6 +114,7 @@ object MasqueradeHelper {
                             cleanupMasquerading(ContextKeeper.appContext)
                             // isMasquerading is already set so this will set the masqueradeUser
                             ApiPrefs.user = response.body()
+                            ApiPrefs.isFirstMasqueradingStart = true
                             restartApplication(startingClass)
                         }
                     }
