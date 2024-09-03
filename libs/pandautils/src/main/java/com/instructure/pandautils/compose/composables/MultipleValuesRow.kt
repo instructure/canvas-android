@@ -62,6 +62,7 @@ fun <T> MultipleValuesRow(
     actionHandler: (MultipleValuesRowAction) -> Unit,
     itemComposable: @Composable (T) -> Unit,
     modifier: Modifier = Modifier,
+    searchResultComposable: (@Composable (T) -> Unit)? = null,
 ) {
     val animationLabel = "LabelMultipleValuesRowTransition"
     val searchFieldFocusRequester = remember { FocusRequester() }
@@ -145,11 +146,7 @@ fun <T> MultipleValuesRow(
                                             actionHandler(MultipleValuesRowAction.HideRecipientResults)
                                         }
                                 ){
-                                    Text(
-                                        text = uiState.searchResultToString(value),
-                                        modifier = Modifier
-                                            .padding(8.dp)
-                                    )
+                                    searchResultComposable?.invoke(value)
                                 }
                             }
                         }
@@ -183,7 +180,6 @@ data class MultipleValuesRowState<T>(
     val isShowResults: Boolean = false,
     val searchQuery: TextFieldValue = TextFieldValue(""),
     val searchResults: List<T> = emptyList(),
-    val searchResultToString: (T) -> String = { it.toString() }
 )
 
 sealed class MultipleValuesRowAction {
@@ -207,7 +203,7 @@ fun LabelMultipleValuesRowPreview() {
         isLoading = false,
         isSearchEnabled = false,
         searchQuery = TextFieldValue(""),
-        searchResults = emptyList()
+        searchResults = emptyList(),
     )
     MultipleValuesRow(
         label = "To",
@@ -217,6 +213,6 @@ fun LabelMultipleValuesRowPreview() {
         },
         actionHandler = {},
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
     )
 }

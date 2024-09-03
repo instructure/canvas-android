@@ -22,17 +22,23 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -57,6 +63,7 @@ import com.instructure.pandautils.compose.composables.MultipleValuesRowAction
 import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
+import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
@@ -174,6 +181,23 @@ private fun InboxComposeScreenContent(
                             }
                             is MultipleValuesRowAction.SearchQueryChanges -> actionHandler(InboxComposeActionHandler.SearchRecipientQueryChanged(action.searchQuery))
                             is MultipleValuesRowAction.HideRecipientResults -> actionHandler(InboxComposeActionHandler.HideSearchResults)
+                        }
+                    },
+                    searchResultComposable = { recipient ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(4.dp)
+                        ) {
+                            UserAvatar(
+                                imageUrl = recipient.avatarURL,
+                                name = recipient.name ?: "",
+                                modifier = Modifier
+                                    .size(24.dp)
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Text(recipient.name ?: "")
                         }
                     }
                 )

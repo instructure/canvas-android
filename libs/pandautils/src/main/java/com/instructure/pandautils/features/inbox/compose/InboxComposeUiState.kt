@@ -11,10 +11,7 @@ import java.util.EnumMap
 data class InboxComposeUiState(
     val selectContextUiState: SelectContextUiState = SelectContextUiState(),
     val recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
-    val inlineRecipientSelectorState: MultipleValuesRowState<Recipient> = MultipleValuesRowState(
-        isSearchEnabled = true,
-        searchResultToString = { it.name ?: "" },
-    ),
+    val inlineRecipientSelectorState: MultipleValuesRowState<Recipient> = MultipleValuesRowState(isSearchEnabled = true),
     val screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     val sendIndividual: Boolean = false,
     val subject: TextFieldValue = TextFieldValue(""),
