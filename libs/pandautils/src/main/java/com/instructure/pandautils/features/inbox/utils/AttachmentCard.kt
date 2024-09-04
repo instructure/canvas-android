@@ -65,20 +65,13 @@ fun AttachmentCard(
                     .background(colorResource(id = R.color.backgroundLight))
             ){
                 if (attachment.thumbnailUrl != null) {
-                    // If the attachment has been deleted, the thumbnailUrl will be load an empty image.
-                    // In this case, we should show the icon instead of the thumbnail.
-                    Icon(
-                        painter = painterResource(id = attachment.iconRes),
-                        contentDescription = null,
-                        tint = colorResource(id = R.color.textDark),
-                        modifier = Modifier.size(48.dp)
-                    )
-
                     GlideImage(
                         model = attachment.thumbnailUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(id = R.color.backgroundLight))
                     )
                 } else {
                     Icon(
