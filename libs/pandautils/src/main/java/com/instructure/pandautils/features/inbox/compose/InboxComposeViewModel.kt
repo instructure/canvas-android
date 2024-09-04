@@ -13,6 +13,7 @@ import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
+import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.isCourse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,6 +42,23 @@ class InboxComposeViewModel @Inject constructor(
 
     private val _events = Channel<InboxComposeViewModelAction>()
     val events = _events.receiveAsFlow()
+
+    val debouncedSearch = debounce<String>(waitMs = 300, coroutineScope = viewModelScope) { searchQuery ->
+        val recipients = getRecipientList(
+            searchQuery,
+            uiState.value.selectContextUiState.selectedCanvasContext
+                ?: return@debounce
+        ).dataOrNull.orEmpty().filterNot { uiState.value.recipientPickerUiState.selectedRecipients.contains(it) }
+
+        _uiState.update {
+            it.copy(
+                inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                    searchResults = recipients,
+                    isShowResults = recipients.isNotEmpty(),
+                )
+            )
+        }
+    }
 
     init {
         loadContexts()
@@ -121,22 +139,7 @@ class InboxComposeViewModel @Inject constructor(
                 ) }
 
                 if (action.searchValue.text.length > 1) {
-                    viewModelScope.launch {
-                        val recipients = getRecipientList(
-                            action.searchValue.text,
-                            uiState.value.selectContextUiState.selectedCanvasContext
-                                ?: return@launch
-                        ).dataOrNull.orEmpty().filterNot { uiState.value.recipientPickerUiState.selectedRecipients.contains(it) }
-
-                        _uiState.update {
-                            it.copy(
-                                inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
-                                    searchResults = recipients,
-                                    isShowResults = recipients.isNotEmpty(),
-                                )
-                            )
-                        }
-                    }
+                    debouncedSearch(action.searchValue.text)
                 } else {
                     _uiState.update {
                         it.copy(
