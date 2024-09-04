@@ -134,7 +134,8 @@ class StudioSync(
             async {
                 studioApi.getStudioMediaMetadata(
                     "${studioSession.baseUrl}/api/public/v1/courses/$courseId/media",
-                    RestParams(isForceReadFromNetwork = true, studioToken = studioSession.accessToken, shouldIgnoreToken = true)
+                    RestParams(isForceReadFromNetwork = true, shouldIgnoreToken = true),
+                    "Bearer ${studioSession.accessToken}"
                 ).dataOrNull.orEmpty()
             }
         }.awaitAll()

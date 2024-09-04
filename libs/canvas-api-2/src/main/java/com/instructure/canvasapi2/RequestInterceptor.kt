@@ -65,10 +65,6 @@ class RequestInterceptor : Interceptor {
             builder.addHeader("Authorization", "Bearer $token")
         }
 
-        if (params.studioToken != null) {
-            builder.addHeader("Authorization", OAuthAPI.authBearer(params.studioToken))
-        }
-
         // Add Accept-Language header for a11y
         builder.addHeader("accept-language", params.acceptLanguageOverride ?: acceptedLanguageString)
 
