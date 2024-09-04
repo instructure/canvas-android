@@ -30,6 +30,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -48,6 +50,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Message
@@ -56,6 +62,8 @@ import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.details.composables.MessageMenuItem
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.handleUrlAt
+import com.instructure.pandautils.utils.linkify
 import com.instructure.pandautils.utils.toLocalString
 import java.time.ZonedDateTime
 import java.time.format.FormatStyle
@@ -91,10 +99,25 @@ private fun InboxMessageDetailsView(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        Text(
-            text = messageState.message?.body ?: "",
-            fontSize = 16.sp,
-        )
+        val annotatedString = messageState.message?.body?.linkify(
+            SpanStyle(
+                color = colorResource(id = R.color.textInfo),
+                textDecoration = TextDecoration.Underline
+            )
+        ) ?: AnnotatedString("")
+        SelectionContainer {
+            ClickableText(
+                text = annotatedString,
+                onClick = {
+                    annotatedString.handleUrlAt(it) {
+                        actionHandler(MessageAction.UrlSelected(it))
+                    }
+                },
+                style = TextStyle.Default.copy(
+                    fontSize = 16.sp
+                )
+            )
+        }
 
         messageState.message?.attachments?.forEach { attachment ->
             Spacer(modifier = Modifier.height(16.dp))

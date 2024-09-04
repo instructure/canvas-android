@@ -17,4 +17,5 @@ sealed class MessageAction {
     data object Forward : MessageAction()
     data class DeleteMessage(val message: Message) : MessageAction()
     data class OpenAttachment(val attachment: Attachment) : MessageAction()
+    data class UrlSelected(val url: String) : MessageAction()
 }

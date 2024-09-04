@@ -1,5 +1,7 @@
 package com.instructure.pandautils.features.inbox.details
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import com.instructure.pandautils.features.inbox.details.composables.InboxDetail
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class InboxDetailsFragment : Fragment(), FragmentInteractions {
@@ -61,6 +64,10 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
             }
             is InboxDetailsFragmentAction.ShowScreenResult -> {
                 Toast.makeText(requireContext(), action.message, Toast.LENGTH_SHORT).show()
+            }
+            is InboxDetailsFragmentAction.UrlSelected -> {
+                val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
+                activity?.startActivity(urlIntent)
             }
         }
     }

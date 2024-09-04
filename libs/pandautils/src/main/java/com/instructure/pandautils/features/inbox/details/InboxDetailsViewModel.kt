@@ -48,6 +48,11 @@ class InboxDetailsViewModel @Inject constructor(
             is MessageAction.Forward -> handleAction(InboxDetailsAction.Forward)
             is MessageAction.DeleteMessage -> handleAction(InboxDetailsAction.DeleteMessage(conversationId ?: 0, action.message))
             is MessageAction.OpenAttachment -> { fileDownloader.downloadFileToDevice(action.attachment) }
+            is MessageAction.UrlSelected -> {
+                viewModelScope.launch {
+                    _events.send(InboxDetailsFragmentAction.UrlSelected(action.url))
+                }
+            }
         }
     }
 
