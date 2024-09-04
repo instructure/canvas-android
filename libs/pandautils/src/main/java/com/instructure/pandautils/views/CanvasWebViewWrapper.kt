@@ -22,12 +22,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.annotation.ColorRes
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ViewCanvasWebViewWrapperBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
+import java.io.File
 
 class CanvasWebViewWrapper @JvmOverloads constructor(
     context: Context,
@@ -101,7 +103,15 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
     fun loadHtml(html: String, title: String?, baseUrl: String? = null, extraFormatting: ((String) -> String)? = null) {
         this.html = html
         this.title = title
-        this.baseUrl = baseUrl
+
+        // This is needed for captions to work in offline studio videos.
+        // We need to use the user files path for base url in this case.
+        if (html.contains(getCaptionsHtmlPattern())) {
+            binding.contentWebView.settings.allowUniversalAccessFromFileURLs = true
+            this.baseUrl = getUserFilesPath()
+        } else {
+            this.baseUrl = baseUrl
+        }
 
         initVisibility(html)
 
@@ -111,9 +121,19 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
 
     fun loadDataWithBaseUrl(url: String?, data: String, mimeType: String?, encoding: String?, history: String?) {
         html = data
+
+        // This is needed for captions to work in offline studio videos.
+        // We need to use the user files path for base url in this case.
+        val baseUrl = if (data.contains(getCaptionsHtmlPattern())) {
+            binding.contentWebView.settings.allowUniversalAccessFromFileURLs = true
+            getUserFilesPath()
+        } else {
+            url
+        }
+
         initVisibility(data)
         val formattedHtml = formatHtml(data)
-        binding.contentWebView.loadDataWithBaseURL(url, formattedHtml, mimeType, encoding, history)
+        binding.contentWebView.loadDataWithBaseURL(baseUrl, formattedHtml, mimeType, encoding, history)
     }
 
     private fun initVisibility(html: String) {
@@ -146,5 +166,13 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
 
     private fun colorResToHexString(@ColorRes colorRes: Int): String {
         return "#" + Integer.toHexString(context.getColor(colorRes)).substring(2)
+    }
+
+    private fun getCaptionsHtmlPattern(): String {
+        return """<track kind="captions" src="${getUserFilesPath()}"""
+    }
+
+    private fun getUserFilesPath(): String {
+        return "file://${File(context.filesDir, ApiPrefs.user?.id.toString()).absolutePath}"
     }
 }

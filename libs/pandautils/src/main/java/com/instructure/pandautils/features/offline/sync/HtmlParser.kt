@@ -20,6 +20,7 @@ import android.content.Context
 import android.net.Uri
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
@@ -39,14 +40,28 @@ class HtmlParser(
     private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
     private val fileLinkRegex = Regex("<a[^>]*class=\"instructure_file_link[^>]*href=\"([^\"]*)\"[^>]*>")
     private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
+    private val studioIframeRegex = Regex("<iframe[^>]*custom_arc_media_id%3D([^%]*)%[^>]*>[^<]*</iframe>")
 
-    suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long): HtmlParsingResult {
-        if (html == null) return HtmlParsingResult(null, emptySet(), emptySet())
+    private val videoTagReplacement = """
+        <video controls playsinline preload="auto" poster="{posterPath}">
+          <source src="{srcPath}" type="{mimeType}" />
+          {captions}
+          
+        </video>
+    """.trimIndent()
+
+    private val captionsTemplate = """
+        <track kind="captions" src="{captionsFileSource}" srclang="{captionsSrcLang}" />
+    """.trimIndent()
+
+    suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long, studioMetadata: List<StudioMediaMetadata> = emptyList()): HtmlParsingResult {
+        if (html == null) return HtmlParsingResult(null, emptySet(), emptySet(), emptySet())
 
         val imageParsingResult = parseAndReplaceImageTags(html, courseId)
         val filesFromFileLinks = findFileIdsToSync(imageParsingResult.htmlWithLocalFileLinks ?: html)
+        val studioMediaResult = parseAndReplaceStudioVideos(imageParsingResult, studioMetadata)
 
-        return imageParsingResult.copy(internalFileIds = imageParsingResult.internalFileIds + filesFromFileLinks)
+        return studioMediaResult.copy(internalFileIds = imageParsingResult.internalFileIds + filesFromFileLinks)
     }
 
     private suspend fun parseAndReplaceImageTags(originalHtml: String, courseId: Long): HtmlParsingResult {
@@ -72,7 +87,7 @@ class HtmlParser(
             }
         }
 
-        return HtmlParsingResult(resultHtml, internalFileIds, externalFileUrls)
+        return HtmlParsingResult(resultHtml, internalFileIds, externalFileUrls, emptySet())
     }
 
     private suspend fun replaceInternalFileUrl(html: String, courseId: Long, fileId: Long, imageUrl: String): Pair<String, Boolean> {
@@ -105,7 +120,7 @@ class HtmlParser(
         return downloadedFile.absolutePath
     }
 
-    private suspend fun createLocalFilePathForExternalFile(fileName: String, courseId: Long): String {
+    private fun createLocalFilePathForExternalFile(fileName: String, courseId: Long): String {
         val dir = File(context.filesDir, "${apiPrefs.user?.id.toString()}/external_$courseId")
 
         val downloadedFile = File(dir, fileName)
@@ -128,10 +143,58 @@ class HtmlParser(
 
         return internalFileIds
     }
+
+    private fun parseAndReplaceStudioVideos(htmlParsingResult: HtmlParsingResult, studioMetadata: List<StudioMediaMetadata>): HtmlParsingResult {
+        var resultHtml: String = htmlParsingResult.htmlWithLocalFileLinks ?: return htmlParsingResult
+        val studioMediaIds = mutableSetOf<String>()
+
+        val matches = studioIframeRegex.findAll(resultHtml)
+        matches.forEach { match ->
+            val studioIframe = match.groupValues[0]
+            val studioMediaId = match.groupValues[1]
+            studioMediaIds.add(studioMediaId)
+
+            val videoMetadata = studioMetadata.find { it.ltiLaunchId == studioMediaId }
+            val captionsHtml = createCaptionsHtml(videoMetadata)
+
+            resultHtml = resultHtml.replace(
+                studioIframe, videoTagReplacement
+                    .replace("{posterPath}", "file://${getFileForStudioVideoDir(studioMediaId).absolutePath}/poster.jpg")
+                    .replace("{srcPath}", "file://${getLocalPathForStudioMedia(studioMediaId).absolutePath}")
+                    .replace("{mimeType}", videoMetadata?.mimeType.orEmpty())
+                    .replace("{captions}", captionsHtml)
+            )
+        }
+
+        return htmlParsingResult.copy(htmlWithLocalFileLinks = resultHtml, studioMediaIds = studioMediaIds)
+    }
+
+    private fun createCaptionsHtml(studioMetadata: StudioMediaMetadata?): String {
+        if (studioMetadata == null) return ""
+        return studioMetadata.captions.joinToString(separator = "\n") {
+            captionsTemplate
+                .replace(
+                    "{captionsFileSource}",
+                    "file://${getFileForStudioVideoDir(studioMetadata.ltiLaunchId).absolutePath}/${it.srcLang}.vtt"
+                )
+                .replace("{captionsSrcLang}", it.srcLang)
+        }
+    }
+
+    private fun getLocalPathForStudioMedia(ltiLaunchId: String): File {
+        return File(getFileForStudioVideoDir(ltiLaunchId), "${ltiLaunchId}.mp4")
+    }
+
+    private fun getFileForStudioVideoDir(ltiLaunchId: String): File {
+        val userFilesDir = File(context.filesDir, apiPrefs.user?.id.toString())
+        val studioDir = File(userFilesDir, "studio")
+        return File(studioDir, ltiLaunchId)
+    }
 }
 
 data class HtmlParsingResult(
     val htmlWithLocalFileLinks: String?,
     val internalFileIds: Set<Long>,
-    val externalFileUrls: Set<String>
+    val externalFileUrls: Set<String>,
+    val studioMediaIds: Set<String>
 )

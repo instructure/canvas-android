@@ -20,16 +20,15 @@ package com.instructure.pandautils.features.offline.sync.progress
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import androidx.work.WorkInfo
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
+data class SyncProgressViewData(val items: List<ItemViewModel>)
 
 data class CourseProgressViewData(
     val courseName: String,
@@ -122,12 +121,25 @@ data class AdditionalFilesProgressViewData(
     }
 }
 
+data class StudioMediaProgressViewData(
+    @Bindable var totalSize: String = "",
+    @Bindable var state: ProgressState = ProgressState.IN_PROGRESS,
+    @Bindable var visible: Boolean = false
+) : BaseObservable() {
+
+    fun updateTotalSize(totalSize: String) {
+        this.totalSize = totalSize
+        notifyPropertyChanged(BR.totalSize)
+    }
+}
+
 enum class ViewType(val viewType: Int) {
     COURSE_PROGRESS(0),
     COURSE_TAB_PROGRESS(1),
     COURSE_FILE_TAB_PROGRESS(2),
     COURSE_FILE_PROGRESS(3),
     COURSE_ADDITIONAL_FILES_PROGRESS(4),
+    STUDIO_MEDIA_PROGRESS(5)
 }
 
 sealed class SyncProgressAction {
