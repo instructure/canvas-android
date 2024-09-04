@@ -209,7 +209,8 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { uiState.value.copy(
                     recipientPickerUiState = it.recipientPickerUiState.copy(
                         screenOption = RecipientPickerScreenOption.Roles,
-                        selectedRole = null
+                        selectedRole = null,
+                        allRecipientsToShow = getAllRecipients()
                     )
                 ) }
 
