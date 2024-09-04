@@ -43,7 +43,7 @@ class InboxComposeViewModel @Inject constructor(
     private val _events = Channel<InboxComposeViewModelAction>()
     val events = _events.receiveAsFlow()
 
-    val debouncedSearch = debounce<String>(waitMs = 300, coroutineScope = viewModelScope) { searchQuery ->
+    private val debouncedInnerSearch = debounce<String>(waitMs = 200, coroutineScope = viewModelScope) { searchQuery ->
         val recipients = getRecipientList(
             searchQuery,
             uiState.value.selectContextUiState.selectedCanvasContext
@@ -58,6 +58,10 @@ class InboxComposeViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private val debouncedRecipientScreenSearch = debounce<String>(waitMs = 200, coroutineScope = viewModelScope) { searchQuery ->
+        loadRecipients(searchQuery, uiState.value.selectContextUiState.selectedCanvasContext ?: return@debounce)
     }
 
     init {
@@ -139,7 +143,7 @@ class InboxComposeViewModel @Inject constructor(
                 ) }
 
                 if (action.searchValue.text.length > 1) {
-                    debouncedSearch(action.searchValue.text)
+                    debouncedInnerSearch(action.searchValue.text)
                 } else {
                     _uiState.update {
                         it.copy(
@@ -239,7 +243,7 @@ class InboxComposeViewModel @Inject constructor(
                     )
                 ) }
 
-                loadRecipients(action.searchText.text, uiState.value.selectContextUiState.selectedCanvasContext ?: return)
+                debouncedRecipientScreenSearch(action.searchText.text)
             }
         }
     }

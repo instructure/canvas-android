@@ -124,7 +124,7 @@ fun <T> MultipleValuesRow(
                     DropdownMenu(
                         expanded = uiState.isShowResults,
                         properties = PopupProperties(focusable = false),
-                        onDismissRequest = { actionHandler(MultipleValuesRowAction.HideRecipientResults) }
+                        onDismissRequest = { actionHandler(MultipleValuesRowAction.HideSearchResults) }
                     ) {
                         Column(
                             modifier = Modifier
@@ -147,7 +147,7 @@ fun <T> MultipleValuesRow(
                                                     TextFieldValue("")
                                                 )
                                             )
-                                            actionHandler(MultipleValuesRowAction.HideRecipientResults)
+                                            actionHandler(MultipleValuesRowAction.HideSearchResults)
                                         }
                                 ){
                                     searchResultComposable?.invoke(value)
@@ -188,7 +188,7 @@ data class MultipleValuesRowState<T>(
 
 sealed class MultipleValuesRowAction {
     data object AddValueClicked : MultipleValuesRowAction()
-    data object HideRecipientResults : MultipleValuesRowAction()
+    data object HideSearchResults : MultipleValuesRowAction()
     data class SearchValueSelected<T>(val value: T) : MultipleValuesRowAction()
     data class SearchQueryChanges(val searchQuery: TextFieldValue) : MultipleValuesRowAction()
 }

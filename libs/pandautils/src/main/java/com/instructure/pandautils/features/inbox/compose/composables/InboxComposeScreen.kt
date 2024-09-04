@@ -180,7 +180,7 @@ private fun InboxComposeScreenContent(
                                 (action.value as? Recipient)?.let { actionHandler(InboxComposeActionHandler.AddRecipient(it)) }
                             }
                             is MultipleValuesRowAction.SearchQueryChanges -> actionHandler(InboxComposeActionHandler.SearchRecipientQueryChanged(action.searchQuery))
-                            is MultipleValuesRowAction.HideRecipientResults -> actionHandler(InboxComposeActionHandler.HideSearchResults)
+                            is MultipleValuesRowAction.HideSearchResults -> actionHandler(InboxComposeActionHandler.HideSearchResults)
                         }
                     },
                     searchResultComposable = { recipient ->

@@ -436,6 +436,15 @@ class InboxComposeViewModelTest {
     }
 
     @Test
+    fun `Add Recipient action handler`() {
+        val recipient = Recipient(stringId = "1")
+        val viewmodel = getViewModel()
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(recipient))
+
+        assertEquals(listOf(recipient), viewmodel.uiState.value.recipientPickerUiState.selectedRecipients)
+    }
+
+    @Test
     fun `Search value changed action handler`() {
         val searchValue = TextFieldValue("searchValue")
         val courseId: Long = 1
