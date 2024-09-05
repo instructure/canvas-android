@@ -61,6 +61,7 @@ import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -108,6 +109,7 @@ class DashboardNotificationsViewModelTest {
     private val aggregateProgressObserver: AggregateProgressObserver = mockk(relaxed = true)
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
+    private val studioMediaProgressDao: StudioMediaProgressDao = mockk(relaxed = true)
 
     private lateinit var uploadsLiveData: MutableLiveData<List<DashboardFileUploadEntity>>
     private lateinit var progressLiveData: MutableLiveData<AggregateProgressViewData>
@@ -171,7 +173,8 @@ class DashboardNotificationsViewModelTest {
             fileUploadUtilsHelper,
             aggregateProgressObserver,
             courseSyncProgressDao,
-            fileSyncProgressDao
+            fileSyncProgressDao,
+            studioMediaProgressDao
         )
 
         viewModel.data.observe(lifecycleOwner, {})
@@ -832,6 +835,7 @@ class DashboardNotificationsViewModelTest {
         coVerify {
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
         }
     }
 

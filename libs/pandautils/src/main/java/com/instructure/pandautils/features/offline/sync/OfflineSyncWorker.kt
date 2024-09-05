@@ -20,9 +20,13 @@ package com.instructure.pandautils.features.offline.sync
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
+import androidx.lifecycle.Observer
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -38,6 +42,7 @@ import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
@@ -45,6 +50,8 @@ import com.instructure.pandautils.room.offline.entities.EnrollmentState
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.random.Random
 
@@ -66,15 +73,27 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao,
     private val syncRouter: SyncRouter,
-    private val courseSync: CourseSync
+    private val courseSync: CourseSync,
+    private val studioSync: StudioSync,
+    private val aggregateProgressObserver: AggregateProgressObserver,
+    private val studioMediaProgressDao: StudioMediaProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val notificationId = Random.nextInt()
+    private val progressNotificationId = Random.nextInt()
+
+    private val progressObserver = Observer<AggregateProgressViewData?> { aggregateProgressViewData ->
+        if (aggregateProgressViewData?.progressState == ProgressState.IN_PROGRESS) {
+            val foregroundInfo = createForegroundInfo(aggregateProgressViewData.progress)
+            notificationManager.notify(progressNotificationId, foregroundInfo.notification)
+        }
+    }
 
     override suspend fun doWork(): Result {
         courseSyncProgressDao.deleteAll()
         fileSyncProgressDao.deleteAll()
+        studioMediaProgressDao.deleteAll()
 
         if (!featureFlagProvider.offlineEnabled() || apiPrefs.user == null) return Result.success()
 
@@ -135,10 +154,27 @@ class OfflineSyncWorker @AssistedInject constructor(
             courseSyncProgressDao.insertAll(it)
         }
 
-        courseSync.syncCourses(coursesToSync.map { it.courseId })
+        if (coursesToSync.isNotEmpty()) {
+            setForeground(createForegroundInfo())
+
+            withContext(Dispatchers.Main) {
+                aggregateProgressObserver.progressData.observeForever(progressObserver)
+            }
+        }
+
+        val courseIdsToSync = coursesToSync.map { it.courseId }.toSet()
+        val studioMetadata = studioSync.getStudioMetadata(courseIdsToSync)
+        courseSync.syncCourses(courseIdsToSync, studioMetadata)
+
+        studioSync.syncStudioVideos(studioMetadata, courseSync.studioMediaIdsToSync)
 
         val courseProgresses = courseSyncProgressDao.findAll()
         val fileProgresses = fileSyncProgressDao.findAll()
+
+        withContext(Dispatchers.Main) {
+            aggregateProgressObserver.progressData.removeObserver(progressObserver)
+            aggregateProgressObserver.onCleared()
+        }
 
         if (courseProgresses.isNotEmpty() && fileProgresses.isNotEmpty()) {
             showNotification(
@@ -148,6 +184,33 @@ class OfflineSyncWorker @AssistedInject constructor(
         }
 
         return Result.success()
+    }
+
+    private fun createForegroundInfo(progress: Int = 0): ForegroundInfo {
+        registerNotificationChannel(context)
+
+        val pendingIntent = syncRouter.routeToSyncProgress(context)
+
+        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+            .setContentTitle(context.getString(R.string.offlineSyncInProgressNotification))
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+
+        if (progress > 0) {
+            notificationBuilder.setProgress(100, progress, false)
+        } else {
+            notificationBuilder.setProgress(0, 0, true)
+        }
+
+        val notification = notificationBuilder.build()
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ForegroundInfo(progressNotificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            ForegroundInfo(progressNotificationId, notification)
+        }
     }
 
     private fun showNotification(itemCount: Int, success: Boolean) {

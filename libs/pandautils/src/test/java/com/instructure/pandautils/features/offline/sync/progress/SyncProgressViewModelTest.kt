@@ -33,9 +33,11 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.StudioMediaProgressItemViewModel
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
@@ -75,6 +77,7 @@ class SyncProgressViewModelTest {
     private val aggregateProgressObserver: AggregateProgressObserver = mockk(relaxed = true)
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
+    private val studioMediaProgressDao: StudioMediaProgressDao = mockk(relaxed = true)
 
     private lateinit var viewModel: SyncProgressViewModel
 
@@ -166,7 +169,8 @@ class SyncProgressViewModelTest {
                 context = context,
                 courseSyncProgressDao = courseSyncProgressDao,
                 fileSyncProgressDao = fileSyncProgressDao
-            )
+            ),
+            StudioMediaProgressItemViewModel(StudioMediaProgressViewData(), studioMediaProgressDao, context)
         )
 
         assertEquals(expected, viewModel.data.value?.items)
@@ -199,6 +203,7 @@ class SyncProgressViewModelTest {
         coVerify {
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
             offlineSyncHelper.syncOnce(listOf(1L))
         }
 
@@ -238,6 +243,7 @@ class SyncProgressViewModelTest {
             offlineSyncHelper.cancelRunningWorkers()
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
         }
 
         assertEquals(SyncProgressAction.Back, viewModel.events.value?.getContentIfNotHandled())
@@ -251,7 +257,8 @@ class SyncProgressViewModelTest {
             offlineSyncHelper,
             aggregateProgressObserver,
             courseSyncProgressDao,
-            fileSyncProgressDao
+            fileSyncProgressDao,
+            studioMediaProgressDao
         )
     }
 

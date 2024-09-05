@@ -33,10 +33,12 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.StudioMediaProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -52,7 +54,8 @@ class SyncProgressViewModel @Inject constructor(
     private val offlineSyncHelper: OfflineSyncHelper,
     private val aggregateProgressObserver: AggregateProgressObserver,
     private val courseSyncProgressDao: CourseSyncProgressDao,
-    private val fileSyncProgressDao: FileSyncProgressDao
+    private val fileSyncProgressDao: FileSyncProgressDao,
+    private val studioMediaProgressDao: StudioMediaProgressDao
 ) : ViewModel() {
 
     val data: LiveData<SyncProgressViewData>
@@ -77,10 +80,10 @@ class SyncProgressViewModel @Inject constructor(
             }
             courseIds.addAll(courseSyncProgresses.map { it.courseId })
 
-            val courses = courseSyncProgresses.map {
+            val items = courseSyncProgresses.map {
                 createCourseItem(it)
-            }
-            _data.postValue(SyncProgressViewData(courses))
+            } + StudioMediaProgressItemViewModel(StudioMediaProgressViewData(), studioMediaProgressDao, context)
+            _data.postValue(SyncProgressViewData(items))
         }
     }
 
@@ -117,6 +120,7 @@ class SyncProgressViewModel @Inject constructor(
             offlineSyncHelper.cancelRunningWorkers()
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            studioMediaProgressDao.deleteAll()
             _events.postValue(Event(SyncProgressAction.Back))
         }
     }
@@ -131,6 +135,7 @@ class SyncProgressViewModel @Inject constructor(
                 viewModelScope.launch {
                     courseSyncProgressDao.deleteAll()
                     fileSyncProgressDao.deleteAll()
+                    studioMediaProgressDao.deleteAll()
                     retry()
                     _events.postValue(Event(SyncProgressAction.Back))
                 }

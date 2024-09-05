@@ -555,4 +555,9 @@ class OfflineModule {
     fun provideDiscussionTopicRemoteFileDao(appDatabase: OfflineDatabase): DiscussionTopicRemoteFileDao {
         return appDatabase.discussionTopicRemoteFileDao()
     }
+
+    @Provides
+    fun provideStudioMediaProgressDao(database: OfflineDatabase): StudioMediaProgressDao {
+        return database.studioMediaProgressDao()
+    }
 }

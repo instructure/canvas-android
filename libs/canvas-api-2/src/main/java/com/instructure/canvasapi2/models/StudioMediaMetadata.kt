@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
 package com.instructure.canvasapi2.models
 
@@ -21,22 +20,22 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class LaunchDefinition(
-        @SerializedName("definition_type")
-        var definitionType: String,
-        @SerializedName("definition_id")
-        var definitionId: Long? = null,
-        var name: String,
-        var description: String,
-        var domain: String,
-        var placements: Placements,
-        var url: String
-) : Parcelable {
+data class StudioMediaMetadata(
+    val id: Long,
+    @SerializedName("lti_launch_id")
+    val ltiLaunchId: String,
+    val title: String,
+    @SerializedName("mime_type")
+    val mimeType: String,
+    val size: Long,
+    val captions: List<StudioCaption>,
+    val url: String,
+) : Parcelable
 
-    val isGauge: Boolean get() = domain == GAUGE_DOMAIN
-
-    companion object {
-        const val GAUGE_DOMAIN = "gauge.instructure.com"
-        const val STUDIO_DOMAIN = "arc.instructure.com" // NOTE: The subdomain hasn't changed to reflect the rebranding of Arc -> Studio yet
-    }
-}
+@Parcelize
+data class StudioCaption(
+    @SerializedName("srclang")
+    val srcLang: String,
+    val data: String,
+    val label: String,
+) : Parcelable

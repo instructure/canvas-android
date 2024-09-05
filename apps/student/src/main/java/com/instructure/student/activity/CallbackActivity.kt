@@ -143,7 +143,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             val launchDefinitions = awaitApi<List<LaunchDefinition>?> { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
             launchDefinitions?.let {
-                val definitions = launchDefinitions.filter { it.domain == LaunchDefinition._STUDIO_DOMAIN || it.domain == LaunchDefinition._GAUGE_DOMAIN }
+                val definitions = launchDefinitions.filter { it.domain == LaunchDefinition.STUDIO_DOMAIN || it.domain == LaunchDefinition.GAUGE_DOMAIN }
                 gotLaunchDefinitions(definitions)
             }
 

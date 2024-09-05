@@ -34,8 +34,21 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_UNSUPPORTED_FILE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.models.EditableFile
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.IntArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.Utils.copyToClipboard
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.viewExternally
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentUnsupportedFileTypeBinding
 import com.instructure.teacher.router.RouteMatcher
@@ -149,6 +162,10 @@ class ViewUnsupportedFileFragment : Fragment() {
                 // Download the file first
                 val tempFile = FileCache.awaitFileDownload(mUri.toString())
 
+                // File cache overwrites the file name and extension, so we need to rename it back to the original name because some apps rely on the file extension
+                val renamed = File(tempFile?.parentFile, mDisplayName)
+                tempFile?.copyTo(renamed, overwrite = true)
+
                 openExternallyButton.text = getText(R.string.openWithAnotherApp)
                 openExternallyButton.isEnabled = true
 
@@ -160,7 +177,7 @@ class ViewUnsupportedFileFragment : Fragment() {
                         val docTempFile = File("${tempFile.absolutePath}${mDisplayName.substring(mDisplayName.indexOf("."), mDisplayName.length)}")
                         tempFile.renameTo(docTempFile)
                         Uri.fromFile(docTempFile).viewExternally(requireContext(), mContentType)
-                    } else Uri.fromFile(tempFile).viewExternally(requireContext(), mContentType)
+                    } else Uri.fromFile(renamed).viewExternally(requireContext(), mContentType)
                 else {
                     throw RuntimeException("File download error")
                 }

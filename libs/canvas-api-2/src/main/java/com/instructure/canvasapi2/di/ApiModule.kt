@@ -13,6 +13,7 @@ import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
@@ -22,6 +23,7 @@ import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
@@ -322,5 +324,15 @@ class ApiModule {
     @Provides
     fun provideRecipientApi(): RecipientAPI.RecipientInterface {
         return RestBuilder().build(RecipientAPI.RecipientInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideLaunchDefinitionsApi(): LaunchDefinitionsAPI.LaunchDefinitionsInterface {
+        return RestBuilder().build(LaunchDefinitionsAPI.LaunchDefinitionsInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideStudioApi(): StudioApi {
+        return RestBuilder().build(StudioApi::class.java, RestParams())
     }
 }
