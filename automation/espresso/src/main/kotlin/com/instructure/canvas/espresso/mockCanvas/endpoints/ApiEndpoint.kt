@@ -380,7 +380,7 @@ object ApiEndpoint : Endpoint(
                 val params = getJsonFromRequestBody<PlannerNoteBody>(request.body)
                 val plannerItem = data.addPlannable(
                     name = params?.title.orEmpty(),
-                    userId = data.users.values.first().id,
+                    userId = data.currentUser!!.id,
                     course = params?.courseId?.let { data.courses[it] },
                     type = PlannableType.PLANNER_NOTE,
                     date = params?.toDoDate?.toDate(),

@@ -126,7 +126,7 @@ abstract class AssignmentListRecyclerAdapter(
     private fun loadAssignmentsData(course: Course) {
         //This check is for the "all grading periods" option
         if (currentGradingPeriod != null && currentGradingPeriod!!.title != null
-            && currentGradingPeriod!!.title == context.getString(R.string.assignmentsListAllGradingPeriods)) {
+            && currentGradingPeriod!!.title == context.getString(R.string.assignmentsListDisplayGradingPeriod)) {
             loadAssignment()
             return
         }

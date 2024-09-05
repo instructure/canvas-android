@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsP
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPlannable
 import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.User
 import org.junit.Test
 import java.util.Calendar
 import java.util.Date
@@ -121,7 +122,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedTitle() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         data.addPlannable(
             name = "Test Todo",
             course = null,
@@ -146,7 +147,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedDate() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val date = Date()
         data.addPlannable(
             name = "Test Todo",
@@ -173,7 +174,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedTime() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val date = Date()
         data.addPlannable(
             name = "Test Todo",
@@ -205,7 +206,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedCanvasContext() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         data.addPlannable(
             name = "Test Todo",
             course = null,
@@ -230,7 +231,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedDetails() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val date = Date()
         data.addPlannable(
             name = "Test Todo",
@@ -256,7 +257,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUnsavedChangesDialog() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         data.addPlannable(
             name = "Test Todo",
             course = null,
@@ -282,5 +283,8 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
 
     abstract fun initData(): MockCanvas
 
+    abstract fun getLoggedInUser(): User
+
     override fun displaysPageObjects() = Unit
+
 }

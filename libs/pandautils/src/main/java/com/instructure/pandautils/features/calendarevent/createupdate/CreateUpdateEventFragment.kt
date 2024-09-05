@@ -116,8 +116,8 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
     }
 
     companion object {
-        internal const val INITIAL_DATE = "INITIAL_DATE"
-        internal const val SCHEDULE_ITEM = "SCHEDULE_ITEM"
+        const val INITIAL_DATE = "INITIAL_DATE"
+        const val SCHEDULE_ITEM = "SCHEDULE_ITEM"
 
         fun newInstance(route: Route) = CreateUpdateEventFragment().withArgs(route.arguments)
 

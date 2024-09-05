@@ -49,6 +49,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -106,6 +108,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.post
 import com.instructure.pandautils.utils.postSticky
@@ -204,6 +207,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
+    lateinit var oAuthApi: OAuthAPI.OAuthInterface
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -377,6 +383,22 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         scheduleAlarms()
+
+        if (ApiPrefs.isFirstMasqueradingStart) {
+            loadAuthenticatedSession()
+            ApiPrefs.isFirstMasqueradingStart = false
+        }
+    }
+
+    private fun loadAuthenticatedSession() {
+        lifecycleScope.launch {
+            oAuthApi.getAuthenticatedSession(
+                ApiPrefs.fullDomain,
+                RestParams(isForceReadFromNetwork = true)
+            ).dataOrNull?.sessionUrl?.let {
+                loadUrlIntoHeadlessWebView(this@NavigationActivity, it)
+            }
+        }
     }
 
     private fun handleTokenCheck(online: Boolean?) {

@@ -142,6 +142,11 @@ class MockCanvas {
     /** Map of user id to user object */
     val users = mutableMapOf<Long, User>()
 
+    var currentUser: User? = null
+        get() {
+            return field ?: users.values.first()
+        }
+
     /** Map of term id to term object */
     val terms = mutableMapOf<Long, Term>()
 

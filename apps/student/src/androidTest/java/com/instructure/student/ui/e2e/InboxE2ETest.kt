@@ -102,7 +102,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.openConversation(seededConversation.subject)
         inboxConversationPage.archive() //After select 'Archive', we will be navigated back to Inbox Page
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'All' tab.") //TODO: Discuss this logic if it's ok if we don't show Archived messages on 'All' tab...
+        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
@@ -115,6 +115,41 @@ class InboxE2ETest: StudentTest() {
                 "Unarchive it, and assert that it is not displayed in the 'ARCHIVED' scope any more.")
         inboxPage.selectConversation(seededConversation.subject)
         inboxPage.assertSelectedConversationNumber("1")
+
+        Log.d(STEP_TAG, "Click on the 'Mark as Unread' button and assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
+        inboxPage.clickMarkAsUnread()
+        inboxPage.assertInboxEmpty()
+        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG,"Select 'Unread' conversation filter.")
+        inboxPage.filterInbox("Unread")
+
+        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation is displayed on the 'Inbox' tab.")
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
+        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
+
+        Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
+        inboxPage.openConversation(seededConversation.subject)
+        inboxConversationPage.archive() //After select 'Archive', we will be navigated back to Inbox Page
+
+        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
+        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
+        inboxPage.filterInbox("Archived")
+
+        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation does not have the unread mark because an archived conversation cannot be unread.")
+        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
+
+        Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation.")
+        inboxPage.selectConversation(seededConversation.subject)
+
+        Log.d(STEP_TAG, "Click on the 'Unarchive' button and assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
         inboxPage.clickUnArchive()
         inboxPage.assertInboxEmpty()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)

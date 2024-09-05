@@ -74,8 +74,8 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         when (action) {
             is CreateUpdateToDoViewModelAction.RefreshCalendarDays -> {
                 navigateBack()
-                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseToDoScreen)
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
             }
 
             is CreateUpdateToDoViewModelAction.NavigateBack -> navigateBack()
@@ -110,8 +110,8 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
     }
 
     companion object {
-        internal const val PLANNER_ITEM = "PLANNER_ITEM"
-        internal const val INITIAL_DATE = "INITIAL_DATE"
+        const val PLANNER_ITEM = "PLANNER_ITEM"
+        const val INITIAL_DATE = "INITIAL_DATE"
         fun newInstance(route: Route) = CreateUpdateToDoFragment().withArgs(route.arguments)
 
         fun makeRoute(plannerItem: PlannerItem): Route {

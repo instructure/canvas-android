@@ -61,6 +61,15 @@ class PeopleListPage(val searchable: Searchable) : BasePage(R.id.peopleListPage)
     }
 
     /**
+     * Clicks on a person in the list.
+     *
+     * @param userName The user name to click on.
+     */
+    fun clickPerson(userName: String) {
+        waitForViewWithText(userName).click()
+    }
+
+    /**
      * Asserts that a person is listed in the people list.
      *
      * @param person The user representing the person to assert.
@@ -84,6 +93,15 @@ class PeopleListPage(val searchable: Searchable) : BasePage(R.id.peopleListPage)
         }
         scrollToMatch(matcher)
         Espresso.onView(matcher).assertDisplayed()
+    }
+
+    /**
+     * Assert that the corresponding person contains the proper pronoun string.
+     * @param personName The corresponding person name.
+     * @param pronounString The pronoun string to assert.
+     */
+    fun assertPersonPronouns(personName: String, pronounString: String) {
+        onView(withId(R.id.userName) + withAncestor(R.id.peopleListPage) + withText("$personName $pronounString")).assertDisplayed()
     }
 
     /**
