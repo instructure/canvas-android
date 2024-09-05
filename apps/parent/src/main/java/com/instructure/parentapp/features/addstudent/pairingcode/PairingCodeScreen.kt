@@ -44,6 +44,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentUiState
 
 @Composable
@@ -85,7 +86,7 @@ private fun PairingScreenContent(
             onValueChange = {
                 pairingCode = it
                 if (uiState.isError) {
-                    uiState.resetError()
+                    uiState.actionHandler(AddStudentAction.ResetError)
                 }
             },
             colors = TextFieldDefaults.textFieldColors(
@@ -124,7 +125,7 @@ private fun PairingScreenContent(
             }
             TextButton(
                 modifier = Modifier.testTag("okButton"),
-                onClick = { uiState.onStartPairing(pairingCode) },
+                onClick = { uiState.actionHandler(AddStudentAction.PairStudent(pairingCode)) },
             ) {
                 Text(
                     text = stringResource(id = R.string.pairingCodeDialogPositiveButton),
@@ -140,7 +141,7 @@ private fun PairingScreenContent(
 fun PairingCodeScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     PairingCodeScreen(
-        uiState = AddStudentUiState(color = android.graphics.Color.BLUE, onStartPairing = {}, resetError = {}),
+        uiState = AddStudentUiState(color = android.graphics.Color.BLUE) {},
         onCancelClick = {})
 }
 
@@ -149,6 +150,6 @@ fun PairingCodeScreenPreview() {
 fun PairingScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     PairingCodeScreen(
-        uiState = AddStudentUiState(color = android.graphics.Color.BLUE, isLoading = true, onStartPairing = {}, resetError = {}),
+        uiState = AddStudentUiState(color = android.graphics.Color.BLUE, isLoading = true) {},
         onCancelClick = {})
 }

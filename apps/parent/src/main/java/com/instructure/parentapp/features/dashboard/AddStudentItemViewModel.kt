@@ -23,6 +23,6 @@ data class AddStudentItemViewModel(
     @ColorInt val color: Int,
     val onAddStudentClicked: () -> Unit
 ) : ItemViewModel {
-    override val viewType: Int = 1
+    override val viewType: Int = StudentListViewType.ADD_STUDENT.viewType
     override val layoutId = R.layout.item_add_student
 }

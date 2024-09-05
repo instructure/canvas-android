@@ -22,10 +22,14 @@ data class AddStudentUiState(
     @ColorInt val color: Int,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val resetError: () -> Unit,
-    val onStartPairing: (pairingCode: String) -> Unit
+    val actionHandler: (AddStudentAction) -> Unit,
 )
 
 sealed class AddStudentViewModelAction {
     data object PairStudentSuccess : AddStudentViewModelAction()
+}
+
+sealed class AddStudentAction {
+    data class PairStudent(val pairingCode: String) : AddStudentAction()
+    object ResetError : AddStudentAction()
 }

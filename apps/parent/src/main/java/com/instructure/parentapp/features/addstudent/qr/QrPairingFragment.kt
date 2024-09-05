@@ -30,6 +30,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.loginapi.login.R
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import com.journeyapps.barcodescanner.ScanContract
@@ -44,11 +45,13 @@ class QrPairingFragment : Fragment() {
 
     private val barcodeLauncher: ActivityResultLauncher<ScanOptions> =
         registerForActivityResult(ScanContract()) {
+            if (it.contents == null) return@registerForActivityResult
+
             val uri = Uri.parse(it.contents)
             val code = uri.getQueryParameter("code")
             if (code != null) {
                 lifecycleScope.launch {
-                    viewModel.pairStudent(code)
+                    viewModel.handleAction(AddStudentAction.PairStudent(code))
                 }
             }
         }
@@ -95,6 +98,6 @@ class QrPairingFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.resetError()
+        viewModel.handleAction(AddStudentAction.ResetError)
     }
 }

@@ -32,6 +32,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import dagger.hilt.android.AndroidEntryPoint
@@ -82,6 +83,6 @@ class PairingCodeDialogFragment : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        addStudentViewModel.resetError()
+        addStudentViewModel.handleAction(AddStudentAction.ResetError)
     }
 }

@@ -18,6 +18,7 @@ package com.instructure.parentapp.features.addstudent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +34,8 @@ import javax.inject.Inject
 class AddStudentViewModel @Inject constructor(
     selectedStudentHolder: SelectedStudentHolder,
     private val colorKeeper: ColorKeeper,
-    private val repository: AddStudentRepository
+    private val repository: AddStudentRepository,
+    private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     private val _uiState =
@@ -42,8 +44,7 @@ class AddStudentViewModel @Inject constructor(
                 color = colorKeeper.getOrGenerateUserColor(
                     selectedStudentHolder.selectedStudentState.value
                 ).textAndIconColor(),
-                onStartPairing = this::pairStudent,
-                resetError = this::resetError
+                actionHandler = this::handleAction
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -61,19 +62,27 @@ class AddStudentViewModel @Inject constructor(
         }
     }
 
-    fun pairStudent(pairingCode: String) {
+    fun handleAction(action: AddStudentAction) {
+        when (action) {
+            is AddStudentAction.PairStudent -> pairStudent(action.pairingCode)
+            is AddStudentAction.ResetError -> resetError()
+        }
+    }
+
+    private fun pairStudent(pairingCode: String) {
         viewModelScope.launch {
             try {
+                _uiState.value = _uiState.value.copy(isLoading = true, isError = false)
                 repository.pairStudent(pairingCode).dataOrThrow
                 _events.emit(AddStudentViewModelAction.PairStudentSuccess)
             } catch (e: Exception) {
-                e.printStackTrace()
+                crashlytics.recordException(e)
                 _uiState.value = _uiState.value.copy(isLoading = false, isError = true)
             }
         }
     }
 
-    fun resetError() {
+    private fun resetError() {
         _uiState.value = _uiState.value.copy(isError = false)
     }
 }

@@ -49,3 +49,8 @@ sealed class DashboardViewModelAction {
     data object AddStudent : DashboardViewModelAction()
     data class NavigateDeepLink(val deepLinkUri: Uri) : DashboardViewModelAction()
 }
+
+enum class StudentListViewType(val viewType: Int) {
+    STUDENT(0),
+    ADD_STUDENT(1)
+}

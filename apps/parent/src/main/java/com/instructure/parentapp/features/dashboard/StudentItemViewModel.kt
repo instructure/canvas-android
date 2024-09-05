@@ -26,7 +26,7 @@ data class StudentItemViewModel(
     private val onStudentSelected: (Long) -> Unit
 ) : ItemViewModel {
 
-    override val viewType: Int = 0
+    override val viewType: Int = StudentListViewType.STUDENT.viewType
 
     override val layoutId = R.layout.item_student
 

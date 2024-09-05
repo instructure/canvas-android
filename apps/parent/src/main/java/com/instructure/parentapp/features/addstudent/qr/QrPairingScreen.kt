@@ -17,7 +17,6 @@
 package com.instructure.parentapp.features.addstudent.qr
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -48,6 +47,7 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentUiState
 
 @Composable
@@ -61,7 +61,7 @@ fun QrPairingScreen(
     LaunchedEffect(key1 = uiState.isError) {
         if (uiState.isError) {
             snackbarHostState.showSnackbar(message = context.getString(R.string.pairingCodeDialogError))
-            uiState.resetError()
+            uiState.actionHandler(AddStudentAction.ResetError)
         }
     }
     CanvasTheme {
@@ -71,6 +71,7 @@ fun QrPairingScreen(
                 CanvasAppBar(
                     title = stringResource(id = R.string.qrPairingTitle),
                     navigationActionClick = onBackClicked,
+                    backgroundColor = R.color.backgroundLightestElevated,
                     actions = {
                         TextButton(onClick = onNextClicked) {
                             Text(
@@ -89,13 +90,7 @@ fun QrPairingScreen(
             Box(modifier = Modifier.padding(padding)) {
                 when {
                     uiState.isLoading -> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Loading()
-                        }
+                        Loading(modifier = Modifier.fillMaxSize())
                     }
 
                     else -> {
@@ -141,7 +136,7 @@ private fun QrPairingContent() {
 @Composable
 fun QrPairingScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    QrPairingScreen(uiState = AddStudentUiState(color = android.graphics.Color.BLUE, resetError = {}, onStartPairing = {}), {}, {})
+    QrPairingScreen(uiState = AddStudentUiState(color = android.graphics.Color.BLUE) {}, {}, {})
 }
 
 @Preview
@@ -151,7 +146,5 @@ fun QrPairingScreenLoadingPreview() {
     QrPairingScreen(
         uiState = AddStudentUiState(
             color = android.graphics.Color.BLUE,
-            isLoading = true,
-            resetError = {},
-            onStartPairing = {}), {}, {})
+            isLoading = true) {}, {}, {})
 }
