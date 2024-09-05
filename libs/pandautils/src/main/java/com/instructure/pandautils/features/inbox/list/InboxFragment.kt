@@ -40,6 +40,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +58,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -114,6 +116,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
+        setupFragmentResultListener()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -144,6 +147,12 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         }
 
         configureItemTouchHelper()
+    }
+
+    private fun setupFragmentResultListener() {
+        setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
+            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
+        }
     }
 
     private fun configureItemTouchHelper() {

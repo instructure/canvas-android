@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
@@ -79,6 +81,14 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
             is InboxComposeViewModelAction.ShowScreenResult -> {
                 Toast.makeText(requireContext(), action.message, Toast.LENGTH_SHORT).show()
             }
+            is InboxComposeViewModelAction.UpdateParentFragment -> {
+                setFragmentResult(FRAGMENT_RESULT_KEY, bundleOf())
+            }
         }
+    }
+
+    companion object {
+        const val TAG = "InboxComposeFragment"
+        const val FRAGMENT_RESULT_KEY = "InboxComposeFragmentResultKey"
     }
 }

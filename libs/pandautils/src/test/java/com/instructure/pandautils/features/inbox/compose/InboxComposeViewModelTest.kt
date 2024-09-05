@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import io.mockk.coEvery
@@ -18,6 +20,7 @@ import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -45,6 +48,7 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
     }
 
     @After
@@ -116,7 +120,7 @@ class InboxComposeViewModelTest {
     }
 
     @Test
-    fun `Test if All Recipients show up`() {
+    fun `Test if All Recipients show up`() = runTest {
         val courseId: Long = 1
         val course = Course(id = courseId, name = "Course")
         val recipients = listOf(
@@ -148,6 +152,10 @@ class InboxComposeViewModelTest {
         assertEquals(expectedAllStudentsRecipient, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
         viewModel.handleAction(RecipientPickerActionHandler.RecipientBackClicked)
+
+        //Wait for debounce
+        delay(500)
+
         assertEquals(expectedAllCourseRecipient, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
         viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.TEACHERENROLLMENT))
@@ -271,13 +279,23 @@ class InboxComposeViewModelTest {
     }
 
     @Test
-    fun `Send Message action handler`() {
+    fun `Send Message action handler`() = runTest {
         val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(mockk(relaxed = true)))
 
         viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
 
         coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+        assertEquals(3, events.size)
+        assertEquals(InboxComposeViewModelAction.UpdateParentFragment, events[0])
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult(context.getString(R.string.messageSentSuccessfully)), events[1])
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events[2])
     }
 
     @Test
@@ -336,6 +354,74 @@ class InboxComposeViewModelTest {
 
         coVerify(exactly = 1) { fileDownloader.downloadFileToDevice(attachment) }
     }
+
+    @Test
+    fun `Add recipient action handler`() {
+        val viewmodel = getViewModel()
+        val recipient = Recipient(stringId = "1")
+
+        assertEquals(0, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size)
+
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(recipient))
+
+        assertEquals(1, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size)
+        assertEquals(true, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient))
+    }
+
+    @Test
+    fun `Inline search value changed`() = runTest {
+        val viewmodel = getViewModel()
+        val searchValue = TextFieldValue("searchValue")
+        val canvasContext: CanvasContext = mockk(relaxed = true)
+        val recipients = listOf(
+            Recipient(stringId = "1"),
+            Recipient(stringId = "2"),
+            Recipient(stringId = "3"),
+        )
+
+        coEvery { inboxComposeRepository.getRecipients(searchValue.text, canvasContext, any()) } returns DataResult.Success(recipients)
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(canvasContext))
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(recipients.first()))
+        viewmodel.handleAction(InboxComposeActionHandler.SearchRecipientQueryChanged(searchValue))
+
+        //Wait for debounce
+        delay(500)
+
+        assertEquals(true, viewmodel.uiState.value.inlineRecipientSelectorState.isShowResults)
+        assertEquals(listOf(recipients[1], recipients[2]), viewmodel.uiState.value.inlineRecipientSelectorState.searchResults)
+
+        viewmodel.handleAction(InboxComposeActionHandler.HideSearchResults)
+
+        assertEquals(false, viewmodel.uiState.value.inlineRecipientSelectorState.isShowResults)
+    }
+
+    @Test
+    fun `Hide search results`() = runTest {
+        val viewmodel = getViewModel()
+        val searchValue = TextFieldValue("searchValue")
+        val canvasContext: CanvasContext = mockk(relaxed = true)
+        val recipients = listOf(
+            Recipient(stringId = "1"),
+            Recipient(stringId = "2"),
+            Recipient(stringId = "3"),
+        )
+
+        coEvery { inboxComposeRepository.getRecipients(searchValue.text, canvasContext, any()) } returns DataResult.Success(recipients)
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(canvasContext))
+        viewmodel.handleAction(InboxComposeActionHandler.SearchRecipientQueryChanged(searchValue))
+
+        //Wait for debounce
+        delay(500)
+
+        assertEquals(true, viewmodel.uiState.value.inlineRecipientSelectorState.isShowResults)
+
+        viewmodel.handleAction(InboxComposeActionHandler.HideSearchResults)
+
+        assertEquals(false, viewmodel.uiState.value.inlineRecipientSelectorState.isShowResults)
+    }
+
     //endregion
 
     //region Context Picker action handler
@@ -424,7 +510,7 @@ class InboxComposeViewModelTest {
     }
 
     @Test
-    fun `Search value changed action handler`() {
+    fun `Search value changed action handler`() = runTest {
         val searchValue = TextFieldValue("searchValue")
         val courseId: Long = 1
         val course = Course(id = courseId)
@@ -445,6 +531,10 @@ class InboxComposeViewModelTest {
 
         coEvery { inboxComposeRepository.getRecipients(searchValue.text, any(), any()) } returns DataResult.Success(listOf(recipients.first()))
         viewmodel.handleAction(RecipientPickerActionHandler.SearchValueChanged(searchValue))
+
+        //Wait for debounce
+        delay(500)
+
         assertEquals(listOf(recipients.first()), viewmodel.uiState.value.recipientPickerUiState.recipientsToShow)
     }
     //endregion

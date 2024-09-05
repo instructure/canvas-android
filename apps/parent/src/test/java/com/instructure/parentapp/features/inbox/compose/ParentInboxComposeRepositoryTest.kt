@@ -109,7 +109,7 @@ class ParentInboxComposeRepositoryTest {
             Recipient(stringId = "2", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())))
         )
 
-        coEvery { recipientAPI.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(expected)
+        coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getRecipients("", course, true).dataOrThrow
 
@@ -118,7 +118,7 @@ class ParentInboxComposeRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Get recipients with error`() = runTest {
-        coEvery { recipientAPI.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Fail()
+        coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Fail()
 
         inboxComposeRepository.getRecipients("", Course(), true).dataOrThrow
     }

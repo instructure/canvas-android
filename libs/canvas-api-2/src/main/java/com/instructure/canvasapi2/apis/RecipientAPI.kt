@@ -42,6 +42,9 @@ object RecipientAPI {
         @GET("search/recipients")
         fun getFirstPageRecipientListNoSyntheticContexts(@Query("search") searchQuery: String?, @Query(value = "context", encoded = true) context: String): Call<List<Recipient>>
 
+        @GET("search/recipients")
+        suspend fun getFirstPageRecipientListNoSyntheticContexts(@Query("search") searchQuery: String?, @Query(value = "context", encoded = true) context: String, @Tag restParams: RestParams): DataResult<List<Recipient>>
+
         @GET
         fun getNextPageRecipientList(@Url url: String): Call<List<Recipient>>
 

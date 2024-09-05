@@ -42,9 +42,9 @@ class ParentInboxComposeRepository(
 
     override suspend fun getRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean): DataResult<List<Recipient>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-        return recipientAPI.getFirstPageRecipientList(
+        return recipientAPI.getFirstPageRecipientListNoSyntheticContexts(
             searchQuery = searchQuery,
-            context = context.apiContext(),
+            context = context.contextId,
             restParams = params,
         ).depaginate {
             recipientAPI.getNextPageRecipientList(it, params)
