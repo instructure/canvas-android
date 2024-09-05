@@ -155,7 +155,7 @@ class InboxComposeViewModelTest {
 
         //Wait for debounce
         delay(500)
-        
+
         assertEquals(expectedAllCourseRecipient, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
         viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.TEACHERENROLLMENT))
