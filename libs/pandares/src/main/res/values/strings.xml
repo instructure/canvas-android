@@ -1806,4 +1806,7 @@
     <string name="qrPairingDescription">You\'ll need to open your student\'s Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.</string>
     <string name="qrCodePairingPrompt">Scan a QR code from Canvas Student to pair</string>
     <string name="a11y_addStudentContentDescription">Add Student</string>
+    <string name="qrPairingErrorTitle">Expired QR Code</string>
+    <string name="qrPairingErrorDescription">The QR code you scanned may have expired. Refresh the code on the student\'s device and try again.</string>
+    <string name="studentPairing">Student Pairing</string>
 </resources>

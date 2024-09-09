@@ -15,15 +15,11 @@
  */
 package com.instructure.parentapp.ui.pages
 
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.hasAnyAncestor
-import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 
-@OptIn(ExperimentalTestApi::class)
 class QrPairingPage(private val composeTestRule: ComposeTestRule) {
 
     fun tapNext() {
@@ -31,15 +27,7 @@ class QrPairingPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertErrorDisplayed() {
-        val snackbarText = hasText("Your code is incorrect or expired.").and(
-            hasAnyAncestor(
-                hasTestTag("snackbarHost")
-            )
-        )
-
-        composeTestRule.waitUntilAtLeastOneExists(
-            snackbarText,
-            10000
-        )
+        composeTestRule.onNodeWithText("Expired QR Code").assertExists()
+        composeTestRule.onNodeWithText("Retry").assertExists().assertHasClickAction()
     }
 }

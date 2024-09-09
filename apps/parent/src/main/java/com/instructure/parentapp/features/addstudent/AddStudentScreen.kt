@@ -48,7 +48,7 @@ fun AddStudentScreen(
             text = stringResource(id = R.string.addStudentTitle),
             style = TextStyle(
                 color = colorResource(id = R.color.textDarkest),
-                fontSize = 16.sp
+                fontSize = 14.sp
             )
         )
         AddStudentButton(
@@ -92,7 +92,7 @@ private fun AddStudentButton(
                     color = colorResource(
                         id = R.color.textDarkest
                     ),
-                    fontSize = 18.sp
+                    fontSize = 16.sp
                 )
             )
             Text(
@@ -100,7 +100,7 @@ private fun AddStudentButton(
                 text = stringResource(id = explanation),
                 style = TextStyle(
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
             )
         }

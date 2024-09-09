@@ -23,22 +23,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,41 +53,44 @@ fun QrPairingScreen(
     onNextClicked: () -> Unit,
     onBackClicked: () -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    LaunchedEffect(key1 = uiState.isError) {
-        if (uiState.isError) {
-            snackbarHostState.showSnackbar(message = context.getString(R.string.pairingCodeDialogError))
-            uiState.actionHandler(AddStudentAction.ResetError)
-        }
-    }
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasAppBar(
-                    title = stringResource(id = R.string.qrPairingTitle),
+                    title = stringResource(
+                        id = if (uiState.isError) {
+                            R.string.studentPairing
+                        } else {
+                            R.string.qrPairingTitle
+                        }
+                    ),
                     navigationActionClick = onBackClicked,
                     backgroundColor = R.color.backgroundLightestElevated,
                     actions = {
-                        TextButton(onClick = onNextClicked) {
-                            Text(
-                                text = stringResource(id = R.string.next),
-                                style = TextStyle(
-                                    color = colorResource(id = R.color.textInfo),
-                                    fontSize = 18.sp
+                        if (!uiState.isError) {
+                            TextButton(onClick = onNextClicked) {
+                                Text(
+                                    text = stringResource(id = R.string.next),
+                                    style = TextStyle(
+                                        color = colorResource(id = R.color.textInfo),
+                                        fontSize = 18.sp
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 )
-            },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) }
+            }
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
                 when {
                     uiState.isLoading -> {
                         Loading(modifier = Modifier.fillMaxSize())
+                    }
+
+                    uiState.isError -> {
+                        QrPairingError(uiState.actionHandler, onNextClicked)
                     }
 
                     else -> {
@@ -99,6 +99,68 @@ fun QrPairingScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun QrPairingError(
+    actionHandler: (AddStudentAction) -> Unit,
+    onRetryClicked: () -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(
+            modifier = Modifier
+                .heightIn(min = 16.dp)
+                .weight(1f)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.panda_no_pairing_code),
+            contentDescription = null
+        )
+        Spacer(
+            modifier = Modifier
+                .heightIn(min = 16.dp)
+                .weight(1f)
+        )
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = stringResource(id = R.string.qrPairingErrorTitle),
+            style = TextStyle(
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            )
+        )
+        Text(
+            text = stringResource(id = R.string.qrPairingErrorDescription),
+            style = TextStyle(
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            )
+        )
+        OutlinedButton(
+            modifier = Modifier.padding(top = 16.dp),
+            onClick = {
+                onRetryClicked()
+                actionHandler(AddStudentAction.ResetError)
+            }) {
+            Text(
+                text = stringResource(id = R.string.retry),
+                style = TextStyle(
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 18.sp,
+                )
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .heightIn(min = 16.dp)
+                .weight(1f)
+        )
     }
 }
 
@@ -146,5 +208,18 @@ fun QrPairingScreenLoadingPreview() {
     QrPairingScreen(
         uiState = AddStudentUiState(
             color = android.graphics.Color.BLUE,
-            isLoading = true) {}, {}, {})
+            isLoading = true
+        ) {}, {}, {})
+}
+
+@Preview
+@Composable
+fun QrPairingErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    QrPairingScreen(
+        uiState = AddStudentUiState(
+            color = android.graphics.Color.BLUE,
+            isLoading = false,
+            isError = true
+        ) {}, {}, {})
 }

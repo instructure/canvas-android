@@ -49,7 +49,7 @@ class AddStudentViewModel @Inject constructor(
         )
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<AddStudentViewModelAction>()
+    private val _events = MutableSharedFlow<AddStudentViewModelAction>(replay = 1)
     val events = _events.asSharedFlow()
 
     init {

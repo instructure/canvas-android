@@ -21,6 +21,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
@@ -56,6 +57,7 @@ class AddStudentViewModelTest {
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val repository: AddStudentRepository = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -64,7 +66,7 @@ class AddStudentViewModelTest {
 
         every { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLACK)
         every { selectedStudentHolder.selectedStudentState.value } returns mockk(relaxed = true)
-        viewModel = AddStudentViewModel(selectedStudentHolder, colorKeeper, repository)
+        viewModel = AddStudentViewModel(selectedStudentHolder, colorKeeper, repository, crashlytics)
     }
 
     @After
@@ -81,7 +83,7 @@ class AddStudentViewModelTest {
             viewModel.events.toList(events)
         }
 
-        viewModel.pairStudent("pairingCode")
+        viewModel.uiState.value.actionHandler(AddStudentAction.PairStudent("pairingCode"))
 
         events.addAll(viewModel.events.replayCache)
 
@@ -92,7 +94,7 @@ class AddStudentViewModelTest {
     fun `pairStudent should not emit PairStudentSuccess`() = runTest {
         coEvery { repository.pairStudent(any()) } returns DataResult.Fail()
 
-        viewModel.pairStudent("pairingCode")
+        viewModel.uiState.value.actionHandler(AddStudentAction.PairStudent("pairingCode"))
 
         val events = mutableListOf<AddStudentViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -107,7 +109,7 @@ class AddStudentViewModelTest {
     @Test
     fun `resetError should set isError to false`() = runTest {
 
-        viewModel.uiState.value.resetError()
+        viewModel.uiState.value.actionHandler(AddStudentAction.ResetError)
 
         assert(viewModel.uiState.value.isError.not())
     }
