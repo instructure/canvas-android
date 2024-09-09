@@ -75,6 +75,7 @@ import com.instructure.pandautils.room.offline.daos.RubricSettingsDao
 import com.instructure.pandautils.room.offline.daos.ScheduleItemAssignmentOverrideDao
 import com.instructure.pandautils.room.offline.daos.ScheduleItemDao
 import com.instructure.pandautils.room.offline.daos.SectionDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.SyncSettingsDao
@@ -142,6 +143,7 @@ import com.instructure.pandautils.room.offline.entities.RubricSettingsEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemAssignmentOverrideEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemEntity
 import com.instructure.pandautils.room.offline.entities.SectionEntity
+import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionCommentEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionDiscussionEntryEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionEntity
@@ -221,7 +223,8 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         DiscussionTopicEntity::class,
         CourseSyncProgressEntity::class,
         FileSyncProgressEntity::class,
-    ], version = 2
+        StudioMediaProgressEntity::class
+    ], version = 3
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
@@ -347,4 +350,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun remoteFileDao(): RemoteFileDao
 
     abstract fun discussionTopicRemoteFileDao(): DiscussionTopicRemoteFileDao
+
+    abstract fun studioMediaProgressDao(): StudioMediaProgressDao
 }

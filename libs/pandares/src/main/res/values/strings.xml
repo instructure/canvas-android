@@ -1809,4 +1809,6 @@
     <string name="qrPairingErrorTitle">Expired QR Code</string>
     <string name="qrPairingErrorDescription">The QR code you scanned may have expired. Refresh the code on the student\'s device and try again.</string>
     <string name="studentPairing">Student Pairing</string>
+    <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
+    <string name="studioMediaProgressTitle">Studio media</string>
 </resources>
