@@ -19,6 +19,7 @@ package com.instructure.student.fragment
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,11 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -38,7 +43,19 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentLtiLaunchBinding
 import com.instructure.student.router.RouteMatcher
@@ -93,6 +110,7 @@ class LtiLaunchFragment : ParentFragment() {
             return
         }
 
+        Log.d("LtiLaunchFragment", "onResume: $ltiUrl")
         try {
             when {
                 ltiTab != null -> loadSessionlessLtiUrl(ltiTab!!.ltiUrl)
@@ -100,6 +118,7 @@ class LtiLaunchFragment : ParentFragment() {
                     var url = ltiUrl // Replace deep link scheme
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
+                        .replaceWithURLQueryParameter(HtmlContentFormatter.hasKalturaUrl(ltiUrl))
                     when {
                         sessionLessLaunch -> {
                             // This is specific for Studio and Gauge
@@ -162,6 +181,15 @@ class LtiLaunchFragment : ParentFragment() {
         context?.startActivity(intent)
 
         customTabLaunched = true
+    }
+
+    private fun String.replaceWithURLQueryParameter(ifSatisfies: Boolean = true): String {
+        val urlQueryParameter = this.substringAfter("url=").substringBefore('&')
+        return if (ifSatisfies) {
+            urlQueryParameter
+        } else {
+            this
+        }
     }
 
     private fun displayError() {

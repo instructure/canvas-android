@@ -153,6 +153,7 @@ class HtmlContentFormatter(
 
     companion object {
         fun hasGoogleDocsUrl(text: String?) = text?.contains("docs.google.com").orDefault()
+        fun hasKalturaUrl(text: String?) = text?.contains("kaltura.com").orDefault()
         fun hasExternalTools(text: String?) = text?.contains("external_tools").orDefault()
     }
 }
