@@ -41,6 +41,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.StringArg
@@ -120,6 +121,7 @@ class LtiLaunchFragment : BaseFragment() {
                     var url = ltiUrl // Replace deep link scheme
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
+                        .replaceWithURLQueryParameter(HtmlContentFormatter.hasKalturaUrl(ltiUrl))
 
                     if (sessionLessLaunch) {
                         if (url.contains("sessionless_launch")) {
@@ -187,6 +189,15 @@ class LtiLaunchFragment : BaseFragment() {
         context?.startActivity(intent)
 
         customTabLaunched = true
+    }
+
+    private fun String.replaceWithURLQueryParameter(ifSatisfies: Boolean = true): String {
+        val urlQueryParameter = this.substringAfter("url=").substringBefore('&')
+        return if (ifSatisfies) {
+            urlQueryParameter
+        } else {
+            this
+        }
     }
 
     private fun displayError() {

@@ -119,6 +119,7 @@ class LtiLaunchFragment : ParentFragment() {
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
                         .replaceWithURLQueryParameter(HtmlContentFormatter.hasKalturaUrl(ltiUrl))
+
                     when {
                         sessionLessLaunch -> {
                             // This is specific for Studio and Gauge
