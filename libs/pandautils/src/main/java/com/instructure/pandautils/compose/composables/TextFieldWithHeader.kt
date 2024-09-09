@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -80,6 +81,7 @@ fun TextFieldWithHeader(
                 .fillMaxSize()
                 .padding(start = 16.dp, end = 16.dp)
                 .focusRequester(focusRequester)
+                .testTag("TextFieldWithHeaderTextField")
         )
     }
 }

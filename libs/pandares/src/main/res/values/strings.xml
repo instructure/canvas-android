@@ -423,6 +423,9 @@
     <string name="noRecipientsAvailable">No recipients available</string>
     <string name="a11y_backToRoles">Back to roles</string>
     <string name="a11y_closeRecipientPicker">Close recipient picker</string>
+    <string name="a11y_addAttachment">Add attachment</string>
+    <string name="a11y_removeAttachment">Remove Attachment</string>
+    <string name="a11y_removeRecipient">Remove Recipient</string>
     <string name="failed_to_send_message">Failed to send message</string>
     <string name="failed_to_open_attachment">Failed to open attachment</string>
     <plurals name="people">

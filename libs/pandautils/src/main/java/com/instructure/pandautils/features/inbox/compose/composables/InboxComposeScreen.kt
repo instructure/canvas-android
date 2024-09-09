@@ -231,6 +231,7 @@ private fun InboxComposeScreenContent(
             label = stringResource(R.string.message),
             value = uiState.body,
             headerIconResource = R.drawable.ic_attachment,
+            iconContentDescription = stringResource(id = R.string.a11y_addAttachment),
             onValueChange = {
                 actionHandler(InboxComposeActionHandler.BodyChanged(it))
             },

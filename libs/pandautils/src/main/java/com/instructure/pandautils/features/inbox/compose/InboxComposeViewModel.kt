@@ -15,6 +15,7 @@ import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -269,7 +270,7 @@ class InboxComposeViewModel @Inject constructor(
     private fun loadRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false) {
         viewModelScope.launch {
 
-            canSendToAll = inboxComposeRepository.canSendToAll(context).dataOrThrow
+            canSendToAll = inboxComposeRepository.canSendToAll(context).dataOrNull.orDefault()
 
             var recipients: List<Recipient> = emptyList()
             var newState: ScreenState = ScreenState.Empty
