@@ -19,7 +19,6 @@ package com.instructure.teacher.dialog
 
 import android.app.Dialog
 import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioGroup
@@ -76,14 +75,14 @@ class DiscussionsMoveToDialog : DialogFragment() {
             DiscussionListPresenter.PINNED -> {
                 setupRadioButton(view.findViewById(R.id.rb_closedOpenForComments),
                         if (discussion.locked) getString(R.string.discussions_open)
-                        else getString(R.string.discussions_closed),
+                        else getString(R.string.discussions_close),
                         true, DiscussionListPresenter.CLOSED_FOR_COMMENTS)
                 setupRadioButton(view.findViewById(R.id.rb_pinnedUnpinned),
                         getString(R.string.discussions_unpin), false, DiscussionListPresenter.UNPINNED)
             }
             DiscussionListPresenter.UNPINNED -> {
                 setupRadioButton(view.findViewById(R.id.rb_closedOpenForComments),
-                        getString(R.string.discussions_closed), true, DiscussionListPresenter.CLOSED_FOR_COMMENTS)
+                        getString(R.string.discussions_close), true, DiscussionListPresenter.CLOSED_FOR_COMMENTS)
                 setupRadioButton(view.findViewById(R.id.rb_pinnedUnpinned),
                         getString(R.string.discussions_pin), false, DiscussionListPresenter.PINNED)
             }
