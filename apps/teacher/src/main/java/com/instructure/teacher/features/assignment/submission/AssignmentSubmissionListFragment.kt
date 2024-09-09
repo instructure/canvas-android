@@ -156,7 +156,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                     selectedIdx = selectedIdx,
                     anonymousGrading = assignment.anonymousGrading,
                     filter = presenter.getFilter(),
-                    filterValue = presenter.getFilterPoints()
+                    filterValue = presenter.getFilterPoints(),
+                    filteredSubmissionIds = filteredSubmissions.map { it.id }.toLongArray(),
                 )
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
@@ -206,8 +207,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     private fun setupListeners() = with(binding) {
         clearFilterTextView.setOnClickListener {
-            presenter.setFilter(SubmissionListFilter.ALL)
             presenter.clearFilterList()
+            presenter.setFilter(SubmissionListFilter.ALL)
             filterTitle.setText(R.string.all_submissions)
             clearFilterTextView.setGone()
         }
