@@ -74,6 +74,8 @@ class DashboardViewModel @Inject constructor(
     private val currentUser = previousUsersUtils.getSignedInUser(context, apiPrefs.domain, apiPrefs.user?.id.orDefault())
     private val intent = savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT)
 
+    private var students = mutableListOf<User>()
+
     init {
         handleDeeplink()
         loadData()
@@ -154,7 +156,10 @@ class DashboardViewModel @Inject constructor(
 
     private suspend fun loadStudents(forceNetwork: Boolean) {
         val students = repository.getStudents(forceNetwork)
-        val selectedStudent = students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
+        val selected = students.subtract(this.students.toSet()).firstOrNull() ?: students.firstOrNull()
+        this.students = students.toMutableList()
+
+        val selectedStudent = students.find { it.id == selected?.id } ?: students.firstOrNull()
         parentPrefs.currentStudent = selectedStudent
         selectedStudent?.let {
             selectedStudentHolder.updateSelectedStudent(it)
