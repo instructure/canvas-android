@@ -32,13 +32,13 @@ class AssignmentDetailsInteractor {
     String? studentId,
   ) async {
     final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
-    final assignmentEnhancementEnabled = locator<CourseApi>().getEnabledCourseFeatures(courseId, forceRefresh: forceRefresh);
+    final enabledCourseFeatures = locator<CourseApi>().getEnabledCourseFeatures(courseId, forceRefresh: forceRefresh);
     final assignment = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(
         assignment: (await assignment),
         course: (await course),
-        assignmentEnhancementEnabled: (await assignmentEnhancementEnabled)?.contains(_ASSIGNMENT_ENHANCEMENT_KEY));
+        assignmentEnhancementEnabled: (await enabledCourseFeatures)?.contains(_ASSIGNMENT_ENHANCEMENT_KEY));
   }
 
   Future<AssignmentDetails> loadQuizDetails(
@@ -48,13 +48,13 @@ class AssignmentDetailsInteractor {
     String studentId,
   ) async {
     final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
-    final assignmentEnhancementEnabled = locator<CourseApi>().getEnabledCourseFeatures(courseId, forceRefresh: forceRefresh);
+    final enabledCourseFeatures = locator<CourseApi>().getEnabledCourseFeatures(courseId, forceRefresh: forceRefresh);
     final quiz = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(
         assignment: (await quiz),
         course: (await course),
-        assignmentEnhancementEnabled: (await assignmentEnhancementEnabled)?.contains(_ASSIGNMENT_ENHANCEMENT_KEY));
+        assignmentEnhancementEnabled: (await enabledCourseFeatures)?.contains(_ASSIGNMENT_ENHANCEMENT_KEY));
   }
 
   Future<Reminder?> loadReminder(String assignmentId) async {
