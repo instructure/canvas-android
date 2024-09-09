@@ -103,7 +103,10 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(calendarSharedEvents.events, ::handleSharedCalendarAction)
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(addStudentViewModel.events, ::handleAddStudentEvents)
+
+        lifecycleScope.launch {
+            addStudentViewModel.events.collectLatest(::handleAddStudentEvents)
+        }
         return binding.root
     }
 

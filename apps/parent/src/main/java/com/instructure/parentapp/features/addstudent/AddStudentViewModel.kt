@@ -49,7 +49,7 @@ class AddStudentViewModel @Inject constructor(
         )
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<AddStudentViewModelAction>(replay = 1)
+    private val _events = MutableSharedFlow<AddStudentViewModelAction>()
     val events = _events.asSharedFlow()
 
     init {
@@ -75,6 +75,7 @@ class AddStudentViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(isLoading = true, isError = false)
                 repository.pairStudent(pairingCode).dataOrThrow
                 _events.emit(AddStudentViewModelAction.PairStudentSuccess)
+                _uiState.value = _uiState.value.copy(isLoading = false)
             } catch (e: Exception) {
                 crashlytics.recordException(e)
                 _uiState.value = _uiState.value.copy(isLoading = false, isError = true)
