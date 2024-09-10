@@ -68,6 +68,7 @@ fun AttachmentCard(
     val status = attachmentCardItem.status
 
     Card(
+        backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
         border = BorderStroke(1.dp, colorResource(id = R.color.backgroundMedium)),
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier

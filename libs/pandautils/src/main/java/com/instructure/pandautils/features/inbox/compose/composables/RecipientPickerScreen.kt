@@ -101,6 +101,7 @@ fun RecipientPickerScreen(
 
         CanvasTheme {
             Scaffold(
+                backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
                 topBar = { TopBar(title, uiState, actionHandler) },
                 content = { padding ->
                     Box(

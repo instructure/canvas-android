@@ -67,6 +67,8 @@ fun LabelSwitchRow(
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color(ThemePrefs.brandColor),
                 checkedTrackColor = Color(ThemePrefs.brandColor).copy(alpha = 0.5f),
+                uncheckedThumbColor = colorResource(id = R.color.backgroundDark),
+                uncheckedTrackColor = colorResource(id = R.color.backgroundMedium),
             ),
             modifier = Modifier
                 .testTag("switch")
@@ -77,11 +79,22 @@ fun LabelSwitchRow(
 
 @Preview
 @Composable
-fun LabelSwitchRowPreview() {
+fun LabelSwitchRowCheckedPreview() {
     ContextKeeper.appContext = LocalContext.current
     LabelSwitchRow(
         label = "Switch row",
         checked = true,
+        onCheckedChange = {},
+    )
+}
+
+@Preview
+@Composable
+fun LabelSwitchRowUncheckedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    LabelSwitchRow(
+        label = "Switch row",
+        checked = false,
         onCheckedChange = {},
     )
 }
