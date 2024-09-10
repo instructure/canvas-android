@@ -49,6 +49,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.replaceWithURLQueryParameter
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
@@ -189,15 +190,6 @@ class LtiLaunchFragment : BaseFragment() {
         context?.startActivity(intent)
 
         customTabLaunched = true
-    }
-
-    private fun String.replaceWithURLQueryParameter(ifSatisfies: Boolean = true): String {
-        val urlQueryParameter = this.substringAfter("url=").substringBefore('&')
-        return if (ifSatisfies) {
-            urlQueryParameter
-        } else {
-            this
-        }
     }
 
     private fun displayError() {

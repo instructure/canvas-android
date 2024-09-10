@@ -157,3 +157,12 @@ class HtmlContentFormatter(
         fun hasExternalTools(text: String?) = text?.contains("external_tools").orDefault()
     }
 }
+
+fun String.replaceWithURLQueryParameter(ifSatisfies: Boolean = true): String {
+    val urlQueryParameter = this.substringAfter("url=").substringBefore('&')
+    return if (ifSatisfies) {
+        urlQueryParameter
+    } else {
+        this
+    }
+}

@@ -19,7 +19,6 @@ package com.instructure.student.fragment
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +52,7 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.replaceWithURLQueryParameter
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
@@ -110,7 +110,6 @@ class LtiLaunchFragment : ParentFragment() {
             return
         }
 
-        Log.d("LtiLaunchFragment", "onResume: $ltiUrl")
         try {
             when {
                 ltiTab != null -> loadSessionlessLtiUrl(ltiTab!!.ltiUrl)
@@ -182,15 +181,6 @@ class LtiLaunchFragment : ParentFragment() {
         context?.startActivity(intent)
 
         customTabLaunched = true
-    }
-
-    private fun String.replaceWithURLQueryParameter(ifSatisfies: Boolean = true): String {
-        val urlQueryParameter = this.substringAfter("url=").substringBefore('&')
-        return if (ifSatisfies) {
-            urlQueryParameter
-        } else {
-            this
-        }
     }
 
     private fun displayError() {
