@@ -20,7 +20,7 @@ package com.instructure.espresso
 
 import android.util.Log
 
-import androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull
+import androidx.test.espresso.core.internal.deps.dagger.internal.Preconditions.checkNotNull
 
 /**
  * Wrapper for android.util.log
