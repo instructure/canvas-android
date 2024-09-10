@@ -7,8 +7,11 @@ import com.google.android.apps.common.testing.accessibility.framework.checks.Spe
 import com.instructure.canvas.espresso.common.interaction.InboxComposeInteractionTest
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.parentapp.BuildConfig
@@ -39,7 +42,7 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         inboxPage.pressNewMessageButton()
     }
 
-    override fun initData(): MockCanvas {
+    override fun initData(canSendToAll: Boolean, sendMessages: Boolean): MockCanvas {
         val data =  MockCanvas.init(
             parentCount = 1,
             studentCount = 1,
@@ -51,6 +54,11 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
             course = data.courses.values.first(),
             students = data.students,
             teachers = data.teachers,
+        )
+
+        data.addCoursePermissions(
+            data.courses.values.first().id,
+            CanvasContextPermission(send_messages_all = canSendToAll, send_messages = sendMessages)
         )
 
         return data
@@ -75,7 +83,9 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
 
     override fun getLoggedInUser(): User = MockCanvas.data.parents[0]
 
-    override fun getOtherUser(): User { return MockCanvas.data.teachers.first() }
+    override fun getTeachers(): List<User> { return MockCanvas.data.teachers }
 
     override fun getFirstCourse(): Course { return MockCanvas.data.courses.values.first() }
+
+    override fun getSentConversation(): Conversation? { return MockCanvas.data.sentConversation }
 }

@@ -170,7 +170,7 @@ fun <T> MultipleValuesRow(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_add_lined),
-                contentDescription = stringResource(id = R.string.add),
+                contentDescription = stringResource(R.string.add),
                 tint = colorResource(id = R.color.textDarkest)
             )
         }

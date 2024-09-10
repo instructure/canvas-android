@@ -101,6 +101,11 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithContentDescription("Close").performClick()
     }
 
+    fun pressSendButton() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithContentDescription("Send message").performClick()
+    }
+
     fun pressCourseSelector() {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Course").performClick()

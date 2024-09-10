@@ -1815,4 +1815,5 @@
     <string name="featureFlags">Feature Flags</string>
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
+    <string name="add">Add</string>
 </resources>

@@ -422,7 +422,6 @@
     <string name="image_upload_error">Image Upload Error</string>
     <string name="retry">Retry</string>
     <string name="search">Search</string>
-    <string name="add">Add</string>
     <string name="searchAssignmentsHint">Search Assignments</string>
     <string name="searchAnnouncementsHint">Search Announcements</string>
     <string name="searchDiscussionsHint">Search Discussions</string>
