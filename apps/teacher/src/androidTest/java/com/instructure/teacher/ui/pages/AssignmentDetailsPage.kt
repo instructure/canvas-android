@@ -24,8 +24,27 @@ import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.ModuleItemInteractions
+import com.instructure.espresso.OnViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasContentDescription
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.assertNotHasText
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.scrollTo
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.swipeDown
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 
@@ -95,10 +114,10 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     }
 
     /**
-     * Open submissions page (by clicking on the View All Submissions button).
+     * Open all submissions page (by clicking on the View All Submissions button).
      *
      */
-    fun openSubmissionsPage() {
+    fun openAllSubmissionsPage() {
         scrollTo(R.id.viewAllSubmissions)
         viewAllSubmissions.click()
     }

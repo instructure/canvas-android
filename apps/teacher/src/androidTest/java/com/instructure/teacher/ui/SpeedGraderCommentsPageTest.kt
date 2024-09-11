@@ -190,7 +190,7 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
         speedGraderPage.swipeUpCommentsTab()

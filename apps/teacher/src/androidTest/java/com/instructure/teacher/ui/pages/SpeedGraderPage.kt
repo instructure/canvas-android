@@ -20,17 +20,38 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.SubmissionApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithStringText
+import com.instructure.espresso.ViewPagerItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.WaitForViewWithText
+import com.instructure.espresso.assertCompletelyDisplayed
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.pageToItem
+import com.instructure.espresso.swipeToTop
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
-import java.util.*
+import java.util.Locale
 
 /**
  * Represents the SpeedGrader page.
@@ -206,5 +227,10 @@ class SpeedGraderPage : BasePage() {
      */
     fun assertCommentLibraryNotVisible() {
         commentLibraryContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
+    }
+
+    fun assertSpeedGraderToolbarTitle(title: String, subTitle: String? = null) {
+        onView(withId(R.id.titleTextView) + withText(title) + withAncestor(R.id.speedGraderToolbar)).assertDisplayed()
+        if(subTitle != null) onView(withId(R.id.subtitleTextView) + withText(subTitle) + withAncestor(R.id.speedGraderToolbar) + hasSibling(withId(R.id.titleTextView) + withText(title))).assertDisplayed()
     }
 }
