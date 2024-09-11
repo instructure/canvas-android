@@ -23,6 +23,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -41,15 +42,17 @@ fun CanvasAppBar(
     modifier: Modifier = Modifier,
     @DrawableRes navIconRes: Int = R.drawable.ic_close,
     navIconContentDescription: String = stringResource(id = R.string.close),
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
+    backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
+    textColor: Color = colorResource(id = R.color.textDarkest)
 ) {
     TopAppBar(
         title = {
             Text(text = title)
         },
         elevation = 2.dp,
-        backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-        contentColor = colorResource(id = R.color.textDarkest),
+        backgroundColor = backgroundColor,
+        contentColor = textColor,
         navigationIcon = {
             IconButton(onClick = navigationActionClick) {
                 Icon(

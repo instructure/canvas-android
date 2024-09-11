@@ -14,8 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package com.instructure.parentapp.features.managestudents
+package com.instructure.parentapp.features.alerts.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,51 +25,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-
 
 @AndroidEntryPoint
-class ManageStudentsFragment : Fragment() {
+class AlertSettingsFragment : Fragment() {
 
-    @Inject
-    lateinit var navigation: Navigation
-
-    private val viewModel: ManageStudentViewModel by viewModels()
+    private val viewModel: AlertSettingsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
-
-        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-
-        return ComposeView(requireActivity()).apply {
+        return ComposeView(requireContext()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                ManageStudentsScreen(
-                    uiState,
-                    viewModel::handleAction,
-                    navigationActionClick = {
-                        findNavController().popBackStack()
-                    }
-                )
-            }
-        }
-    }
-
-    private fun handleAction(action: ManageStudentsViewModelAction) {
-        when (action) {
-            is ManageStudentsViewModelAction.NavigateToAlertSettings -> {
-                navigation.navigate(requireActivity(), navigation.alertSettingsRoute(action.student))
+                AlertSettingsScreen(uiState) {
+                    requireActivity().onBackPressed()
+                }
             }
         }
     }

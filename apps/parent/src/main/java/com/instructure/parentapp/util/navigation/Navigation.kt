@@ -10,26 +10,28 @@ import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
+import com.instructure.parentapp.features.alerts.settings.AlertSettingsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
-import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.parentapp.features.splash.SplashFragment
 
 
@@ -57,6 +59,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val todo = "$baseUrl/todos/{${ToDoFragment.PLANNER_ITEM}}"
     private val createToDo = "$baseUrl/create-todo/{${CreateUpdateToDoFragment.INITIAL_DATE}}"
     private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
+    private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
 
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
 
@@ -67,6 +70,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun toDoRoute(plannerItem: PlannerItem) = "$baseUrl/todos/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
     fun createToDoRoute(initialDate: String?) = "$baseUrl/create-todo/${Uri.encode(initialDate.orEmpty())}"
     fun updateToDoRoute(plannerItem: PlannerItem) = "$baseUrl/update-todo/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
+
+    fun alertSettingsRoute(student: User) = "$baseUrl/alert-settings/${UserParametersType.serializeAsValue(student)}"
 
     fun crateMainNavGraph(navController: NavController): NavGraph {
         return navController.createGraph(
@@ -152,6 +157,12 @@ class Navigation(apiPrefs: ApiPrefs) {
                     nullable = false
                 }
             }
+            fragment<AlertSettingsFragment>(alertSettings) {
+                argument(Const.USER) {
+                    type = UserParametersType
+                    nullable = false
+                }
+            }
         }
     }
 
@@ -223,6 +234,24 @@ private val ScheduleItemParametersType = object : NavType<ScheduleItem>(
     }
 
     override fun parseValue(value: String): ScheduleItem {
+        return value.fromJson()
+    }
+}
+
+private val UserParametersType = object : NavType<User>(isNullableAllowed = false) {
+    override fun put(bundle: Bundle, key: String, value: User) {
+        bundle.putParcelable(key, value)
+    }
+
+    override fun get(bundle: Bundle, key: String): User? {
+        return bundle.getParcelable(key) as? User
+    }
+
+    override fun serializeAsValue(value: User): String {
+        return Uri.encode(value.toJson())
+    }
+
+    override fun parseValue(value: String): User {
         return value.fromJson()
     }
 }
