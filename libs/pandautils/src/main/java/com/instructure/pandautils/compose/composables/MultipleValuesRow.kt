@@ -17,6 +17,7 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -124,7 +125,8 @@ fun <T> MultipleValuesRow(
                     DropdownMenu(
                         expanded = uiState.isShowResults,
                         properties = PopupProperties(focusable = false),
-                        onDismissRequest = { actionHandler(MultipleValuesRowAction.HideSearchResults) }
+                        onDismissRequest = { actionHandler(MultipleValuesRowAction.HideSearchResults) },
+                        modifier = Modifier.background(colorResource(id = R.color.backgroundLight))
                     ) {
                         Column(
                             modifier = Modifier

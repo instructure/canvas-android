@@ -55,7 +55,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
     override fun title(): String = getString(R.string.newMessage)
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.themeStatusBar(requireActivity())
     }
 
     override fun getFragment(): Fragment {

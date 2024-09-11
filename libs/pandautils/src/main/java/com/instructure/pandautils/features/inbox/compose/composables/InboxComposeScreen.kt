@@ -197,7 +197,10 @@ private fun InboxComposeScreenContent(
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Text(recipient.name ?: "")
+                            Text(
+                                recipient.name ?: "",
+                                color = colorResource(id = R.color.textDarkest),
+                            )
                         }
                     }
                 )
