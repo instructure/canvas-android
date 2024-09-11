@@ -21,6 +21,8 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.pandautils.compose.composables.MultipleValuesRowState
 import com.instructure.pandautils.compose.composables.SelectContextUiState
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import java.util.EnumMap
 
 data class InboxComposeUiState(

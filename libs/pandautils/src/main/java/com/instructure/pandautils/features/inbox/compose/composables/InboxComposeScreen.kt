@@ -68,6 +68,7 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandl
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 import com.instructure.pandautils.features.inbox.compose.ScreenState
+import com.instructure.pandautils.features.inbox.utils.AttachmentCard
 
 @Composable
 fun InboxComposeScreen(
@@ -252,7 +253,9 @@ private fun InboxComposeScreenContent(
                     attachmentCardItem = attachment,
                     onSelect = { actionHandler(InboxComposeActionHandler.OpenAttachment(attachment)) },
                     onRemove = { actionHandler(InboxComposeActionHandler.RemoveAttachment(attachment)) },
-                    context = LocalContext.current,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(vertical = 8.dp)
                 )
             }
         }

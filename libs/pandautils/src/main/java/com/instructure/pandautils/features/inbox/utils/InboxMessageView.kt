@@ -194,6 +194,7 @@ private fun InboxMessageAuthorView(
             Text(
                 text = "${author?.name} to $recipientText",
                 fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest)
             )
 
             val date = ZonedDateTime.parse(message?.createdAt ?: "")

@@ -210,6 +210,7 @@ private fun InboxDetailsContentView(
         ) {
             Text(
                 text = conversation.subject ?: stringResource(id = R.string.message),
+                color = colorResource(id = R.color.textDarkest),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
@@ -222,6 +223,7 @@ private fun InboxDetailsContentView(
             IconButton(onClick = { actionHandler(InboxDetailsAction.UpdateStarred(conversation.id, !conversation.isStarred)) }) {
                 Icon(
                     painter = if (conversation.isStarred) painterResource(id = R.drawable.ic_star_filled) else painterResource(id = R.drawable.ic_star_outline),
+                    tint = colorResource(id = R.color.textDarkest),
                     contentDescription = if (conversation.isStarred) stringResource(id = R.string.unstarSelected) else stringResource(id = R.string.starSelected),
                     modifier = Modifier
                         .padding(vertical = 16.dp)

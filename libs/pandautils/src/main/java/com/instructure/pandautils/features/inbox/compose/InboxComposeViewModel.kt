@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.debounce
@@ -91,7 +93,7 @@ class InboxComposeViewModel @Inject constructor(
                     val attachmentEntities = attachmentDao.findByParentId(uuid.toString())
                     val status = workInfo.state.toAttachmentCardStatus()
                     attachmentEntities?.let { attachmentList ->
-                        _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status) }) }
+                        _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status, false) }) }
                         attachmentDao.deleteAll(attachmentList)
                     } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
                 } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))

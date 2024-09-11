@@ -48,6 +48,7 @@ fun AttachmentCard(
     val status = attachmentCardItem.status
 
     Card(
+        backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
         border = BorderStroke(1.dp, colorResource(id = R.color.backgroundMedium)),
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
@@ -92,7 +93,7 @@ fun AttachmentCard(
                 Text(
                     attachment.filename ?: "",
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp,
+                    fontSize = 20.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -102,7 +103,7 @@ fun AttachmentCard(
                 Text(
                     Formatter.formatFileSize(LocalContext.current, attachment.size),
                     color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                 )
             }
 
