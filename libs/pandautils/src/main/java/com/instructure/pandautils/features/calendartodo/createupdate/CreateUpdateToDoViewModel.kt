@@ -82,8 +82,8 @@ class CreateUpdateToDoViewModel @Inject constructor(
 
             is CreateUpdateToDoAction.UpdateCanvasContext -> {
                 _uiState.update {
-                    val selectCalendarUiState = it.selectCalendarUiState.copy(selectedCanvasContext = action.canvasContext)
-                    it.copy(selectCalendarUiState = selectCalendarUiState)
+                    val selectCalendarUiState = it.selectContextUiState.copy(selectedCanvasContext = action.canvasContext)
+                    it.copy(selectContextUiState = selectCalendarUiState)
                 }
             }
 
@@ -99,8 +99,8 @@ class CreateUpdateToDoViewModel @Inject constructor(
 
             is CreateUpdateToDoAction.ShowSelectCalendarScreen -> {
                 _uiState.update {
-                    val selectCalendarUiState = it.selectCalendarUiState.copy(show = true)
-                    it.copy(selectCalendarUiState = selectCalendarUiState)
+                    val selectCalendarUiState = it.selectContextUiState.copy(show = true)
+                    it.copy(selectContextUiState = selectCalendarUiState)
                 }
             }
 
@@ -122,7 +122,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
     }
 
     fun onBackPressed(): Boolean {
-        return if (uiState.value.selectCalendarUiState.show) {
+        return if (uiState.value.selectContextUiState.show) {
             hideSelectCalendarScreen()
             true
         } else if (!uiState.value.canNavigateBack) {
@@ -135,8 +135,8 @@ class CreateUpdateToDoViewModel @Inject constructor(
 
     private fun hideSelectCalendarScreen() {
         _uiState.update {
-            val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
-            it.copy(selectCalendarUiState = selectCalendarUiState)
+            val selectCalendarUiState = it.selectContextUiState.copy(show = false)
+            it.copy(selectContextUiState = selectCalendarUiState)
         }
     }
 
@@ -171,7 +171,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     loadingCanvasContexts = false,
-                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                    selectContextUiState = it.selectContextUiState.copy(
                         canvasContexts = userList + courses,
                         selectedCanvasContext = courses.firstOrNull { course ->
                             course.id == plannerItem?.plannable?.courseId
@@ -183,7 +183,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     loadingCanvasContexts = false,
-                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                    selectContextUiState = it.selectContextUiState.copy(
                         canvasContexts = userList,
                         selectedCanvasContext = apiPrefs.user
                     )
@@ -201,14 +201,14 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     title = uiState.value.title,
                     details = uiState.value.details,
                     toDoDate = LocalDateTime.of(uiState.value.date, uiState.value.time).toApiString().orEmpty(),
-                    courseId = uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id,
+                    courseId = uiState.value.selectContextUiState.selectedCanvasContext.takeIf { it is Course }?.id,
                 )
             } ?: run {
                 repository.createToDo(
                     title = uiState.value.title,
                     details = uiState.value.details,
                     toDoDate = LocalDateTime.of(uiState.value.date, uiState.value.time).toApiString().orEmpty(),
-                    courseId = uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id,
+                    courseId = uiState.value.selectContextUiState.selectedCanvasContext.takeIf { it is Course }?.id,
                 )
             }
             _uiState.update { it.copy(saving = false, canNavigateBack = true) }
@@ -233,11 +233,11 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     uiState.value.details != plannerItem.plannable.details.orEmpty() ||
                     uiState.value.date != plannerItem.plannable.todoDate.toDate()?.toLocalDate() ||
                     uiState.value.time != plannerItem.plannable.todoDate.toDate()?.toLocalTime() ||
-                    uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id != plannerItem.plannable.courseId
+                    uiState.value.selectContextUiState.selectedCanvasContext.takeIf { it is Course }?.id != plannerItem.plannable.courseId
         } ?: run {
             uiState.value.title.isNotEmpty() ||
                     uiState.value.details.isNotEmpty() ||
-                    uiState.value.selectCalendarUiState.selectedCanvasContext != apiPrefs.user ||
+                    uiState.value.selectContextUiState.selectedCanvasContext != apiPrefs.user ||
                     uiState.value.date != initialDate ||
                     uiState.value.time != LocalTime.of(12, 0)
         }

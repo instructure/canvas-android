@@ -409,6 +409,29 @@
     <string name="forwardMessage">Forward Message</string>
     <string name="addMorePeopleToMessage">Add another recipient. Messages addressed only to yourself cannot be sent.</string>
     <string name="selectRecipients">Select Recipients</string>
+    <string name="course">Course</string>
+    <string name="all_recipients_in_selected_context">All in %1$s</string>
+    <string name="selectCourseOrGroup">Select a course or a group</string>
+    <string name="a11y_sendMessage">Send message</string>
+    <string name="a11y_selected">Selected</string>
+    <string name="recipientsTo">To</string>
+    <string name="a11y_openCoursePicker">Open Course Picker</string>
+    <string name="a11y_closeCoursePicker">Close Course Picker</string>
+    <string name="a11y_cancelNewMessage">Cancel new message</string>
+    <string name="failedToLoadCoursesAndGroups">Failed to load Courses and Groups</string>
+    <string name="failedToLoadRecipients">Failed to load recipients</string>
+    <string name="noRecipientsAvailable">No recipients available</string>
+    <string name="a11y_backToRoles">Back to roles</string>
+    <string name="a11y_closeRecipientPicker">Close recipient picker</string>
+    <string name="a11y_addAttachment">Add attachment</string>
+    <string name="a11y_removeAttachment">Remove Attachment</string>
+    <string name="a11y_removeRecipient">Remove Recipient</string>
+    <string name="failed_to_send_message">Failed to send message</string>
+    <string name="failed_to_open_attachment">Failed to open attachment</string>
+    <plurals name="people">
+        <item quantity="one">%d Person</item>
+        <item quantity="other">%d People</item>
+    </plurals>
 
     <plurals name="people_count">
         <item quantity="one">%d person</item>
@@ -1792,4 +1815,5 @@
     <string name="featureFlags">Feature Flags</string>
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
+    <string name="add">Add</string>
 </resources>
