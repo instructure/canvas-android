@@ -74,7 +74,7 @@ fun LabelTextFieldRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
-                .testTag("LabelTextFieldRowTextField")
+                .testTag("labelTextFieldRowTextField")
         )
     }
 }

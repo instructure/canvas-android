@@ -68,12 +68,12 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertSubjectText(subject: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("LabelTextFieldRowTextField").assertTextEquals(subject)
+        composeTestRule.onNodeWithTag("labelTextFieldRowTextField").assertTextEquals(subject)
     }
 
     fun assertBodyText(body: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("TextFieldWithHeaderTextField").assertTextEquals(body)
+        composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").assertTextEquals(body)
     }
 
     fun assertAlertDialog() {
@@ -86,14 +86,14 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun typeSubject(subject: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("LabelTextFieldRowTextField").performClick()
-        composeTestRule.onNodeWithTag("LabelTextFieldRowTextField").performTextReplacement(subject)
+        composeTestRule.onNodeWithTag("labelTextFieldRowTextField").performClick()
+        composeTestRule.onNodeWithTag("labelTextFieldRowTextField").performTextReplacement(subject)
     }
 
     fun typeBody(body: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("TextFieldWithHeaderTextField").performClick()
-        composeTestRule.onNodeWithTag("TextFieldWithHeaderTextField").performTextReplacement(body)
+        composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").performClick()
+        composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").performTextReplacement(body)
     }
 
     fun pressBackButton() {

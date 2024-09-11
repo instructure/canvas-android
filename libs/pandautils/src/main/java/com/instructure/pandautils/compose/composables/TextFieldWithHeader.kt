@@ -81,7 +81,7 @@ fun TextFieldWithHeader(
                 .fillMaxSize()
                 .padding(start = 16.dp, end = 16.dp)
                 .focusRequester(focusRequester)
-                .testTag("TextFieldWithHeaderTextField")
+                .testTag("textFieldWithHeaderTextField")
         )
     }
 }
