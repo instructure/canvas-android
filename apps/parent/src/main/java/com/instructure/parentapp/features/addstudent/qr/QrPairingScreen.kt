@@ -74,7 +74,7 @@ fun QrPairingScreen(
                                     text = stringResource(id = R.string.next),
                                     style = TextStyle(
                                         color = colorResource(id = R.color.textInfo),
-                                        fontSize = 18.sp
+                                        fontSize = 16.sp
                                     )
                                 )
                             }

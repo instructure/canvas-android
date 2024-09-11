@@ -81,6 +81,7 @@ private fun PairingScreenContent(
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 8.dp)
                 .testTag("pairingCodeTextField"),
             value = pairingCode,
             onValueChange = {
