@@ -16,10 +16,12 @@
  */
 package com.instructure.student.features.calendar
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendar.CalendarRouter
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
@@ -31,7 +33,7 @@ import com.instructure.student.features.assignments.details.AssignmentDetailsFra
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.router.RouteMatcher
 
-class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRouter {
+class StudentCalendarRouter(private val activity: FragmentActivity, private val fragment: Fragment) : CalendarRouter {
     override fun openNavigationDrawer() {
         (activity as? NavigationActivity)?.openNavigationDrawer()
     }
@@ -74,6 +76,9 @@ class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRo
     }
 
     override fun attachNavigationDrawer() {
-        // This is a no-op in the Student app, navigation drawer is already handled in the Activity
+        val calendarFragment = fragment as? CalendarFragment
+        if (calendarFragment != null) {
+            (activity as? NavigationActivity)?.attachNavigationDrawer(calendarFragment, null)
+        }
     }
 }

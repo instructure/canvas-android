@@ -17,8 +17,6 @@
 package com.instructure.pandarecycler.util
 
 import androidx.recyclerview.widget.SortedList
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 class GroupSortedList<GROUP, ITEM>(
@@ -578,6 +576,9 @@ class GroupSortedList<GROUP, ITEM>(
             } else { // handle the case where the item has changed groups
                 val oldGroupItems = getGroupItems(getGroup(itemPosition.groupId)!!)
                 oldGroupItems.removeItemAt(itemPosition.itemPosition)
+                if (oldGroupItems.size() == 0 && !isDisplayEmptyCell) {
+                    groupObjects.remove(getGroup(itemPosition.groupId)!!)
+                }
                 return groupItems.add(item)
             }
         } else { // if its not there, just add it
