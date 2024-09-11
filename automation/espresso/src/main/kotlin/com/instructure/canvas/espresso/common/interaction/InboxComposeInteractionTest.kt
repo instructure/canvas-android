@@ -240,12 +240,13 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         inboxComposePage.typeBody("Test Body")
         inboxComposePage.pressSendButton()
         val attachmentName = "attachment.html"
-        val sentConversation = data.conversations.values.first()
-        addAttachmentToConversation(
-            attachmentName,
-            sentConversation,
-            data
-        )
+        data.sentConversation?.let {
+            addAttachmentToConversation(
+                attachmentName,
+                it,
+                data
+            )
+        }
 
         inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed("Test Subject")
