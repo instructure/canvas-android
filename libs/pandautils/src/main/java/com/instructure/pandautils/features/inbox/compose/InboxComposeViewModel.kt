@@ -270,7 +270,7 @@ class InboxComposeViewModel @Inject constructor(
         viewModelScope.launch {
             val courses = inboxComposeRepository.getCourses(forceRefresh).dataOrNull.orEmpty()
             val groups = inboxComposeRepository.getGroups(forceRefresh).dataOrNull.orEmpty()
-            
+
             _uiState.update { it.copy(
                 selectContextUiState = it.selectContextUiState.copy(
                     canvasContexts = courses + groups

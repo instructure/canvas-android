@@ -407,6 +407,7 @@ private fun SearchField(
                 .padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
             Icon(
+                tint = colorResource(id = R.color.textDark),
                 painter = painterResource(id = R.drawable.ic_search_white_24dp),
                 contentDescription = null,
                 modifier = Modifier
