@@ -17,19 +17,12 @@
 package com.instructure.parentapp.features.alerts.settings
 
 import com.instructure.canvasapi2.apis.ObserverApi
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AlertThreshold
-import com.instructure.canvasapi2.models.User
 
 class AlertSettingsRepository(
-    private val userApi: UserAPI.UsersInterface,
     private val observerApi: ObserverApi
 ) {
-
-    suspend fun loadUserDetails(userId: Long): User {
-        return userApi.getUser(userId, RestParams(isForceReadFromNetwork = true)).dataOrThrow
-    }
 
     suspend fun loadAlertThresholds(userId: Long): List<AlertThreshold> {
         return observerApi.getObserverAlertThresholds(userId, RestParams(isForceReadFromNetwork = true)).dataOrThrow

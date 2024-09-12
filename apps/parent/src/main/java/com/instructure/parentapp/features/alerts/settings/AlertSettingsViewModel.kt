@@ -27,15 +27,16 @@ import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AlertSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    colorKeeper: ColorKeeper,
     private val repository: AlertSettingsRepository,
-    private val crashlytics: FirebaseCrashlytics,
-    private val colorKeeper: ColorKeeper
+    private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     private val student =
@@ -54,13 +55,19 @@ class AlertSettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-
+            loadAlertThresholds()
         }
     }
 
     private suspend fun loadAlertThresholds() {
         try {
             val alertThresholds = repository.loadAlertThresholds(student.id)
+            _uiState.update {
+                it.copy(
+                    thresholds = alertThresholds.associateBy { it.alertType },
+                    isLoading = false
+                )
+            }
         } catch (e: Exception) {
             crashlytics.recordException(e)
             Log.e("AlertSettingsViewModel", "Error loading alert thresholds", e)

@@ -17,7 +17,6 @@
 package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.ObserverApi
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.parentapp.features.alerts.settings.AlertSettingsRepository
 import dagger.Module
 import dagger.Provides
@@ -29,7 +28,7 @@ import dagger.hilt.android.components.ViewModelComponent
 class AlertSettingsModule {
 
     @Provides
-    fun provideAlertSettingsRepository(userApi: UserAPI.UsersInterface, observerApi: ObserverApi): AlertSettingsRepository {
-        return AlertSettingsRepository(userApi, observerApi)
+    fun provideAlertSettingsRepository(observerApi: ObserverApi): AlertSettingsRepository {
+        return AlertSettingsRepository(observerApi)
     }
 }

@@ -25,5 +25,14 @@ data class AlertThreshold(
     @SerializedName("user_id")
     val userId: Long,
     @SerializedName("observer_id")
-    val observerId: Long
+    val observerId: Long,
+    @SerializedName("workflow_state")
+    val workflowState: ThresholdWorkflowState
 )
+
+enum class ThresholdWorkflowState {
+    @SerializedName("active")
+    ACTIVE,
+    @SerializedName("inactive")
+    INACTIVE
+}

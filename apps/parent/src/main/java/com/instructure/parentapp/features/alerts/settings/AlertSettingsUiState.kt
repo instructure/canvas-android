@@ -16,6 +16,8 @@
  */    package com.instructure.parentapp.features.alerts.settings
 
 import androidx.annotation.ColorInt
+import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.User
 
 
@@ -25,5 +27,6 @@ data class AlertSettingsUiState(
     val isLoading: Boolean = true,
     val avatarUrl: String,
     val studentName: String,
-    val studentPronouns: String?
+    val studentPronouns: String?,
+    val thresholds: Map<AlertType, AlertThreshold> = mutableMapOf()
 )

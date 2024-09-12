@@ -1793,4 +1793,14 @@
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
     <string name="alertSettingsTitle">Alert Settings</string>
+    <string name="alertSettingsThresholdsTitle">Alert me when…</string>
+    <string name="alertSettingsAssignmentMissing">Assignment missing</string>
+    <string name="alertSettingsAssignmentGradeHigh">Assignment grade above</string>
+    <string name="alertSettingsAssignmentGradeLow">Assignment grade below</string>
+    <string name="alertSettingsCourseGradeHigh">Course grade above</string>
+    <string name="alertSettingsCourseGradeLow">Course grade below</string>
+    <string name="alertSettingsInstitutionAnnouncement">Institution Announcements</string>
+    <string name="alertSettingsCourseAnnouncement">Course Announcements</string>
+    <string name="alertSettingsPercentage">%s%</string>
+    <string name="alertSettingsThresholdNever">Never</string>
 </resources>
