@@ -119,6 +119,18 @@ object InboxApi {
                        @Field("attachment_ids[]") attachmentIds: LongArray,
                        @Field("context_code") contextCode: String?): Call<Conversation>
 
+        @FormUrlEncoded
+        @POST("conversations/{conversationId}/add_message?group_conversation=true")
+        suspend fun addMessage(
+            @Path("conversationId") conversationId: Long,
+            @Field("recipients[]") recipientIds: List<String>,
+            @Field("body") body: String,
+            @Field("included_messages[]") includedMessageIds: LongArray,
+            @Field("attachment_ids[]") attachmentIds: LongArray,
+            @Field("context_code") contextCode: String?,
+            @Tag params: RestParams
+        ): DataResult<Conversation>
+
         @PUT("conversations/{conversationId}?conversation[workflow_state]=unread")
         fun markConversationAsUnread(@Path("conversationId") conversationId: Long): Call<Void>
 

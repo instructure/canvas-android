@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.inbox.list
 import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
 interface InboxRouter {
 
@@ -27,6 +28,8 @@ interface InboxRouter {
     fun attachNavigationIcon(toolbar: Toolbar)
 
     fun routeToNewMessage()
+
+    fun routeToCompose(options: InboxComposeOptions)
 
     fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope)
 }

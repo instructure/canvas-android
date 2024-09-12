@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,18 +38,28 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
@@ -69,6 +80,10 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.features.inbox.utils.AttachmentCard
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.instructure.pandautils.utils.toLocalString
+import java.time.ZonedDateTime
 
 @Composable
 fun InboxComposeScreen(
@@ -159,6 +174,7 @@ private fun InboxComposeScreenContent(
         ContextValueRow(
             label = stringResource(id = R.string.course),
             value = uiState.selectContextUiState.selectedCanvasContext,
+            enabled = uiState.disabledFields.isContextDisabled.not(),
             onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
         )
 
@@ -213,6 +229,7 @@ private fun InboxComposeScreenContent(
         LabelSwitchRow(
             label = stringResource(R.string.sendIndividualMessage),
             checked = uiState.sendIndividual,
+            enabled = uiState.disabledFields.isSendIndividualDisabled.not(),
             onCheckedChange = {
                 actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
             },
@@ -226,6 +243,7 @@ private fun InboxComposeScreenContent(
             onValueChange = {
                 actionHandler(InboxComposeActionHandler.SubjectChanged(it))
             },
+            enabled = uiState.disabledFields.isSubjectDisabled.not(),
             focusRequester = subjectFocusRequester,
         )
 
@@ -234,6 +252,8 @@ private fun InboxComposeScreenContent(
         TextFieldWithHeader(
             label = stringResource(R.string.message),
             value = uiState.body,
+            enabled = uiState.disabledFields.isBodyDisabled.not(),
+            headerEnabled = uiState.disabledFields.isAttachmentDisabled.not(),
             headerIconResource = R.drawable.ic_attachment,
             iconContentDescription = stringResource(id = R.string.a11y_addAttachment),
             onValueChange = {
@@ -258,6 +278,105 @@ private fun InboxComposeScreenContent(
                         .padding(vertical = 8.dp)
                 )
             }
+        }
+
+        uiState.previousMessages?.let { previousMessages ->
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    "Previous Messages",
+                    color = colorResource(id = R.color.textDarkest),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                CanvasDivider()
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                previousMessages.previousMessages.forEach { message ->
+                    PreviousMessageView(previousMessages.conversation, message, actionHandler)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CanvasDivider()
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PreviousMessageView(
+    conversation: Conversation,
+    message: Message,
+    actionHandler: (InboxComposeActionHandler) -> Unit
+) {
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+
+    Column {
+        Column(
+            modifier = Modifier
+                .clickable {
+                    isExpanded = !isExpanded
+                }
+        ){
+            Row {
+                Text(
+                    text = conversation.participants.firstOrNull { it.id == message.authorId }?.name
+                        ?: "",
+                    color = colorResource(id = R.color.textDarkest),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Text(
+                    text = ZonedDateTime.parse(message.createdAt ?: "").toLocalString(),
+                    color = colorResource(id = R.color.textDark),
+                    fontSize = 12.sp,
+                )
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.textDark),
+                    modifier = Modifier
+                        .rotate(if (isExpanded) 180f else 0f)
+                )
+            }
+
+            Text(
+                text = message.body ?: "",
+                color = colorResource(id = R.color.textDark),
+                fontSize = 14.sp,
+                maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
+        if (message.attachments.isNotEmpty() && isExpanded) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            message.attachments
+                .map { AttachmentCardItem(it, AttachmentStatus.UPLOADED, true) }
+                .forEach { attachment ->
+                    AttachmentCard(
+                        attachmentCardItem = attachment,
+                        onSelect = { actionHandler(InboxComposeActionHandler.OpenAttachment(attachment)) },
+                        onRemove = {},
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
         }
     }
 }

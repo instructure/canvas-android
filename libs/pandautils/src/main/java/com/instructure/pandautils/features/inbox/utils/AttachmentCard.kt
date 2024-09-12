@@ -93,7 +93,7 @@ fun AttachmentCard(
                 Text(
                     attachment.filename ?: "",
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 20.sp,
+                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -103,7 +103,7 @@ fun AttachmentCard(
                 Text(
                     Formatter.formatFileSize(LocalContext.current, attachment.size),
                     color = colorResource(id = R.color.textDark),
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                 )
             }
 

@@ -11,6 +11,7 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
@@ -68,6 +69,27 @@ class ParentInboxComposeRepository(
             contextCode = context.contextId,
             attachmentIds = attachments.map { it.id }.toLongArray(),
             isBulk = if (isIndividual) { 0 } else { 1 },
+            params = restParams
+        )
+    }
+
+    override suspend fun addMessage(
+        conversationId: Long,
+        recipients: List<Recipient>,
+        message: String,
+        includedMessages: List<Message>,
+        attachments: List<Attachment>,
+        context: CanvasContext,
+    ): DataResult<Conversation> {
+        val restParams = RestParams()
+
+        return inboxAPI.addMessage(
+            conversationId = conversationId,
+            recipientIds = recipients.mapNotNull { it.stringId },
+            body = message,
+            includedMessageIds = includedMessages.map { it.id }.toLongArray(),
+            attachmentIds = attachments.map { it.id }.toLongArray(),
+            contextCode = context.contextId,
             params = restParams
         )
     }

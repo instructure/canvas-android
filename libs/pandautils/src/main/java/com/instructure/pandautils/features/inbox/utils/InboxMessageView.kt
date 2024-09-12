@@ -133,7 +133,7 @@ private fun InboxMessageDetailsView(
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
-                onClick = { actionHandler(MessageAction.Reply) },
+                onClick = { messageState.message?.let { actionHandler( MessageAction.Reply(it) ) } },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.backgroundLightest),
                     contentColor = Color(ThemePrefs.brandColor)
@@ -207,7 +207,7 @@ private fun InboxMessageAuthorView(
         }
 
         if (messageState.enabledActions) {
-            IconButton(onClick = { actionHandler(MessageAction.Reply) }) {
+            IconButton(onClick = { messageState.message?.let { actionHandler( MessageAction.Reply(it) ) } }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_reply),
                     contentDescription = stringResource(id = R.string.reply)
@@ -240,7 +240,7 @@ private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit
             DropdownMenuItem(
                 onClick = {
                     showMenu = !showMenu
-                    actionHandler(MessageAction.Reply)
+                    actionHandler(MessageAction.Reply(message))
                 }
             ) {
                 MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
@@ -249,7 +249,7 @@ private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit
             DropdownMenuItem(
                 onClick = {
                     showMenu = !showMenu
-                    actionHandler(MessageAction.ReplyAll)
+                    actionHandler(MessageAction.ReplyAll(message))
                 }
             ) {
                 MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
@@ -258,7 +258,7 @@ private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit
             DropdownMenuItem(
                 onClick = {
                     showMenu = !showMenu
-                    actionHandler(MessageAction.Forward)
+                    actionHandler(MessageAction.Forward(message))
                 }
             ) {
                 MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandares.R
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
 import com.instructure.pandautils.utils.FileDownloader
@@ -43,9 +44,9 @@ class InboxDetailsViewModel @Inject constructor(
 
     fun messageActionHandler(action: MessageAction) {
         when (action) {
-            is MessageAction.Reply -> handleAction(InboxDetailsAction.Reply)
-            is MessageAction.ReplyAll -> handleAction(InboxDetailsAction.ReplyAll)
-            is MessageAction.Forward -> handleAction(InboxDetailsAction.Forward)
+            is MessageAction.Reply -> handleAction(InboxDetailsAction.Reply(action.message))
+            is MessageAction.ReplyAll -> handleAction(InboxDetailsAction.ReplyAll(action.message))
+            is MessageAction.Forward -> handleAction(InboxDetailsAction.Forward(action.message))
             is MessageAction.DeleteMessage -> handleAction(InboxDetailsAction.DeleteMessage(conversationId ?: 0, action.message))
             is MessageAction.OpenAttachment -> { fileDownloader.downloadFileToDevice(action.attachment) }
             is MessageAction.UrlSelected -> {
@@ -96,12 +97,34 @@ class InboxDetailsViewModel @Inject constructor(
                     _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
                 }
             )) }
-            is InboxDetailsAction.Forward -> TODO()
-            is InboxDetailsAction.Reply -> TODO()
-            is InboxDetailsAction.ReplyAll -> TODO()
+            is InboxDetailsAction.Forward -> {
+                viewModelScope.launch {
+                    uiState.value.conversation?.let {
+                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(it, action.message)))
+                    }
+                }
+            }
+            is InboxDetailsAction.Reply -> {
+                viewModelScope.launch {
+                    uiState.value.conversation?.let {
+                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(it, action.message)))
+                    }
+                }
+            }
+            is InboxDetailsAction.ReplyAll -> {
+                viewModelScope.launch {
+                    uiState.value.conversation?.let {
+                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(it, action.message)))
+                    }
+                }
+            }
             is InboxDetailsAction.UpdateState -> updateState(action.conversationId, action.workflowState)
             is InboxDetailsAction.UpdateStarred -> updateStarred(action.conversationId, action.newStarValue)
         }
+    }
+
+    fun refreshParentFragment() {
+        viewModelScope.launch { _events.send(InboxDetailsFragmentAction.UpdateParentFragment) }
     }
 
     private fun getConversation(forceRefresh: Boolean = false) {
@@ -150,7 +173,7 @@ class InboxDetailsViewModel @Inject constructor(
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)))
             }
 
-            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
+            refreshParentFragment()
         }
     }
 
@@ -173,7 +196,7 @@ class InboxDetailsViewModel @Inject constructor(
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)))
             }
 
-            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
+            refreshParentFragment()
         }
     }
 
@@ -186,7 +209,7 @@ class InboxDetailsViewModel @Inject constructor(
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
 
-            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
+            refreshParentFragment()
         }
     }
 
@@ -199,7 +222,7 @@ class InboxDetailsViewModel @Inject constructor(
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
 
-            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
+            refreshParentFragment()
         }
     }
 }

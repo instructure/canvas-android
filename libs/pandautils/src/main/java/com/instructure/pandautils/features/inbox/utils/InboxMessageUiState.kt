@@ -12,9 +12,9 @@ data class InboxMessageUiState(
 )
 
 sealed class MessageAction {
-    data object Reply : MessageAction()
-    data object ReplyAll : MessageAction()
-    data object Forward : MessageAction()
+    data class Reply(val message: Message) : MessageAction()
+    data class ReplyAll(val message: Message) : MessageAction()
+    data class Forward(val message: Message) : MessageAction()
     data class DeleteMessage(val message: Message) : MessageAction()
     data class OpenAttachment(val attachment: Attachment) : MessageAction()
     data class UrlSelected(val url: String) : MessageAction()

@@ -13,21 +13,28 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
+import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class InboxDetailsFragment : Fragment(), FragmentInteractions {
 
     private val viewModel: InboxDetailsViewModel by viewModels()
+
+    @Inject
+    lateinit var inboxRouter: InboxRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +49,21 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
                 val uiState by viewModel.uiState.collectAsState()
 
                 InboxDetailsScreen(title(), uiState,  viewModel::messageActionHandler, viewModel::handleAction)
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupFragmentResultListener()
+    }
+
+    private fun setupFragmentResultListener() {
+        setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
+            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) {
+                viewModel.handleAction(InboxDetailsAction.RefreshCalled)
+                viewModel.refreshParentFragment()
             }
         }
     }
@@ -73,6 +95,9 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
             }
             is InboxDetailsFragmentAction.UpdateParentFragment -> {
                 setFragmentResult(FRAGMENT_RESULT_KEY, bundleOf())
+            }
+            is InboxDetailsFragmentAction.NavigateToCompose -> {
+                inboxRouter.routeToCompose(action.options)
             }
         }
     }

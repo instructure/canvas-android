@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
@@ -42,6 +43,7 @@ import com.instructure.pandautils.R
 fun LabelTextFieldRow(
     label: String,
     value: TextFieldValue,
+    enabled: Boolean,
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester = remember { FocusRequester() }
@@ -51,6 +53,7 @@ fun LabelTextFieldRow(
         modifier = modifier
             .height(48.dp)
             .padding(start = 16.dp, end = 16.dp)
+            .alpha(if (enabled) 1f else 0.5f)
     ) {
         Text(
             text = label,
@@ -70,6 +73,7 @@ fun LabelTextFieldRow(
         CanvasThemedTextField(
             value = value,
             onValueChange = onValueChange,
+            enabled = enabled,
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
@@ -85,6 +89,7 @@ fun LabelTextFieldRowPreview() {
     LabelTextFieldRow(
         label = "Label",
         value = TextFieldValue("Some text"),
-        onValueChange = {}
+        onValueChange = {},
+        enabled = true
     )
 }

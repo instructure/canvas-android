@@ -2,6 +2,7 @@ package com.instructure.pandautils.features.inbox.details
 
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 
 data class InboxDetailsUiState(
@@ -28,14 +29,15 @@ sealed class InboxDetailsFragmentAction {
     data class ShowScreenResult(val message: String) : InboxDetailsFragmentAction()
     data class UrlSelected(val url: String) : InboxDetailsFragmentAction()
     data object UpdateParentFragment : InboxDetailsFragmentAction()
+    data class NavigateToCompose(val options: InboxComposeOptions) : InboxDetailsFragmentAction()
 }
 
 sealed class InboxDetailsAction {
     data object CloseFragment : InboxDetailsAction()
     data object RefreshCalled : InboxDetailsAction()
-    data object Reply : InboxDetailsAction()
-    data object ReplyAll : InboxDetailsAction()
-    data object Forward : InboxDetailsAction()
+    data class Reply(val message: Message) : InboxDetailsAction()
+    data class ReplyAll(val message: Message) : InboxDetailsAction()
+    data class Forward(val message: Message) : InboxDetailsAction()
     data class DeleteConversation(val conversationId: Long) : InboxDetailsAction()
     data class DeleteMessage(val conversationId: Long, val message: Message) : InboxDetailsAction()
     data class UpdateState(val conversationId: Long, val workflowState: Conversation.WorkflowState) : InboxDetailsAction()

@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.parentapp.util.navigation.Navigation
 import org.greenrobot.eventbus.Subscribe
@@ -40,7 +41,12 @@ class ParentInboxRouter(private val activity: FragmentActivity, private val navi
     }
 
     override fun routeToNewMessage() {
-        val route = navigation.inboxCompose
+        val route = navigation.inboxComposeRoute(InboxComposeOptions.buildNewMessage())
+        navigation.navigate(activity, route)
+    }
+
+    override fun routeToCompose(options: InboxComposeOptions) {
+        val route = navigation.inboxComposeRoute(options)
         navigation.navigate(activity, route)
     }
 

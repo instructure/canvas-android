@@ -256,76 +256,105 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
             showMenu = !showMenu
         }
     ) {
-        DropdownMenuItem(
-            onClick = {
-                showMenu = !showMenu
-                actionHandler(InboxDetailsAction.Reply)
-            }
-        ) {
-            MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
-        }
-
-        DropdownMenuItem(
-            onClick = {
-                showMenu = !showMenu
-                actionHandler(InboxDetailsAction.ReplyAll)
-            }
-        ) {
-            MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
-        }
-
-        DropdownMenuItem(
-            onClick = {
-                showMenu = !showMenu
-                actionHandler(InboxDetailsAction.Forward)
-            }
-        ) {
-            MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
-        }
-
-        if (conversation?.workflowState == Conversation.WorkflowState.READ) {
+        conversation?.messages?.sortedBy { it.createdAt }?.last()?.let { message ->
             DropdownMenuItem(
                 onClick = {
                     showMenu = !showMenu
-                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.UNREAD))
+                    actionHandler(InboxDetailsAction.Reply(message))
                 }
             ) {
-                MessageMenuItem(R.drawable.ic_mark_as_unread, stringResource(id = R.string.markAsUnread))
+                MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
             }
-        }
 
-        if (conversation?.workflowState == Conversation.WorkflowState.UNREAD) {
             DropdownMenuItem(
                 onClick = {
                     showMenu = !showMenu
-                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.READ))
+                    actionHandler(InboxDetailsAction.ReplyAll(message))
                 }
             ) {
-                MessageMenuItem(R.drawable.ic_mark_as_read, stringResource(id = R.string.markAsRead))
+                MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
             }
-        }
 
-        if (conversation != null && conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
             DropdownMenuItem(
                 onClick = {
                     showMenu = !showMenu
-                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.ARCHIVED))
+                    actionHandler(InboxDetailsAction.Forward(message))
                 }
             ) {
-                MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
+                MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
             }
-        } else if (conversation != null) {
-            DropdownMenuItem(
-                onClick = {
-                    showMenu = !showMenu
-                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.READ))
-                }
-            ) {
-                MessageMenuItem(R.drawable.ic_unarchive, stringResource(id = R.string.unarchive))
-            }
-        }
 
-        conversation?.let {
+            if (conversation.workflowState == Conversation.WorkflowState.READ) {
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(
+                            InboxDetailsAction.UpdateState(
+                                conversation.id,
+                                Conversation.WorkflowState.UNREAD
+                            )
+                        )
+                    }
+                ) {
+                    MessageMenuItem(
+                        R.drawable.ic_mark_as_unread,
+                        stringResource(id = R.string.markAsUnread)
+                    )
+                }
+            }
+
+            if (conversation.workflowState == Conversation.WorkflowState.UNREAD) {
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(
+                            InboxDetailsAction.UpdateState(
+                                conversation.id,
+                                Conversation.WorkflowState.READ
+                            )
+                        )
+                    }
+                ) {
+                    MessageMenuItem(
+                        R.drawable.ic_mark_as_read,
+                        stringResource(id = R.string.markAsRead)
+                    )
+                }
+            }
+
+            if (conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(
+                            InboxDetailsAction.UpdateState(
+                                conversation.id,
+                                Conversation.WorkflowState.ARCHIVED
+                            )
+                        )
+                    }
+                ) {
+                    MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
+                }
+            } else {
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(
+                            InboxDetailsAction.UpdateState(
+                                conversation.id,
+                                Conversation.WorkflowState.READ
+                            )
+                        )
+                    }
+                ) {
+                    MessageMenuItem(
+                        R.drawable.ic_unarchive,
+                        stringResource(id = R.string.unarchive)
+                    )
+                }
+            }
+
             DropdownMenuItem(
                 onClick = {
                     showMenu = !showMenu
