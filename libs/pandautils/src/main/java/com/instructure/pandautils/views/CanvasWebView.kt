@@ -804,5 +804,5 @@ data class HtmlFormatColors(
     @ColorRes val backgroundColorRes: Int = R.color.backgroundLightest,
     @ColorRes val textColor: Int = R.color.textDarkest,
     @ColorRes val linkColor: Int = R.color.textInfo,
-    @ColorRes val visitedLinkColor: Int = R.color.textMasquerade // TODO Fix link colors
+    @ColorRes val visitedLinkColor: Int = R.color.textMasquerade
 )
