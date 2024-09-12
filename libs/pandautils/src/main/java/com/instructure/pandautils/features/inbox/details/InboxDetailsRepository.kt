@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.inbox.details
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
@@ -31,6 +32,7 @@ class InboxDetailsRepositoryImpl(
         messageIds: List<Long>
     ): DataResult<Conversation> {
         val params = RestParams()
+        deleteConversationCache(conversationId)
         return inboxAPI.deleteMessages(conversationId, messageIds, params)
     }
 
@@ -39,6 +41,7 @@ class InboxDetailsRepositoryImpl(
         isStarred: Boolean
     ): DataResult<Conversation> {
         val params = RestParams()
+        deleteConversationCache(conversationId)
         return inboxAPI.updateConversation(conversationId, null, isStarred, params)
     }
 
@@ -47,6 +50,11 @@ class InboxDetailsRepositoryImpl(
         state: Conversation.WorkflowState
     ): DataResult<Conversation> {
         val params = RestParams()
+        deleteConversationCache(conversationId)
         return inboxAPI.updateConversation(conversationId, state.apiString, null, params)
+    }
+
+    private fun deleteConversationCache(conversationId: Long) {
+        CanvasRestAdapter.clearCacheUrls("conversations/$conversationId")
     }
 }

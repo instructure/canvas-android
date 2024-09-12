@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.interactions.FragmentInteractions
@@ -69,11 +71,15 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
                 val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
                 activity?.startActivity(urlIntent)
             }
+            is InboxDetailsFragmentAction.UpdateParentFragment -> {
+                setFragmentResult(FRAGMENT_RESULT_KEY, bundleOf())
+            }
         }
     }
 
     companion object {
         const val CONVERSATION_ID = "conversation_id"
+        const val FRAGMENT_RESULT_KEY = "InboxDetailsFragmentResultKey"
 
         fun newInstance(): InboxDetailsFragment {
             return InboxDetailsFragment()

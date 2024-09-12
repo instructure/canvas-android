@@ -149,6 +149,8 @@ class InboxDetailsViewModel @Inject constructor(
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)))
             }
+
+            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
         }
     }
 
@@ -170,6 +172,8 @@ class InboxDetailsViewModel @Inject constructor(
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)))
             }
+
+            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
         }
     }
 
@@ -181,6 +185,8 @@ class InboxDetailsViewModel @Inject constructor(
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
+
+            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
         }
     }
 
@@ -192,6 +198,8 @@ class InboxDetailsViewModel @Inject constructor(
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
+
+            _events.send(InboxDetailsFragmentAction.UpdateParentFragment)
         }
     }
 }
