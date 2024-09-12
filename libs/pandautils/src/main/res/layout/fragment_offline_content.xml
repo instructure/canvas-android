@@ -216,7 +216,7 @@
             android:onClick="@{() -> viewModel.onSyncClicked()}"
             android:text="@string/offline_content_sync"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/textLightest"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Sync" />
 

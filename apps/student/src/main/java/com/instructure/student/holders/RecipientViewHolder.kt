@@ -52,7 +52,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     mutate().setTintList(ColorStateList.valueOf(selectionColor))
                 })
                 checkMarkImageView.setVisible()
-                ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
+                ColorUtils.colorIt(context.getColor(R.color.textLightest), checkMarkImageView)
             } else {
                 root.setBackgroundColor(Color.TRANSPARENT)
                 checkMarkImageView.setGone()
