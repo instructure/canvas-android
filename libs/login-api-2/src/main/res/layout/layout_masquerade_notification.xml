@@ -22,7 +22,7 @@
     android:layout_height="wrap_content"
     android:paddingStart="16dp"
     android:paddingEnd="6dp"
-    android:background="@color/backgroundAlert">
+    android:background="@color/backgroundMasquerade">
 
     <TextView
         android:id="@+id/masqueradeLabel"

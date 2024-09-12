@@ -19,7 +19,7 @@
 
     <!-- InstUI colors - We should use these colors to build standard UI elements -->
     <color name="ash">#6A7883</color>
-    <color name="backgroundAlert">#FB7430</color>
+    <color name="backgroundMasquerade">#C74BAF</color>
     <color name="backgroundDanger">#FF6B72</color>
     <color name="backgroundDark">#919CA8</color>
     <color name="backgroundDarkest">#FFFFFF</color>
@@ -28,12 +28,12 @@
     <color name="backgroundInfo">#6F9DE4</color>
     <color name="backgroundLight">#1C242E</color>
     <color name="backgroundLightest">#0F1A21</color>
-    <color name="backgroundLightestElevated">#242526</color>
+    <color name="backgroundLightestElevated">#151D24</color>
     <color name="backgroundMedium">#616F7C</color>
     <color name="backgroundSuccess">#36B15F</color>
     <color name="backgroundWarning">#FB7430</color>
     <color name="barney">#FB7430</color>
-    <color name="borderAlert">#FB7430</color>
+    <color name="borderMasquerade">#C74BAF</color>
     <color name="borderDanger">#FF6B72</color>
     <color name="borderDark">#919CA8</color>
     <color name="borderDarkest">#FFFFFF</color>
@@ -50,10 +50,11 @@
     <color name="oxford">#394B58</color>
     <color name="porcelain">#FFFFFF</color>
     <color name="shamrock">#36B15F</color>
-    <color name="textAlert">#FB7430</color>
+    <color name="textMasquerade">#C74BAF</color>
     <color name="textDanger">#FF6B72</color>
     <color name="textDark">#919CA8</color>
     <color name="textDarkest">#FFFFFF</color>
+    <color name="textPlaceholder">#616F7C</color>
     <color name="textInfo">#6F9DE4</color>
     <color name="textLight">#273540</color>
     <color name="textLightest">#273540</color>
