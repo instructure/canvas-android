@@ -97,7 +97,7 @@ class SpeedGraderFilesPageTest : TeacherTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
 
         speedGraderPage.selectFilesTab(assignment.submission?.attachments?.size ?: 0)

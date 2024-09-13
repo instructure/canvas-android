@@ -71,7 +71,7 @@ class CommentLibraryE2ETest : TeacherTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(testAssignment)
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
 
