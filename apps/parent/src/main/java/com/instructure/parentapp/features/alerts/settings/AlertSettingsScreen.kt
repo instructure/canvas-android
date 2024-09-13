@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,6 +59,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.parentapp.R
 
@@ -84,7 +86,19 @@ fun AlertSettingsScreen(
                 )
             }
         ) { padding ->
-            AlertSettingsContent(uiState, modifier = Modifier.padding(padding))
+            when {
+                uiState.isLoading -> {
+                    Loading(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxSize()
+                    )
+                }
+
+                else -> {
+                    AlertSettingsContent(uiState, modifier = Modifier.padding(padding))
+                }
+            }
         }
     }
 }
@@ -119,6 +133,7 @@ fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
                 threshold = uiState.thresholds[it]?.threshold,
                 active = uiState.thresholds[it]?.workflowState == ThresholdWorkflowState.ACTIVE,
                 color = Color(uiState.userColor),
+                actionHandler = uiState.actionHandler
             )
         }
     }
@@ -177,6 +192,7 @@ private fun ThresholdItem(
     threshold: String?,
     active: Boolean,
     color: Color,
+    actionHandler: (AlertSettingsAction) -> Unit
 ) {
     when (alertType) {
         in percentageItems -> PercentageItem(
@@ -184,6 +200,7 @@ private fun ThresholdItem(
             threshold = threshold,
             alertType = alertType,
             color = color,
+            actionHandler = actionHandler
         )
 
         else -> SwitchItem(
@@ -191,6 +208,7 @@ private fun ThresholdItem(
             active = active,
             alertType = alertType,
             color = color,
+            actionHandler = actionHandler
         )
     }
 }
@@ -201,6 +219,7 @@ private fun PercentageItem(
     threshold: String?,
     alertType: AlertType,
     color: Color,
+    actionHandler: (AlertSettingsAction) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -230,12 +249,23 @@ private fun SwitchItem(
     active: Boolean,
     alertType: AlertType,
     color: Color,
-    modifier: Modifier = Modifier
+    actionHandler: (AlertSettingsAction) -> Unit
 ) {
+    fun toggleAlert(state: Boolean) {
+        if (state) {
+            actionHandler(AlertSettingsAction.CreateThreshold(alertType, null))
+        } else {
+            actionHandler(AlertSettingsAction.DeleteThreshold(alertType))
+        }
+    }
+
     var switchState by remember { mutableStateOf(active) }
     Row(
-        modifier = modifier
-            .clickable { switchState = !switchState }
+        modifier = Modifier
+            .clickable {
+                switchState = !switchState
+                toggleAlert(switchState)
+            }
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(56.dp),
@@ -248,7 +278,10 @@ private fun SwitchItem(
         )
         Switch(
             checked = switchState,
-            onCheckedChange = { switchState = it },
+            onCheckedChange = {
+                switchState = it
+                toggleAlert(switchState)
+            },
             colors = SwitchDefaults.colors(checkedThumbColor = color)
         )
     }
@@ -261,22 +294,23 @@ fun AlertSettingsScreenPreview() {
     AlertSettingsScreen(
         uiState = AlertSettingsUiState(
             student = User(),
+            isLoading = false,
             userColor = android.graphics.Color.BLUE,
             avatarUrl = "",
             studentName = "Test Student",
             studentPronouns = "they/them"
-        )
+        ) {}
     ) {}
 }
 
 @Preview
 @Composable
 fun PercentageItemPreview() {
-    PercentageItem("Test", "20", AlertType.ASSIGNMENT_GRADE_HIGH, Color.Blue)
+    PercentageItem("Test", "20", AlertType.ASSIGNMENT_GRADE_HIGH, Color.Blue) {}
 }
 
 @Preview
 @Composable
 fun SwitchItemPreview() {
-    SwitchItem("Test", true, AlertType.ASSIGNMENT_MISSING, Color.Blue)
+    SwitchItem("Test", true, AlertType.ASSIGNMENT_MISSING, Color.Blue) {}
 }

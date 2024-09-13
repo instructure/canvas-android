@@ -19,12 +19,37 @@ package com.instructure.parentapp.features.alerts.settings
 import com.instructure.canvasapi2.apis.ObserverApi
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertType
+import com.instructure.canvasapi2.models.postmodels.CreateObserverThreshold
+import com.instructure.canvasapi2.models.postmodels.CreateObserverThresholdWrapper
 
 class AlertSettingsRepository(
     private val observerApi: ObserverApi
 ) {
 
     suspend fun loadAlertThresholds(userId: Long): List<AlertThreshold> {
-        return observerApi.getObserverAlertThresholds(userId, RestParams(isForceReadFromNetwork = true)).dataOrThrow
+        return observerApi.getObserverAlertThresholds(
+            userId,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrThrow
+    }
+
+    suspend fun createAlertThreshold(alertType: AlertType, userId: Long, threshold: String?) {
+        observerApi.createObserverAlert(
+            CreateObserverThresholdWrapper(
+                CreateObserverThreshold(
+                    alertType,
+                    userId,
+                    threshold
+                )
+            ), RestParams(isForceReadFromNetwork = true)
+        ).dataOrThrow
+    }
+
+    suspend fun deleteAlertThreshold(thresholdId: Long) {
+        observerApi.deleteObserverAlert(
+            thresholdId,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrThrow
     }
 }

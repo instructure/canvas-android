@@ -16,11 +16,11 @@
  */
 package com.instructure.parentapp.features.alerts.settings
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -48,7 +48,8 @@ class AlertSettingsViewModel @Inject constructor(
             avatarUrl = student.avatarUrl.orEmpty(),
             studentName = student.shortName ?: student.name,
             studentPronouns = student.pronouns,
-            userColor = colorKeeper.getOrGenerateUserColor(student).backgroundColor()
+            userColor = colorKeeper.getOrGenerateUserColor(student).backgroundColor(),
+            actionHandler = this::handleAction
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -56,6 +57,23 @@ class AlertSettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             loadAlertThresholds()
+        }
+    }
+
+    private fun handleAction(alertSettingsAction: AlertSettingsAction) {
+        when (alertSettingsAction) {
+            is AlertSettingsAction.CreateThreshold -> {
+                viewModelScope.launch {
+                    createAlertThreshold(alertSettingsAction.alertType, alertSettingsAction.threshold)
+                    loadAlertThresholds()
+                }
+            }
+            is AlertSettingsAction.DeleteThreshold -> {
+                viewModelScope.launch {
+                    deleteAlertThreshold(_uiState.value.thresholds[alertSettingsAction.alertType]?.id ?: throw IllegalArgumentException("Threshold not found"))
+                    loadAlertThresholds()
+                }
+            }
         }
     }
 
@@ -70,7 +88,25 @@ class AlertSettingsViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             crashlytics.recordException(e)
-            Log.e("AlertSettingsViewModel", "Error loading alert thresholds", e)
+            e.printStackTrace()
+        }
+    }
+
+    private suspend fun createAlertThreshold(alertType: AlertType, threshold: String?) {
+        try {
+            repository.createAlertThreshold(alertType, student.id, threshold)
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            e.printStackTrace()
+        }
+    }
+
+    private suspend fun deleteAlertThreshold(thresholdId: Long) {
+        try {
+            repository.deleteAlertThreshold(thresholdId)
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            e.printStackTrace()
         }
     }
 

@@ -28,5 +28,11 @@ data class AlertSettingsUiState(
     val avatarUrl: String,
     val studentName: String,
     val studentPronouns: String?,
-    val thresholds: Map<AlertType, AlertThreshold> = mutableMapOf()
+    val thresholds: Map<AlertType, AlertThreshold> = mutableMapOf(),
+    val actionHandler: (AlertSettingsAction) -> Unit
 )
+
+sealed class AlertSettingsAction {
+    data class CreateThreshold(val alertType: AlertType, val threshold: String?) : AlertSettingsAction()
+    data class DeleteThreshold(val alertType: AlertType) : AlertSettingsAction()
+}
