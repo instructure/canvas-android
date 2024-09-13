@@ -21,8 +21,17 @@ import android.os.Parcelable
 import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.*
-import java.util.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingSchemeRow
+import com.instructure.canvasapi2.models.MediaComment
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.type.EnrollmentType
+import java.util.Date
 import java.util.regex.Pattern
 
 private const val WORKFLOW_STATE_DELETED = "deleted"
@@ -88,6 +97,18 @@ fun RemoteFile.mapToAttachment(): Attachment = Attachment(
         thumbnailUrl = thumbnailUrl,
         url = url
 )
+
+val EnrollmentType?.displayText: String
+    get() = ContextKeeper.appContext.getText(
+        when (this) {
+            EnrollmentType.STUDENTENROLLMENT -> R.string.enrollmentTypeStudents
+            EnrollmentType.TEACHERENROLLMENT -> R.string.enrollmentTypeTeachers
+            EnrollmentType.OBSERVERENROLLMENT -> R.string.enrollmentTypeObservers
+            EnrollmentType.TAENROLLMENT -> R.string.enrollmentTypeTeachingAssistants
+            EnrollmentType.DESIGNERENROLLMENT -> R.string.enrollmentTypeDesigners
+            else -> R.string.enrollmentTypeUnknown
+        }
+    ).toString()
 
 val Enrollment.displayType: CharSequence
     get() = ContextKeeper.appContext.getText(

@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Icon

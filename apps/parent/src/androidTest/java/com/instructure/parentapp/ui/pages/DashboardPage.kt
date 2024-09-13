@@ -24,6 +24,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
@@ -58,6 +59,10 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
 
     fun selectStudent(name: String) {
         onView(withText(name) + withAncestor(R.id.student_list)).click()
+    }
+
+    fun tapAddStudent() {
+        onViewWithContentDescription(R.string.a11y_addStudentContentDescription).click()
     }
 
     fun tapLogout() {

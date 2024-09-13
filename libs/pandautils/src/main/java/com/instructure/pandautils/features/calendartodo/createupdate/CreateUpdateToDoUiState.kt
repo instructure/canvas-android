@@ -20,7 +20,7 @@ package com.instructure.pandautils.features.calendartodo.createupdate
 import android.content.Context
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import com.instructure.pandautils.compose.composables.SelectContextUiState
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -33,7 +33,7 @@ data class CreateUpdateToDoUiState(
     val saving: Boolean = false,
     val errorSnack: String? = null,
     val loadingCanvasContexts: Boolean = false,
-    val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState(),
+    val selectContextUiState: SelectContextUiState = SelectContextUiState(),
     val showUnsavedChangesDialog: Boolean = false,
     val canNavigateBack: Boolean = false
 ) {

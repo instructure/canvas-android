@@ -36,6 +36,8 @@ object Randomizer {
     /** Creates a random UUID */
     private fun randomUUID() = UUID.randomUUID().toString()
 
+    fun randomPairingCode() = faker.number().digits(6)
+
     /** Creates a random [FakeName] */
     fun randomName() = FakeName(faker.name().firstName(), faker.name().lastName())
 

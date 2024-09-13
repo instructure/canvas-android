@@ -41,6 +41,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.StringArg
@@ -48,6 +49,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.replaceWithURLQueryParameter
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
@@ -120,6 +122,7 @@ class LtiLaunchFragment : BaseFragment() {
                     var url = ltiUrl // Replace deep link scheme
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
+                        .replaceWithURLQueryParameter(HtmlContentFormatter.hasKalturaUrl(ltiUrl))
 
                     if (sessionLessLaunch) {
                         if (url.contains("sessionless_launch")) {

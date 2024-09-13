@@ -18,12 +18,14 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpda
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.qr.QrPairingFragment
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
 import com.instructure.parentapp.features.alerts.settings.AlertSettingsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
@@ -48,7 +50,9 @@ class Navigation(apiPrefs: ApiPrefs) {
     val calendar = "$baseUrl/calendar"
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
+    val inboxCompose = "$baseUrl/conversations/compose"
     val manageStudents = "$baseUrl/manage-students"
+    val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
 
     private val calendarEvent =
@@ -94,12 +98,10 @@ class Navigation(apiPrefs: ApiPrefs) {
                     uriPattern = alerts
                 }
             }
-            fragment<InboxFragment>(inbox) {
-                deepLink {
-                    uriPattern = inbox
-                }
-            }
+            fragment<InboxFragment>(inbox)
+            fragment<InboxComposeFragment>(inboxCompose)
             fragment<ManageStudentsFragment>(manageStudents)
+            fragment<QrPairingFragment>(qrPairing)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {
                 argument(courseId) {

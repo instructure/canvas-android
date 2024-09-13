@@ -58,6 +58,10 @@ class ManageStudentViewModel @Inject constructor(
         loadStudents()
     }
 
+    fun refresh() {
+        loadStudents(true)
+    }
+
     private val userColorContentDescriptionMap = mapOf(
         R.color.studentBlue to R.string.studentColorContentDescriptionBlue,
         R.color.studentPurple to R.string.studentColorContentDescriptionPurple,
@@ -178,7 +182,11 @@ class ManageStudentViewModel @Inject constructor(
             }
 
             is ManageStudentsAction.Refresh -> loadStudents(true)
-            is ManageStudentsAction.AddStudent -> {} //TODO: Add student flow
+            is ManageStudentsAction.AddStudent -> {
+                viewModelScope.launch {
+                    _events.send(ManageStudentsViewModelAction.AddStudent)
+                }
+            }
             is ManageStudentsAction.ShowColorPickerDialog -> _uiState.update {
                 it.copy(
                     colorPickerDialogUiState = it.colorPickerDialogUiState.copy(

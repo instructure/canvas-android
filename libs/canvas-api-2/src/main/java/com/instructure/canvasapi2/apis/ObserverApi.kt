@@ -43,6 +43,9 @@ interface ObserverApi {
     @GET("users/self/observer_alert_thresholds")
     suspend fun getObserverAlertThresholds(@Query("student_id") studentId: Long, @Tag restParams: RestParams): DataResult<List<AlertThreshold>>
 
+    @POST("users/self/observees")
+    suspend fun pairStudent(@Query("pairing_code") pairingCode: String, @Tag restParams: RestParams): DataResult<Unit>
+
     @POST("users/self/observer_alert_thresholds")
     suspend fun createObserverAlert(@Body data: CreateObserverThresholdWrapper, @Tag restParams: RestParams): DataResult<Unit>
 
