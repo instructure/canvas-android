@@ -24,6 +24,7 @@ import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHiddenFields
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import java.util.EnumMap
@@ -34,6 +35,7 @@ data class InboxComposeUiState(
     val recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
     val inlineRecipientSelectorState: MultipleValuesRowState<Recipient> = MultipleValuesRowState(isSearchEnabled = true),
     val disabledFields: InboxComposeOptionsDisabledFields = InboxComposeOptionsDisabledFields(),
+    val hiddenFields: InboxComposeOptionsHiddenFields = InboxComposeOptionsHiddenFields(),
     val previousMessages: InboxComposeOptionsPreviousMessages? = null,
     val screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     val sendIndividual: Boolean = false,

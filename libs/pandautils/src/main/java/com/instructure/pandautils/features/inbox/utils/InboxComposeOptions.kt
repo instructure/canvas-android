@@ -14,6 +14,7 @@ data class InboxComposeOptions(
     val mode: InboxComposeOptionsMode = InboxComposeOptionsMode.NEW_MESSAGE,
     val previousMessages: InboxComposeOptionsPreviousMessages? = null,
     val disabledFields: InboxComposeOptionsDisabledFields = InboxComposeOptionsDisabledFields(),
+    val hiddenFields: InboxComposeOptionsHiddenFields = InboxComposeOptionsHiddenFields(),
     val defaultValues: InboxComposeOptionsDefaultValues = InboxComposeOptionsDefaultValues(),
 ): Parcelable {
     companion object {
@@ -85,6 +86,16 @@ data class InboxComposeOptionsDisabledFields(
     val isSubjectDisabled: Boolean = false,
     val isBodyDisabled: Boolean = false,
     val isAttachmentDisabled: Boolean = false,
+): Parcelable
+
+@Parcelize
+data class InboxComposeOptionsHiddenFields(
+    val isContextHidden: Boolean = false,
+    val isRecipientsHidden: Boolean = false,
+    val isSendIndividualHidden: Boolean = false,
+    val isSubjectHidden: Boolean = false,
+    val isBodyHidden: Boolean = false,
+    val isAttachmentHidden: Boolean = false,
 ): Parcelable
 
 @Parcelize

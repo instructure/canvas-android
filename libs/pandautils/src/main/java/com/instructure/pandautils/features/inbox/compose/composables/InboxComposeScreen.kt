@@ -183,16 +183,18 @@ private fun InboxComposeScreenContent(
             .padding(padding)
             .fillMaxSize()
     ) {
-        ContextValueRow(
-            label = stringResource(id = R.string.course),
-            value = uiState.selectContextUiState.selectedCanvasContext,
-            enabled = uiState.disabledFields.isContextDisabled.not(),
-            onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
-        )
+        if (uiState.hiddenFields.isContextHidden.not()) {
+            ContextValueRow(
+                label = stringResource(id = R.string.course),
+                value = uiState.selectContextUiState.selectedCanvasContext,
+                enabled = uiState.disabledFields.isContextDisabled.not(),
+                onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
+            )
+        }
 
         CanvasDivider()
 
-        AnimatedVisibility(visible = uiState.selectContextUiState.selectedCanvasContext != null) {
+        AnimatedVisibility(visible = uiState.selectContextUiState.selectedCanvasContext != null && uiState.hiddenFields.isContextHidden.not()) {
             Column {
                 MultipleValuesRow(
                     label = stringResource(R.string.recipientsTo),
@@ -203,13 +205,26 @@ private fun InboxComposeScreenContent(
                         }
                     },
                     actionHandler = { action ->
-                        when(action) {
-                            is MultipleValuesRowAction.AddValueClicked -> actionHandler(InboxComposeActionHandler.OpenRecipientPicker)
+                        when (action) {
+                            is MultipleValuesRowAction.AddValueClicked -> actionHandler(
+                                InboxComposeActionHandler.OpenRecipientPicker
+                            )
+
                             is MultipleValuesRowAction.SearchValueSelected<*> -> {
-                                (action.value as? Recipient)?.let { actionHandler(InboxComposeActionHandler.AddRecipient(it)) }
+                                (action.value as? Recipient)?.let {
+                                    actionHandler(
+                                        InboxComposeActionHandler.AddRecipient(it)
+                                    )
+                                }
                             }
-                            is MultipleValuesRowAction.SearchQueryChanges -> actionHandler(InboxComposeActionHandler.SearchRecipientQueryChanged(action.searchQuery))
-                            is MultipleValuesRowAction.HideSearchResults -> actionHandler(InboxComposeActionHandler.HideSearchResults)
+
+                            is MultipleValuesRowAction.SearchQueryChanges -> actionHandler(
+                                InboxComposeActionHandler.SearchRecipientQueryChanged(action.searchQuery)
+                            )
+
+                            is MultipleValuesRowAction.HideSearchResults -> actionHandler(
+                                InboxComposeActionHandler.HideSearchResults
+                            )
                         }
                     },
                     searchResultComposable = { recipient ->
@@ -238,46 +253,52 @@ private fun InboxComposeScreenContent(
             }
         }
 
-        LabelSwitchRow(
-            label = stringResource(R.string.sendIndividualMessage),
-            checked = uiState.sendIndividual,
-            enabled = uiState.disabledFields.isSendIndividualDisabled.not(),
-            onCheckedChange = {
-                actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
-            },
-        )
+        if (uiState.hiddenFields.isSendIndividualHidden.not()) {
+            LabelSwitchRow(
+                label = stringResource(R.string.sendIndividualMessage),
+                checked = uiState.sendIndividual,
+                enabled = uiState.disabledFields.isSendIndividualDisabled.not(),
+                onCheckedChange = {
+                    actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
+                },
+            )
 
-        CanvasDivider()
+            CanvasDivider()
+        }
 
-        LabelTextFieldRow(
-            value = uiState.subject,
-            label = stringResource(R.string.subject),
-            onValueChange = {
-                actionHandler(InboxComposeActionHandler.SubjectChanged(it))
-            },
-            enabled = uiState.disabledFields.isSubjectDisabled.not(),
-            focusRequester = subjectFocusRequester,
-        )
+        if (uiState.hiddenFields.isSubjectHidden.not()) {
+            LabelTextFieldRow(
+                value = uiState.subject,
+                label = stringResource(R.string.subject),
+                onValueChange = {
+                    actionHandler(InboxComposeActionHandler.SubjectChanged(it))
+                },
+                enabled = uiState.disabledFields.isSubjectDisabled.not(),
+                focusRequester = subjectFocusRequester,
+            )
 
-        CanvasDivider()
+            CanvasDivider()
+        }
 
-        TextFieldWithHeader(
-            label = stringResource(R.string.message),
-            value = uiState.body,
-            enabled = uiState.disabledFields.isBodyDisabled.not(),
-            headerEnabled = uiState.disabledFields.isAttachmentDisabled.not(),
-            headerIconResource = R.drawable.ic_attachment,
-            iconContentDescription = stringResource(id = R.string.a11y_addAttachment),
-            onValueChange = {
-                actionHandler(InboxComposeActionHandler.BodyChanged(it))
-            },
-            onIconClick = {
-                actionHandler(InboxComposeActionHandler.AddAttachmentSelected)
-            },
-            focusRequester = bodyFocusRequester,
-            modifier = Modifier
-                .defaultMinSize(minHeight = 100.dp)
-        )
+        if (uiState.hiddenFields.isBodyHidden.not()) {
+            TextFieldWithHeader(
+                label = stringResource(R.string.message),
+                value = uiState.body,
+                enabled = uiState.disabledFields.isBodyDisabled.not(),
+                headerEnabled = uiState.disabledFields.isAttachmentDisabled.not(),
+                headerIconResource = if (uiState.hiddenFields.isBodyHidden) null else R.drawable.ic_attachment,
+                iconContentDescription = if (uiState.hiddenFields.isBodyHidden) null else stringResource(id = R.string.a11y_addAttachment),
+                onValueChange = {
+                    actionHandler(InboxComposeActionHandler.BodyChanged(it))
+                },
+                onIconClick = {
+                    actionHandler(InboxComposeActionHandler.AddAttachmentSelected)
+                },
+                focusRequester = bodyFocusRequester,
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 100.dp)
+            )
+        }
 
         Column {
             uiState.attachments.forEach { attachment ->
