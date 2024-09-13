@@ -66,7 +66,6 @@ fun QrPairingScreen(
                         }
                     ),
                     navigationActionClick = onBackClicked,
-                    backgroundColor = R.color.backgroundLightestElevated,
                     actions = {
                         if (!uiState.isError) {
                             TextButton(onClick = onNextClicked) {

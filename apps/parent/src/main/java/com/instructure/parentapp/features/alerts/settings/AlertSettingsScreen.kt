@@ -17,6 +17,7 @@
 package com.instructure.parentapp.features.alerts.settings
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,10 +29,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,11 +53,13 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
@@ -221,9 +228,15 @@ private fun PercentageItem(
     color: Color,
     actionHandler: (AlertSettingsAction) -> Unit
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+    if (showDialog) {
+        ThresholdDialog(alertType, threshold, color, actionHandler) {
+            showDialog = false
+        }
+    }
     Row(
         modifier = Modifier
-            .clickable { }
+            .clickable { showDialog = true }
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(56.dp),
@@ -240,6 +253,85 @@ private fun PercentageItem(
             style = TextStyle(color = color, textAlign = TextAlign.End),
             modifier = Modifier.padding(8.dp)
         )
+    }
+}
+
+@Composable
+private fun ThresholdDialog(
+    alertType: AlertType,
+    threshold: String?,
+    color: Color,
+    actionHandler: (AlertSettingsAction) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var percentage by remember { mutableStateOf(threshold.orEmpty()) }
+    Dialog(onDismissRequest = { onDismiss() }) {
+        Column(
+            Modifier
+                .background(color = colorResource(id = R.color.backgroundLightest))
+                .padding(16.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(bottom = 16.dp),
+                text = stringResource(id = getTitle(alertType)),
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.textDarkest)
+                )
+            )
+
+            TextField(
+                value = percentage,
+                onValueChange = {
+                    percentage = it
+                },
+                label = {
+                    Text(text = stringResource(id = R.string.alertSettingsThresholdLabel))
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = color,
+                    focusedLabelColor = color,
+                    cursorColor = color,
+                    textColor = colorResource(id = R.color.textDarkest),
+                    unfocusedLabelColor = colorResource(id = R.color.textDark),
+                    unfocusedIndicatorColor = colorResource(id = R.color.textDark)
+                )
+            )
+
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.cancel), style = TextStyle(color = color))
+                }
+                TextButton(onClick = {
+                    actionHandler(
+                        AlertSettingsAction.DeleteThreshold(
+                            alertType
+                        )
+                    )
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.alertSettingsThresholdNever), style = TextStyle(color = color))
+                }
+                TextButton(
+                    onClick = {
+                        actionHandler(
+                            AlertSettingsAction.CreateThreshold(
+                                alertType,
+                                percentage
+                            )
+                        )
+                        onDismiss()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.save), style = TextStyle(color = color))
+                }
+            }
+        }
     }
 }
 
@@ -313,4 +405,10 @@ fun PercentageItemPreview() {
 @Composable
 fun SwitchItemPreview() {
     SwitchItem("Test", true, AlertType.ASSIGNMENT_MISSING, Color.Blue) {}
+}
+
+@Preview
+@Composable
+fun ThresholdDialogPreview() {
+    ThresholdDialog(AlertType.ASSIGNMENT_GRADE_HIGH, "20", Color.Blue, {}, {})
 }

@@ -1846,4 +1846,5 @@
     <string name="alertSettingsPercentage">%s%</string>
     <string name="alertSettingsThresholdNever">Never</string>
     <string name="add">Add</string>
+    <string name="alertSettingsThresholdLabel">Grade percentage</string>
 </resources>
