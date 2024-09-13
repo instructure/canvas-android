@@ -136,7 +136,7 @@
                 android:backgroundTint="@color/backgroundInfo"
                 android:text="@string/actAsUser"
                 android:textAllCaps="false"
-                android:textColor="@color/white"/>
+                android:textColor="@color/textLightest"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"

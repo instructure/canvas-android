@@ -51,7 +51,7 @@
             android:gravity="center"
             android:padding="4dp"
             android:text="@string/error_sending_message"
-            android:textColor="@color/white"
+            android:textColor="@color/textLightest"
             android:textSize="12sp"
             android:visibility="gone"
             tools:visibility="visible"/>
