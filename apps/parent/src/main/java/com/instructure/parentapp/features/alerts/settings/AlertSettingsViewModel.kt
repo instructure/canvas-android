@@ -25,8 +25,10 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -54,6 +56,9 @@ class AlertSettingsViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
+    private val _events = Channel<AlertSettingsViewModelAction>()
+    val events = _events.receiveAsFlow()
+
     init {
         viewModelScope.launch {
             loadAlertThresholds()
@@ -72,6 +77,14 @@ class AlertSettingsViewModel @Inject constructor(
                 viewModelScope.launch {
                     deleteAlertThreshold(_uiState.value.thresholds[alertSettingsAction.alertType]?.id ?: throw IllegalArgumentException("Threshold not found"))
                     loadAlertThresholds()
+                }
+            }
+            is AlertSettingsAction.UnpairStudent -> {
+                viewModelScope.launch {
+                    _uiState.update {
+                        it.copy(isLoading = true)
+                    }
+                    _events.send(AlertSettingsViewModelAction.UnpairStudent(alertSettingsAction.studentId))
                 }
             }
         }

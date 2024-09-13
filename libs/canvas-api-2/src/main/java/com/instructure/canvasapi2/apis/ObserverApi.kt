@@ -46,6 +46,9 @@ interface ObserverApi {
     @POST("users/self/observees")
     suspend fun pairStudent(@Query("pairing_code") pairingCode: String, @Tag restParams: RestParams): DataResult<Unit>
 
+    @DELETE("users/self/observees/{studentId}")
+    suspend fun unpairStudent(@Path("studentId") studentId: Long, @Tag restParams: RestParams): DataResult<Unit>
+
     @POST("users/self/observer_alert_thresholds")
     suspend fun createObserverAlert(@Body data: CreateObserverThresholdWrapper, @Tag restParams: RestParams): DataResult<Unit>
 

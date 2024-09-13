@@ -115,6 +115,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.reloadData()
             }
+            is AddStudentViewModelAction.UnpairStudentSuccess -> {
+                viewModel.reloadData()
+            }
         }
     }
 

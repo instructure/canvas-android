@@ -30,6 +30,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
@@ -48,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -84,12 +90,21 @@ fun AlertSettingsScreen(
 ) {
     CanvasTheme {
         Scaffold(
+            backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasAppBar(
                     title = stringResource(id = R.string.alertSettingsTitle),
+                    navIconRes = R.drawable.ic_back_arrow,
                     navigationActionClick = navigationActionClick,
                     backgroundColor = Color(uiState.userColor),
-                    textColor = colorResource(id = R.color.textLightest)
+                    textColor = colorResource(id = R.color.textLightest),
+                    actions = {
+                        OverflowMenu(
+                            studentId = uiState.student.id,
+                            color = Color(uiState.userColor),
+                            actionHandler = uiState.actionHandler
+                        )
+                    }
                 )
             }
         ) { padding ->
@@ -305,7 +320,10 @@ private fun ThresholdDialog(
                         onDismiss()
                     }
                 ) {
-                    Text(text = stringResource(id = R.string.cancel), style = TextStyle(color = color))
+                    Text(
+                        text = stringResource(id = R.string.cancel),
+                        style = TextStyle(color = color)
+                    )
                 }
                 TextButton(onClick = {
                     actionHandler(
@@ -315,7 +333,10 @@ private fun ThresholdDialog(
                     )
                     onDismiss()
                 }) {
-                    Text(text = stringResource(id = R.string.alertSettingsThresholdNever), style = TextStyle(color = color))
+                    Text(
+                        text = stringResource(id = R.string.alertSettingsThresholdNever),
+                        style = TextStyle(color = color)
+                    )
                 }
                 TextButton(
                     onClick = {
@@ -328,7 +349,10 @@ private fun ThresholdDialog(
                         onDismiss()
                     }
                 ) {
-                    Text(text = stringResource(id = R.string.save), style = TextStyle(color = color))
+                    Text(
+                        text = stringResource(id = R.string.save),
+                        style = TextStyle(color = color)
+                    )
                 }
             }
         }
@@ -379,6 +403,73 @@ private fun SwitchItem(
     }
 }
 
+@Composable
+private fun OverflowMenu(
+    studentId: Long,
+    color: Color,
+    actionHandler: (AlertSettingsAction) -> Unit
+) {
+    var showMenu by remember { mutableStateOf(false) }
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+    if (showConfirmationDialog) {
+        UnpairStudentDialog(studentId, color, actionHandler) {
+            showConfirmationDialog = false
+        }
+    }
+    IconButton(onClick = { showMenu = true }) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_kebab),
+            contentDescription = stringResource(id = R.string.add),
+            tint = colorResource(id = R.color.textLightest)
+        )
+    }
+    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+        DropdownMenuItem(onClick = {
+            showMenu = false
+            showConfirmationDialog = true
+        }) {
+            Text(text = stringResource(id = R.string.delete))
+        }
+    }
+}
+
+@Composable
+private fun UnpairStudentDialog(
+    studentId: Long,
+    color: Color,
+    actionHandler: (AlertSettingsAction) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        title = {
+            Text(
+                text = stringResource(id = R.string.unpairStudentTitle),
+                style = TextStyle(color = colorResource(id = R.color.textDarkest))
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = R.string.unpairStudentMessage),
+                style = TextStyle(color = colorResource(id = R.color.textDarkest))
+            )
+        },
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            TextButton(onClick = {
+                actionHandler(AlertSettingsAction.UnpairStudent(studentId))
+                onDismiss()
+            }) {
+                Text(text = stringResource(id = R.string.delete), style = TextStyle(color = color))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) {
+                Text(text = stringResource(id = R.string.cancel), style = TextStyle(color = color))
+            }
+        })
+}
+
 @Preview
 @Composable
 fun AlertSettingsScreenPreview() {
@@ -411,4 +502,10 @@ fun SwitchItemPreview() {
 @Composable
 fun ThresholdDialogPreview() {
     ThresholdDialog(AlertType.ASSIGNMENT_GRADE_HIGH, "20", Color.Blue, {}, {})
+}
+
+@Preview
+@Composable
+fun UnpairStudentDialogPreview() {
+    UnpairStudentDialog(1, Color.Blue, {}, {})
 }

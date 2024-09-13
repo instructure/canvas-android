@@ -24,15 +24,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.features.addstudent.AddStudentAction
+import com.instructure.parentapp.features.addstudent.AddStudentViewModel
+import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AlertSettingsFragment : Fragment() {
+
+    private val addStudentViewModel: AddStudentViewModel by activityViewModels()
 
     private val viewModel: AlertSettingsViewModel by viewModels()
 
@@ -57,6 +64,28 @@ class AlertSettingsFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.uiState.collectLatest {
                 ViewStyler.setStatusBarDark(requireActivity(), it.userColor)
+            }
+        }
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
+        lifecycleScope.launch {
+            addStudentViewModel.events.collectLatest(::handleAddStudentEvents)
+        }
+    }
+
+    private fun handleAddStudentEvents(action: AddStudentViewModelAction) {
+        when (action) {
+            is AddStudentViewModelAction.UnpairStudentSuccess -> {
+                requireActivity().onBackPressed()
+            }
+            else -> {}
+        }
+    }
+
+    private fun handleAction(action: AlertSettingsViewModelAction) {
+        when (action) {
+            is AlertSettingsViewModelAction.UnpairStudent -> {
+                addStudentViewModel.handleAction(AddStudentAction.UnpairStudent(action.studentId))
             }
         }
     }

@@ -35,4 +35,9 @@ data class AlertSettingsUiState(
 sealed class AlertSettingsAction {
     data class CreateThreshold(val alertType: AlertType, val threshold: String?) : AlertSettingsAction()
     data class DeleteThreshold(val alertType: AlertType) : AlertSettingsAction()
+    data class UnpairStudent(val studentId: Long) : AlertSettingsAction()
+}
+
+sealed class AlertSettingsViewModelAction {
+    data class UnpairStudent(val studentId: Long) : AlertSettingsViewModelAction()
 }

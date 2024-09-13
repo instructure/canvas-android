@@ -64,6 +64,7 @@ class AddStudentViewModel @Inject constructor(
 
     fun handleAction(action: AddStudentAction) {
         when (action) {
+            is AddStudentAction.UnpairStudent -> unpairStudent(action.studentId)
             is AddStudentAction.PairStudent -> pairStudent(action.pairingCode)
             is AddStudentAction.ResetError -> resetError()
         }
@@ -79,6 +80,20 @@ class AddStudentViewModel @Inject constructor(
             } catch (e: Exception) {
                 crashlytics.recordException(e)
                 _uiState.value = _uiState.value.copy(isLoading = false, isError = true)
+            }
+        }
+    }
+
+    private fun unpairStudent(studentId: Long) {
+        viewModelScope.launch {
+            try {
+                _uiState.value = _uiState.value.copy(isLoading = true, isError = false)
+                repository.unpairStudent(studentId).dataOrThrow
+                _events.emit(AddStudentViewModelAction.UnpairStudentSuccess)
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
+                _uiState.value = _uiState.value.copy(isLoading = false)
             }
         }
     }

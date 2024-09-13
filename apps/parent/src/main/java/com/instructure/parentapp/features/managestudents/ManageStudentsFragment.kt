@@ -82,6 +82,9 @@ class ManageStudentsFragment : Fragment() {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.handleAction(ManageStudentsAction.Refresh)
             }
+            is AddStudentViewModelAction.UnpairStudentSuccess -> {
+                viewModel.handleAction(ManageStudentsAction.Refresh)
+            }
         }
     }
 
