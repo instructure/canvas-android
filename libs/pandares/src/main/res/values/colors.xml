@@ -26,7 +26,7 @@
     <color name="backgroundGrouped">#FFFFFF</color>
     <color name="backgroundGroupedCell">#FFFFFF</color>
     <color name="backgroundInfo">#2B7ABC</color>
-    <color name="backgroundLight">#FFFFFF</color>
+    <color name="backgroundLight">#F2F4F4</color>
     <color name="backgroundLightest">#FFFFFF</color>
     <color name="backgroundLightestElevated">#FFFFFF</color>
     <color name="backgroundMedium">#9EA6AD</color>
@@ -38,7 +38,7 @@
     <color name="borderDark">#6A7883</color>
     <color name="borderDarkest">#273540</color>
     <color name="borderInfo">#2B7ABC</color>
-    <color name="borderLight">#FFFFFF</color>
+    <color name="borderLight">#F2F4F4</color>
     <color name="borderLightest">#FFFFFF</color>
     <color name="borderMedium">#9EA6AD</color>
     <color name="borderSuccess">#03893D</color>

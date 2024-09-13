@@ -38,9 +38,9 @@
     <color name="borderDark">#919CA8</color>
     <color name="borderDarkest">#FFFFFF</color>
     <color name="borderInfo">#127CB9</color>
-    <color name="borderLight">#1D1E1F</color>
-    <color name="borderLightest">#111213</color>
-    <color name="borderMedium">#394B58</color>
+    <color name="borderLight">#1C242E</color>
+    <color name="borderLightest">#0F1A21</color>
+    <color name="borderMedium">#616F7C</color>
     <color name="borderSuccess">#36B15F</color>
     <color name="borderWarning">#FB7430</color>
     <color name="crimson">#FF6B72</color>
