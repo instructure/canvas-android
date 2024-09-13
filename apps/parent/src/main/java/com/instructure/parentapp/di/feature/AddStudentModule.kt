@@ -13,24 +13,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
+ */    package com.instructure.parentapp.di.feature
 
-package com.instructure.parentapp.features.dashboard
+import com.instructure.canvasapi2.apis.ObserverApi
+import com.instructure.parentapp.features.addstudent.AddStudentRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.parentapp.R
+@Module
+@InstallIn(SingletonComponent::class)
+class AddStudentModule {
 
-
-data class StudentItemViewModel(
-    val studentItemViewData: StudentItemViewData,
-    private val onStudentSelected: (Long) -> Unit
-) : ItemViewModel {
-
-    override val viewType: Int = StudentListViewType.STUDENT.viewType
-
-    override val layoutId = R.layout.item_student
-
-    fun onStudentClick() {
-        onStudentSelected(studentItemViewData.studentId)
+    @Provides
+    fun provideAddStudentRepository(observerApi: ObserverApi): AddStudentRepository {
+        return AddStudentRepository(observerApi)
     }
 }

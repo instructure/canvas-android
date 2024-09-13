@@ -306,6 +306,8 @@ class MockCanvas {
     var observerAlerts = mutableMapOf<Long, List<Alert>>()
     val observerAlertThresholds = mutableMapOf<Long, List<AlertThreshold>>()
 
+    val pairingCodes = mutableMapOf<String, User>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -498,6 +500,20 @@ fun MockCanvas.Companion.init(
     data.webViewServer.start()
 
     return data
+}
+
+fun MockCanvas.addStudent(courses: List<Course>): User {
+    val user = addUser()
+    courses.forEach { course ->
+        addEnrollment(
+            user = user,
+            course = course,
+            enrollmentState = EnrollmentAPI.STATE_ACTIVE,
+            type = Enrollment.EnrollmentType.Student,
+            courseSectionId = if (course.sections.isNotEmpty()) course.sections[0].id else 0
+        )
+    }
+    return user
 }
 
 /** Create a bookmark associated with an assignment */
@@ -2316,4 +2332,10 @@ fun MockCanvas.addObserverAlertThreshold(id: Long, alertType: AlertType, observe
     )
 
     observerAlertThresholds[student.id] = thresholds
+}
+
+fun MockCanvas.addPairingCode(student: User): String {
+    val pairingCode = Randomizer.randomPairingCode()
+    pairingCodes[pairingCode] = student
+    return pairingCode
 }

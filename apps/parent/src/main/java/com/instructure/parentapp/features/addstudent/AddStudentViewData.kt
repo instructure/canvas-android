@@ -14,23 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.parentapp.features.addstudent
 
-package com.instructure.parentapp.features.dashboard
+import androidx.annotation.ColorInt
 
-import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.parentapp.R
+data class AddStudentUiState(
+    @ColorInt val color: Int,
+    val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val actionHandler: (AddStudentAction) -> Unit,
+)
 
+sealed class AddStudentViewModelAction {
+    data object PairStudentSuccess : AddStudentViewModelAction()
+}
 
-data class StudentItemViewModel(
-    val studentItemViewData: StudentItemViewData,
-    private val onStudentSelected: (Long) -> Unit
-) : ItemViewModel {
-
-    override val viewType: Int = StudentListViewType.STUDENT.viewType
-
-    override val layoutId = R.layout.item_student
-
-    fun onStudentClick() {
-        onStudentSelected(studentItemViewData.studentId)
-    }
+sealed class AddStudentAction {
+    data class PairStudent(val pairingCode: String) : AddStudentAction()
+    object ResetError : AddStudentAction()
 }
