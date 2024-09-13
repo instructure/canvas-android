@@ -107,6 +107,7 @@ class InboxComposeViewModel @Inject constructor(
                         enabled = options.disabledFields.isRecipientsDisabled.not(),
                     ),
                     disabledFields = options.disabledFields,
+                    hiddenFields = options.hiddenFields,
                     sendIndividual = options.defaultValues.sendIndividual,
                     subject = TextFieldValue(options.defaultValues.subject),
                     body = TextFieldValue(options.defaultValues.body),
