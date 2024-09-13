@@ -15,6 +15,8 @@
  */
 package com.instructure.pandautils.features.inbox.compose
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -116,6 +118,10 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
             }
             is InboxComposeViewModelAction.UpdateParentFragment -> {
                 setFragmentResult(FRAGMENT_RESULT_KEY, bundleOf())
+            }
+            is InboxComposeViewModelAction.UrlSelected -> {
+                val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
+                activity?.startActivity(urlIntent)
             }
         }
     }

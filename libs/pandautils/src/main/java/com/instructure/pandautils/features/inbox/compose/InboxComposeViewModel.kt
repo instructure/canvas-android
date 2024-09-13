@@ -208,13 +208,18 @@ class InboxComposeViewModel @Inject constructor(
                     }
                 }
             }
-
-            InboxComposeActionHandler.HideSearchResults -> {
+            is InboxComposeActionHandler.HideSearchResults -> {
                 _uiState.update { it.copy(
                     inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
                         isShowResults = false,
                     )
                 ) }
+            }
+
+            is InboxComposeActionHandler.UrlSelected -> {
+                viewModelScope.launch {
+                    _events.send(InboxComposeViewModelAction.UrlSelected(action.url))
+                }
             }
         }
     }

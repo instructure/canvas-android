@@ -55,6 +55,7 @@ sealed class InboxComposeViewModelAction {
     data object UpdateParentFragment: InboxComposeViewModelAction()
     data object OpenAttachmentPicker: InboxComposeViewModelAction()
     data class ShowScreenResult(val message: String): InboxComposeViewModelAction()
+    data class UrlSelected(val url: String): InboxComposeViewModelAction()
 }
 
 sealed class InboxComposeActionHandler {
@@ -73,6 +74,7 @@ sealed class InboxComposeActionHandler {
     data object AddAttachmentSelected : InboxComposeActionHandler()
     data class RemoveAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
     data class OpenAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
+    data class UrlSelected(val url: String) : InboxComposeActionHandler()
 }
 
 sealed class InboxComposeScreenOptions {
