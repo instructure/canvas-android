@@ -35,7 +35,16 @@ data class InboxComposeOptions(
 
             return InboxComposeOptions(
                 mode = InboxComposeOptionsMode.REPLY,
-                previousMessages = InboxComposeOptionsPreviousMessages(conversation, conversation.messages.filter { ZonedDateTime.parse(it.createdAt ?: "") <= ZonedDateTime.parse(selectedMessage.createdAt ?: "") }),
+                previousMessages = InboxComposeOptionsPreviousMessages(
+                    conversation,
+                    conversation.messages
+                        .filter {
+                            if (it.createdAt != null && selectedMessage.createdAt != null)
+                                ZonedDateTime.parse(it.createdAt) <= ZonedDateTime.parse(selectedMessage.createdAt)
+                            else
+                                true
+                        }
+                ),
                 disabledFields = InboxComposeOptionsDisabledFields(isContextDisabled = true, isSubjectDisabled = true),
                 hiddenFields = InboxComposeOptionsHiddenFields(isSendIndividualHidden = true),
                 defaultValues = InboxComposeOptionsDefaultValues(
@@ -53,7 +62,16 @@ data class InboxComposeOptions(
 
             return InboxComposeOptions(
                 mode = InboxComposeOptionsMode.REPLY_ALL,
-                previousMessages = InboxComposeOptionsPreviousMessages(conversation, conversation.messages.filter { ZonedDateTime.parse(it.createdAt ?: "") <= ZonedDateTime.parse(selectedMessage.createdAt ?: "") }),
+                previousMessages = InboxComposeOptionsPreviousMessages(
+                    conversation,
+                    conversation.messages
+                        .filter {
+                            if (it.createdAt != null && selectedMessage.createdAt != null)
+                                ZonedDateTime.parse(it.createdAt) <= ZonedDateTime.parse(selectedMessage.createdAt)
+                            else
+                                true
+                        }
+                ),
                 disabledFields = InboxComposeOptionsDisabledFields(isContextDisabled = true, isSubjectDisabled = true),
                 hiddenFields = InboxComposeOptionsHiddenFields(isSendIndividualHidden = true),
                 defaultValues = InboxComposeOptionsDefaultValues(
@@ -68,7 +86,16 @@ data class InboxComposeOptions(
         fun buildForward(conversation: Conversation, selectedMessage: Message): InboxComposeOptions {
             return InboxComposeOptions(
                 mode = InboxComposeOptionsMode.FORWARD,
-                previousMessages = InboxComposeOptionsPreviousMessages(conversation, conversation.messages.filter { ZonedDateTime.parse(it.createdAt ?: "") <= ZonedDateTime.parse(selectedMessage.createdAt ?: "") }),
+                previousMessages = InboxComposeOptionsPreviousMessages(
+                    conversation,
+                    conversation.messages
+                        .filter {
+                            if (it.createdAt != null && selectedMessage.createdAt != null)
+                                ZonedDateTime.parse(it.createdAt) <= ZonedDateTime.parse(selectedMessage.createdAt)
+                            else
+                                true
+                        }
+                ),
                 disabledFields = InboxComposeOptionsDisabledFields(isContextDisabled = true, isSubjectDisabled = true),
                 hiddenFields = InboxComposeOptionsHiddenFields(isSendIndividualHidden = true),
                 defaultValues = InboxComposeOptionsDefaultValues(

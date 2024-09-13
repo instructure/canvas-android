@@ -9,6 +9,7 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandares.R
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
 import com.instructure.pandautils.utils.FileDownloader
@@ -184,9 +185,10 @@ class InboxDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(2, events.size)
+        assertEquals(3, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeleted)), events[0])
         assertEquals(InboxDetailsFragmentAction.CloseFragment, events[1])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[2])
     }
 
     @Test
@@ -213,8 +215,9 @@ class InboxDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(1, events.size)
+        assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)), events[0])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
     }
 
     @Test
@@ -272,8 +275,9 @@ class InboxDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(1, events.size)
+        assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeleted)), events[0])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
         assertEquals(expectedUiState, viewModel.uiState.value)
 
@@ -301,32 +305,54 @@ class InboxDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(1, events.size)
+        assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
 
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
     }
 
-    @Test(expected = NotImplementedError::class)
-    fun `Test Reply action`() {
+    @Test
+    fun `Test Reply action`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.handleAction(InboxDetailsAction.Reply)
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.Reply(conversation.messages.last()))
+
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(conversation, conversation.messages.last())), events.last())
     }
 
-    @Test(expected = NotImplementedError::class)
-    fun `Test Reply All action`() {
+    @Test
+    fun `Test Reply All action`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.handleAction(InboxDetailsAction.ReplyAll)
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.ReplyAll(conversation.messages.last()))
+
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(conversation, conversation.messages.last())), events.last())
     }
 
-    @Test(expected = NotImplementedError::class)
-    fun `Test Forward action`() {
+    @Test
+    fun `Test Forward action`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.handleAction(InboxDetailsAction.Forward)
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.Forward(conversation.messages.last()))
+
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(conversation, conversation.messages.last())), events.last())
     }
 
     @Test
@@ -356,8 +382,9 @@ class InboxDetailsViewModelTest {
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
-        assertEquals(1, events.size)
+        assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)), events[0])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         coVerify(exactly = 1) { inboxDetailsRepository.updateStarred(conversation.id, isStarred) }
     }
 
@@ -388,8 +415,9 @@ class InboxDetailsViewModelTest {
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
-        assertEquals(1, events.size)
+        assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)), events[0])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         coVerify(exactly = 1) { inboxDetailsRepository.updateState(conversation.id, newState) }
     }
 
@@ -408,34 +436,154 @@ class InboxDetailsViewModelTest {
         coVerify(exactly = 1) { fileDownloader.downloadFileToDevice(attachment) }
     }
 
-    @Test(expected = NotImplementedError::class)
-    fun `Test MessageAction Reply action`() {
-        `Test Reply action`()
+    @Test
+    fun `Test MessageAction open url in message`() = runTest {
+        val viewModel = getViewModel()
+        val url = "testURL"
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.messageActionHandler(MessageAction.UrlSelected(url))
+
+        assertEquals(InboxDetailsFragmentAction.UrlSelected(url), events.last())
     }
 
-    @Test(expected = NotImplementedError::class)
-    fun `Test MessageAction Reply All action`() {
-        `Test Reply All action`()
+    @Test
+    fun `Test MessageAction Reply action`() = runTest {
+        val viewModel = getViewModel()
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.messageActionHandler(MessageAction.Reply(conversation.messages.last()))
+
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(conversation, conversation.messages.last())), events.last())
     }
 
-    @Test(expected = NotImplementedError::class)
-    fun `Test MessageAction Forward action`() {
-        `Test Forward action`()
+    @Test
+    fun `Test MessageAction Reply All action`() = runTest {
+        val viewModel = getViewModel()
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.messageActionHandler(MessageAction.ReplyAll(conversation.messages.last()))
+
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(conversation, conversation.messages.last())), events.last())
+    }
+
+    @Test
+    fun `Test MessageAction Forward action`() = runTest {
+        val viewModel = getViewModel()
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.messageActionHandler(MessageAction.Forward(conversation.messages.last()))
+
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(conversation, conversation.messages.last())), events.last())
     }
 
     @Test
     fun `Test MessageAction Delete Message action with Cancel`() {
-        `Test Message Delete action with Cancel`()
+        val viewModel = getViewModel()
+
+        viewModel.messageActionHandler(MessageAction.DeleteMessage(conversation.messages[0]))
+
+        val alertDialogState = viewModel.uiState.value.alertDialogState
+        assertEquals(true, alertDialogState.showDialog)
+        assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
+        assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
+        assertEquals(context.getString(R.string.delete), alertDialogState.positiveButton)
+        assertEquals(context.getString(R.string.cancel), alertDialogState.negativeButton)
+
+        alertDialogState.onNegativeButtonClick.invoke()
+
+        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
     }
 
     @Test
-    fun `Test MessageAction Delete Message action with successful Delete`() {
-        `Test Message Delete action with successful Delete`()
+    fun `Test MessageAction Delete Message action with successful Delete`() = runTest {
+        val viewModel = getViewModel()
+        val newConversation = conversation.copy(messages = listOf(conversation.messages[1]))
+        val messageStates = listOf(
+            InboxMessageUiState(
+                message = conversation.messages[1],
+                author = conversation.participants[1],
+                recipients = listOf(conversation.participants[0]),
+                enabledActions = true,
+            ),
+        )
+        val expectedUiState = InboxDetailsUiState(
+            conversationId = newConversation.id,
+            conversation = newConversation,
+            messageStates = messageStates,
+            state = ScreenState.Success,
+        )
+        coEvery { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) } returns DataResult.Success(newConversation)
+        coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(newConversation)
+
+        viewModel.messageActionHandler(MessageAction.DeleteMessage(conversation.messages[0]))
+
+        val alertDialogState = viewModel.uiState.value.alertDialogState
+        assertEquals(true, alertDialogState.showDialog)
+        assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
+        assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
+        assertEquals(context.getString(R.string.delete), alertDialogState.positiveButton)
+        assertEquals(context.getString(R.string.cancel), alertDialogState.negativeButton)
+
+        alertDialogState.onPositiveButtonClick.invoke()
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(2, events.size)
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeleted)), events[0])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
+        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(expectedUiState, viewModel.uiState.value)
+
+        coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
     }
 
     @Test
-    fun `Test MessageAction Delete Message action with failed Delete`() {
-        `Test Message Delete action with failed Delete`()
+    fun `Test MessageAction Delete Message action with failed Delete`() = runTest {
+        val viewModel = getViewModel()
+        coEvery { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) } returns DataResult.Fail()
+
+        viewModel.messageActionHandler(MessageAction.DeleteMessage(conversation.messages[0]))
+
+        val alertDialogState = viewModel.uiState.value.alertDialogState
+        assertEquals(true, alertDialogState.showDialog)
+        assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
+        assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
+        assertEquals(context.getString(R.string.delete), alertDialogState.positiveButton)
+        assertEquals(context.getString(R.string.cancel), alertDialogState.negativeButton)
+
+        alertDialogState.onPositiveButtonClick.invoke()
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(2, events.size)
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
+        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+
+        coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
     }
 
     // endregion

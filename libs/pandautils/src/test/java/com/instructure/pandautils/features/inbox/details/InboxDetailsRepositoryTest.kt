@@ -1,14 +1,18 @@
 package com.instructure.pandautils.features.inbox.details
 
 import android.content.Context
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import io.mockk.verify
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,6 +35,9 @@ class InboxDetailsRepositoryTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
+
+        mockkObject(CanvasRestAdapter)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns mockk(relaxed = true)
     }
 
     @After
@@ -109,6 +116,7 @@ class InboxDetailsRepositoryTest {
 
         val result = inboxRepository.deleteMessage(conversation.id, messageIds)
 
+        verify(exactly = 1) { CanvasRestAdapter.clearCacheUrls(any()) }
         assertEquals(conversation, result.dataOrNull)
     }
 
@@ -122,6 +130,7 @@ class InboxDetailsRepositoryTest {
 
         val result = inboxRepository.deleteMessage(conversation.id, messageIds)
 
+        verify(exactly = 1) { CanvasRestAdapter.clearCacheUrls(any()) }
         assertEquals(DataResult.Fail(), result)
     }
 
@@ -135,6 +144,7 @@ class InboxDetailsRepositoryTest {
 
         val result = inboxRepository.updateStarred(conversation.id, isStarred)
 
+        verify(exactly = 1) { CanvasRestAdapter.clearCacheUrls(any()) }
         assertEquals(isStarred, result.dataOrNull?.isStarred)
     }
 
@@ -148,6 +158,7 @@ class InboxDetailsRepositoryTest {
 
         val result = inboxRepository.updateStarred(conversation.id, isStarred)
 
+        verify(exactly = 1) { CanvasRestAdapter.clearCacheUrls(any()) }
         assertEquals(DataResult.Fail(), result)
     }
 
@@ -161,6 +172,7 @@ class InboxDetailsRepositoryTest {
 
         val result = inboxRepository.updateState(conversation.id, workflowState)
 
+        verify(exactly = 1) { CanvasRestAdapter.clearCacheUrls(any()) }
         assertEquals(workflowState, result.dataOrNull?.workflowState)
     }
 
@@ -174,6 +186,7 @@ class InboxDetailsRepositoryTest {
 
         val result = inboxRepository.updateState(conversation.id, workflowState)
 
+        verify(exactly = 1) { CanvasRestAdapter.clearCacheUrls(any()) }
         assertEquals(DataResult.Fail(), result)
     }
 }

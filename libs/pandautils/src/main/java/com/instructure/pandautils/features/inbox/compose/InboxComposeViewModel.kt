@@ -164,7 +164,6 @@ class InboxComposeViewModel @Inject constructor(
                     InboxComposeOptionsMode.REPLY -> createMessage()
                     InboxComposeOptionsMode.REPLY_ALL -> createMessage()
                     InboxComposeOptionsMode.FORWARD -> createMessage()
-
                 }
             }
             is InboxComposeActionHandler.SubjectChanged -> {

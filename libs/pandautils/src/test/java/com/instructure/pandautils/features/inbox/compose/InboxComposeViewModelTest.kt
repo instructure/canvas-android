@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import io.mockk.coEvery
@@ -346,7 +348,7 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val attachment = Attachment()
         val attachmentEntity = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment)
-        val attachmentCardItem = AttachmentCardItem(Attachment(), AttachmentStatus.UPLOADED)
+        val attachmentCardItem = AttachmentCardItem(Attachment(), AttachmentStatus.UPLOADED, false)
         val uuid = UUID.randomUUID()
         coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
         viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
@@ -363,7 +365,7 @@ class InboxComposeViewModelTest {
         val fileDownloader: FileDownloader = mockk(relaxed = true)
         val viewModel = getViewModel(fileDownloader)
         val attachment = Attachment()
-        val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED)
+        val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false)
 
         viewModel.handleAction(InboxComposeActionHandler.OpenAttachment(attachmentCardItem))
 
