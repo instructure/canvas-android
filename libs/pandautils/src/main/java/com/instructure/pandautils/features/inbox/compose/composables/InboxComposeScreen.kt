@@ -17,6 +17,10 @@
 package com.instructure.pandautils.features.inbox.compose.composables
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -282,7 +286,9 @@ private fun InboxComposeScreenContent(
 
         uiState.previousMessages?.let { previousMessages ->
             Column(
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .animateContentSize()
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -293,20 +299,20 @@ private fun InboxComposeScreenContent(
                     fontSize = 16.sp,
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 CanvasDivider()
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 previousMessages.previousMessages.forEach { message ->
                     PreviousMessageView(previousMessages.conversation, message, actionHandler)
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     CanvasDivider()
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
@@ -320,15 +326,26 @@ private fun PreviousMessageView(
     actionHandler: (InboxComposeActionHandler) -> Unit
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
+    val rotationAnimation by animateFloatAsState(
+        targetValue = if (isExpanded) 180F else 0F,
+        animationSpec = tween(durationMillis = 200, easing = FastOutLinearInEasing),
+        label = "messageExpandIconRotation"
 
-    Column {
+    )
+
+    Column(
+        modifier = Modifier
+            .animateContentSize()
+    ) {
         Column(
             modifier = Modifier
                 .clickable {
                     isExpanded = !isExpanded
                 }
         ){
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
                     text = conversation.participants.firstOrNull { it.id == message.authorId }?.name
                         ?: "",
@@ -350,7 +367,7 @@ private fun PreviousMessageView(
                     contentDescription = null,
                     tint = colorResource(id = R.color.textDark),
                     modifier = Modifier
-                        .rotate(if (isExpanded) 180f else 0f)
+                        .rotate(rotationAnimation)
                 )
             }
 
@@ -359,6 +376,7 @@ private fun PreviousMessageView(
                 color = colorResource(id = R.color.textDark),
                 fontSize = 14.sp,
                 maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                minLines = if (isExpanded) 2 else 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
@@ -375,7 +393,7 @@ private fun PreviousMessageView(
                         onRemove = {},
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
         }
     }
