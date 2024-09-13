@@ -113,7 +113,6 @@ class DiscussionsE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Select 'Unpin' overflow menu of '${discussion2.title}' discussion and assert that it has became Unpinned, so it will be displayed (again) in the 'Discussions' group.")
         discussionsListPage.clickDiscussionOverFlowMenu(discussion2.title)
         discussionsListPage.selectOverFlowMenu("Unpin")
-        discussionsListPage.assertGroupDisplayed("Pinned")
         discussionsListPage.assertDiscussionInGroup("Discussions", discussion2.title)
         discussionsListPage.assertDiscussionNotInGroup("Pinned", discussion2.title)
 
@@ -123,7 +122,7 @@ class DiscussionsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Select 'Closed for Comments' overflow menu of '${discussion.title}' discussion and assert that it has became 'Closed for Comments'.")
         discussionsListPage.clickDiscussionOverFlowMenu(discussion.title)
-        discussionsListPage.selectOverFlowMenu("Closed for Comments")
+        discussionsListPage.selectOverFlowMenu("Close for Comments")
         discussionsListPage.assertGroupDisplayed("Closed for Comments")
         discussionsListPage.assertDiscussionInGroup("Closed for Comments", discussion.title)
 
@@ -136,8 +135,7 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.selectOverFlowMenu("Open for Comments")
         discussionsListPage.assertDiscussionInGroup("Discussions", discussion.title)
 
-        Log.d(STEP_TAG, "Assert that the 'Closed for Comments' group will be still displayed despite it has no items in it. Assert that the '${discussion2.title}' discussion is not in the 'Closed for Comments' group any more.")
-        discussionsListPage.assertGroupDisplayed("Closed for Comments")
+        Log.d(STEP_TAG, "Assert that the '${discussion2.title}' discussion is not in the 'Closed for Comments' group any more.")
         discussionsListPage.assertDiscussionNotInGroup("Closed for Comments", discussion.title)
 
         Log.d(STEP_TAG,"Click on more menu of '${discussion.title}' discussion and delete it.")
