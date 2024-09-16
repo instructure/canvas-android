@@ -45,7 +45,7 @@ class DashboardRepositoryTest {
 
         coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(enrollments)
 
-        val result = repository.getStudents()
+        val result = repository.getStudents(true)
         assertEquals(expected, result)
     }
 
@@ -62,7 +62,7 @@ class DashboardRepositoryTest {
         )
         coEvery { enrollmentApi.getNextPage("page_2_url", any()) } returns DataResult.Success(enrollments2)
 
-        val result = repository.getStudents()
+        val result = repository.getStudents(true)
         assertEquals(page1 + page2, result)
     }
 
@@ -77,7 +77,7 @@ class DashboardRepositoryTest {
 
         coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(enrollments + otherEnrollments)
 
-        val result = repository.getStudents()
+        val result = repository.getStudents(true)
         assertEquals(expected, result)
     }
 

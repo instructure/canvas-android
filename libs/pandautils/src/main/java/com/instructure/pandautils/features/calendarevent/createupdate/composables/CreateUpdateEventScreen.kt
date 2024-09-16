@@ -77,8 +77,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.LabelValueRow
-import com.instructure.pandautils.compose.composables.SelectCalendarScreen
-import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import com.instructure.pandautils.compose.composables.SelectContextScreen
+import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.SingleChoiceAlertDialog
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
@@ -121,10 +121,11 @@ internal fun CreateUpdateEventScreenWrapper(
                 },
                 modifier = modifier
             )
-        } else if (uiState.selectCalendarUiState.show) {
-            SelectCalendarScreen(
-                uiState = uiState.selectCalendarUiState,
-                onCalendarSelected = {
+        } else if (uiState.selectContextUiState.show) {
+            SelectContextScreen(
+                title = stringResource(id = R.string.selectCalendarScreenTitle),
+                uiState = uiState.selectContextUiState,
+                onContextSelected = {
                     localView.announceForAccessibility(
                         context.getString(R.string.a11y_calendarSelected, it.name.orEmpty())
                     )
@@ -458,7 +459,7 @@ private fun CreateUpdateEventContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventCalendarLabel),
-                value = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
+                value = uiState.selectContextUiState.selectedCanvasContext?.name.orEmpty(),
                 loading = uiState.loadingCanvasContexts,
                 onClick = {
                     focusManager.clearFocus()
@@ -633,7 +634,7 @@ private fun CreateUpdateEventPreview() {
             saving = false,
             errorSnack = null,
             loadingCanvasContexts = false,
-            selectCalendarUiState = SelectCalendarUiState(
+            selectContextUiState = SelectContextUiState(
                 selectedCanvasContext = Course(name = "Course")
             )
         ),

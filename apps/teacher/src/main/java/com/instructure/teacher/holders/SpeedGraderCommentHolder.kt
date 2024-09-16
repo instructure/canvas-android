@@ -179,7 +179,7 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
             }
             CommentDirection.OUTGOING -> {
                 setCommentBubbleColor(context.getColorCompat(R.color.backgroundInfo))
-                commentTextColor = context.getColor(R.color.white)
+                commentTextColor = context.getColor(R.color.textLightest)
             }
         }
     }

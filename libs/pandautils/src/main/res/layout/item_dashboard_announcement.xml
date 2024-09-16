@@ -54,7 +54,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:importantForAccessibility="no"
-                android:tint="@color/white"
+                android:tint="@color/textLightest"
                 app:imageRes="@{itemViewModel.data.icon}" />
 
         </FrameLayout>

@@ -18,16 +18,14 @@
 
 package com.instructure.espresso.matchers
 
+import androidx.test.espresso.core.internal.deps.dagger.internal.Preconditions.checkNotNull
+import com.instructure.espresso.EspressoLog
+import com.instructure.espresso.UiControllerSingleton
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
-
-import androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull
-import com.instructure.espresso.EspressoLog
-import com.instructure.espresso.UiControllerSingleton
 
 class WaitForCheckMatcher<T>(private val matcher: Matcher<T>) : BaseMatcher<T>() {
 

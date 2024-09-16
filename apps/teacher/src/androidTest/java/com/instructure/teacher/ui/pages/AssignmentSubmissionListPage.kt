@@ -20,10 +20,12 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withChild
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -33,11 +35,12 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.WaitForViewWithText
+import com.instructure.espresso.actions.ForceClick
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
@@ -64,9 +67,10 @@ class AssignmentSubmissionListPage : BasePage() {
     private val assignmentSubmissionListToolbar by OnViewWithId(R.id.assignmentSubmissionListToolbar)
     private val assignmentSubmissionRecyclerView by OnViewWithId(R.id.submissionsRecyclerView)
     private val assignmentSubmissionListFilterLabel by OnViewWithId(R.id.filterTitle)
-    private val assignmentSubmissionClearFilter by OnViewWithId(R.id.clearFilterTextView, false)
+    private val assignmentSubmissionClearFilter by WaitForViewWithId(R.id.clearFilterTextView, false)
     private val assignmentSubmissionFilterButton by OnViewWithId(R.id.submissionFilter, false)
     private val assignmentSubmissionFilterBySubmissionsButton by WaitForViewWithText(R.string.filterSubmissionsLowercase)
+    private val assignmentSubmissionFilterBySectionButton by WaitForViewWithText(R.string.filterBySection)
     private val assignmentSubmissionStatus by OnViewWithId(R.id.submissionStatus)
     private val addMessageFAB by OnViewWithId(R.id.addMessage)
     private val enableAnonymousGradingMenuItem by WaitForViewWithText(R.string.turnOnAnonymousGrading)
@@ -120,7 +124,14 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun assertClearFilterGone() {
-        assignmentSubmissionClearFilter.assertGone()
+        onView(withId(R.id.clearFilterTextView)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    }
+
+    /**
+     * Clear the existing filter by clicking on the 'Clear filter' button.
+     */
+    fun clearFilter() {
+        assignmentSubmissionClearFilter.perform(ForceClick())
     }
 
     /**
@@ -150,11 +161,19 @@ class AssignmentSubmissionListPage : BasePage() {
     }
 
     /**
-     * Click filter submissions
+     * Click filter submissions (types)
      *
      */
     fun clickFilterSubmissions() {
         assignmentSubmissionFilterBySubmissionsButton.click()
+    }
+
+    /**
+     * Click filter section(s)
+     *
+     */
+    fun clickFilterBySection() {
+        assignmentSubmissionFilterBySectionButton.click()
     }
 
     /**
@@ -202,6 +221,16 @@ class AssignmentSubmissionListPage : BasePage() {
     fun assertFilterLabelText(text: Int) {
         assignmentSubmissionListFilterLabel.assertHasText(text)
     }
+
+    /**
+     * Assert filter label text
+     *
+     * @param text
+     */
+    fun assertFilterLabelText(text: String) {
+        assignmentSubmissionListFilterLabel.assertHasText(text)
+    }
+
 
     /**
      * Assert has submission
@@ -356,5 +385,24 @@ class AssignmentSubmissionListPage : BasePage() {
                 )
             )
         ).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Assert the 'Filter By..' (section) dialog details like title, subtitle, buttons.
+     */
+    fun assertSectionFilterDialogDetails() {
+        waitForView(withId(R.id.alertTitle) + withText(getStringFromResource(R.string.filterBy)) + withAncestor(R.id.topPanel)).assertDisplayed()
+        onView(withText(getStringFromResource(R.string.sections)) + withAncestor(R.id.customPanel)).assertDisplayed()
+        onView(withId(android.R.id.button2) + withText(getStringFromResource(R.string.cancel)) + withAncestor(R.id.buttonPanel)).assertDisplayed()
+        onView(withId(android.R.id.button1) + withText(getStringFromResource(R.string.ok)) + withAncestor(R.id.buttonPanel)).assertDisplayed()
+    }
+
+    /**
+     * Filter by the given section name.
+     * @param sectionName: The section to filter by.
+     */
+    fun filterBySection(sectionName: String) {
+        waitForView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(sectionName) + withAncestor(R.id.customPanel))).click()
+        onView(withId(android.R.id.button1) + withText(getStringFromResource(R.string.ok)) + withAncestor(R.id.buttonPanel)).click()
     }
 }

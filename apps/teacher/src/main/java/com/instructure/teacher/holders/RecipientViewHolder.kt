@@ -48,7 +48,7 @@ class RecipientViewHolder(private val binding: ViewholderRecipientBinding) : Rec
                     mutate().setTintList(ColorStateList.valueOf(selectionColor))
                 })
                 checkMarkImageView.setVisible()
-                ColorUtils.colorIt(Color.WHITE, checkMarkImageView)
+                ColorUtils.colorIt(context.getColor(R.color.textLightest), checkMarkImageView)
             } else {
                 root.setBackgroundColor(Color.TRANSPARENT)
                 checkMarkImageView.setGone()

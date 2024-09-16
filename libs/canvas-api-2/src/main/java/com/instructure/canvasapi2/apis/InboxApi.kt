@@ -74,6 +74,18 @@ object InboxApi {
             @Field("attachment_ids[]") attachmentIds: LongArray,
             @Field("bulk_message") isBulk: Int): Call<List<Conversation>>
 
+        @FormUrlEncoded
+        @POST("conversations?group_conversation=true")
+        suspend fun createConversation(
+            @Field("recipients[]") recipients: List<String>,
+            @Field("body") message: String,
+            @Field("subject") subject: String,
+            @Field("context_code") contextCode: String,
+            @Field("attachment_ids[]") attachmentIds: LongArray,
+            @Field("bulk_message") isBulk: Int,
+            @Tag params: RestParams
+        ): DataResult<List<Conversation>>
+
         @GET("conversations/{conversationId}?include[]=participant_avatars")
         fun getConversation(@Path("conversationId") conversationId: Long, @Query("auto_mark_as_read") markAsRead: Boolean): Call<Conversation>
 

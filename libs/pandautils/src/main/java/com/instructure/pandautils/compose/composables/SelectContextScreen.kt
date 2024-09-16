@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.composables
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -33,7 +34,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -64,26 +64,28 @@ private const val HEADER_CONTENT_TYPE = "header"
 private const val FILTER_ITEM_CONTENT_TYPE = "filter_item"
 
 @Composable
-fun SelectCalendarScreen(
-    uiState: SelectCalendarUiState,
-    onCalendarSelected: (CanvasContext) -> Unit,
+fun SelectContextScreen(
+    title: String,
+    uiState: SelectContextUiState,
+    onContextSelected: (CanvasContext) -> Unit,
     navigationActionClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @DrawableRes navIconRes: Int = R.drawable.ic_close,
 ) {
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CanvasAppBar(
-                title = stringResource(id = R.string.selectCalendarScreenTitle),
+                title = title,
                 navigationActionClick = navigationActionClick,
-                navIconRes = R.drawable.ic_close,
+                navIconRes = navIconRes,
                 navIconContentDescription = stringResource(id = R.string.back)
             )
         },
         content = { padding ->
-            SelectCalendarContent(
+            SelectContextContent(
                 uiState = uiState,
-                onCalendarSelected = onCalendarSelected,
+                onContextSelected = onContextSelected,
                 modifier = modifier
                     .padding(padding)
                     .fillMaxSize()
@@ -93,9 +95,9 @@ fun SelectCalendarScreen(
 }
 
 @Composable
-private fun SelectCalendarContent(
-    uiState: SelectCalendarUiState,
-    onCalendarSelected: (CanvasContext) -> Unit,
+private fun SelectContextContent(
+    uiState: SelectContextUiState,
+    onContextSelected: (CanvasContext) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -110,7 +112,7 @@ private fun SelectCalendarContent(
                 key = { it.contextId },
                 contentType = { FILTER_ITEM_CONTENT_TYPE }) { user ->
                 val selected = user.contextId == uiState.selectedCanvasContext?.contextId
-                SelectCalendarItem(user, selected, onCalendarSelected, Modifier.fillMaxWidth())
+                SelectContextItem(user, selected, onContextSelected, Modifier.fillMaxWidth())
             }
             if (uiState.courses.isNotEmpty()) {
                 item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
@@ -121,10 +123,10 @@ private fun SelectCalendarContent(
                     key = { it.contextId },
                     contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
                     val selected = course.contextId == uiState.selectedCanvasContext?.contextId
-                    SelectCalendarItem(
+                    SelectContextItem(
                         course,
                         selected,
-                        onCalendarSelected,
+                        onContextSelected,
                         Modifier.fillMaxWidth()
                     )
                 }
@@ -138,19 +140,18 @@ private fun SelectCalendarContent(
                     key = { it.contextId },
                     contentType = { FILTER_ITEM_CONTENT_TYPE }) { group ->
                     val selected = group.contextId == uiState.selectedCanvasContext?.contextId
-                    SelectCalendarItem(group, selected, onCalendarSelected, Modifier.fillMaxWidth())
+                    SelectContextItem(group, selected, onContextSelected, Modifier.fillMaxWidth())
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun SelectCalendarItem(
+private fun SelectContextItem(
     canvasContext: CanvasContext,
     selected: Boolean,
-    onCalendarSelected: (CanvasContext) -> Unit,
+    onContextSelected: (CanvasContext) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -165,7 +166,7 @@ private fun SelectCalendarItem(
         modifier = modifier
             .defaultMinSize(minHeight = 54.dp)
             .clickable {
-                onCalendarSelected(canvasContext)
+                onContextSelected(canvasContext)
             }
             .padding(start = 8.dp, end = 16.dp)
             .semantics(mergeDescendants = true) {
@@ -187,7 +188,7 @@ private fun SelectCalendarItem(
                 testTag = "radioButton_${canvasContext.name}"
             },
             onClick = {
-                onCalendarSelected(canvasContext)
+                onContextSelected(canvasContext)
             },
             colors = RadioButtonDefaults.colors(
                 selectedColor = color,
@@ -205,7 +206,7 @@ private fun SelectCalendarItem(
     }
 }
 
-data class SelectCalendarUiState(
+data class SelectContextUiState(
     val show: Boolean = false,
     val selectedCanvasContext: CanvasContext? = null,
     val canvasContexts: List<CanvasContext> = emptyList()
@@ -222,11 +223,12 @@ data class SelectCalendarUiState(
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
-private fun SelectCalendarPreview() {
+private fun SelectContextPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
-    SelectCalendarScreen(
-        uiState = SelectCalendarUiState(
+    SelectContextScreen(
+        title = stringResource(id = R.string.calendarFilterTitle),
+        uiState = SelectContextUiState(
             show = true,
             selectedCanvasContext = Course(id = 2),
             canvasContexts = listOf(
@@ -235,18 +237,18 @@ private fun SelectCalendarPreview() {
                 Course(id = 3, name = "Life in the Universe"),
             )
         ),
-        onCalendarSelected = {},
+        onContextSelected = {},
         navigationActionClick = {}
     )
 }
 
 @Preview
 @Composable
-private fun SelectCalendarItemPreview() {
-    SelectCalendarItem(
+private fun SelectContextItemPreview() {
+    SelectContextItem(
         canvasContext = Course(id = 1, name = "Black Holes"),
         selected = false,
-        onCalendarSelected = {},
+        onContextSelected = {},
         modifier = Modifier.fillMaxWidth()
     )
 }

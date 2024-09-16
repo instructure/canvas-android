@@ -19,6 +19,7 @@ package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
@@ -32,6 +33,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
@@ -79,12 +82,14 @@ class DashboardViewModelTest {
     private val alertCountUpdaterFlow = MutableSharedFlow<Boolean>()
     private val alertCountUpdater: AlertCountUpdater = TestAlertCountUpdater(alertCountUpdaterFlow)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
 
     @Before
     fun setup() {
         every { savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT) } returns null
+        every { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLUE)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
@@ -127,21 +132,27 @@ class DashboardViewModelTest {
             User(id = 2L, shortName = "Student Two", avatarUrl = "avatar2"),
         )
 
-        coEvery { repository.getStudents() } returns students
+        coEvery { repository.getStudents(any()) } returns students
 
         createViewModel()
 
         val expected = listOf(
-            StudentItemViewData(1L, "Student One", "avatar1"),
-            StudentItemViewData(2L, "Student Two", "avatar2")
+            StudentItemViewModel(studentItemViewData = StudentItemViewData(1L, "Student One", "avatar1")) {},
+            StudentItemViewModel(studentItemViewData = StudentItemViewData(2L, "Student Two", "avatar2")) {},
+            AddStudentItemViewModel(color = 0) {}
         )
 
-        assertEquals(expected, viewModel.data.value.studentItems.map { it.studentItemViewData })
+        val items = viewModel.data.value.studentItems
+        assert(items[0] is StudentItemViewModel)
+        assertEquals((expected[0] as StudentItemViewModel).studentItemViewData, (items[0] as StudentItemViewModel).studentItemViewData)
+        assert(items[1] is StudentItemViewModel)
+        assertEquals((expected[1] as StudentItemViewModel).studentItemViewData, (items[1] as StudentItemViewModel).studentItemViewData)
+        assert(items[2] is AddStudentItemViewModel)
     }
 
     @Test
     fun `Empty student list`() {
-        coEvery { repository.getStudents() } returns emptyList()
+        coEvery { repository.getStudents(any()) } returns emptyList()
 
         createViewModel()
 
@@ -158,7 +169,7 @@ class DashboardViewModelTest {
     fun `Selected student set up correctly when it was selected before`() {
         val students = listOf(User(id = 1L), User(id = 2L))
         val expected = students[1]
-        coEvery { repository.getStudents() } returns students
+        coEvery { repository.getStudents(any()) } returns students
         coEvery { previousUsersUtils.getSignedInUser(any(), any(), any()) } returns SignedInUser(
             user = User(),
             domain = "",
@@ -186,13 +197,13 @@ class DashboardViewModelTest {
             User(id = 2L, name = "Student Two", avatarUrl = "avatar2"),
         )
 
-        coEvery { repository.getStudents() } returns students
+        coEvery { repository.getStudents(any()) } returns students
 
         createViewModel()
 
         assertEquals(students.first(), viewModel.data.value.selectedStudent)
 
-        viewModel.data.value.studentItems.last().onStudentClick()
+        (viewModel.data.value.studentItems.last { it is StudentItemViewModel } as StudentItemViewModel).onStudentClick()
 
         assertEquals(students.last(), viewModel.data.value.selectedStudent)
         assertFalse(viewModel.data.value.studentSelectorExpanded)
@@ -213,7 +224,7 @@ class DashboardViewModelTest {
     @Test
     fun `Update unread count when the update unread count flow triggers an update`() = runTest {
         val students = listOf(User(id = 1L), User(id = 2L))
-        coEvery { repository.getStudents() } returns students
+        coEvery { repository.getStudents(any()) } returns students
         coEvery { repository.getUnreadCounts() } returns 0
 
         createViewModel()
@@ -229,7 +240,7 @@ class DashboardViewModelTest {
     @Test
     fun `Update alert count when the update alert count flow triggers`() = runTest {
         val students = listOf(User(id = 1L), User(id = 2L))
-        coEvery { repository.getStudents() } returns students
+        coEvery { repository.getStudents(any()) } returns students
         coEvery { alertsRepository.getUnreadAlertCount(1L) } returns 0
 
         createViewModel()
@@ -252,13 +263,13 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<DashboardAction>()
+        val events = mutableListOf<DashboardViewModelAction>()
 
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
 
-        assertEquals(DashboardAction.NavigateDeepLink(uri), events.first())
+        assertEquals(DashboardViewModelAction.NavigateDeepLink(uri), events.first())
     }
 
     private fun createViewModel() {
@@ -272,6 +283,7 @@ class DashboardViewModelTest {
             selectedStudentHolder = selectedStudentHolder,
             inboxCountUpdater = inboxCountUpdater,
             alertCountUpdater = alertCountUpdater,
+            colorKeeper = colorKeeper,
             savedStateHandle = savedStateHandle
         )
     }

@@ -41,7 +41,7 @@
             android:layout_height="18dp"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_checkmark"
-            app:tint="@color/white" />
+            app:tint="@color/textLightest" />
 
     </FrameLayout>
 
