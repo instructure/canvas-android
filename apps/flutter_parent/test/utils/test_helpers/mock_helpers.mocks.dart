@@ -1670,6 +1670,20 @@ class MockCourseApi extends _i1.Mock implements _i52.CourseApi {
         returnValue: _i8.Future<_i56.CoursePermissions?>.value(),
         returnValueForMissingStub: _i8.Future<_i56.CoursePermissions?>.value(),
       ) as _i8.Future<_i56.CoursePermissions?>);
+  @override
+  _i8.Future<List<String>?> getEnabledCourseFeatures(
+    String? courseId, {
+    bool? forceRefresh = false,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getEnabledCourseFeatures,
+          [courseId],
+          {#forceRefresh: forceRefresh},
+        ),
+        returnValue: _i8.Future<List<String>?>.value(),
+        returnValueForMissingStub: _i8.Future<List<String>?>.value(),
+      ) as _i8.Future<List<String>?>);
 }
 
 /// A class which mocks [CourseDetailsInteractor].

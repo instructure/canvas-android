@@ -662,4 +662,66 @@ void main() {
     // Check that we have the correct title
     expect(find.text(AppLocalizations().submission), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks(
+      'Submission & Rubric button opens SimpleWebViewScreen with the '
+      'correct url when assignment enhancements are enabled', (tester) async {
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(assignment: assignment, assignmentEnhancementEnabled: true));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+      ),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initWebview: true),
+    ));
+
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
+
+    await tester.tap(find.text(AppLocalizations().submissionAndRubric));
+    await tester.pumpAndSettle();
+
+    // Check to make sure we're on the SimpleWebViewScreen screen
+    final webViewScreenFinder = find.byType(SimpleWebViewScreen);
+    expect(find.byType(SimpleWebViewScreen), findsOneWidget);
+
+    final SimpleWebViewScreen webViewScreen = tester.widget(webViewScreenFinder) as SimpleWebViewScreen;
+    expect(webViewScreen.url, assignmentUrl);
+
+    // Check that we have the correct title
+    expect(find.text(AppLocalizations().submission), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks(
+      'Submission & Rubric button opens SimpleWebViewScreen with the '
+      'correct url when assignment enhancements are disabled', (tester) async {
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(assignment: assignment, assignmentEnhancementEnabled: false));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+      ),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initWebview: true),
+    ));
+
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
+
+    await tester.tap(find.text(AppLocalizations().submissionAndRubric));
+    await tester.pumpAndSettle();
+
+    // Check to make sure we're on the SimpleWebViewScreen screen
+    final webViewScreenFinder = find.byType(SimpleWebViewScreen);
+    expect(find.byType(SimpleWebViewScreen), findsOneWidget);
+
+    final SimpleWebViewScreen webViewScreen = tester.widget(webViewScreenFinder) as SimpleWebViewScreen;
+    expect(webViewScreen.url, assignmentUrl + '/submissions/' + studentId);
+
+    // Check that we have the correct title
+    expect(find.text(AppLocalizations().submission), findsOneWidget);
+  });
 }
