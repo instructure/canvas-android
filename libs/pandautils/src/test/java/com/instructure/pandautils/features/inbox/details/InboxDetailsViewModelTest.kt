@@ -53,6 +53,14 @@ class InboxDetailsViewModelTest {
 
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
         coEvery { savedStateHandle.get<Long>(any()) } returns conversation.id
+        coEvery { context.getString(
+            com.instructure.pandautils.R.string.inboxForwardSubjectFwdPrefix,
+            conversation.subject
+        ) } returns "Fwd: ${conversation.subject}"
+        coEvery { context.getString(
+            com.instructure.pandautils.R.string.inboxReplySubjectRePrefix,
+            conversation.subject
+        ) } returns "Re: ${conversation.subject}"
     }
 
     @After
@@ -324,7 +332,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.Reply(conversation.messages.last()))
 
-        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(conversation, conversation.messages.last())), events.last())
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(context, conversation, conversation.messages.last())), events.last())
     }
 
     @Test
@@ -338,7 +346,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.ReplyAll(conversation.messages.last()))
 
-        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(conversation, conversation.messages.last())), events.last())
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, conversation, conversation.messages.last())), events.last())
     }
 
     @Test
@@ -352,7 +360,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.Forward(conversation.messages.last()))
 
-        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(conversation, conversation.messages.last())), events.last())
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(context, conversation, conversation.messages.last())), events.last())
     }
 
     @Test
@@ -462,7 +470,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.messageActionHandler(MessageAction.Reply(conversation.messages.last()))
 
-        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(conversation, conversation.messages.last())), events.last())
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(context, conversation, conversation.messages.last())), events.last())
     }
 
     @Test
@@ -476,7 +484,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.messageActionHandler(MessageAction.ReplyAll(conversation.messages.last()))
 
-        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(conversation, conversation.messages.last())), events.last())
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, conversation, conversation.messages.last())), events.last())
     }
 
     @Test
@@ -490,7 +498,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.messageActionHandler(MessageAction.Forward(conversation.messages.last()))
 
-        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(conversation, conversation.messages.last())), events.last())
+        assertEquals(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(context, conversation, conversation.messages.last())), events.last())
     }
 
     @Test

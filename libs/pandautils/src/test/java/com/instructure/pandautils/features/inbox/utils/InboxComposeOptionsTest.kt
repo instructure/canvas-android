@@ -9,6 +9,7 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -45,6 +46,14 @@ class InboxComposeOptionsTest {
 
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = 1, name = "User 1")
+        coEvery { context.getString(
+            com.instructure.pandautils.R.string.inboxForwardSubjectFwdPrefix,
+            conversation.subject
+        ) } returns "Fwd: ${conversation.subject}"
+        coEvery { context.getString(
+            com.instructure.pandautils.R.string.inboxReplySubjectRePrefix,
+            conversation.subject
+        ) } returns "Re: ${conversation.subject}"
     }
 
     @After
@@ -91,7 +100,7 @@ class InboxComposeOptionsTest {
 
     @Test
     fun `Test Compose options build for Reply`() {
-        val inboxComposeOptions = InboxComposeOptions.buildReply(conversation, conversation.messages.last())
+        val inboxComposeOptions = InboxComposeOptions.buildReply(context, conversation, conversation.messages.last())
 
         // Check if the mode is set correctly
         assertEquals(InboxComposeOptionsMode.REPLY, inboxComposeOptions.mode)
@@ -128,7 +137,7 @@ class InboxComposeOptionsTest {
 
     @Test
     fun `Test Compose options build for Reply All`() {
-        val inboxComposeOptions = InboxComposeOptions.buildReplyAll(conversation, conversation.messages.last())
+        val inboxComposeOptions = InboxComposeOptions.buildReplyAll(context, conversation, conversation.messages.last())
 
         // Check if the mode is set correctly
         assertEquals(InboxComposeOptionsMode.REPLY_ALL, inboxComposeOptions.mode)
@@ -165,7 +174,7 @@ class InboxComposeOptionsTest {
 
     @Test
     fun `Test Compose options build for Forward`() {
-        val inboxComposeOptions = InboxComposeOptions.buildForward(conversation, conversation.messages.last())
+        val inboxComposeOptions = InboxComposeOptions.buildForward(context, conversation, conversation.messages.last())
 
         // Check if the mode is set correctly
         assertEquals(InboxComposeOptionsMode.FORWARD, inboxComposeOptions.mode)

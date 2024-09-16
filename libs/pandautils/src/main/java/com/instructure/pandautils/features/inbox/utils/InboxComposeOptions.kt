@@ -1,11 +1,13 @@
 package com.instructure.pandautils.features.inbox.utils
 
+import android.content.Context
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.R
 import kotlinx.parcelize.Parcelize
 import java.time.ZonedDateTime
 
@@ -25,7 +27,7 @@ data class InboxComposeOptions(
             )
         }
 
-        fun buildReply(conversation: Conversation, selectedMessage: Message): InboxComposeOptions {
+        fun buildReply(context: Context, conversation: Conversation, selectedMessage: Message): InboxComposeOptions {
             val currentUser = ApiPrefs.user?.id
             val recipients = if (selectedMessage.authorId == currentUser) {
                 conversation.participants.filter { it.id != currentUser }
@@ -51,12 +53,15 @@ data class InboxComposeOptions(
                     contextCode = conversation.contextCode,
                     contextName = conversation.contextName,
                     recipients = recipients.map { Recipient(it.id.toString(), it.name, it.avatarUrl) },
-                    subject = "Re: ${conversation.subject}",
+                    subject = context.getString(
+                        R.string.inboxReplySubjectRePrefix,
+                        conversation.subject
+                    ),
                 )
             )
         }
 
-        fun buildReplyAll(conversation: Conversation, selectedMessage: Message): InboxComposeOptions {
+        fun buildReplyAll(context: Context, conversation: Conversation, selectedMessage: Message): InboxComposeOptions {
             val currentUser = ApiPrefs.user?.id
             val recipients = conversation.participants.filter { it.id != currentUser }
 
@@ -78,12 +83,15 @@ data class InboxComposeOptions(
                     contextCode = conversation.contextCode,
                     contextName = conversation.contextName,
                     recipients = recipients.map { Recipient(it.id.toString(), it.name, it.avatarUrl) },
-                    subject = "Re: ${conversation.subject}",
+                    subject = context.getString(
+                        R.string.inboxReplySubjectRePrefix,
+                        conversation.subject
+                    ),
                 )
             )
         }
 
-        fun buildForward(conversation: Conversation, selectedMessage: Message): InboxComposeOptions {
+        fun buildForward(context: Context, conversation: Conversation, selectedMessage: Message): InboxComposeOptions {
             return InboxComposeOptions(
                 mode = InboxComposeOptionsMode.FORWARD,
                 previousMessages = InboxComposeOptionsPreviousMessages(
@@ -101,7 +109,10 @@ data class InboxComposeOptions(
                 defaultValues = InboxComposeOptionsDefaultValues(
                     contextCode = conversation.contextCode,
                     contextName = conversation.contextName,
-                    subject = "Fwd: ${conversation.subject}",
+                    subject = context.getString(
+                        R.string.inboxForwardSubjectFwdPrefix,
+                        conversation.subject
+                    ),
                 )
             )
         }

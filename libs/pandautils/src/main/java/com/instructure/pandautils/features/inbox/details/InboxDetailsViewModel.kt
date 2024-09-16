@@ -100,21 +100,21 @@ class InboxDetailsViewModel @Inject constructor(
             is InboxDetailsAction.Forward -> {
                 viewModelScope.launch {
                     uiState.value.conversation?.let {
-                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(it, action.message)))
+                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildForward(context, it, action.message)))
                     }
                 }
             }
             is InboxDetailsAction.Reply -> {
                 viewModelScope.launch {
                     uiState.value.conversation?.let {
-                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(it, action.message)))
+                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReply(context, it, action.message)))
                     }
                 }
             }
             is InboxDetailsAction.ReplyAll -> {
                 viewModelScope.launch {
                     uiState.value.conversation?.let {
-                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(it, action.message)))
+                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, it, action.message)))
                     }
                 }
             }
