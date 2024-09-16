@@ -106,12 +106,12 @@ class ViewImageFragment : Fragment(), ShareableFile {
         if (isInModulesPager) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewImageFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@ViewImageFragment)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
         } else if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()

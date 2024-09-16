@@ -42,7 +42,7 @@ class CourseBrowserEmptyFragment : BasePresenterFragment<
 
     private fun setupToolbar(courseColor: Int?) {
         if(courseColor != null) {
-            ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, courseColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, courseColor, requireContext().getColor(R.color.textLightest))
         }
     }
 

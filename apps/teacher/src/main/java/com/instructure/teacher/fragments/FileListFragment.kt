@@ -327,7 +327,7 @@ class FileListFragment : BaseSyncFragment<
         if (canvasContext.isUser) {
             // User's files, no CanvasContext
             ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.textLightest))
     }
 
     private fun animateFabs() = if (fabOpen) {

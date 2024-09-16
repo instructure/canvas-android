@@ -118,7 +118,7 @@ internal fun EventScreen(
                         }
                     },
                     backgroundColor = Color(color = eventUiState.toolbarUiState.toolbarColor),
-                    contentColor = Color.White,
+                    contentColor = colorResource(id = R.color.textLightest),
                     navigationActionClick = {
                         navigationAction()
                     }

@@ -210,7 +210,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         assignmentListToolbar.subtitle = canvasContext.name
         assignmentListToolbar.setupBackButton(this@AssignmentListFragment)
 
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.textLightest))
     }
 
     override fun adjustGradingPeriodHeader(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {

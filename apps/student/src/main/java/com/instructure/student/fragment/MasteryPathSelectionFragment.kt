@@ -143,7 +143,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
     private fun setupTabLayoutColors() {
         val color = canvasContext.backgroundColor
         binding.tabLayout.setBackgroundColor(color)
-        binding.tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.white))
+        binding.tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.textLightest))
     }
     //endregion
 

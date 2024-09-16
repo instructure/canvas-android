@@ -172,12 +172,12 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         ViewStyler.colorToolbarIconsAndText(
             requireActivity(),
             binding.noOverlayToolbar,
-            requireContext().getColor(R.color.white)
+            requireContext().getColor(R.color.textLightest)
         )
         ViewStyler.colorToolbarIconsAndText(
             requireActivity(),
             binding.overlayToolbar,
-            requireContext().getColor(R.color.white)
+            requireContext().getColor(R.color.textLightest)
         )
         ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
     }

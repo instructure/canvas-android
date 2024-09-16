@@ -35,6 +35,8 @@
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> itemViewModel.onCardClick.invoke()}"
             android:minHeight="290dp"
+            android:background="@color/backgroundLightestElevated"
+            app:cardBackgroundColor="@color/backgroundLightestElevated"
             app:cardCornerRadius="3dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
@@ -44,7 +46,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/backgroundLightestElevated">
 
                 <ImageView
                     android:id="@+id/courseImage"

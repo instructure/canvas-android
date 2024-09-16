@@ -252,20 +252,18 @@ object ColorApiHelper {
 
 fun createThemedColor(@ColorInt color: Int): ThemedColor {
     val light = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.white))
-    val darkBackgroundColor = ColorUtils.correctContrastForButtonBackground(color, ContextKeeper.appContext.getColor(R.color.backgroundDarkMode), ContextKeeper.appContext.getColor(R.color.white))
-    val darkTextAndIconColor = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.elevatedDarkColor))
+    val dark = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.textOnColorDark))
 
-    return ThemedColor(light, darkBackgroundColor, darkTextAndIconColor)
+    return ThemedColor(light, dark)
 }
 
 data class ThemedColor(
     @ColorInt val light: Int,
-    @ColorInt val darkBackgroundColor: Int = light,
-    @ColorInt val darkTextAndIconColor: Int = light
+    @ColorInt val dark: Int = light,
 ) {
     @ColorInt
-    fun textAndIconColor() = if (ColorKeeper.darkTheme) darkTextAndIconColor else light
+    fun textAndIconColor() = if (ColorKeeper.darkTheme) dark else light
 
     @ColorInt
-    fun backgroundColor() = if (ColorKeeper.darkTheme) darkBackgroundColor else light
+    fun backgroundColor() = if (ColorKeeper.darkTheme) dark else light
 }

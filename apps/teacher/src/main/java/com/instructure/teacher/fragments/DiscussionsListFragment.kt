@@ -224,7 +224,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.textLightest))
     }
 
     private fun setupViews() = with(binding) {

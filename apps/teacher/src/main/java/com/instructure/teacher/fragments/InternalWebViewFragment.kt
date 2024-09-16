@@ -178,7 +178,7 @@ open class InternalWebViewFragment : BaseFragment() {
         if (isInModulesPager) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@InternalWebViewFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@InternalWebViewFragment)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.textLightest))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
@@ -191,7 +191,7 @@ open class InternalWebViewFragment : BaseFragment() {
         if (darkToolbar) {
             if (courseColor != -1) {
                 // Use course colors for toolbar
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.textLightest))
             } else {
                 // Use institution colors for toolbar
                 ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)

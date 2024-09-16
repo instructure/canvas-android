@@ -124,7 +124,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         if (activity is MasterDetailInteractions) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@StudentContextFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@StudentContextFragment)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.textLightest))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
@@ -132,7 +132,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         }
         toolbar.title = Pronouns.span(student.shortName, student.pronouns)
         toolbar.subtitle = course.name
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.textLightest))
 
         // Message FAB
         messageButton.setVisible()
@@ -214,7 +214,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                 // Set color of last grade item
                 visibleGradeItems.lastOrNull()?.apply {
                     backgroundTintList = courseBackgroundColor.asStateList()
-                    children<TextView>().onEach { it.setTextColor(requireContext().getColor(R.color.white)) }
+                    children<TextView>().onEach { it.setTextColor(requireContext().getColor(R.color.textLightest)) }
                 }
             }
 
