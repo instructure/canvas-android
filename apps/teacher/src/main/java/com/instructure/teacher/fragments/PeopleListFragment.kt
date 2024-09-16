@@ -31,7 +31,13 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.isDesigner
+import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.PeopleListRecyclerAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
@@ -46,7 +52,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.PeopleListView
-import java.util.*
 
 @PageView(url = "{canvasContext}/users")
 @ScreenView(SCREEN_VIEW_PEOPLE_LIST)
@@ -126,7 +131,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         }
 
         setupTitle(presenter.canvasContextList)
-        ViewStyler.themeToolbarColored(requireActivity(), peopleListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.textLightest))
+        ViewStyler.themeToolbarColored(requireActivity(), peopleListToolbar, canvasContext.color, requireContext().getColor(R.color.textLightest))
         peopleListToolbar.setupBackButton(this@PeopleListFragment)
     }
 

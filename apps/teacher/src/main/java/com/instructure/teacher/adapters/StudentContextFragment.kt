@@ -16,9 +16,16 @@
 package com.instructure.teacher.adapters
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewConfiguration
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.TextView
-import com.instructure.canvasapi2.StudentContextCardQuery.*
+import com.instructure.canvasapi2.StudentContextCardQuery.Analytics
+import com.instructure.canvasapi2.StudentContextCardQuery.AsCourse
+import com.instructure.canvasapi2.StudentContextCardQuery.Submission
+import com.instructure.canvasapi2.StudentContextCardQuery.User
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Recipient
@@ -31,7 +38,20 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.asStateList
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
+import com.instructure.pandautils.utils.isVisible
+import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentStudentContextBinding
@@ -116,7 +136,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     override fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean) = with(binding) {
-        val courseBackgroundColor = CanvasContext.emptyCourseContext(course.id.toLong()).backgroundColor
+        val courseBackgroundColor = CanvasContext.emptyCourseContext(course.id.toLong()).color
 
         setupScrollListener()
 
@@ -267,7 +287,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     override fun addSubmissions(submissions: List<Submission>, course: AsCourse, student: User) {
-        val courseColor = CanvasContext.emptyCourseContext(course.id.toLong()).textAndIconColor
+        val courseColor = CanvasContext.emptyCourseContext(course.id.toLong()).color
         submissions.forEach { submission ->
             val view = StudentContextSubmissionView(requireContext(), submission, courseColor)
             if (mLaunchSubmissions) view.onClick {

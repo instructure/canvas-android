@@ -42,7 +42,22 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.FileUploadEvent
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isGroup
+import com.instructure.pandautils.utils.isUser
+import com.instructure.pandautils.utils.remove
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.databinding.FragmentFileListBinding
@@ -61,7 +76,7 @@ import com.instructure.teacher.viewinterface.FileListView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.UUID
 
 @PageView
 @ScreenView(SCREEN_VIEW_FILE_LIST)
@@ -200,18 +215,18 @@ class FileListFragment : BaseSyncFragment<
     }
 
     override fun createAdapter(): FileListAdapter {
-        return FileListAdapter(requireContext(), canvasContext.textAndIconColor, presenter) {
+        return FileListAdapter(requireContext(), canvasContext.color, presenter) {
             if (it.displayName.isValid()) {
                 // This is a file
-                val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.backgroundColor, presenter.mCanvasContext, R.drawable.ic_document)
+                val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.color, presenter.mCanvasContext, R.drawable.ic_document)
                 recordFilePreviewEvent(it)
                 if (it.isHtmlFile) {
                     /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
                     accessed as an authenticated preview to work correctly */
-                    val bundle = ViewHtmlFragment.makeAuthSessionBundle(canvasContext, it, it.displayName.orEmpty(), canvasContext.backgroundColor, editableFile)
+                    val bundle = ViewHtmlFragment.makeAuthSessionBundle(canvasContext, it, it.displayName.orEmpty(), canvasContext.color, editableFile)
                     RouteMatcher.route(requireActivity(), Route(ViewHtmlFragment::class.java, null, bundle))
                 } else {
-                    viewMedia(requireActivity(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
+                    viewMedia(requireActivity(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.color, editableFile)
                 }
             } else {
                 // This is a folder
@@ -327,7 +342,7 @@ class FileListFragment : BaseSyncFragment<
         if (canvasContext.isUser) {
             // User's files, no CanvasContext
             ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.textLightest))
+        } else ViewStyler.themeToolbarColored(requireActivity(), fileListToolbar, canvasContext.color, requireContext().getColor(R.color.textLightest))
     }
 
     private fun animateFabs() = if (fabOpen) {

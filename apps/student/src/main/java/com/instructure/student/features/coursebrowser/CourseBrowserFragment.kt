@@ -26,7 +26,10 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -38,7 +41,16 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.a11yManager
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.isSwitchAccessEnabled
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
@@ -85,23 +97,23 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         courseBrowserTitle.text = canvasContext.name
 
         (canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.backgroundColor, !StudentPrefs.hideCourseColorOverlay)
+            courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
             courseBrowserSubtitle.text = it.term?.name ?: ""
             binding.courseBrowserHeader.courseBrowserHeader.setTitleAndSubtitle(it.name, it.term?.name ?: "")
         }
 
         (canvasContext as? Group)?.let {
-            courseImage.setImageDrawable(ColorDrawable(it.backgroundColor))
+            courseImage.setImageDrawable(ColorDrawable(it.color))
         }
 
-        collapsingToolbarLayout.setContentScrimColor(canvasContext.backgroundColor)
+        collapsingToolbarLayout.setContentScrimColor(canvasContext.color)
 
         // If course color overlay is disabled we show a static toolbar and hide the text overlay
         overlayToolbar.setupAsBackButton(this@CourseBrowserFragment)
         noOverlayToolbar.setupAsBackButton(this@CourseBrowserFragment)
         noOverlayToolbar.title = canvasContext.name
         (canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
-        noOverlayToolbar.setBackgroundColor(canvasContext.backgroundColor)
+        noOverlayToolbar.setBackgroundColor(canvasContext.color)
         updateToolbarVisibility()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
@@ -136,7 +148,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     @Subscribe(sticky = true)
     fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
         (canvasContext as? Course)?.let {
-            binding.courseImage.setCourseImage(it, it.backgroundColor, !StudentPrefs.hideCourseColorOverlay)
+            binding.courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
         }
         updateToolbarVisibility()
     }
@@ -154,7 +166,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         (canvasContext as? Course)?.let {
             binding.courseImage.setCourseImage(
                 it,
-                it.backgroundColor,
+                it.color,
                 !StudentPrefs.hideCourseColorOverlay
             )
         }
@@ -179,7 +191,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
             binding.overlayToolbar,
             requireContext().getColor(R.color.textLightest)
         )
-        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
+        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
     }
 
     override fun getFragment(): Fragment? = this

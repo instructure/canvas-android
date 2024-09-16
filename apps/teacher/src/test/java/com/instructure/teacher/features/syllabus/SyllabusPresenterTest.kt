@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import com.instructure.teacher.features.syllabus.ui.EventsViewState
 import com.instructure.teacher.features.syllabus.ui.ScheduleItemViewState
@@ -96,28 +96,28 @@ class SyllabusPresenterTest {
                     title = "",
                     date = "Apr 2 at 1:59 PM",
                     iconRes = R.drawable.ic_calendar,
-                    color = baseCourse.backgroundColor
+                    color = baseCourse.color
             ),
             ScheduleItemViewState(
                     id = "1",
                     title = "assignment",
                     date = "Due Apr 3 at 1:59 pm",
                     iconRes = R.drawable.ic_assignment,
-                    color = baseCourse.backgroundColor
+                    color = baseCourse.color
             ),
             ScheduleItemViewState(
                     id = "2",
                     title = "quiz",
                     date = "Due Apr 4 at 2:00 am",
                     iconRes = R.drawable.ic_quiz,
-                    color = baseCourse.backgroundColor
+                    color = baseCourse.color
             ),
             ScheduleItemViewState(
                     id = "3",
                     title = "discussion",
                     date = "No Due Date",
                     iconRes = R.drawable.ic_discussion,
-                    color = baseCourse.backgroundColor
+                    color = baseCourse.color
             )
     )
 

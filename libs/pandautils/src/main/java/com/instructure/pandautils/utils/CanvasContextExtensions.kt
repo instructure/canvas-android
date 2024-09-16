@@ -23,13 +23,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 
 @get:ColorInt
-val CanvasContext?.backgroundColor: Int get() {
-    val themedColor = ColorKeeper.getOrGenerateColor(this)
-    return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
-}
-
-@get:ColorInt
-val CanvasContext?.textAndIconColor: Int get() {
+val CanvasContext?.color: Int get() {
     val themedColor = ColorKeeper.getOrGenerateColor(this)
     return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
 }

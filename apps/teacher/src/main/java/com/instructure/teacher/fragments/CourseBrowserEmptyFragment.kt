@@ -22,7 +22,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentCourseBrowserEmptyBinding
 import com.instructure.teacher.factory.CourseBrowserEmptyViewFactory
@@ -53,7 +53,7 @@ class CourseBrowserEmptyFragment : BasePresenterFragment<
     override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter) = with(binding) {
         textCourseName.text = presenter.course.name
         textCourseTerm.text = presenter.course.term?.name
-        setupToolbar(presenter.course.backgroundColor)
+        setupToolbar(presenter.course.color)
     }
 
     override fun getPresenterFactory() = CourseBrowserEmptyViewFactory(mCourse)

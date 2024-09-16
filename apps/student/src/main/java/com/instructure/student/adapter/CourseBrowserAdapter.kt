@@ -26,8 +26,8 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
-import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.databinding.AdapterCourseBrowserBinding
 import com.instructure.student.databinding.AdapterCourseBrowserHomeBinding
@@ -41,9 +41,9 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
             HOME -> CourseBrowserHomeViewHolder(LayoutInflater.from(parent.context)
                     .inflate(CourseBrowserHomeViewHolder.HOLDER_RES_ID, parent, false), canvasContext, homePageTitle)
             WEB_VIEW_ITEM -> CourseBrowserWebViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(CourseBrowserWebViewHolder.HOLDER_RES_ID, parent, false), canvasContext.textAndIconColor)
+                    .inflate(CourseBrowserWebViewHolder.HOLDER_RES_ID, parent, false), canvasContext.color)
             else -> CourseBrowserViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(CourseBrowserViewHolder.HOLDER_RES_ID, parent, false), canvasContext.textAndIconColor)
+                    .inflate(CourseBrowserViewHolder.HOLDER_RES_ID, parent, false), canvasContext.color)
         }
     }
 

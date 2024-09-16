@@ -25,7 +25,12 @@ import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COLOR_PICKER
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.dismissExisting
+import com.instructure.pandautils.utils.onClick
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.DialogColorPickerBinding
 import com.instructure.teacher.utils.getColorCompat
@@ -64,7 +69,7 @@ class ColorPickerDialog: AppCompatDialogFragment() {
     }
 
     fun setupViews(binding: DialogColorPickerBinding) {
-        val currentColor = course.backgroundColor
+        val currentColor = course.color
         listOf(
             binding.colorCottonCandy to R.color.colorCottonCandy,
             binding.colorBarbie to R.color.colorBarbie,

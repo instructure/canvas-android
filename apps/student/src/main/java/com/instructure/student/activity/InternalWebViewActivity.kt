@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.models.CanvasContext.Companion.emptyCourseCont
 import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
@@ -45,7 +45,7 @@ class InternalWebViewActivity : BaseActionBarActivity() {
                 if (canvasContext.id == 0L) {
                     bundle.putBoolean(Const.HIDDEN_TOOLBAR, true)
                 } else {
-                    val color = canvasContext.backgroundColor
+                    val color = canvasContext.color
                     setActionBarStatusBarColor(color)
                     supportActionBar?.title = canvasContext.name
                 }

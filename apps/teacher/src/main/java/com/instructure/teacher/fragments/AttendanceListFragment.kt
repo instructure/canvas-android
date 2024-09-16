@@ -23,7 +23,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.webkit.*
+import android.webkit.CookieManager
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.apis.AttendanceAPI
@@ -44,7 +47,16 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ATTENDANCE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AttendanceListRecyclerAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
@@ -60,7 +72,7 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AttendanceListView
 import org.json.JSONObject
-import java.util.*
+import java.util.Calendar
 import java.util.regex.Pattern
 
 @ScreenView(SCREEN_VIEW_ATTENDANCE_LIST)
@@ -141,7 +153,7 @@ class AttendanceListFragment : BaseSyncFragment<
             ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         } else {
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.textLightest))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCanvasContext.color, requireContext().getColor(R.color.textLightest))
         }
     }
 
