@@ -136,16 +136,16 @@ class AlertSettingsViewModel @Inject constructor(
                 }
 
                 is AlertSettingsAction.ReloadAlertSettings -> {
-                    loadAlertThresholds()
+                    loadAlertThresholds(true)
                 }
             }
         }
     }
 
-    private suspend fun loadAlertThresholds() {
+    private suspend fun loadAlertThresholds(showLoading: Boolean = false) {
         _uiState.update {
             it.copy(
-                isLoading = true,
+                isLoading = showLoading,
                 isError = false
             )
         }

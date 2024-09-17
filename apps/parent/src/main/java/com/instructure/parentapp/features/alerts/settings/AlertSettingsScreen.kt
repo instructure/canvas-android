@@ -358,7 +358,7 @@ private fun ThresholdDialog(
                 )
             )
             when {
-                (percentage.toIntOrNull() ?: 100) < min -> {
+                (percentage.toIntOrNull() ?: 100) <= min -> {
                     Text(
                         modifier = Modifier.padding(top = 8.dp),
                         text = stringResource(id = R.string.alertSettingsMinThresholdError, min),
@@ -366,7 +366,7 @@ private fun ThresholdDialog(
                     )
                 }
 
-                (percentage.toIntOrNull() ?: 0) > max -> {
+                (percentage.toIntOrNull() ?: 0) >= max -> {
                     Text(
                         modifier = Modifier.padding(top = 8.dp),
                         text = stringResource(id = R.string.alertSettingsMaxThresholdError, max),
