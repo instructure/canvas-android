@@ -33,6 +33,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.isUser
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -112,8 +113,8 @@ class EventViewModel @Inject constructor(
     }
 
     private fun setToolbarColor() {
-        getCanvasContext()?.color?.let { color ->
-            _uiState.update { it.copy(toolbarUiState = it.toolbarUiState.copy(toolbarColor = color)) }
+        getCanvasContext()?.let { canvasContext ->
+            _uiState.update { it.copy(toolbarUiState = it.toolbarUiState.copy(toolbarColor = canvasContext.color, isUserContext = canvasContext.isUser)) }
         }
     }
 
