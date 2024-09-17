@@ -16,6 +16,7 @@
  */    package com.instructure.parentapp.features.alerts.settings
 
 import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.User
@@ -25,6 +26,7 @@ data class AlertSettingsUiState(
     val student: User,
     @ColorInt val userColor: Int,
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
     val avatarUrl: String,
     val studentName: String,
     val studentPronouns: String?,
@@ -36,8 +38,12 @@ sealed class AlertSettingsAction {
     data class CreateThreshold(val alertType: AlertType, val threshold: String?) : AlertSettingsAction()
     data class DeleteThreshold(val alertType: AlertType) : AlertSettingsAction()
     data class UnpairStudent(val studentId: Long) : AlertSettingsAction()
+
+    data object ReloadAlertSettings : AlertSettingsAction()
 }
 
 sealed class AlertSettingsViewModelAction {
     data class UnpairStudent(val studentId: Long) : AlertSettingsViewModelAction()
+
+    data class ShowSnackbar(@StringRes val message: Int, val actionCallback: () -> Unit) : AlertSettingsViewModelAction()
 }

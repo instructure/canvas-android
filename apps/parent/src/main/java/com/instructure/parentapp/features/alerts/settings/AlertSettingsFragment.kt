@@ -27,8 +27,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
@@ -78,6 +80,7 @@ class AlertSettingsFragment : Fragment() {
             is AddStudentViewModelAction.UnpairStudentSuccess -> {
                 requireActivity().onBackPressed()
             }
+
             else -> {}
         }
     }
@@ -86,6 +89,13 @@ class AlertSettingsFragment : Fragment() {
         when (action) {
             is AlertSettingsViewModelAction.UnpairStudent -> {
                 addStudentViewModel.handleAction(AddStudentAction.UnpairStudent(action.studentId))
+            }
+
+            is AlertSettingsViewModelAction.ShowSnackbar -> {
+                Snackbar.make(requireView(), action.message, Snackbar.LENGTH_SHORT).apply {
+                    setAction(R.string.retry) { action.actionCallback() }
+                    setActionTextColor(resources.getColor(R.color.white, resources.newTheme()))
+                }.show()
             }
         }
     }

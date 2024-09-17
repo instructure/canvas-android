@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.parentapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,8 +42,8 @@ class AlertSettingsViewModel @Inject constructor(
     private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
-    private val student =
-        savedStateHandle.get<User>(Const.USER) ?: throw IllegalArgumentException("User not found")
+    private val student = savedStateHandle.get<User>(Const.USER)
+        ?: throw IllegalArgumentException("Student not found")
 
     private val _uiState = MutableStateFlow(
         AlertSettingsUiState(
@@ -66,31 +67,88 @@ class AlertSettingsViewModel @Inject constructor(
     }
 
     private fun handleAction(alertSettingsAction: AlertSettingsAction) {
-        when (alertSettingsAction) {
-            is AlertSettingsAction.CreateThreshold -> {
-                viewModelScope.launch {
-                    createAlertThreshold(alertSettingsAction.alertType, alertSettingsAction.threshold)
-                    loadAlertThresholds()
+        viewModelScope.launch {
+            when (alertSettingsAction) {
+                is AlertSettingsAction.CreateThreshold -> {
+                    try {
+                        createAlertThreshold(
+                            alertSettingsAction.alertType,
+                            alertSettingsAction.threshold
+                        )
+
+                    } catch (e: Exception) {
+                        crashlytics.recordException(e)
+                        e.printStackTrace()
+                        _events.send(AlertSettingsViewModelAction.ShowSnackbar(
+                            message = R.string.generalUnexpectedError,
+                            actionCallback = {
+                                handleAction(alertSettingsAction)
+                            }
+                        ))
+                    } finally {
+                        loadAlertThresholds()
+                    }
                 }
-            }
-            is AlertSettingsAction.DeleteThreshold -> {
-                viewModelScope.launch {
-                    deleteAlertThreshold(_uiState.value.thresholds[alertSettingsAction.alertType]?.id ?: throw IllegalArgumentException("Threshold not found"))
-                    loadAlertThresholds()
+
+                is AlertSettingsAction.DeleteThreshold -> {
+                    try {
+                        deleteAlertThreshold(
+                            _uiState.value.thresholds[alertSettingsAction.alertType]?.id
+                                ?: throw IllegalArgumentException("Threshold not found")
+                        )
+                    } catch (e: Exception) {
+                        crashlytics.recordException(e)
+                        e.printStackTrace()
+                        _events.send(AlertSettingsViewModelAction.ShowSnackbar(
+                            message = R.string.generalUnexpectedError,
+                            actionCallback = {
+                                handleAction(alertSettingsAction)
+                            }
+                        ))
+                    } finally {
+                        loadAlertThresholds()
+                    }
                 }
-            }
-            is AlertSettingsAction.UnpairStudent -> {
-                viewModelScope.launch {
+
+                is AlertSettingsAction.UnpairStudent -> {
                     _uiState.update {
                         it.copy(isLoading = true)
                     }
-                    _events.send(AlertSettingsViewModelAction.UnpairStudent(alertSettingsAction.studentId))
+                    try {
+                        _events.send(
+                            AlertSettingsViewModelAction.UnpairStudent(
+                                alertSettingsAction.studentId
+                            )
+                        )
+                    } catch (e: Exception) {
+                        crashlytics.recordException(e)
+                        e.printStackTrace()
+                        _uiState.update {
+                            it.copy(isLoading = false)
+                        }
+                        _events.send(AlertSettingsViewModelAction.ShowSnackbar(
+                            message = R.string.generalUnexpectedError,
+                            actionCallback = {
+                                handleAction(alertSettingsAction)
+                            }
+                        ))
+                    }
+                }
+
+                is AlertSettingsAction.ReloadAlertSettings -> {
+                    loadAlertThresholds()
                 }
             }
         }
     }
 
     private suspend fun loadAlertThresholds() {
+        _uiState.update {
+            it.copy(
+                isLoading = true,
+                isError = false
+            )
+        }
         try {
             val alertThresholds = repository.loadAlertThresholds(student.id)
             _uiState.update {
@@ -102,25 +160,18 @@ class AlertSettingsViewModel @Inject constructor(
         } catch (e: Exception) {
             crashlytics.recordException(e)
             e.printStackTrace()
+            _uiState.update {
+                it.copy(isLoading = false, isError = true)
+            }
         }
     }
 
     private suspend fun createAlertThreshold(alertType: AlertType, threshold: String?) {
-        try {
-            repository.createAlertThreshold(alertType, student.id, threshold)
-        } catch (e: Exception) {
-            crashlytics.recordException(e)
-            e.printStackTrace()
-        }
+        repository.createAlertThreshold(alertType, student.id, threshold)
     }
 
     private suspend fun deleteAlertThreshold(thresholdId: Long) {
-        try {
-            repository.deleteAlertThreshold(thresholdId)
-        } catch (e: Exception) {
-            crashlytics.recordException(e)
-            e.printStackTrace()
-        }
+        repository.deleteAlertThreshold(thresholdId)
     }
 
 }

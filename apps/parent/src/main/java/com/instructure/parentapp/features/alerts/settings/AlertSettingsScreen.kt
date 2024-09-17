@@ -72,6 +72,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.parentapp.R
@@ -115,6 +116,15 @@ fun AlertSettingsScreen(
                             .padding(padding)
                             .fillMaxSize()
                     )
+                }
+
+                uiState.isError -> {
+                    ErrorContent(
+                        modifier = Modifier.fillMaxSize(),
+                        errorMessage = stringResource(id = R.string.alertSettingsErrorMessage),
+                        retryClick = {
+                            uiState.actionHandler(AlertSettingsAction.ReloadAlertSettings)
+                        })
                 }
 
                 else -> {
@@ -570,4 +580,21 @@ fun ThresholdDialogPreview() {
 @Composable
 fun UnpairStudentDialogPreview() {
     UnpairStudentDialog(1, Color.Blue, {}, {})
+}
+
+@Preview
+@Composable
+fun AlertSettingsErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AlertSettingsScreen(
+        uiState = AlertSettingsUiState(
+            student = User(),
+            isLoading = false,
+            isError = true,
+            userColor = android.graphics.Color.BLUE,
+            avatarUrl = "",
+            studentName = "Test Student",
+            studentPronouns = "they/them"
+        ) {}
+    ) {}
 }
