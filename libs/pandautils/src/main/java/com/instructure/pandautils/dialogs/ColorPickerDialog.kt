@@ -13,7 +13,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.instructure.teacher.dialog
+package com.instructure.pandautils.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
@@ -23,17 +23,17 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COLOR_PICKER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.databinding.DialogColorPickerBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.pandautils.utils.onClick
-import com.instructure.teacher.R
-import com.instructure.teacher.databinding.DialogColorPickerBinding
-import com.instructure.teacher.utils.getColorCompat
+import com.instructure.pandautils.views.ColorPickerIcon
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_COLOR_PICKER)
@@ -71,29 +71,26 @@ class ColorPickerDialog: AppCompatDialogFragment() {
     fun setupViews(binding: DialogColorPickerBinding) {
         val currentColor = course.color
         listOf(
-            binding.colorCottonCandy to R.color.colorCottonCandy,
-            binding.colorBarbie to R.color.colorBarbie,
-            binding.colorBarneyPurple to R.color.colorBarneyPurple,
-            binding.colorEggplant to R.color.colorEggplant,
-            binding.colorUltramarine to R.color.colorUltramarine,
-            binding.colorOcean11 to R.color.colorOcean11,
-            binding.colorCyan to R.color.colorCyan,
-            binding.colorAquaMarine to R.color.colorAquaMarine,
-            binding.colorEmeraldGreen to R.color.colorEmeraldGreen,
-            binding.colorFreshCutLawn to R.color.colorFreshCutLawn,
-            binding.colorChartreuse to R.color.colorChartreuse,
-            binding.colorSunFlower to R.color.colorSunFlower,
-            binding.colorTangerine to R.color.colorTangerine,
-            binding.colorBloodOrange to R.color.colorBloodOrange,
-            binding.colorSriracha to R.color.colorSriracha
-        ).map { it.first to requireContext().getColorCompat(it.second) }
-            .onEach { (view, color) ->
-                ColorUtils.colorIt(color, view.circle)
-                view.onClick {
-                    callback(color)
+            ColorPickerItem(binding.courseColor1, R.color.courseColor1, R.color.courseColor1light),
+            ColorPickerItem(binding.courseColor2, R.color.courseColor2, R.color.courseColor2light),
+            ColorPickerItem(binding.courseColor3, R.color.courseColor3, R.color.courseColor3light),
+            ColorPickerItem(binding.courseColor4, R.color.courseColor4, R.color.courseColor4light),
+            ColorPickerItem(binding.courseColor5, R.color.courseColor5, R.color.courseColor5light),
+            ColorPickerItem(binding.courseColor6, R.color.courseColor6, R.color.courseColor6light),
+            ColorPickerItem(binding.courseColor7, R.color.courseColor7, R.color.courseColor7light),
+            ColorPickerItem(binding.courseColor8, R.color.courseColor8, R.color.courseColor8light),
+            ColorPickerItem(binding.courseColor9, R.color.courseColor9, R.color.courseColor9light),
+            ColorPickerItem(binding.courseColor10, R.color.courseColor10, R.color.courseColor10light),
+            ColorPickerItem(binding.courseColor11, R.color.courseColor11, R.color.courseColor11light),
+            ColorPickerItem(binding.courseColor12, R.color.courseColor12, R.color.courseColor12light)
+        ).map { it.copy(displayColor = requireContext().getColor(it.displayColor), lightColor = requireContext().getColor(it.lightColor)) }
+            .onEach { colorPickerItem ->
+                ColorUtils.colorIt(colorPickerItem.displayColor, colorPickerItem.view.circle)
+                colorPickerItem.view.onClick {
+                    callback(colorPickerItem.lightColor)
                     dismiss()
                 }
-                if (color == currentColor) view.setSelected()
+                if (colorPickerItem.displayColor == currentColor) colorPickerItem.view.setSelected()
             }
     }
 
@@ -103,3 +100,5 @@ class ColorPickerDialog: AppCompatDialogFragment() {
         super.onDestroyView()
     }
 }
+
+data class ColorPickerItem(val view: ColorPickerIcon, val displayColor: Int, val lightColor: Int)

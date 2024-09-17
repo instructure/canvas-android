@@ -73,21 +73,18 @@
     <color name="uploadFileDialogBackground">#00FFFFFF</color>
 
     <!-- Course Colors for customization -->
-    <color name="colorCottonCandy">#FFF26090</color>
-    <color name="colorBarbie">#FFEA1661</color>
-    <color name="colorBarneyPurple">#FF903A99</color>
-    <color name="colorEggplant">#FF65469F</color>
-    <color name="colorUltramarine">#FF4452A6</color>
-    <color name="colorOcean11">#FF1482C8</color>
-    <color name="colorCyan">#FF2CA3DE</color>
-    <color name="colorAquaMarine">#FF00BCD5</color>
-    <color name="colorEmeraldGreen">#FF009788</color>
-    <color name="colorFreshCutLawn">#FF3FA142</color>
-    <color name="colorChartreuse">#FF89C540</color>
-    <color name="colorSunFlower">#FFFFC100</color>
-    <color name="colorTangerine">#FFFA9800</color>
-    <color name="colorBloodOrange">#FFF2581B</color>
-    <color name="colorSriracha">#FFF2422E</color>
+    <color name="courseColor1">#F26BBF</color>
+    <color name="courseColor2">#F7ABDB</color>
+    <color name="courseColor3">#CE7BE7</color>
+    <color name="courseColor4">#8094FF</color>
+    <color name="courseColor5">#61A2D2</color>
+    <color name="courseColor6">#4EA9AF</color>
+    <color name="courseColor7">#40AE84</color>
+    <color name="courseColor8">#4CB04C</color>
+    <color name="courseColor9">#BC972E</color>
+    <color name="courseColor10">#EA8039</color>
+    <color name="courseColor11">#FF6E4F</color>
+    <color name="courseColor12">#9C9C9C</color>
 
     <!-- Override these colors to change the text colors of the date picker -->
     <color name="blue">@color/textDarkest</color>
