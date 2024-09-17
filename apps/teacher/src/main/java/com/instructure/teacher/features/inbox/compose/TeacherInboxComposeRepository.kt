@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
@@ -34,6 +35,17 @@ class TeacherInboxComposeRepository: InboxComposeRepository {
         attachments: List<Attachment>,
         isIndividual: Boolean
     ): DataResult<List<Conversation>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addMessage(
+        conversationId: Long,
+        recipients: List<Recipient>,
+        message: String,
+        includedMessages: List<Message>,
+        attachments: List<Attachment>,
+        context: CanvasContext
+    ): DataResult<Conversation> {
         TODO("Not yet implemented")
     }
 
