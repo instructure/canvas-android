@@ -27,6 +27,22 @@ object AppThemeSelector {
         dialog.show()
     }
 
+    fun showAppThemeSelectorDialog(context: Context, onThemeChanged: (AppTheme) -> Unit) {
+        val builder = AlertDialog.Builder(context)
+            .setTitle(R.string.selectAppTheme)
+        val appThemes = AppTheme.values().map { context.getString(it.themeNameRes) }.toTypedArray()
+
+        val currentAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        builder.setSingleChoiceItems(appThemes, currentAppTheme.ordinal) { dialog, itemIndex ->
+            val newAppTheme = AppTheme.fromIndex(itemIndex)
+            setAppTheme(newAppTheme, dialog, context)
+            onThemeChanged(newAppTheme)
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
     private fun setAppTheme(appTheme: AppTheme, dialog: DialogInterface, context: Context) {
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
         ThemePrefs.appTheme = appTheme.ordinal

@@ -17,6 +17,7 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.addEnrollment
 import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
@@ -30,6 +31,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.user
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.FileUploadParams
 import com.instructure.canvasapi2.models.Group
@@ -64,6 +66,7 @@ object UserListEndpoint : Endpoint(
  * - `enrollments` -> [UserEnrollmentEndpoint]
  */
 object UserEndpoint : Endpoint(
+    Segment("observees") to ObserveeEndpoint,
     Segment("observer_alerts") to ObserverAlertsEndpoint,
     Segment("observer_alert_thresholds") to Endpoint(
         response = {
@@ -495,4 +498,26 @@ object UserBookmarksEndpoint : Endpoint(
                 request.successResponse(response)
             }
         }
+)
+
+object ObserveeEndpoint : Endpoint(
+    response = {
+        POST {
+            val user = data.users[pathVars.userId]!!
+            val pairingCode = request.url.queryParameter("pairing_code")!!
+
+            data.pairingCodes[pairingCode]?.let { student ->
+                data.courses.values.forEach { course ->
+                    data.addEnrollment(
+                        user = user,
+                        observedUser = student,
+                        course = course,
+                        type = Enrollment.EnrollmentType.Observer
+                    )
+                }
+                data.pairingCodes.remove(pairingCode)
+                request.successResponse(Unit)
+            } ?: request.unauthorizedResponse()
+        }
+    }
 )

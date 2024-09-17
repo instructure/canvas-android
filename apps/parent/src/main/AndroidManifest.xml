@@ -17,11 +17,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.instructure.parentapp">
 
+    <!-- Features -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <!-- End of Features -->
+
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
         tools:replace="android:maxSdkVersion" />
+    <!-- End of Permissions -->
 
     <application
         android:name=".util.AppManager"
@@ -34,6 +44,7 @@
         android:theme="@style/CanvasMaterialTheme_Default"
         tools:overrideLibrary="com.instructure.canvasapi">
 
+        <!-- Activities -->
         <activity
             android:name=".features.login.LoginActivity"
             android:clearTaskOnLaunch="true"
@@ -118,10 +129,38 @@
 
         <activity
             android:name=".features.main.MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false"
             android:label="@string/canvas"
             android:launchMode="singleTask"
             android:theme="@style/CanvasMaterialTheme_Default" />
+        <!-- End of Activities -->
+
+        <!-- Services -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+        <!-- End of Services -->
+
+        <!-- Providers -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
+        <!-- End of Providers -->
+
     </application>
 
 </manifest>

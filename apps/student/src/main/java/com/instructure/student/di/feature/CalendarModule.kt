@@ -16,6 +16,7 @@
  */
 package com.instructure.student.di.feature
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
@@ -37,8 +38,8 @@ import dagger.hilt.android.components.ViewModelComponent
 class CalendarModule {
 
     @Provides
-    fun provideCalendarRouter(activity: FragmentActivity): CalendarRouter {
-        return StudentCalendarRouter(activity)
+    fun provideCalendarRouter(activity: FragmentActivity, fragment: Fragment): CalendarRouter {
+        return StudentCalendarRouter(activity, fragment)
     }
 }
 

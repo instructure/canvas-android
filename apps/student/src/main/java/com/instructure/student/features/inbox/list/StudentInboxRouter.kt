@@ -38,8 +38,8 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
     }
 
     override fun attachNavigationIcon(toolbar: Toolbar) {
-        if (activity is NavigationActivity) {
-            activity.attachNavigationIcon(toolbar)
+        if (activity is NavigationActivity && fragment is InboxFragment) {
+            activity.attachNavigationDrawer(fragment, toolbar)
         }
     }
 

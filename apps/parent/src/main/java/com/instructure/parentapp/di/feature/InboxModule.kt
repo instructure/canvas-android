@@ -17,16 +17,19 @@
 
 package com.instructure.parentapp.di.feature
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,8 +41,8 @@ import dagger.hilt.android.components.ViewModelComponent
 class InboxFragmentModule {
 
     @Provides
-    fun provideInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
-        return ParentInboxRouter(activity, fragment)
+    fun provideInboxRouter(activity: FragmentActivity, navigation: Navigation): InboxRouter {
+        return ParentInboxRouter(activity, navigation)
     }
 }
 
@@ -55,5 +58,14 @@ class InboxModule {
         progressApi: ProgressAPI.ProgressInterface
     ): InboxRepository {
         return ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+    }
+
+    @Provides
+    fun provideInboxComposeRepository(
+        courseAPI: CourseAPI.CoursesInterface,
+        recipientAPI: RecipientAPI.RecipientInterface,
+        inboxAPI: InboxApi.InboxInterface,
+    ): InboxComposeRepository {
+        return ParentInboxComposeRepository(courseAPI, recipientAPI, inboxAPI)
     }
 }

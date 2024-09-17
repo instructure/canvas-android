@@ -56,8 +56,8 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="10dp"
                 android:importantForAccessibility="no"
-                    android:background="@drawable/ic_circle"
-                    android:backgroundTint="@color/backgroundInfo"/>
+                android:background="@drawable/ic_circle"
+                android:backgroundTint="@color/backgroundInfo" />
 
                 <ImageView
                     android:id="@+id/overflow"

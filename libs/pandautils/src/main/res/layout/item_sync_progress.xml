@@ -28,6 +28,8 @@
         <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
 
         <import type="android.view.View" />
+
+        <import type="com.instructure.pandares.R" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -49,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="@{itemViewModel.data.title}"
-                android:textColor="@color/white"
+                android:textColor="@{itemViewModel.data.progressState == ProgressState.ERROR ? @color/textLightest : @color/white}"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/dismissButton"
@@ -64,6 +66,7 @@
                 android:contentDescription="@string/a11y_contentDescription_syncDashboardNotificationDismiss"
                 android:src="@drawable/ic_close"
                 android:visibility="@{itemViewModel.data.progressState == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+                app:tint="@{itemViewModel.data.progressState == ProgressState.ERROR ? R.color.textLightest : R.color.white}"
                 app:accessibleTouchTarget="@{true}"
                 app:layout_constraintBottom_toBottomOf="@id/syncProgressTitle"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{itemViewModel.data.subtitle}"
-                android:textColor="@color/white"
+                android:textColor="@{itemViewModel.data.progressState == ProgressState.ERROR ? @color/textLightest : @color/white}"
                 app:layout_constraintTop_toBottomOf="@id/syncProgressTitle"
                 tools:text="125 files are syncing." />
 

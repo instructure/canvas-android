@@ -20,6 +20,7 @@ package com.instructure.parentapp.di.feature
 import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.about.AboutRepository
+import com.instructure.parentapp.features.about.ParentAboutRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +36,6 @@ class AboutModule {
         @ApplicationContext context: Context,
         apiPrefs: ApiPrefs
     ): AboutRepository {
-        // TODO: Implement
-        throw NotImplementedError()
+        return ParentAboutRepository(context, apiPrefs)
     }
 }

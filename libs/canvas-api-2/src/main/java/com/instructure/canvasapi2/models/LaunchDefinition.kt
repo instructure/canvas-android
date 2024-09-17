@@ -29,13 +29,14 @@ data class LaunchDefinition(
         var name: String,
         var description: String,
         var domain: String,
-        var placements: Placements
+        var placements: Placements,
+        var url: String
 ) : Parcelable {
 
-    val isGauge: Boolean get() = domain == _GAUGE_DOMAIN
+    val isGauge: Boolean get() = domain == GAUGE_DOMAIN
 
     companion object {
-        val _GAUGE_DOMAIN = "gauge.instructure.com"
-        val _STUDIO_DOMAIN = "arc.instructure.com" // NOTE: The subdomain hasn't changed to reflect the rebranding of Arc -> Studio yet
+        const val GAUGE_DOMAIN = "gauge.instructure.com"
+        const val STUDIO_DOMAIN = "arc.instructure.com" // NOTE: The subdomain hasn't changed to reflect the rebranding of Arc -> Studio yet
     }
 }

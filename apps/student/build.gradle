@@ -40,8 +40,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 263
-        versionName = '7.5.0'
+        versionCode = 266
+        versionName = '7.5.3'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -224,7 +224,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     buildFeatures {

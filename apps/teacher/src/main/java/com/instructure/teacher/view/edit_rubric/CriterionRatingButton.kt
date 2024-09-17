@@ -118,8 +118,8 @@ class CriterionRatingButton @JvmOverloads constructor(
 
         // Set text color to handle selected vs unselected states
         if (!isInEditMode) setTextColor(ViewStyler.generateColorStateList(
-                intArrayOf(android.R.attr.state_selected) to Color.WHITE,
-                intArrayOf(android.R.attr.state_pressed) to context.getColor(R.color.backgroundInfo),
+                intArrayOf(android.R.attr.state_selected) to context.getColor(R.color.textLightest),
+                intArrayOf(android.R.attr.state_pressed) to context.getColor(R.color.textInfo),
                 intArrayOf() to context.getColorCompat(R.color.textDark)
         ))
     }

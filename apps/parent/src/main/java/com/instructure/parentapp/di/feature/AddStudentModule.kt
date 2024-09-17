@@ -13,30 +13,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
+ */    package com.instructure.parentapp.di.feature
 
-package com.instructure.parentapp.features.settings
+import com.instructure.canvasapi2.apis.ObserverApi
+import com.instructure.parentapp.features.addstudent.AddStudentRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.material.Text
-import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+@Module
+@InstallIn(SingletonComponent::class)
+class AddStudentModule {
 
-
-class SettingsFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireActivity()).apply {
-            setContent {
-                Text(text = "Settings")
-            }
-        }
+    @Provides
+    fun provideAddStudentRepository(observerApi: ObserverApi): AddStudentRepository {
+        return AddStudentRepository(observerApi)
     }
 }

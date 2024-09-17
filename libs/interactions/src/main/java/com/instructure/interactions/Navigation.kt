@@ -28,5 +28,5 @@ interface Navigation {
     fun addBookmark()
     fun canBookmark(): Boolean
 
-    fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions
+    fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar?) where F : Fragment, F : FragmentInteractions
 }
