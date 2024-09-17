@@ -97,7 +97,7 @@ fun AlertSettingsScreen(
                     navIconRes = R.drawable.ic_back_arrow,
                     navigationActionClick = navigationActionClick,
                     backgroundColor = Color(uiState.userColor),
-                    textColor = colorResource(id = R.color.textLightest),
+                    textColor = colorResource(id = R.color.white),
                     actions = {
                         OverflowMenu(
                             studentId = uiState.student.id,
@@ -155,7 +155,33 @@ fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
                 threshold = uiState.thresholds[it]?.threshold,
                 active = uiState.thresholds[it]?.workflowState == ThresholdWorkflowState.ACTIVE,
                 color = Color(uiState.userColor),
-                actionHandler = uiState.actionHandler
+                actionHandler = uiState.actionHandler,
+                min = when (it) {
+                    AlertType.COURSE_GRADE_HIGH -> {
+                        uiState.thresholds[AlertType.COURSE_GRADE_LOW]?.threshold?.toIntOrNull()
+                            ?: 0
+                    }
+
+                    AlertType.ASSIGNMENT_GRADE_HIGH -> {
+                        uiState.thresholds[AlertType.ASSIGNMENT_GRADE_LOW]?.threshold?.toIntOrNull()
+                            ?: 0
+                    }
+
+                    else -> 0
+                },
+                max = when (it) {
+                    AlertType.COURSE_GRADE_LOW -> {
+                        uiState.thresholds[AlertType.COURSE_GRADE_HIGH]?.threshold?.toIntOrNull()
+                            ?: 100
+                    }
+
+                    AlertType.ASSIGNMENT_GRADE_LOW -> {
+                        uiState.thresholds[AlertType.ASSIGNMENT_GRADE_HIGH]?.threshold?.toIntOrNull()
+                            ?: 100
+                    }
+
+                    else -> 100
+                }
             )
         }
     }
@@ -214,6 +240,8 @@ private fun ThresholdItem(
     threshold: String?,
     active: Boolean,
     color: Color,
+    min: Int = 0,
+    max: Int = 100,
     actionHandler: (AlertSettingsAction) -> Unit
 ) {
     when (alertType) {
@@ -222,7 +250,9 @@ private fun ThresholdItem(
             threshold = threshold,
             alertType = alertType,
             color = color,
-            actionHandler = actionHandler
+            actionHandler = actionHandler,
+            min = min,
+            max = max
         )
 
         else -> SwitchItem(
@@ -241,11 +271,13 @@ private fun PercentageItem(
     threshold: String?,
     alertType: AlertType,
     color: Color,
+    min: Int,
+    max: Int,
     actionHandler: (AlertSettingsAction) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
     if (showDialog) {
-        ThresholdDialog(alertType, threshold, color, actionHandler) {
+        ThresholdDialog(alertType, threshold, color, min, max, actionHandler) {
             showDialog = false
         }
     }
@@ -276,6 +308,8 @@ private fun ThresholdDialog(
     alertType: AlertType,
     threshold: String?,
     color: Color,
+    min: Int,
+    max: Int,
     actionHandler: (AlertSettingsAction) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -313,6 +347,23 @@ private fun ThresholdDialog(
                     unfocusedIndicatorColor = colorResource(id = R.color.textDark)
                 )
             )
+            when {
+                (percentage.toIntOrNull() ?: 100) < min -> {
+                    Text(
+                        modifier = Modifier.padding(top = 8.dp),
+                        text = stringResource(id = R.string.alertSettingsMinThresholdError, min),
+                        style = TextStyle(color = colorResource(id = R.color.textDanger))
+                    )
+                }
+
+                (percentage.toIntOrNull() ?: 0) > max -> {
+                    Text(
+                        modifier = Modifier.padding(top = 8.dp),
+                        text = stringResource(id = R.string.alertSettingsMaxThresholdError, max),
+                        style = TextStyle(color = colorResource(id = R.color.textDanger))
+                    )
+                }
+            }
 
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                 TextButton(
@@ -339,6 +390,7 @@ private fun ThresholdDialog(
                     )
                 }
                 TextButton(
+                    enabled = percentage.toIntOrNull() in min..max,
                     onClick = {
                         actionHandler(
                             AlertSettingsAction.CreateThreshold(
@@ -398,7 +450,10 @@ private fun SwitchItem(
                 switchState = it
                 toggleAlert(switchState)
             },
-            colors = SwitchDefaults.colors(checkedThumbColor = color)
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = color,
+                uncheckedTrackColor = colorResource(id = R.color.textDark)
+            )
         )
     }
 }
@@ -420,7 +475,7 @@ private fun OverflowMenu(
         Icon(
             painter = painterResource(id = R.drawable.ic_kebab),
             contentDescription = stringResource(id = R.string.add),
-            tint = colorResource(id = R.color.textLightest)
+            tint = colorResource(id = R.color.white)
         )
     }
     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
@@ -489,7 +544,14 @@ fun AlertSettingsScreenPreview() {
 @Preview
 @Composable
 fun PercentageItemPreview() {
-    PercentageItem("Test", "20", AlertType.ASSIGNMENT_GRADE_HIGH, Color.Blue) {}
+    PercentageItem(
+        "Test",
+        "20",
+        AlertType.ASSIGNMENT_GRADE_HIGH,
+        Color.Blue,
+        min = 21,
+        max = 100
+    ) {}
 }
 
 @Preview
@@ -501,7 +563,7 @@ fun SwitchItemPreview() {
 @Preview
 @Composable
 fun ThresholdDialogPreview() {
-    ThresholdDialog(AlertType.ASSIGNMENT_GRADE_HIGH, "20", Color.Blue, {}, {})
+    ThresholdDialog(AlertType.ASSIGNMENT_GRADE_HIGH, "20", Color.Blue, min = 21, max = 100, {}, {})
 }
 
 @Preview
