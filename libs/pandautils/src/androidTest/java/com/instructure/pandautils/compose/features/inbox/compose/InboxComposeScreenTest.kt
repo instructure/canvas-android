@@ -21,13 +21,15 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.compose.composables.MultipleValuesRowState
 import com.instructure.pandautils.compose.composables.SelectContextUiState
-import com.instructure.pandautils.features.inbox.compose.AttachmentCardItem
-import com.instructure.pandautils.features.inbox.compose.AttachmentStatus
 import com.instructure.pandautils.features.inbox.compose.InboxComposeScreenOptions
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHiddenFields
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -206,7 +208,7 @@ class InboxComposeScreenTest {
             .assertIsDisplayed()
             .assertHasClickAction()
 
-        composeTestRule.onNode(hasContentDescription("Remove Attachment"))
+        composeTestRule.onNode(hasContentDescription("Remove attachment"))
             .assertIsDisplayed()
             .assertHasClickAction()
     }
@@ -228,6 +230,135 @@ class InboxComposeScreenTest {
         composeTestRule.onNode(hasText("Cancel"))
             .assertIsDisplayed()
             .assertHasClickAction()
+    }
+
+    @Test
+    fun testDisabledFields() {
+        setComposeScreen(
+            InboxComposeUiState(
+                disabledFields = InboxComposeOptionsDisabledFields(
+                    isContextDisabled = true,
+                    isRecipientsDisabled = true,
+                    isSendIndividualDisabled = true,
+                    isSubjectDisabled = true,
+                    isBodyDisabled = true,
+                    isAttachmentDisabled = true
+                ),
+                subject = TextFieldValue("testSubject"),
+                body = TextFieldValue("testBody"),
+                selectContextUiState = SelectContextUiState(selectedCanvasContext = Course(name = "Course 1")),
+                inlineRecipientSelectorState = MultipleValuesRowState(enabled = false, isSearchEnabled = true, selectedValues = listOf(Recipient(stringId = "r2", name = "r2"))),
+                recipientPickerUiState = RecipientPickerUiState(selectedRecipients = listOf(Recipient(stringId = "r2", name = "r2"))),
+            )
+        )
+
+        composeTestRule.onNode(hasText("Course"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasText("Course 1"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasText("To"))
+            .assertIsDisplayed()
+
+        composeTestRule.onNode(hasText("Search"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasContentDescription("Add"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasText("r2"))
+            .assertIsDisplayed()
+
+        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasText("Send individual message to each recipient"))
+            .assertIsDisplayed()
+
+        composeTestRule.onNode(hasTestTag("switch"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasText("Subject"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasText("testSubject"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasText("testBody"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+
+        composeTestRule.onNode(hasContentDescription("Add attachment"))
+            .assertIsDisplayed()
+            .assert(isNotEnabled())
+    }
+
+    @Test
+    fun testHiddenFields() {
+        setComposeScreen(
+            InboxComposeUiState(
+                hiddenFields = InboxComposeOptionsHiddenFields(
+                    isContextHidden = true,
+                    isRecipientsHidden = true,
+                    isSendIndividualHidden = true,
+                    isSubjectHidden = true,
+                    isBodyHidden = true,
+                    isAttachmentHidden = true,
+                ),
+                subject = TextFieldValue("testSubject"),
+                body = TextFieldValue("testBody"),
+                selectContextUiState = SelectContextUiState(selectedCanvasContext = Course(name = "Course 1")),
+                inlineRecipientSelectorState = MultipleValuesRowState(isSearchEnabled = true, selectedValues = listOf(Recipient(stringId = "r2", name = "r2"))),
+                recipientPickerUiState = RecipientPickerUiState(selectedRecipients = listOf(Recipient(stringId = "r2", name = "r2"))),
+            )
+        )
+
+        composeTestRule.onNode(hasText("Course"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("Course 1"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("To"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("Search"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasContentDescription("Add"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("r2"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("Send individual message to each recipient"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasTestTag("switch"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("Subject"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("testSubject"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasText("testBody"))
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(hasContentDescription("Add attachment"))
+            .assertIsNotDisplayed()
     }
 
     private fun setComposeScreen(uiState: InboxComposeUiState = getUiState()) {
@@ -258,7 +389,7 @@ class InboxComposeScreenTest {
             sendIndividual = sendIndividual,
             subject = TextFieldValue(subject),
             body = TextFieldValue(body),
-            attachments = attachments.map { AttachmentCardItem(it, AttachmentStatus.UPLOADED) },
+            attachments = attachments.map { AttachmentCardItem(it, AttachmentStatus.UPLOADED, false) },
             screenState = ScreenState.Data,
             showConfirmationDialog = showConfirmationDialog
         )

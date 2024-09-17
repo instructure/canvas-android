@@ -46,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -229,8 +228,7 @@ private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit
     ){
         OverflowMenu(
             modifier = Modifier
-                .background(color = colorResource(id = R.color.backgroundLightestElevated))
-                .testTag("overFlowMenu"),
+                .background(color = colorResource(id = R.color.backgroundLightestElevated)),
             showMenu = showMenu,
             tint = colorResource(id = R.color.textDarkest),
             onDismissRequest = {

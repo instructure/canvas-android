@@ -8,6 +8,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -28,7 +29,9 @@ fun MessageMenuItem(
         Text(
             text = label,
             color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .testTag("messageMenuItem")
         )
     }
 }

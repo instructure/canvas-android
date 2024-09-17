@@ -54,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -199,9 +200,9 @@ private fun InboxComposeScreenContent(
                 MultipleValuesRow(
                     label = stringResource(R.string.recipientsTo),
                     uiState = uiState.inlineRecipientSelectorState,
-                    itemComposable = {
-                        RecipientChip(it) {
-                            actionHandler(InboxComposeActionHandler.RemoveRecipient(it))
+                    itemComposable = { recipient, enabled ->
+                        RecipientChip(enabled, recipient) {
+                            actionHandler(InboxComposeActionHandler.RemoveRecipient(recipient))
                         }
                     },
                     actionHandler = { action ->
@@ -365,6 +366,7 @@ private fun PreviousMessageView(
     Column(
         modifier = Modifier
             .animateContentSize()
+            .testTag("previousMessageView")
     ) {
         Column(
             modifier = Modifier

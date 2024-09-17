@@ -204,7 +204,7 @@ class InboxDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val result = repository.updateStarred(conversationId, isStarred)
             if (result.isSuccess) {
-                _uiState.update { it.copy(conversation = result.dataOrNull) }
+                _uiState.update { it.copy(conversation = it.conversation?.copy(isStarred = result.dataOrNull?.isStarred ?: false)) }
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
@@ -217,7 +217,7 @@ class InboxDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val result = repository.updateState(conversationId, state)
             if (result.isSuccess) {
-                _uiState.update { it.copy(conversation = result.dataOrNull) }
+                _uiState.update { it.copy(conversation = it.conversation?.copy(workflowState = result.dataOrNull?.workflowState)) }
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }

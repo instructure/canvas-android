@@ -1,0 +1,157 @@
+package com.instructure.canvas.espresso.common.pages.compose
+
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.filter
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onParent
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Message
+
+class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
+
+    fun assertTitle(title: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(title)
+            .isDisplayed()
+    }
+
+    fun assertConversationSubject(subject: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(subject)
+            .isDisplayed()
+    }
+
+    fun assertMessageDisplayed(message: Message) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(message.body ?: "").performScrollTo()
+    }
+
+    fun assertAllMessagesDisplayed(conversation: Conversation) {
+        conversation.messages.forEach { message ->
+            assertMessageDisplayed(message)
+        }
+    }
+
+    fun assertStarred(isStarred: Boolean) {
+        composeTestRule.waitForIdle()
+        if (isStarred) {
+            composeTestRule.onNodeWithContentDescription("Unstar")
+        } else {
+            composeTestRule.onNodeWithContentDescription("Star")
+        }
+    }
+
+    fun assertDeleteMessageAlertDialog() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Delete Message").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Are you sure you want to delete your copy of this message? This action cannot be undone.").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsDisplayed()
+    }
+
+    fun assertDeleteConversationAlertDialog() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Delete Conversation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Are you sure you want to delete your copy of this conversation? This action cannot be undone.").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Delete").assertIsDisplayed()
+    }
+
+    fun pressBackButton() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithContentDescription("Go Back").performClick()
+    }
+
+    fun pressReplyTextButtonForMessage(message: Message) {
+        composeTestRule.waitForIdle()
+
+        val replyButton = composeTestRule.onNodeWithText(message.body ?: "")
+            .onParent() // SelectionContainer
+            .onParent() // Column
+            .onChildren()
+            .filterToOne(hasText("Reply"))
+
+        composeTestRule.waitForIdle()
+        replyButton.performScrollTo()
+        replyButton.performClick()
+    }
+
+    fun pressReplyIconButtonForMessage(message: Message) {
+        composeTestRule.waitForIdle()
+
+        val replyButton = composeTestRule.onNodeWithText(message.body ?: "")
+            .onParent() // SelectionContainer
+            .onParent() // Column
+            .onChildren()
+            .filterToOne(hasContentDescription("Reply"))
+
+        replyButton.performScrollTo()
+        composeTestRule.waitForIdle()
+        replyButton.performScrollTo()
+        replyButton.performClick()
+    }
+
+    fun pressStarButton(newIsStarred: Boolean) {
+        if (newIsStarred) {
+            composeTestRule.onNodeWithContentDescription("Star").performClick()
+        } else {
+            composeTestRule.onNodeWithContentDescription("Unstar").performClick()
+        }
+    }
+
+    fun pressAlertButton(buttonLabel: String) {
+        composeTestRule.onNodeWithText(buttonLabel).performClick()
+    }
+
+    fun pressOverflowMenuItemForMessage(conversation: Conversation, message: Message, buttonLabel: String) {
+        pressOverflowIconButtonForMessage(conversation, message)
+
+        composeTestRule.onNode(hasTestTag("messageMenuItem").and(hasText(buttonLabel)), true)
+            .performClick()
+    }
+
+    fun pressOverflowMenuItemForConversation(buttonLabel: String) {
+        pressOverflowIconButtonForConversation()
+
+        composeTestRule.onNode(hasTestTag("messageMenuItem").and(hasText(buttonLabel)), true)
+            .performClick()
+    }
+
+    private fun pressOverflowIconButtonForMessage(conversation: Conversation, message: Message) {
+        composeTestRule.waitForIdle()
+
+        val overflowButton = composeTestRule.onNodeWithText(message.body ?: "")
+            .onParent() // SelectionContainer
+            .onParent() // Column
+            .onChildren()
+            .filter(hasContentDescription("More options"))
+            .get(conversation.messages.indexOf(message))
+
+        overflowButton.performScrollTo()
+        composeTestRule.waitForIdle()
+        overflowButton.performClick()
+    }
+
+    private fun pressOverflowIconButtonForConversation() {
+        composeTestRule.waitForIdle()
+
+        val overflowButton = composeTestRule.onNode(
+            hasParent(hasTestTag("toolbar")).and(
+                hasContentDescription("More options")
+            )
+        )
+
+        overflowButton.performClick()
+    }
+}

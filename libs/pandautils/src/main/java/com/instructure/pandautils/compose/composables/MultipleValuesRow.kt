@@ -63,7 +63,7 @@ fun <T> MultipleValuesRow(
     label: String,
     uiState: MultipleValuesRowState<T>,
     actionHandler: (MultipleValuesRowAction) -> Unit,
-    itemComposable: @Composable (T) -> Unit,
+    itemComposable: @Composable (T, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     searchResultComposable: (@Composable (T) -> Unit)? = null,
 ) {
@@ -105,7 +105,7 @@ fun <T> MultipleValuesRow(
                             label = animationLabel,
                             targetState = value,
                         ) {
-                            itemComposable(it)
+                            itemComposable(it, uiState.enabled)
                         }
                     }
                 }
@@ -218,7 +218,7 @@ fun LabelMultipleValuesRowPreview() {
     MultipleValuesRow(
         label = "To",
         uiState = uiState,
-        itemComposable = { user ->
+        itemComposable = { user, enabled ->
             Text(user.name ?: "")
         },
         actionHandler = {},

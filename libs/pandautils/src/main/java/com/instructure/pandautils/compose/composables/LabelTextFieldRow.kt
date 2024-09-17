@@ -62,6 +62,7 @@ fun LabelTextFieldRow(
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
                 .clickable(
+                    enabled = enabled,
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ) {

@@ -6,7 +6,10 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.isNotEnabled
@@ -16,6 +19,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Message
+import com.instructure.pandautils.utils.toLocalString
+import java.time.ZonedDateTime
 
 class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     fun assertTitle(title: String) {
@@ -42,7 +49,8 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertRecipientSelected(recipientName: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(recipientName).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("recipientChip").and(hasAnyDescendant(hasText(recipientName))))
+            .assertIsDisplayed()
     }
 
     fun assertRecipientNotSelected(recipientName: String) {
@@ -82,6 +90,26 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Are you sure you would like to exit without saving?").assertIsDisplayed()
         composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
         composeTestRule.onNodeWithText("Exit").assertIsDisplayed()
+    }
+
+    fun assertPreviousMessagesDisplayed(conversation: Conversation, includedMessages: List<Message>) {
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithText("Previous Messages")
+            .assertIsDisplayed()
+
+        includedMessages.forEach { message ->
+            composeTestRule.onNodeWithText(message.body!!)
+                .assertIsDisplayed()
+
+            val authorMatcher = hasTestTag("previousMessageView").and(hasAnyDescendant(hasText(ZonedDateTime.parse(message.createdAt ?: "").toLocalString())))
+            composeTestRule.onNode(authorMatcher)
+                .assertIsDisplayed()
+
+            val recipientsMatcher = hasTestTag("previousMessageView").and(hasAnyDescendant(hasText(conversation.participants.first { it.id == message.authorId }.name!!)))
+            composeTestRule.onNode(recipientsMatcher)
+                .assertIsDisplayed()
+        }
     }
 
     fun typeSubject(subject: String) {
