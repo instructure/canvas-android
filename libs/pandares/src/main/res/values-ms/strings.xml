@@ -899,21 +899,6 @@
     <string name="colorPickerDialogMessage">Peribadikan kursus anda dengan menetapkan warna baharu.</string>
     <string name="colorPickerError">Warna kursus tidak boleh ditetapkan pada masa ini.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Merah jambu</string>
-    <string name="contentDescriptionColorBarbie">Merah jambu terang</string>
-    <string name="contentDescriptionColorBarneyPurple">Lembayung</string>
-    <string name="contentDescriptionColorEggplant">Ungu</string>
-    <string name="contentDescriptionColorUltramarine">Biru Tua</string>
-    <string name="contentDescriptionColorOcean11">Biru</string>
-    <string name="contentDescriptionColorCyan">Sian</string>
-    <string name="contentDescriptionColorAquaMarine">Biru Laut</string>
-    <string name="contentDescriptionColorEmeraldGreen">Hijau Zamrud</string>
-    <string name="contentDescriptionColorFreshCutLawn">Hijau</string>
-    <string name="contentDescriptionColorChartreuse">Hijau Pucuk Pisang</string>
-    <string name="contentDescriptionColorSunFlower">Kuning</string>
-    <string name="contentDescriptionColorTangerine">Oren</string>
-    <string name="contentDescriptionColorBloodOrange">Oren Tua</string>
-    <string name="contentDescriptionColorSriracha">Merah</string>
 
     <string name="courseFavorited">Kursus %s, kegemaran.</string>
     <string name="courseNotFavorited">Kursus %s, bukan kegemaran.</string>
