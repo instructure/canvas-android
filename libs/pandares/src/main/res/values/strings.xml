@@ -1835,4 +1835,16 @@
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
     <string name="add">Add</string>
+    <string name="courseColor1contentDescription">Berry</string>
+    <string name="courseColor2contentDescription">Fuchsia</string>
+    <string name="courseColor3contentDescription">Violet</string>
+    <string name="courseColor4contentDescription">Blue</string>
+    <string name="courseColor5contentDescription">Aqua</string>
+    <string name="courseColor6contentDescription">Teal</string>
+    <string name="courseColor7contentDescription">Green</string>
+    <string name="courseColor8contentDescription">Moss</string>
+    <string name="courseColor9contentDescription">Honey</string>
+    <string name="courseColor10contentDescription">Rust</string>
+    <string name="courseColor11contentDescription">Red</string>
+    <string name="courseColor12contentDescription">Gray</string>
 </resources>

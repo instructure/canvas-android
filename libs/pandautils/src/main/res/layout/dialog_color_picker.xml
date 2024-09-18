@@ -40,22 +40,22 @@
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor1"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorCottonCandy"/>
+            android:contentDescription="@string/courseColor1contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor2"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorBarbie"/>
+            android:contentDescription="@string/courseColor2contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor3"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorBarneyPurple"/>
+            android:contentDescription="@string/courseColor3contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor4"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorEggplant"/>
+            android:contentDescription="@string/courseColor4contentDescription"/>
 
     </LinearLayout>
 
@@ -67,22 +67,22 @@
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor5"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorOcean11"/>
+            android:contentDescription="@string/courseColor5contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor6"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorCyan"/>
+            android:contentDescription="@string/courseColor6contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor7"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorAquaMarine"/>
+            android:contentDescription="@string/courseColor7contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor8"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorEmeraldGreen"/>
+            android:contentDescription="@string/courseColor8contentDescription"/>
 
     </LinearLayout>
 
@@ -95,22 +95,22 @@
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor9"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorChartreuse"/>
+            android:contentDescription="@string/courseColor9contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor10"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorSunFlower"/>
+            android:contentDescription="@string/courseColor10contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor11"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorTangerine"/>
+            android:contentDescription="@string/courseColor11contentDescription"/>
 
         <com.instructure.pandautils.views.ColorPickerIcon
             android:id="@+id/courseColor12"
             style="@style/ColorPickerDialogItem"
-            android:contentDescription="@string/contentDescriptionColorBloodOrange"/>
+            android:contentDescription="@string/courseColor12contentDescription"/>
 
     </LinearLayout>
 
