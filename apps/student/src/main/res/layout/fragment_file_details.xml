@@ -15,7 +15,7 @@
   ~
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_root"
@@ -27,7 +27,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:layout_alignParentTop="true"
+        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/textDarkest"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
@@ -38,7 +38,7 @@
         android:id="@+id/fileName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:focusable="true"
@@ -54,7 +54,7 @@
         android:id="@+id/fileType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fileName"
+        app:layout_constraintTop_toBottomOf="@+id/fileName"
         android:layout_marginTop="12dp"
         android:focusable="true"
         android:gravity="center"
@@ -68,7 +68,10 @@
         android:id="@+id/fileIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        app:layout_constraintTop_toBottomOf="@+id/fileType"
+        app:layout_constraintBottom_toTopOf="@id/buttonContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/fileIcon"
         android:focusable="true"
         android:minHeight="48dp"
@@ -79,8 +82,9 @@
         android:id="@+id/fileLoadingProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonContainer"
-        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toTopOf="@id/buttonContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -88,7 +92,7 @@
         android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:orientation="horizontal"
         android:padding="12dp">
 
@@ -112,4 +116,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
