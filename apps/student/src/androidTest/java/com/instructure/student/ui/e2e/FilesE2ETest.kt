@@ -19,6 +19,8 @@ package com.instructure.student.ui.e2e
 import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -224,4 +226,73 @@ class FilesE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Assert that there is a folder called '$testFolderName' is displayed.")
         fileListPage.assertItemDisplayed(testFolderName)
     }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
+    fun testUploadGlobalFilesE2E() {
+
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        val testFile = "samplepdf.pdf"
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to the global 'Files' Page from the left side menu.")
+        leftSideNavigationDrawerPage.clickFilesMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (+) icon and after that on the 'Upload File' icon.")
+        fileListPage.clickAddButton()
+        fileListPage.clickUploadFileButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the File Chooser Page details (title, subtitle, camera, gallery, device) are displayed correctly.")
+        fileChooserPage.assertFileChooserDetails()
+
+        Log.d(ASSERTION_TAG, "Assert that the File Choose Page title is 'Upload To My Files' as we would like to upload to the 'global' Files.")
+        fileChooserPage.assertDialogTitle("Upload To My Files")
+
+        //Note: This was a bug previously that if we attached a file, removing it, and attach it again,
+        // there we placeholder numbers like ("samplepdf(1).pdf") in the file name, even though we did not uploaded the first selection.
+        Log.d(PREPARATION_TAG, "Simulate file picker intent.")
+        Intents.init()
+        try {
+            stubFilePickerIntent(testFile)
+            fileChooserPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+
+        Log.d(ASSERTION_TAG, "Assert that the '$testFile' file is displayed on the File Chooser Page.")
+        fileChooserPage.assertFileDisplayed(testFile)
+
+        Log.d(STEP_TAG, "Remove the '$testFile' file by clicking on the remove (X) icon, and assert that the file has disappear.")
+        fileChooserPage.removeFile(testFile)
+        fileChooserPage.assertFileNotDisplayed(testFile)
+
+        Log.d(PREPARATION_TAG, "Simulate file picker intent (again).")
+        Intents.init()
+        try {
+            stubFilePickerIntent(testFile)
+            fileChooserPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+
+        Log.d(ASSERTION_TAG, "Assert that the '$testFile' file is displayed on the File Chooser Page.")
+        fileChooserPage.assertFileDisplayed(testFile)
+
+        Log.d(STEP_TAG, "Click on the 'Upload' button.")
+        fileChooserPage.clickUpload()
+
+        Log.d(STEP_TAG, "Assert that the file upload was successful so the file has displayed on the (global) File List Page.")
+        fileListPage.assertItemDisplayed(testFile)
+    }
+
 }
