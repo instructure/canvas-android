@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -557,6 +558,6 @@ class InboxComposeViewModelTest {
     //endregion
 
     private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
-        return InboxComposeViewModel(context, fileDownloader, inboxComposeRepository, attachmentDao)
+        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao)
     }
 }

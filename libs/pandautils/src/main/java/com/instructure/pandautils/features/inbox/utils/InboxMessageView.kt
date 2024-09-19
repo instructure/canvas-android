@@ -46,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,9 +54,12 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
@@ -184,14 +188,22 @@ private fun InboxMessageAuthorView(
                 messageState.recipients.map { it.name }.joinToString(", ")
             } else {
                 if (messageState.recipients.size > 1) {
-                    "${messageState.recipients[0].name} + ${messageState.recipients.size - 1} Others"
+                    stringResource(
+                        R.string.inboxMessageRecipientsText,
+                        messageState.recipients[0].name ?: "",
+                        messageState.recipients.size - 1
+                    )
                 } else {
                     messageState.recipients[0].name
                 }
             }
 
             Text(
-                text = "${author?.name} to $recipientText",
+                text = stringResource(
+                    R.string.inboxMessageAuthorAndRecipientsLabel,
+                    author?.name ?: "",
+                    recipientText ?:""
+                ),
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest)
             )
@@ -272,5 +284,57 @@ private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit
             }
 
         }
+    }
+}
+
+@Composable
+@Preview
+fun InboxMessageViewPreviewWithActions() {
+    ContextKeeper.appContext = LocalContext.current
+
+    Column(
+        modifier = Modifier.background(colorResource(id = R.color.backgroundLightest))
+    ){
+        InboxMessageView(
+            messageState = InboxMessageUiState(
+                author = BasicUser(id = 1, name = "User 1"),
+                recipients = listOf(BasicUser(id = 2, name = "User 2")),
+                message = Message(
+                    id = 1,
+                    authorId = 1,
+                    body = "Test message",
+                    participatingUserIds = listOf(2),
+                    createdAt = ZonedDateTime.now().toString()
+                ),
+                enabledActions = true
+            ),
+            actionHandler = {}
+        )
+    }
+}
+
+@Composable
+@Preview
+fun InboxMessageViewPreviewWithoutActions() {
+    ContextKeeper.appContext = LocalContext.current
+
+    Column(
+        modifier = Modifier.background(colorResource(id = R.color.backgroundLightest))
+    ){
+        InboxMessageView(
+            messageState = InboxMessageUiState(
+                author = BasicUser(id = 1, name = "User 1"),
+                recipients = listOf(BasicUser(id = 2, name = "User 2")),
+                message = Message(
+                    id = 1,
+                    authorId = 1,
+                    body = "Test message",
+                    participatingUserIds = listOf(2),
+                    createdAt = ZonedDateTime.now().toString()
+                ),
+                enabledActions = false
+            ),
+            actionHandler = {}
+        )
     }
 }

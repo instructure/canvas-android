@@ -323,7 +323,7 @@ private fun InboxComposeScreenContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    "Previous Messages",
+                    stringResource(com.instructure.pandautils.R.string.previousMessages),
                     color = colorResource(id = R.color.textDarkest),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,

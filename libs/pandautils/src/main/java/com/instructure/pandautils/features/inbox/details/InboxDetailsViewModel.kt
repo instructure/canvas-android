@@ -184,11 +184,11 @@ class InboxDetailsViewModel @Inject constructor(
             if (result.isSuccess) {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeleted)))
                 _events.send(InboxDetailsFragmentAction.CloseFragment)
+
+                refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)))
             }
-
-            refreshParentFragment()
         }
     }
 
@@ -207,11 +207,11 @@ class InboxDetailsViewModel @Inject constructor(
                         messageStates = conversation?.messages?.map { getMessageViewState(conversation, it) } ?: emptyList()
                     )
                 }
+
+                refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)))
             }
-
-            refreshParentFragment()
         }
     }
 
@@ -220,11 +220,11 @@ class InboxDetailsViewModel @Inject constructor(
             val result = repository.updateStarred(conversationId, isStarred)
             if (result.isSuccess) {
                 _uiState.update { it.copy(conversation = it.conversation?.copy(isStarred = result.dataOrNull?.isStarred ?: false)) }
+
+                refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
-
-            refreshParentFragment()
         }
     }
 
@@ -233,11 +233,11 @@ class InboxDetailsViewModel @Inject constructor(
             val result = repository.updateState(conversationId, state)
             if (result.isSuccess) {
                 _uiState.update { it.copy(conversation = it.conversation?.copy(workflowState = result.dataOrNull?.workflowState)) }
+
+                refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
-
-            refreshParentFragment()
         }
     }
 }

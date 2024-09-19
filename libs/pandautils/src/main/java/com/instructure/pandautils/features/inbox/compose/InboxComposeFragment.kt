@@ -38,7 +38,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreenWrapper
-import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.FORWARD
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.NEW_MESSAGE
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.REPLY
@@ -69,12 +68,6 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
                 InboxComposeScreenWrapper(title(), uiState, viewModel::handleAction, viewModel::handleAction, viewModel::handleAction)
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initStateFromArgs()
     }
 
     override val navigation: Navigation?
@@ -124,11 +117,6 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
                 activity?.startActivity(urlIntent)
             }
         }
-    }
-
-    private fun initStateFromArgs() {
-        val args = arguments?.getParcelable<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS)
-        viewModel.initFromOptions(args)
     }
 
     companion object {

@@ -434,6 +434,14 @@
     <string name="a11y_removeRecipient">Remove Recipient</string>
     <string name="failed_to_send_message">Failed to send message</string>
     <string name="failed_to_open_attachment">Failed to open attachment</string>
+    <string name="failed_to_load_conversation">Failed to load conversation</string>
+    <string name="no_messages_found">No messages found</string>
+    <string name="inboxReplySubjectRePrefix">Re: %1$s</string>
+    <string name="inboxForwardSubjectFwdPrefix">Fwd: %1$s</string>
+    <string name="inboxMessageAuthorAndRecipientsLabel">%1$s to %2$s</string>
+    <string name="inboxMessageRecipientsText">%1$s + %2$s Others</string>
+    <string name="add">Add</string>
+    <string name="previousMessages">Previous Messages</string>
     <plurals name="people">
         <item quantity="one">%d Person</item>
         <item quantity="other">%d People</item>
@@ -1821,5 +1829,4 @@
     <string name="featureFlags">Feature Flags</string>
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
-    <string name="add">Add</string>
 </resources>

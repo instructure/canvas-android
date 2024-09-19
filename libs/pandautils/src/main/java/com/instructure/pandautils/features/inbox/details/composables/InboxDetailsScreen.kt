@@ -27,7 +27,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -45,14 +46,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
@@ -64,8 +71,10 @@ import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
 import com.instructure.pandautils.features.inbox.details.ScreenState
+import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.InboxMessageView
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import java.time.ZonedDateTime
 
 @Composable
 fun InboxDetailsScreen(
@@ -113,26 +122,21 @@ private fun InboxDetailsScreenContent(
             .pullRefresh(pullToRefreshState)
             .padding(padding)
     ) {
+        when (uiState.state) {
+            is ScreenState.Loading -> {
+                InboxDetailsLoading()
+            }
 
-        LazyColumn {
-            item {
-                when (uiState.state) {
-                    is ScreenState.Loading -> {
-                        InboxDetailsLoading()
-                    }
+            is ScreenState.Error -> {
+                InboxDetailsError(actionHandler)
+            }
 
-                    is ScreenState.Error -> {
-                        InboxDetailsError(actionHandler)
-                    }
+            is ScreenState.Empty -> {
+                InboxDetailsEmpty(actionHandler)
+            }
 
-                    is ScreenState.Empty -> {
-                        InboxDetailsEmpty(actionHandler)
-                    }
-
-                    is ScreenState.Success -> {
-                        InboxDetailsContentView(uiState, actionHandler, messageActionHandler)
-                    }
-                }
+            is ScreenState.Success -> {
+                InboxDetailsContentView(uiState, actionHandler, messageActionHandler)
             }
         }
 
@@ -153,6 +157,7 @@ private fun InboxDetailsLoading() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         Loading()
     }
@@ -172,7 +177,9 @@ private fun InboxDetailsEmpty(actionHandler: (InboxDetailsAction) -> Unit) {
     EmptyContent(
         emptyMessage = stringResource(R.string.no_messages_found),
         imageRes = R.drawable.ic_panda_nocourses,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         buttonText = stringResource(id = R.string.retry),
         buttonClick = { actionHandler(InboxDetailsAction.RefreshCalled) }
     )
@@ -203,7 +210,11 @@ private fun InboxDetailsContentView(
         )
     }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -368,3 +379,98 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
     }
 }
 
+@Composable
+@Preview
+fun InboxDetailsScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
+        conversationId = 1,
+        conversation = null,
+        messageStates = emptyList(),
+        state = ScreenState.Loading
+    ))
+}
+
+@Composable
+@Preview
+fun InboxDetailsScreenErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
+        conversationId = 1,
+        conversation = null,
+        messageStates = emptyList(),
+        state = ScreenState.Error
+    ))
+}
+
+@Composable
+@Preview
+fun InboxDetailsScreenEmptyPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
+        conversationId = 1,
+        conversation = Conversation(),
+        messageStates = emptyList(),
+        state = ScreenState.Empty
+    ))
+}
+
+@Composable
+@Preview
+fun InboxDetailsScreenContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val messages = listOf(
+        Message(
+            createdAt = ZonedDateTime.now().toString(),
+            body = "Message 1",
+            authorId = 1,
+            participatingUserIds = listOf(2),
+            attachments = listOf(
+                Attachment(filename = "Attachment 1.txt", size = 1452),
+            )
+        ),
+        Message(
+            createdAt = ZonedDateTime.now().toString(),
+            body = "Message 2",
+            authorId = 2,
+            participatingUserIds = listOf(1),
+            attachments = listOf(
+                Attachment(filename = "Attachment 2.txt", size = 1252),
+            )
+        ),
+    )
+
+    val conversation = Conversation(
+        id = 1,
+        subject = "Test subject",
+        messageCount = 2,
+        messages = messages,
+        isStarred = true,
+        participants = mutableListOf(
+            BasicUser(id = 1, name = "User 1"),
+            BasicUser(id = 2, name = "User 2"),
+        )
+    )
+
+    val messageStates = messages.map { message ->
+        val author = conversation.participants.find { it.id == message.authorId }
+        val recipients = conversation.participants.filter { message.participatingUserIds.filter { it != message.authorId }.contains(it.id) }
+        InboxMessageUiState(
+            message = message,
+            author = author,
+            recipients = recipients,
+            enabledActions = true,
+        )
+    }
+
+    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
+        conversationId = 1,
+        conversation = conversation,
+        messageStates = messageStates,
+        state = ScreenState.Success
+    ))
+}

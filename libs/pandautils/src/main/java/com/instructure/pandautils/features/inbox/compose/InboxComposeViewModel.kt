@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
@@ -50,6 +51,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InboxComposeViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val fileDownloader: FileDownloader,
     private val inboxComposeRepository: InboxComposeRepository,
@@ -62,6 +64,8 @@ class InboxComposeViewModel @Inject constructor(
 
     private val _events = Channel<InboxComposeViewModelAction>()
     val events = _events.receiveAsFlow()
+
+    private val options = savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS)
 
     private val debouncedInnerSearch = debounce<String>(waitMs = 200, coroutineScope = viewModelScope) { searchQuery ->
         val recipients = getRecipientList(
@@ -86,9 +90,12 @@ class InboxComposeViewModel @Inject constructor(
 
     init {
         loadContexts()
+        if (options != null) {
+            initFromOptions(options)
+        }
     }
 
-    fun initFromOptions(options: InboxComposeOptions?) {
+    private fun initFromOptions(options: InboxComposeOptions?) {
         options?.let {
             val context = CanvasContext.fromContextCode(options.defaultValues.contextCode, options.defaultValues.contextName)
             context?.let { loadRecipients("", it, false) }
