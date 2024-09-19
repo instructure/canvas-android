@@ -86,4 +86,9 @@ class CourseApi {
     var dio = canvasDio(forceRefresh: forceRefresh);
     return fetch(dio.get('courses/$courseId/permissions'));
   }
+
+  Future<List<String>?> getEnabledCourseFeatures(String courseId, {bool forceRefresh = false}) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetchList(dio.get('courses/$courseId/features/enabled'));
+  }
 }
