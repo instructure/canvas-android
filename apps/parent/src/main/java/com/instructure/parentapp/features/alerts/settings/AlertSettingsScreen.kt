@@ -29,7 +29,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -115,6 +117,7 @@ fun AlertSettingsScreen(
                         modifier = Modifier
                             .padding(padding)
                             .fillMaxSize()
+                            .testTag("loading")
                     )
                 }
 
@@ -137,7 +140,7 @@ fun AlertSettingsScreen(
 
 @Composable
 fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         StudentDetails(
             avatarUrl = uiState.avatarUrl,
             studentName = uiState.studentName,
@@ -296,11 +299,13 @@ private fun PercentageItem(
             .clickable { showDialog = true }
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
-            .height(56.dp),
+            .height(56.dp)
+            .testTag("${alertType.name}_thresholdItem"),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier.testTag("${alertType.name}_thresholdTitle"),
             text = title,
             style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
         )
@@ -308,116 +313,10 @@ private fun PercentageItem(
             text = threshold?.let { "${it}%" }
                 ?: stringResource(id = R.string.alertSettingsThresholdNever),
             style = TextStyle(color = color, textAlign = TextAlign.End),
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .padding(8.dp)
+                .testTag("${alertType.name}_thresholdValue")
         )
-    }
-}
-
-@Composable
-private fun ThresholdDialog(
-    alertType: AlertType,
-    threshold: String?,
-    color: Color,
-    min: Int,
-    max: Int,
-    actionHandler: (AlertSettingsAction) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var percentage by remember { mutableStateOf(threshold.orEmpty()) }
-    Dialog(onDismissRequest = { onDismiss() }) {
-        Column(
-            Modifier
-                .background(color = colorResource(id = R.color.backgroundLightest))
-                .padding(16.dp)
-        ) {
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp),
-                text = stringResource(id = getTitle(alertType)),
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.textDarkest)
-                )
-            )
-
-            TextField(
-                value = percentage,
-                onValueChange = {
-                    percentage = it
-                },
-                label = {
-                    Text(text = stringResource(id = R.string.alertSettingsThresholdLabel))
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = color,
-                    focusedLabelColor = color,
-                    cursorColor = color,
-                    textColor = colorResource(id = R.color.textDarkest),
-                    unfocusedLabelColor = colorResource(id = R.color.textDark),
-                    unfocusedIndicatorColor = colorResource(id = R.color.textDark)
-                )
-            )
-            when {
-                (percentage.toIntOrNull() ?: 100) <= min -> {
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = stringResource(id = R.string.alertSettingsMinThresholdError, min),
-                        style = TextStyle(color = colorResource(id = R.color.textDanger))
-                    )
-                }
-
-                (percentage.toIntOrNull() ?: 0) >= max -> {
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = stringResource(id = R.string.alertSettingsMaxThresholdError, max),
-                        style = TextStyle(color = colorResource(id = R.color.textDanger))
-                    )
-                }
-            }
-
-            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                TextButton(
-                    onClick = {
-                        onDismiss()
-                    }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = TextStyle(color = color)
-                    )
-                }
-                TextButton(onClick = {
-                    actionHandler(
-                        AlertSettingsAction.DeleteThreshold(
-                            alertType
-                        )
-                    )
-                    onDismiss()
-                }) {
-                    Text(
-                        text = stringResource(id = R.string.alertSettingsThresholdNever),
-                        style = TextStyle(color = color)
-                    )
-                }
-                TextButton(
-                    enabled = percentage.toIntOrNull() in min..max,
-                    onClick = {
-                        actionHandler(
-                            AlertSettingsAction.CreateThreshold(
-                                alertType,
-                                percentage
-                            )
-                        )
-                        onDismiss()
-                    }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.save),
-                        style = TextStyle(color = color)
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -446,15 +345,18 @@ private fun SwitchItem(
             }
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
-            .height(56.dp),
+            .height(56.dp)
+            .testTag("${alertType.name}_thresholdItem"),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier.testTag("${alertType.name}_thresholdTitle"),
             text = title,
             style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
         )
         Switch(
+            modifier = Modifier.testTag("${alertType.name}_thresholdSwitch"),
             checked = switchState,
             onCheckedChange = {
                 switchState = it
@@ -465,6 +367,122 @@ private fun SwitchItem(
                 uncheckedTrackColor = colorResource(id = R.color.textDark)
             )
         )
+    }
+}
+
+@Composable
+private fun ThresholdDialog(
+    alertType: AlertType,
+    threshold: String?,
+    color: Color,
+    min: Int,
+    max: Int,
+    actionHandler: (AlertSettingsAction) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var percentage by remember { mutableStateOf(threshold.orEmpty()) }
+    Dialog(onDismissRequest = { onDismiss() }) {
+        Column(
+            Modifier
+                .background(color = colorResource(id = R.color.backgroundLightest))
+                .padding(16.dp)
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .testTag("thresholdDialogTitle"),
+                text = stringResource(id = getTitle(alertType)),
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.textDarkest)
+                )
+            )
+
+            TextField(
+                modifier = Modifier.testTag("thresholdDialogInput"),
+                value = percentage,
+                onValueChange = {
+                    percentage = it
+                },
+                label = {
+                    Text(text = stringResource(id = R.string.alertSettingsThresholdLabel))
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = color,
+                    focusedLabelColor = color,
+                    cursorColor = color,
+                    textColor = colorResource(id = R.color.textDarkest),
+                    unfocusedLabelColor = colorResource(id = R.color.textDark),
+                    unfocusedIndicatorColor = colorResource(id = R.color.textDark)
+                )
+            )
+            val errorText = when {
+                (percentage.toIntOrNull() ?: 100) <= min ->
+                    stringResource(id = R.string.alertSettingsMinThresholdError, min)
+
+                (percentage.toIntOrNull() ?: 0) >= max ->
+                    stringResource(id = R.string.alertSettingsMaxThresholdError, max)
+
+                else -> null
+            }
+            if (errorText != null) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .testTag("thresholdDialogError"),
+                    text = errorText,
+                    style = TextStyle(color = colorResource(id = R.color.textDanger))
+                )
+            }
+
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                TextButton(
+                    modifier = Modifier.testTag("thresholdDialogCancelButton"),
+                    onClick = {
+                        onDismiss()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.cancel),
+                        style = TextStyle(color = color)
+                    )
+                }
+                TextButton(
+                    modifier = Modifier.testTag("thresholdDialogNeverButton"),
+                    onClick = {
+                        actionHandler(
+                            AlertSettingsAction.DeleteThreshold(
+                                alertType
+                            )
+                        )
+                        onDismiss()
+                    }) {
+                    Text(
+                        text = stringResource(id = R.string.alertSettingsThresholdNever),
+                        style = TextStyle(color = color)
+                    )
+                }
+                TextButton(
+                    modifier = Modifier.testTag("thresholdDialogSaveButton"),
+                    enabled = percentage.toIntOrNull() in min..max,
+                    onClick = {
+                        actionHandler(
+                            AlertSettingsAction.CreateThreshold(
+                                alertType,
+                                percentage
+                            )
+                        )
+                        onDismiss()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.save),
+                        style = TextStyle(color = color)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -481,7 +499,9 @@ private fun OverflowMenu(
             showConfirmationDialog = false
         }
     }
-    IconButton(onClick = { showMenu = true }) {
+    IconButton(
+        modifier = Modifier.testTag("overflowMenu"),
+        onClick = { showMenu = true }) {
         Icon(
             painter = painterResource(id = R.drawable.ic_kebab),
             contentDescription = stringResource(id = R.string.add),
@@ -489,10 +509,12 @@ private fun OverflowMenu(
         )
     }
     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-        DropdownMenuItem(onClick = {
-            showMenu = false
-            showConfirmationDialog = true
-        }) {
+        DropdownMenuItem(
+            modifier = Modifier.testTag("deleteMenuItem"),
+            onClick = {
+                showMenu = false
+                showConfirmationDialog = true
+            }) {
             Text(text = stringResource(id = R.string.delete))
         }
     }
@@ -509,6 +531,7 @@ private fun UnpairStudentDialog(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         title = {
             Text(
+                modifier = Modifier.testTag("deleteDialogTitle"),
                 text = stringResource(id = R.string.unpairStudentTitle),
                 style = TextStyle(color = colorResource(id = R.color.textDarkest))
             )
@@ -521,15 +544,19 @@ private fun UnpairStudentDialog(
         },
         onDismissRequest = { onDismiss() },
         confirmButton = {
-            TextButton(onClick = {
-                actionHandler(AlertSettingsAction.UnpairStudent(studentId))
-                onDismiss()
-            }) {
+            TextButton(
+                modifier = Modifier.testTag("deleteConfirmButton"),
+                onClick = {
+                    actionHandler(AlertSettingsAction.UnpairStudent(studentId))
+                    onDismiss()
+                }) {
                 Text(text = stringResource(id = R.string.delete), style = TextStyle(color = color))
             }
         },
         dismissButton = {
-            TextButton(onClick = { onDismiss() }) {
+            TextButton(
+                modifier = Modifier.testTag("deleteCancelButton"),
+                onClick = { onDismiss() }) {
                 Text(text = stringResource(id = R.string.cancel), style = TextStyle(color = color))
             }
         })

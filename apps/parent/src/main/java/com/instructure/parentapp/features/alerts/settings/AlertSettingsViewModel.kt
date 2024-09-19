@@ -62,7 +62,7 @@ class AlertSettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            loadAlertThresholds()
+            loadAlertThresholds(true)
         }
     }
 
