@@ -28,7 +28,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
-import com.instructure.pandautils.features.inbox.details.AlertDialogState
+import com.instructure.pandautils.features.inbox.details.ConfirmationDialogState
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
 import com.instructure.pandautils.features.inbox.details.ScreenState
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
@@ -188,7 +188,7 @@ class InboxDetailsScreenTest {
     @Test
     fun testInboxDetailsAlertDialog() {
         setDetailsScreen(getUiState(
-            alertDialogState = AlertDialogState(
+            confirmationDialogState = ConfirmationDialogState(
                 showDialog = true,
                 title = "Test title",
                 message = "Test message",
@@ -228,14 +228,14 @@ class InboxDetailsScreenTest {
         id: Long = 1,
         conversation: Conversation? = null,
         state: ScreenState = ScreenState.Success,
-        alertDialogState: AlertDialogState = AlertDialogState()
+        confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState()
     ): InboxDetailsUiState {
         return InboxDetailsUiState(
             conversationId = id,
             conversation = conversation,
             messageStates = conversation?.messages?.map { getMessageViewState(conversation, it) } ?: emptyList(),
             state = state,
-            alertDialogState = alertDialogState
+            confirmationDialogState = confirmationDialogState
         )
     }
 

@@ -172,7 +172,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.DeleteConversation(conversation.id))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteConversation), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteConversation), alertDialogState.message)
@@ -181,7 +181,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onNegativeButtonClick.invoke()
 
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
     }
 
     @Test
@@ -191,7 +191,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.DeleteConversation(conversation.id))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteConversation), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteConversation), alertDialogState.message)
@@ -200,7 +200,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onPositiveButtonClick.invoke()
 
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
         coVerify(exactly = 1) { inboxDetailsRepository.deleteConversation(conversation.id) }
 
         val events = mutableListOf<InboxDetailsFragmentAction>()
@@ -221,7 +221,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.DeleteConversation(conversation.id))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteConversation), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteConversation), alertDialogState.message)
@@ -230,7 +230,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onPositiveButtonClick.invoke()
 
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
         coVerify(exactly = 1) { inboxDetailsRepository.deleteConversation(conversation.id) }
 
         val events = mutableListOf<InboxDetailsFragmentAction>()
@@ -249,7 +249,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.DeleteMessage(conversation.id, conversation.messages[0]))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
@@ -258,7 +258,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onNegativeButtonClick.invoke()
 
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
     }
 
     @Test
@@ -284,7 +284,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.DeleteMessage(conversation.id, conversation.messages[0]))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
@@ -301,7 +301,7 @@ class InboxDetailsViewModelTest {
         assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeleted)), events[0])
         assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
         assertEquals(expectedUiState, viewModel.uiState.value)
 
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
@@ -314,7 +314,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.DeleteMessage(conversation.id, conversation.messages[0]))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
@@ -331,7 +331,7 @@ class InboxDetailsViewModelTest {
         assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])
         assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
 
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
     }
@@ -522,7 +522,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.messageActionHandler(MessageAction.DeleteMessage(conversation.messages[0]))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
@@ -531,7 +531,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onNegativeButtonClick.invoke()
 
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
     }
 
     @Test
@@ -557,7 +557,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.messageActionHandler(MessageAction.DeleteMessage(conversation.messages[0]))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
@@ -574,7 +574,7 @@ class InboxDetailsViewModelTest {
         assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeleted)), events[0])
         assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
         assertEquals(expectedUiState, viewModel.uiState.value)
 
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
@@ -587,7 +587,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.messageActionHandler(MessageAction.DeleteMessage(conversation.messages[0]))
 
-        val alertDialogState = viewModel.uiState.value.alertDialogState
+        val alertDialogState = viewModel.uiState.value.confirmationDialogState
         assertEquals(true, alertDialogState.showDialog)
         assertEquals(context.getString(R.string.deleteMessage), alertDialogState.title)
         assertEquals(context.getString(R.string.confirmDeleteMessage), alertDialogState.message)
@@ -604,7 +604,7 @@ class InboxDetailsViewModelTest {
         assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])
         assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
-        assertEquals(AlertDialogState(), viewModel.uiState.value.alertDialogState)
+        assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
 
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
     }

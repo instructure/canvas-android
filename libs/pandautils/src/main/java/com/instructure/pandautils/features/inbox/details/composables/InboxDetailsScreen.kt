@@ -199,14 +199,14 @@ private fun InboxDetailsContentView(
         return
     }
 
-    if (uiState.alertDialogState.showDialog) {
+    if (uiState.confirmationDialogState.showDialog) {
         SimpleAlertDialog(
-            dialogTitle = uiState.alertDialogState.title,
-            dialogText = uiState.alertDialogState.message,
-            dismissButtonText = uiState.alertDialogState.negativeButton,
-            confirmationButtonText = uiState.alertDialogState.positiveButton,
-            onDismissRequest = uiState.alertDialogState.onNegativeButtonClick,
-            onConfirmation = uiState.alertDialogState.onPositiveButtonClick
+            dialogTitle = uiState.confirmationDialogState.title,
+            dialogText = uiState.confirmationDialogState.message,
+            dismissButtonText = uiState.confirmationDialogState.negativeButton,
+            confirmationButtonText = uiState.confirmationDialogState.positiveButton,
+            onDismissRequest = uiState.confirmationDialogState.onNegativeButtonClick,
+            onConfirmation = uiState.confirmationDialogState.onPositiveButtonClick
         )
     }
 

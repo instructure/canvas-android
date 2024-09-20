@@ -84,7 +84,7 @@ class InboxDetailsViewModel @Inject constructor(
                 getConversation(true)
             }
 
-            is InboxDetailsAction.DeleteConversation -> _uiState.update { it.copy(alertDialogState = AlertDialogState(
+            is InboxDetailsAction.DeleteConversation -> _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
                 showDialog = true,
                 title = context.getString(R.string.deleteConversation),
                 message = context.getString(R.string.confirmDeleteConversation),
@@ -92,13 +92,13 @@ class InboxDetailsViewModel @Inject constructor(
                 negativeButton = context.getString(R.string.cancel),
                 onPositiveButtonClick = {
                     deleteConversation(action.conversationId)
-                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
                 },
                 onNegativeButtonClick = {
-                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
                 }
             )) }
-            is InboxDetailsAction.DeleteMessage -> _uiState.update { it.copy(alertDialogState = AlertDialogState(
+            is InboxDetailsAction.DeleteMessage -> _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
                 showDialog = true,
                 title = context.getString(R.string.deleteMessage),
                 message = context.getString(R.string.confirmDeleteMessage),
@@ -106,10 +106,10 @@ class InboxDetailsViewModel @Inject constructor(
                 negativeButton = context.getString(R.string.cancel),
                 onPositiveButtonClick = {
                     deleteMessage(action.conversationId, action.message)
-                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
                 },
                 onNegativeButtonClick = {
-                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
                 }
             )) }
             is InboxDetailsAction.Forward -> {

@@ -25,10 +25,10 @@ data class InboxDetailsUiState(
     val conversation: Conversation? = null,
     val messageStates: List<InboxMessageUiState> = emptyList(),
     val state: ScreenState = ScreenState.Loading,
-    val alertDialogState: AlertDialogState = AlertDialogState()
+    val confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState()
 )
 
-data class AlertDialogState(
+data class ConfirmationDialogState(
     val showDialog: Boolean = false,
     val title: String = "",
     val message: String = "",
