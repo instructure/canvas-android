@@ -22,8 +22,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.parentapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -37,7 +37,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AlertSettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    colorKeeper: ColorKeeper,
     private val repository: AlertSettingsRepository,
     private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
@@ -51,7 +50,7 @@ class AlertSettingsViewModel @Inject constructor(
             avatarUrl = student.avatarUrl.orEmpty(),
             studentName = student.shortName ?: student.name,
             studentPronouns = student.pronouns,
-            userColor = colorKeeper.getOrGenerateUserColor(student).backgroundColor(),
+            userColor = student.backgroundColor,
             actionHandler = this::handleAction
         )
     )
@@ -151,9 +150,9 @@ class AlertSettingsViewModel @Inject constructor(
         }
         try {
             val alertThresholds = repository.loadAlertThresholds(student.id)
-            _uiState.update {
-                it.copy(
-                    thresholds = alertThresholds.associateBy { it.alertType },
+            _uiState.update { uiState ->
+                uiState.copy(
+                    thresholds = alertThresholds.associateBy { threshold -> threshold.alertType },
                     isLoading = false
                 )
             }

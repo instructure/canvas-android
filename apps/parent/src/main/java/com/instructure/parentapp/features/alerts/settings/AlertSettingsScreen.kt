@@ -33,10 +33,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
@@ -55,7 +52,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -76,6 +72,7 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.parentapp.R
 
@@ -102,11 +99,32 @@ fun AlertSettingsScreen(
                     backgroundColor = Color(uiState.userColor),
                     textColor = colorResource(id = R.color.white),
                     actions = {
+                        var showMenu by remember { mutableStateOf(false) }
+                        var showConfirmationDialog by remember { mutableStateOf(false) }
+                        if (showConfirmationDialog) {
+                            UnpairStudentDialog(
+                                uiState.student.id,
+                                Color(uiState.userColor),
+                                uiState.actionHandler
+                            ) {
+                                showConfirmationDialog = false
+                            }
+                        }
                         OverflowMenu(
-                            studentId = uiState.student.id,
-                            color = Color(uiState.userColor),
-                            actionHandler = uiState.actionHandler
-                        )
+                            modifier = Modifier.testTag("overflowMenu"),
+                            showMenu = showMenu,
+                            onDismissRequest = { showMenu = !showMenu }) {
+                            DropdownMenuItem(
+                                modifier = Modifier.testTag("deleteMenuItem"),
+                                onClick = {
+                                    showMenu = !showMenu
+                                    if (!showMenu) {
+                                        showConfirmationDialog = true
+                                    }
+                                }) {
+                                Text(text = stringResource(id = R.string.delete))
+                            }
+                        }
                     }
                 )
             }
@@ -310,7 +328,7 @@ private fun PercentageItem(
             style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
         )
         Text(
-            text = threshold?.let { "${it}%" }
+            text = threshold?.let { stringResource(id = R.string.alertSettingsPercentage, it) }
                 ?: stringResource(id = R.string.alertSettingsThresholdNever),
             style = TextStyle(color = color, textAlign = TextAlign.End),
             modifier = Modifier
@@ -482,40 +500,6 @@ private fun ThresholdDialog(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun OverflowMenu(
-    studentId: Long,
-    color: Color,
-    actionHandler: (AlertSettingsAction) -> Unit
-) {
-    var showMenu by remember { mutableStateOf(false) }
-    var showConfirmationDialog by remember { mutableStateOf(false) }
-    if (showConfirmationDialog) {
-        UnpairStudentDialog(studentId, color, actionHandler) {
-            showConfirmationDialog = false
-        }
-    }
-    IconButton(
-        modifier = Modifier.testTag("overflowMenu"),
-        onClick = { showMenu = true }) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_kebab),
-            contentDescription = stringResource(id = R.string.add),
-            tint = colorResource(id = R.color.white)
-        )
-    }
-    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-        DropdownMenuItem(
-            modifier = Modifier.testTag("deleteMenuItem"),
-            onClick = {
-                showMenu = false
-                showConfirmationDialog = true
-            }) {
-            Text(text = stringResource(id = R.string.delete))
         }
     }
 }

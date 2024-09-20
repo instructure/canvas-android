@@ -32,6 +32,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -59,7 +61,6 @@ class AlertSettingsViewModelTest {
     private lateinit var viewModel: AlertSettingsViewModel
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val repository: AlertSettingsRepository = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
@@ -68,13 +69,15 @@ class AlertSettingsViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
 
-        coEvery { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         every { savedStateHandle.get<User>(any()) } returns User(1L)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -259,6 +262,6 @@ class AlertSettingsViewModelTest {
 
 
     private fun createViewModel() {
-        viewModel = AlertSettingsViewModel(savedStateHandle, colorKeeper, repository, crashlytics)
+        viewModel = AlertSettingsViewModel(savedStateHandle, repository, crashlytics)
     }
 }

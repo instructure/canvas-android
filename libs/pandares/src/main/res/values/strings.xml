@@ -1843,7 +1843,7 @@
     <string name="alertSettingsCourseGradeLow">Course grade below</string>
     <string name="alertSettingsInstitutionAnnouncement">Institution Announcements</string>
     <string name="alertSettingsCourseAnnouncement">Course Announcements</string>
-    <string name="alertSettingsPercentage">%s%</string>
+    <string name="alertSettingsPercentage">%1$s\%%</string>
     <string name="alertSettingsThresholdNever">Never</string>
     <string name="add">Add</string>
     <string name="alertSettingsThresholdLabel">Grade percentage</string>
