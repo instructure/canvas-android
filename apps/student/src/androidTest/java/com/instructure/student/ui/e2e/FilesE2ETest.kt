@@ -235,8 +235,10 @@ class FilesE2ETest: StudentTest() {
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
-
         val testFile = "samplepdf.pdf"
+
+        Log.d(PREPARATION_TAG, "Setup the '$testFile' file on the device and clear the cache to make sure that the file names won't interfere with the possible cached ones.")
+        setupFileOnDevice(testFile)
         File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
