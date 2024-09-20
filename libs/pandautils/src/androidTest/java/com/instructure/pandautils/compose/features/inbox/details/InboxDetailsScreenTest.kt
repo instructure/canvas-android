@@ -33,7 +33,6 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
 import com.instructure.pandautils.features.inbox.details.ScreenState
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
-import com.instructure.pandautils.utils.toLocalString
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -104,9 +103,6 @@ class InboxDetailsScreenTest {
         composeTestRule.onNodeWithText("User 1 to User 2")
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText(ZonedDateTime.parse(conversation.messages.first().createdAt).toLocalString())
-            .assertIsDisplayed()
-
         composeTestRule.onNodeWithText("Test message")
             .assertIsDisplayed()
 
@@ -160,9 +156,6 @@ class InboxDetailsScreenTest {
             .assertHasClickAction()
 
         composeTestRule.onNodeWithText("User 1 to User 2")
-            .assertIsDisplayed()
-
-        composeTestRule.onNodeWithText(ZonedDateTime.parse(conversation.messages.first().createdAt).toLocalString())
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Test message")

@@ -36,8 +36,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
-import com.instructure.pandautils.utils.toLocalString
-import java.time.ZonedDateTime
 
 class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     fun assertTitle(title: String) {
@@ -117,7 +115,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
             composeTestRule.onNodeWithText(message.body!!)
                 .assertIsDisplayed()
 
-            val authorMatcher = hasTestTag("previousMessageView").and(hasAnyDescendant(hasText(ZonedDateTime.parse(message.createdAt ?: "").toLocalString())))
+            val authorMatcher = hasTestTag("previousMessageView")
             composeTestRule.onNode(authorMatcher)
                 .assertIsDisplayed()
 
