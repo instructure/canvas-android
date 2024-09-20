@@ -37,6 +37,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,7 +90,7 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
     override fun title(): String = getString(R.string.message)
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
     }
 
     override fun getFragment(): Fragment {

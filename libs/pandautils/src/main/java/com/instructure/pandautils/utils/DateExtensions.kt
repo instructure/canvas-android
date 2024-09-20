@@ -23,9 +23,6 @@ import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
-import java.time.format.FormatStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -86,14 +83,4 @@ fun Date.toLocalDate(): LocalDate {
 
 fun Date.toLocalTime(): LocalTime {
     return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalTime()
-}
-
-fun LocalDateTime.toLocalString(formatStyle: FormatStyle = FormatStyle.MEDIUM): String {
-    val formatter = java.time.format.DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-    return this.format(formatter)
-}
-
-fun ZonedDateTime.toLocalString(formatStyle: FormatStyle = FormatStyle.MEDIUM): String {
-    val formatter = java.time.format.DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-    return this.format(formatter)
 }

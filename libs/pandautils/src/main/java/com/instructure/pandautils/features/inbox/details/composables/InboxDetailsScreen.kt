@@ -62,7 +62,7 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -87,7 +87,7 @@ fun InboxDetailsScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                CanvasAppBar(
+                CanvasThemedAppBar(
                     title = title,
                     navIconRes = R.drawable.ic_back_arrow,
                     navIconContentDescription = stringResource(id = R.string.contentDescription_back),

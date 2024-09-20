@@ -73,6 +73,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
@@ -95,8 +96,6 @@ import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.utils.handleUrlAt
 import com.instructure.pandautils.utils.linkify
-import com.instructure.pandautils.utils.toLocalString
-import java.time.ZonedDateTime
 
 @Composable
 fun InboxComposeScreen(
@@ -388,7 +387,7 @@ private fun PreviousMessageView(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Text(
-                    text = ZonedDateTime.parse(message.createdAt ?: "").toLocalString(),
+                    text = DateHelper.getFormattedDate(LocalContext.current, DateHelper.stringToDateWithMillis(message.createdAt)) ?: "",
                     color = colorResource(id = R.color.textDark),
                     fontSize = 12.sp,
                 )

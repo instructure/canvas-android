@@ -60,6 +60,8 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
@@ -67,9 +69,7 @@ import com.instructure.pandautils.features.inbox.details.composables.MessageMenu
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.handleUrlAt
 import com.instructure.pandautils.utils.linkify
-import com.instructure.pandautils.utils.toLocalString
 import java.time.ZonedDateTime
-import java.time.format.FormatStyle
 
 @Composable
 fun InboxMessageView(
@@ -208,10 +208,8 @@ private fun InboxMessageAuthorView(
                 color = colorResource(id = R.color.textDarkest)
             )
 
-            val date = ZonedDateTime.parse(message?.createdAt ?: "")
-
             Text(
-                text = date.toLocalString(FormatStyle.MEDIUM),
+                text = DateHelper.getDateTimeString(LocalContext.current, message?.createdAt.toDate()) ?: "",
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.textDark)
             )
