@@ -238,9 +238,8 @@ class InboxDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(2, events.size)
+        assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)), events[0])
-        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
     }
 
     @Test
@@ -328,9 +327,8 @@ class InboxDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(2, events.size)
+        assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])
-        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
 
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
@@ -405,9 +403,8 @@ class InboxDetailsViewModelTest {
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
-        assertEquals(2, events.size)
+        assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)), events[0])
-        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         coVerify(exactly = 1) { inboxDetailsRepository.updateStarred(conversation.id, isStarred) }
     }
 
@@ -438,9 +435,8 @@ class InboxDetailsViewModelTest {
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
-        assertEquals(2, events.size)
+        assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)), events[0])
-        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         coVerify(exactly = 1) { inboxDetailsRepository.updateState(conversation.id, newState) }
     }
 
@@ -601,9 +597,8 @@ class InboxDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(2, events.size)
+        assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])
-        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
         assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
 
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
