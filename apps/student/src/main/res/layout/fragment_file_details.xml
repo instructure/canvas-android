@@ -74,6 +74,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/fileIcon"
         android:focusable="true"
+        app:layout_constraintHeight_max="230dp"
+        app:layout_constraintWidth_max="230dp"
         android:minHeight="48dp"
         android:minWidth="48dp"
         app:srcCompat="@drawable/ic_document"/>
