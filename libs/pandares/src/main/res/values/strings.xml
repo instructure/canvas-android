@@ -1332,6 +1332,7 @@
     <string name="appThemeLight">Light</string>
     <string name="appThemeDark">Dark</string>
     <string name="appThemeSystem">Same as device</string>
+    <string name="appThemeAuto">System</string>
 
     <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
     <string name="themeSelectorDescription">Choose app theme</string>

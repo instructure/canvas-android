@@ -17,16 +17,22 @@
 
 package com.instructure.pandautils.features.settings
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.databinding.FragmentSettingsBinding
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.legal.LegalDialogFragment
 import com.instructure.pandautils.utils.AppThemeSelector
@@ -44,16 +50,60 @@ class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private val binding: FragmentSettingsBinding by viewBinding(FragmentSettingsBinding::bind)
+
+    private var bitmap: Bitmap? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = layoutInflater.inflate(R.layout.fragment_settings, container, false)
+        val bitmap = savedInstanceState?.getParcelable("bitmap", Bitmap::class.java)
+        bitmap?.let {
+            view.findViewById<ImageView>(R.id.backImage).setImageBitmap(it)
+        }
+        return view
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val w = requireView().measuredWidth
+        val h = requireView().measuredHeight
+        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        requireView().draw(canvas)
+        outState.putParcelable("bitmap", bitmap)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        bitmap = savedInstanceState?.getParcelable("bitmap", Bitmap::class.java)
+
+        if (bitmap != null) {
+            binding.backImage.setImageBitmap(bitmap)
+            binding.settingsComposeView.post {
+                val w = requireView().measuredWidth
+                val h = requireView().measuredHeight
+                val finalRadius = kotlin.math.sqrt((w * w + h * h).toDouble()).toFloat()
+                val anim = ViewAnimationUtils.createCircularReveal(
+                    binding.settingsComposeView,
+                    (w / 2),
+                    (h / 2),
+                    0f,
+                    finalRadius
+                )
+                anim.duration = 500
+                anim.start()
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
-        return ComposeView(requireActivity()).apply {
+        binding.settingsComposeView.apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 SettingsScreen(uiState) {
@@ -110,3 +160,4 @@ class SettingsFragment : Fragment() {
         }
     }
 }
+
