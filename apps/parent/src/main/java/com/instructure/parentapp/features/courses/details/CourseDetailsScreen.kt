@@ -52,9 +52,11 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
+import com.instructure.pandautils.features.grades.GradesViewModelAction
 import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.launch
 
@@ -62,6 +64,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun CourseDetailsScreen(
     uiState: CourseDetailsUiState,
+    actionHandler: (CourseDetailsAction) -> Unit,
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
@@ -80,7 +83,12 @@ internal fun CourseDetailsScreen(
                 }
 
                 uiState.isError -> {
-                    // Error
+                    ErrorContent(
+                        errorMessage = stringResource(id = R.string.errorLoadingCourse),
+                        retryClick = {
+                            actionHandler(CourseDetailsAction.Refresh)
+                        }, modifier = Modifier.fillMaxSize()
+                    )
                 }
 
                 else -> {
@@ -105,18 +113,10 @@ private fun CourseDetailsScreenContent(
     val pagerState = rememberPagerState { uiState.tabs.size }
     val coroutineScope = rememberCoroutineScope()
 
-    val gradesViewModel: GradesViewModel = viewModel()
-    val gradeUiState by remember { gradesViewModel.uiState }.collectAsState()
-
     val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
         when (it) {
             TabType.GRADES -> {
-                {
-                    GradesScreen(gradeUiState, gradesViewModel::handleAction)
-                    LaunchedEffect(key1 = Unit) {
-                        gradesViewModel.loadGrades(uiState.courseId, false)
-                    }
-                }
+                { Grades() }
             }
 
             TabType.FRONT_PAGE -> {
@@ -180,19 +180,37 @@ private fun CourseDetailsScreenContent(
         },
         floatingActionButton = {
             FloatingActionButton(
-                backgroundColor = Color(ThemePrefs.buttonColor),
+                backgroundColor = Color(uiState.studentColor),
                 onClick = {
 
                 }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_add),
+                    painter = painterResource(id = R.drawable.ic_chat),
                     tint = Color(ThemePrefs.buttonTextColor),
                     contentDescription = "todo"
                 )
             }
-        },
+        }
     )
+}
+
+@Composable
+private fun Grades() {
+    val gradesViewModel: GradesViewModel = viewModel()
+    val gradeUiState by remember { gradesViewModel.uiState }.collectAsState()
+    val events = gradesViewModel.events
+    LaunchedEffect(events) {
+        events.collect { action ->
+            when (action) {
+                is GradesViewModelAction.NavigateToAssignmentDetails -> {
+
+                }
+            }
+        }
+    }
+
+    GradesScreen(gradeUiState, gradesViewModel::handleAction)
 }
 
 @Preview(showBackground = true)
@@ -201,17 +219,30 @@ private fun CourseDetailsScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     CourseDetailsScreen(
         uiState = CourseDetailsUiState(
-            courseId = 0,
             courseName = "Course Name",
             studentColor = Color.Black.toArgb(),
             isLoading = false,
             isError = false,
             tabs = listOf(
-                TabType.GRADES,
                 TabType.SYLLABUS,
                 TabType.SUMMARY
             )
         ),
+        actionHandler = {},
+        navigationActionClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CourseDetailsScreenErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CourseDetailsScreen(
+        uiState = CourseDetailsUiState(
+            studentColor = Color.Black.toArgb(),
+            isError = true,
+        ),
+        actionHandler = {},
         navigationActionClick = {}
     )
 }

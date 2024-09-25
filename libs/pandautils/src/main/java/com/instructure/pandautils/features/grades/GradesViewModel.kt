@@ -17,54 +17,153 @@
 
 package com.instructure.pandautils.features.grades
 
+import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseGrade
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.grades.GradingPeriod
+import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.utils.getGrade
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 
+private const val COURSE_ID_KEY = "course-id"
+
 @HiltViewModel
 class GradesViewModel @Inject constructor(
-    private val repository: GradesRepository
+    @ApplicationContext private val context: Context,
+    private val gradesBehaviour: GradesBehaviour,
+    private val repository: GradesRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val courseId = savedStateHandle.get<Long>(COURSE_ID_KEY).orDefault()
 
     private val _uiState = MutableStateFlow(GradesUiState())
     val uiState = _uiState.asStateFlow()
 
-    private var currentGradingPeriod: GradingPeriod? = null
+    private val _events = Channel<GradesViewModelAction>()
+    val events = _events.receiveAsFlow()
 
-    fun loadGrades(courseId: Long, forceRefresh: Boolean) {
+    private var course: Course? = null
+    private var courseGrade: CourseGrade? = null
+
+    init {
+        loadGrades(false)
+    }
+
+    private fun loadGrades(forceRefresh: Boolean) {
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
-                    isLoading = true,
-                    isError = false
+                    canvasContextColor = gradesBehaviour.canvasContextColor,
+                    isLoading = it.items.isEmpty(),
+                    isRefreshing = it.items.isNotEmpty(),
+                    isError = false,
+                    gradePreferencesUiState = it.gradePreferencesUiState.copy(
+                        canvasContextColor = gradesBehaviour.canvasContextColor
+                    )
                 )
             }
 
-            val assignmentGroups = repository.loadAssignmentGroups(courseId, forceRefresh)
+            val course = repository.loadCourse(courseId, forceRefresh)
+            this@GradesViewModel.course = course
             val gradingPeriods = repository.loadGradingPeriods(courseId, forceRefresh)
-            //  val enrollments = repository.loadEnrollments(courseId, currentGradingPeriod?.id, forceRefresh)
+            val selectedGradingPeriodId = _uiState.value.gradePreferencesUiState.selectedGradingPeriod?.id
+            val assignmentGroups = repository.loadAssignmentGroups(courseId, selectedGradingPeriodId, forceRefresh)
+            val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriodId, forceRefresh)
 
-            val items = groupByAssignmentGroup(assignmentGroups)
+            courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriodId)
+
+            val items = when (_uiState.value.gradePreferencesUiState.sortBy) {
+                SortBy.GROUP -> groupByAssignmentGroup(assignmentGroups)
+                SortBy.DUE_DATE -> groupByDueDate(assignmentGroups)
+            }.filter {
+                it.assignments.isNotEmpty()
+            }
 
             _uiState.update {
                 it.copy(
                     items = items,
-                    isLoading = false
+                    isLoading = false,
+                    isRefreshing = false,
+                    gradePreferencesUiState = it.gradePreferencesUiState.copy(
+                        gradingPeriods = gradingPeriods
+                    ),
+                    gradeText = getGradeString(courseGrade, !it.onlyGradedAssignmentsSwitchEnabled)
                 )
             }
         } catch {
             _uiState.update { it.copy(isError = true) }
+        }
+    }
+
+    private fun getGradeString(
+        courseGrade: CourseGrade?,
+        isFinal: Boolean
+    ): String {
+        if (courseGrade == null) return context.getString(R.string.noGradeText)
+        return if (isFinal) {
+            formatGrade(
+                courseGrade.noFinalGrade,
+                courseGrade.hasFinalGradeString(),
+                courseGrade.finalGrade,
+                courseGrade.finalScore,
+                course
+            )
+        } else {
+            formatGrade(
+                courseGrade.noCurrentGrade,
+                courseGrade.hasCurrentGradeString(),
+                courseGrade.currentGrade,
+                courseGrade.currentScore,
+                course
+            )
+        }
+    }
+
+    private fun formatGrade(
+        noGrade: Boolean,
+        hasGradeString: Boolean,
+        grade: String?,
+        score: Double?,
+        course: Course?
+    ): String {
+        return if (noGrade) {
+            context.getString(R.string.noGradeText)
+        } else {
+            val restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault()
+            if (restrictQuantitativeData) {
+                val gradingScheme = course?.gradingScheme.orEmpty()
+                when {
+                    hasGradeString -> grade.orEmpty()
+                    gradingScheme.isNotEmpty() && score != null -> convertPercentScoreToLetterGrade(score / 100, gradingScheme)
+                    else -> context.getString(R.string.noGradeText)
+                }
+            } else {
+                val percentage = NumberHelper.doubleToPercentage(score.orDefault())
+                if (hasGradeString) "$percentage $grade" else percentage
+            }
         }
     }
 
@@ -77,20 +176,102 @@ class GradesViewModel @Inject constructor(
         )
     }
 
-    private fun mapAssignments(assignments: List<Assignment>) = assignments.map { assignment ->
+    private fun groupByDueDate(assignmentGroups: List<AssignmentGroup>): List<AssignmentGroupUiState> {
+        val today = Date()
+
+        val overdue = mutableListOf<Assignment>()
+        val upcoming = mutableListOf<Assignment>()
+        val undated = mutableListOf<Assignment>()
+        val past = mutableListOf<Assignment>()
+
+        assignmentGroups
+            .flatMap { it.assignments }
+            .map { assignment ->
+                val dueAt = assignment.dueAt
+                val submission = assignment.submission
+                val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
+                val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
+                if (dueAt == null) {
+                    undated.add(assignment)
+                } else {
+                    when {
+                        today.before(dueAt.toDate()) -> upcoming.add(assignment)
+                        isOverdue -> overdue.add(assignment)
+                        else -> past.add(assignment)
+                    }
+                }
+            }
+
+        return listOf(
+            AssignmentGroupUiState(
+                id = 0,
+                name = context.getString(R.string.overdueAssignments),
+                assignments = mapAssignments(overdue),
+                expanded = true
+            ),
+            AssignmentGroupUiState(
+                id = 1,
+                name = context.getString(R.string.upcomingAssignments),
+                assignments = mapAssignments(upcoming),
+                expanded = true
+            ),
+            AssignmentGroupUiState(
+                id = 2,
+                name = context.getString(R.string.undatedAssignments),
+                assignments = mapAssignments(undated),
+                expanded = true
+            ),
+            AssignmentGroupUiState(
+                id = 3,
+                name = context.getString(R.string.pastAssignments),
+                assignments = mapAssignments(past),
+                expanded = true
+            )
+        )
+    }
+
+    private fun mapAssignments(assignments: List<Assignment>) = assignments.sortedBy { it.position }.map { assignment ->
+        val iconRes = when {
+            assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> R.drawable.ic_quiz
+            assignment.getSubmissionTypes().contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> R.drawable.ic_discussion
+            else -> R.drawable.ic_assignment
+        }
+
+        val dateText = assignment.dueDate?.let {
+            val dateText = DateHelper.dayMonthDateFormat.format(it)
+            val timeText = DateHelper.getFormattedTime(context, it)
+            "$dateText, $timeText"
+        } ?: context.getString(R.string.gradesNoDueDate)
+
+        val submissionStateLabel = when {
+            assignment.submission?.late.orDefault() -> SubmissionStateLabel.LATE
+            assignment.isMissing() -> SubmissionStateLabel.MISSING
+            assignment.isSubmitted -> SubmissionStateLabel.SUBMITTED
+            !assignment.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
+            else -> SubmissionStateLabel.NONE
+        }
+
         AssignmentUiState(
-            iconRes = R.drawable.ic_assignment,
+            id = assignment.id,
+            iconRes = iconRes,
             name = assignment.name.orEmpty(),
-            dueDate = assignment.dueAt,
-            points = "10",
-            pointsPossible = "20"
+            dueDate = dateText,
+            submissionStateLabel = submissionStateLabel,
+            displayGrade = assignment.getGrade(
+                submission = assignment.submission,
+                context = context,
+                restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault(),
+                gradingScheme = course?.gradingScheme.orEmpty(),
+                showZeroPossiblePoints = true,
+                showNotGraded = true
+            )
         )
     }
 
     fun handleAction(action: GradesAction) {
         when (action) {
             is GradesAction.Refresh -> {
-
+                loadGrades(true)
             }
 
             is GradesAction.HeaderClick -> {
@@ -102,6 +283,34 @@ class GradesViewModel @Inject constructor(
                     }
                 }
                 _uiState.update { it.copy(items = items) }
+            }
+
+            is GradesAction.ShowGradePreferences -> {
+                _uiState.update { it.copy(gradePreferencesUiState = it.gradePreferencesUiState.copy(show = true)) }
+            }
+
+            is GradesAction.HideGradePreferences -> {
+                _uiState.update { it.copy(gradePreferencesUiState = it.gradePreferencesUiState.copy(show = false)) }
+            }
+
+            is GradesAction.GradePreferencesUpdated -> {
+                _uiState.update { it.copy(gradePreferencesUiState = action.gradePreferencesUiState) }
+                loadGrades(false)
+            }
+
+            is GradesAction.OnlyGradedAssignmentsSwitchCheckedChange -> {
+                _uiState.update {
+                    it.copy(
+                        onlyGradedAssignmentsSwitchEnabled = action.checked,
+                        gradeText = getGradeString(courseGrade, !action.checked)
+                    )
+                }
+            }
+
+            is GradesAction.AssignmentClick -> {
+                viewModelScope.launch {
+                    _events.send(GradesViewModelAction.NavigateToAssignmentDetails(action.id))
+                }
             }
         }
     }

@@ -168,6 +168,14 @@ object CourseAPI {
             @Tag params: RestParams
         ): DataResult<List<Enrollment>>
 
+        @GET("courses/{courseId}/enrollments?state[]=active&state[]=completed")
+        suspend fun getObservedUserEnrollmentsForGradingPeriod(
+            @Path("courseId") courseId: Long,
+            @Query("user_id") userId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long?,
+            @Tag params: RestParams
+        ): DataResult<List<Enrollment>>
+
         @GET("courses/{courseId}/rubrics/{rubricId}")
         fun getRubricSettings(@Path("courseId") courseId: Long, @Path("rubricId") rubricId: Long): Call<RubricSettings>
 

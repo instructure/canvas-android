@@ -45,7 +45,7 @@ class CourseDetailsViewModel @Inject constructor(
 
     private val courseId = savedStateHandle.get<Long>(Navigation.COURSE_ID).orDefault()
 
-    private val _uiState = MutableStateFlow(CourseDetailsUiState(courseId))
+    private val _uiState = MutableStateFlow(CourseDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -94,6 +94,12 @@ class CourseDetailsViewModel @Inject constructor(
                     isError = true
                 )
             }
+        }
+    }
+
+    fun handleAction(action: CourseDetailsAction) {
+        when (action) {
+            is CourseDetailsAction.Refresh -> loadData(forceRefresh = true)
         }
     }
 }

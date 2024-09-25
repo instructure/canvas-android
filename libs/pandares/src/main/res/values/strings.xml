@@ -1839,4 +1839,16 @@
     <string name="courseFrontPageLabel">Front Page</string>
     <string name="courseSyllabusLabel">Syllabus</string>
     <string name="courseSummaryLabel">Summary</string>
+    <string name="gradesTotal">Total</string>
+    <string name="gradesBasedOnGraded">Based on graded assignments</string>
+    <string name="lateSubmissionLabel">Late</string>
+    <string name="sortByDueDate">Due Date</string>
+    <string name="sortByGroup">Group</string>
+    <string name="gradePreferencesScreenTitle">Grade Preferences</string>
+    <string name="gradePreferencesHeaderGradingPeriod">Grading Period</string>
+    <string name="gradePreferencesHeaderSortBy">Sort By</string>
+    <string name="gradesEmptyTitle">No Assignments</string>
+    <string name="gradesEmptyMessage">It looks like assignments haven\'t been created in this space yet.</string>
+    <string name="errorLoadingGrades">We\'re having trouble loading your student\'s grades. Please try reloading the page or check back later.</string>
+    <string name="errorLoadingCourse">We\'re having trouble loading your course details. Please try reloading the page or check back later.</string>
 </resources>

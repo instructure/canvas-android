@@ -15,25 +15,11 @@
  *
  */
 
-package com.instructure.teacher.di
+package com.instructure.pandautils.features.grades
 
-import com.instructure.pandautils.features.grades.GradesBehaviour
-import com.instructure.pandautils.features.grades.GradesRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class GradesModule {
+interface GradesBehaviour {
 
-    @Provides
-    fun provideGradesRepository(): GradesRepository {
-        throw NotImplementedError()
-    }
+    val canvasContextColor: Int
 
-    fun provideGradesBehaviour(): GradesBehaviour {
-        throw NotImplementedError()
-    }
 }

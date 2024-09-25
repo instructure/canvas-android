@@ -18,6 +18,8 @@
 package com.instructure.pandautils.features.grades
 
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
 
@@ -25,7 +27,9 @@ import com.instructure.canvasapi2.models.GradingPeriod
 interface GradesRepository {
 
     val studentId: Long
-    suspend fun loadAssignmentGroups(courseId: Long, forceRefresh: Boolean): List<AssignmentGroup>
+    suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<AssignmentGroup>
     suspend fun loadGradingPeriods(courseId: Long, forceRefresh: Boolean): List<GradingPeriod>
-    suspend fun loadEnrollments(courseId: Long, gradingPeriodId: Long, forceRefresh: Boolean): List<Enrollment>
+    suspend fun loadEnrollments(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<Enrollment>
+    suspend fun loadCourse(courseId: Long, forceRefresh: Boolean): Course
+    fun getCourseGrade(course: Course, studentId: Long, enrollments: List<Enrollment>, gradingPeriodId: Long?): CourseGrade?
 }

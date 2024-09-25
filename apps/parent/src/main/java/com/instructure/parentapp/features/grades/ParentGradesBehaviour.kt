@@ -15,25 +15,17 @@
  *
  */
 
-package com.instructure.teacher.di
+package com.instructure.parentapp.features.grades
 
 import com.instructure.pandautils.features.grades.GradesBehaviour
-import com.instructure.pandautils.features.grades.GradesRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.parentapp.util.ParentPrefs
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class GradesModule {
 
-    @Provides
-    fun provideGradesRepository(): GradesRepository {
-        throw NotImplementedError()
-    }
+class ParentGradesBehaviour(
+    parentPrefs: ParentPrefs,
+    colorKeeper: ColorKeeper
+) : GradesBehaviour {
 
-    fun provideGradesBehaviour(): GradesBehaviour {
-        throw NotImplementedError()
-    }
+    override val canvasContextColor = colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent).backgroundColor()
 }

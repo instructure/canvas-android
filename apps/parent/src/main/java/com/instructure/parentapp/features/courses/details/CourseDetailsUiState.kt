@@ -7,7 +7,6 @@ import com.instructure.parentapp.R
 
 
 data class CourseDetailsUiState(
-    val courseId: Long,
     val courseName: String = "",
     @ColorInt val studentColor: Int = Color.BLACK,
     val isLoading: Boolean = false,
@@ -20,4 +19,8 @@ enum class TabType(@StringRes val labelRes: Int) {
     FRONT_PAGE(R.string.courseFrontPageLabel),
     SYLLABUS(R.string.courseSyllabusLabel),
     SUMMARY(R.string.courseSummaryLabel)
+}
+
+sealed class CourseDetailsAction {
+    data object Refresh : CourseDetailsAction()
 }

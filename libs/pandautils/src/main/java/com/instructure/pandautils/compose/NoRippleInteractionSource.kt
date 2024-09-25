@@ -15,25 +15,16 @@
  *
  */
 
-package com.instructure.teacher.di
+package com.instructure.pandautils.compose
 
-import com.instructure.pandautils.features.grades.GradesBehaviour
-import com.instructure.pandautils.features.grades.GradesRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class GradesModule {
 
-    @Provides
-    fun provideGradesRepository(): GradesRepository {
-        throw NotImplementedError()
-    }
-
-    fun provideGradesBehaviour(): GradesBehaviour {
-        throw NotImplementedError()
-    }
+class NoRippleInteractionSource : MutableInteractionSource {
+    override val interactions: Flow<Interaction> = emptyFlow()
+    override suspend fun emit(interaction: Interaction) {}
+    override fun tryEmit(interaction: Interaction) = true
 }

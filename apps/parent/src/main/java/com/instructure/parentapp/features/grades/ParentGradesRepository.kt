@@ -20,9 +20,13 @@ package com.instructure.parentapp.features.grades
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.ObserveeAssignmentGroup
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.grades.GradesRepository
 import com.instructure.pandautils.utils.orDefault
@@ -37,15 +41,15 @@ class ParentGradesRepository(
 
     override val studentId = parentPrefs.currentStudent?.id.orDefault()
 
-    override suspend fun loadAssignmentGroups(courseId: Long, forceRefresh: Boolean): List<AssignmentGroup> {
+    override suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<AssignmentGroup> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
 
-        return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, params).depaginate {
-            assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, params)
+        return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForObserver(courseId, gradingPeriodId, params).depaginate {
+            assignmentApi.getNextPageAssignmentGroupListWithAssignmentsForObserver(it, params)
         }.map {
             it.map { group ->
                 val filteredAssignments = group.assignments.filter { assignment -> assignment.published }
-                group.copy(assignments = filteredAssignments)
+                group.copy(assignments = filteredAssignments).toAssignmentGroup()
             }
         }.dataOrThrow
     }
@@ -56,9 +60,70 @@ class ParentGradesRepository(
         return courseApi.getGradingPeriodsForCourse(courseId, params).dataOrThrow.gradingPeriodList
     }
 
-    override suspend fun loadEnrollments(courseId: Long, gradingPeriodId: Long, forceRefresh: Boolean): List<Enrollment> {
+    override suspend fun loadEnrollments(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<Enrollment> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
 
-        return courseApi.getUserEnrollmentsForGradingPeriod(courseId, studentId, gradingPeriodId, params).dataOrThrow
+        return courseApi.getObservedUserEnrollmentsForGradingPeriod(courseId, studentId, gradingPeriodId, params).dataOrThrow
+    }
+
+    override suspend fun loadCourse(courseId: Long, forceRefresh: Boolean): Course {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+
+        return courseApi.getCourseWithGrade(courseId, params).dataOrThrow
+    }
+
+    override fun getCourseGrade(course: Course, studentId: Long, enrollments: List<Enrollment>, gradingPeriodId: Long?): CourseGrade? {
+        val firstEnrollment = enrollments.firstOrNull()
+        val enrollment = firstEnrollment ?: course.enrollments?.find {
+            it.userId == studentId && (gradingPeriodId == null || gradingPeriodId == it.currentGradingPeriodId)
+        } ?: return null
+
+        return course.parentGetCourseGradeFromEnrollment(
+            enrollment,
+            firstEnrollment == null && gradingPeriodId == null
+        )
+    }
+
+    private fun ObserveeAssignmentGroup.toAssignmentGroup(): AssignmentGroup {
+        return AssignmentGroup(
+            id = id,
+            name = name,
+            position = position,
+            groupWeight = groupWeight,
+            assignments = assignments.map {
+                Assignment(
+                    id = it.id,
+                    name = it.name,
+                    description = it.description,
+                    submissionTypesRaw = it.submissionTypesRaw,
+                    dueAt = it.dueAt,
+                    pointsPossible = it.pointsPossible,
+                    courseId = it.courseId,
+                    isGradeGroupsIndividually = it.isGradeGroupsIndividually,
+                    gradingType = it.gradingType,
+                    needsGradingCount = it.needsGradingCount,
+                    htmlUrl = it.htmlUrl,
+                    url = it.url,
+                    quizId = it.quizId,
+                    rubric = it.rubric,
+                    isUseRubricForGrading = it.isUseRubricForGrading,
+                    rubricSettings = it.rubricSettings,
+                    allowedExtensions = it.allowedExtensions,
+                    submission = it.submissionList?.firstOrNull { submission ->
+                        submission.userId == studentId
+                    },
+                    assignmentGroupId = it.assignmentGroupId,
+                    position = it.position,
+                    isPeerReviews = it.isPeerReviews,
+                    lockInfo = it.lockInfo,
+                    lockedForUser = it.lockedForUser,
+                    lockAt = it.lockAt,
+                    unlockAt = it.unlockAt,
+                    lockExplanation = it.lockExplanation,
+                    discussionTopicHeader = it.discussionTopicHeader
+                )
+            },
+            rules = rules
+        )
     }
 }
