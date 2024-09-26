@@ -24,15 +24,15 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.AlertType
+import com.instructure.composeTest.hasDrawable
+import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsItemUiState
 import com.instructure.parentapp.features.alerts.list.AlertsListItem
-import com.instructure.parentapp.utils.hasDrawable
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.Date
-import com.instructure.parentapp.R
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)

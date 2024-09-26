@@ -79,6 +79,7 @@ import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
+import com.instructure.pandautils.utils.drawableId
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -354,7 +355,7 @@ private fun GradesScreenContent(
 }
 
 @Composable
-private fun AssignmentItem(
+fun AssignmentItem(
     uiState: AssignmentUiState,
     actionHandler: (GradesAction) -> Unit,
     userColor: Int,
@@ -373,7 +374,11 @@ private fun AssignmentItem(
             painter = painterResource(id = uiState.iconRes),
             contentDescription = null,
             tint = Color(userColor),
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier
+                .size(24.dp)
+                .semantics {
+                    drawableId = uiState.iconRes
+                }
         )
         Spacer(modifier = Modifier.width(18.dp))
         Column {
@@ -386,7 +391,7 @@ private fun AssignmentItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = uiState.dueDate.orEmpty(),
+                    text = uiState.dueDate,
                     color = colorResource(id = R.color.textDark),
                     fontSize = 14.sp
                 )
@@ -404,7 +409,11 @@ private fun AssignmentItem(
                         painter = painterResource(id = uiState.submissionStateLabel.iconRes),
                         contentDescription = null,
                         tint = colorResource(id = uiState.submissionStateLabel.colorRes),
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier
+                            .size(16.dp)
+                            .semantics {
+                                drawableId = uiState.submissionStateLabel.iconRes
+                            }
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
@@ -458,8 +467,9 @@ private fun GradesScreenPreview() {
                         )
                     ),
                     expanded = true
-                ),
-            )
+                )
+            ),
+            gradeText = "96% A"
         ),
         actionHandler = {}
     )

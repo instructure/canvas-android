@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.ui.compose
+package com.instructure.parentapp.ui.compose.courses.details
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed

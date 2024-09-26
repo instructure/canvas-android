@@ -31,7 +31,7 @@ data class AssignmentUiState(
     val id: Long,
     @DrawableRes val iconRes: Int,
     val name: String,
-    val dueDate: String?,
+    val dueDate: String,
     val submissionStateLabel: SubmissionStateLabel,
     val displayGrade: DisplayGrade
 )
