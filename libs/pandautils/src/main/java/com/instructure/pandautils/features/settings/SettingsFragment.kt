@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.settings
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,10 +54,20 @@ class SettingsFragment : Fragment() {
     private val binding: FragmentSettingsBinding by viewBinding(FragmentSettingsBinding::bind)
 
     private var bitmap: Bitmap? = null
+    private var xPos = 0
+    private var yPos = 0
+    private var appThemeChange = false
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = layoutInflater.inflate(R.layout.fragment_settings, container, false)
-        val bitmap = savedInstanceState?.getParcelable("bitmap", Bitmap::class.java)
+
+        bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            savedInstanceState?.getParcelable("bitmap", Bitmap::class.java)
+        } else {
+            savedInstanceState?.getParcelable("bitmap")
+        }
+
         bitmap?.let {
             view.findViewById<ImageView>(R.id.backImage).setImageBitmap(it)
         }
@@ -66,32 +77,37 @@ class SettingsFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val w = requireView().measuredWidth
-        val h = requireView().measuredHeight
-        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        requireView().draw(canvas)
-        outState.putParcelable("bitmap", bitmap)
+        if (appThemeChange) {
+            val w = requireView().measuredWidth
+            val h = requireView().measuredHeight
+            val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            requireView().draw(canvas)
+            outState.putParcelable("bitmap", bitmap)
+            outState.putInt("xPos", xPos)
+            outState.putInt("yPos", yPos)
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        bitmap = savedInstanceState?.getParcelable("bitmap", Bitmap::class.java)
+
+        xPos = savedInstanceState?.getInt("xPos") ?: (requireView().measuredWidth / 2)
+        yPos = savedInstanceState?.getInt("yPos") ?: (requireView().measuredHeight / 2)
 
         if (bitmap != null) {
-            binding.backImage.setImageBitmap(bitmap)
             binding.settingsComposeView.post {
                 val w = requireView().measuredWidth
                 val h = requireView().measuredHeight
                 val finalRadius = kotlin.math.sqrt((w * w + h * h).toDouble()).toFloat()
                 val anim = ViewAnimationUtils.createCircularReveal(
                     binding.settingsComposeView,
-                    (w / 2),
-                    (h / 2),
+                    xPos,
+                    yPos,
                     0f,
                     finalRadius
                 )
-                anim.duration = 500
+                anim.duration = 1000
                 anim.start()
             }
         }
@@ -117,6 +133,11 @@ class SettingsFragment : Fragment() {
         when (action) {
             is SettingsViewModelAction.Navigate -> {
                 navigate(action.item)
+            }
+            is SettingsViewModelAction.AppThemeClickPosition -> {
+                xPos = action.xPos
+                yPos = action.yPos
+                appThemeChange = true
             }
         }
     }

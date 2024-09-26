@@ -16,14 +16,20 @@
  */
 package com.instructure.pandautils.features.settings
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Configuration
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,15 +39,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     settingsBehaviour: SettingsBehaviour,
-    themePrefs: ThemePrefs,
-    private val syncSettingsFacade: SyncSettingsFacade
+    @ApplicationContext private val context: Context,
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val colorKeeper: ColorKeeper,
+    private val themePrefs: ThemePrefs
 ) :
     ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsUiState(onClick = this::onItemClick))
+    private val _uiState = MutableStateFlow(
+        SettingsUiState(
+            appTheme = themePrefs.appTheme,
+            onClick = this::onItemClick,
+            actionHandler = this::actionHandler
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private val _events = Channel<SettingsViewModelAction>()
@@ -64,8 +79,11 @@ class SettingsViewModel @Inject constructor(
                     }
             }
         }
-        val appTheme = AppTheme.fromIndex(themePrefs.appTheme)
-        _uiState.update { it.copy(items = settingsBehaviour.settingsItems, appTheme = appTheme.themeNameRes) }
+        _uiState.update {
+            it.copy(
+                items = settingsBehaviour.settingsItems,
+            )
+        }
     }
 
     fun onThemeSelected(theme: AppTheme) {
@@ -75,6 +93,33 @@ class SettingsViewModel @Inject constructor(
     private fun onItemClick(item: SettingsItem) {
         viewModelScope.launch {
             _events.send(SettingsViewModelAction.Navigate(item))
+        }
+    }
+
+    private fun actionHandler(action: SettingsAction) {
+        when (action) {
+            is SettingsAction.SetAppTheme -> {
+                viewModelScope.launch {
+                    _events.send(SettingsViewModelAction.AppThemeClickPosition(action.xPos, action.yPos))
+                }
+                setAppTheme(action.appTheme)
+            }
+        }
+    }
+
+    private fun setAppTheme(appTheme: AppTheme) {
+        AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
+        themePrefs.appTheme = appTheme.ordinal
+
+        val nightModeFlags: Int =
+            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        colorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        themePrefs.isThemeApplied = false
+
+        _uiState.update {
+            it.copy(
+                appTheme = appTheme.ordinal,
+            )
         }
     }
 }

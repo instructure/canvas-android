@@ -19,25 +19,34 @@ package com.instructure.pandautils.features.settings
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -54,7 +63,6 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.LabelValueVerticalItem
 import com.instructure.pandautils.utils.AppTheme
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
@@ -142,6 +150,8 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
 @Composable
 private fun AppThemeItem(uiState: SettingsUiState) {
     val context = LocalContext.current
+    val nightMode =
+        (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     Column {
         Text(
             modifier = Modifier
@@ -157,35 +167,44 @@ private fun AppThemeItem(uiState: SettingsUiState) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        AppThemeButton(icon = R.drawable.panda_light_mode, title = R.string.appThemeLight) {
-            val appTheme = AppTheme.LIGHT
-            AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
-            ThemePrefs.appTheme = appTheme.ordinal
-
-            val nightModeFlags: Int =
-                context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-            ThemePrefs.isThemeApplied = false
+        AppThemeButton(
+            icon = if (nightMode) R.drawable.ic_panda_light_dark else R.drawable.ic_panda_light_light,
+            title = R.string.appThemeLight,
+            selected = uiState.appTheme == AppTheme.LIGHT.ordinal
+        ) {
+            uiState.actionHandler(
+                SettingsAction.SetAppTheme(
+                    AppTheme.LIGHT,
+                    it.x.toInt(),
+                    it.y.toInt()
+                )
+            )
         }
-        AppThemeButton(icon = R.drawable.panda_dark_mode, title = R.string.appThemeDark) {
-            val appTheme = AppTheme.DARK
-            AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
-            ThemePrefs.appTheme = appTheme.ordinal
-
-            val nightModeFlags: Int =
-                context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-            ThemePrefs.isThemeApplied = false
+        AppThemeButton(
+            icon = if (nightMode) R.drawable.ic_panda_dark_dark else R.drawable.ic_panda_dark_light,
+            title = R.string.appThemeDark,
+            selected = uiState.appTheme == AppTheme.DARK.ordinal
+        ) {
+            uiState.actionHandler(
+                SettingsAction.SetAppTheme(
+                    AppTheme.DARK,
+                    it.x.toInt(),
+                    it.y.toInt()
+                )
+            )
         }
-        AppThemeButton(icon = R.drawable.panda_light_mode, title = R.string.appThemeAuto) {
-            val appTheme = AppTheme.SYSTEM
-            AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
-            ThemePrefs.appTheme = appTheme.ordinal
-
-            val nightModeFlags: Int =
-                context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-            ThemePrefs.isThemeApplied = false
+        AppThemeButton(
+            icon = if (nightMode) R.drawable.ic_panda_system_dark else R.drawable.ic_panda_system_light,
+            title = R.string.appThemeAuto,
+            selected = uiState.appTheme == AppTheme.SYSTEM.ordinal
+        ) {
+            uiState.actionHandler(
+                SettingsAction.SetAppTheme(
+                    AppTheme.SYSTEM,
+                    it.x.toInt(),
+                    it.y.toInt()
+                )
+            )
         }
     }
 }
@@ -194,14 +213,29 @@ private fun AppThemeItem(uiState: SettingsUiState) {
 private fun AppThemeButton(
     @DrawableRes icon: Int,
     @StringRes title: Int,
+    selected: Boolean,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: (Offset) -> Unit
 ) {
-    Column(modifier = modifier.height(120.dp)) {
-        IconButton(onClick = { onClick() }) {
+    var position by remember { mutableStateOf(Offset.Zero) }
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        IconButton(
+            modifier = Modifier
+                .onGloballyPositioned {
+                    position = Offset(
+                        x = it.positionInRoot().x + it.size.width / 2,
+                        y = it.positionInRoot().y + it.size.height / 2
+                    )
+                }
+                .border(
+                    2.dp,
+                    if (selected) Color(ThemePrefs.brandColor) else Color.Transparent,
+                    CircleShape
+                ), onClick = { onClick(position) }) {
             Image(
                 modifier = Modifier
-                    .height(88.dp)
+                    .padding(4.dp)
+                    .size(88.dp)
                     .aspectRatio(1f),
                 painter = painterResource(id = icon),
                 contentDescription = stringResource(id = title)
@@ -209,8 +243,7 @@ private fun AppThemeButton(
         }
         Text(
             modifier = Modifier
-                .padding(top = 8.dp)
-                .width(80.dp),
+                .padding(top = 8.dp),
             text = stringResource(title),
             style = TextStyle(
                 fontSize = 12.sp,
@@ -240,13 +273,31 @@ private fun OfflineSyncItem(uiState: SettingsUiState) {
 }
 
 @Composable
-@Preview
-fun SettingsScreenPreview() {
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+fun SettingsScreenDarkPreview() {
     ContextKeeper.appContext = LocalContext.current
     SettingsScreen(SettingsUiState(
-        mapOf(
+        appTheme = AppTheme.SYSTEM.ordinal,
+        actionHandler = {},
+        items = mapOf(
             R.string.preferences to listOf(SettingsItem.APP_THEME),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
-        )
-    ) {}, navigationActionClick = {})
+        ),
+        onClick = {}
+    ), navigationActionClick = {})
+}
+
+@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+fun SettingsScreenLightPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SettingsScreen(SettingsUiState(
+        appTheme = AppTheme.SYSTEM.ordinal,
+        actionHandler = {},
+        items = mapOf(
+            R.string.preferences to listOf(SettingsItem.APP_THEME),
+            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
+        ),
+        onClick = {}
+    ), navigationActionClick = {})
 }

@@ -16,13 +16,21 @@
  */
 package com.instructure.pandautils.features.settings
 
+import com.instructure.pandautils.utils.AppTheme
+
 data class SettingsUiState(
+    val appTheme: Int,
     val items: Map<Int, List<SettingsItem>> = emptyMap(),
     val offlineState: Int? = null,
-    val appTheme: Int? = null,
-    val onClick: (SettingsItem) -> Unit
+    val onClick: (SettingsItem) -> Unit,
+    val actionHandler: (SettingsAction) -> Unit
 )
 
 sealed class SettingsViewModelAction {
     data class Navigate(val item: SettingsItem) : SettingsViewModelAction()
+    data class AppThemeClickPosition(val xPos: Int, val yPos: Int) : SettingsViewModelAction()
+}
+
+sealed class SettingsAction {
+    data class SetAppTheme(val appTheme: AppTheme, val xPos: Int, val yPos: Int) : SettingsAction()
 }
