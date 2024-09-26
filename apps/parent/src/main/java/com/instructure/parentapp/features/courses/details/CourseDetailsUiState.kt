@@ -23,4 +23,11 @@ enum class TabType(@StringRes val labelRes: Int) {
 
 sealed class CourseDetailsAction {
     data object Refresh : CourseDetailsAction()
+    data object SendAMessage : CourseDetailsAction()
+    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsAction()
+}
+
+sealed class CourseDetailsViewModelAction {
+    data object NavigateToComposeMessageScreen : CourseDetailsViewModelAction()
+    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsViewModelAction()
 }

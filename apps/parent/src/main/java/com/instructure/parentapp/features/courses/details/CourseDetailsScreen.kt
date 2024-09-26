@@ -31,10 +31,6 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -47,16 +43,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.pandautils.features.grades.GradesScreen
-import com.instructure.pandautils.features.grades.GradesViewModel
-import com.instructure.pandautils.features.grades.GradesViewModelAction
 import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.launch
 
@@ -94,6 +86,7 @@ internal fun CourseDetailsScreen(
                 else -> {
                     CourseDetailsScreenContent(
                         uiState = uiState,
+                        actionHandler = actionHandler,
                         navigationActionClick = navigationActionClick,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -107,6 +100,7 @@ internal fun CourseDetailsScreen(
 @Composable
 private fun CourseDetailsScreenContent(
     uiState: CourseDetailsUiState,
+    actionHandler: (CourseDetailsAction) -> Unit,
     navigationActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -116,7 +110,7 @@ private fun CourseDetailsScreenContent(
     val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
         when (it) {
             TabType.GRADES -> {
-                { Grades() }
+                { GradesScreen(actionHandler) }
             }
 
             TabType.FRONT_PAGE -> {
@@ -153,7 +147,9 @@ private fun CourseDetailsScreenContent(
                         selectedTabIndex = pagerState.currentPage,
                         contentColor = Color.White,
                         backgroundColor = Color(uiState.studentColor),
-                        modifier = Modifier.shadow(10.dp)
+                        modifier = Modifier
+                            .shadow(10.dp)
+                            .testTag("courseDetailsTabRow")
                     ) {
                         uiState.tabs.forEachIndexed { index, tab ->
                             Tab(
@@ -172,7 +168,9 @@ private fun CourseDetailsScreenContent(
                 }
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("courseDetailsPager")
                 ) { page ->
                     tabContents[page]()
                 }
@@ -182,35 +180,17 @@ private fun CourseDetailsScreenContent(
             FloatingActionButton(
                 backgroundColor = Color(uiState.studentColor),
                 onClick = {
-
+                    actionHandler(CourseDetailsAction.SendAMessage)
                 }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chat),
                     tint = Color(ThemePrefs.buttonTextColor),
-                    contentDescription = "todo"
+                    contentDescription = stringResource(id = R.string.courseDetailsMessageContentDescription)
                 )
             }
         }
     )
-}
-
-@Composable
-private fun Grades() {
-    val gradesViewModel: GradesViewModel = viewModel()
-    val gradeUiState by remember { gradesViewModel.uiState }.collectAsState()
-    val events = gradesViewModel.events
-    LaunchedEffect(events) {
-        events.collect { action ->
-            when (action) {
-                is GradesViewModelAction.NavigateToAssignmentDetails -> {
-
-                }
-            }
-        }
-    }
-
-    GradesScreen(gradeUiState, gradesViewModel::handleAction)
 }
 
 @Preview(showBackground = true)

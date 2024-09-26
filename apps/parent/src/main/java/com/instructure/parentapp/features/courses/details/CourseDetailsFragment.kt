@@ -26,9 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,6 +46,7 @@ class CourseDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         applyTheme()
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
@@ -58,5 +61,17 @@ class CourseDetailsFragment : Fragment() {
         val student = ParentPrefs.currentStudent
         val color = ColorKeeper.getOrGenerateUserColor(student).backgroundColor()
         ViewStyler.setStatusBarDark(requireActivity(), color)
+    }
+
+    private fun handleAction(action: CourseDetailsViewModelAction) {
+        when (action) {
+            is CourseDetailsViewModelAction.NavigateToComposeMessageScreen -> {
+
+            }
+
+            is CourseDetailsViewModelAction.NavigateToAssignmentDetails -> {
+
+            }
+        }
     }
 }

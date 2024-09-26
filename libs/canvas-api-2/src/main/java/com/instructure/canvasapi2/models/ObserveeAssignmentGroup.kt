@@ -33,4 +33,15 @@ data class ObserveeAssignmentGroup(
 ) : CanvasModel<ObserveeAssignmentGroup>() {
     override val comparisonDate: Date? get() = null
     override val comparisonString: String get() = position.toString()
+
+    fun toAssignmentGroup(studentId: Long): AssignmentGroup {
+        return AssignmentGroup(
+            id = id,
+            name = name,
+            position = position,
+            groupWeight = groupWeight,
+            assignments = assignments.map { it.toAssignment(studentId) },
+            rules = rules
+        )
+    }
 }

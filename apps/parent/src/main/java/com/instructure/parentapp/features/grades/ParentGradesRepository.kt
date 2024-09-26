@@ -20,13 +20,11 @@ package com.instructure.parentapp.features.grades
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.models.ObserveeAssignmentGroup
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.grades.GradesRepository
 import com.instructure.pandautils.utils.orDefault
@@ -49,7 +47,7 @@ class ParentGradesRepository(
         }.map {
             it.map { group ->
                 val filteredAssignments = group.assignments.filter { assignment -> assignment.published }
-                group.copy(assignments = filteredAssignments).toAssignmentGroup()
+                group.copy(assignments = filteredAssignments).toAssignmentGroup(studentId)
             }
         }.dataOrThrow
     }
@@ -81,49 +79,6 @@ class ParentGradesRepository(
         return course.parentGetCourseGradeFromEnrollment(
             enrollment,
             firstEnrollment == null && gradingPeriodId == null
-        )
-    }
-
-    private fun ObserveeAssignmentGroup.toAssignmentGroup(): AssignmentGroup {
-        return AssignmentGroup(
-            id = id,
-            name = name,
-            position = position,
-            groupWeight = groupWeight,
-            assignments = assignments.map {
-                Assignment(
-                    id = it.id,
-                    name = it.name,
-                    description = it.description,
-                    submissionTypesRaw = it.submissionTypesRaw,
-                    dueAt = it.dueAt,
-                    pointsPossible = it.pointsPossible,
-                    courseId = it.courseId,
-                    isGradeGroupsIndividually = it.isGradeGroupsIndividually,
-                    gradingType = it.gradingType,
-                    needsGradingCount = it.needsGradingCount,
-                    htmlUrl = it.htmlUrl,
-                    url = it.url,
-                    quizId = it.quizId,
-                    rubric = it.rubric,
-                    isUseRubricForGrading = it.isUseRubricForGrading,
-                    rubricSettings = it.rubricSettings,
-                    allowedExtensions = it.allowedExtensions,
-                    submission = it.submissionList?.firstOrNull { submission ->
-                        submission.userId == studentId
-                    },
-                    assignmentGroupId = it.assignmentGroupId,
-                    position = it.position,
-                    isPeerReviews = it.isPeerReviews,
-                    lockInfo = it.lockInfo,
-                    lockedForUser = it.lockedForUser,
-                    lockAt = it.lockAt,
-                    unlockAt = it.unlockAt,
-                    lockExplanation = it.lockExplanation,
-                    discussionTopicHeader = it.discussionTopicHeader
-                )
-            },
-            rules = rules
         )
     }
 }

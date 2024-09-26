@@ -29,9 +29,12 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -47,6 +50,9 @@ class CourseDetailsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(CourseDetailsUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _events = Channel<CourseDetailsViewModelAction>()
+    val events = _events.receiveAsFlow()
 
     init {
         loadData()
@@ -100,6 +106,18 @@ class CourseDetailsViewModel @Inject constructor(
     fun handleAction(action: CourseDetailsAction) {
         when (action) {
             is CourseDetailsAction.Refresh -> loadData(forceRefresh = true)
+
+            is CourseDetailsAction.SendAMessage -> {
+                viewModelScope.launch {
+                    _events.send(CourseDetailsViewModelAction.NavigateToComposeMessageScreen)
+                }
+            }
+
+            is CourseDetailsAction.NavigateToAssignmentDetails -> {
+                viewModelScope.launch {
+                    _events.send(CourseDetailsViewModelAction.NavigateToAssignmentDetails(action.id))
+                }
+            }
         }
     }
 }

@@ -196,6 +196,7 @@ private fun GradesScreenContent(
         ) {
             Card(
                 modifier = Modifier
+                    .semantics(true) {}
                     .weight(1f),
                 shape = RoundedCornerShape(6.dp),
                 elevation = 8.dp
@@ -255,7 +256,7 @@ private fun GradesScreenContent(
                             R.drawable.ic_filter_active
                         }
                     ),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.gradesFilterContentDescription),
                     tint = Color(userColor),
                     modifier = Modifier.size(24.dp)
                 )
@@ -362,10 +363,10 @@ private fun AssignmentItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(12.dp)
             .clickable {
                 actionHandler(GradesAction.AssignmentClick(uiState.id))
             }
+            .padding(12.dp)
     ) {
         Spacer(modifier = Modifier.width(12.dp))
         Icon(
