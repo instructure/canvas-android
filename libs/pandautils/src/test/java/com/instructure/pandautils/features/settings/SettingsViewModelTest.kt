@@ -15,16 +15,20 @@
  */
 package com.instructure.pandautils.features.settings
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
@@ -55,14 +59,20 @@ class SettingsViewModelTest {
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
+    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val settingsBehaviour: SettingsBehaviour = mockk(relaxed = true)
     private val syncSettingsFacade: SyncSettingsFacade = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val context: Context = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     @Before
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        every { savedStateHandle.get<Boolean>(OFFLINE_ENABLED) } returns true
     }
 
     @After
@@ -90,7 +100,7 @@ class SettingsViewModelTest {
 
         val uiState = viewModel.uiState.value
 
-        assertEquals(R.string.appThemeLight, uiState.appTheme)
+        assertEquals(AppTheme.LIGHT.ordinal, uiState.appTheme)
         assertEquals(items, uiState.items)
     }
 
@@ -176,6 +186,6 @@ class SettingsViewModelTest {
 
 
     private fun createViewModel(): SettingsViewModel {
-        return SettingsViewModel(settingsBehaviour, themePrefs, syncSettingsFacade)
+        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs)
     }
 }

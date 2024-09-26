@@ -61,6 +61,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.LabelValueSwitch
 import com.instructure.pandautils.compose.composables.LabelValueVerticalItem
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ThemePrefs
@@ -115,6 +116,12 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
 
                     SettingsItem.OFFLINE_SYNCHRONIZATION -> {
                         OfflineSyncItem(uiState)
+                    }
+
+                    SettingsItem.HOMEROOM_VIEW -> {
+                        HomeroomViewItem(uiState.homeroomView) {
+                            uiState.actionHandler(SettingsAction.SetHomeroomView(it))
+                        }
                     }
 
                     else -> {
@@ -273,14 +280,26 @@ private fun OfflineSyncItem(uiState: SettingsUiState) {
 }
 
 @Composable
+private fun HomeroomViewItem(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    LabelValueSwitch(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+        label = stringResource(id = R.string.settingsHomeroomView),
+        value = stringResource(
+            id = R.string.settingsElementaryViewSubtitle
+        ),
+        isChecked = checked,
+        onCheckedChange = onCheckedChange)
+}
+
+@Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun SettingsScreenDarkPreview() {
     ContextKeeper.appContext = LocalContext.current
     SettingsScreen(SettingsUiState(
         appTheme = AppTheme.SYSTEM.ordinal,
+        homeroomView = true,
         actionHandler = {},
         items = mapOf(
-            R.string.preferences to listOf(SettingsItem.APP_THEME),
+            R.string.preferences to listOf(SettingsItem.APP_THEME, SettingsItem.HOMEROOM_VIEW),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         ),
         onClick = {}
@@ -293,9 +312,10 @@ fun SettingsScreenLightPreview() {
     ContextKeeper.appContext = LocalContext.current
     SettingsScreen(SettingsUiState(
         appTheme = AppTheme.SYSTEM.ordinal,
+        homeroomView = false,
         actionHandler = {},
         items = mapOf(
-            R.string.preferences to listOf(SettingsItem.APP_THEME),
+            R.string.preferences to listOf(SettingsItem.APP_THEME, SettingsItem.HOMEROOM_VIEW),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         ),
         onClick = {}

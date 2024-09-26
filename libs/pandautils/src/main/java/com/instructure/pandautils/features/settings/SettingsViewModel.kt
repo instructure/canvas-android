@@ -20,9 +20,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.AppTheme
@@ -42,17 +44,20 @@ import javax.inject.Inject
 @SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     settingsBehaviour: SettingsBehaviour,
     @ApplicationContext private val context: Context,
     private val syncSettingsFacade: SyncSettingsFacade,
     private val colorKeeper: ColorKeeper,
-    private val themePrefs: ThemePrefs
+    private val themePrefs: ThemePrefs,
+    private val apiPrefs: ApiPrefs
 ) :
     ViewModel() {
 
     private val _uiState = MutableStateFlow(
         SettingsUiState(
             appTheme = themePrefs.appTheme,
+            homeroomView = apiPrefs.elementaryDashboardEnabledOverride,
             onClick = this::onItemClick,
             actionHandler = this::actionHandler
         )
@@ -62,8 +67,16 @@ class SettingsViewModel @Inject constructor(
     private val _events = Channel<SettingsViewModelAction>()
     val events = _events.receiveAsFlow()
 
+    private val offlineEnabled = savedStateHandle.get<Boolean>(OFFLINE_ENABLED) ?: false
     init {
-        if (settingsBehaviour.settingsItems.any { it.value.contains(SettingsItem.OFFLINE_SYNCHRONIZATION) }) {
+        val items = settingsBehaviour.settingsItems.filter {
+            if (it.value.contains(SettingsItem.OFFLINE_SYNCHRONIZATION)) {
+                offlineEnabled
+            } else {
+                true
+            }
+        }
+        if (items.any { it.value.contains(SettingsItem.OFFLINE_SYNCHRONIZATION) }) {
             viewModelScope.launch {
                 syncSettingsFacade.getSyncSettingsListenable().asFlow()
                     .collectLatest { syncSettings ->
@@ -81,7 +94,7 @@ class SettingsViewModel @Inject constructor(
         }
         _uiState.update {
             it.copy(
-                items = settingsBehaviour.settingsItems,
+                items = items,
             )
         }
     }
@@ -103,6 +116,13 @@ class SettingsViewModel @Inject constructor(
                     _events.send(SettingsViewModelAction.AppThemeClickPosition(action.xPos, action.yPos))
                 }
                 setAppTheme(action.appTheme)
+            }
+
+            is SettingsAction.SetHomeroomView -> {
+                apiPrefs.elementaryDashboardEnabledOverride = action.homeroomView
+                _uiState.update {
+                    it.copy(homeroomView = action.homeroomView)
+                }
             }
         }
     }
