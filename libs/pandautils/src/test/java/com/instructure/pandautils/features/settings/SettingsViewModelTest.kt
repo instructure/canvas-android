@@ -175,7 +175,7 @@ class SettingsViewModelTest {
         val viewModel = createViewModel()
 
         viewModel.uiState.value.items.flatMap { it.value }.forEach { item ->
-            viewModel.uiState.value.onClick(item)
+            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item))
             val events = mutableListOf<SettingsViewModelAction>()
             backgroundScope.launch(testDispatcher) {
                 viewModel.events.toList(events)

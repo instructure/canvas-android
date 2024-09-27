@@ -58,7 +58,6 @@ class SettingsViewModel @Inject constructor(
         SettingsUiState(
             appTheme = themePrefs.appTheme,
             homeroomView = apiPrefs.elementaryDashboardEnabledOverride,
-            onClick = this::onItemClick,
             actionHandler = this::actionHandler
         )
     )
@@ -68,6 +67,7 @@ class SettingsViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val offlineEnabled = savedStateHandle.get<Boolean>(OFFLINE_ENABLED) ?: false
+
     init {
         val items = settingsBehaviour.settingsItems.filter {
             if (it.value.contains(SettingsItem.OFFLINE_SYNCHRONIZATION)) {
@@ -103,17 +103,16 @@ class SettingsViewModel @Inject constructor(
         _uiState.update { it.copy(appTheme = theme.themeNameRes) }
     }
 
-    private fun onItemClick(item: SettingsItem) {
-        viewModelScope.launch {
-            _events.send(SettingsViewModelAction.Navigate(item))
-        }
-    }
-
     private fun actionHandler(action: SettingsAction) {
         when (action) {
             is SettingsAction.SetAppTheme -> {
                 viewModelScope.launch {
-                    _events.send(SettingsViewModelAction.AppThemeClickPosition(action.xPos, action.yPos))
+                    _events.send(
+                        SettingsViewModelAction.AppThemeClickPosition(
+                            action.xPos,
+                            action.yPos
+                        )
+                    )
                 }
                 setAppTheme(action.appTheme)
             }
@@ -122,6 +121,12 @@ class SettingsViewModel @Inject constructor(
                 apiPrefs.elementaryDashboardEnabledOverride = action.homeroomView
                 _uiState.update {
                     it.copy(homeroomView = action.homeroomView)
+                }
+            }
+
+            is SettingsAction.ItemClicked -> {
+                viewModelScope.launch {
+                    _events.send(SettingsViewModelAction.Navigate(action.settingsItem))
                 }
             }
         }

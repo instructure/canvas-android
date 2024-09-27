@@ -23,7 +23,6 @@ data class SettingsUiState(
     val homeroomView: Boolean,
     val items: Map<Int, List<SettingsItem>> = emptyMap(),
     val offlineState: Int? = null,
-    val onClick: (SettingsItem) -> Unit,
     val actionHandler: (SettingsAction) -> Unit
 )
 
@@ -36,4 +35,6 @@ sealed class SettingsAction {
     data class SetAppTheme(val appTheme: AppTheme, val xPos: Int, val yPos: Int) : SettingsAction()
 
     data class SetHomeroomView(val homeroomView: Boolean) : SettingsAction()
+
+    data class ItemClicked(val settingsItem: SettingsItem) : SettingsAction()
 }

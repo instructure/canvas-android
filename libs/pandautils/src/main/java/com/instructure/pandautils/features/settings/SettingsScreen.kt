@@ -128,7 +128,7 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
                         LabelValueVerticalItem(
                             modifier = Modifier
                                 .clickable {
-                                    uiState.onClick(settingsItem)
+                                    uiState.actionHandler(SettingsAction.ItemClicked(settingsItem))
                                 }
                                 .padding(
                                     horizontal = 16.dp,
@@ -267,7 +267,7 @@ private fun OfflineSyncItem(uiState: SettingsUiState) {
     LabelValueVerticalItem(
         modifier = Modifier
             .clickable {
-                uiState.onClick(SettingsItem.OFFLINE_SYNCHRONIZATION)
+                uiState.actionHandler(SettingsAction.ItemClicked(SettingsItem.OFFLINE_SYNCHRONIZATION))
             }
             .padding(
                 horizontal = 16.dp,
@@ -281,13 +281,15 @@ private fun OfflineSyncItem(uiState: SettingsUiState) {
 
 @Composable
 private fun HomeroomViewItem(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
-    LabelValueSwitch(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+    LabelValueSwitch(
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
         label = stringResource(id = R.string.settingsHomeroomView),
         value = stringResource(
             id = R.string.settingsElementaryViewSubtitle
         ),
         isChecked = checked,
-        onCheckedChange = onCheckedChange)
+        onCheckedChange = onCheckedChange
+    )
 }
 
 @Composable
@@ -302,7 +304,6 @@ fun SettingsScreenDarkPreview() {
             R.string.preferences to listOf(SettingsItem.APP_THEME, SettingsItem.HOMEROOM_VIEW),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         ),
-        onClick = {}
     ), navigationActionClick = {})
 }
 
@@ -318,6 +319,5 @@ fun SettingsScreenLightPreview() {
             R.string.preferences to listOf(SettingsItem.APP_THEME, SettingsItem.HOMEROOM_VIEW),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         ),
-        onClick = {}
     ), navigationActionClick = {})
 }
