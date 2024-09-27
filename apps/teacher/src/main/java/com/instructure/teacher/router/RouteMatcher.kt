@@ -50,6 +50,7 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -105,7 +106,6 @@ import com.instructure.teacher.fragments.ProfileFragment
 import com.instructure.teacher.fragments.QuizDetailsFragment
 import com.instructure.teacher.fragments.QuizListFragment
 import com.instructure.teacher.fragments.QuizPreviewWebviewFragment
-import com.instructure.teacher.fragments.SettingsFragment
 import com.instructure.teacher.fragments.SpeedGraderQuizWebViewFragment
 import com.instructure.teacher.fragments.ViewHtmlFragment
 import com.instructure.teacher.fragments.ViewImageFragment
@@ -510,7 +510,7 @@ object RouteMatcher : BaseRouteMatcher() {
             CreateDiscussionFragment::class.java.isAssignableFrom(cls) -> fragment = CreateDiscussionFragment.newInstance(route.arguments)
             CreateOrEditAnnouncementFragment::class.java.isAssignableFrom(cls) -> fragment = CreateOrEditAnnouncementFragment
                 .newInstance(route.arguments)
-            SettingsFragment::class.java.isAssignableFrom(cls) -> fragment = SettingsFragment.newInstance(route.arguments)
+            SettingsFragment::class.java.isAssignableFrom(cls) -> fragment = SettingsFragment.newInstance(route)
             ProfileEditFragment::class.java.isAssignableFrom(cls) -> fragment = ProfileEditFragment.newInstance(route.arguments)
             LtiLaunchFragment::class.java.isAssignableFrom(cls) -> fragment = LtiLaunchFragment.newInstance(route.arguments)
             PeopleListFragment::class.java.isAssignableFrom(cls) -> fragment = PeopleListFragment.newInstance(canvasContext!!)

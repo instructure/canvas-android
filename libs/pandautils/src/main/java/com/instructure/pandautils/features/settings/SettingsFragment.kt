@@ -209,6 +209,10 @@ class SettingsFragment : Fragment() {
                 settingsRouter.navigateToFeatureFlags()
             }
 
+            SettingsItem.RATE_APP -> {
+                settingsRouter.navigateToRateApp()
+            }
+
             else -> {
 
             }

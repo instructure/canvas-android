@@ -16,24 +16,32 @@
  */
 package com.instructure.teacher.di
 
+import android.content.Context
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRouter
+import com.instructure.teacher.features.settings.TeacherSettingsBehaviour
+import com.instructure.teacher.features.settings.TeacherSettingsRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.components.SingletonComponent
 
+@Module
+@InstallIn(ActivityComponent::class)
+class SettingsRouterModule {
+    @Provides
+    fun provideSettingsRouter(@ActivityContext context: Context): SettingsRouter {
+        return TeacherSettingsRouter(context)
+    }
+}
 @Module
 @InstallIn(SingletonComponent::class)
 class SettingsModule {
 
     @Provides
-    fun provideSettingsRouter(): SettingsRouter {
-        throw NotImplementedError("Not implemented")
-    }
-
-    @Provides
     fun provideSettingsBehavior(): SettingsBehaviour {
-        throw NotImplementedError("Not implemented")
+        return TeacherSettingsBehaviour()
     }
 }

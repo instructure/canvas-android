@@ -74,6 +74,7 @@ import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
@@ -107,7 +108,6 @@ import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.fragments.LtiLaunchFragment
-import com.instructure.teacher.fragments.SettingsFragment
 import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher

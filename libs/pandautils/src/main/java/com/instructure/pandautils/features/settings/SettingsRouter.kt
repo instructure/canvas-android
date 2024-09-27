@@ -33,4 +33,6 @@ interface SettingsRouter {
 
     fun navigateToFeatureFlags() = Unit
 
+    fun navigateToRateApp() = Unit
+
 }
