@@ -59,7 +59,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.databinding.AssignmentListLayoutBinding
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.adapter.AssignmentListByDateRecyclerAdapter
 import com.instructure.student.features.assignments.list.adapter.AssignmentListByTypeRecyclerAdapter
 import com.instructure.student.features.assignments.list.adapter.AssignmentListFilter

@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider

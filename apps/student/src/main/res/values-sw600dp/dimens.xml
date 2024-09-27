@@ -22,7 +22,5 @@
     <dimen name="actionbar_course_navigation_width">260dp</dimen>
     <dimen name="card_outer_margin">12dp</dimen>
     <dimen name="card_header_margins">16dp</dimen>
-    <dimen name="grade_cell_text_top_margin">8dp</dimen>
-    <dimen name="grade_cell_chart_top_margin">0dp</dimen>
 
 </resources>

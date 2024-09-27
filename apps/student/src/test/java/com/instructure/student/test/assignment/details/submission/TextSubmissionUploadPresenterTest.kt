@@ -20,8 +20,8 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadModel
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadPresenter
+import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadModel
+import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadPresenter
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

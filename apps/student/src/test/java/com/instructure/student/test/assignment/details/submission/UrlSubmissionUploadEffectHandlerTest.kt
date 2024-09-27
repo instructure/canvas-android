@@ -17,10 +17,10 @@ package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEffect
-import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEffectHandler
-import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEvent
-import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadView
+import com.instructure.student.mobius.assignmentDetails.submissions.url.UrlSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submissions.url.UrlSubmissionUploadEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submissions.url.UrlSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submissions.url.ui.UrlSubmissionUploadView
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified

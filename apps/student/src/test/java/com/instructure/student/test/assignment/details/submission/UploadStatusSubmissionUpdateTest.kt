@@ -16,10 +16,10 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionUpdate
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionEffect
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionEvent
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionModel
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionUpdate
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers

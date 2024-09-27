@@ -13,6 +13,7 @@ import androidx.navigation.fragment.fragment
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
@@ -51,6 +52,9 @@ class Navigation(apiPrefs: ApiPrefs) {
     val manageStudents = "$baseUrl/manage-students"
     val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
+
+    private val assignmentDetails = "$baseUrl/courses/{${courseId}}/assignments/{${AssignmentDetailsFragment.ASSIGNMENT_ID}}"
+    fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
 
     private val calendarEvent =
         "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
@@ -150,6 +154,16 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<CreateUpdateEventFragment>(updateEvent) {
                 argument(CreateUpdateEventFragment.SCHEDULE_ITEM) {
                     type = ScheduleItemParametersType
+                    nullable = false
+                }
+            }
+            fragment<AssignmentDetailsFragment>(assignmentDetails) {
+                argument(courseId) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(AssignmentDetailsFragment.ASSIGNMENT_ID) {
+                    type = NavType.LongType
                     nullable = false
                 }
             }

@@ -32,7 +32,7 @@ import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
+import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
@@ -283,7 +283,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val data = SubmissionDetailsTabData.CommentData( // ?? I don't know what this does, but I need to provide it
+        val data = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.CommentData( // ?? I don't know what this does, but I need to provide it
             name = "Name",
             assignment = baseAssignment,
             submission = baseSubmission,

@@ -25,7 +25,7 @@ import com.instructure.espresso.click
 import com.instructure.pandautils.utils.PandaPrefs
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.MediaSubmissionViewFragment
+import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.content.MediaSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.MediaSubmissionViewRenderPage
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
@@ -74,8 +74,8 @@ class MediaSubmissionViewRenderTest : StudentRenderTest() {
         page.prepareMediaButton.assertNotDisplayed()
     }
 
-    private fun loadPageWithViewData(data: SubmissionDetailsContentType.MediaContent): MediaSubmissionViewFragment {
-        val fragment = MediaSubmissionViewFragment.newInstance(data)
+    private fun loadPageWithViewData(data: SubmissionDetailsContentType.MediaContent): com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.content.MediaSubmissionViewFragment {
+        val fragment = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.content.MediaSubmissionViewFragment.newInstance(data)
         activityRule.activity.loadFragment(fragment)
         return fragment
     }

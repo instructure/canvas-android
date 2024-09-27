@@ -34,7 +34,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
+import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.ui.pages.renderPages.SubmissionRubricRenderPage
 import com.instructure.student.ui.utils.assertFontSizeSP
@@ -292,7 +292,7 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val data = SubmissionDetailsTabData.RubricData(
+        val data = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.RubricData(
             name = "Rubric",
             assignment = Assignment(),
             submission = Submission()
@@ -311,7 +311,7 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val data = SubmissionDetailsTabData.RubricData(
+        val data = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.RubricData(
             name = "Rubric",
             assignment = Assignment(),
             submission = Submission()

@@ -27,7 +27,7 @@ import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFileData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
+import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.ui.pages.renderPages.SubmissionFilesRenderPage
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -100,7 +100,7 @@ class SubmissionFilesRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val data = SubmissionDetailsTabData.FileData(
+        val data = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.FileData(
             name = "Files",
             files = emptyList(),
             selectedFileId = 0L,

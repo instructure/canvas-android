@@ -17,10 +17,10 @@ package com.instructure.student.test.assignment.details.submission
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffectHandler
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionEffect
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionEvent
+import com.instructure.student.mobius.assignmentDetails.submissions.file.ui.UploadStatusSubmissionView
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.room.StudentDb

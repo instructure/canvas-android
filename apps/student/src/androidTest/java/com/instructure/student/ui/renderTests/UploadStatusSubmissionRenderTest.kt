@@ -21,8 +21,8 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
-import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
+import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionModel
+import com.instructure.student.mobius.assignmentDetails.submissions.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest

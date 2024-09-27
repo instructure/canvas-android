@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
+import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert

@@ -25,11 +25,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.DialogCustomReminderBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewModel
+import com.instructure.pandautils.features.assignments.details.ReminderChoice
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.student.R
-import com.instructure.student.databinding.DialogCustomReminderBinding
-import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
-import com.instructure.student.features.assignments.details.ReminderChoice
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

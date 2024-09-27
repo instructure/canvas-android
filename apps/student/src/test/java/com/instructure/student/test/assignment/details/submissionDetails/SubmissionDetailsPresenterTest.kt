@@ -24,8 +24,8 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsPresenter
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsViewState
+import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData
+import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -62,7 +62,7 @@ class SubmissionDetailsPresenterTest : Assert() {
 
     @Test
     fun `Returns Loading state when model is loading`() {
-        val expectedState = SubmissionDetailsViewState.Loading
+        val expectedState = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loading
         val model = baseModel.copy(isLoading = true)
         val actualState = SubmissionDetailsPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -70,7 +70,7 @@ class SubmissionDetailsPresenterTest : Assert() {
 
     @Test
     fun `Returns failed state when assignment result is failed`() {
-        val expectedState = SubmissionDetailsViewState.Error
+        val expectedState = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Error
         val model = baseModel.copy(assignmentResult = DataResult.Fail())
         val actualState = SubmissionDetailsPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -78,7 +78,7 @@ class SubmissionDetailsPresenterTest : Assert() {
 
     @Test
     fun `Returns failed state when submission result is failed`() {
-        val expectedState = SubmissionDetailsViewState.Error
+        val expectedState = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Error
         val model = baseModel.copy(rootSubmissionResult = DataResult.Fail())
         val actualState = SubmissionDetailsPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -94,7 +94,7 @@ class SubmissionDetailsPresenterTest : Assert() {
             rootSubmissionResult = DataResult.Success(submission)
         )
         val actualState = SubmissionDetailsPresenter.present(model, context)
-        assertTrue(actualState is SubmissionDetailsViewState.Loaded)
+        assertTrue(actualState is com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded)
     }
 
     @Test
@@ -111,7 +111,7 @@ class SubmissionDetailsPresenterTest : Assert() {
             assignmentResult = DataResult.Success(baseAssignment),
             rootSubmissionResult = DataResult.Success(submission)
         )
-        val actualState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
+        val actualState = SubmissionDetailsPresenter.present(model, context) as com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded
         assertTrue(actualState.showVersionsSpinner)
     }
 
@@ -124,7 +124,7 @@ class SubmissionDetailsPresenterTest : Assert() {
             assignmentResult = DataResult.Success(baseAssignment),
             rootSubmissionResult = DataResult.Success(submission)
         )
-        val actualState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
+        val actualState = SubmissionDetailsPresenter.present(model, context) as com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded
         assertFalse(actualState.showVersionsSpinner)
     }
 
@@ -144,7 +144,7 @@ class SubmissionDetailsPresenterTest : Assert() {
                 Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
             )
         )
-        val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
+        val viewState = SubmissionDetailsPresenter.present(model, context) as com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded
         val expectedVersions = arrayListOf(
             2L to "Jan 31, 2050, 11:59 PM",
             1L to "Jan 30, 2050, 11:59 PM"
@@ -176,7 +176,7 @@ class SubmissionDetailsPresenterTest : Assert() {
             ),
             selectedSubmissionAttempt = 2
         )
-        val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
+        val viewState = SubmissionDetailsPresenter.present(model, context) as com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded
         assertEquals(1, viewState.selectedVersionSpinnerIndex)
     }
 
@@ -188,8 +188,8 @@ class SubmissionDetailsPresenterTest : Assert() {
                 Submission(submissionHistory = listOf(baseSubmission))
             )
         )
-        val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
-        val actual = viewState.tabData.first { it is SubmissionDetailsTabData.FileData }.tabName
+        val viewState = SubmissionDetailsPresenter.present(model, context) as com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded
+        val actual = viewState.tabData.first { it is com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.FileData }.tabName
         assertEquals("Files", actual)
     }
 
@@ -206,8 +206,8 @@ class SubmissionDetailsPresenterTest : Assert() {
                 )
             )
         )
-        val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
-        val actual = viewState.tabData.first { it is SubmissionDetailsTabData.FileData }.tabName
+        val viewState = SubmissionDetailsPresenter.present(model, context) as com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded
+        val actual = viewState.tabData.first { it is com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.FileData }.tabName
         assertEquals("Files ($fileCount)", actual)
     }
 
@@ -226,13 +226,13 @@ class SubmissionDetailsPresenterTest : Assert() {
                 submission.copy(submissionHistory = listOf(submission))
             )
         )
-        val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
-        val expectedTab = SubmissionDetailsTabData.RubricData(
+        val viewState = SubmissionDetailsPresenter.present(model, context) as com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsViewState.Loaded
+        val expectedTab = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.RubricData(
             "Rubric",
             model.assignmentResult!!.dataOrThrow,
             model.rootSubmissionResult!!.dataOrThrow
         )
-        val actualTab = viewState.tabData.single { it is SubmissionDetailsTabData.RubricData }
+        val actualTab = viewState.tabData.single { it is com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.RubricData }
         assertEquals(expectedTab, actualTab)
     }
 }

@@ -36,7 +36,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
+import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.Connection
@@ -202,7 +202,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities())
+            view.showSubmitDialogView(assignment,
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities()
+            )
         }
 
         confirmVerified(view)
@@ -413,7 +415,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities())
+            view.showSubmitDialogView(assignment,
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities()
+            )
         }
 
         confirmVerified(view)
@@ -429,7 +433,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             view.showSubmitDialogView(
                 assignment,
-                SubmissionTypesVisibilities(fileUpload = true, studioUpload = true)
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities(
+                    fileUpload = true,
+                    studioUpload = true
+                )
             )
         }
 
@@ -446,7 +453,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(fileUpload = true))
+            view.showSubmitDialogView(assignment,
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities(
+                    fileUpload = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -461,7 +472,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(textEntry = true))
+            view.showSubmitDialogView(assignment,
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities(
+                    textEntry = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -476,7 +491,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(urlEntry = true))
+            view.showSubmitDialogView(assignment,
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities(
+                    urlEntry = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -492,7 +511,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(studentAnnotation = true))
+            view.showSubmitDialogView(assignment,
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities(
+                    studentAnnotation = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -509,7 +532,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             view.showSubmitDialogView(
                 assignment,
-                SubmissionTypesVisibilities(mediaRecording = true)
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities(
+                    mediaRecording = true
+                )
             )
         }
 
@@ -527,13 +552,14 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             view.showSubmitDialogView(
                 assignment,
-                SubmissionTypesVisibilities(
+                com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionTypesVisibilities(
                     textEntry = true,
                     urlEntry = true,
                     fileUpload = true,
                     mediaRecording = true,
                     studioUpload = true,
-                    studentAnnotation = true)
+                    studentAnnotation = true
+                )
             )
         }
 

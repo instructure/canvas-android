@@ -46,12 +46,12 @@ import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.student.features.assignments.details.AssignmentDetailAction
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailAction
 import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
-import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
-import com.instructure.student.features.assignments.details.ReminderChoice
-import com.instructure.student.features.assignments.details.ReminderViewData
-import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewModel
+import com.instructure.pandautils.features.assignments.details.ReminderChoice
+import com.instructure.pandautils.features.assignments.details.ReminderViewData
+import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb

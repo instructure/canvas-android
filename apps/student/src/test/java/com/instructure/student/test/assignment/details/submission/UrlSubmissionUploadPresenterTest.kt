@@ -20,9 +20,9 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.url.MalformedUrlError
-import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadModel
-import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadPresenter
+import com.instructure.student.mobius.assignmentDetails.submissions.url.MalformedUrlError
+import com.instructure.student.mobius.assignmentDetails.submissions.url.UrlSubmissionUploadModel
+import com.instructure.student.mobius.assignmentDetails.submissions.url.UrlSubmissionUploadPresenter
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

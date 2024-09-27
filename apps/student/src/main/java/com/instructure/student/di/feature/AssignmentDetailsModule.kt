@@ -17,21 +17,38 @@
 
 package com.instructure.student.di.feature
 
-import com.instructure.canvasapi2.apis.*
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRouter
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsSubmissionHandler
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
 
+@Module
+@InstallIn(FragmentComponent::class)
+class AssignmentDetailsFragmentModule {
+    @Provides
+    fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
+        return StudentAssignmentDetailsRouter()
+    }
+}
 @Module
 @InstallIn(ViewModelComponent::class)
 class AssignmentDetailsModule {
@@ -56,13 +73,18 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideCourseBrowserRepository(
+    fun provideAssignmentDetailsRepository(
         networkStateProvider: NetworkStateProvider,
         localDataSource: AssignmentDetailsLocalDataSource,
         networkDataSource: AssignmentDetailsNetworkDataSource,
         featureFlagProvider: FeatureFlagProvider,
         reminderDao: ReminderDao
     ): AssignmentDetailsRepository {
-        return AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, reminderDao)
+        return StudentAssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, reminderDao)
+    }
+
+    @Provides
+    fun provideAssignmentDetailsSubmissionHandler(): AssignmentDetailsSubmissionHandler {
+        return StudentAssignmentDetailsSubmissionHandler()
     }
 }
