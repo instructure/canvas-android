@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.assignments.reminder
+package com.instructure.pandautils.features.assignments.details.reminder
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -23,8 +23,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.receivers.alarm.AlarmReceiver
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
-import com.instructure.student.receivers.AlarmReceiver
 
 class AlarmScheduler(private val context: Context, private val reminderDao: ReminderDao, private val apiPrefs: ApiPrefs) {
 

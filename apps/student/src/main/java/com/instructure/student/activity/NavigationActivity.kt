@@ -126,7 +126,7 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository

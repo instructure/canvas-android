@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.assignments.reminder
+package com.instructure.pandautils.features.assignments.details.reminder
 
 import android.app.Dialog
 import android.content.res.ColorStateList

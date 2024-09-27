@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

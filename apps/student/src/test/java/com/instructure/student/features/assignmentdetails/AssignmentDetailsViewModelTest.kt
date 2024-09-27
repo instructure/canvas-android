@@ -52,7 +52,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.ReminderChoice
 import com.instructure.pandautils.features.assignments.details.ReminderViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity

@@ -19,8 +19,8 @@ package com.instructure.student.di
 
 import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
