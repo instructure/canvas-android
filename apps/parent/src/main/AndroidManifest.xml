@@ -161,6 +161,11 @@
         </provider>
         <!-- End of Providers -->
 
+        <!--Reminder-->
+        <receiver
+            android:name="com.instructure.pandautils.receivers.alarm.AlarmReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>

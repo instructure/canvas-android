@@ -37,6 +37,7 @@ import com.instructure.student.features.assignments.details.StudentAssignmentDet
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import com.instructure.student.features.assignments.details.receiver.StudentAlarmReceiverNotificationHandler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -87,8 +88,8 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsSubmissionHandler(): AssignmentDetailsSubmissionHandler {
-        return StudentAssignmentDetailsSubmissionHandler()
+    fun provideAssignmentDetailsSubmissionHandler(submissionHandler: SubmissionHelper): AssignmentDetailsSubmissionHandler {
+        return StudentAssignmentDetailsSubmissionHandler(submissionHandler)
     }
 }
 

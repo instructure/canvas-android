@@ -113,7 +113,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             title = context?.getString(R.string.assignmentDetails)
             subtitle = viewModel.course?.name
 
-            assignmentDetailsRouter.applyTheme()
+            assignmentDetailsRouter.applyTheme(requireActivity(), binding, viewModel.course)
 
             ViewStyler.themeToolbarColored(requireActivity(), this, viewModel.course)
         }
@@ -195,24 +195,42 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 assignmentDetailsRouter.navigateToLtiLaunchScreen(requireActivity(), canvasContext,  action.ltiTool?.url.orEmpty(), action.title, isAssignmentLTI = true, ltiTool = action.ltiTool)
             }
             is AssignmentDetailAction.ShowMediaDialog -> {
-                assignmentDetailsRouter.showMediaDialog(requireContext())
+                assignmentDetailsRouter.showMediaDialog(
+                    requireActivity(),
+                    binding,
+                    { viewModel.uploadAudioSubmission(context, it) },
+                    ::startVideoCapture,
+                    { mediaPickerContract.launch(arrayOf("video/*", "audio/*")) }
+                )
             }
             is AssignmentDetailAction.ShowSubmitDialog -> {
-                assignmentDetailsRouter.showSubmitDialog(requireContext(), action.assignment, action.studioLTITool)
+                viewModel.course?.let {
+                    assignmentDetailsRouter.showSubmitDialog(
+                        requireActivity(),
+                        binding,
+                        { viewModel.uploadAudioSubmission(context, it) },
+                        ::startVideoCapture,
+                        { mediaPickerContract.launch(arrayOf("video/*", "audio/*")) },
+                        action.assignment,
+                        it,
+                        viewModel.isStudioAccepted(),
+                        action.studioLTITool
+                    )
+                }
             }
             is AssignmentDetailAction.NavigateToUploadStatusScreen -> {
                 assignmentDetailsRouter.navigateToUploadStatusScreen(requireActivity(), action.submissionId)
             }
             is AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked -> {
                 action.attachments.firstOrNull()?.let {
-                    assignmentDetailsRouter.navigateToDiscussionAttachmentScreen(requireContext(), it)
+                    assignmentDetailsRouter.navigateToDiscussionAttachmentScreen(requireActivity(), canvasContext, it)
                 }
             }
             is AssignmentDetailAction.ShowReminderDialog -> {
                 checkAlarmPermission()
             }
             is AssignmentDetailAction.ShowCustomReminderDialog -> {
-                assignmentDetailsRouter.showCustomReminderDialog(requireContext())
+                assignmentDetailsRouter.showCustomReminderDialog(requireActivity())
             }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
                 assignmentDetailsRouter.showDeleteReminderConfirmationDialog(requireContext(), action.onConfirmed)
@@ -271,7 +289,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
         binding?.descriptionWebViewWrapper?.webView?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
-                assignmentDetailsRouter.navigateToInternalWebView(requireContext(), canvasContext, url, false)
+                assignmentDetailsRouter.navigateToInternalWebView(requireActivity(), canvasContext, url, false)
             }
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
@@ -287,7 +305,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                assignmentDetailsRouter.showCreateReminderDialog(requireContext())
+                assignmentDetailsRouter.showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
             } else {
                 viewModel.checkingReminderPermission = true
                 startActivity(
@@ -298,14 +316,14 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 )
             }
         } else {
-            assignmentDetailsRouter.showCreateReminderDialog(requireContext())
+            assignmentDetailsRouter.showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
         }
     }
 
     private fun checkAlarmPermissionResult() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
             if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
-                assignmentDetailsRouter.showCreateReminderDialog(requireContext())
+                assignmentDetailsRouter.showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }

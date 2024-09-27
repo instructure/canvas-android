@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
@@ -19,7 +20,7 @@ class TeacherAssignmentDetailsSubmissionHandler: AssignmentDetailsSubmissionHand
 
     override fun removeAssignmentSubmissionObserver() = Unit
 
-    override fun uploadAudioSubmission(context: Context?, file: File?) = Unit
+    override fun uploadAudioSubmission(context: Context?, course: Course?, assignment: Assignment?, file: File?) = Unit
 
     override fun getVideoUri(fragment: FragmentActivity): Uri? = null
 

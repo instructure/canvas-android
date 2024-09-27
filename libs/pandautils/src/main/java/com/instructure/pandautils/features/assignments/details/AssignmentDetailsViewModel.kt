@@ -53,6 +53,7 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
@@ -66,7 +67,6 @@ import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
-import java.net.URI
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -82,6 +82,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val application: Application,
     private val apiPrefs: ApiPrefs,
     private val submissionHandler: AssignmentDetailsSubmissionHandler,
+    private val alarmScheduler: AlarmScheduler,
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -455,6 +456,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun deleteReminderById(id: Long) {
+        alarmScheduler.cancelAlarm(id)
         viewModelScope.launch {
             assignmentDetailsRepository.deleteReminderById(id)
         }
@@ -554,7 +556,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     fun uploadAudioSubmission(context: Context?, file: File?) {
-        submissionHandler.uploadAudioSubmission(context, file)
+        submissionHandler.uploadAudioSubmission(context, course, assignment, file)
     }
 
     fun showContent(viewState: ViewState?): Boolean {

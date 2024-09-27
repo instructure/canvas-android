@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Submission
 import java.io.File
@@ -18,7 +19,7 @@ interface AssignmentDetailsSubmissionHandler {
 
     fun removeAssignmentSubmissionObserver()
 
-    fun uploadAudioSubmission(context: Context?, file: File?)
+    fun uploadAudioSubmission(context: Context?, course: Course?, assignment: Assignment?, file: File?)
 
     fun getVideoUri(fragment: FragmentActivity): Uri?
 
