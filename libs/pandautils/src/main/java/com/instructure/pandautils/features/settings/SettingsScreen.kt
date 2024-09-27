@@ -93,7 +93,7 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier.testTag("settingsList")) {
         uiState.items.onEachIndexed { index, entry ->
             val (sectionTitle, items) = entry
             item {
@@ -177,6 +177,7 @@ private fun AppThemeItem(uiState: SettingsUiState) {
         AppThemeButton(
             icon = if (nightMode) R.drawable.ic_panda_light_dark else R.drawable.ic_panda_light_light,
             title = R.string.appThemeLight,
+            testTag = "lightThemeButton",
             selected = uiState.appTheme == AppTheme.LIGHT.ordinal
         ) {
             uiState.actionHandler(
@@ -190,6 +191,7 @@ private fun AppThemeItem(uiState: SettingsUiState) {
         AppThemeButton(
             icon = if (nightMode) R.drawable.ic_panda_dark_dark else R.drawable.ic_panda_dark_light,
             title = R.string.appThemeDark,
+            testTag = "darkThemeButton",
             selected = uiState.appTheme == AppTheme.DARK.ordinal
         ) {
             uiState.actionHandler(
@@ -203,6 +205,7 @@ private fun AppThemeItem(uiState: SettingsUiState) {
         AppThemeButton(
             icon = if (nightMode) R.drawable.ic_panda_system_dark else R.drawable.ic_panda_system_light,
             title = R.string.appThemeAuto,
+            testTag = "systemThemeButton",
             selected = uiState.appTheme == AppTheme.SYSTEM.ordinal
         ) {
             uiState.actionHandler(
@@ -221,6 +224,7 @@ private fun AppThemeButton(
     @DrawableRes icon: Int,
     @StringRes title: Int,
     selected: Boolean,
+    testTag: String,
     modifier: Modifier = Modifier,
     onClick: (Offset) -> Unit
 ) {
@@ -228,6 +232,7 @@ private fun AppThemeButton(
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         IconButton(
             modifier = Modifier
+                .testTag(testTag)
                 .onGloballyPositioned {
                     position = Offset(
                         x = it.positionInRoot().x + it.size.width / 2,
@@ -316,7 +321,11 @@ fun SettingsScreenLightPreview() {
         homeroomView = false,
         actionHandler = {},
         items = mapOf(
-            R.string.preferences to listOf(SettingsItem.APP_THEME, SettingsItem.HOMEROOM_VIEW),
+            R.string.preferences to listOf(
+                SettingsItem.APP_THEME,
+                SettingsItem.HOMEROOM_VIEW,
+                SettingsItem.PROFILE_SETTINGS
+            ),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         ),
     ), navigationActionClick = {})
