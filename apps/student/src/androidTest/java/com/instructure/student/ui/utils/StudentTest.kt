@@ -32,6 +32,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -65,7 +66,6 @@ import com.instructure.student.ui.pages.HelpPage
 import com.instructure.student.ui.pages.HomeroomPage
 import com.instructure.student.ui.pages.ImportantDatesPage
 import com.instructure.student.ui.pages.InboxConversationPage
-import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
 import com.instructure.student.ui.pages.LoginFindSchoolPage
@@ -83,6 +83,7 @@ import com.instructure.student.ui.pages.PeopleListPage
 import com.instructure.student.ui.pages.PersonDetailsPage
 import com.instructure.student.ui.pages.PickerSubmissionUploadPage
 import com.instructure.student.ui.pages.ProfileSettingsPage
+import com.instructure.student.ui.pages.PushNotificationsPage
 import com.instructure.student.ui.pages.QRLoginPage
 import com.instructure.student.ui.pages.QuizListPage
 import com.instructure.student.ui.pages.QuizTakingPage
@@ -164,6 +165,7 @@ abstract class StudentTest : CanvasTest() {
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val settingsPage = SettingsPage()
+    val pushNotificationsPage = PushNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()
