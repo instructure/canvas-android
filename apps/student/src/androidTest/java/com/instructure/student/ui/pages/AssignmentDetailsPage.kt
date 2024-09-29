@@ -177,6 +177,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         assertStatus(R.string.missingAssignment)
     }
 
+    fun assertStatusGraded() {
+        assertStatus(R.string.gradedSubmissionLabel)
+    }
+
     fun viewQuiz() {
         onView(withId(R.id.submitButton)).assertHasText(R.string.viewQuiz).click()
     }
@@ -320,6 +324,11 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.notAvailableIcon) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
         onView(withId(R.id.title) + withText(R.string.notAvailableOfflineScreenTitle) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
         onView(withId(R.id.description) + withText(R.string.notAvailableOfflineDescriptionForTabs) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertSubmitButtonDisabled() {
+        onView(withId(R.id.submitButton)).check(matches(ViewMatchers.isNotEnabled()))
     }
 }
 
