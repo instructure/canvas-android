@@ -33,6 +33,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
@@ -48,7 +49,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -460,17 +460,16 @@ private fun ThresholdDialog(
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                 TextButton(
                     modifier = Modifier.testTag("thresholdDialogCancelButton"),
+                    colors = ButtonDefaults.textButtonColors(contentColor = color),
                     onClick = {
                         onDismiss()
                     }
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = TextStyle(color = color)
-                    )
+                    Text(text = stringResource(id = R.string.cancel))
                 }
                 TextButton(
                     modifier = Modifier.testTag("thresholdDialogNeverButton"),
+                    colors = ButtonDefaults.textButtonColors(contentColor = color),
                     onClick = {
                         actionHandler(
                             AlertSettingsAction.DeleteThreshold(
@@ -479,14 +478,12 @@ private fun ThresholdDialog(
                         )
                         onDismiss()
                     }) {
-                    Text(
-                        text = stringResource(id = R.string.alertSettingsThresholdNever),
-                        style = TextStyle(color = color)
-                    )
+                    Text(text = stringResource(id = R.string.alertSettingsThresholdNever))
                 }
                 TextButton(
                     modifier = Modifier.testTag("thresholdDialogSaveButton"),
                     enabled = enabled,
+                    colors = ButtonDefaults.textButtonColors(contentColor = color),
                     onClick = {
                         actionHandler(
                             AlertSettingsAction.CreateThreshold(
@@ -497,11 +494,7 @@ private fun ThresholdDialog(
                         onDismiss()
                     }
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.save),
-                        style = TextStyle(color = if (enabled) color else colorResource(id = R.color.textDarkest)),
-                        modifier = Modifier.alpha(if (enabled) 1f else 0.5f)
-                    )
+                    Text(text = stringResource(id = R.string.save))
                 }
             }
         }
@@ -534,18 +527,20 @@ private fun UnpairStudentDialog(
         confirmButton = {
             TextButton(
                 modifier = Modifier.testTag("deleteConfirmButton"),
+                colors = ButtonDefaults.textButtonColors(contentColor = color),
                 onClick = {
                     actionHandler(AlertSettingsAction.UnpairStudent(studentId))
                     onDismiss()
                 }) {
-                Text(text = stringResource(id = R.string.delete), style = TextStyle(color = color))
+                Text(text = stringResource(id = R.string.delete))
             }
         },
         dismissButton = {
             TextButton(
                 modifier = Modifier.testTag("deleteCancelButton"),
-                onClick = { onDismiss() }) {
-                Text(text = stringResource(id = R.string.cancel), style = TextStyle(color = color))
+                onClick = { onDismiss() },
+                colors = ButtonDefaults.textButtonColors(contentColor = color)) {
+                Text(text = stringResource(id = R.string.cancel))
             }
         })
 }
