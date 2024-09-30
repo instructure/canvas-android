@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.dashboard
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
@@ -29,6 +30,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
@@ -44,6 +46,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -55,6 +58,7 @@ class DashboardViewModel @Inject constructor(
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
     private val alertCountUpdater: AlertCountUpdater,
+    private val colorKeeper: ColorKeeper,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -64,15 +68,21 @@ class DashboardViewModel @Inject constructor(
     private val _state = MutableStateFlow<ViewState>(ViewState.Loading)
     val state = _state.asStateFlow()
 
-    private val _events = Channel<DashboardAction>()
+    private val _events = Channel<DashboardViewModelAction>()
     val events = _events.receiveAsFlow()
 
     private val currentUser = previousUsersUtils.getSignedInUser(context, apiPrefs.domain, apiPrefs.user?.id.orDefault())
     private val intent = savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT)
 
+    private var students = mutableListOf<User>()
+
     init {
         handleDeeplink()
         loadData()
+    }
+
+    fun reloadData() {
+        loadData(true)
     }
 
     private fun handleDeeplink() {
@@ -80,12 +90,12 @@ class DashboardViewModel @Inject constructor(
 
         uri?.let {
             viewModelScope.launch {
-                _events.send(DashboardAction.NavigateDeepLink(it))
+                _events.send(DashboardViewModelAction.NavigateDeepLink(it))
             }
         }
     }
 
-    private fun loadData() {
+    private fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
             inboxCountUpdater.shouldRefreshInboxCountFlow.collect { shouldUpdate ->
                 if (shouldUpdate) {
@@ -108,7 +118,7 @@ class DashboardViewModel @Inject constructor(
             _state.value = ViewState.Loading
 
             setupUserInfo()
-            loadStudents()
+            loadStudents(forceNetwork)
             updateUnreadCount()
             updateAlertCount()
 
@@ -144,27 +154,44 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadStudents() {
-        val students = repository.getStudents()
-        val selectedStudent = students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
+    private suspend fun loadStudents(forceNetwork: Boolean) {
+        val students = repository.getStudents(forceNetwork)
+        val selectedStudent = if (this.students.isEmpty()) {
+            students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
+        } else {
+            students.subtract(this.students.toSet()).firstOrNull() ?: students.firstOrNull()
+        }
+        this.students = students.toMutableList()
+
         parentPrefs.currentStudent = selectedStudent
         selectedStudent?.let {
             selectedStudentHolder.updateSelectedStudent(it)
         }
 
+        val studentItems = students.map { user ->
+            StudentItemViewModel(
+                StudentItemViewData(
+                    user.id,
+                    user.shortName.orEmpty(),
+                    user.avatarUrl.orEmpty()
+                )
+            ) { userId ->
+                onStudentSelected(students.first { it.id == userId })
+            }
+        }
+
+        val studentItemsWithAddStudent = if (studentItems.isNotEmpty()) {
+            studentItems + AddStudentItemViewModel(
+                colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor(),
+                ::addStudent
+            )
+        } else {
+            studentItems
+        }
+
         _data.update { data ->
             data.copy(
-                studentItems = students.map { user ->
-                    StudentItemViewModel(
-                        StudentItemViewData(
-                            user.id,
-                            user.shortName.orEmpty(),
-                            user.avatarUrl.orEmpty()
-                        )
-                    ) { userId ->
-                        onStudentSelected(students.first { it.id == userId })
-                    }
-                },
+                studentItems = studentItemsWithAddStudent,
                 selectedStudent = selectedStudent
             )
         }
@@ -180,6 +207,12 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    private fun addStudent() {
+        viewModelScope.launch {
+            _events.send(DashboardViewModelAction.AddStudent)
+        }
+    }
+
     private fun onStudentSelected(student: User) {
         parentPrefs.currentStudent = student
         currentUser?.let {
@@ -188,7 +221,14 @@ class DashboardViewModel @Inject constructor(
         _data.update {
             it.copy(
                 studentSelectorExpanded = false,
-                selectedStudent = student
+                selectedStudent = student,
+                studentItems = it.studentItems.map { item ->
+                    if (item is AddStudentItemViewModel) {
+                        item.copy(color = colorKeeper.getOrGenerateUserColor(student).textAndIconColor())
+                    } else {
+                        item
+                    }
+                }
             )
         }
         viewModelScope.launch {

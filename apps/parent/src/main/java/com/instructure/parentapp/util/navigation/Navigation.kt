@@ -25,6 +25,7 @@ import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.qr.QrPairingFragment
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
@@ -49,6 +50,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
     val manageStudents = "$baseUrl/manage-students"
+    val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
 
     private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
@@ -114,6 +116,7 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
             }
             fragment<ManageStudentsFragment>(manageStudents)
+            fragment<QrPairingFragment>(qrPairing)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {
                 argument(courseId) {

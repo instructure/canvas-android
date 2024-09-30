@@ -143,6 +143,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final course = snapshot.data?.course;
     final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
     final assignment = snapshot.data!.assignment!;
+    final assignmentEnhancementEnabled = snapshot.data?.assignmentEnhancementEnabled ?? false;
     final submission = assignment.submission(_currentStudent?.id);
     final fullyLocked = assignment.isFullyLocked;
     final missing = submission?.missing == true;
@@ -191,7 +192,11 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
               padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
               child: OutlinedButton(
                   onPressed: () {
-                    _onSubmissionAndRubricClicked(assignment.htmlUrl, l10n.submission);
+                    _onSubmissionAndRubricClicked(
+                      assignment.htmlUrl,
+                      assignmentEnhancementEnabled,
+                      l10n.submission,
+                    );
                   },
                   child: Align(
                       alignment: Alignment.center,
@@ -400,12 +405,13 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     }
   }
 
-  _onSubmissionAndRubricClicked(String? assignmentUrl, String title) async {
+  _onSubmissionAndRubricClicked(String? assignmentUrl, bool assignmentEnhancementEnabled, String title) async {
     if (assignmentUrl == null) return;
     final parentId = ApiPrefs.getUser()?.id ?? 0;
     final currentStudentId = _currentStudent?.id ?? 0;
+    final url = assignmentEnhancementEnabled ? assignmentUrl : assignmentUrl + "/submissions/$currentStudentId";
     locator<QuickNav>().pushRoute(context, PandaRouter.submissionWebViewRoute(
-        await locator<WebContentInteractor>().getAuthUrl(assignmentUrl),
+        await locator<WebContentInteractor>().getAuthUrl(url),
         title,
         {"k5_observed_user_for_$parentId": "$currentStudentId"},
         false

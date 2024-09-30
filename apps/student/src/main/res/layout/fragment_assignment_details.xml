@@ -626,7 +626,7 @@
             android:onClick="@{()->viewModel.onSubmitButtonClicked()}"
             android:text="@{viewModel.data.submitButtonText}"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/textLightest"
             android:visibility="@{viewModel.data.submitVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Resubmit Assignment" />

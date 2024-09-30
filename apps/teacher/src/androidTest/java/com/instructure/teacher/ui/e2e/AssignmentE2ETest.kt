@@ -102,7 +102,38 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentDetailsPage.assertNotSubmitted(3,3)
         assignmentDetailsPage.assertNeedsGrading(0,3)
 
-        Log.d(STEP_TAG,"Publish ${assignment[0].name} assignment. Click on Save.")
+        Log.d(STEP_TAG, "Open the 'All Submissions' page and click on the filter icon on the top-right corner.")
+        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Filter by section (the ${course.name} course).")
+        assignmentSubmissionListPage.clickFilterBySection()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Filter By...' section dialog details displayed correctly. Filter by the '${course.name}' (course) section.")
+        assignmentSubmissionListPage.assertSectionFilterDialogDetails()
+        assignmentSubmissionListPage.filterBySection(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is displayed as we set some filter. Assert that the filter label text is the 'All Submissions' text plus the '${course.name}' course name.")
+        assignmentSubmissionListPage.assertDisplaysClearFilter()
+        assignmentSubmissionListPage.assertFilterLabelText("All Submissions, ${course.name}")
+
+        Log.d(STEP_TAG, "Open '${student.name}' student's submission.")
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(ASSERTION_TAG, "Assert that the speed grader page of '${student.name}' student is displayed and the title is the student's name, the subtitle is 'Not submitted yet'.")
+        speedGraderPage.assertSpeedGraderToolbarTitle(student.name, "Not submitted yet")
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment Submission List Page and clear the filter.")
+        Espresso.pressBack()
+        assignmentSubmissionListPage.clearFilter()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is NOT displayed as we just cleared the filter. Assert that the filter label text 'All Submission'.")
+        assignmentSubmissionListPage.assertClearFilterGone()
+        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
+
+        Log.d(STEP_TAG,"Navigate back to Assignment List Page, open the '${assignment[0].name}' assignment and publish it. Click on Save.")
+        Espresso.pressBack()
+        assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickPublishSwitch()
         editAssignmentDetailsPage.saveAssignment()
@@ -322,7 +353,7 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentListPage.clickAssignment(assignment)
 
         Log.d(STEP_TAG,"Open ${student.name} student's submission and switch to submission details Comments Tab.")
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
 
@@ -390,7 +421,7 @@ class AssignmentE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Click on ${assignment.name} assignment and navigate to Submissions Page.")
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
 
         Log.d(STEP_TAG,"Click on ${student.name} student's submission.")
         assignmentSubmissionListPage.clickSubmission(student)

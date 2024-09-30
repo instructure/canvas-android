@@ -52,6 +52,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForViewToBeCompletelyDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -423,7 +424,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     //OfflineMethod
     fun assertCourseOfflineSyncIconVisible(courseName: String) {
-        waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        WaitForViewMatcher.waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName)), 20).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     //OfflineMethod

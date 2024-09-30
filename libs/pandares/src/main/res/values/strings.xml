@@ -1827,6 +1827,25 @@
     <string name="studentColorContentDescriptionOrange">Fire, Orange</string>
     <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
     <string name="featureFlags">Feature Flags</string>
+    <string name="addStudent">Add Student</string>
+    <string name="addStudentTitle">Add student with…</string>
+    <string name="addStudentQrCodeTitle">QR Code</string>
+    <string name="addStudentQrCodeExplanation">Students can generate a QR code using the Canvas Student app on their mobile device</string>
+    <string name="addStudentPairingCodeTitle">Pairing Code</string>
+    <string name="addStudentPairingCodeExplanation">Students can obtain a pairing code through the Canvas website</string>
+    <string name="pairingCodeDialogTitle">Add Student</string>
+    <string name="pairingCodeDialogMessage">Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired.</string>
+    <string name="pairingCodeDialogLabel">Pairing Code</string>
+    <string name="pairingCodeDialogNegativeButton">Cancel</string>
+    <string name="pairingCodeDialogPositiveButton">Ok</string>
+    <string name="pairingCodeDialogError">Your code is incorrect or expired.</string>
+    <string name="qrPairingTitle">Open Canvas Student</string>
+    <string name="qrPairingDescription">You\'ll need to open your student\'s Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.</string>
+    <string name="qrCodePairingPrompt">Scan a QR code from Canvas Student to pair</string>
+    <string name="a11y_addStudentContentDescription">Add Student</string>
+    <string name="qrPairingErrorTitle">Expired QR Code</string>
+    <string name="qrPairingErrorDescription">The QR code you scanned may have expired. Refresh the code on the student\'s device and try again.</string>
+    <string name="studentPairing">Student Pairing</string>
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
 </resources>

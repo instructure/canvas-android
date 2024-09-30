@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -38,4 +39,7 @@ interface ObserverApi {
 
     @GET("users/self/observer_alert_thresholds")
     suspend fun getObserverAlertThresholds(@Query("student_id") studentId: Long, @Tag restParams: RestParams): DataResult<List<AlertThreshold>>
+
+    @POST("users/self/observees")
+    suspend fun pairStudent(@Query("pairing_code") pairingCode: String, @Tag restParams: RestParams): DataResult<Unit>
 }

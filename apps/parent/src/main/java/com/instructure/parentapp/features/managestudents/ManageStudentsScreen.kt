@@ -119,6 +119,7 @@ internal fun ManageStudentsScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(
+                    modifier = Modifier.testTag("addStudentButton"),
                     backgroundColor = Color(ThemePrefs.buttonColor),
                     onClick = {
                         actionHandler(ManageStudentsAction.AddStudent)
