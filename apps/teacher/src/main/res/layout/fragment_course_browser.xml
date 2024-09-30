@@ -80,6 +80,10 @@
                             android:maxLines="3"
                             android:textColor="@color/textLightest"
                             android:textSize="24sp"
+                            android:shadowColor="@color/shadowColor"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="4"
                             tools:text="Title of Course"/>
 
                         <!-- Subtitle -->
@@ -95,6 +99,10 @@
                             android:maxLines="1"
                             android:textColor="@color/textLightest"
                             android:textSize="16sp"
+                            android:shadowColor="@color/shadowColor"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="4"
                             tools:text="Subtitle"/>
 
                     </LinearLayout>

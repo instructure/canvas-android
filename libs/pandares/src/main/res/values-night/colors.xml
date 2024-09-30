@@ -63,6 +63,7 @@
     <color name="tiara">#919CA8</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="shadowColor">#66FFFFFF</color>
 
     <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
     <color name="switchThumbColor">#616F7C</color>
