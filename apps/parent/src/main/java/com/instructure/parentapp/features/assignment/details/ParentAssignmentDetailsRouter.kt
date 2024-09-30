@@ -6,175 +6,161 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
+import com.instructure.pandautils.features.assignments.details.ReminderChoice
+import java.io.File
 
 class ParentAssignmentDetailsRouter: AssignmentDetailsRouter {
     override fun navigateToAssignmentUploadPicker(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
         mediaUri: Uri
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToLtiScreen(
         activity: FragmentActivity,
         canvasContext: CanvasContext?,
         url: String
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToSubmissionScreen(
-        context: Context,
+        activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
         isObserver: Boolean,
         initialSelectedSubmissionAttempt: Long?
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToQuizScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         quiz: Quiz,
         url: String
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToDiscussionScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         discussionTopicHeaderId: Long,
         isAnnouncement: Boolean
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToUploadScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
         attemptId: Long?
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToTextEntryScreen(
-        context: Context,
+        activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
         initialText: String?,
         isFailure: Boolean
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToUrlSubmissionScreen(
-        context: Context,
+        activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
         initialUrl: String?,
         isFailure: Boolean
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToAnnotationSubmissionScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         annotatableAttachmentId: Long,
         submissionId: Long,
         assignmentId: Long,
         assignmentName: String
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToLtiLaunchScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         url: String,
         title: String?,
         sessionLessLaunch: Boolean,
         isAssignmentLTI: Boolean,
         ltiTool: LTITool?
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
-    override fun navigateToUploadStatusScreen(context: Context, submissionId: Long) {
-        TODO("Not yet implemented")
-    }
+    override fun navigateToUploadStatusScreen(activity: FragmentActivity, submissionId: Long) = Unit
 
-    override fun navigateToDiscussionAttachmentScreen(context: Context, attachment: RemoteFile) {
-        TODO("Not yet implemented")
-    }
+    override fun navigateToDiscussionAttachmentScreen(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        attachment: RemoteFile
+    ) = Unit
 
     override fun navigateToUrl(
         activity: FragmentActivity,
         url: String,
         domain: String,
         extras: Bundle?
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
     override fun navigateToInternalWebView(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         url: String,
         authenticate: Boolean
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
-    override fun openMedia(context: Context, url: String) {
-        TODO("Not yet implemented")
-    }
+    override fun openMedia(activity: FragmentActivity, url: String) = Unit
 
-    override fun showMediaDialog(context: Context) {
-        TODO("Not yet implemented")
-    }
+    override fun showMediaDialog(
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        recordCallback: (File?) -> Unit,
+        startVideoCapture: () -> Unit,
+        onLaunchMediaPicker: () -> Unit
+    ) = Unit
 
     override fun showSubmitDialog(
-        context: Context,
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        recordCallback: (File?) -> Unit,
+        startVideoCapture: () -> Unit,
+        onLaunchMediaPicker: () -> Unit,
         assignment: Assignment,
+        course: Course,
+        isStudioEnabled: Boolean,
         studioLTITool: LTITool?
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) = Unit
 
-    override fun showCustomReminderDialog(context: Context) {
-        TODO("Not yet implemented")
-    }
+    override fun showCustomReminderDialog(activity: FragmentActivity) = Unit
 
-    override fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {
-        TODO("Not yet implemented")
-    }
+    override fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) = Unit
 
-    override fun showCreateReminderDialog(context: Context) {
-        TODO("Not yet implemented")
-    }
+    override fun showCreateReminderDialog(
+        context: Context,
+        onReminderSelected: (ReminderChoice) -> Unit
+    ) = Unit
 
     override fun canRouteInternally(
         activity: FragmentActivity?,
-        url: String?,
+        url: String,
         domain: String,
         routeIfPossible: Boolean
-    ): Boolean {
-        TODO("Not yet implemented")
+    ): Boolean = false
+
+    override fun applyTheme(
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        course: Course?
+    ) {
+
     }
 
-    override fun applyTheme() {
-        TODO("Not yet implemented")
-    }
 }

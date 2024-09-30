@@ -78,7 +78,8 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
-    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
+    val courseId by LongArg(key = Const.COURSE_ID, default = 0)
+    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT, default = Course(courseId))
 
     private var binding: FragmentAssignmentDetailsBinding? = null
     private val viewModel: AssignmentDetailsViewModel by viewModels()
@@ -332,7 +333,6 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     }
 
     companion object {
-        const val ASSIGNMENT_ID = "assignment-id"
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
             val bundle = course.makeBundle { putLong(Const.ASSIGNMENT_ID, assignmentId) }
             return Route(null, AssignmentDetailsFragment::class.java, course, bundle)

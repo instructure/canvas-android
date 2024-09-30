@@ -1,16 +1,29 @@
 package com.instructure.parentapp.features.assignment.details
 
 import androidx.lifecycle.LiveData
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 
-class ParentAssignmentDetailsRepository: AssignmentDetailsRepository {
+class ParentAssignmentDetailsRepository(
+    private val coursesApi: CourseAPI.CoursesInterface,
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
+    private val quizApi: QuizAPI.QuizInterface,
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val reminderDao: ReminderDao
+): AssignmentDetailsRepository {
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
-        TODO("Not yet implemented")
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return coursesApi.getCourseWithGrade(courseId, params).dataOrThrow
     }
 
     override suspend fun getAssignment(
@@ -19,11 +32,13 @@ class ParentAssignmentDetailsRepository: AssignmentDetailsRepository {
         courseId: Long,
         forceNetwork: Boolean
     ): Assignment {
-        TODO("Not yet implemented")
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return assignmentApi.getAssignmentIncludeObservees(courseId, assignmentId, params).dataOrThrow.toAssignmentForObservee()!!
     }
 
     override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
-        TODO("Not yet implemented")
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return quizApi.getQuiz(courseId, quizId, params).dataOrThrow
     }
 
     override suspend fun getExternalToolLaunchUrl(
@@ -32,22 +47,24 @@ class ParentAssignmentDetailsRepository: AssignmentDetailsRepository {
         assignmentId: Long,
         forceNetwork: Boolean
     ): LTITool? {
-        TODO("Not yet implemented")
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return assignmentApi.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params).dataOrThrow
     }
 
     override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
-        TODO("Not yet implemented")
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return submissionApi.getLtiFromAuthenticationUrl(url, params).dataOrThrow
     }
 
     override fun getRemindersByAssignmentIdLiveData(
         userId: Long,
         assignmentId: Long
     ): LiveData<List<ReminderEntity>> {
-        TODO("Not yet implemented")
+        return reminderDao.findByAssignmentIdLiveData(userId, assignmentId)
     }
 
     override suspend fun deleteReminderById(id: Long) {
-        TODO("Not yet implemented")
+        reminderDao.deleteById(id)
     }
 
     override suspend fun addReminder(
@@ -56,10 +73,17 @@ class ParentAssignmentDetailsRepository: AssignmentDetailsRepository {
         text: String,
         time: Long
     ): Long {
-        TODO("Not yet implemented")
+        return reminderDao.insert(
+            ReminderEntity(
+                userId = userId,
+                assignmentId = assignment.id,
+                htmlUrl = assignment.htmlUrl.orEmpty(),
+                name = assignment.name.orEmpty(),
+                text = text,
+                time = time
+            )
+        )
     }
 
-    override fun isOnline(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun isOnline(): Boolean = true
 }

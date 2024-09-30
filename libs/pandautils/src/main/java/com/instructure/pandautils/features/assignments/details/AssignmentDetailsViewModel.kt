@@ -97,7 +97,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<AssignmentDetailAction>>()
 
-    val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
+    val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) ?: Course(savedStateHandle.get<Long>(Const.COURSE_ID) ?: 0)
     private val assignmentId = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID).orDefault()
 
     var bookmarker = Bookmarker(true, course).withParam(RouterParams.ASSIGNMENT_ID, assignmentId.toString())

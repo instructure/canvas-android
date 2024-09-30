@@ -10,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -21,6 +22,7 @@ import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
@@ -53,8 +55,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
 
-    private val assignmentDetails = "$baseUrl/courses/{${courseId}}/assignments/{${AssignmentDetailsFragment.ASSIGNMENT_ID}}"
-    fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
+    private val assignmentDetails = "$baseUrl/courses/{${Const.COURSE_ID}}/assignments/{${Const.ASSIGNMENT_ID}}"
 
     private val calendarEvent =
         "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
@@ -158,11 +159,11 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
             }
             fragment<AssignmentDetailsFragment>(assignmentDetails) {
-                argument(courseId) {
+                argument(Const.COURSE_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
-                argument(AssignmentDetailsFragment.ASSIGNMENT_ID) {
+                argument(Const.ASSIGNMENT_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
@@ -238,6 +239,26 @@ private val ScheduleItemParametersType = object : NavType<ScheduleItem>(
     }
 
     override fun parseValue(value: String): ScheduleItem {
+        return value.fromJson()
+    }
+}
+
+private val CanvasContextParametersType = object : NavType<CanvasContext>(
+    isNullableAllowed = false
+) {
+    override fun put(bundle: Bundle, key: String, value: CanvasContext) {
+        bundle.putParcelable(key, value)
+    }
+
+    override fun get(bundle: Bundle, key: String): CanvasContext? {
+        return bundle.getParcelable(key) as? CanvasContext
+    }
+
+    override fun serializeAsValue(value: CanvasContext): String {
+        return Uri.encode(value.toJson())
+    }
+
+    override fun parseValue(value: String): CanvasContext {
         return value.fromJson()
     }
 }
