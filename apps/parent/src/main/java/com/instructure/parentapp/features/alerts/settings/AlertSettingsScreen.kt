@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -74,6 +75,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 
 private val percentageItems = listOf(
@@ -399,6 +401,7 @@ private fun ThresholdDialog(
     onDismiss: () -> Unit
 ) {
     var percentage by remember { mutableStateOf(threshold.orEmpty()) }
+    val enabled = percentage.toIntOrNull().orDefault() in (min + 1)..< max
     Dialog(onDismissRequest = { onDismiss() }) {
         Column(
             Modifier
@@ -483,7 +486,7 @@ private fun ThresholdDialog(
                 }
                 TextButton(
                     modifier = Modifier.testTag("thresholdDialogSaveButton"),
-                    enabled = percentage.toIntOrNull() in min..max,
+                    enabled = enabled,
                     onClick = {
                         actionHandler(
                             AlertSettingsAction.CreateThreshold(
@@ -496,7 +499,8 @@ private fun ThresholdDialog(
                 ) {
                     Text(
                         text = stringResource(id = R.string.save),
-                        style = TextStyle(color = color)
+                        style = TextStyle(color = if (enabled) color else colorResource(id = R.color.textDarkest)),
+                        modifier = Modifier.alpha(if (enabled) 1f else 0.5f)
                     )
                 }
             }
