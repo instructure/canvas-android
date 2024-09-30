@@ -129,25 +129,13 @@ class AlertSettingsScreenTest {
             )
         }
 
-        page.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Course grade below", "Never")
-        page.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Course grade above", "Never")
-        page.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, "Assignment missing", false)
-        page.assertPercentageThreshold(
-            AlertType.ASSIGNMENT_GRADE_LOW,
-            "Assignment grade below",
-            "Never"
-        )
-        page.assertPercentageThreshold(
-            AlertType.ASSIGNMENT_GRADE_HIGH,
-            "Assignment grade above",
-            "Never"
-        )
-        page.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, "Course Announcements", false)
-        page.assertSwitchThreshold(
-            AlertType.INSTITUTION_ANNOUNCEMENT,
-            "Institution Announcements",
-            false
-        )
+        page.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Never")
+        page.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Never")
+        page.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, false)
+        page.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "Never")
+        page.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "Never")
+        page.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, false)
+        page.assertSwitchThreshold(AlertType.INSTITUTION_ANNOUNCEMENT, false)
     }
 
     @Test
@@ -226,25 +214,13 @@ class AlertSettingsScreenTest {
             )
         }
 
-        page.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Course grade below", "40%")
-        page.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Course grade above", "80%")
-        page.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, "Assignment missing", true)
-        page.assertPercentageThreshold(
-            AlertType.ASSIGNMENT_GRADE_LOW,
-            "Assignment grade below",
-            "40%"
-        )
-        page.assertPercentageThreshold(
-            AlertType.ASSIGNMENT_GRADE_HIGH,
-            "Assignment grade above",
-            "80%"
-        )
-        page.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, "Course Announcements", true)
-        page.assertSwitchThreshold(
-            AlertType.INSTITUTION_ANNOUNCEMENT,
-            "Institution Announcements",
-            true
-        )
+        page.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "40%")
+        page.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "80%")
+        page.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, true)
+        page.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "40%")
+        page.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "80%")
+        page.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, true)
+        page.assertSwitchThreshold(AlertType.INSTITUTION_ANNOUNCEMENT, true)
     }
 
     @Test

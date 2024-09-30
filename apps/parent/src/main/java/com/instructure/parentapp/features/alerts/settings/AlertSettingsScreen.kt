@@ -113,7 +113,6 @@ fun AlertSettingsScreen(
                             }
                         }
                         OverflowMenu(
-                            modifier = Modifier.testTag("overflowMenu"),
                             showMenu = showMenu,
                             onDismissRequest = { showMenu = !showMenu }) {
                             DropdownMenuItem(

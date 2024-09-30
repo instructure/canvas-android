@@ -16,32 +16,35 @@
 package com.instructure.parentapp.ui.pages
 
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.espresso.page.BasePage
 
 class AlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
-    fun assertPercentageThreshold(alertType: AlertType, title: String, threshold: String) {
+    fun assertPercentageThreshold(alertType: AlertType, threshold: String) {
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdItem", useUnmergedTree = true)
             .assertHasClickAction()
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdTitle", useUnmergedTree = true)
-            .assertTextEquals(title)
+            .assertTextEquals(getAlertTitle(alertType))
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdValue", useUnmergedTree = true)
             .assertTextEquals(threshold)
     }
 
-    fun assertSwitchThreshold(alertType: AlertType, title: String, isOn: Boolean) {
+    fun assertSwitchThreshold(alertType: AlertType, isOn: Boolean) {
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdItem", useUnmergedTree = true)
             .assertHasClickAction()
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdTitle", useUnmergedTree = true)
-            .assertTextEquals(title)
+            .assertTextEquals(getAlertTitle(alertType))
         if (isOn) {
             composeTestRule.onNodeWithTag("${alertType.name}_thresholdSwitch", useUnmergedTree = true)
                 .assertIsOn()
@@ -64,6 +67,41 @@ class AlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage
     }
 
     fun enterThreshold(threshold: String) {
+        composeTestRule.onNodeWithTag("thresholdDialogInput").performTextClearance()
         composeTestRule.onNodeWithTag("thresholdDialogInput").performTextInput(threshold)
+    }
+
+    fun assertThresholdDialogError() {
+        composeTestRule.onNodeWithTag("thresholdDialogError").assertExists()
+        composeTestRule.onNodeWithTag("thresholdDialogSaveButton").assertIsNotEnabled()
+    }
+
+    fun assertThresholdDialogNotError() {
+        composeTestRule.onNodeWithTag("thresholdDialogError").assertDoesNotExist()
+        composeTestRule.onNodeWithTag("thresholdDialogSaveButton").assertIsEnabled()
+    }
+
+    fun tapThresholdSaveButton() {
+        composeTestRule.onNodeWithTag("thresholdDialogSaveButton").performClick()
+    }
+
+    fun tapThresholdNeverButton() {
+        composeTestRule.onNodeWithTag("thresholdDialogNeverButton").performClick()
+    }
+
+    fun tapDeleteStudentButton() {
+        composeTestRule.onNodeWithTag("deleteConfirmButton").performClick()
+    }
+
+    private fun getAlertTitle(alertType: AlertType): String {
+        return when (alertType) {
+            AlertType.COURSE_GRADE_HIGH -> "Course grade above"
+            AlertType.COURSE_GRADE_LOW -> "Course grade below"
+            AlertType.COURSE_ANNOUNCEMENT -> "Course Announcements"
+            AlertType.ASSIGNMENT_MISSING -> "Assignment missing"
+            AlertType.ASSIGNMENT_GRADE_HIGH -> "Assignment grade above"
+            AlertType.ASSIGNMENT_GRADE_LOW -> "Assignment grade below"
+            AlertType.INSTITUTION_ANNOUNCEMENT -> "Institution Announcements"
+        }
     }
 }

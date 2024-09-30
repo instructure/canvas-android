@@ -305,7 +305,7 @@ class MockCanvas {
 
     /** Map of userId to alerts */
     var observerAlerts = mutableMapOf<Long, List<Alert>>()
-    val observerAlertThresholds = mutableMapOf<Long, List<AlertThreshold>>()
+    val observerAlertThresholds = mutableMapOf<Long, MutableList<AlertThreshold>>()
 
     val pairingCodes = mutableMapOf<String, User>()
 
