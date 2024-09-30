@@ -26,8 +26,6 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -47,13 +45,14 @@ import java.util.Date
 import javax.inject.Inject
 
 
-private const val COURSE_ID_KEY = "course-id"
+const val COURSE_ID_KEY = "course-id"
 
 @HiltViewModel
 class GradesViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val gradesBehaviour: GradesBehaviour,
     private val repository: GradesRepository,
+    private val gradeFormatter: GradeFormatter,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -108,61 +107,19 @@ class GradesViewModel @Inject constructor(
                     isLoading = false,
                     isRefreshing = false,
                     gradePreferencesUiState = it.gradePreferencesUiState.copy(
+                        courseName = course.name,
                         gradingPeriods = gradingPeriods
                     ),
-                    gradeText = getGradeString(courseGrade, !it.onlyGradedAssignmentsSwitchEnabled)
+                    gradeText = gradeFormatter.getGradeString(course, courseGrade, !it.onlyGradedAssignmentsSwitchEnabled)
                 )
             }
         } catch {
-            _uiState.update { it.copy(isError = true) }
-        }
-    }
-
-    private fun getGradeString(
-        courseGrade: CourseGrade?,
-        isFinal: Boolean
-    ): String {
-        if (courseGrade == null) return context.getString(R.string.noGradeText)
-        return if (isFinal) {
-            formatGrade(
-                courseGrade.noFinalGrade,
-                courseGrade.hasFinalGradeString(),
-                courseGrade.finalGrade,
-                courseGrade.finalScore,
-                course
-            )
-        } else {
-            formatGrade(
-                courseGrade.noCurrentGrade,
-                courseGrade.hasCurrentGradeString(),
-                courseGrade.currentGrade,
-                courseGrade.currentScore,
-                course
-            )
-        }
-    }
-
-    private fun formatGrade(
-        noGrade: Boolean,
-        hasGradeString: Boolean,
-        grade: String?,
-        score: Double?,
-        course: Course?
-    ): String {
-        return if (noGrade) {
-            context.getString(R.string.noGradeText)
-        } else {
-            val restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault()
-            if (restrictQuantitativeData) {
-                val gradingScheme = course?.gradingScheme.orEmpty()
-                when {
-                    hasGradeString -> grade.orEmpty()
-                    gradingScheme.isNotEmpty() && score != null -> convertPercentScoreToLetterGrade(score / 100, gradingScheme)
-                    else -> context.getString(R.string.noGradeText)
-                }
-            } else {
-                val percentage = NumberHelper.doubleToPercentage(score.orDefault())
-                if (hasGradeString) "$percentage $grade" else percentage
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    isError = true
+                )
             }
         }
     }
@@ -246,6 +203,7 @@ class GradesViewModel @Inject constructor(
         val submissionStateLabel = when {
             assignment.submission?.late.orDefault() -> SubmissionStateLabel.LATE
             assignment.isMissing() -> SubmissionStateLabel.MISSING
+            assignment.submission?.isGraded.orDefault() || assignment.submission?.excused.orDefault() -> SubmissionStateLabel.GRADED
             assignment.isSubmitted -> SubmissionStateLabel.SUBMITTED
             !assignment.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
             else -> SubmissionStateLabel.NONE
@@ -274,7 +232,7 @@ class GradesViewModel @Inject constructor(
                 loadGrades(true)
             }
 
-            is GradesAction.HeaderClick -> {
+            is GradesAction.GroupHeaderClick -> {
                 val items = uiState.value.items.map { group ->
                     if (group.id == action.id) {
                         group.copy(expanded = !group.expanded)
@@ -302,7 +260,7 @@ class GradesViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         onlyGradedAssignmentsSwitchEnabled = action.checked,
-                        gradeText = getGradeString(courseGrade, !action.checked)
+                        gradeText = gradeFormatter.getGradeString(course, courseGrade, !action.checked)
                     )
                 }
             }

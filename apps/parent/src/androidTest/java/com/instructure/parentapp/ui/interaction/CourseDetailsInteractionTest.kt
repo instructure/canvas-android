@@ -18,11 +18,10 @@
 package com.instructure.parentapp.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
-import com.instructure.canvas.espresso.mockCanvas.addEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.parentapp.ui.pages.CoursesPage
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -32,92 +31,52 @@ import org.junit.Test
 @HiltAndroidTest
 class CourseDetailsInteractionTest : ParentComposeTest() {
 
-    private val coursesPage = CoursesPage(composeTestRule)
-
     @Test
-    fun testNoCourseDisplayed() {
+    fun courseDetailsDisplayed() {
         val data = initData()
-        data.courses.clear()
+        val course = data.courses.values.first()
+        setupTabs(data, course)
 
-        goToCourses(data)
+        goToCourseDetails(data, course.name)
 
         composeTestRule.waitForIdle()
-        coursesPage.assertEmptyContentDisplayed()
+        courseDetailsPage.assertCourseDetailsDisplayed(course)
     }
 
     @Test
-    fun testCourseDisplayed() {
+    fun changeTab() {
         val data = initData()
+        val course = data.courses.values.first()
+        setupTabs(data, course)
 
-        goToCourses(data)
+        goToCourseDetails(data, course.name)
 
         composeTestRule.waitForIdle()
-        coursesPage.assertCourseItemDisplayed(data.courses.values.first())
-    }
-
-    @Test
-    fun testShowGradeIfThereIsACurrentGrade() {
-        val data = initData()
-        val course = data.courses.values.find {
-            val enrollment = it.enrollments!!.first()
-            !enrollment.currentGrade.isNullOrEmpty() && enrollment.currentScore != null
-        }
-        val enrollment = course!!.enrollments!!.first()
-
-        goToCourses(data)
-
-        composeTestRule.waitForIdle()
-        coursesPage.assertGradeTextDisplayed(course.name, "${enrollment.currentGrade} ${enrollment.currentScore}%")
-    }
-
-    @Test
-    fun testShowNoGradeIfThereIsNoCurrentGrade() {
-        val data = initData()
-        val firstStudent = data.students.first()
-        val courseWithoutGrade = data.addCourseWithEnrollment(firstStudent, Enrollment.EnrollmentType.Student, score = null, grade = null)
-        data.addEnrollment(data.parents.first(), courseWithoutGrade, Enrollment.EnrollmentType.Observer, firstStudent)
-
-        goToCourses(data)
-
-        composeTestRule.waitForIdle()
-        coursesPage.assertGradeTextDisplayed(courseWithoutGrade.name, "No Grade")
-    }
-
-    @Test
-    fun testShowGradeOnlyIfQuantitativeDataIsRestricted() {
-        val data = initData()
-        val firstStudent = data.students.first()
-        val course = data.addCourseWithEnrollment(firstStudent, Enrollment.EnrollmentType.Student, restrictQuantitativeData = true)
-        data.addEnrollment(data.parents.first(), course, Enrollment.EnrollmentType.Observer, firstStudent)
-
-        goToCourses(data)
-
-        composeTestRule.waitForIdle()
-        coursesPage.assertGradeTextIsNotDisplayed(course.name)
-    }
-
-    @Test
-    fun testCourseTapped() {
-        val data = initData()
-
-        goToCourses(data)
-
-        composeTestRule.waitForIdle()
-        coursesPage.tapCurseItem(data.courses.values.first().name)
-        // TODO Assert course details when implemented
+        courseDetailsPage.selectTab("SYLLABUS")
+        courseDetailsPage.assertTabSelected("SYLLABUS")
     }
 
     private fun initData(): MockCanvas {
         return MockCanvas.init(
             parentCount = 1,
             studentCount = 1,
-            courseCount = 3
+            courseCount = 1
         )
     }
 
-    private fun goToCourses(data: MockCanvas) {
+    private fun setupTabs(data: MockCanvas, course: Course) {
+        course.homePage = Course.HomePage.HOME_SYLLABUS
+        course.syllabusBody = "This is the syllabus"
+        data.courseTabs[course.id]?.add(Tab(tabId = Tab.SYLLABUS_ID))
+        data.courseSettings[course.id] = CourseSettings(
+            courseSummary = true
+        )
+    }
+
+    private fun goToCourseDetails(data: MockCanvas, courseName: String) {
         val parent = data.parents.first()
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
+        coursesPage.tapCurseItem(courseName)
     }
 }

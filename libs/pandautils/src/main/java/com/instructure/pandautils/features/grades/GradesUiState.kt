@@ -17,7 +17,7 @@ data class GradesUiState(
     val items: List<AssignmentGroupUiState> = emptyList(),
     val gradePreferencesUiState: GradePreferencesUiState = GradePreferencesUiState(),
     val onlyGradedAssignmentsSwitchEnabled: Boolean = true,
-    val gradeText: String? = null
+    val gradeText: String = ""
 )
 
 data class AssignmentGroupUiState(
@@ -51,7 +51,7 @@ enum class SubmissionStateLabel(
 
 sealed class GradesAction {
     data object Refresh : GradesAction()
-    data class HeaderClick(val id: Long) : GradesAction()
+    data class GroupHeaderClick(val id: Long) : GradesAction()
     data object ShowGradePreferences : GradesAction()
     data object HideGradePreferences : GradesAction()
     data class GradePreferencesUpdated(val gradePreferencesUiState: GradePreferencesUiState) : GradesAction()

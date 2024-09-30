@@ -20,6 +20,8 @@ package com.instructure.parentapp.utils
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.AlertsPage
+import com.instructure.parentapp.ui.pages.CourseDetailsPage
+import com.instructure.parentapp.ui.pages.CoursesPage
 import org.junit.Rule
 
 
@@ -29,6 +31,8 @@ abstract class ParentComposeTest : ParentTest() {
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
     protected val alertsPage = AlertsPage(composeTestRule)
+    protected val coursesPage = CoursesPage(composeTestRule)
+    protected val courseDetailsPage = CourseDetailsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }

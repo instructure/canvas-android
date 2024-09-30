@@ -17,10 +17,30 @@
 
 package com.instructure.parentapp.ui.pages
 
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import com.instructure.canvasapi2.models.Course
 
 
 class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
+    fun assertCourseDetailsDisplayed(course: Course) {
+        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
+        composeTestRule.onNodeWithText("GRADES")
+            .assertIsDisplayed()
+            .assertIsSelected()
+        composeTestRule.onNodeWithText("SYLLABUS").assertIsDisplayed()
+        composeTestRule.onNodeWithText("SUMMARY").assertIsDisplayed()
+    }
 
+    fun selectTab(tabName: String) {
+        composeTestRule.onNodeWithText(tabName).performClick()
+    }
+
+    fun assertTabSelected(tabName: String) {
+        composeTestRule.onNodeWithText(tabName).assertIsSelected()
+    }
 }

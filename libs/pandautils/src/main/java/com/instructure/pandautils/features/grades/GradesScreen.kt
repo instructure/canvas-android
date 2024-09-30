@@ -313,7 +313,7 @@ private fun GradesScreenContent(
                             modifier = Modifier
                                 .background(colorResource(id = R.color.backgroundLightest))
                                 .clickable {
-                                    actionHandler(GradesAction.HeaderClick(it.id))
+                                    actionHandler(GradesAction.GroupHeaderClick(it.id))
                                 }
                         ) {
                             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
