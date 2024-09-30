@@ -414,6 +414,123 @@ class InboxConversationInteractionTest : StudentTest() {
         inboxConversationPage.assertMessageNotDisplayed(replyMessage)
     }
 
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_showReplyButton() {
+        val data = createInitialData(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Test Subject"
+        val conversationMessageBody = "Test Message Body"
+        val conversation = data.addConversation(
+            senderId = data.students[2].id,
+            receiverIds = data.students.take(2).map {user -> user.id},
+            messageBody = conversationMessageBody,
+            messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.openConversation(conversation)
+        inboxConversationPage.assertReplyButtonVisible(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_hideReplyButton() {
+        val data = createInitialData(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Test Subject"
+        val conversationMessageBody = "Test Message Body"
+        val conversation = data.addConversation(
+            senderId = data.students[2].id,
+            receiverIds = data.students.take(2).map {user -> user.id},
+            messageBody = conversationMessageBody,
+            messageSubject = conversationSubject,
+            cannotReply = true
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.openConversation(conversation)
+        inboxConversationPage.assertReplyButtonVisible(false)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_showReplyMenuItems() {
+        val data = createInitialData(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Test Subject"
+        val conversationMessageBody = "Test Message Body"
+        val conversation = data.addConversation(
+            senderId = data.students[2].id,
+            receiverIds = data.students.take(2).map {user -> user.id},
+            messageBody = conversationMessageBody,
+            messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.openConversation(conversation)
+        inboxConversationPage.assertReplyMenuItemsVisible(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_hideReplyMenuItems() {
+        val data = createInitialData(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Test Subject"
+        val conversationMessageBody = "Test Message Body"
+        val conversation = data.addConversation(
+            senderId = data.students[2].id,
+            receiverIds = data.students.take(2).map {user -> user.id},
+            messageBody = conversationMessageBody,
+            messageSubject = conversationSubject,
+            cannotReply = true
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.openConversation(conversation)
+        inboxConversationPage.assertReplyMenuItemsVisible(false)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_showReplyMessageOptions() {
+        val data = createInitialData(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Test Subject"
+        val conversationMessageBody = "Test Message Body"
+        val conversation = data.addConversation(
+            senderId = data.students[2].id,
+            receiverIds = data.students.take(2).map {user -> user.id},
+            messageBody = conversationMessageBody,
+            messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.openConversation(conversation)
+        inboxConversationPage.assertReplyMessageOptionsVisible(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_hideReplyMessageOptions() {
+        val data = createInitialData(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Test Subject"
+        val conversationMessageBody = "Test Message Body"
+        val conversation = data.addConversation(
+            senderId = data.students[2].id,
+            receiverIds = data.students.take(2).map {user -> user.id},
+            messageBody = conversationMessageBody,
+            messageSubject = conversationSubject,
+            cannotReply = true
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.openConversation(conversation)
+        inboxConversationPage.assertReplyMessageOptionsVisible(false)
+    }
+
     private fun getFirstConversation(data: MockCanvas, includeIsAuthor: Boolean = false): Conversation {
         return data.conversations.values.toList()
             .filter { it.workflowState != Conversation.WorkflowState.ARCHIVED }
