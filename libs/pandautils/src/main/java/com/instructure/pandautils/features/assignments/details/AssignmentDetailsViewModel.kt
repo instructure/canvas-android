@@ -131,7 +131,14 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     init {
         markSubmissionAsRead()
-        submissionHandler.addAssignmentSubmissionObserver()
+        submissionHandler.addAssignmentSubmissionObserver(
+            assignmentId,
+            apiPrefs.user?.id.orDefault(),
+            resources,
+            viewModelScope,
+            _data,
+            ::refreshAssignment
+        )
         _state.postValue(ViewState.Loading)
         loadData()
     }
@@ -190,7 +197,6 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
-                val dbSubmission = submissionHandler.lastSubmission
                 val hasDraft = submissionHandler.lastSubmissionIsDraft
 
                 assignment = assignmentResult
@@ -491,10 +497,10 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     fun onGradeCellClicked() {
         if (submissionHandler.isUploading) {
-            when (submissionHandler.lastSubmission?.submissionType) {
+            when (submissionHandler.lastSubmissionSubmissionType) {
                 SubmissionType.ONLINE_TEXT_ENTRY.apiString -> onDraftClicked()
                 SubmissionType.ONLINE_UPLOAD.apiString, SubmissionType.MEDIA_RECORDING.apiString -> postAction(
-                    AssignmentDetailAction.NavigateToUploadStatusScreen(submissionHandler.lastSubmission?.assignmentId.orDefault())
+                    AssignmentDetailAction.NavigateToUploadStatusScreen(submissionHandler.lastSubmissionAssignmentId.orDefault())
                 )
                 SubmissionType.ONLINE_URL.apiString -> postAction(
                     AssignmentDetailAction.NavigateToUrlSubmissionScreen(
