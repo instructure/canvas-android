@@ -81,9 +81,9 @@ class ShareExtensionInteractionTest : StudentTest() {
 
         shareExtensionTargetPage.pressNext()
 
-        fileUploadPage.assertPageObjects()
-        fileUploadPage.assertDialogTitle("Upload To My Files")
-        fileUploadPage.assertFileDisplayed("sample.jpg")
+        fileChooserPage.assertPageObjects()
+        fileChooserPage.assertDialogTitle("Upload To My Files")
+        fileChooserPage.assertFileDisplayed("sample.jpg")
     }
 
     @Test
@@ -106,23 +106,23 @@ class ShareExtensionInteractionTest : StudentTest() {
 
         shareExtensionTargetPage.pressNext()
 
-        fileUploadPage.assertPageObjects()
-        fileUploadPage.assertFileDisplayed("sample.jpg")
+        fileChooserPage.assertPageObjects()
+        fileChooserPage.assertFileDisplayed("sample.jpg")
 
-        fileUploadPage.removeFile("sample.jpg")
+        fileChooserPage.removeFile("sample.jpg")
 
         // Add new file
         Intents.init()
         try {
             stubFilePickerIntent("samplepdf.pdf")
-            fileUploadPage.chooseDevice()
+            fileChooserPage.chooseDevice()
         }
         finally {
             Intents.release()
         }
 
-        fileUploadPage.assertFileNotDisplayed("sample.jpg")
-        fileUploadPage.assertFileDisplayed("samplepdf.pdf")
+        fileChooserPage.assertFileNotDisplayed("sample.jpg")
+        fileChooserPage.assertFileDisplayed("samplepdf.pdf")
     }
 
     @Test
@@ -147,9 +147,9 @@ class ShareExtensionInteractionTest : StudentTest() {
         shareExtensionTargetPage.assertAssignmentSelectorDisplayedWithAssignment(assignment.name!!)
         shareExtensionTargetPage.pressNext()
 
-        fileUploadPage.assertPageObjects()
-        fileUploadPage.assertDialogTitle("Submission")
-        fileUploadPage.assertFileDisplayed("sample.jpg")
+        fileChooserPage.assertPageObjects()
+        fileChooserPage.assertDialogTitle("Submission")
+        fileChooserPage.assertFileDisplayed("sample.jpg")
     }
 
     @Test
@@ -199,9 +199,9 @@ class ShareExtensionInteractionTest : StudentTest() {
 
         shareExtensionTargetPage.pressNext()
 
-        fileUploadPage.assertPageObjects()
-        fileUploadPage.assertDialogTitle("Submission")
-        fileUploadPage.assertFileDisplayed("sample.jpg")
+        fileChooserPage.assertPageObjects()
+        fileChooserPage.assertDialogTitle("Submission")
+        fileChooserPage.assertFileDisplayed("sample.jpg")
     }
 
     @Test
@@ -228,9 +228,9 @@ class ShareExtensionInteractionTest : StudentTest() {
 
         shareExtensionTargetPage.pressNext()
 
-        fileUploadPage.assertPageObjects()
-        fileUploadPage.assertFileDisplayed("sample.jpg")
-        fileUploadPage.assertFileDisplayed("samplepdf.pdf")
+        fileChooserPage.assertPageObjects()
+        fileChooserPage.assertFileDisplayed("sample.jpg")
+        fileChooserPage.assertFileDisplayed("samplepdf.pdf")
     }
 
     @Test
@@ -253,7 +253,7 @@ class ShareExtensionInteractionTest : StudentTest() {
 
         shareExtensionTargetPage.selectSubmission()
         shareExtensionTargetPage.pressNext()
-        fileUploadPage.clickTurnIn()
+        fileChooserPage.clickTurnIn()
 
         shareExtensionStatusPage.assertPageObjects()
         shareExtensionStatusPage.assertAssignmentSubmissionSuccess()
