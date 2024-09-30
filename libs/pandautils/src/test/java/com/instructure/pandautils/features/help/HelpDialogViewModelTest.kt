@@ -233,7 +233,7 @@ class HelpDialogViewModelTest {
         val defaultLinks = listOf(
             createHelpLink(listOf("student"), text = null, subText = "Test", url = "Test"),
             createHelpLink(listOf("student"), text = "Test", subText = "Test", url = null),
-            createHelpLink(listOf("student"), text = "Test", subText = null, url = "Test"),
+            createHelpLink(listOf("student"), text = "Test title", subText = null, url = "Test url"),
             createHelpLink(listOf("student"), text = null, subText = null, url = null),
             createHelpLink(listOf("student"), text = "Test title", subText = "Test", url = "Test url"),
         )
@@ -258,9 +258,10 @@ class HelpDialogViewModelTest {
         assertTrue(viewModel.state.value is ViewState.Success)
 
         val linksViewData = viewModel.data.value?.helpLinks ?: emptyList()
-        assertEquals(2, linksViewData.size)
-        assertEquals(HelpLinkViewData("Test title", "Test", HelpDialogAction.OpenWebView("Test url", "Test title")), linksViewData[0].helpLinkViewData)
-        assertEquals(HelpLinkViewData("Share your love title", "", HelpDialogAction.RateTheApp), linksViewData[1].helpLinkViewData)
+        assertEquals(3, linksViewData.size)
+        assertEquals(HelpLinkViewData("Test title", "", HelpDialogAction.OpenWebView("Test url", "Test title")), linksViewData[0].helpLinkViewData)
+        assertEquals(HelpLinkViewData("Test title", "Test", HelpDialogAction.OpenWebView("Test url", "Test title")), linksViewData[1].helpLinkViewData)
+        assertEquals(HelpLinkViewData("Share your love title", "", HelpDialogAction.RateTheApp), linksViewData[2].helpLinkViewData)
     }
 
     private fun createViewModel() =
