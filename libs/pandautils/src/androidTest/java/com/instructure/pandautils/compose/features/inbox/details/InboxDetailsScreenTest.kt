@@ -17,6 +17,7 @@ package com.instructure.pandautils.compose.features.inbox.details
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -206,6 +207,59 @@ class InboxDetailsScreenTest {
             .assertHasClickAction()
     }
 
+    @Test
+    fun testInboxDetailsScreenWithCannotReply() {
+        val conversation = getConversation(
+            messages = listOf(
+                getMessage(id = 1, authorId = 1),
+            ),
+            cannotReply = true
+        )
+        setDetailsScreen(getUiState(conversation = conversation))
+
+        composeTestRule.onNode(
+            hasParent(hasTestTag("toolbar")).and(
+                hasContentDescription("More options")
+            )
+        )
+        .assertIsDisplayed()
+        .assertHasClickAction()
+
+        composeTestRule.onNode(
+            hasParent(hasTestTag("toolbar")).and(
+                hasText("Message")
+            )
+        )
+        .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Test subject")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithContentDescription("Star")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+
+        composeTestRule.onNodeWithText("User 1 to User 2")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Test message")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Reply")
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNodeWithContentDescription("Reply")
+            .assertIsNotDisplayed()
+
+        composeTestRule.onNode(
+            hasParent(hasTestTag("toolbar")).not().and(
+                hasContentDescription("More options")
+            )
+        )
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    }
+
     private fun setDetailsScreen(uiState: InboxDetailsUiState = getUiState()) {
         composeTestRule.setContent {
             InboxDetailsScreen(
@@ -242,7 +296,8 @@ class InboxDetailsScreenTest {
             BasicUser(id = 2, name = "User 2"),
             BasicUser(id = 3, name = "User 3"),
         ),
-        isStarred: Boolean = false
+        isStarred: Boolean = false,
+        cannotReply: Boolean = false,
     ): Conversation {
         return Conversation(
             id = id,
@@ -252,7 +307,8 @@ class InboxDetailsScreenTest {
             messageCount = messages.size,
             lastMessage = messages.lastOrNull()?.body,
             participants = participants,
-            isStarred = isStarred
+            isStarred = isStarred,
+            cannotReply = cannotReply
         )
     }
 
@@ -280,6 +336,7 @@ class InboxDetailsScreenTest {
             author = author,
             recipients = recipients,
             enabledActions = true,
+            cannotReply = conversation.cannotReply
         )
     }
 }

@@ -23,7 +23,8 @@ data class InboxMessageUiState(
     val message: Message? = null,
     val author: BasicUser? = null,
     val recipients: List<BasicUser> = emptyList(),
-    val enabledActions: Boolean = true
+    val enabledActions: Boolean = true,
+    val cannotReply: Boolean = false
 )
 
 sealed class MessageAction {

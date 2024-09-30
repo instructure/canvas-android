@@ -157,7 +157,7 @@ class InboxDetailsViewModel @Inject constructor(
                         _uiState.update { uiState -> uiState.copy(
                             state = ScreenState.Success,
                             conversation =  conversation,
-                            messageStates = conversation.messages.map { getMessageViewState(conversation, it) }
+                            messageStates = conversation.messages.map { getMessageViewState(conversation, it) },
                         ) }
                     }
                 } catch (e: Exception) {
@@ -175,6 +175,7 @@ class InboxDetailsViewModel @Inject constructor(
             author = author,
             recipients = recipients,
             enabledActions = true,
+            cannotReply = conversation.cannotReply,
         )
     }
 

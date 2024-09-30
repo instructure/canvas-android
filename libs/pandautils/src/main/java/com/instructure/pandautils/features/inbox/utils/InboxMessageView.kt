@@ -132,7 +132,7 @@ private fun InboxMessageDetailsView(
                 onRemove = {})
         }
 
-        if (messageState.enabledActions) {
+        if (messageState.enabledActions  && !messageState.cannotReply) {
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
@@ -216,22 +216,26 @@ private fun InboxMessageAuthorView(
         }
 
         if (messageState.enabledActions) {
-            IconButton(onClick = { messageState.message?.let { actionHandler( MessageAction.Reply(it) ) } }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_reply),
-                    contentDescription = stringResource(id = R.string.reply)
-                )
+            if (!messageState.cannotReply) {
+                IconButton(onClick = {
+                    messageState.message?.let { actionHandler(MessageAction.Reply(it)) }
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_reply),
+                        contentDescription = stringResource(id = R.string.reply)
+                    )
+                }
             }
 
             message?.let {
-                MessageMenu(it, actionHandler)
+                MessageMenu(it, messageState.cannotReply, actionHandler)
             }
         }
     }
 }
 
 @Composable
-private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit) {
+private fun MessageMenu(message: Message, cannotReply: Boolean, actionHandler: (MessageAction) -> Unit) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
     Box(
         contentAlignment = Alignment.CenterEnd,
@@ -245,22 +249,26 @@ private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit
                 showMenu = !showMenu
             }
         ) {
-            DropdownMenuItem(
-                onClick = {
-                    showMenu = !showMenu
-                    actionHandler(MessageAction.Reply(message))
+            if (!cannotReply) {
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(MessageAction.Reply(message))
+                    }
+                ) {
+                    MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
             }
 
-            DropdownMenuItem(
-                onClick = {
-                    showMenu = !showMenu
-                    actionHandler(MessageAction.ReplyAll(message))
+            if (!cannotReply){
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(MessageAction.ReplyAll(message))
+                    }
+                ) {
+                    MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
             }
 
             DropdownMenuItem(

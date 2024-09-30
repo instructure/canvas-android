@@ -123,19 +123,19 @@ private fun InboxDetailsScreenContent(
             .padding(padding)
     ) {
         when (uiState.state) {
-            is ScreenState.Loading -> {
+            ScreenState.Loading -> {
                 InboxDetailsLoading()
             }
 
-            is ScreenState.Error -> {
+            ScreenState.Error -> {
                 InboxDetailsError(actionHandler)
             }
 
-            is ScreenState.Empty -> {
+            ScreenState.Empty -> {
                 InboxDetailsEmpty(actionHandler)
             }
 
-            is ScreenState.Success -> {
+            ScreenState.Success -> {
                 InboxDetailsContentView(uiState, actionHandler, messageActionHandler)
             }
         }
@@ -268,22 +268,24 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
         }
     ) {
         conversation?.messages?.sortedBy { it.createdAt }?.last()?.let { message ->
-            DropdownMenuItem(
-                onClick = {
-                    showMenu = !showMenu
-                    actionHandler(InboxDetailsAction.Reply(message))
+            if (!conversation.cannotReply){
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(InboxDetailsAction.Reply(message))
+                    }
+                ) {
+                    MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
-            }
 
-            DropdownMenuItem(
-                onClick = {
-                    showMenu = !showMenu
-                    actionHandler(InboxDetailsAction.ReplyAll(message))
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(InboxDetailsAction.ReplyAll(message))
+                    }
+                ) {
+                    MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
             }
 
             DropdownMenuItem(
