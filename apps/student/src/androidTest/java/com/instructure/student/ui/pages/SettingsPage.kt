@@ -66,6 +66,11 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
         profileSettingLabel.scrollTo().click()
     }
 
+    fun openPushNotificationsPage() {
+        pushNotificationsLabel.scrollTo().click()
+    }
+
+
     fun openSubscribeToCalendar() {
         subscribeCalendarLabel.scrollTo().click()
     }
