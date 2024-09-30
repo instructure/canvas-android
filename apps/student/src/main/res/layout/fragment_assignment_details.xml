@@ -617,7 +617,7 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.2f}"
+            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.5f}"
             android:background="@color/backgroundInfo"
             android:backgroundTint="@{ThemePrefs.INSTANCE.buttonColor}"
             android:enabled="@{viewModel.data.submitEnabled}"
