@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
@@ -38,6 +39,7 @@ import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isDesigner
 import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.themeSearchView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.PeopleListRecyclerAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
@@ -88,6 +90,10 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         peopleListToolbar.subtitle = canvasContext!!.name
         if (peopleListToolbar.menu.size() == 0) peopleListToolbar.inflateMenu(R.menu.menu_people_list)
         val searchView = peopleListToolbar.menu.findItem(R.id.search).actionView as SearchView
+        searchView.themeSearchView(binding.peopleListToolbar, requireContext().getColor(R.color.textLightest))
+        searchView.findViewById<ImageView>(com.instructure.pandautils.R.id.search_mag_icon)?.setImageDrawable(null)
+        searchView.queryHint = requireContext().getString(com.instructure.pandautils.R.string.search)
+        searchView.setIconifiedByDefault(false)
 
         peopleListToolbar.menu.findItem(R.id.search).setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
