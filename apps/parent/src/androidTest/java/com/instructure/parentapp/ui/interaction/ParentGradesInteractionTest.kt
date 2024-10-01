@@ -19,14 +19,17 @@ package com.instructure.parentapp.ui.interaction
 
 import com.instructure.canvas.espresso.common.interaction.GradesInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.CoursesPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
 import com.instructure.parentapp.utils.tokenLogin
+import dagger.hilt.android.testing.HiltAndroidTest
 
 
+@HiltAndroidTest
 class ParentGradesInteractionTest : GradesInteractionTest() {
 
     private val coursesPage = CoursesPage(composeTestRule)
@@ -35,12 +38,17 @@ class ParentGradesInteractionTest : GradesInteractionTest() {
 
     override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
 
-    override fun initData(): MockCanvas {
+    override fun initData(addAssignmentGroups: Boolean): MockCanvas {
         return MockCanvas.init(
             parentCount = 1,
             studentCount = 1,
-            courseCount = 1
-        )
+            courseCount = 1,
+            withGradingPeriods = true
+        ).apply {
+            if (addAssignmentGroups) {
+                addAssignmentsToGroups(this.courses.values.first())
+            }
+        }
     }
 
     override fun goToGrades(data: MockCanvas, courseName: String) {

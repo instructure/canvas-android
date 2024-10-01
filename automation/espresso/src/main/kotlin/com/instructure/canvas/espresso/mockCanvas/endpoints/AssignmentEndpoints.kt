@@ -24,6 +24,8 @@ import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradeableStudent
+import com.instructure.canvasapi2.models.ObserveeAssignment
+import com.instructure.canvasapi2.models.ObserveeAssignmentGroup
 import com.instructure.canvasapi2.models.SubmissionSummary
 import okio.Buffer
 import org.json.JSONObject
@@ -143,7 +145,67 @@ object AssignmentGroupListEndpoint : Endpoint(
     LongId(PathVars::assignmentId) to AssignmentEndpoint,
     response = {
         GET {
-            request.successResponse(data.assignmentGroups[pathVars.courseId] ?: listOf(AssignmentGroup()))
+            if (request.url.queryParameterValues("include[]").contains("observed_users")) {
+                val assignmentGroups = data.assignmentGroups[pathVars.courseId].orEmpty().map {
+                    it.toObserveeAssignmentGroup()
+                }
+                request.successResponse(assignmentGroups)
+            } else {
+                request.successResponse(data.assignmentGroups[pathVars.courseId] ?: listOf(AssignmentGroup()))
+            }
         }
     }
+)
+
+private fun AssignmentGroup.toObserveeAssignmentGroup() = ObserveeAssignmentGroup(
+    id = id,
+    name = name,
+    position = position,
+    groupWeight = groupWeight,
+    assignments = assignments.map { it.toObserveeAssignment() },
+    rules = rules
+)
+
+private fun Assignment.toObserveeAssignment() = ObserveeAssignment(
+    id = id,
+    name = name,
+    description = description,
+    submissionTypesRaw = submissionTypesRaw,
+    dueAt = dueAt,
+    pointsPossible = pointsPossible,
+    courseId = courseId,
+    isGradeGroupsIndividually = isGradeGroupsIndividually,
+    gradingType = gradingType,
+    needsGradingCount = needsGradingCount,
+    htmlUrl = htmlUrl,
+    url = url,
+    quizId = quizId,
+    rubric = rubric,
+    isUseRubricForGrading = isUseRubricForGrading,
+    rubricSettings = rubricSettings,
+    allowedExtensions = allowedExtensions,
+    submissionList = listOfNotNull(submission),
+    assignmentGroupId = assignmentGroupId,
+    position = position,
+    isPeerReviews = isPeerReviews,
+    lockInfo = lockInfo,
+    lockedForUser = lockedForUser,
+    lockAt = lockAt,
+    unlockAt = unlockAt,
+    lockExplanation = lockExplanation,
+    discussionTopicHeader = discussionTopicHeader,
+    needsGradingCountBySection = needsGradingCountBySection,
+    freeFormCriterionComments = freeFormCriterionComments,
+    published = published,
+    groupCategoryId = groupCategoryId,
+    allDates = allDates,
+    userSubmitted = userSubmitted,
+    unpublishable = unpublishable,
+    overrides = overrides,
+    onlyVisibleToOverrides = onlyVisibleToOverrides,
+    anonymousPeerReviews = anonymousPeerReviews,
+    moderatedGrading = moderatedGrading,
+    anonymousGrading = anonymousGrading,
+    allowedAttempts = allowedAttempts,
+    isStudioEnabled = isStudioEnabled
 )

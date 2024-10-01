@@ -20,6 +20,9 @@ package com.instructure.parentapp.ui.compose.courses.details
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -90,6 +93,11 @@ class CourseDetailsScreenTest {
             )
         }
 
+        composeTestRule.onNodeWithTag("toolbar")
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("Back")))
+            .assertIsDisplayed()
+            .assertHasClickAction()
         composeTestRule.onNodeWithText("Course 1")
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("SYLLABUS")

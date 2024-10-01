@@ -39,8 +39,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
@@ -264,49 +266,52 @@ private fun GradesScreenContent(
             }
         }
 
-        LazyColumn(
-            state = lazyListState
-        ) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 32.dp, end = 32.dp, bottom = 16.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(!uiState.onlyGradedAssignmentsSwitchEnabled))
-                        },
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.gradesBasedOnGraded),
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.textDarkest)
-                    )
-                    Switch(
-                        interactionSource = NoRippleInteractionSource(),
-                        checked = uiState.onlyGradedAssignmentsSwitchEnabled,
-                        onCheckedChange = {
-                            actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(it))
-                        },
-                        modifier = Modifier.height(24.dp)
-                    )
-                }
-            }
-
-            if (uiState.items.isEmpty()) {
+        if (uiState.items.isEmpty()) {
+            EmptyContent(
+                emptyTitle = stringResource(id = R.string.gradesEmptyTitle),
+                emptyMessage = stringResource(id = R.string.gradesEmptyMessage),
+                imageRes = R.drawable.ic_panda_space,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = 32.dp, start = 16.dp, end = 16.dp)
+            )
+        } else {
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier.testTag("gradesList")
+            ) {
                 item {
-                    EmptyContent(
-                        emptyTitle = stringResource(id = R.string.gradesEmptyTitle),
-                        emptyMessage = stringResource(id = R.string.gradesEmptyMessage),
-                        imageRes = R.drawable.ic_panda_space,
-                        modifier = Modifier.fillParentMaxHeight(.8f)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 32.dp, end = 32.dp, bottom = 16.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(!uiState.onlyGradedAssignmentsSwitchEnabled))
+                            },
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.gradesBasedOnGraded),
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.textDarkest)
+                        )
+                        Switch(
+                            interactionSource = NoRippleInteractionSource(),
+                            checked = uiState.onlyGradedAssignmentsSwitchEnabled,
+                            onCheckedChange = {
+                                actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(it))
+                            },
+                            modifier = Modifier.height(24.dp)
+                        )
+                    }
                 }
-            } else {
+
+
                 uiState.items.forEach {
                     stickyHeader {
                         Column(
