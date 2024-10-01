@@ -3,17 +3,24 @@ package com.instructure.teacher.features.assignment.details
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.interactions.bookmarks.Bookmarker
+import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
+import com.instructure.pandautils.features.assignments.details.ReminderChoice
+import java.io.File
 
 class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     override fun navigateToAssignmentUploadPicker(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
         mediaUri: Uri
@@ -30,7 +37,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToSubmissionScreen(
-        context: Context,
+        activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
         isObserver: Boolean,
@@ -40,7 +47,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToQuizScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         quiz: Quiz,
         url: String
@@ -49,7 +56,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToDiscussionScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         discussionTopicHeaderId: Long,
         isAnnouncement: Boolean
@@ -58,7 +65,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToUploadScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
         attemptId: Long?
@@ -67,7 +74,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToTextEntryScreen(
-        context: Context,
+        activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
@@ -78,7 +85,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToUrlSubmissionScreen(
-        context: Context,
+        activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
@@ -89,7 +96,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToAnnotationSubmissionScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         annotatableAttachmentId: Long,
         submissionId: Long,
@@ -100,7 +107,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToLtiLaunchScreen(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         url: String,
         title: String?,
@@ -111,11 +118,15 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
         TODO("Not yet implemented")
     }
 
-    override fun navigateToUploadStatusScreen(context: Context, submissionId: Long) {
+    override fun navigateToUploadStatusScreen(activity: FragmentActivity, submissionId: Long) {
         TODO("Not yet implemented")
     }
 
-    override fun navigateToDiscussionAttachmentScreen(context: Context, attachment: RemoteFile) {
+    override fun navigateToDiscussionAttachmentScreen(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        attachment: RemoteFile
+    ) {
         TODO("Not yet implemented")
     }
 
@@ -129,7 +140,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
     }
 
     override fun navigateToInternalWebView(
-        context: Context,
+        activity: FragmentActivity,
         canvasContext: CanvasContext,
         url: String,
         authenticate: Boolean
@@ -137,23 +148,35 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
         TODO("Not yet implemented")
     }
 
-    override fun openMedia(context: Context, url: String) {
+    override fun openMedia(activity: FragmentActivity, url: String) {
         TODO("Not yet implemented")
     }
 
-    override fun showMediaDialog(context: Context) {
+    override fun showMediaDialog(
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        recordCallback: (File?) -> Unit,
+        startVideoCapture: () -> Unit,
+        onLaunchMediaPicker: () -> Unit
+    ) {
         TODO("Not yet implemented")
     }
 
     override fun showSubmitDialog(
-        context: Context,
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        recordCallback: (File?) -> Unit,
+        startVideoCapture: () -> Unit,
+        onLaunchMediaPicker: () -> Unit,
         assignment: Assignment,
+        course: Course,
+        isStudioEnabled: Boolean,
         studioLTITool: LTITool?
     ) {
         TODO("Not yet implemented")
     }
 
-    override fun showCustomReminderDialog(context: Context) {
+    override fun showCustomReminderDialog(activity: FragmentActivity) {
         TODO("Not yet implemented")
     }
 
@@ -161,20 +184,33 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
         TODO("Not yet implemented")
     }
 
-    override fun showCreateReminderDialog(context: Context) {
+    override fun showCreateReminderDialog(
+        context: Context,
+        onReminderSelected: (ReminderChoice) -> Unit
+    ) {
         TODO("Not yet implemented")
     }
 
     override fun canRouteInternally(
         activity: FragmentActivity?,
-        url: String?,
+        url: String,
         domain: String,
         routeIfPossible: Boolean
     ): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun applyTheme() {
+    override fun applyTheme(
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        bookmark: Bookmarker,
+        toolbar: Toolbar,
+        course: Course?
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean {
         TODO("Not yet implemented")
     }
 }

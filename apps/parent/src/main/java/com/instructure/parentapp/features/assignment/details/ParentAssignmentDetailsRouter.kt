@@ -3,6 +3,8 @@ package com.instructure.parentapp.features.assignment.details
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -10,6 +12,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.ReminderChoice
@@ -158,9 +161,10 @@ class ParentAssignmentDetailsRouter: AssignmentDetailsRouter {
     override fun applyTheme(
         activity: FragmentActivity,
         binding: FragmentAssignmentDetailsBinding?,
+        bookmark: Bookmarker,
+        toolbar: Toolbar,
         course: Course?
-    ) {
+    ) = Unit
 
-    }
-
+    override fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
 }

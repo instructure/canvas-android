@@ -3,6 +3,8 @@ package com.instructure.pandautils.features.assignments.details
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -10,6 +12,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import java.io.File
 
@@ -56,5 +59,7 @@ interface AssignmentDetailsRouter {
 
     fun canRouteInternally(activity: FragmentActivity?, url: String, domain: String, routeIfPossible: Boolean): Boolean
 
-    fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, course: Course?)
+    fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?)
+
+    fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean
 }

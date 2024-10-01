@@ -25,6 +25,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -114,7 +115,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             title = context?.getString(R.string.assignmentDetails)
             subtitle = viewModel.course?.name
 
-            assignmentDetailsRouter.applyTheme(requireActivity(), binding, viewModel.course)
+            assignmentDetailsRouter.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course)
 
             ViewStyler.themeToolbarColored(requireActivity(), this, viewModel.course)
         }
@@ -147,6 +148,10 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     override fun onResume() {
         super.onResume()
         checkAlarmPermissionResult()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return assignmentDetailsRouter.onOptionsItemSelected(requireActivity(), item)
     }
 
     private fun handleAction(action: AssignmentDetailAction) {

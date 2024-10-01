@@ -5,8 +5,11 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -14,8 +17,11 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.interactions.Navigation
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.ReminderChoice
@@ -404,7 +410,13 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter {
         return RouteMatcher.canRouteInternally(activity, url, domain, routeIfPossible)
     }
 
-    override fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, course: Course?) {
+    override fun applyTheme(
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        bookmark: Bookmarker,
+        toolbar: Toolbar,
+        course: Course?
+    ) {
         binding?.toolbar?.apply {
             setupAsBackButton {
                 activity.onBackPressed()
@@ -413,10 +425,40 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter {
             title = activity.getString(R.string.assignmentDetails)
             subtitle = course?.name
 
-            // TODO: Bookmark is missing
+            setupToolbarMenu(activity, bookmark, toolbar)
 
             ViewStyler.themeToolbarColored(activity, this, course)
         }
+    }
+
+    private fun setupToolbarMenu(activity: FragmentActivity, bookmark: Bookmarker, toolbar: Toolbar) {
+        addBookmarkMenuIfAllowed(activity, bookmark, toolbar)
+        addOnMenuItemClickListener(activity, toolbar)
+    }
+
+    private fun addBookmarkMenuIfAllowed(activity: FragmentActivity, bookmark: Bookmarker, toolbar: Toolbar) {
+        val navigation = activity as? Navigation
+        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: false
+        if (bookmarkFeatureAllowed && bookmark.canBookmark && toolbar.menu.findItem(
+                R.id.bookmark) == null) {
+            toolbar.inflateMenu(R.menu.bookmark_menu)
+        }
+    }
+
+    private fun addOnMenuItemClickListener(activity: FragmentActivity, toolbar: Toolbar) {
+        toolbar.setOnMenuItemClickListener { item -> onOptionsItemSelected(activity, item) }
+    }
+
+    override fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean {
+        if (item.itemId == R.id.bookmark) {
+            if (APIHelper.hasNetworkConnection()) {
+                    (activity as? Navigation)?.addBookmark()
+            } else {
+                Toast.makeText(activity, activity.getString(com.instructure.pandautils.R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
+            }
+            return true
+        }
+        return false
     }
 
 }
