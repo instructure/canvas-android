@@ -33,6 +33,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.toast
@@ -131,7 +133,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
                     AssignmentListFragment::class.java -> AssignmentDetailsFragment::class.java
                     else -> null
                 }
-                RouteMatcher.route(requireActivity(), route?.copy(secondaryClass = secondaryClass))
+                RouteMatcher.route(requireActivity(), route?.copy(canvasContext = canvasContext,  primaryClass = null, secondaryClass = secondaryClass))
             } else {
                 val args = QuizDetailsFragment.makeBundle(quiz)
                 RouteMatcher.route(requireActivity(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
