@@ -125,7 +125,7 @@ data class InboxComposeOptions(
                     contextCode = conversation.contextCode,
                     contextName = conversation.contextName,
                     subject = context.getString(
-                        R.string.inboxForwardSubjectFwdPrefix,
+                        R.string.inboxForwardSubjectFwPrefix,
                         conversation.subject
                     ),
                 )

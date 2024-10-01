@@ -117,7 +117,8 @@ private fun InboxMessageDetailsView(
                     }
                 },
                 style = TextStyle.Default.copy(
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.textDarkest)
                 )
             )
         }
@@ -222,7 +223,8 @@ private fun InboxMessageAuthorView(
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_reply),
-                        contentDescription = stringResource(id = R.string.reply)
+                        contentDescription = stringResource(id = R.string.reply),
+                        tint = colorResource(id = R.color.textDarkest)
                     )
                 }
             }

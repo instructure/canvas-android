@@ -69,7 +69,7 @@ class InboxDetailsViewModelTest {
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
         coEvery { savedStateHandle.get<Long>(any()) } returns conversation.id
         coEvery { context.getString(
-            com.instructure.pandautils.R.string.inboxForwardSubjectFwdPrefix,
+            com.instructure.pandautils.R.string.inboxForwardSubjectFwPrefix,
             conversation.subject
         ) } returns "Fwd: ${conversation.subject}"
         coEvery { context.getString(

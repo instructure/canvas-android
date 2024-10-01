@@ -46,6 +46,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -74,6 +75,7 @@ import com.instructure.pandautils.features.inbox.details.ScreenState
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.InboxMessageView
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.ThemePrefs
 import java.time.ZonedDateTime
 
 @Composable
@@ -244,12 +246,16 @@ private fun InboxDetailsContentView(
             Spacer(Modifier.width(4.dp))
         }
 
-        Divider()
+        Divider(
+            color = colorResource(id = R.color.borderLight),
+        )
 
         messages.forEach { messageState ->
             InboxMessageView(messageState, messageActionHandler)
 
-            Divider()
+            Divider(
+                color = colorResource(id = R.color.borderLight),
+            )
         }
     }
 }
@@ -262,7 +268,7 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
             .background(color = colorResource(id = R.color.backgroundLightestElevated))
             .testTag("overFlowMenu"),
         showMenu = showMenu,
-        tint = colorResource(id = R.color.textDarkest),
+        tint = Color(color = ThemePrefs.primaryTextColor),
         onDismissRequest = {
             showMenu = !showMenu
         }

@@ -106,8 +106,12 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
                 Toast.makeText(requireContext(), action.message, Toast.LENGTH_SHORT).show()
             }
             is InboxDetailsFragmentAction.UrlSelected -> {
-                val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
-                activity?.startActivity(urlIntent)
+                try {
+                    val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
+                    activity?.startActivity(urlIntent)
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), R.string.inboxMessageFailedToOpenUrl, Toast.LENGTH_SHORT).show()
+                }
             }
             is InboxDetailsFragmentAction.UpdateParentFragment -> {
                 setFragmentResult(FRAGMENT_RESULT_KEY, bundleOf())

@@ -437,9 +437,10 @@
     <string name="failed_to_load_conversation">Failed to load conversation</string>
     <string name="no_messages_found">No messages found</string>
     <string name="inboxReplySubjectRePrefix">Re: %1$s</string>
-    <string name="inboxForwardSubjectFwdPrefix">Fwd: %1$s</string>
+    <string name="inboxForwardSubjectFwPrefix">Fw: %1$s</string>
     <string name="inboxMessageAuthorAndRecipientsLabel">%1$s to %2$s</string>
     <string name="inboxMessageRecipientsText">%1$s + %2$s Others</string>
+    <string name="inboxMessageFailedToOpenUrl">Failed to open url</string>
     <string name="add">Add</string>
     <string name="previousMessages">Previous Messages</string>
     <plurals name="people">

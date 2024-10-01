@@ -62,7 +62,7 @@ class InboxComposeOptionsTest {
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = 1, name = "User 1")
         coEvery { context.getString(
-            com.instructure.pandautils.R.string.inboxForwardSubjectFwdPrefix,
+            com.instructure.pandautils.R.string.inboxForwardSubjectFwPrefix,
             conversation.subject
         ) } returns "Fwd: ${conversation.subject}"
         coEvery { context.getString(
