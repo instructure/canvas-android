@@ -236,7 +236,7 @@ private fun StudentListItem(
                 }
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(color = Color(uiState.studentColor.backgroundColor()))
+                    indication = rememberRipple(color = Color(uiState.studentColor.color()))
                 ) {
                     actionHandler(ManageStudentsAction.ShowColorPickerDialog(uiState.studentId, uiState.studentColor))
                 }
@@ -245,7 +245,7 @@ private fun StudentListItem(
                 modifier = Modifier
                     .size(20.dp)
                     .clip(CircleShape)
-                    .background(color = Color(uiState.studentColor.backgroundColor()))
+                    .background(color = Color(uiState.studentColor.color()))
             )
         }
     }

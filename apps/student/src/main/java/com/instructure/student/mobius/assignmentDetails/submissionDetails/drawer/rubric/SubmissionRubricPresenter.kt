@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
@@ -149,7 +149,7 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
             comment = assessment?.comments.validOrNull(),
             ratingTitle = if (isFreeForm) null else selectedRating?.description,
             ratingDescription = if (isFreeForm) null else selectedRating?.longDescription,
-            tint = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
+            tint = CanvasContext.emptyCourseContext(model.assignment.courseId).color
         )
     }
 

@@ -35,6 +35,8 @@
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> itemViewModel.onCardClick.invoke()}"
             android:minHeight="290dp"
+            android:background="@color/backgroundLightestElevated"
+            app:cardBackgroundColor="@color/backgroundLightestElevated"
             app:cardCornerRadius="3dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="true"
@@ -44,16 +46,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/backgroundLightestElevated">
 
                 <ImageView
                     android:id="@+id/courseImage"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:importantForAccessibility="no"
-                    android:background="@{itemViewModel.data.color.textAndIconColor()}"
+                    android:background="@{itemViewModel.data.color.color()}"
                     app:imageUrl="@{itemViewModel.data.imageUrl}"
-                    app:overlayColor="@{itemViewModel.data.color.textAndIconColor()}"
+                    app:overlayColor="@{itemViewModel.data.color.color()}"
                     tools:background="@color/backgroundInfo"/>
 
                 <TextView
@@ -66,7 +69,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    android:textColor="@{itemViewModel.data.color.textAndIconColor()}"
+                    android:textColor="@{itemViewModel.data.color.color()}"
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:maxLines="2"
@@ -80,7 +83,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@{itemViewModel.data.color.textAndIconColor()}"
+                    android:background="@{itemViewModel.data.color.color()}"
                     tools:background="@color/backgroundInfo" />
 
                 <LinearLayout
@@ -100,7 +103,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:src="@drawable/ic_homeroom_todo"
-                        android:tint="@{itemViewModel.data.color.textAndIconColor()}"
+                        android:tint="@{itemViewModel.data.color.color()}"
                         android:importantForAccessibility="no"
                         tools:tint="@color/textInfo" />
 
@@ -144,7 +147,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:src="@drawable/ic_homeroom_announcement"
-                        android:tint="@{itemViewModel.data.color.textAndIconColor()}"
+                        android:tint="@{itemViewModel.data.color.color()}"
                         android:importantForAccessibility="no"
                         tools:tint="@color/textInfo" />
 

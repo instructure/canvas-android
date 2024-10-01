@@ -17,14 +17,14 @@ package com.instructure.pandautils.views
  */
 
 import android.content.Context
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -36,7 +36,7 @@ class ColorPickerIcon @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     lateinit var circle: ImageView
-    lateinit var checkMark: ImageView
+    private lateinit var checkMark: ImageView
     private var circlePlaceholder = R.drawable.ic_color_picker_circle
     private var checkMarkPlaceholder = R.drawable.ic_check_white_24dp
 
@@ -51,7 +51,7 @@ class ColorPickerIcon @JvmOverloads constructor(
     init {
         //configure image views
         addView(initCircle(context))
-        addView(initcheckMark(context))
+        addView(initCheckMark(context))
 
         attrs?.let {
             val a = context.obtainStyledAttributes(it, R.styleable.ColorPickerIcon)
@@ -67,7 +67,7 @@ class ColorPickerIcon @JvmOverloads constructor(
         }
 
         setCircle(circlePlaceholder)
-        setcheckMark(checkMarkPlaceholder)
+        setCheckMark(checkMarkPlaceholder)
     }
 
     private fun initCircle(context: Context): ImageView {
@@ -83,7 +83,7 @@ class ColorPickerIcon @JvmOverloads constructor(
         return circle
     }
 
-    private fun initcheckMark(context: Context): ImageView {
+    private fun initCheckMark(context: Context): ImageView {
         checkMark = ImageView(context)
         checkMark.id = R.id.checkMark
         
@@ -98,14 +98,14 @@ class ColorPickerIcon @JvmOverloads constructor(
         return checkMark
     }
 
-    fun setCircle(@DrawableRes iconRes: Int, @ColorInt tintColor: Int? = null) {
+    private fun setCircle(@DrawableRes iconRes: Int, @ColorInt tintColor: Int? = null) {
         circle.setImageDrawable(ContextCompat.getDrawable(context, iconRes))
         tintColor?.let { circle.setColorFilter(it) }
     }
 
-    fun setcheckMark(@DrawableRes iconRes: Int, @ColorInt tintColor: Int? = null) {
+    private fun setCheckMark(@DrawableRes iconRes: Int) {
         checkMark.setImageDrawable(ContextCompat.getDrawable(context, iconRes))
-        tintColor?.let { checkMark.setColorFilter(it) }
+        checkMark.setColorFilter(context.getColor(R.color.textLightest))
     }
 
     fun setSelected() {

@@ -27,9 +27,11 @@ data class AddStudentUiState(
 
 sealed class AddStudentViewModelAction {
     data object PairStudentSuccess : AddStudentViewModelAction()
+    data object UnpairStudentSuccess : AddStudentViewModelAction()
 }
 
 sealed class AddStudentAction {
+    data class UnpairStudent(val studentId: Long) : AddStudentAction()
     data class PairStudent(val pairingCode: String) : AddStudentAction()
     object ResetError : AddStudentAction()
 }

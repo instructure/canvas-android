@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListModel
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListPresenter
@@ -33,7 +33,8 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 class ConferenceListPresenterTest : Assert() {
@@ -97,7 +98,7 @@ class ConferenceListPresenterTest : Assert() {
         val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
 
         val expectedHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.newConferences))
-        val expectedConferenceItem = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, conference, context)
+        val expectedConferenceItem = ConferenceListPresenter.mapItemState(canvasContext.color, conference, context)
 
         // Should have two list items - one header and one conference
         assertEquals(state.itemStates.size, 2)
@@ -116,7 +117,7 @@ class ConferenceListPresenterTest : Assert() {
         val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
 
         val expectedHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.concludedConferences))
-        val expectedConferenceItem = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, conference, context)
+        val expectedConferenceItem = ConferenceListPresenter.mapItemState(canvasContext.color, conference, context)
 
         // Should have two list items - one header and one conference
         assertEquals(state.itemStates.size, 2)
@@ -138,9 +139,9 @@ class ConferenceListPresenterTest : Assert() {
 
         val newHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.newConferences))
         val concludedHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.concludedConferences))
-        val inProgressItem = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, inProgress, context)
-        val notStartedItem = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, notStarted, context)
-        val concludedItem = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, concluded, context)
+        val inProgressItem = ConferenceListPresenter.mapItemState(canvasContext.color, inProgress, context)
+        val notStartedItem = ConferenceListPresenter.mapItemState(canvasContext.color, notStarted, context)
+        val concludedItem = ConferenceListPresenter.mapItemState(canvasContext.color, concluded, context)
 
         // Should sort by in-progress, then not-started, then concluded, with appropriate headers
         // Should have five list items - two headers and three conferences
@@ -164,11 +165,11 @@ class ConferenceListPresenterTest : Assert() {
         )
 
         // Generate state
-        val state = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, conference, context)
+        val state = ConferenceListPresenter.mapItemState(canvasContext.color, conference, context)
 
         // Expected state. Notably, label tint is green and isJoinable is true.
         val expected = ConferenceListItemViewState.ConferenceItem(
-            tint = canvasContext.backgroundColor,
+            tint = canvasContext.color,
             title  = conference.title!!,
             subtitle = conference.description!!,
             label = context.getString(R.string.inProgress),
@@ -192,11 +193,11 @@ class ConferenceListPresenterTest : Assert() {
         )
 
         // Generate state
-        val state = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, conference, context)
+        val state = ConferenceListPresenter.mapItemState(canvasContext.color, conference, context)
 
         // Expected state. Notably, label tint is grey and isJoinable is false.
         val expected = ConferenceListItemViewState.ConferenceItem(
-            tint = canvasContext.backgroundColor,
+            tint = canvasContext.color,
             title  = conference.title!!,
             subtitle = conference.description!!,
             label = context.getString(R.string.notStarted),
@@ -220,11 +221,11 @@ class ConferenceListPresenterTest : Assert() {
         )
 
         // Generate state
-        val state = ConferenceListPresenter.mapItemState(canvasContext.backgroundColor, conference, context)
+        val state = ConferenceListPresenter.mapItemState(canvasContext.color, conference, context)
 
         // Expected state. Notably, label tint is grey and isJoinable is false.
         val expected = ConferenceListItemViewState.ConferenceItem(
-            tint = canvasContext.backgroundColor,
+            tint = canvasContext.color,
             title  = conference.title!!,
             subtitle = conference.description!!,
             label = "Concluded Jan 1 at 8:57 AM",

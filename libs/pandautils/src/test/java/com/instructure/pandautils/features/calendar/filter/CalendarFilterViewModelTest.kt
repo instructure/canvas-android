@@ -26,7 +26,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -101,8 +101,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10",
         )
 
@@ -137,8 +137,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10")
 
         assertEquals(expectedUiState, uiState)
@@ -166,8 +166,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -179,8 +179,8 @@ class CalendarFilterViewModelTest {
         val newUiState = viewModel.uiState.value
         val newExpectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", true, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", false, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", false, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -211,8 +211,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -223,8 +223,8 @@ class CalendarFilterViewModelTest {
         val newUiState = viewModel.uiState.value
         val newExpectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10", snackbarMessage = "Filter limit reached"
         )
 
@@ -313,8 +313,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -325,8 +325,8 @@ class CalendarFilterViewModelTest {
         val newUiState = viewModel.uiState.value
         val newExpectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", true, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -357,8 +357,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", false, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", false, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -369,8 +369,8 @@ class CalendarFilterViewModelTest {
         val newUiState = viewModel.uiState.value
         val newExpectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", true, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.color)),
             explanationMessage = "Limit 10", snackbarMessage = "Filter limit reached"
         )
 
@@ -400,8 +400,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -412,8 +412,8 @@ class CalendarFilterViewModelTest {
         val newUiState = viewModel.uiState.value
         val newExpectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", false, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", false, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", false, group.color)),
             explanationMessage = "Limit 10"
         )
 
@@ -444,8 +444,8 @@ class CalendarFilterViewModelTest {
         val uiState = viewModel.uiState.value
         val expectedUiState = CalendarFilterScreenUiState(
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
-            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
-            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            listOf(CalendarFilterItemUiState("course_1", "Course", true, course.color)),
+            listOf(CalendarFilterItemUiState("group_3", "Group", true, group.color)),
             selectAllAvailable = true,
             explanationMessage = null
         )

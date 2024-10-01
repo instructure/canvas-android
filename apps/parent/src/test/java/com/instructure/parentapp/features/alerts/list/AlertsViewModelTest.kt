@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
@@ -128,14 +129,16 @@ class AlertsViewModelTest {
                 observerId = 1L,
                 threshold = null,
                 alertType = AlertType.ASSIGNMENT_MISSING,
-                userId = 1L
+                userId = 1L,
+                workflowState = ThresholdWorkflowState.ACTIVE
             ),
             AlertThreshold(
                 id = 2L,
                 observerId = 1L,
                 threshold = "50%",
                 alertType = AlertType.ASSIGNMENT_GRADE_LOW,
-                userId = 1L
+                userId = 1L,
+                workflowState = ThresholdWorkflowState.ACTIVE
             )
         )
 
