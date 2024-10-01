@@ -887,7 +887,8 @@ fun MockCanvas.addConversation(
         senderId: Long,
         receiverIds: List<Long>,
         messageBody : String = Randomizer.randomConversationBody(),
-        messageSubject : String = Randomizer.randomConversationSubject()) : Conversation {
+        messageSubject : String = Randomizer.randomConversationSubject(),
+        cannotReply: Boolean = false) : Conversation {
 
     val sender = this.users[senderId]!!
     val senderBasic = BasicUser(
@@ -928,7 +929,8 @@ fun MockCanvas.addConversation(
             messages = listOf(basicMessage),
             avatarUrl = Randomizer.randomAvatarUrl(),
             participants = participants,
-            audience = null // Prevents "Monologue"
+            audience = null, // Prevents "Monologue"
+            cannotReply = cannotReply
     )
 
     this.conversations[result.id] = result

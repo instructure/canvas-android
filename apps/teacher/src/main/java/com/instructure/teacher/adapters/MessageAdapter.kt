@@ -37,6 +37,15 @@ open class MessageAdapter(
     protected var mCallback: MessageAdapterCallback
 ) : SyncRecyclerAdapter<Message, MessageHolder, MessageThreadView>(context, presenter) {
 
+    fun updateConversation(conversation: Conversation?) {
+        conversation?.let {
+            if (conversation != mConversation) {
+                mConversation = conversation
+                notifyDataSetChanged()
+            }
+        }
+    }
+
     override fun bindHolder(model: Message, holder: MessageHolder, position: Int) = MessageBinder.bind(
         model, mConversation, mCallback.getParticipantById(model.authorId), position, mCallback, holder
     )
