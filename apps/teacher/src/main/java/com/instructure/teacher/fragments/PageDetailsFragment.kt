@@ -19,7 +19,6 @@ package com.instructure.teacher.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.Toast
 import com.instructure.canvasapi2.models.CanvasContext
@@ -40,7 +39,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.loadHtmlWithIframes
@@ -217,7 +216,7 @@ class PageDetailsFragment : BasePresenterFragment<
 
         toolbar.setupBackButtonWithExpandCollapseAndBack(this@PageDetailsFragment) {
             toolbar.updateToolbarExpandCollapseIcon(this@PageDetailsFragment)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext.color, requireContext().getColor(R.color.textLightest))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
@@ -225,7 +224,7 @@ class PageDetailsFragment : BasePresenterFragment<
         if (!isTablet) {
             toolbar.subtitle = canvasContext.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext.color, requireContext().getColor(R.color.textLightest))
     }
 
     private fun openEditPage(page: Page) {

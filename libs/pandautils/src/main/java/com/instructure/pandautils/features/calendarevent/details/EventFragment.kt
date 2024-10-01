@@ -42,8 +42,8 @@ import com.instructure.pandautils.features.calendarevent.details.composables.Eve
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
@@ -117,7 +117,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     override fun title(): String = getString(R.string.Event)
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), viewModel.getCanvasContext().backgroundColor)
+        ViewStyler.setStatusBarDark(requireActivity(), viewModel.getCanvasContext().color)
     }
 
     override fun getFragment(): Fragment {

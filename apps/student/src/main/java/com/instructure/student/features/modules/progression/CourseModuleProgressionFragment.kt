@@ -27,9 +27,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.ModuleObject.State
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
@@ -45,7 +50,22 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.IntArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.SerializableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.databinding.CourseModuleProgressionBinding
 import com.instructure.student.events.ModuleUpdatedEvent
@@ -125,8 +145,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.prevItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.textAndIconColor))
-        binding.nextItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.textAndIconColor))
+        binding.prevItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.color))
+        binding.nextItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.color))
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -168,7 +188,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     //region Fragment Interaction Overrides
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
+        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
     }
 
     override fun title(): String = getString(R.string.modules)

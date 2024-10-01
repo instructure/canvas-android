@@ -58,7 +58,9 @@ data class Conversation(
         @SerializedName("context_name")
         val contextName: String? = null,
         @SerializedName("context_code")
-        val contextCode: String? = null
+        val contextCode: String? = null,
+        @SerializedName("cannot_reply")
+        val cannotReply: Boolean = false
 ) : CanvasModel<Conversation>() {
     // Helper variables
     @IgnoredOnParcel

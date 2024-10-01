@@ -29,7 +29,7 @@ data class GradeCellViewData(
     val finalGrade: String = "",
     val stats: GradeCellViewState.GradeStats? = null
 ) {
-    val backgroundColorWithAlpha = ColorUtils.setAlphaComponent(courseColor.backgroundColor(), (.25 * 255).toInt())
+    val backgroundColorWithAlpha = ColorUtils.setAlphaComponent(courseColor.color(), (.25 * 255).toInt())
 
     enum class State {
         EMPTY,

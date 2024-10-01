@@ -9,8 +9,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setTextForVisibility
-import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.ViewholderTodoBinding
@@ -42,17 +42,17 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         when {
             item.canvasContext?.name != null -> {
                 course.text = item.canvasContext!!.name
-                course.setTextColor(item.canvasContext.textAndIconColor)
+                course.setTextColor(item.canvasContext.color)
             }
             item.scheduleItem?.contextType == CanvasContext.Type.USER -> {
                 course.text = context.getString(R.string.PersonalCalendar)
-                course.setTextColor(item.canvasContext.textAndIconColor)
+                course.setTextColor(item.canvasContext.color)
             }
             else -> course.text = ""
         }
 
         // Get courseColor
-        val iconColor = item.canvasContext?.textAndIconColor ?: ContextCompat.getColor(context, R.color.textDarkest)
+        val iconColor = item.canvasContext?.color ?: ContextCompat.getColor(context, R.color.textDarkest)
 
         if (item.isChecked) {
             root.setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))

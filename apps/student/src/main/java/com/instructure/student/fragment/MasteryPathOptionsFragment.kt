@@ -22,7 +22,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentSet
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.MasteryPathAssignment
+import com.instructure.canvasapi2.models.MasteryPathSelectResponse
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -30,7 +34,16 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MASTERY_PATH_OPTIONS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.peekingFragment
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.adapter.MasteryPathOptionsRecyclerAdapter
 import com.instructure.student.databinding.FragmentMasteryPathsOptionsBinding
@@ -64,7 +77,7 @@ class MasteryPathOptionsFragment : ParentFragment() {
         mRecyclerAdapter = MasteryPathOptionsRecyclerAdapter(
             requireContext(),
             assignments.toTypedArray(),
-            canvasContext.textAndIconColor,
+            canvasContext.color,
             object : AdapterToFragmentCallback<Assignment> {
                 override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
                     val route = AssignmentBasicFragment.makeRoute(canvasContext, assignment)

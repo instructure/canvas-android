@@ -26,7 +26,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.app.ActivityCompat
@@ -42,10 +46,27 @@ import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.ApiValues
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -57,7 +78,20 @@ import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.interfaces.ShareableFile
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AssignmentUtils2
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.iconRes
+import com.instructure.pandautils.utils.isAccessibilityEnabled
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAvatarA11y
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.viewExternally
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.pandautils.views.ViewPagerNonSwipeable
@@ -69,11 +103,30 @@ import com.instructure.teacher.databinding.ViewSubmissionContentBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.RationedBusEvent
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
-import com.instructure.teacher.fragments.*
+import com.instructure.teacher.fragments.SimpleWebViewFragment
+import com.instructure.teacher.fragments.SpeedGraderCommentsFragment
+import com.instructure.teacher.fragments.SpeedGraderEmptyFragment
+import com.instructure.teacher.fragments.SpeedGraderFilesFragment
+import com.instructure.teacher.fragments.SpeedGraderGradeFragment
+import com.instructure.teacher.fragments.SpeedGraderLtiSubmissionFragment
+import com.instructure.teacher.fragments.SpeedGraderQuizSubmissionFragment
+import com.instructure.teacher.fragments.SpeedGraderTextSubmissionFragment
+import com.instructure.teacher.fragments.SpeedGraderUrlSubmissionFragment
+import com.instructure.teacher.fragments.ViewImageFragment
+import com.instructure.teacher.fragments.ViewMediaFragment
+import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
 import com.instructure.teacher.utils.Const
+import com.instructure.teacher.utils.getColorCompat
+import com.instructure.teacher.utils.getResForSubmission
+import com.instructure.teacher.utils.getState
+import com.instructure.teacher.utils.iconRes
+import com.instructure.teacher.utils.isTablet
+import com.instructure.teacher.utils.setAnonymousAvatar
+import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.transformForQuizGrading
 import com.pspdfkit.ui.PdfFragment
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
 import com.pspdfkit.ui.special_mode.manager.AnnotationManager
@@ -86,7 +139,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.text.DateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @SuppressLint("ViewConstructor")
 class SubmissionContentView(
@@ -741,8 +795,8 @@ class SubmissionContentView(
         })
 
         bottomTabLayout.setupWithViewPager(mBottomViewPager)
-        bottomTabLayout.setSelectedTabIndicatorColor(course.textAndIconColor)
-        bottomTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), course.textAndIconColor)
+        bottomTabLayout.setSelectedTabIndicatorColor(course.color)
+        bottomTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), course.color)
         bottomTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {

@@ -31,16 +31,21 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.MasterDetailActivity
 import com.instructure.teacher.databinding.FragmentSyllabusBinding
 import com.instructure.teacher.events.SyllabusUpdatedEvent
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
-import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
@@ -87,7 +92,7 @@ class SyllabusView(
         setEditVisibility(false)
         ViewStyler.themeToolbarColored(activity, binding.toolbar, canvasContext)
 
-        binding.syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
+        binding.syllabusTabLayout.setBackgroundColor(canvasContext.color)
 
         if (context !is MasterDetailActivity) {
             binding.toolbar.setupAsBackButton { activity.onBackPressed() }

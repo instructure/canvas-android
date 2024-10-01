@@ -32,8 +32,10 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.*
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
@@ -146,6 +148,45 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         onView(withId(R.id.starred)).check(matches(ImageViewDrawableMatcher(R.drawable.ic_star_outline, ThemePrefs.brandColor)))
     }
 
+    fun assertReplyButtonVisible(visible: Boolean) {
+        val replyButton = onView(withId(R.id.reply))
+        if (visible) {
+            replyButton.assertDisplayed()
+        } else {
+            replyButton.assertGone()
+        }
+    }
+
+    fun assertReplyMenuItemsVisible(visible: Boolean) {
+        onView(
+            allOf(
+                withContentDescription(stringContainsTextCaseInsensitive("More options")),
+                isDisplayed()
+            )
+        ).click()
+        val replyButton = onView(withText(R.string.reply))
+        val replyAllButton = onView(withText(R.string.replyAll))
+        if (visible) {
+            replyButton.assertDisplayed()
+            replyAllButton.assertDisplayed()
+        } else {
+            replyButton.check(doesNotExist())
+            replyAllButton.check(doesNotExist())
+        }
+    }
+
+    fun assertReplyMessageOptionsVisible(visible: Boolean) {
+        onView(withId(R.id.messageOptions)).click()
+        val replyButton = onView(withText(R.string.reply))
+        val replyAllButton = onView(withText(R.string.replyAll))
+        if (visible) {
+            replyButton.assertDisplayed()
+            replyAllButton.assertDisplayed()
+        } else {
+            replyButton.check(doesNotExist())
+            replyAllButton.check(doesNotExist())
+        }
+    }
 }
 
 // Arrgghh... I tried to put this in the canvas_espresso CustomMatchers module, but that required

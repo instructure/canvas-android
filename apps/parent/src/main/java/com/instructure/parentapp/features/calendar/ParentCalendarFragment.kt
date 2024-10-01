@@ -48,7 +48,7 @@ class ParentCalendarFragment : BaseCalendarFragment() {
 
     override fun applyTheme() {
         val student = ParentPrefs.currentStudent
-        val color = ColorKeeper.getOrGenerateUserColor(student).backgroundColor()
+        val color = ColorKeeper.getOrGenerateUserColor(student).color()
         ViewStyler.setStatusBarDark(requireActivity(), color)
     }
 

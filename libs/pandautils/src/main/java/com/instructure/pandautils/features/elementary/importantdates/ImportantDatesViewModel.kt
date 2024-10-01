@@ -25,22 +25,25 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesHeaderItemViewModel
 import com.instructure.pandautils.features.elementary.importantdates.itemviewmodels.ImportantDatesItemViewModel
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.pandautils.utils.textAndIconColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel

@@ -201,6 +201,11 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         EventBus.getDefault().register(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        themeToolbar()
+    }
+
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)

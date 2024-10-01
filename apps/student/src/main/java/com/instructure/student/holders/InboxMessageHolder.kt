@@ -80,7 +80,11 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Set up message options
         messageOptions.onClick { v ->
             // Set up popup menu
-            val actions = MessageAdapterCallback.MessageClickAction.values()
+            val actions = MessageAdapterCallback.MessageClickAction.values().toMutableList()
+            if (conversation.cannotReply) {
+                actions.remove(MessageAdapterCallback.MessageClickAction.REPLY)
+                actions.remove(MessageAdapterCallback.MessageClickAction.REPLY_ALL)
+            }
             val popup = PopupMenu(v.context, v, Gravity.START)
             val menu = popup.menu
             for (action in actions) {
@@ -96,10 +100,18 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             // Show
             popup.show()
         }
-
-        reply.setTextColor(ThemePrefs.textButtonColor)
-        reply.setVisible(position == 0)
-        reply.onClick { callback.onMessageAction(MessageAdapterCallback.MessageClickAction.REPLY, message) }
+        if (!conversation.cannotReply) {
+            reply.setTextColor(ThemePrefs.textButtonColor)
+            reply.setVisible(position == 0)
+            reply.onClick {
+                callback.onMessageAction(
+                    MessageAdapterCallback.MessageClickAction.REPLY,
+                    message
+                )
+            }
+        } else {
+            reply.setVisible(false)
+        }
     }
 
     private val dateFormat = SimpleDateFormat(
