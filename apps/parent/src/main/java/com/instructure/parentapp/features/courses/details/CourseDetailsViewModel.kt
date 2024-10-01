@@ -63,7 +63,7 @@ class CourseDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = true,
-                    studentColor = colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent).backgroundColor()
+                    studentColor = colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent).color()
                 )
             }
 
