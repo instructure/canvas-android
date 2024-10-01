@@ -90,7 +90,7 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
             backgroundColorRes = background,
             textColor = textColor,
             linkColor = if (themeSwitched) R.color.electric else R.color.textInfo,
-            visitedLinkColor = if (themeSwitched) R.color.barney else R.color.textAlert,
+            visitedLinkColor = if (themeSwitched) R.color.barney else R.color.textMasquerade,
         )
 
         binding.contentWebView.setBackgroundColor(context.getColor(background))

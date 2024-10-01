@@ -86,7 +86,11 @@ object MessageBinder {
         // Set up message options
         messageOptions.setOnClickListener { v ->
             // Set up popup menu
-            val actions = MessageAdapterCallback.MessageClickAction.values()
+            val actions = MessageAdapterCallback.MessageClickAction.values().toMutableList()
+            if (conversation.cannotReply) {
+                actions.remove(MessageAdapterCallback.MessageClickAction.REPLY)
+                actions.remove(MessageAdapterCallback.MessageClickAction.REPLY_ALL)
+            }
             val popup = PopupMenu(v.context, v, Gravity.START)
             val menu = popup.menu
             for (action in actions) {
@@ -104,9 +108,18 @@ object MessageBinder {
         }
 
         with(reply) {
-            setTextColor(ThemePrefs.textButtonColor)
-            setVisible(position == 0)
-            setOnClickListener { callback.onMessageAction(MessageAdapterCallback.MessageClickAction.REPLY, message) }
+            if (!conversation.cannotReply) {
+                setTextColor(ThemePrefs.textButtonColor)
+                setVisible(position == 0)
+                setOnClickListener {
+                    callback.onMessageAction(
+                        MessageAdapterCallback.MessageClickAction.REPLY,
+                        message
+                    )
+                }
+            } else {
+                setVisible(false)
+            }
         }
     }
 

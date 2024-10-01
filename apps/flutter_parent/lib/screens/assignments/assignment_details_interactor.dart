@@ -23,6 +23,8 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AssignmentDetailsInteractor {
+  final String _ASSIGNMENT_ENHANCEMENT_KEY = "assignments_2_student";
+
   Future<AssignmentDetails?> loadAssignmentDetails(
     bool forceRefresh,
     String courseId,
@@ -30,12 +32,13 @@ class AssignmentDetailsInteractor {
     String? studentId,
   ) async {
     final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
+    final enabledCourseFeatures = locator<CourseApi>().getEnabledCourseFeatures(courseId, forceRefresh: forceRefresh);
     final assignment = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(
-      assignment: (await assignment),
-      course: (await course),
-    );
+        assignment: (await assignment),
+        course: (await course),
+        assignmentEnhancementEnabled: (await enabledCourseFeatures)?.contains(_ASSIGNMENT_ENHANCEMENT_KEY));
   }
 
   Future<AssignmentDetails> loadQuizDetails(
@@ -45,12 +48,13 @@ class AssignmentDetailsInteractor {
     String studentId,
   ) async {
     final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
+    final enabledCourseFeatures = locator<CourseApi>().getEnabledCourseFeatures(courseId, forceRefresh: forceRefresh);
     final quiz = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(
-      assignment: (await quiz),
-      course: (await course),
-    );
+        assignment: (await quiz),
+        course: (await course),
+        assignmentEnhancementEnabled: (await enabledCourseFeatures)?.contains(_ASSIGNMENT_ENHANCEMENT_KEY));
   }
 
   Future<Reminder?> loadReminder(String assignmentId) async {
@@ -100,7 +104,6 @@ class AssignmentDetailsInteractor {
       reminder = insertedReminder;
       await locator<NotificationUtil>().scheduleReminder(l10n, title, body, reminder);
     }
-
   }
 
   Future<void> deleteReminder(Reminder? reminder) async {
@@ -113,6 +116,7 @@ class AssignmentDetailsInteractor {
 class AssignmentDetails {
   final Course? course;
   final Assignment? assignment;
+  final bool? assignmentEnhancementEnabled;
 
-  AssignmentDetails({this.course, this.assignment});
+  AssignmentDetails({this.course, this.assignment, this.assignmentEnhancementEnabled});
 }

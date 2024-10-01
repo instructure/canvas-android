@@ -37,10 +37,20 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Const.CANVAS_STUDENT_ID
 import com.instructure.pandautils.utils.Const.MARKET_URI_PREFIX
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.a11yManager
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.isSwitchAccessEnabled
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.requestAccessibilityFocus
+import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CourseBrowserAdapter
 import com.instructure.teacher.databinding.FragmentCourseBrowserBinding
@@ -52,7 +62,11 @@ import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.DisableableAppBarLayoutBehavior
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.view.CourseBrowserHeaderView
 import com.instructure.teacher.viewinterface.CourseBrowserView
 import org.greenrobot.eventbus.EventBus
@@ -140,7 +154,7 @@ class CourseBrowserFragment : BaseSyncFragment<
         super.onResume()
         EventBus.getDefault().register(this@CourseBrowserFragment)
         (presenter.canvasContext as? Course)?.let {
-            binding.courseImage.setCourseImage(it, it.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
+            binding.courseImage.setCourseImage(it, it.color, !TeacherPrefs.hideCourseColorOverlay)
         }
         binding.courseBrowserTitle.text = presenter.canvasContext.name
         binding.courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name.orEmpty()
@@ -174,7 +188,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             courseHeader.setGone()
             noOverlayToolbar.title = presenter.canvasContext.name
             (presenter.canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
-            noOverlayToolbar.setBackgroundColor(presenter.canvasContext.backgroundColor)
+            noOverlayToolbar.setBackgroundColor(presenter.canvasContext.color)
             noOverlayToolbar
         } else {
             noOverlayToolbar.setGone()
@@ -183,10 +197,10 @@ class CourseBrowserFragment : BaseSyncFragment<
 
         toolbar.setupBackButton(this@CourseBrowserFragment)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.white))
-        ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.backgroundColor)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.textLightest))
+        ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
 
-        collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.backgroundColor)
+        collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (presenter.canvasContext as? Course)?.imageUrl?.isValid() == true
@@ -212,7 +226,7 @@ class CourseBrowserFragment : BaseSyncFragment<
     }
 
     override fun createAdapter(): CourseBrowserAdapter {
-        return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.textAndIconColor) { tab ->
+        return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.color) { tab ->
             when (tab.tabId) {
                 Tab.ASSIGNMENTS_ID -> RouteMatcher.route(
                     requireActivity(),

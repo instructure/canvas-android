@@ -27,7 +27,13 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.databinding.ViewholderNotificationBinding
@@ -68,7 +74,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         course.text = courseName
-        course.setTextColor(item.canvasContext.textAndIconColor)
+        course.setTextColor(item.canvasContext.color)
 
         // Description
         if (!TextUtils.isEmpty(item.getMessage(context))) {
@@ -155,7 +161,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         val courseColor: Int = if (item.canvasContext != null) {
-            item.canvasContext.textAndIconColor
+            item.canvasContext.color
         } else
             ThemePrefs.brandColor
 

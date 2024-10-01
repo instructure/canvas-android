@@ -922,21 +922,6 @@
     <string name="colorPickerDialogMessage">Personalize your course by setting a new color.</string>
     <string name="colorPickerError">The course color could not be set at this time.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Pink</string>
-    <string name="contentDescriptionColorBarbie">Hot Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Purple</string>
-    <string name="contentDescriptionColorUltramarine">Dark Blue</string>
-    <string name="contentDescriptionColorOcean11">Blue</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
-    <string name="contentDescriptionColorFreshCutLawn">Green</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Yellow</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
-    <string name="contentDescriptionColorSriracha">Red</string>
 
     <string name="courseFavorited">Course %s, favorite.</string>
     <string name="courseNotFavorited">Course %s, not favorite.</string>
@@ -1846,6 +1831,18 @@
     <string name="alertSettingsPercentage">%1$s\%%</string>
     <string name="alertSettingsThresholdNever">Never</string>
     <string name="add">Add</string>
+    <string name="courseColor1contentDescription">Berry</string>
+    <string name="courseColor2contentDescription">Fuchsia</string>
+    <string name="courseColor3contentDescription">Violet</string>
+    <string name="courseColor4contentDescription">Blue</string>
+    <string name="courseColor5contentDescription">Aqua</string>
+    <string name="courseColor6contentDescription">Teal</string>
+    <string name="courseColor7contentDescription">Green</string>
+    <string name="courseColor8contentDescription">Moss</string>
+    <string name="courseColor9contentDescription">Honey</string>
+    <string name="courseColor10contentDescription">Rust</string>
+    <string name="courseColor11contentDescription">Red</string>
+    <string name="courseColor12contentDescription">Gray</string>
     <string name="alertSettingsThresholdLabel">Grade percentage</string>
     <string name="unpairStudentTitle">Delete</string>
     <string name="unpairStudentMessage">This will unpair and remove all enrollments for this student from you account.</string>

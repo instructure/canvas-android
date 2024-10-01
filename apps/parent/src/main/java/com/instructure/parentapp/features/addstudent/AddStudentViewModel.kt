@@ -43,7 +43,7 @@ class AddStudentViewModel @Inject constructor(
             AddStudentUiState(
                 color = colorKeeper.getOrGenerateUserColor(
                     selectedStudentHolder.selectedStudentState.value
-                ).textAndIconColor(),
+                ).color(),
                 actionHandler = this::handleAction
             )
         )
@@ -56,7 +56,7 @@ class AddStudentViewModel @Inject constructor(
         viewModelScope.launch {
             selectedStudentHolder.selectedStudentChangedFlow.collectLatest { user ->
                 _uiState.value = _uiState.value.copy(
-                    color = colorKeeper.getOrGenerateUserColor(user).textAndIconColor()
+                    color = colorKeeper.getOrGenerateUserColor(user).color()
                 )
             }
         }

@@ -50,7 +50,7 @@ import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.util.concurrent.*
+import java.util.concurrent.TimeUnit
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -58,7 +58,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val baseOnGradedAssignmentsCheckBox by WaitForViewWithId(R.id.showTotalCheckBox)
     private val showWhatIfCheckbox by WaitForViewWithId(R.id.showWhatIfCheckBox)
 
-    fun scrollToItem(itemMatcher: Matcher<View>) {
+    private fun scrollToItem(itemMatcher: Matcher<View>) {
         scrollRecyclerView(R.id.listView,itemMatcher)
     }
 

@@ -198,13 +198,15 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 val height = viewHolder.itemView.height
                 val margin = 16.toPx
 
+                val iconColor = requireContext().getColor(R.color.textLightest)
+
                 if (dX > 0) {
                     paint.color = markAsColor
                     canvas.drawRect(bounds, paint)
 
                     val drawableId = if (itemViewModel.data.unread) R.drawable.ic_mark_as_read else R.drawable.ic_mark_as_unread
                     val markAsIcon = resources.getDrawable(drawableId, null)
-                    markAsIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
+                    markAsIcon.colorFilter = PorterDuffColorFilter(iconColor,PorterDuff.Mode.SRC_ATOP)
                     markAsIcon.bounds = Rect(
                         margin,
                         bounds.top + height/2 - markAsIcon.intrinsicHeight/2,
@@ -220,7 +222,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                         getString(R.string.inbox_starred) -> resources.getDrawable(R.drawable.ic_star_outline, null)
                         else -> resources.getDrawable(R.drawable.ic_archive, null)
                     }
-                    archiveIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
+                    archiveIcon.colorFilter = PorterDuffColorFilter(iconColor,PorterDuff.Mode.SRC_ATOP)
 
                     val width = resources.displayMetrics.widthPixels
                     archiveIcon.bounds = Rect(
@@ -332,7 +334,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
-        binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        ViewStyler.themeFAB(binding.addMessage)
         binding.scopeFilterText.setTextColor(ThemePrefs.textButtonColor)
         binding.scopeFilterIcon.setColorFilter(ThemePrefs.textButtonColor)
         inboxRouter.attachNavigationIcon(binding.toolbar)

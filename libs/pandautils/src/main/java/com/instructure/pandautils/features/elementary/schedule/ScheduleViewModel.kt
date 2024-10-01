@@ -22,25 +22,50 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CalendarEventManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.PlannerManager
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleEmptyItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsGroupItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemTagItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.SchedulePlannerItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.MissingItemsPrefs
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.date.DateTimeProvider
+import com.instructure.pandautils.utils.getLastSunday
+import com.instructure.pandautils.utils.getNextSaturday
+import com.instructure.pandautils.utils.isNextDay
+import com.instructure.pandautils.utils.isPreviousDay
+import com.instructure.pandautils.utils.isSameDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -178,7 +203,7 @@ class ScheduleViewModel @Inject constructor(
 
     private fun createMissingItems(): ScheduleMissingItemsGroupItemViewModel {
         val missingItems = missingSubmissions.map { assignment ->
-            val color = if (coursesMap.containsKey(assignment.courseId)) coursesMap[assignment.courseId].textAndIconColor else resources.getColor(R.color.textInfo)
+            val color = if (coursesMap.containsKey(assignment.courseId)) coursesMap[assignment.courseId].color else resources.getColor(R.color.textInfo)
             ScheduleMissingItemViewModel(
                     data = ScheduleMissingItemData(
                             title = assignment.name,
@@ -260,7 +285,7 @@ class ScheduleViewModel @Inject constructor(
         val courseViewModels = coursePlannerMap.entries
                 .sortedBy { it.key?.name }
                 .map { entry ->
-                    val color = if (coursesMap.containsKey(entry.key?.id)) coursesMap[entry.key?.id].textAndIconColor else resources.getColor(R.color.textInfo)
+                    val color = if (coursesMap.containsKey(entry.key?.id)) coursesMap[entry.key?.id].color else resources.getColor(R.color.textInfo)
                     val scheduleViewData = ScheduleCourseViewData(
                             entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
                             entry.key != null && !entry.key!!.homeroomCourse,

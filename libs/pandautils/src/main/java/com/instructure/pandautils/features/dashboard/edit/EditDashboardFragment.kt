@@ -78,7 +78,7 @@ class EditDashboardFragment : Fragment() {
     private fun setupToolbar() {
         binding.toolbar.setTitle(R.string.allCoursesScreenHeader)
         binding.toolbar.setupAsBackButton(this)
-        binding.toolbar.addSearch {
+        binding.toolbar.addSearch(color = ThemePrefs.primaryTextColor) {
             viewModel.queryItems(it)
         }
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)

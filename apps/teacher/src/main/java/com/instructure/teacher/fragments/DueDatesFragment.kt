@@ -28,7 +28,12 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_DUE_DATES
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.bind
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DueDatesAdapter
@@ -77,7 +82,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
         if(!isTablet) {
             toolbar.subtitle = mCourse.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.textLightest))
     }
 
     override fun showMenu(assignment: Assignment) {

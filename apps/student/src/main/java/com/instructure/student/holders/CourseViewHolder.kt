@@ -25,11 +25,16 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.dashboard.DashboardCourseItem
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderCourseCardBinding
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
@@ -48,15 +53,15 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
-        titleTextView.setTextColor(course.textAndIconColor)
+        titleTextView.setTextColor(course.color)
 
         courseImageView.setCourseImage(
             course = course,
-            courseColor = course.backgroundColor,
+            courseColor = course.color,
             applyColor = !StudentPrefs.hideCourseColorOverlay
         )
 
-        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
+        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.color)
         courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
 
         if (courseItem.available || !isOfflineEnabled) {
@@ -104,11 +109,11 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if(courseGrade.isLocked) {
                 gradeTextView.setGone()
                 lockedGradeImage.setVisible()
-                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(root.context, R.drawable.ic_lock, course.textAndIconColor))
+                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(root.context, R.drawable.ic_lock, course.color))
             } else {
                 gradeTextView.setVisible()
                 lockedGradeImage.setGone()
-                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, root.context, course.settings?.restrictQuantitativeData ?: false)
+                setGradeView(gradeTextView, courseGrade, course.color, root.context, course.settings?.restrictQuantitativeData ?: false)
             }
         } else {
             gradeLayout.setGone()

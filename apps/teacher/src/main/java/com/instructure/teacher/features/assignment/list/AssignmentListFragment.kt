@@ -34,7 +34,13 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssignmentAdapter
 import com.instructure.teacher.databinding.FragmentAssignmentListBinding
@@ -123,7 +129,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): AssignmentAdapter {
-        return AssignmentAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { assignment ->
+        return AssignmentAdapter(requireContext(), presenter, canvasContext.color) { assignment ->
             if (pairedWithSubmissions) {
                 val args = AssignmentSubmissionListFragment.makeBundle(assignment)
                 RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, canvasContext, args))
@@ -210,7 +216,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         assignmentListToolbar.subtitle = canvasContext.name
         assignmentListToolbar.setupBackButton(this@AssignmentListFragment)
 
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, canvasContext.color, requireContext().getColor(R.color.textLightest))
     }
 
     override fun adjustGradingPeriodHeader(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {

@@ -18,14 +18,14 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Color
 import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContext.Companion.emptyCourseContext
 import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
@@ -45,8 +45,8 @@ class InternalWebViewActivity : BaseActionBarActivity() {
                 if (canvasContext.id == 0L) {
                     bundle.putBoolean(Const.HIDDEN_TOOLBAR, true)
                 } else {
-                    val color = canvasContext.backgroundColor
-                    setActionBarStatusBarColors(color, color)
+                    val color = canvasContext.color
+                    setActionBarStatusBarColor(color)
                     supportActionBar?.title = canvasContext.name
                 }
             }
@@ -75,10 +75,12 @@ class InternalWebViewActivity : BaseActionBarActivity() {
         if (fragment?.handleBackPressed() != true) super.onBackPressed()
     }
 
-    private fun setActionBarStatusBarColors(actionBarColor: Int, statusBarColor: Int) {
-        val colorDrawable = ColorDrawable(actionBarColor)
-        supportActionBar?.setBackgroundDrawable(colorDrawable)
-        if (statusBarColor != Int.MAX_VALUE) window.statusBarColor = statusBarColor
+    private fun setActionBarStatusBarColor(color: Int) {
+        val contentColor = resources?.getColor(R.color.textLightest) ?: Color.WHITE
+        toolbar?.let {
+            ViewStyler.themeToolbarColored(this, it, color, contentColor)
+        }
+        if (color != Int.MAX_VALUE) window.statusBarColor = color
     }
 
     companion object {
