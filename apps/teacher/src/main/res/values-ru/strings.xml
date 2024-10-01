@@ -531,21 +531,6 @@
     <string name="colorPickerDialogMessage">Это ваша персональная настройка цвета. Только вы будет видеть этот цвет для курса.</string>
     <string name="colorPickerError">В данный момент невозможно задать цвет курса.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Розовый</string>
-    <string name="contentDescriptionColorBarbie">Ярко-розовый</string>
-    <string name="contentDescriptionColorBarneyPurple">Фиолетовый</string>
-    <string name="contentDescriptionColorEggplant">Пурпурный</string>
-    <string name="contentDescriptionColorUltramarine">Темно-синий</string>
-    <string name="contentDescriptionColorOcean11">Синий</string>
-    <string name="contentDescriptionColorCyan">Голубой</string>
-    <string name="contentDescriptionColorAquaMarine">Бирюзовый</string>
-    <string name="contentDescriptionColorEmeraldGreen">Изумрудный</string>
-    <string name="contentDescriptionColorFreshCutLawn">Зеленый</string>
-    <string name="contentDescriptionColorChartreuse">Салатовый</string>
-    <string name="contentDescriptionColorSunFlower">Желтый</string>
-    <string name="contentDescriptionColorTangerine">Оранжевый</string>
-    <string name="contentDescriptionColorBloodOrange">Темно-оранжевый</string>
-    <string name="contentDescriptionColorSriracha">Красный</string>
     <string name="launch_link_in_external_browser">Перейдите по ссылке во внешнем браузере</string>
     <string name="contentDescriptionSelectedFile">Выбранный файл</string>
     <string name="contentDescriptionFileIcon">Иконка файла</string>

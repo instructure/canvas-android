@@ -899,21 +899,6 @@
     <string name="colorPickerDialogMessage">Mukauta kurssisi määrittämällä uusi väri.</string>
     <string name="colorPickerError">Kurssin värin määrittäminen ei onnistu juuri nyt.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Vaaleanpunainen</string>
-    <string name="contentDescriptionColorBarbie">Kuuma vaaleanpunainen</string>
-    <string name="contentDescriptionColorBarneyPurple">Violetti</string>
-    <string name="contentDescriptionColorEggplant">Purppura</string>
-    <string name="contentDescriptionColorUltramarine">Tummansininen</string>
-    <string name="contentDescriptionColorOcean11">Sininen</string>
-    <string name="contentDescriptionColorCyan">Syaani</string>
-    <string name="contentDescriptionColorAquaMarine">Vedensininen</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragdinvihreä</string>
-    <string name="contentDescriptionColorFreshCutLawn">Vihreä</string>
-    <string name="contentDescriptionColorChartreuse">Herneenvihreä</string>
-    <string name="contentDescriptionColorSunFlower">Keltainen</string>
-    <string name="contentDescriptionColorTangerine">Oranssi</string>
-    <string name="contentDescriptionColorBloodOrange">Tummanoranssi</string>
-    <string name="contentDescriptionColorSriracha">Punainen</string>
 
     <string name="courseFavorited">Kurssi %s, suosikki.</string>
     <string name="courseNotFavorited">Kurssi %s, ei suosikki.</string>

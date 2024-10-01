@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNER_ITEM
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -71,7 +71,7 @@ class ToDoViewModel @Inject constructor(
                 it.copy(
                     title = plannerItem.plannable.title,
                     contextName = plannerItem.contextName,
-                    contextColor = plannerItem.canvasContext.textAndIconColor,
+                    contextColor = plannerItem.canvasContext.color,
                     date = dateText.orEmpty(),
                     description = plannerItem.plannable.details.orEmpty()
                 )

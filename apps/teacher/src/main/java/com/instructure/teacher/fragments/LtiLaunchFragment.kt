@@ -48,7 +48,7 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.replaceWithURLQueryParameter
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.toast
@@ -99,7 +99,7 @@ class LtiLaunchFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val color = canvasContext?.backgroundColor ?: ThemePrefs.primaryColor
+        val color = canvasContext?.color ?: ThemePrefs.primaryColor
         ViewStyler.setStatusBarDark(requireActivity(), color)
         binding.loadingView.setOverrideColor(color)
         binding.toolName.setTextForVisibility(title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull())
@@ -173,7 +173,7 @@ class LtiLaunchFragment : BaseFragment() {
             .build()
 
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext?.backgroundColor ?: ThemePrefs.primaryColor)
+            .setToolbarColor(canvasContext?.color ?: ThemePrefs.primaryColor)
             .build()
 
         var intent = CustomTabsIntent.Builder()

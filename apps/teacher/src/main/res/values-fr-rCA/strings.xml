@@ -509,21 +509,6 @@
     <string name="colorPickerDialogMessage">Ceci est votre paramètre de couleur personnelle. Vous serez la seule personne à voir cette couleur pour le cours.</string>
     <string name="colorPickerError">La couleur de cours n\'a pas pu être définie en ce moment.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rose</string>
-    <string name="contentDescriptionColorBarbie">Rose vif</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Violet</string>
-    <string name="contentDescriptionColorUltramarine">Bleu foncé</string>
-    <string name="contentDescriptionColorOcean11">Bleu</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Bleu aquatique</string>
-    <string name="contentDescriptionColorEmeraldGreen">Vert émeraude</string>
-    <string name="contentDescriptionColorFreshCutLawn">Vert</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Jaune</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Orange foncé</string>
-    <string name="contentDescriptionColorSriracha">Rouge</string>
     <string name="launch_link_in_external_browser">Lancer le lien dans un navigateur externe</string>
     <string name="contentDescriptionSelectedFile">Fichier sélectionné</string>
     <string name="contentDescriptionFileIcon">Icône de fichier</string>
