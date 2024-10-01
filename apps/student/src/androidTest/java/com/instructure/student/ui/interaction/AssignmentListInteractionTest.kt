@@ -64,7 +64,7 @@ class AssignmentListInteractionTest : StudentTest() {
         goToAssignmentsPage()
         assignmentListPage.assertHasAssignment(assignment)
         assignmentListPage.assertSortByButtonShowsSortByTime()
-        assignmentListPage.assertFindsUndatedAssignmentLabel()
+        assignmentListPage.assertAssignmentGroupDisplayed("Undated Assignments")
     }
 
     @Test
