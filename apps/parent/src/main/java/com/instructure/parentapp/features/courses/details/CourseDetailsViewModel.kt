@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -42,8 +42,7 @@ import javax.inject.Inject
 class CourseDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: CourseDetailsRepository,
-    private val parentPrefs: ParentPrefs,
-    private val colorKeeper: ColorKeeper
+    private val parentPrefs: ParentPrefs
 ) : ViewModel() {
 
     private val courseId = savedStateHandle.get<Long>(Navigation.COURSE_ID).orDefault()
@@ -63,7 +62,7 @@ class CourseDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = true,
-                    studentColor = colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent).color()
+                    studentColor = parentPrefs.currentStudent.color
                 )
             }
 

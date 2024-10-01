@@ -30,7 +30,10 @@ import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -59,7 +62,6 @@ class CourseDetailsViewModelTest {
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: CourseDetailsRepository = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private lateinit var viewModel: CourseDetailsViewModel
 
@@ -67,13 +69,15 @@ class CourseDetailsViewModelTest {
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
-        coEvery { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         coEvery { savedStateHandle.get<Long>(Navigation.COURSE_ID) } returns 1
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -226,6 +230,6 @@ class CourseDetailsViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = CourseDetailsViewModel(savedStateHandle, repository, parentPrefs, colorKeeper)
+        viewModel = CourseDetailsViewModel(savedStateHandle, repository, parentPrefs)
     }
 }

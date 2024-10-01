@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.features.grades.GradesBehaviour
 import com.instructure.pandautils.features.grades.GradesRepository
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.features.grades.ParentGradesBehaviour
 import com.instructure.parentapp.features.grades.ParentGradesRepository
 import com.instructure.parentapp.util.ParentPrefs
@@ -45,9 +44,8 @@ class GradesModule {
 
     @Provides
     fun provideGradesBehaviour(
-        parentPrefs: ParentPrefs,
-        colorKeeper: ColorKeeper
+        parentPrefs: ParentPrefs
     ): GradesBehaviour {
-        return ParentGradesBehaviour(parentPrefs, colorKeeper)
+        return ParentGradesBehaviour(parentPrefs)
     }
 }

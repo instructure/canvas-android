@@ -28,9 +28,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.color
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,8 +58,7 @@ class CourseDetailsFragment : Fragment() {
     }
 
     private fun applyTheme() {
-        val student = ParentPrefs.currentStudent
-        val color = ColorKeeper.getOrGenerateUserColor(student).color()
+        val color = ParentPrefs.currentStudent.color
         ViewStyler.setStatusBarDark(requireActivity(), color)
     }
 

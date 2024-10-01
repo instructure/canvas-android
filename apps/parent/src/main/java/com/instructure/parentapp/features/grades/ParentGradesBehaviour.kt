@@ -18,14 +18,13 @@
 package com.instructure.parentapp.features.grades
 
 import com.instructure.pandautils.features.grades.GradesBehaviour
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
 import com.instructure.parentapp.util.ParentPrefs
 
 
 class ParentGradesBehaviour(
-    parentPrefs: ParentPrefs,
-    colorKeeper: ColorKeeper
+    parentPrefs: ParentPrefs
 ) : GradesBehaviour {
 
-    override val canvasContextColor = colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent).color()
+    override val canvasContextColor = parentPrefs.currentStudent.color
 }

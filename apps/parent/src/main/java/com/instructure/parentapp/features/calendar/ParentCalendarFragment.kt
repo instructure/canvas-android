@@ -20,8 +20,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.features.calendar.BaseCalendarFragment
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,8 +47,7 @@ class ParentCalendarFragment : BaseCalendarFragment() {
     }
 
     override fun applyTheme() {
-        val student = ParentPrefs.currentStudent
-        val color = ColorKeeper.getOrGenerateUserColor(student).color()
+        val color = ParentPrefs.currentStudent.color
         ViewStyler.setStatusBarDark(requireActivity(), color)
     }
 

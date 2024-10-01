@@ -20,8 +20,11 @@ package com.instructure.parentapp.features.grades
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.util.ParentPrefs
-import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -30,13 +33,18 @@ import org.junit.Test
 class ParentGradesBehaviourTest {
 
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private lateinit var gradesBehaviour: ParentGradesBehaviour
 
     @Before
     fun setup() {
-        coEvery { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -49,6 +57,6 @@ class ParentGradesBehaviourTest {
     }
 
     private fun createGradesBehaviour() {
-        gradesBehaviour = ParentGradesBehaviour(parentPrefs, colorKeeper)
+        gradesBehaviour = ParentGradesBehaviour(parentPrefs)
     }
 }
