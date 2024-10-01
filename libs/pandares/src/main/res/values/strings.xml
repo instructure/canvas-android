@@ -1819,6 +1819,17 @@
     <string name="studentPairing">Student Pairing</string>
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
+    <string name="alertSettingsTitle">Alert Settings</string>
+    <string name="alertSettingsThresholdsTitle">Alert me when…</string>
+    <string name="alertSettingsAssignmentMissing">Assignment missing</string>
+    <string name="alertSettingsAssignmentGradeHigh">Assignment grade above</string>
+    <string name="alertSettingsAssignmentGradeLow">Assignment grade below</string>
+    <string name="alertSettingsCourseGradeHigh">Course grade above</string>
+    <string name="alertSettingsCourseGradeLow">Course grade below</string>
+    <string name="alertSettingsInstitutionAnnouncement">Institution Announcements</string>
+    <string name="alertSettingsCourseAnnouncement">Course Announcements</string>
+    <string name="alertSettingsPercentage">%1$s\%%</string>
+    <string name="alertSettingsThresholdNever">Never</string>
     <string name="add">Add</string>
     <string name="courseColor1contentDescription">Berry</string>
     <string name="courseColor2contentDescription">Fuchsia</string>
@@ -1832,4 +1843,10 @@
     <string name="courseColor10contentDescription">Rust</string>
     <string name="courseColor11contentDescription">Red</string>
     <string name="courseColor12contentDescription">Gray</string>
+    <string name="alertSettingsThresholdLabel">Grade percentage</string>
+    <string name="unpairStudentTitle">Delete</string>
+    <string name="unpairStudentMessage">This will unpair and remove all enrollments for this student from you account.</string>
+    <string name="alertSettingsMinThresholdError">Must be above %d</string>
+    <string name="alertSettingsMaxThresholdError">Must be below %d</string>
+    <string name="alertSettingsErrorMessage">An error occurred while fetching the alert settings.</string>
 </resources>

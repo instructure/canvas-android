@@ -13,26 +13,21 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvasapi2.models
+package com.instructure.canvasapi2.models.postmodels
 
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.models.AlertType
 
-data class AlertThreshold(
-    val id: Long,
-    @SerializedName("alert_type")
-    val alertType: AlertType,
-    val threshold: String?,
-    @SerializedName("user_id")
-    val userId: Long,
-    @SerializedName("observer_id")
-    val observerId: Long,
-    @SerializedName("workflow_state")
-    val workflowState: ThresholdWorkflowState
+data class CreateObserverThresholdWrapper(
+    @SerializedName("observer_alert_threshold")
+    val alert: CreateObserverThreshold
 )
 
-enum class ThresholdWorkflowState {
-    @SerializedName("active")
-    ACTIVE,
-    @SerializedName("inactive")
-    INACTIVE
-}
+data class CreateObserverThreshold(
+    @SerializedName("alert_type")
+    val alertType: AlertType,
+    @SerializedName("user_id")
+    val userId: Long,
+    @SerializedName("threshold")
+    val threshold: String? = null
+)

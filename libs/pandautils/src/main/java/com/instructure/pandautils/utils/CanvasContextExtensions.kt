@@ -20,6 +20,7 @@ import android.os.Bundle
 import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.interactions.router.Route
 
 @get:ColorInt
@@ -32,6 +33,12 @@ val CanvasContext?.color: Int get() {
 val CanvasContext?.lightColor: Int get() {
     val themedColor = ColorKeeper.getOrGenerateColor(this)
     return themedColor.light
+}
+
+@get:ColorInt
+val User?.color: Int get() {
+    val themedColor = ColorKeeper.getOrGenerateUserColor(this)
+    return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
 }
 
 val CanvasContext.isCourse: Boolean get() = this.type == CanvasContext.Type.COURSE

@@ -124,6 +124,7 @@ class ManageStudentsViewModelTest {
 
     @Test
     fun `Navigate to alert settings screen`() = runTest {
+        coEvery { repository.getStudents(any()) } returns listOf(User(id = 1))
         createViewModel()
 
         val events = mutableListOf<ManageStudentsViewModelAction>()
@@ -133,7 +134,7 @@ class ManageStudentsViewModelTest {
 
         viewModel.handleAction(ManageStudentsAction.StudentTapped(1L))
 
-        val expected = ManageStudentsViewModelAction.NavigateToAlertSettings(1L)
+        val expected = ManageStudentsViewModelAction.NavigateToAlertSettings(User(id = 1))
         Assert.assertEquals(expected, events.last())
     }
 
