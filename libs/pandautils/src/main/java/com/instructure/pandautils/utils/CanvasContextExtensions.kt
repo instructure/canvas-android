@@ -36,20 +36,9 @@ val CanvasContext?.lightColor: Int get() {
 }
 
 @get:ColorInt
-val User?.backgroundColor: Int get() {
+val User?.color: Int get() {
     val themedColor = ColorKeeper.getOrGenerateUserColor(this)
-    return if (ColorKeeper.darkTheme) themedColor.darkBackgroundColor else themedColor.light
-}
-
-@get:ColorInt
-val User?.textAndIconColor: Int get() {
-    val themedColor = ColorKeeper.getOrGenerateUserColor(this)
-    return if (ColorKeeper.darkTheme) themedColor.darkTextAndIconColor else themedColor.light
-}
-
-val User?.lightColor: Int get() {
-    val themedColor = ColorKeeper.getOrGenerateUserColor(this)
-    return themedColor.light
+    return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
 }
 
 val CanvasContext.isCourse: Boolean get() = this.type == CanvasContext.Type.COURSE
