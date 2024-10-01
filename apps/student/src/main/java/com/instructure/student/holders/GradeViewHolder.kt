@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
