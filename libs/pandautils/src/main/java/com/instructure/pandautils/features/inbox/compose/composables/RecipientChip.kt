@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +47,7 @@ import com.instructure.pandautils.compose.composables.UserAvatar
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecipientChip(
+    enabled: Boolean,
     recipient: Recipient,
     onRemove: () -> Unit = {}
 ) {
@@ -55,6 +57,7 @@ fun RecipientChip(
             .clip(CircleShape)
             .background(colorResource(R.color.backgroundLightest))
             .border(1.dp, colorResource(R.color.borderMedium), CircleShape)
+            .testTag("recipientChip")
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -78,6 +81,7 @@ fun RecipientChip(
             Spacer(Modifier.width(4.dp))
 
             IconButton(
+                enabled = enabled,
                 onClick = { onRemove() },
                 modifier = Modifier.size(20.dp)
             ) {
@@ -98,6 +102,7 @@ fun RecipientChip(
 @Preview
 fun RecipientChipPreview() {
     RecipientChip(
+        enabled = true,
         recipient = Recipient(
             name = "John Doe",
             avatarURL = null

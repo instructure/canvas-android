@@ -1,24 +1,23 @@
 /*
  * Copyright (C) 2024 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
-package com.instructure.pandautils.features.inbox.compose.composables
+package com.instructure.pandautils.features.inbox.utils
 
-import android.content.Context
 import android.text.format.Formatter
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,17 +50,15 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.pandautils.features.inbox.compose.AttachmentCardItem
-import com.instructure.pandautils.features.inbox.compose.AttachmentStatus
 import com.instructure.pandautils.utils.iconRes
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun AttachmentCard(
     attachmentCardItem: AttachmentCardItem,
-    context: Context,
     onSelect: () -> Unit,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val attachment = attachmentCardItem.attachment
     val status = attachmentCardItem.status
@@ -71,9 +67,7 @@ fun AttachmentCard(
         backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
         border = BorderStroke(1.dp, colorResource(id = R.color.backgroundMedium)),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .padding(vertical = 8.dp)
+        modifier = modifier
             .clickable { onSelect() }
     ) {
         Row(
@@ -85,13 +79,16 @@ fun AttachmentCard(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(96.dp)
+                    .background(colorResource(id = R.color.backgroundLight))
             ){
                 if (attachment.thumbnailUrl != null) {
                     GlideImage(
                         model = attachment.thumbnailUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(id = R.color.backgroundLight))
                     )
                 } else {
                     Icon(
@@ -112,7 +109,7 @@ fun AttachmentCard(
                 Text(
                     attachment.filename ?: "",
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 20.sp,
+                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -120,42 +117,46 @@ fun AttachmentCard(
                 Spacer(Modifier.height(8.dp))
 
                 Text(
-                    Formatter.formatFileSize(context, attachment.size),
+                    Formatter.formatFileSize(LocalContext.current, attachment.size),
                     color = colorResource(id = R.color.textDark),
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                 )
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            when (status) {
-                AttachmentStatus.UPLOADING -> {
-                    Loading()
+            if (!attachmentCardItem.readOnly){
+                when (status) {
+                    AttachmentStatus.UPLOADING -> {
+                        Loading()
+                    }
+
+                    AttachmentStatus.UPLOADED -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_complete),
+                            contentDescription = null,
+                            tint = colorResource(id = R.color.textDark)
+                        )
+                    }
+
+                    AttachmentStatus.FAILED -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_no),
+                            contentDescription = null,
+                            tint = colorResource(id = R.color.textDark)
+                        )
+                    }
                 }
-                AttachmentStatus.UPLOADED -> {
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                IconButton(onClick = { onRemove() }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_complete),
-                        contentDescription = null,
-                        tint = colorResource(id = R.color.textDark)
+                        painter = painterResource(id = R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.removeAttachment),
+                        tint = colorResource(id = R.color.textDark),
                     )
                 }
-                AttachmentStatus.FAILED -> {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_no),
-                        contentDescription = null,
-                        tint = colorResource(id = R.color.textDark)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            IconButton(onClick = { onRemove() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = stringResource(id = R.string.a11y_removeAttachment),
-                    tint = colorResource(id = R.color.textDark),
-                )
             }
         }
     }
@@ -177,10 +178,10 @@ fun AttachmentCardPreview() {
                 previewUrl = null,
                 size = 1024
             ),
-            AttachmentStatus.UPLOADED
+            AttachmentStatus.UPLOADED,
+            false
         ),
-        context,
         {},
-        {}
+        {},
     )
 }

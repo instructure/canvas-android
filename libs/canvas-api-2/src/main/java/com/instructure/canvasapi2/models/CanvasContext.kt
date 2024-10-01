@@ -17,7 +17,8 @@
 
 package com.instructure.canvasapi2.models
 
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 abstract class CanvasContext : CanvasModel<CanvasContext>() {
     abstract val name: String?
@@ -111,8 +112,8 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
          * @param contextCode Context code string, e.g. "course_1"
          * @return A generic CanvasContext, or null if the provided contextCode is invalid
          */
-        fun fromContextCode(contextCode: String?): CanvasContext? {
-            if (contextCode.isNullOrBlank()) return null
+        fun fromContextCode(contextCode: String?, name: String? = ""): CanvasContext? {
+            if (contextCode.isNullOrBlank() || name == null) return null
 
             val codeParts = contextCode.split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             if (codeParts.size != 2) return null
@@ -131,7 +132,7 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
                 return null
             }
 
-            return getGenericContext(type, id, "")
+            return getGenericContext(type, id, name)
         }
 
         fun getApiContext(canvasContext: CanvasContext): String = if (canvasContext.type == Type.COURSE) "courses" else "groups"

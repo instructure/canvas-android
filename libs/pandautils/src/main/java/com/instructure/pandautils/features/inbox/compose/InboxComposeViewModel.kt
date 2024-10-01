@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
@@ -26,6 +27,10 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.debounce
@@ -46,6 +51,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InboxComposeViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val fileDownloader: FileDownloader,
     private val inboxComposeRepository: InboxComposeRepository,
@@ -58,6 +64,8 @@ class InboxComposeViewModel @Inject constructor(
 
     private val _events = Channel<InboxComposeViewModelAction>()
     val events = _events.receiveAsFlow()
+
+    private val options = savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS)
 
     private val debouncedInnerSearch = debounce<String>(waitMs = 200, coroutineScope = viewModelScope) { searchQuery ->
         val recipients = getRecipientList(
@@ -82,6 +90,38 @@ class InboxComposeViewModel @Inject constructor(
 
     init {
         loadContexts()
+        if (options != null) {
+            initFromOptions(options)
+        }
+    }
+
+    private fun initFromOptions(options: InboxComposeOptions?) {
+        options?.let {
+            val context = CanvasContext.fromContextCode(options.defaultValues.contextCode, options.defaultValues.contextName)
+            context?.let { loadRecipients("", it, false) }
+            _uiState.update {
+                it.copy(
+                    inboxComposeMode = options.mode,
+                    previousMessages = options.previousMessages,
+                    selectContextUiState = it.selectContextUiState.copy(
+                        selectedCanvasContext = context
+                    ),
+                    recipientPickerUiState = it.recipientPickerUiState.copy(
+                        selectedRecipients = options.defaultValues.recipients,
+                    ),
+                    inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                        selectedValues = options.defaultValues.recipients,
+                        enabled = options.disabledFields.isRecipientsDisabled.not(),
+                    ),
+                    disabledFields = options.disabledFields,
+                    hiddenFields = options.hiddenFields,
+                    sendIndividual = options.defaultValues.sendIndividual,
+                    subject = TextFieldValue(options.defaultValues.subject),
+                    body = TextFieldValue(options.defaultValues.body),
+                    attachments = options.defaultValues.attachments.map { attachment -> AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false) }
+                )
+            }
+        }
     }
 
     fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
@@ -91,7 +131,7 @@ class InboxComposeViewModel @Inject constructor(
                     val attachmentEntities = attachmentDao.findByParentId(uuid.toString())
                     val status = workInfo.state.toAttachmentCardStatus()
                     attachmentEntities?.let { attachmentList ->
-                        _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status) }) }
+                        _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status, false) }) }
                         attachmentDao.deleteAll(attachmentList)
                     } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
                 } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
@@ -126,7 +166,12 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { it.copy(body = action.body) }
             }
             is InboxComposeActionHandler.SendClicked -> {
-                createConversation()
+                when(uiState.value.inboxComposeMode) {
+                    InboxComposeOptionsMode.NEW_MESSAGE -> createConversation()
+                    InboxComposeOptionsMode.REPLY -> createMessage()
+                    InboxComposeOptionsMode.REPLY_ALL -> createMessage()
+                    InboxComposeOptionsMode.FORWARD -> createMessage()
+                }
             }
             is InboxComposeActionHandler.SubjectChanged -> {
                 _uiState.update { it.copy(subject = action.subject) }
@@ -170,13 +215,18 @@ class InboxComposeViewModel @Inject constructor(
                     }
                 }
             }
-
-            InboxComposeActionHandler.HideSearchResults -> {
+            is InboxComposeActionHandler.HideSearchResults -> {
                 _uiState.update { it.copy(
                     inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
                         isShowResults = false,
                     )
                 ) }
+            }
+
+            is InboxComposeActionHandler.UrlSelected -> {
+                viewModelScope.launch {
+                    _events.send(InboxComposeViewModelAction.UrlSelected(action.url))
+                }
             }
         }
     }
@@ -350,6 +400,36 @@ class InboxComposeViewModel @Inject constructor(
                         context = canvasContext,
                         attachments = uiState.value.attachments.map { it.attachment },
                         isIndividual = uiState.value.sendIndividual
+                    ).dataOrThrow
+
+                    _events.send(InboxComposeViewModelAction.UpdateParentFragment)
+
+                    sendScreenResult(context.getString(R.string.messageSentSuccessfully))
+
+                    handleAction(InboxComposeActionHandler.Close)
+
+                } catch (e: IllegalStateException) {
+                    sendScreenResult(context.getString(R.string.failed_to_send_message))
+                } finally {
+                    _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
+                }
+            }
+        }
+    }
+
+    private fun createMessage() {
+        uiState.value.selectContextUiState.selectedCanvasContext?.let { canvasContext ->
+            viewModelScope.launch {
+                _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
+
+                try {
+                    inboxComposeRepository.addMessage(
+                        conversationId = uiState.value.previousMessages?.conversation?.id ?: 0,
+                        recipients = uiState.value.recipientPickerUiState.selectedRecipients,
+                        message = uiState.value.body.text,
+                        includedMessages = uiState.value.previousMessages?.previousMessages ?: emptyList(),
+                        attachments = uiState.value.attachments.map { it.attachment },
+                        context = canvasContext
                     ).dataOrThrow
 
                     _events.send(InboxComposeViewModelAction.UpdateParentFragment)
