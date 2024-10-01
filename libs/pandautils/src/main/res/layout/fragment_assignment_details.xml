@@ -45,7 +45,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:background="#00bcd5"
             tools:navigationIcon="@drawable/ic_back_arrow"
-            tools:subtitle="Biology 101"
+            tools:subtitle="@{viewModel.course.name}"
             tools:subtitleTextColor="@color/white"
             tools:title="Ecosystem Health and Human Well-Being"
             tools:titleTextColor="@color/white" />

@@ -98,10 +98,14 @@ class AssignmentDetailsViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<AssignmentDetailAction>>()
 
-    val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) ?: Course(savedStateHandle.get<Long>(Const.COURSE_ID) ?: 0)
+    private val courseId = savedStateHandle.get<Long>(Const.COURSE_ID).orDefault()
+    val course: LiveData<Course>
+        get() = _course
+    private val _course = MutableLiveData<Course>(Course(id = courseId))
+
     private val assignmentId = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID).orDefault()
 
-    var bookmarker = Bookmarker(true, course).withParam(RouterParams.ASSIGNMENT_ID, assignmentId.toString())
+    var bookmarker = Bookmarker(true, course.value).withParam(RouterParams.ASSIGNMENT_ID, assignmentId.toString())
 
     private var isObserver: Boolean = false
     private var quizResult: Quiz? = null
@@ -154,14 +158,15 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun markSubmissionAsRead() {
         viewModelScope.launch {
-            SubmissionManager.markSubmissionAsReadAsync(course?.id.orDefault(), assignmentId).await()
+            SubmissionManager.markSubmissionAsReadAsync(courseId.orDefault(), assignmentId).await()
         }
     }
 
     private fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
             try {
-                val courseResult = assignmentDetailsRepository.getCourseWithGrade(course?.id.orDefault(), forceNetwork)
+                val courseResult = assignmentDetailsRepository.getCourseWithGrade(courseId.orDefault(), forceNetwork)
+                _course.postValue(courseResult)
                 restrictQuantitativeData = courseResult.settings?.restrictQuantitativeData ?: false
                 gradingScheme = courseResult.gradingScheme
 
@@ -170,17 +175,17 @@ class AssignmentDetailsViewModel @Inject constructor(
                 val assignmentResult = assignmentDetailsRepository.getAssignment(
                     isObserver,
                     assignmentId,
-                    course?.id.orDefault(),
+                    courseId.orDefault(),
                     forceNetwork
                 )
 
                 quizResult = if (assignmentResult.turnInType == Assignment.TurnInType.QUIZ && assignmentResult.quizId != 0L) {
-                    assignmentDetailsRepository.getQuiz(course?.id.orDefault(), assignmentResult.quizId, forceNetwork)
+                    assignmentDetailsRepository.getQuiz(courseId.orDefault(), assignmentResult.quizId, forceNetwork)
                 } else null
 
                 val ltiToolId = assignmentResult.externalToolAttributes?.contentId.orDefault()
                 externalLTITool = if (ltiToolId != 0L) {
-                    assignmentDetailsRepository.getExternalToolLaunchUrl(course?.id.orDefault(), ltiToolId, assignmentId, forceNetwork)
+                    assignmentDetailsRepository.getExternalToolLaunchUrl(courseId.orDefault(), ltiToolId, assignmentId, forceNetwork)
                 } else {
                     if (!assignmentResult.url.isNullOrEmpty() && assignmentResult.getSubmissionTypes().contains(SubmissionType.EXTERNAL_TOOL)) {
                         assignmentDetailsRepository.getLtiFromAuthenticationUrl(assignmentResult.url.orEmpty(), forceNetwork)
@@ -192,7 +197,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     courseId = assignmentResult.courseId
                 }
 
-                studioLTITool = submissionHandler.getStudioLTITool(assignmentResult, course?.id)
+                studioLTITool = submissionHandler.getStudioLTITool(assignmentResult, courseId)
 
                 assignmentResult.isStudioEnabled = studioLTITool != null
 
@@ -217,7 +222,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun refreshAssignment() {
         viewModelScope.launch {
             try {
-                val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, course?.id.orDefault(), true)
+                val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, courseId.orDefault(), true)
                 _data.postValue(getViewData(assignmentResult, submissionHandler.lastSubmissionIsDraft))
             } catch (e: Exception) {
                 _events.value = Event(AssignmentDetailAction.ShowToast(resources.getString(R.string.assignmentRefreshError)))
@@ -285,7 +290,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             }.orEmpty()
 
             return AssignmentDetailsViewData(
-                courseColor = colorKeeper.getOrGenerateColor(course),
+                courseColor = colorKeeper.getOrGenerateColor(course.value),
                 assignmentName = assignment.name.orEmpty(),
                 points = points,
                 submissionStatusText = submittedLabelText,
@@ -342,7 +347,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         // Observers shouldn't see the submit button OR if the course is soft concluded
         val submitVisible = when {
             isObserver -> false
-            !course?.isBetweenValidDateRange().orDefault() -> false
+            !course.value?.isBetweenValidDateRange().orDefault() -> false
             assignment.submission?.excused.orDefault() -> false
             else -> when (assignment.turnInType) {
                 Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
@@ -416,7 +421,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
 
         return AssignmentDetailsViewData(
-            courseColor = colorKeeper.getOrGenerateColor(course),
+            courseColor = colorKeeper.getOrGenerateColor(course.value),
             assignmentName = assignment.name.orEmpty(),
             points = points,
             submissionStatusText = submittedLabelText,
@@ -430,7 +435,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             attempts = attempts,
             selectedGradeCellViewData = GradeCellViewData.fromSubmission(
                 resources,
-                colorKeeper.getOrGenerateColor(course),
+                colorKeeper.getOrGenerateColor(course.value),
                 assignment,
                 assignment.submission,
                 restrictQuantitativeData,
@@ -481,7 +486,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         this.selectedSubmission = selectedSubmission
         _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
             resources,
-            colorKeeper.getOrGenerateColor(course),
+            colorKeeper.getOrGenerateColor(course.value),
             assignment,
             selectedSubmission,
             restrictQuantitativeData,
@@ -540,8 +545,15 @@ class AssignmentDetailsViewModel @Inject constructor(
             Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
             postAction(AssignmentDetailAction.NavigateToQuizScreen(quiz))
         } else if (turnInType == Assignment.TurnInType.DISCUSSION) {
-            Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
-            postAction(AssignmentDetailAction.NavigateToDiscussionScreen(assignment.discussionTopicHeader?.id.orDefault(), course))
+            course.value?.let {
+                Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
+                postAction(
+                    AssignmentDetailAction.NavigateToDiscussionScreen(
+                        assignment.discussionTopicHeader?.id.orDefault(),
+                        it
+                    )
+                )
+            }
         } else if (hasSingleSubmissionType) {
             when (submissionTypes.first()) {
                 SubmissionType.ONLINE_UPLOAD -> postAction(AssignmentDetailAction.NavigateToUploadScreen(assignment))
@@ -563,7 +575,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     fun uploadAudioSubmission(context: Context?, file: File?) {
-        submissionHandler.uploadAudioSubmission(context, course, assignment, file)
+        submissionHandler.uploadAudioSubmission(context, course.value, assignment, file)
     }
 
     fun showContent(viewState: ViewState?): Boolean {

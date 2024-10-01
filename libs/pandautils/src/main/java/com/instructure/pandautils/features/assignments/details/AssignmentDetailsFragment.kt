@@ -52,7 +52,6 @@ import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
-import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.makeBundle
@@ -68,7 +67,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
-@PageView(url = "{canvasContext}/assignments/{assignmentId}")
+@PageView(url = "courses/{courseId}/assignments/{assignmentId}")
 @AndroidEntryPoint
 class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable {
 
@@ -79,8 +78,9 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
+
+    @get:PageViewUrlParam(name = "courseId")
     val courseId by LongArg(key = Const.COURSE_ID, default = 0)
-    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT, default = Course(courseId))
 
     private var binding: FragmentAssignmentDetailsBinding? = null
     private val viewModel: AssignmentDetailsViewModel by viewModels()
@@ -88,8 +88,9 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     private var captureVideoUri: Uri? = null
     private val captureVideoContract = registerForActivityResult(ActivityResultContracts.CaptureVideo()) {
         val assignment = viewModel.assignment
-        if (assignment != null && captureVideoUri != null && it) {
-            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), canvasContext, assignment, captureVideoUri!!)
+        val course = viewModel.course.value
+        if (assignment != null && captureVideoUri != null && it && course != null) {
+            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, captureVideoUri!!)
         } else {
             toast(R.string.videoRecordingError)
         }
@@ -97,8 +98,9 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     private val mediaPickerContract = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         val assignment = viewModel.assignment
-        if (assignment != null && it != null) {
-            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), canvasContext, assignment, it)
+        val course = viewModel.course.value
+        if (assignment != null && it != null && course != null) {
+            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, it)
         } else {
             toast(R.string.unexpectedErrorOpeningFile)
         }
@@ -113,11 +115,10 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             }
 
             title = context?.getString(R.string.assignmentDetails)
-            subtitle = viewModel.course?.name
 
-            assignmentDetailsRouter.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course)
+            assignmentDetailsRouter.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value)
 
-            ViewStyler.themeToolbarColored(requireActivity(), this, viewModel.course)
+            ViewStyler.themeToolbarColored(requireActivity(), this, viewModel.course.value)
         }
     }
 
@@ -155,7 +156,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     }
 
     private fun handleAction(action: AssignmentDetailAction) {
-        val canvasContext = canvasContext as? CanvasContext ?: run {
+        val canvasContext: CanvasContext = viewModel.course.value ?: run {
             toast(R.string.generalUnexpectedError)
             return
         }
@@ -165,7 +166,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 toast(action.message)
             }
             is AssignmentDetailAction.NavigateToLtiScreen -> {
-                assignmentDetailsRouter.navigateToLtiScreen(requireActivity(), viewModel.course, action.url)
+                assignmentDetailsRouter.navigateToLtiScreen(requireActivity(), viewModel.course.value, action.url)
             }
             is AssignmentDetailAction.NavigateToSubmissionScreen -> {
                 assignmentDetailsRouter.navigateToSubmissionScreen(requireActivity(), canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
@@ -210,7 +211,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 )
             }
             is AssignmentDetailAction.ShowSubmitDialog -> {
-                viewModel.course?.let {
+                viewModel.course.value?.let {
                     assignmentDetailsRouter.showSubmitDialog(
                         requireActivity(),
                         binding,
@@ -286,16 +287,20 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             }
 
             override fun routeInternallyCallback(url: String) {
-                viewModel.assignment?.let {
-                    val extras = Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(canvasContext, it)) }
-                    assignmentDetailsRouter.navigateToUrl(requireActivity(), url, ApiPrefs.domain, extras)
+                viewModel.assignment?.let { assignment ->
+                    viewModel.course.value?.let { course ->
+                        val extras = Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(course, assignment)) }
+                        assignmentDetailsRouter.navigateToUrl(requireActivity(), url, ApiPrefs.domain, extras)
+                    }
                 }
             }
         }
 
         binding?.descriptionWebViewWrapper?.webView?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
-                assignmentDetailsRouter.navigateToInternalWebView(requireActivity(), canvasContext, url, false)
+                viewModel.course.value?.let {
+                    assignmentDetailsRouter.navigateToInternalWebView(requireActivity(), it, url, false)
+                }
             }
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
@@ -339,7 +344,10 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     companion object {
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
-            val bundle = course.makeBundle { putLong(Const.ASSIGNMENT_ID, assignmentId) }
+            val bundle = course.makeBundle {
+                putLong(Const.ASSIGNMENT_ID, assignmentId)
+                putLong(Const.COURSE_ID, course.id)
+            }
             return Route(null, AssignmentDetailsFragment::class.java, course, bundle)
         }
 
