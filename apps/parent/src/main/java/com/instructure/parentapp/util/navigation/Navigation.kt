@@ -19,7 +19,9 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
@@ -50,10 +52,15 @@ class Navigation(apiPrefs: ApiPrefs) {
     val calendar = "$baseUrl/calendar"
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
-    val inboxCompose = "$baseUrl/conversations/compose"
     val manageStudents = "$baseUrl/manage-students"
     val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
+
+    private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
+    fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
+
+    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
+    fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
 
     private val calendarEvent =
         "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
@@ -99,7 +106,21 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
             }
             fragment<InboxFragment>(inbox)
-            fragment<InboxComposeFragment>(inboxCompose)
+            fragment<InboxComposeFragment>(inboxCompose) {
+                argument(InboxComposeOptions.COMPOSE_PARAMETERS) {
+                    type = InboxComposeOptionsParametersType
+                    nullable = false
+                }
+            }
+            fragment<InboxDetailsFragment>(inboxDetails) {
+                argument(InboxDetailsFragment.CONVERSATION_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = inboxDetails
+                }
+            }
             fragment<ManageStudentsFragment>(manageStudents)
             fragment<QrPairingFragment>(qrPairing)
             fragment<SettingsFragment>(settings)
@@ -236,6 +257,26 @@ private val ScheduleItemParametersType = object : NavType<ScheduleItem>(
     }
 
     override fun parseValue(value: String): ScheduleItem {
+        return value.fromJson()
+    }
+}
+
+private val InboxComposeOptionsParametersType = object : NavType<InboxComposeOptions>(
+    isNullableAllowed = false
+) {
+    override fun put(bundle: Bundle, key: String, value: InboxComposeOptions) {
+        bundle.putParcelable(key, value)
+    }
+
+    override fun get(bundle: Bundle, key: String): InboxComposeOptions? {
+        return bundle.getParcelable(key) as? InboxComposeOptions
+    }
+
+    override fun serializeAsValue(value: InboxComposeOptions): String {
+        return Uri.encode(value.toJson())
+    }
+
+    override fun parseValue(value: String): InboxComposeOptions {
         return value.fromJson()
     }
 }

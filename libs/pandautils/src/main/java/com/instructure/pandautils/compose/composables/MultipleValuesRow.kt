@@ -42,6 +42,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -62,7 +63,7 @@ fun <T> MultipleValuesRow(
     label: String,
     uiState: MultipleValuesRowState<T>,
     actionHandler: (MultipleValuesRowAction) -> Unit,
-    itemComposable: @Composable (T) -> Unit,
+    itemComposable: @Composable (T, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     searchResultComposable: (@Composable (T) -> Unit)? = null,
 ) {
@@ -74,6 +75,7 @@ fun <T> MultipleValuesRow(
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp)
             .defaultMinSize(minHeight = 52.dp)
+            .alpha(if (uiState.enabled) 1f else 0.5f)
     ) {
         Column {
             Text(
@@ -103,12 +105,12 @@ fun <T> MultipleValuesRow(
                             label = animationLabel,
                             targetState = value,
                         ) {
-                            itemComposable(it)
+                            itemComposable(it, uiState.enabled)
                         }
                     }
                 }
 
-                if (uiState.isSearchEnabled) {
+                if (uiState.isSearchEnabled && uiState.enabled) {
                     Spacer(Modifier.height(8.dp))
 
                     CanvasThemedTextField(
@@ -166,6 +168,7 @@ fun <T> MultipleValuesRow(
         Spacer(modifier = Modifier.width(8.dp))
 
         IconButton(
+            enabled = uiState.enabled,
             onClick = { actionHandler(MultipleValuesRowAction.AddValueClicked) },
             modifier = Modifier
                 .size(24.dp)
@@ -181,6 +184,7 @@ fun <T> MultipleValuesRow(
 
 data class MultipleValuesRowState<T>(
     val selectedValues: List<T> = emptyList(),
+    val enabled: Boolean = true,
     val isLoading: Boolean = false,
     val isSearchEnabled: Boolean = false,
     val isShowResults: Boolean = false,
@@ -214,7 +218,7 @@ fun LabelMultipleValuesRowPreview() {
     MultipleValuesRow(
         label = "To",
         uiState = uiState,
-        itemComposable = { user ->
+        itemComposable = { user, enabled ->
             Text(user.name ?: "")
         },
         actionHandler = {},
