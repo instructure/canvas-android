@@ -31,7 +31,6 @@ import com.instructure.canvas.espresso.mockCanvas.updateUserEnrollments
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.loginapi.login.R
-import com.instructure.parentapp.ui.pages.NotAParentPage
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -41,8 +40,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class NotAParentInteractionsTest : ParentComposeTest() {
-
-    private val notAParentPage = NotAParentPage(composeTestRule)
 
     @Test
     fun testLogout() {

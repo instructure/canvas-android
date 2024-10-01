@@ -14,28 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import com.instructure.pandautils.features.settings.SettingsBehaviour
-import com.instructure.pandautils.features.settings.SettingsRouter
-import com.instructure.parentapp.features.settings.ParentSettingsBehaviour
-import com.instructure.parentapp.features.settings.ParentSettingsRouter
+import android.app.Activity
+import com.instructure.pandautils.features.legal.LegalRouter
+import com.instructure.parentapp.features.legal.ParentLegalRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ActivityComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
-class SettingsModule {
+@InstallIn(ActivityComponent::class)
+class LegalModule {
 
     @Provides
-    fun provideSettingsBehaviour(): SettingsBehaviour {
-        return ParentSettingsBehaviour()
-    }
-
-    @Provides
-    fun provideSettingsRouter(): SettingsRouter {
-        return ParentSettingsRouter()
+    fun provideLegalRouter(activity: Activity): LegalRouter {
+        return ParentLegalRouter(activity)
     }
 }

@@ -14,24 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.addstudent
+package com.instructure.parentapp.di.feature
 
-import androidx.annotation.ColorInt
+import com.instructure.canvasapi2.apis.ObserverApi
+import com.instructure.parentapp.features.alerts.settings.AlertSettingsRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-data class AddStudentUiState(
-    @ColorInt val color: Int,
-    val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val actionHandler: (AddStudentAction) -> Unit,
-)
+@Module
+@InstallIn(ViewModelComponent::class)
+class AlertSettingsModule {
 
-sealed class AddStudentViewModelAction {
-    data object PairStudentSuccess : AddStudentViewModelAction()
-    data object UnpairStudentSuccess : AddStudentViewModelAction()
-}
-
-sealed class AddStudentAction {
-    data class UnpairStudent(val studentId: Long) : AddStudentAction()
-    data class PairStudent(val pairingCode: String) : AddStudentAction()
-    object ResetError : AddStudentAction()
+    @Provides
+    fun provideAlertSettingsRepository(observerApi: ObserverApi): AlertSettingsRepository {
+        return AlertSettingsRepository(observerApi)
+    }
 }

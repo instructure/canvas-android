@@ -14,8 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package com.instructure.parentapp.features.managestudents
+package com.instructure.parentapp.features.alerts.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,77 +27,75 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.instructure.pandautils.utils.ThemePrefs
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
+import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
-import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 
 @AndroidEntryPoint
-class ManageStudentsFragment : Fragment() {
+class AlertSettingsFragment : Fragment() {
 
-    @Inject
-    lateinit var navigation: Navigation
-
-    private val viewModel: ManageStudentViewModel by viewModels()
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
+
+    private val viewModel: AlertSettingsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
-
-        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-        lifecycleScope.launch {
-            addStudentViewModel.events.collectLatest(::handleAddStudentAction)
-        }
-
-        return ComposeView(requireActivity()).apply {
+        return ComposeView(requireContext()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                ManageStudentsScreen(
-                    uiState,
-                    viewModel::handleAction,
-                    navigationActionClick = {
-                        findNavController().popBackStack()
-                    }
-                )
+                AlertSettingsScreen(uiState) {
+                    requireActivity().onBackPressed()
+                }
             }
         }
     }
 
-    private fun handleAddStudentAction(action: AddStudentViewModelAction) {
-        when (action) {
-            is AddStudentViewModelAction.PairStudentSuccess -> {
-                viewModel.handleAction(ManageStudentsAction.Refresh)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launch {
+            viewModel.uiState.collectLatest {
+                ViewStyler.setStatusBarDark(requireActivity(), it.userColor)
             }
+        }
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
+        lifecycleScope.launch {
+            addStudentViewModel.events.collectLatest(::handleAddStudentEvents)
+        }
+    }
+
+    private fun handleAddStudentEvents(action: AddStudentViewModelAction) {
+        when (action) {
             is AddStudentViewModelAction.UnpairStudentSuccess -> {
-                viewModel.handleAction(ManageStudentsAction.Refresh)
+                requireActivity().onBackPressed()
             }
+
+            else -> {}
         }
     }
 
-    private fun handleAction(action: ManageStudentsViewModelAction) {
+    private fun handleAction(action: AlertSettingsViewModelAction) {
         when (action) {
-            is ManageStudentsViewModelAction.NavigateToAlertSettings -> {
-                navigation.navigate(requireActivity(), navigation.alertSettingsRoute(action.student))
+            is AlertSettingsViewModelAction.UnpairStudent -> {
+                addStudentViewModel.handleAction(AddStudentAction.UnpairStudent(action.studentId))
             }
 
-            is ManageStudentsViewModelAction.AddStudent -> {
-                AddStudentBottomSheetDialogFragment().show(
-                    childFragmentManager,
-                    AddStudentBottomSheetDialogFragment::class.java.simpleName
-                )
+            is AlertSettingsViewModelAction.ShowSnackbar -> {
+                Snackbar.make(requireView(), action.message, Snackbar.LENGTH_SHORT).apply {
+                    setAction(R.string.retry) { action.actionCallback() }
+                    setActionTextColor(resources.getColor(R.color.white, resources.newTheme()))
+                }.show()
             }
         }
     }
