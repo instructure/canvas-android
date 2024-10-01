@@ -48,6 +48,7 @@ import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
@@ -118,7 +119,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private val remindersObserver = Observer<List<ReminderEntity>> {
         _data.value?.reminders = mapReminders(it)
-        //_data.value?.notifyPropertyChanged(BR.reminders)
+        _data.value?.notifyPropertyChanged(BR.reminders)
     }
 
     private val remindersLiveData = assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(
@@ -488,7 +489,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             attempt?.isFailed.orDefault(),
             gradingScheme
         )
-        //_data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
+        _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
     }
 
     fun onLtiButtonPressed(url: String) {

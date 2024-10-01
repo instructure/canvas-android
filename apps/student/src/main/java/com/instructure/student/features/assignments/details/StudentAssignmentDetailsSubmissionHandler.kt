@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
@@ -100,7 +101,7 @@ class StudentAssignmentDetailsSubmissionHandler(
                 submission?.let { dbSubmission ->
                     val isDraft = dbSubmission.isDraft
                     data.value?.hasDraft = isDraft
-                    //data.value?.notifyPropertyChanged(BR.hasDraft)
+                    data.value?.notifyPropertyChanged(BR.hasDraft)
 
                     val dateString = (dbSubmission.lastActivityDate?.toInstant()?.toEpochMilli()?.let { Date(it) } ?: Date()).toFormattedString()
                     if (!isDraft && !isUploading) {
@@ -116,7 +117,7 @@ class StudentAssignmentDetailsSubmissionHandler(
                                 )
                             )
                         }.orEmpty()
-                        //data.value?.notifyPropertyChanged(BR.attempts)
+                        data.value?.notifyPropertyChanged(BR.attempts)
                     }
                     if (isUploading && submission.errorFlag) {
                         data.value?.attempts = attempts?.toMutableList()?.apply {
@@ -130,7 +131,7 @@ class StudentAssignmentDetailsSubmissionHandler(
                             )
                             )
                         }.orEmpty()
-                        //data.value?.notifyPropertyChanged(BR.attempts)
+                        data.value?.notifyPropertyChanged(BR.attempts)
                     }
                 } ?: run {
                     if (isUploading) {
