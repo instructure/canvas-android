@@ -29,13 +29,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun OverflowMenu(
     modifier: Modifier = Modifier,
     showMenu: Boolean,
-    tint: Color = Color.White,
+    iconColor: Color = Color.White,
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -47,7 +46,7 @@ fun OverflowMenu(
         Icon(
             imageVector = Icons.Outlined.MoreVert,
             contentDescription = stringResource(R.string.utils_contentDescriptionDiscussionsOverflow),
-            tint = tint
+            tint = iconColor
         )
     }
     DropdownMenu(

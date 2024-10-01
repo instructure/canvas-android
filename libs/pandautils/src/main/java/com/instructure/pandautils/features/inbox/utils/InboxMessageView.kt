@@ -246,7 +246,7 @@ private fun MessageMenu(message: Message, cannotReply: Boolean, actionHandler: (
             modifier = Modifier
                 .background(color = colorResource(id = R.color.backgroundLightestElevated)),
             showMenu = showMenu,
-            tint = colorResource(id = R.color.textDarkest),
+            iconColor = colorResource(id = R.color.textDarkest),
             onDismissRequest = {
                 showMenu = !showMenu
             }

@@ -441,7 +441,6 @@
     <string name="inboxMessageAuthorAndRecipientsLabel">%1$s to %2$s</string>
     <string name="inboxMessageRecipientsText">%1$s + %2$s Others</string>
     <string name="inboxMessageFailedToOpenUrl">Failed to open url</string>
-    <string name="add">Add</string>
     <string name="previousMessages">Previous Messages</string>
     <plurals name="people">
         <item quantity="one">%d Person</item>
