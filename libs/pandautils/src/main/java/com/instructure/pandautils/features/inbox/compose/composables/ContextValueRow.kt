@@ -46,7 +46,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 
 @Composable
 fun ContextValueRow(
@@ -76,7 +76,7 @@ fun ContextValueRow(
         Spacer(Modifier.width(12.dp))
 
         if (value != null) {
-            val color = if (value.type == CanvasContext.Type.USER) ThemePrefs.brandColor else value.backgroundColor
+            val color = if (value.type == CanvasContext.Type.USER) ThemePrefs.brandColor else value.color
 
             Box(
                 modifier = Modifier

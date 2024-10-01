@@ -899,21 +899,6 @@
     <string name="colorPickerDialogMessage">Establiu un color nou per personalitzar l\'assignatura.</string>
     <string name="colorPickerError">En aquest moment, no s\'ha pogut establir el color de l\'assignatura.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Rosa fort</string>
-    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
-    <string name="contentDescriptionColorEggplant">Porpra</string>
-    <string name="contentDescriptionColorUltramarine">Blau fosc</string>
-    <string name="contentDescriptionColorOcean11">Blau</string>
-    <string name="contentDescriptionColorCyan">Cian</string>
-    <string name="contentDescriptionColorAquaMarine">Blau cel</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verd maragda</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verd</string>
-    <string name="contentDescriptionColorChartreuse">Verd groguenc</string>
-    <string name="contentDescriptionColorSunFlower">Groc</string>
-    <string name="contentDescriptionColorTangerine">Taronja</string>
-    <string name="contentDescriptionColorBloodOrange">Taronja fosc</string>
-    <string name="contentDescriptionColorSriracha">Vermell</string>
 
     <string name="courseFavorited">Assignatura %s, preferida.</string>
     <string name="courseNotFavorited">Assignatura %s, no preferida.</string>

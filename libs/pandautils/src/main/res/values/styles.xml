@@ -52,7 +52,7 @@
 
     <style name="TextStyle.Grade">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/textLightest</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -222,6 +222,14 @@
 
     <style name="DatePickerTextAppearance" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/calendar_color_selector</item>
+    </style>
+
+    <style name="ColorPickerDialogItem">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:src">@drawable/shape_color_picker_bg</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:clickable">true</item>
     </style>
 
 </resources>

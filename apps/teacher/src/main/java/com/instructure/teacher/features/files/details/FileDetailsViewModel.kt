@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -78,7 +78,7 @@ class FileDetailsViewModel @Inject constructor(
                 file = file,
                 usageRights = requiresUsageRights,
                 licenses = licences,
-                courseColor = canvasContext.backgroundColor,
+                courseColor = canvasContext.color,
                 canvasContext = canvasContext,
                 iconRes = R.drawable.ic_document
             )

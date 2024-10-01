@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
@@ -36,7 +36,7 @@ import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 
 open class DiscussionListRecyclerAdapter(
     context: Context,
@@ -87,7 +87,7 @@ open class DiscussionListRecyclerAdapter(
 
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, discussionTopicHeader: DiscussionTopicHeader) {
-        context.let { (holder as DiscussionListHolder).bind(it, discussionTopicHeader, canvasContext.textAndIconColor, isDiscussions, callback) }
+        context.let { (holder as DiscussionListHolder).bind(it, discussionTopicHeader, canvasContext.color, isDiscussions, callback) }
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: String, isExpanded: Boolean) {

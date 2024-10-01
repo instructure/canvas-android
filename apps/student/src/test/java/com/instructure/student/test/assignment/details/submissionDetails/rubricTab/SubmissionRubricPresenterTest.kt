@@ -19,10 +19,20 @@ package com.instructure.student.test.assignment.details.submissionDetails.rubric
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.canvasapi2.models.RubricCriterionRating
+import com.instructure.canvasapi2.models.RubricSettings
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.backgroundColor
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
+import com.instructure.pandautils.utils.color
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RatingData
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricPresenter
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import org.junit.Assert
 import org.junit.Before
@@ -43,7 +53,7 @@ class SubmissionRubricPresenterTest : Assert() {
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        val courseColor = course.backgroundColor // Define here so the color gets cached properly for all tests
+        val courseColor = course.color // Define here so the color gets cached properly for all tests
 
         assignmentTemplate = Assignment(
             courseId = course.id,
@@ -159,7 +169,7 @@ class SubmissionRubricPresenterTest : Assert() {
                     criterionId = "123",
                     showDescriptionButton = true,
                     comment = null,
-                    tint = course.backgroundColor
+                    tint = course.color
                 )
             )
         )

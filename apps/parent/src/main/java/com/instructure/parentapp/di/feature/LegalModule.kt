@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
 import android.app.Activity
 import com.instructure.pandautils.features.legal.LegalRouter

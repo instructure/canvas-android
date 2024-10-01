@@ -36,7 +36,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.children
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.databinding.FragmentDialogUpdateFileBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -67,12 +67,12 @@ class UpdateFileDialogFragment : BottomSheetDialogFragment() {
 
         setRadioButtonColors()
 
-        binding.updateButton.setTextColor(canvasContext.textAndIconColor)
+        binding.updateButton.setTextColor(canvasContext.color)
     }
 
     private fun setRadioButtonColors() = with(binding) {
         val radioButtonColor = ViewStyler.makeColorStateListForRadioGroup(
-            requireContext().getColor(com.instructure.pandautils.R.color.textDarkest), canvasContext.textAndIconColor
+            requireContext().getColor(com.instructure.pandautils.R.color.textDarkest), canvasContext.color
         )
 
         val radioButtons =

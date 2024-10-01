@@ -25,9 +25,11 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun OverflowMenu(
@@ -37,9 +39,11 @@ fun OverflowMenu(
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    IconButton(onClick = {
-        onDismissRequest()
-    }) {
+    IconButton(
+        modifier = Modifier.testTag("overflowMenu"),
+        onClick = {
+            onDismissRequest()
+        }) {
         Icon(
             imageVector = Icons.Outlined.MoreVert,
             contentDescription = stringResource(R.string.utils_contentDescriptionDiscussionsOverflow),

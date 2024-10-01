@@ -66,7 +66,7 @@ class AlertsViewModel @Inject constructor(
             selectedStudent = student
             _uiState.update {
                 it.copy(
-                    studentColor = colorKeeper.getOrGenerateUserColor(student).textAndIconColor(),
+                    studentColor = colorKeeper.getOrGenerateUserColor(student).color(),
                     isLoading = true
                 )
             }

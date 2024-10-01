@@ -14,22 +14,28 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.ObserverApi
-import com.instructure.parentapp.features.alerts.list.AlertsRepository
+import com.instructure.pandautils.features.settings.SettingsBehaviour
+import com.instructure.pandautils.features.settings.SettingsRouter
+import com.instructure.parentapp.features.settings.ParentSettingsBehaviour
+import com.instructure.parentapp.features.settings.ParentSettingsRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
-class AlertsModule {
+@InstallIn(SingletonComponent::class)
+class SettingsModule {
 
     @Provides
-    fun provideAlertsRepository(observerApi: ObserverApi, courseApi: CourseAPI.CoursesInterface): AlertsRepository {
-        return AlertsRepository(observerApi, courseApi)
+    fun provideSettingsBehaviour(): SettingsBehaviour {
+        return ParentSettingsBehaviour()
+    }
+
+    @Provides
+    fun provideSettingsRouter(): SettingsRouter {
+        return ParentSettingsRouter()
     }
 }

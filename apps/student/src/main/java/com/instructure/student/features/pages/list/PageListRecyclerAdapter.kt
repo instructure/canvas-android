@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.adapter.BaseListRecyclerAdapter
@@ -76,7 +76,7 @@ open class PageListRecyclerAdapter(
 
     override fun bindHolder(page: Page, holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is PageViewHolder -> holder.bind(context, page, canvasContext.textAndIconColor, adapterToFragmentCallback)
+            is PageViewHolder -> holder.bind(context, page, canvasContext.color, adapterToFragmentCallback)
             else -> FrontPageViewHolder.bind(context, holder as FrontPageViewHolder, page, adapterToFragmentCallback)
         }
     }

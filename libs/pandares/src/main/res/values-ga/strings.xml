@@ -899,21 +899,6 @@
     <string name="colorPickerDialogMessage">Déan do chúrsa a phearsantú trí dhath nua a shocrú.</string>
     <string name="colorPickerError">Níorbh fhéidir dath an chúrsa a shocrú ag an am seo.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Bándearg</string>
-    <string name="contentDescriptionColorBarbie">Bándearg Te</string>
-    <string name="contentDescriptionColorBarneyPurple">Corcairghorm</string>
-    <string name="contentDescriptionColorEggplant">Corcra</string>
-    <string name="contentDescriptionColorUltramarine">Dúghorm</string>
-    <string name="contentDescriptionColorOcean11">Gorm</string>
-    <string name="contentDescriptionColorCyan">Cian</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Gorm</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragaidghlas</string>
-    <string name="contentDescriptionColorFreshCutLawn">Glas</string>
-    <string name="contentDescriptionColorChartreuse">Chairtreuse</string>
-    <string name="contentDescriptionColorSunFlower">Buí</string>
-    <string name="contentDescriptionColorTangerine">Oráiste</string>
-    <string name="contentDescriptionColorBloodOrange">Oráiste Dorcha</string>
-    <string name="contentDescriptionColorSriracha">Dearg</string>
 
     <string name="courseFavorited">Cúrsa %s, is fearr.</string>
     <string name="courseNotFavorited">Cúrsa %s, ní fearr.</string>

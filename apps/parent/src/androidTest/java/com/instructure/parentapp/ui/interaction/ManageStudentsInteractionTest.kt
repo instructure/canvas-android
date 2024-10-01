@@ -26,8 +26,6 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.parentapp.ui.pages.AddStudentPage
-import com.instructure.parentapp.ui.pages.ManageStudentsPage
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -37,9 +35,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class ManageStudentsInteractionTest : ParentComposeTest() {
-
-    private val manageStudentsPage = ManageStudentsPage(composeTestRule)
-    private val addStudentPage = AddStudentPage(composeTestRule)
 
     @Test
     fun testStudentsDisplayed() {
@@ -61,7 +56,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
 
         composeTestRule.waitForIdle()
         manageStudentsPage.tapStudent(data.students.first().shortName!!)
-        // TODO Assert alert settings when implemented
+        composeTestRule.onNodeWithText("Alert Settings").assertIsDisplayed()
     }
 
     @Test

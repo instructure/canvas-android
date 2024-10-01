@@ -26,7 +26,8 @@ data class ToolbarUiState(
     val subtitle: String = "",
     val editAllowed: Boolean = false,
     val deleteAllowed: Boolean = false,
-    val deleting: Boolean = false
+    val deleting: Boolean = false,
+    val isUserContext: Boolean = false,
 )
 
 sealed class EventAction {

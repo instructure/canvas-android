@@ -861,21 +861,6 @@
     <string name="colorPickerDialogMessage">Personalize your course by setting a new color.</string>
     <string name="colorPickerError">The course color could not be set at this time.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Pink</string>
-    <string name="contentDescriptionColorBarbie">Hot Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Purple</string>
-    <string name="contentDescriptionColorUltramarine">Dark Blue</string>
-    <string name="contentDescriptionColorOcean11">Blue</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
-    <string name="contentDescriptionColorFreshCutLawn">Green</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Yellow</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
-    <string name="contentDescriptionColorSriracha">Red</string>
 
     <string name="courseFavorited">Course %s, favorite.</string>
     <string name="courseNotFavorited">Course %s, not favorite.</string>

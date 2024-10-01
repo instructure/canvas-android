@@ -899,21 +899,6 @@
     <string name="colorPickerDialogMessage">Personalise your module by setting a new colour.</string>
     <string name="colorPickerError">The module colour could not be set at this time.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Pink</string>
-    <string name="contentDescriptionColorBarbie">Hot Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Purple</string>
-    <string name="contentDescriptionColorUltramarine">Dark blue</string>
-    <string name="contentDescriptionColorOcean11">Blue</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
-    <string name="contentDescriptionColorFreshCutLawn">Green</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Yellow</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
-    <string name="contentDescriptionColorSriracha">Red</string>
 
     <string name="courseFavorited">Module %s, favourite.</string>
     <string name="courseNotFavorited">Module %s, not favourite.</string>

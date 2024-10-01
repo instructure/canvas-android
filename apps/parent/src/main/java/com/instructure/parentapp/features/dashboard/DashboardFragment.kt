@@ -115,6 +115,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.reloadData()
             }
+            is AddStudentViewModelAction.UnpairStudentSuccess -> {
+                viewModel.reloadData()
+            }
         }
     }
 
@@ -278,7 +281,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupAppColors(student: User?) {
-        val color = ColorKeeper.getOrGenerateUserColor(student).backgroundColor()
+        val color = ColorKeeper.getOrGenerateUserColor(student).color()
         if (binding.toolbar.background == null) {
             binding.toolbar.setBackgroundColor(color)
         } else {
@@ -315,7 +318,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .showThemed(ColorKeeper.getOrGenerateUserColor(ParentPrefs.currentStudent).textAndIconColor())
+            .showThemed(ColorKeeper.getOrGenerateUserColor(ParentPrefs.currentStudent).color())
     }
 
     private fun onSwitchUsers() {

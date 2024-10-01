@@ -102,7 +102,7 @@ internal fun StudentColorPickerDialog(
                                 .let { modifier ->
                                     if (selected == it) {
                                         modifier
-                                            .border(3.dp, Color(it.color.backgroundColor()), CircleShape)
+                                            .border(3.dp, Color(it.color.color()), CircleShape)
                                             .semantics {
                                                 contentDescription = selectedContentDescription
                                             }
@@ -114,7 +114,7 @@ internal fun StudentColorPickerDialog(
                                 }
                                 .padding(8.dp)
                                 .clip(shape = CircleShape)
-                                .background(color = Color(it.color.backgroundColor()))
+                                .background(color = Color(it.color.color()))
                                 .clickable {
                                     selected = it
                                 }
