@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.inbox.compose.composables
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -254,46 +257,43 @@ private fun RecipientPickerPeopleScreen(
 fun StateScreen(
     uiState: RecipientPickerUiState,
 ) {
-    LazyColumn(
-        Modifier.fillMaxSize()
+    Column(
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         when (uiState.screenState) {
             is ScreenState.Loading -> {
-                item {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        Loading()
-                    }
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Loading()
                 }
             }
 
             is ScreenState.Error -> {
-                item {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        ErrorContent(errorMessage = stringResource(id = R.string.failedToLoadRecipients))
-                    }
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    ErrorContent(errorMessage = stringResource(id = R.string.failedToLoadRecipients))
                 }
             }
 
             is ScreenState.Empty -> {
-                item {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        EmptyContent(
-                            emptyMessage = stringResource(id = R.string.noRecipients),
-                            imageRes = R.drawable.ic_panda_nothing_to_see
-                        )
-                    }
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    EmptyContent(
+                        emptyMessage = stringResource(id = R.string.noRecipients),
+                        imageRes = R.drawable.ic_panda_nothing_to_see
+                    )
                 }
             }
 

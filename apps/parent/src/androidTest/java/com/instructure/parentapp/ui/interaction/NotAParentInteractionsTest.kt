@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.ui.interaction
 
+import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
@@ -35,11 +36,23 @@ import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 
 
 @HiltAndroidTest
 class NotAParentInteractionsTest : ParentComposeTest() {
+
+    @Before
+    fun setup() {
+        Intents.init()
+    }
+
+    @After
+    fun tearDown() {
+        Intents.release()
+    }
 
     @Test
     fun testLogout() {
@@ -60,21 +73,17 @@ class NotAParentInteractionsTest : ParentComposeTest() {
         goToNotAParentScreen(data)
 
         notAParentPage.expandAppOptions()
-        Intents.init()
-        try {
-            val expectedIntent = CoreMatchers.allOf(
-                IntentMatchers.hasAction(Intent.ACTION_VIEW),
-                CoreMatchers.anyOf(
-                    // Could be either of these, depending on whether the play store app is installed
-                    IntentMatchers.hasData("market://details?id=com.instructure.candroid"),
-                    IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.candroid")
-                )
+        val expectedIntent = CoreMatchers.allOf(
+            IntentMatchers.hasAction(Intent.ACTION_VIEW),
+            CoreMatchers.anyOf(
+                // Could be either of these, depending on whether the play store app is installed
+                IntentMatchers.hasData("market://details?id=com.instructure.candroid"),
+                IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.candroid")
             )
-            notAParentPage.tapApp("STUDENT")
-            Intents.intended(expectedIntent)
-        } finally {
-            Intents.release()
-        }
+        )
+        Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+        notAParentPage.tapApp("STUDENT")
+        Intents.intended(expectedIntent)
     }
 
     @Test
@@ -83,21 +92,17 @@ class NotAParentInteractionsTest : ParentComposeTest() {
         goToNotAParentScreen(data)
 
         notAParentPage.expandAppOptions()
-        Intents.init()
-        try {
-            val expectedIntent = CoreMatchers.allOf(
-                IntentMatchers.hasAction(Intent.ACTION_VIEW),
-                CoreMatchers.anyOf(
-                    // Could be either of these, depending on whether the play store app is installed
-                    IntentMatchers.hasData("market://details?id=com.instructure.teacher"),
-                    IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.teacher")
-                )
+        val expectedIntent = CoreMatchers.allOf(
+            IntentMatchers.hasAction(Intent.ACTION_VIEW),
+            CoreMatchers.anyOf(
+                // Could be either of these, depending on whether the play store app is installed
+                IntentMatchers.hasData("market://details?id=com.instructure.teacher"),
+                IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.teacher")
             )
-            notAParentPage.tapApp("TEACHER")
-            Intents.intended(expectedIntent)
-        } finally {
-            Intents.release()
-        }
+        )
+        Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+        notAParentPage.tapApp("TEACHER")
+        Intents.intended(expectedIntent)
     }
 
     private fun initData(): MockCanvas {
