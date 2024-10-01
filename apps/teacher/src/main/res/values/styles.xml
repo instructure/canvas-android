@@ -214,14 +214,6 @@
         <item name="actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="ColorPickerDialogItem">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:src">@drawable/shape_color_picker_bg</item>
-        <item name="android:layout_margin">6dp</item>
-        <item name="android:clickable">true</item>
-    </style>
-
     <style name="ThemeSpinner">
         <!-- Default color for the dropdown arrow and line -->
         <item name="colorControlNormal">#C7CDD1</item>

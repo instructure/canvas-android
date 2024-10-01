@@ -33,7 +33,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -95,7 +95,7 @@ class FileDetailsViewModelTest {
         file = fileFolder,
         usageRights = false,
         licenses = emptyList(),
-        courseColor = course.backgroundColor,
+        courseColor = course.color,
         canvasContext = course,
         iconRes = R.drawable.ic_document
     )

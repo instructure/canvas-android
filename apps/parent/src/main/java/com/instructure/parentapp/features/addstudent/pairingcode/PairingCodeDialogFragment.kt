@@ -57,6 +57,7 @@ class PairingCodeDialogFragment : DialogFragment() {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 dismiss()
             }
+            else -> {}
         }
     }
 

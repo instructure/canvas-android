@@ -29,10 +29,6 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPairingCode
 import com.instructure.canvas.espresso.mockCanvas.addStudent
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.parentapp.ui.pages.AddStudentPage
-import com.instructure.parentapp.ui.pages.ManageStudentsPage
-import com.instructure.parentapp.ui.pages.PairingCodePage
-import com.instructure.parentapp.ui.pages.QrPairingPage
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,11 +38,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class AddStudentInteractionTest : ParentComposeTest() {
-
-    private val manageStudentPage = ManageStudentsPage(composeTestRule)
-    private val addStudentPage = AddStudentPage(composeTestRule)
-    private val pairingCodePage = PairingCodePage(composeTestRule)
-    private val qrPairingPage = QrPairingPage(composeTestRule)
 
     private lateinit var activityResult: Instrumentation.ActivityResult
 
@@ -63,7 +54,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         pairingCodePage.tapSubmit()
 
         composeTestRule.waitForIdle()
-        manageStudentPage.assertStudentItemDisplayed(data.students.first())
+        manageStudentsPage.assertStudentItemDisplayed(data.students.first())
     }
 
     @Test
@@ -105,7 +96,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         }
 
         composeTestRule.waitForIdle()
-        manageStudentPage.assertStudentItemDisplayed(data.students.first())
+        manageStudentsPage.assertStudentItemDisplayed(data.students.first())
     }
 
     @Test
@@ -152,7 +143,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         pairingCodePage.enterPairingCode(code)
         pairingCodePage.assertErrorNotDisplayed()
         pairingCodePage.tapSubmit()
-        manageStudentPage.assertStudentItemDisplayed(data.students.first())
+        manageStudentsPage.assertStudentItemDisplayed(data.students.first())
     }
 
     private fun initData(): MockCanvas {
@@ -171,7 +162,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         tokenLogin(data.domain, token, parent)
         dashboardPage.openNavigationDrawer()
         dashboardPage.tapManageStudents()
-        manageStudentPage.tapAddStudent()
+        manageStudentsPage.tapAddStudent()
     }
 
     override fun enableAndConfigureAccessibilityChecks() {

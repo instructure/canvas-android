@@ -19,26 +19,39 @@ package com.instructure.student.ui.pages
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForViewToBeClickable
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 
-class FileUploadPage : BasePage() {
+class FileChooserPage : BasePage() {
     private val cameraButton by OnViewWithId(R.id.fromCamera)
     private val galleryButton by OnViewWithId(R.id.fromGallery)
     private val deviceButton by OnViewWithId(R.id.fromDevice)
     private val chooseFileTitle by OnViewWithId(R.id.chooseFileTitle)
     private val chooseFileSubtitle by OnViewWithId(R.id.chooseFileSubtitle)
+    private val fileChooserTitle by WaitForViewWithId(R.id.alertTitle)
+
+    fun assertFileChooserDetails() {
+        chooseFileTitle.assertDisplayed().assertHasText(R.string.chooseFile)
+        chooseFileSubtitle.assertDisplayed().assertHasText(R.string.chooseFileForUploadSubtext)
+        cameraButton.assertDisplayed()
+        galleryButton.assertDisplayed()
+        deviceButton.assertDisplayed()
+    }
 
     fun chooseCamera() {
         cameraButton.scrollTo().click()
@@ -60,6 +73,10 @@ class FileUploadPage : BasePage() {
         onView(withText(R.string.turnIn)).click()
     }
 
+    fun clickCancel() {
+        onView(withText(R.string.cancel)).click()
+    }
+
     fun removeFile(filename: String) {
         val fileItemMatcher = withId(R.id.fileItem) + withDescendant(withId(R.id.fileName) + containsTextCaseInsensitive(filename))
 
@@ -68,11 +85,15 @@ class FileUploadPage : BasePage() {
     }
 
     fun assertDialogTitle(title: String) {
-        onViewWithText(title).assertDisplayed()
+        fileChooserTitle.assertHasText(title)
     }
 
     fun assertFileDisplayed(filename: String) {
-        onView(withId(R.id.fileName) + containsTextCaseInsensitive(filename)).assertDisplayed()
+        val fileNameMatcher = withId(R.id.fileName) + withText(filename)
+        onView(fileNameMatcher).assertDisplayed()
+        onView(withId(R.id.fileSize) + hasSibling(fileNameMatcher)).assertDisplayed()
+        onView(withId(R.id.fileIcon)  + withParent(withId(R.id.iconWrapper) + hasSibling(withId(R.id.content) + withChild(fileNameMatcher)))).assertDisplayed()
+        onView(withId(R.id.removeFile)  + hasSibling(withId(R.id.content) + withChild(fileNameMatcher))).assertDisplayed()
     }
 
     fun assertFileNotDisplayed(filename: String) {

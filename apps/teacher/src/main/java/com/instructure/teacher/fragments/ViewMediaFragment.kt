@@ -199,10 +199,10 @@ class ViewMediaFragment : Fragment(), ShareableFile {
             toolbar.setVisible()
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewMediaFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@ViewMediaFragment)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.textLightest))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.textLightest))
         }
     }
 

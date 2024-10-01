@@ -82,6 +82,7 @@ import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.models.TermsOfService
+import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
@@ -304,7 +305,7 @@ class MockCanvas {
 
     /** Map of userId to alerts */
     var observerAlerts = mutableMapOf<Long, List<Alert>>()
-    val observerAlertThresholds = mutableMapOf<Long, List<AlertThreshold>>()
+    val observerAlertThresholds = mutableMapOf<Long, MutableList<AlertThreshold>>()
 
     val pairingCodes = mutableMapOf<String, User>()
 
@@ -887,7 +888,8 @@ fun MockCanvas.addConversation(
         senderId: Long,
         receiverIds: List<Long>,
         messageBody : String = Randomizer.randomConversationBody(),
-        messageSubject : String = Randomizer.randomConversationSubject()) : Conversation {
+        messageSubject : String = Randomizer.randomConversationSubject(),
+        cannotReply: Boolean = false) : Conversation {
 
     val sender = this.users[senderId]!!
     val senderBasic = BasicUser(
@@ -928,7 +930,8 @@ fun MockCanvas.addConversation(
             messages = listOf(basicMessage),
             avatarUrl = Randomizer.randomAvatarUrl(),
             participants = participants,
-            audience = null // Prevents "Monologue"
+            audience = null, // Prevents "Monologue"
+            cannotReply = cannotReply
     )
 
     this.conversations[result.id] = result
@@ -2328,6 +2331,7 @@ fun MockCanvas.addObserverAlertThreshold(id: Long, alertType: AlertType, observe
             userId = student.id,
             threshold = threshold,
             alertType = alertType,
+            workflowState = ThresholdWorkflowState.ACTIVE
         )
     )
 

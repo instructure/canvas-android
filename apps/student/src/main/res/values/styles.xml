@@ -184,14 +184,6 @@
         <item name="android:tint">@color/textDarkest</item>
     </style>
 
-    <style name="ColorPickerDialogItem">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:src">@drawable/shape_color_picker_bg</item>
-        <item name="android:layout_margin">6dp</item>
-        <item name="android:clickable">true</item>
-    </style>
-
     <style name="LightStatusBarDialog">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

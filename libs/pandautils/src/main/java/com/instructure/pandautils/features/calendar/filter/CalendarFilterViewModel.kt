@@ -24,7 +24,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -89,7 +89,7 @@ class CalendarFilterViewModel @Inject constructor(
     }
 
     private fun createFilterItemsUiState(type: CanvasContext.Type) = canvasContexts[type]?.map {
-        val color = if (type == CanvasContext.Type.USER) ThemePrefs.brandColor else it.backgroundColor
+        val color = if (type == CanvasContext.Type.USER) ThemePrefs.brandColor else it.color
         CalendarFilterItemUiState(it.contextId, it.name.orEmpty(), contextIdFilters.contains(it.contextId), color)
     } ?: emptyList()
 

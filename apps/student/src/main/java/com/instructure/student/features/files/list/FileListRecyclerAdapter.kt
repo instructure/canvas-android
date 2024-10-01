@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.adapter.BaseListRecyclerAdapter
 import com.instructure.student.holders.FileViewHolder
 import com.instructure.student.util.StudentPrefs
@@ -40,7 +40,7 @@ open class FileListRecyclerAdapter(
 ) : BaseListRecyclerAdapter<FileFolder, FileViewHolder>(context, FileFolder::class.java) {
 
     private var isTesting = false
-    private val contextColor by lazy { canvasContext.textAndIconColor }
+    private val contextColor by lazy { canvasContext.color }
 
     private var apiCall: WeaveJob? = null
 

@@ -28,10 +28,9 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderGradeBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
@@ -57,7 +56,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         title.text = assignment.name
 
-        icon.setIcon(BinderUtils.getAssignmentIcon(assignment), canvasContext.textAndIconColor)
+        icon.setIcon(BinderUtils.getAssignmentIcon(assignment), canvasContext.color)
         icon.hideNestedIcon()
 
         points.setTextColor(ThemePrefs.brandColor)
@@ -73,7 +72,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val gradingScheme = course?.gradingScheme ?: emptyList()
             if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
                 points.setGone()
-                icon.setNestedIcon(R.drawable.ic_complete_solid, canvasContext.backgroundColor)
+                icon.setNestedIcon(R.drawable.ic_complete_solid, canvasContext.color)
             } else if (restrictQuantitativeData && assignment.isGradingTypeQuantitative && submission?.excused != true && gradingScheme.isEmpty()) {
                 points.setGone()
             } else {

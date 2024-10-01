@@ -182,7 +182,7 @@ class DashboardViewModel @Inject constructor(
 
         val studentItemsWithAddStudent = if (studentItems.isNotEmpty()) {
             studentItems + AddStudentItemViewModel(
-                colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor(),
+                colorKeeper.getOrGenerateUserColor(selectedStudent).color(),
                 ::addStudent
             )
         } else {
@@ -224,7 +224,7 @@ class DashboardViewModel @Inject constructor(
                 selectedStudent = student,
                 studentItems = it.studentItems.map { item ->
                     if (item is AddStudentItemViewModel) {
-                        item.copy(color = colorKeeper.getOrGenerateUserColor(student).textAndIconColor())
+                        item.copy(color = colorKeeper.getOrGenerateUserColor(student).color())
                     } else {
                         item
                     }

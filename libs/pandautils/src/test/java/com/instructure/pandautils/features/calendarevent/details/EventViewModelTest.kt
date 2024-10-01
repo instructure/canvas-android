@@ -32,7 +32,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -113,7 +113,7 @@ class EventViewModelTest {
 
         createViewModel()
 
-        Assert.assertEquals(canvasContext.backgroundColor, viewModel.uiState.value.toolbarUiState.toolbarColor)
+        Assert.assertEquals(canvasContext.color, viewModel.uiState.value.toolbarUiState.toolbarColor)
     }
 
     @Test

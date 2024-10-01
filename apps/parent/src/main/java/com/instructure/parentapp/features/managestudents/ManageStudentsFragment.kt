@@ -35,13 +35,18 @@ import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class ManageStudentsFragment : Fragment() {
+
+    @Inject
+    lateinit var navigation: Navigation
 
     private val viewModel: ManageStudentViewModel by viewModels()
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
@@ -77,13 +82,16 @@ class ManageStudentsFragment : Fragment() {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.handleAction(ManageStudentsAction.Refresh)
             }
+            is AddStudentViewModelAction.UnpairStudentSuccess -> {
+                viewModel.handleAction(ManageStudentsAction.Refresh)
+            }
         }
     }
 
     private fun handleAction(action: ManageStudentsViewModelAction) {
         when (action) {
             is ManageStudentsViewModelAction.NavigateToAlertSettings -> {
-                //TODO: Navigate to alert settings
+                navigation.navigate(requireActivity(), navigation.alertSettingsRoute(action.student))
             }
 
             is ManageStudentsViewModelAction.AddStudent -> {

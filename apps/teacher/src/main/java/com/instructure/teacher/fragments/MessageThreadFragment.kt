@@ -224,8 +224,6 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     override fun onPresenterPrepared(presenter: MessageThreadPresenter) {
         conversationScope = nonNullArgs.getString(Const.SCOPE)
 
-        initToolbar()
-
         // We may not have the conversation yet (we don't when coming from a push notification)
         if (conversation != null) {
             setupConversationDetails()
@@ -262,6 +260,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             toolbar.setupBackButton(this@MessageThreadFragment)
         }
 
+        toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.message_thread)
 
         if (conversationScope != null && conversationScope == "sent") {
@@ -277,13 +276,21 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             }
         }
 
+        conversation?.let {
+            toolbar.menu.findItem(R.id.reply)?.isVisible = (!it.cannotReply)
+            toolbar.menu.findItem(R.id.replyAll)?.isVisible = (!it.cannotReply)
+        }
+
         toolbar.setOnMenuItemClickListener(menuListener)
     }
 
     override fun setupConversationDetails() = with(binding) {
-        if(recyclerView.adapter == null) {
+        initToolbar()
+        if (recyclerView.adapter == null) {
             // If we didn't setup the adapter initially (we didn't start off with the conversation), then do it now
             recyclerView.adapter = adapter
+        } else {
+            (recyclerView.adapter as? MessageAdapter)?.updateConversation(conversation)
         }
 
         setupRecyclerView()
