@@ -35,7 +35,8 @@ import com.instructure.pandautils.utils.PackageInfoProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -100,7 +101,8 @@ class HelpDialogViewModel @Inject constructor(
         return list
             // Only want links for students
             .filter { helpLinkFilter.isLinkAllowed(it, favoriteCourses) }
-            .map { HelpLinkItemViewModel(HelpLinkViewData(it.text, it.subtext, mapAction(it)), ::onLinkClicked) }
+            .filter { it.text != null && it.url != null }
+            .map { HelpLinkItemViewModel(HelpLinkViewData(it.text.orEmpty(), it.subtext.orEmpty(), mapAction(it)), ::onLinkClicked) }
             .plus(HelpLinkItemViewModel(rateLink, ::onLinkClicked))
     }
 
@@ -116,11 +118,11 @@ class HelpDialogViewModel @Inject constructor(
             link.url == "#teacher_feedback" -> HelpDialogAction.AskInstructor
             // External URL, but we handle within the app
             link.id.contains("submit_feature_idea") -> createSubmitFeatureIdea()
-            link.url.startsWith("tel:") -> HelpDialogAction.Phone(link.url)
-            link.url.startsWith("mailto:") -> HelpDialogAction.SendMail(link.url)
-            link.url.contains("cases.canvaslms.com/liveagentchat") -> HelpDialogAction.OpenExternalBrowser(link.url)
+            link.url.orEmpty().startsWith("tel:") -> HelpDialogAction.Phone(link.url.orEmpty())
+            link.url.orEmpty().startsWith("mailto:") -> HelpDialogAction.SendMail(link.url.orEmpty())
+            link.url.orEmpty().contains("cases.canvaslms.com/liveagentchat") -> HelpDialogAction.OpenExternalBrowser(link.url.orEmpty())
             // External URL
-            else -> HelpDialogAction.OpenWebView(link.url, link.text)
+            else -> HelpDialogAction.OpenWebView(link.url.orEmpty(), link.text.orEmpty())
         }
     }
 
