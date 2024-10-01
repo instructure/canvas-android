@@ -27,5 +27,5 @@ class ParentGradesBehaviour(
     colorKeeper: ColorKeeper
 ) : GradesBehaviour {
 
-    override val canvasContextColor = colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent).backgroundColor()
+    override val canvasContextColor = colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent).color()
 }
