@@ -33,6 +33,7 @@ class GradesModule {
         throw NotImplementedError()
     }
 
+    @Provides
     fun provideGradesBehaviour(): GradesBehaviour {
         throw NotImplementedError()
     }
