@@ -164,7 +164,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 thresholds = { _, _ -> FractionalThreshold(0.5f) },
             ).testTag("calendarPager"),
             state = pagerState,
-            beyondBoundsPageCount = 2,
+            beyondViewportPageCount = 2,
             reverseLayout = false,
             pageSize = PageSize.Fill,
             pageContent = { page ->
