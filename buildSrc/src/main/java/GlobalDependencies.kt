@@ -16,9 +16,9 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "1.9.23"
+    const val KOTLIN = "1.9.25"
     const val KOTLIN_COROUTINES = "1.6.4"
-    const val KOTLIN_COMPOSE_COMPILER_VERSION = "1.5.11"
+    const val KOTLIN_COMPOSE_COMPILER_VERSION = "1.5.15"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.15"
@@ -75,6 +75,7 @@ object Libs {
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.9.0"
     const val ANDROIDX_DATABINDING_COMPILER = "androidx.databinding:databinding-compiler:${Versions.ANDROID_GRADLE_TOOLS}" // This is bundled with the gradle plugin so we use the same version
+    const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:32.6.0"
@@ -119,6 +120,7 @@ object Libs {
     const val LIVE_DATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
     const val VIEW_MODE_SAVED_STATE = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.LIFECYCLE}"
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
+    const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
@@ -133,6 +135,7 @@ object Libs {
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE_VERSION}"
     const val GLIDE_OKHTTP = "com.github.bumptech.glide:okhttp3-integration:${Versions.GLIDE_VERSION}"
     const val GLIDE_COMPILER = "com.github.bumptech.glide:compiler:${Versions.GLIDE_VERSION}"
+    const val GLIDE_COMPOSE = "com.github.bumptech.glide:compose:1.0.0-beta01"
     const val SCALE_IMAGE_VIEW = "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
 
     /* Network */
@@ -170,16 +173,14 @@ object Libs {
     const val RRULE = "org.scala-saddle:google-rfc-2445:20110304"
 
     // Compose
-    const val COMPOSE_BOM = "androidx.compose:compose-bom:2024.03.00"
+    const val COMPOSE_BOM = "androidx.compose:compose-bom:2024.09.02"
     const val COMPOSE_MATERIAL = "androidx.compose.material:material"
+    const val COMPOSE_MATERIAL_ICONS = "androidx.compose.material:material-icons-core"
     const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
     const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"
     const val COMPOSE_UI = "androidx.compose.ui:ui-android"
-    const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.6.4"
+    const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
-    const val COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
-    const val COMPOSE_GLIDE = "com.github.bumptech.glide:compose:1.0.0-beta01"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
