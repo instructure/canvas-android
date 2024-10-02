@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
@@ -16,6 +17,9 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.ReminderChoice
+import com.instructure.pandautils.features.assignments.details.reminder.CustomReminderDialog
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.parentapp.R
 import java.io.File
 
 class ParentAssignmentDetailsRouter: AssignmentDetailsRouter {
@@ -32,6 +36,7 @@ class ParentAssignmentDetailsRouter: AssignmentDetailsRouter {
         url: String
     ) = Unit
 
+    // TODO: Navigate to internal webview
     override fun navigateToSubmissionScreen(
         activity: FragmentActivity,
         course: CanvasContext,
@@ -142,14 +147,50 @@ class ParentAssignmentDetailsRouter: AssignmentDetailsRouter {
         studioLTITool: LTITool?
     ) = Unit
 
-    override fun showCustomReminderDialog(activity: FragmentActivity) = Unit
+    override fun showCustomReminderDialog(activity: FragmentActivity) {
+        CustomReminderDialog.newInstance().show(activity.supportFragmentManager, null)
+    }
 
-    override fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) = Unit
+    override fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {
+        AlertDialog.Builder(context)
+            .setTitle(R.string.deleteReminderTitle)
+            .setMessage(R.string.deleteReminderMessage)
+            .setNegativeButton(R.string.no, null)
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                onConfirmed()
+                dialog.dismiss()
+            }
+            .showThemed()
+    }
 
-    override fun showCreateReminderDialog(
-        context: Context,
-        onReminderSelected: (ReminderChoice) -> Unit
-    ) = Unit
+    override fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
+        val choices = listOf(
+            ReminderChoice.Minute(5),
+            ReminderChoice.Minute(15),
+            ReminderChoice.Minute(30),
+            ReminderChoice.Hour(1),
+            ReminderChoice.Day(1),
+            ReminderChoice.Week(1),
+            ReminderChoice.Custom,
+        )
+
+        AlertDialog.Builder(context)
+            .setTitle(R.string.reminderTitle)
+            .setNegativeButton(R.string.cancel, null)
+            .setSingleChoiceItems(
+                choices.map {
+                    if (it is ReminderChoice.Custom) {
+                        it.getText(context.resources)
+                    } else {
+                        context.getString(R.string.reminderBefore, it.getText(context.resources))
+                    }
+                }.toTypedArray(), -1
+            ) { dialog, which ->
+                onReminderSelected(choices[which])
+                dialog.dismiss()
+            }
+            .showThemed()
+    }
 
     override fun canRouteInternally(
         activity: FragmentActivity?,

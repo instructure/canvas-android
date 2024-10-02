@@ -1,4 +1,4 @@
-package com.instructure.teacher.di
+package com.instructure.pandautils.di
 
 import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
