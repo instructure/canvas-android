@@ -129,22 +129,23 @@ class HelpPage : BasePage(R.id.helpDialog) {
      * Asserts the content of the Help menu.
      */
     fun assertHelpMenuContent() {
-        onView(withId(R.id.title) + withText(R.string.searchGuides))
-        onView(withId(R.id.subtitle) + withText(R.string.searchGuidesDetails))
+        onView(withId(R.id.title) + withText(R.string.searchGuides)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(R.string.searchGuidesDetails)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.askInstructor))
-        onView(withId(R.id.subtitle) + withText(R.string.askInstructorDetails))
+        onView(withId(R.id.title) + withText(R.string.askInstructor)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(R.string.askInstructorDetails)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.reportProblem))
-        onView(withId(R.id.subtitle) + withText(R.string.reportProblemDetails))
+        onView(withId(R.id.title) + withText(R.string.reportProblem)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(R.string.reportProblemDetails)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.shareYourLove))
-        onView(withId(R.id.subtitle) + withText(R.string.shareYourLoveDetails))
+        onView(withId(R.id.title) + withText(R.string.shareYourLove)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(R.string.shareYourLoveDetails)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Submit a Feature Idea"))
-        onView(withId(R.id.subtitle) + withText("Have an idea to improveCanvas?"))
+        onView(withId(R.id.title) + withText("Submit a Feature Idea")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Have an idea to improveCanvas?")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("COVID-19 Canvas Resources"))
-        onView(withId(R.id.subtitle) + withText("Tips for teaching and learning online"))
+        //TODO: Under investigation, waiting for answer if the removal of this help menu item was intentional.
+        // onView(withId(R.id.title) + withText("COVID-19 Canvas Resources")).assertDisplayed()
+        // onView(withId(R.id.subtitle) + withText("Tips for teaching and learning online")).assertDisplayed()
     }
 }
