@@ -99,7 +99,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversation.subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).click()
+        onView(matcher).scrollTo().click()
     }
 
     fun filterInbox(filterFor: String) {
