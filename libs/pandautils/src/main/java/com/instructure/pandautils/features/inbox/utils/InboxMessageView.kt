@@ -140,7 +140,7 @@ private fun InboxMessageDetailsView(
                 onClick = { messageState.message?.let { actionHandler( MessageAction.Reply(it) ) } },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.backgroundLightest),
-                    contentColor = Color(ThemePrefs.brandColor)
+                    contentColor = Color(ThemePrefs.textButtonColor)
                 ),
                 contentPadding = PaddingValues(start = 0.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
                 content = {
