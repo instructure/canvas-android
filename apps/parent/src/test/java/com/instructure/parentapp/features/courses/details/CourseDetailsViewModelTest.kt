@@ -84,7 +84,6 @@ class CourseDetailsViewModelTest {
     fun `Load course details with front page tab`() = runTest {
         coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1", homePage = Course.HomePage.HOME_WIKI)
         coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
-        coEvery { repository.getCourseSettings(1, any()) } returns CourseSettings()
 
         createViewModel()
 
@@ -108,7 +107,6 @@ class CourseDetailsViewModelTest {
             syllabusBody = "Syllabus body"
         )
         coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab(Tab.SYLLABUS_ID))
-        coEvery { repository.getCourseSettings(1, any()) } returns CourseSettings()
 
         createViewModel()
 
@@ -129,10 +127,10 @@ class CourseDetailsViewModelTest {
             id = 1,
             name = "Course 1",
             homePage = Course.HomePage.HOME_SYLLABUS,
-            syllabusBody = "Syllabus body"
+            syllabusBody = "Syllabus body",
+            settings = CourseSettings(courseSummary = true)
         )
         coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab(Tab.SYLLABUS_ID))
-        coEvery { repository.getCourseSettings(1, any()) } returns CourseSettings(courseSummary = true)
 
         createViewModel()
 
@@ -166,7 +164,6 @@ class CourseDetailsViewModelTest {
     fun `Refresh course details`() = runTest {
         coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
-        coEvery { repository.getCourseSettings(1, any()) } returns CourseSettings()
 
         createViewModel()
 
@@ -184,10 +181,10 @@ class CourseDetailsViewModelTest {
             id = 1,
             name = "Course 2",
             homePage = Course.HomePage.HOME_SYLLABUS,
-            syllabusBody = "Syllabus body"
+            syllabusBody = "Syllabus body",
+            settings = CourseSettings(courseSummary = true)
         )
         coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab(Tab.SYLLABUS_ID))
-        coEvery { repository.getCourseSettings(1, any()) } returns CourseSettings(courseSummary = true)
 
         viewModel.handleAction(CourseDetailsAction.Refresh)
 

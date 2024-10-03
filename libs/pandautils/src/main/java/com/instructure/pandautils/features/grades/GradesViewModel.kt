@@ -110,15 +110,18 @@ class GradesViewModel @Inject constructor(
                         courseName = course.name,
                         gradingPeriods = gradingPeriods
                     ),
-                    gradeText = gradeFormatter.getGradeString(course, courseGrade, !it.onlyGradedAssignmentsSwitchEnabled)
+                    gradeText = gradeFormatter.getGradeString(course, courseGrade, !it.onlyGradedAssignmentsSwitchEnabled),
+                    isGradeLocked = courseGrade?.isLocked.orDefault()
                 )
             }
         } catch {
             _uiState.update {
+                val showSnack = forceRefresh && it.items.isNotEmpty()
                 it.copy(
                     isLoading = false,
                     isRefreshing = false,
-                    isError = true
+                    isError = !showSnack,
+                    snackbarMessage = context.getString(R.string.gradesRefreshFailed).takeIf { showSnack }
                 )
             }
         }
@@ -143,7 +146,7 @@ class GradesViewModel @Inject constructor(
 
         assignmentGroups
             .flatMap { it.assignments }
-            .map { assignment ->
+            .forEach { assignment ->
                 val dueAt = assignment.dueAt
                 val submission = assignment.submission
                 val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
@@ -252,7 +255,14 @@ class GradesViewModel @Inject constructor(
             }
 
             is GradesAction.GradePreferencesUpdated -> {
-                _uiState.update { it.copy(gradePreferencesUiState = action.gradePreferencesUiState) }
+                _uiState.update {
+                    it.copy(
+                        gradePreferencesUiState = it.gradePreferencesUiState.copy(
+                            selectedGradingPeriod = action.gradingPeriod,
+                            sortBy = action.sortBy
+                        )
+                    )
+                }
                 loadGrades(false)
             }
 
@@ -269,6 +279,10 @@ class GradesViewModel @Inject constructor(
                 viewModelScope.launch {
                     _events.send(GradesViewModelAction.NavigateToAssignmentDetails(action.id))
                 }
+            }
+
+            is GradesAction.SnackbarDismissed -> {
+                _uiState.update { it.copy(snackbarMessage = null) }
             }
         }
     }

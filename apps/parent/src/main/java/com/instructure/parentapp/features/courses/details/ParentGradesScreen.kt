@@ -29,7 +29,7 @@ import com.instructure.pandautils.features.grades.GradesViewModelAction
 
 
 @Composable
-internal fun GradesScreen(
+internal fun ParentGradesScreen(
     actionHandler: (CourseDetailsAction) -> Unit
 ) {
     val gradesViewModel: GradesViewModel = viewModel()

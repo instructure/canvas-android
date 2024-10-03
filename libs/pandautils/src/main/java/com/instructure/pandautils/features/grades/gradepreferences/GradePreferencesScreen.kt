@@ -49,13 +49,12 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ListHeaderItem
-import com.instructure.pandautils.utils.ThemePrefs
 
 
 @Composable
 fun GradePreferencesScreen(
     uiState: GradePreferencesUiState,
-    onPreferenceChangeSaved: (GradePreferencesUiState) -> Unit,
+    onPreferenceChangeSaved: (GradingPeriod?, SortBy) -> Unit,
     navigationActionClick: () -> Unit
 ) {
     var selectedPeriod by rememberSaveable { mutableStateOf(uiState.selectedGradingPeriod) }
@@ -70,23 +69,19 @@ fun GradePreferencesScreen(
                 navigationActionClick = navigationActionClick,
                 navIconRes = R.drawable.ic_close,
                 navIconContentDescription = stringResource(id = R.string.close),
-                backgroundColor = Color(color = uiState.canvasContextColor)
+                backgroundColor = Color(color = uiState.canvasContextColor),
+                contentColor = colorResource(id = R.color.textLightest)
             ) {
                 val saveEnabled = selectedPeriod != uiState.selectedGradingPeriod || selectedSortBy != uiState.sortBy
                 TextButton(
                     onClick = {
-                        onPreferenceChangeSaved(
-                            uiState.copy(
-                                selectedGradingPeriod = selectedPeriod,
-                                sortBy = selectedSortBy
-                            )
-                        )
+                        onPreferenceChangeSaved(selectedPeriod, selectedSortBy)
                     },
                     enabled = saveEnabled
                 ) {
                     Text(
                         text = stringResource(id = R.string.save),
-                        color = Color(color = ThemePrefs.primaryTextColor),
+                        color = colorResource(id = R.color.textLightest),
                         fontSize = 14.sp,
                         modifier = Modifier.alpha(if (saveEnabled) 1f else .4f)
                     )
@@ -239,7 +234,7 @@ private fun GradePreferencesPreview() {
                 title = "Grading Period 1"
             )
         ),
-        onPreferenceChangeSaved = {},
+        onPreferenceChangeSaved = { _, _ -> },
         navigationActionClick = {}
     )
 }

@@ -21,8 +21,10 @@ import android.graphics.Color
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
+import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.DisplayGrade
 
 
@@ -34,7 +36,9 @@ data class GradesUiState(
     val items: List<AssignmentGroupUiState> = emptyList(),
     val gradePreferencesUiState: GradePreferencesUiState = GradePreferencesUiState(),
     val onlyGradedAssignmentsSwitchEnabled: Boolean = true,
-    val gradeText: String = ""
+    val gradeText: String = "",
+    val isGradeLocked: Boolean = false,
+    val snackbarMessage: String? = null
 )
 
 data class AssignmentGroupUiState(
@@ -71,9 +75,10 @@ sealed class GradesAction {
     data class GroupHeaderClick(val id: Long) : GradesAction()
     data object ShowGradePreferences : GradesAction()
     data object HideGradePreferences : GradesAction()
-    data class GradePreferencesUpdated(val gradePreferencesUiState: GradePreferencesUiState) : GradesAction()
+    data class GradePreferencesUpdated(val gradingPeriod: GradingPeriod?, val sortBy: SortBy) : GradesAction()
     data class OnlyGradedAssignmentsSwitchCheckedChange(val checked: Boolean) : GradesAction()
     data class AssignmentClick(val id: Long) : GradesAction()
+    data object SnackbarDismissed : GradesAction()
 }
 
 sealed class GradesViewModelAction {

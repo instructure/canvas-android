@@ -20,11 +20,15 @@ package com.instructure.pandautils.compose.features.grades
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.composeTest.hasDrawable
 import com.instructure.pandares.R
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.AssignmentUiState
@@ -181,5 +185,42 @@ class GradesScreenTest {
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Assignment 3")
             .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun assertLockedGrade() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    gradeText = "87% A",
+                    isGradeLocked = true
+                ),
+                actionHandler = {}
+            )
+        }
+
+        composeTestRule.onNode(hasDrawable(R.drawable.ic_lock_lined), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("87% A")
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun assertSnackbarText() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    gradeText = "87% A",
+                    isGradeLocked = true,
+                    snackbarMessage = "Snackbar message"
+                ),
+                actionHandler = {}
+            )
+        }
+
+        val snackbarText = composeTestRule.onNode(hasText("Snackbar message").and(hasAnyAncestor(hasTestTag("snackbarHost"))))
+        snackbarText.assertIsDisplayed()
     }
 }

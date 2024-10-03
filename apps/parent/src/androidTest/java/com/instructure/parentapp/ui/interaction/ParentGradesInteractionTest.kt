@@ -46,7 +46,7 @@ class ParentGradesInteractionTest : GradesInteractionTest() {
             withGradingPeriods = true
         ).apply {
             if (addAssignmentGroups) {
-                addAssignmentsToGroups(this.courses.values.first())
+                addAssignmentsToGroups(this.courses.values.first(), 3)
             }
         }
     }

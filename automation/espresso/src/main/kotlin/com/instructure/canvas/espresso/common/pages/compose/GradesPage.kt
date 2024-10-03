@@ -19,6 +19,7 @@ package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -27,6 +28,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 
 
 class GradesPage(private val composeTestRule: ComposeTestRule) {
@@ -97,6 +100,17 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
     fun assertEmptyStateIsDisplayed() {
         composeTestRule.onNodeWithText("No Assignments")
             .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    fun scrollScreen() {
+        composeTestRule.onNodeWithTag("gradesList")
+            .performTouchInput { swipeUp() }
+    }
+
+    fun assertCardText(text: String) {
+        composeTestRule.onNodeWithTag("gradesCardText", true)
+            .assertTextEquals(text)
             .assertIsDisplayed()
     }
 }

@@ -20,6 +20,8 @@ package com.instructure.canvas.espresso.common.interaction
 import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.common.pages.compose.GradesPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addGradingPeriod
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.orDefault
 import org.junit.Test
@@ -81,6 +83,38 @@ abstract class GradesInteractionTest : CanvasComposeTest() {
         gradesPage.clickSaveButton()
         gradesPage.assertGroupHeaderIsNotDisplayed("Overdue Assignments")
         gradesPage.assertGroupHeaderIsDisplayed("overdue")
+    }
+
+    @Test
+    fun cardTextChangesWhenScrolled() {
+        val data = initData()
+        val course = data.courses.values.first()
+
+        goToGrades(data, course.name)
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.assertCardText("Total")
+        gradesPage.scrollScreen()
+        gradesPage.assertCardText("Based on graded assignments")
+    }
+
+    @Test
+    fun changeGradingPeriod() {
+        val data = initData()
+        val course = data.courses.values.first()
+        data.addGradingPeriod(course.id, GradingPeriod(id = -1, title = "Test Grading Period"))
+
+        goToGrades(data, course.name)
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.assertGroupHeaderIsDisplayed("Overdue Assignments")
+        gradesPage.clickFilterButton()
+        gradesPage.clickFilterOption("Test Grading Period")
+        gradesPage.clickSaveButton()
+        composeTestRule.waitForIdle()
+        gradesPage.assertEmptyStateIsDisplayed()
     }
 
     @Test

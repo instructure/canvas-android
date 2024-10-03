@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
@@ -85,22 +84,5 @@ class CourseDetailsRepositoryTest {
         } returns DataResult.Fail()
 
         repository.getCourseTabs(1L, true)
-    }
-
-    @Test
-    fun `Get course settings successfully returns data`() = runTest {
-        val expected = CourseSettings()
-
-        coEvery { courseApi.getCourseSettings(1L, RestParams(isForceReadFromNetwork = false)) } returns DataResult.Success(expected)
-
-        val result = repository.getCourseSettings(1L, false)
-        Assert.assertEquals(expected, result)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Get course settings throws exception when fails`() = runTest {
-        coEvery { courseApi.getCourseSettings(1L, RestParams(isForceReadFromNetwork = true)) } returns DataResult.Fail()
-
-        repository.getCourseSettings(1L, true)
     }
 }

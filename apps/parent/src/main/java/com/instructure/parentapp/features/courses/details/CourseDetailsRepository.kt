@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
 
 
@@ -39,10 +38,5 @@ class CourseDetailsRepository(
     suspend fun getCourseTabs(id: Long, forceRefresh: Boolean): List<Tab> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         return tabApi.getTabs(id, CanvasContext.Type.COURSE.apiString, params).dataOrThrow
-    }
-
-    suspend fun getCourseSettings(id: Long, forceRefresh: Boolean): CourseSettings {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        return courseApi.getCourseSettings(id, params).dataOrThrow
     }
 }

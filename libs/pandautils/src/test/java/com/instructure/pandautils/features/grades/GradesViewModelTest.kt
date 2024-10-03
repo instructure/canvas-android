@@ -90,6 +90,7 @@ class GradesViewModelTest {
         every { context.getString(R.string.upcomingAssignments) } returns "Upcoming Assignments"
         every { context.getString(R.string.undatedAssignments) } returns "Undated Assignments"
         every { context.getString(R.string.pastAssignments) } returns "Past Assignments"
+        every { context.getString(R.string.gradesRefreshFailed) } returns "Grade refresh failed"
     }
 
     @After
@@ -389,16 +390,14 @@ class GradesViewModelTest {
 
         createViewModel()
 
-        val gradePreferencesUiState = GradePreferencesUiState(
-            canvasContextColor = 1,
-            courseName = "Course 1",
-            sortBy = SortBy.GROUP
-        )
-
         val expected = GradesUiState(
             isLoading = false,
             canvasContextColor = 1,
-            gradePreferencesUiState = gradePreferencesUiState,
+            gradePreferencesUiState = GradePreferencesUiState(
+                canvasContextColor = 1,
+                courseName = "Course 1",
+                sortBy = SortBy.GROUP
+            ),
             items = listOf(
                 AssignmentGroupUiState(
                     id = 1,
@@ -450,7 +449,7 @@ class GradesViewModelTest {
             )
         )
 
-        viewModel.handleAction(GradesAction.GradePreferencesUpdated(gradePreferencesUiState))
+        viewModel.handleAction(GradesAction.GradePreferencesUpdated(null, SortBy.GROUP))
 
         Assert.assertEquals(expected, viewModel.uiState.value)
     }
@@ -461,6 +460,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns "N/A"
 
         createViewModel()
 
@@ -472,7 +472,33 @@ class GradesViewModelTest {
                 courseName = "Course 1",
                 gradingPeriods = emptyList()
             ),
-            items = emptyList()
+            items = emptyList(),
+            gradeText = "N/A"
+        )
+
+        Assert.assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Show lock when grade is locked`() {
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.getCourseGrade(any(), any(), any(), any()) } returns CourseGrade(isLocked = true)
+
+        createViewModel()
+
+        val expected = GradesUiState(
+            isLoading = false,
+            canvasContextColor = 1,
+            gradePreferencesUiState = GradePreferencesUiState(
+                canvasContextColor = 1,
+                courseName = "Course 1",
+                gradingPeriods = emptyList()
+            ),
+            items = emptyList(),
+            isGradeLocked = true
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -602,6 +628,67 @@ class GradesViewModelTest {
 
         val expected = GradesViewModelAction.NavigateToAssignmentDetails(1L)
         Assert.assertEquals(expected, events.last())
+    }
+
+    @Test
+    fun `Show snackbar if load error and list is not empty`() {
+        every { context.getString(R.string.gradesRefreshFailed) } returns "Grade refresh failed"
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        submissionTypesRaw = listOf(
+                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                        )
+                    )
+                )
+            )
+        )
+
+        createViewModel()
+
+        val loaded = GradesUiState(
+            isLoading = false,
+            canvasContextColor = 1,
+            gradePreferencesUiState = GradePreferencesUiState(
+                canvasContextColor = 1,
+                courseName = "Course 1"
+            ),
+            items = listOf(
+                AssignmentGroupUiState(
+                    id = 2,
+                    name = "Undated Assignments",
+                    expanded = true,
+                    assignments = listOf(
+                        AssignmentUiState(
+                            id = 1,
+                            iconRes = R.drawable.ic_assignment,
+                            name = "Assignment 1",
+                            dueDate = "No due date",
+                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            displayGrade = DisplayGrade("")
+                        )
+                    )
+                )
+            )
+        )
+
+        coEvery { gradesRepository.loadCourse(1, any()) } throws Exception()
+        viewModel.handleAction(GradesAction.Refresh)
+
+        val expectedWithSnackbar = loaded.copy(snackbarMessage = "Grade refresh failed")
+        Assert.assertEquals(expectedWithSnackbar, viewModel.uiState.value)
+
+        viewModel.handleAction(GradesAction.SnackbarDismissed)
+        val expected = loaded.copy(snackbarMessage = null)
+        Assert.assertEquals(expected, viewModel.uiState.value)
     }
 
     private fun createViewModel() {

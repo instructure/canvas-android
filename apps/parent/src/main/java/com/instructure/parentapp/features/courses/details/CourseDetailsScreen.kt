@@ -110,7 +110,7 @@ private fun CourseDetailsScreenContent(
     val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
         when (it) {
             TabType.GRADES -> {
-                { GradesScreen(actionHandler) }
+                { ParentGradesScreen(actionHandler) }
             }
 
             TabType.FRONT_PAGE -> {
@@ -135,7 +135,8 @@ private fun CourseDetailsScreenContent(
                 navigationActionClick = {
                     navigationActionClick()
                 },
-                backgroundColor = Color(uiState.studentColor)
+                backgroundColor = Color(uiState.studentColor),
+                contentColor = colorResource(id = R.color.textLightest)
             )
         },
         content = { padding ->
@@ -145,7 +146,7 @@ private fun CourseDetailsScreenContent(
                 if (tabContents.size > 1) {
                     TabRow(
                         selectedTabIndex = pagerState.currentPage,
-                        contentColor = Color.White,
+                        contentColor = colorResource(id = R.color.textLightest),
                         backgroundColor = Color(uiState.studentColor),
                         modifier = Modifier
                             .shadow(10.dp)
@@ -168,6 +169,7 @@ private fun CourseDetailsScreenContent(
                 }
                 HorizontalPager(
                     state = pagerState,
+                    beyondBoundsPageCount = uiState.tabs.size,
                     modifier = Modifier
                         .fillMaxSize()
                         .testTag("courseDetailsPager")

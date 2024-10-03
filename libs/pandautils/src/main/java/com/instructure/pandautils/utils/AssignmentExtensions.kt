@@ -60,7 +60,7 @@ fun Assignment.getGrade(
     }
 
     // No submission
-    if (submission == null || !isSubmitted) {
+    if (submission == null) {
         return notGradedDisplayGrade
     }
 

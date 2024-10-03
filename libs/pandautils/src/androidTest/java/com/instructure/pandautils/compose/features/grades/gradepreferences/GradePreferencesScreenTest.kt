@@ -63,7 +63,7 @@ class GradePreferencesScreenTest {
                         GradingPeriod(2, "Period 2")
                     )
                 ),
-                onPreferenceChangeSaved = {},
+                onPreferenceChangeSaved = { _, _ -> },
                 navigationActionClick = {}
             )
         }
@@ -115,7 +115,7 @@ class GradePreferencesScreenTest {
                         GradingPeriod(2, "Period 2")
                     )
                 ),
-                onPreferenceChangeSaved = {},
+                onPreferenceChangeSaved = { _, _ -> },
                 navigationActionClick = {}
             )
         }
@@ -145,7 +145,7 @@ class GradePreferencesScreenTest {
         composeTestRule.setContent {
             GradePreferencesScreen(
                 uiState = testState,
-                onPreferenceChangeSaved = {},
+                onPreferenceChangeSaved = { _, _ -> },
                 navigationActionClick = {}
             )
         }
@@ -173,7 +173,7 @@ class GradePreferencesScreenTest {
                     canvasContextColor = Color.RED,
                     gradingPeriods = emptyList()
                 ),
-                onPreferenceChangeSaved = {},
+                onPreferenceChangeSaved = { _, _ -> },
                 navigationActionClick = {}
             )
         }
