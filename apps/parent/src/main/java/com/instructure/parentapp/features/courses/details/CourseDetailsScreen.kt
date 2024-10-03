@@ -169,7 +169,7 @@ private fun CourseDetailsScreenContent(
                 }
                 HorizontalPager(
                     state = pagerState,
-                    beyondBoundsPageCount = uiState.tabs.size,
+                    beyondViewportPageCount = uiState.tabs.size,
                     modifier = Modifier
                         .fillMaxSize()
                         .testTag("courseDetailsPager")
