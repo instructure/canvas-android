@@ -32,6 +32,7 @@ import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
@@ -182,7 +183,7 @@ class DashboardViewModel @Inject constructor(
 
         val studentItemsWithAddStudent = if (studentItems.isNotEmpty()) {
             studentItems + AddStudentItemViewModel(
-                colorKeeper.getOrGenerateUserColor(selectedStudent).color(),
+                selectedStudent.studentColor,
                 ::addStudent
             )
         } else {
@@ -224,7 +225,7 @@ class DashboardViewModel @Inject constructor(
                 selectedStudent = student,
                 studentItems = it.studentItems.map { item ->
                     if (item is AddStudentItemViewModel) {
-                        item.copy(color = colorKeeper.getOrGenerateUserColor(student).color())
+                        item.copy(color = student.studentColor)
                     } else {
                         item
                     }

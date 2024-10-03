@@ -36,7 +36,7 @@ val CanvasContext?.lightColor: Int get() {
 }
 
 @get:ColorInt
-val User?.color: Int get() {
+val User?.studentColor: Int get() {
     val themedColor = ColorKeeper.getOrGenerateUserColor(this)
     return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
 }

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -60,7 +61,7 @@ class CoursesViewModel @Inject constructor(
 
     private fun loadCourses(forceRefresh: Boolean = false) {
         viewModelScope.tryLaunch {
-            val color = colorKeeper.getOrGenerateUserColor(selectedStudent).color()
+            val color = selectedStudent.studentColor
 
             _uiState.update {
                 it.copy(

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
@@ -66,7 +67,7 @@ class AlertsViewModel @Inject constructor(
             selectedStudent = student
             _uiState.update {
                 it.copy(
-                    studentColor = colorKeeper.getOrGenerateUserColor(student).color(),
+                    studentColor = student.studentColor,
                     isLoading = true
                 )
             }
