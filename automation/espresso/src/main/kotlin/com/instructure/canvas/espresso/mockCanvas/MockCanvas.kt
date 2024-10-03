@@ -867,17 +867,76 @@ fun MockCanvas.addSentConversation(subject: String, userId: Long, messageBody : 
  *  for all other conversations.
  *  */
 
-fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long, messageBody : String = Randomizer.randomConversationBody()) {
+fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long, messageBody : String = Randomizer.randomConversationBody(), contextName: String? = null, contextCode: String? = null) {
     for (i in 0 until conversationCount) {
-        val sentConversation = createBasicConversation(userId = userId, isUserAuthor = true, messageBody = messageBody)
-        val archivedConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.ARCHIVED, messageBody = messageBody)
-        val starredConversation = createBasicConversation(userId, isStarred = true, messageBody = messageBody)
-        val unreadConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.UNREAD, messageBody = messageBody)
+        val sentConversation = createBasicConversation(userId = userId, isUserAuthor = true, messageBody = messageBody, contextCode = contextCode, contextName = contextName)
+        val archivedConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.ARCHIVED, messageBody = messageBody, contextCode = contextCode, contextName = contextName)
+        val starredConversation = createBasicConversation(userId, isStarred = true, messageBody = messageBody, contextCode = contextCode, contextName = contextName)
+        val unreadConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.UNREAD, messageBody = messageBody, contextCode = contextCode, contextName = contextName)
         conversations[sentConversation.id] = sentConversation
         conversations[archivedConversation.id] = archivedConversation
         conversations[starredConversation.id] = starredConversation
         conversations[unreadConversation.id] = unreadConversation
     }
+}
+
+/**
+ * Adds a single conversation, with sender [senderId] and receivers [receiverIds].  It will not
+ * be associated with any course.
+ */
+fun MockCanvas.addConversationWithMultipleMessages(
+    senderId: Long,
+    receiverIds: List<Long>,
+    messageCount: Int = 1,
+) : Conversation {
+    val messageSubject = Randomizer.randomConversationSubject()
+    val sender = this.users[senderId]!!
+    val senderBasic = BasicUser(
+        id = sender.id,
+        name = sender.shortName,
+        pronouns = sender.pronouns,
+        avatarUrl = sender.avatarUrl
+    )
+
+    val participants = mutableListOf(senderBasic)
+    receiverIds.forEach {id ->
+        val receiver = this.users[id]!!
+        participants.add(
+            BasicUser(
+                id = receiver.id,
+                name = receiver.shortName,
+                pronouns = receiver.pronouns,
+                avatarUrl = receiver.avatarUrl
+            )
+        )
+    }
+
+    val basicMessages = MutableList(messageCount) {
+        Message(
+            id = newItemId(),
+            createdAt = APIHelper.dateToString(GregorianCalendar()),
+            body = Randomizer.randomConversationBody(),
+            authorId = sender.id,
+            participatingUserIds = receiverIds.toMutableList().plus(senderId)
+        )
+    }
+
+    val result = Conversation(
+        id = newItemId(),
+        subject = messageSubject,
+        workflowState = Conversation.WorkflowState.UNREAD,
+        lastMessage = basicMessages.last().body,
+        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+        messageCount = basicMessages.size,
+        messages = basicMessages,
+        avatarUrl = Randomizer.randomAvatarUrl(),
+        participants = participants,
+        audience = null // Prevents "Monologue"
+    )
+
+    this.conversations[result.id] = result
+
+    return result
 }
 
 /**

@@ -159,7 +159,9 @@ fun ComposeRCE(
         MediaUploadUtils.showPickImageDialog(
             activity = context.getFragmentActivity(),
             onNewPhotoClick = {
-                photoLauncher.launch(imageUri)
+                imageUri?.let {
+                    photoLauncher.launch(it)
+                }
             },
             onChooseFromGalleryClick = {
                 imagePickerLauncher.launch("image/*")

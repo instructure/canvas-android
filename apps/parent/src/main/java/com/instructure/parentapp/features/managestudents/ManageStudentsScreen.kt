@@ -39,7 +39,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -236,7 +236,7 @@ private fun StudentListItem(
                 }
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(color = Color(uiState.studentColor.color()))
+                    indication = ripple(color = Color(uiState.studentColor.color()))
                 ) {
                     actionHandler(ManageStudentsAction.ShowColorPickerDialog(uiState.studentId, uiState.studentColor))
                 }
