@@ -103,7 +103,7 @@ fun CalendarEvents(
     HorizontalPager(
         state = pagerState,
         modifier = modifier,
-        beyondBoundsPageCount = 2,
+        beyondViewportPageCount = 2,
         reverseLayout = false,
         pageSize = PageSize.Fill,
         pageContent = { page ->
