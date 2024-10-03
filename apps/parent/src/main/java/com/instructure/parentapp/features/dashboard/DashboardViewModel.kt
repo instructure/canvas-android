@@ -20,6 +20,7 @@ package com.instructure.parentapp.features.dashboard
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.ColorInt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -59,7 +60,6 @@ class DashboardViewModel @Inject constructor(
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
     private val alertCountUpdater: AlertCountUpdater,
-    private val colorKeeper: ColorKeeper,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -248,8 +248,8 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun updateAlertCount() {
-        _data.value.selectedStudent?.id?.let {
-            val alertCount = alertsRepository.getUnreadAlertCount(it)
+        _data.value.selectedStudent?.id?.let { selectedStudentId ->
+            val alertCount = alertsRepository.getUnreadAlertCount(selectedStudentId)
             _data.update {
                 it.copy(
                     alertCount = alertCount
@@ -261,6 +261,12 @@ class DashboardViewModel @Inject constructor(
     fun toggleStudentSelector() {
         _data.update {
             it.copy(studentSelectorExpanded = !it.studentSelectorExpanded)
+        }
+    }
+
+    fun updateColor(@ColorInt color: Int) {
+        _data.value.studentItems.find { it is AddStudentItemViewModel }?.let { addStudentItem ->
+            (addStudentItem as AddStudentItemViewModel).updateColor(color)
         }
     }
 }

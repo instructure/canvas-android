@@ -298,6 +298,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.unreadCountBadge.setTextColor(color)
 
         binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
+        viewModel.updateColor(color)
     }
 
     private fun openNavigationDrawer() {

@@ -38,9 +38,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CoursesViewModel @Inject constructor(
     private val repository: CoursesRepository,
-    private val colorKeeper: ColorKeeper,
     private val selectedStudentHolder: SelectedStudentHolder,
-    private val courseGradeFormatter: CourseGradeFormatter
+    private val courseGradeFormatter: CourseGradeFormatter,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CoursesUiState())
@@ -56,6 +55,20 @@ class CoursesViewModel @Inject constructor(
             selectedStudentHolder.selectedStudentState.collect {
                 studentChanged(it)
             }
+        }
+
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentColorChanged.collect {
+                updateColor()
+            }
+        }
+    }
+
+    private fun updateColor() {
+        _uiState.update {
+            selectedStudent?.let { student ->
+                it.copy(studentColor = student.studentColor)
+            } ?: it
         }
     }
 
@@ -104,10 +117,8 @@ class CoursesViewModel @Inject constructor(
     }
 
     private fun studentChanged(student: User?) {
-        if (selectedStudent != student) {
             selectedStudent = student
             loadCourses()
-        }
     }
 
     fun handleAction(action: CoursesAction) {

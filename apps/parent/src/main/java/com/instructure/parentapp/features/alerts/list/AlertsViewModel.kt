@@ -40,7 +40,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AlertsViewModel @Inject constructor(
     private val repository: AlertsRepository,
-    private val colorKeeper: ColorKeeper,
     private val selectedStudentHolder: SelectedStudentHolder,
     private val alertCountUpdater: AlertCountUpdater
 ) : ViewModel() {
@@ -59,6 +58,20 @@ class AlertsViewModel @Inject constructor(
             selectedStudentHolder.selectedStudentState.collectLatest {
                 studentChanged(it)
             }
+        }
+
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentColorChanged.collect {
+                updateColor()
+            }
+        }
+    }
+
+    private fun updateColor() {
+        _uiState.update {
+            selectedStudent?.let { student ->
+                it.copy(studentColor = student.studentColor)
+            } ?: it
         }
     }
 

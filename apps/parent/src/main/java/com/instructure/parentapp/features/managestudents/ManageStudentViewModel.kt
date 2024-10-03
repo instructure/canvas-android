@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -41,7 +42,8 @@ import javax.inject.Inject
 class ManageStudentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val colorKeeper: ColorKeeper,
-    private val repository: ManageStudentsRepository
+    private val repository: ManageStudentsRepository,
+    private val selectedStudentHolder: SelectedStudentHolder
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ManageStudentsUiState())
@@ -146,6 +148,7 @@ class ManageStudentViewModel @Inject constructor(
             } else {
                 showSavingError()
             }
+            selectedStudentHolder.selectedStudentColorChanged()
         } catch {
             showSavingError()
         }
