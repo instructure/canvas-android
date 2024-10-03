@@ -59,7 +59,7 @@ class SplashViewModel @Inject constructor(
             colors?.let { colorKeeper.addToCache(it) }
 
             val theme = repository.getTheme()
-            theme?.let { themePrefs.applyCanvasTheme(it, context) }
+            theme?.let { _events.send(SplashAction.ApplyTheme(it)) }
 
             val students = repository.getStudents()
             if (students.isEmpty()) {
