@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.assignmentdetails.gradecellview
+package com.instructure.pandautils.features.assignments.details.gradecellview
 
 import android.content.res.Resources
 import com.instructure.canvasapi2.models.Assignment
@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert

@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.assignmentdetails
+package com.instructure.pandautils.features.assignments.details
 
 import android.app.Application
 import android.content.res.Resources
@@ -28,7 +28,6 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Enrollment
@@ -38,25 +37,15 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailAction
-import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewModel
-import com.instructure.pandautils.features.assignments.details.ReminderChoice
-import com.instructure.pandautils.features.assignments.details.ReminderViewData
-import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
-import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
-import com.instructure.student.room.entities.CreateSubmissionEntity
-import com.instructure.student.util.getStudioLTITool
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -95,8 +84,7 @@ class AssignmentDetailsViewModelTest {
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val application: Application = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val database: StudentDb = mockk(relaxed = true)
-    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val submissionHandler: AssignmentDetailsSubmissionHandler = mockk(relaxed = true)
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
 
     @Before
@@ -112,15 +100,11 @@ class AssignmentDetailsViewModelTest {
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
-        every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns Course()
+        every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns 0L
         every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 0L
 
         every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData()
         every { apiPrefs.user } returns User(id = 1)
-
-        every {
-            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns MutableLiveData(listOf())
     }
 
     @After
@@ -131,32 +115,13 @@ class AssignmentDetailsViewModelTest {
     private fun getViewModel() = AssignmentDetailsViewModel(
         savedStateHandle,
         assignmentDetailsRepository,
-        submissionHelper,
         resources,
         htmlContentFormatter,
         colorKeeper,
         application,
         apiPrefs,
+        submissionHandler,
         alarmScheduler,
-        database
-    )
-
-    private fun getDbSubmission() = CreateSubmissionEntity(
-        id = 0,
-        submissionEntry = "",
-        lastActivityDate = null,
-        assignmentName = null,
-        assignmentId = 0,
-        canvasContext = CanvasContext.emptyCourseContext(0),
-        submissionType = "",
-        errorFlag = false,
-        assignmentGroupCategoryId = null,
-        userId = 0,
-        currentFile = 0,
-        fileCount = 0,
-        progress = null,
-        annotatableAttachmentId = null,
-        isDraft = false
     )
 
     @Test
@@ -264,9 +229,7 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
-        every {
-            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns MutableLiveData(listOf(getDbSubmission().copy(isDraft = true)))
+        coEvery { submissionHandler.lastSubmissionIsDraft } returns true
 
         val viewModel = getViewModel()
 
@@ -297,15 +260,16 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Map grade cell`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+
         val expectedGradeCell = GradeCellViewData.fromSubmission(
             resources,
-            colorKeeper.getOrGenerateColor(Course()),
+            colorKeeper.getOrGenerateColor(course),
             Assignment(),
             Submission(),
             false
         )
 
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
         val assignment = Assignment(submission = Submission())
@@ -431,15 +395,16 @@ class AssignmentDetailsViewModelTest {
             )
         )
 
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+
         val expectedGradeCellViewData = GradeCellViewData.fromSubmission(
             resources,
-            colorKeeper.getOrGenerateColor(Course()),
+            colorKeeper.getOrGenerateColor(course),
             assignment,
             firstSubmission,
             false
         )
 
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
@@ -486,9 +451,11 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
-        every {
-            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_text_entry")))
+        every { submissionHandler.isUploading} returns true
+        every { submissionHandler.lastSubmissionIsDraft } returns false
+        every { submissionHandler.lastSubmissionSubmissionType} returns "online_text_entry"
+        every { submissionHandler.lastSubmissionEntry} returns "test"
+        every { submissionHandler.lastSubmissionAssignmentId} returns 0L
 
         val viewModel = getViewModel()
         viewModel.onGradeCellClicked()
@@ -503,9 +470,11 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
-        every {
-            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_upload")))
+        every { submissionHandler.isUploading} returns true
+        every { submissionHandler.lastSubmissionIsDraft } returns false
+        every { submissionHandler.lastSubmissionSubmissionType} returns "online_upload"
+        every { submissionHandler.lastSubmissionEntry} returns "test"
+        every { submissionHandler.lastSubmissionAssignmentId} returns 0L
 
         val viewModel = getViewModel()
         viewModel.onGradeCellClicked()
@@ -520,9 +489,11 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
-        every {
-            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_url")))
+        every { submissionHandler.isUploading} returns true
+        every { submissionHandler.lastSubmissionIsDraft } returns false
+        every { submissionHandler.lastSubmissionSubmissionType} returns "online_url"
+        every { submissionHandler.lastSubmissionEntry} returns "test"
+        every { submissionHandler.lastSubmissionAssignmentId} returns 0L
 
         val viewModel = getViewModel()
         viewModel.onGradeCellClicked()
@@ -648,59 +619,6 @@ class AssignmentDetailsViewModelTest {
         viewModel.onSubmitButtonClicked()
 
         assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToLtiLaunchScreen)
-    }
-
-    @Test
-    fun `Upload fail`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
-
-        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
-
-        every {
-            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns liveData
-
-        val viewModel = getViewModel()
-
-        liveData.postValue(listOf(getDbSubmission()))
-
-        assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
-
-        liveData.postValue(listOf(getDbSubmission().copy(errorFlag = true)))
-
-        assertTrue(viewModel.data.value?.attempts?.first()?.data?.isFailed!!)
-    }
-
-    @Test
-    fun `Upload success`() {
-        val expected = Submission(submittedAt = Date())
-
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
-
-        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
-
-        every {
-            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns liveData
-
-        val viewModel = getViewModel()
-
-        liveData.postValue(listOf(getDbSubmission()))
-
-        assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
-
-        val assignment = Assignment(submission = Submission(submissionHistory = listOf(expected)))
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-
-        liveData.postValue(emptyList())
-
-        assertEquals(expected, viewModel.data.value?.attempts?.last()?.data?.submission)
     }
 
     @Test
@@ -995,8 +913,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        mockkStatic(Long::getStudioLTITool)
-        coEvery { course.id.getStudioLTITool() } returns DataResult.Fail()
+        coEvery { submissionHandler.getStudioLTITool(any(), any()) } returns null
 
         val assignment = Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_upload"))
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
@@ -1013,8 +930,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        mockkStatic(Long::getStudioLTITool)
-        coEvery { course.id.getStudioLTITool() } returns DataResult.Success(mockk())
+        coEvery { submissionHandler.getStudioLTITool(any(), any()) } returns mockk()
 
         val assignment = Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_text_entry"))
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
@@ -1031,8 +947,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        mockkStatic(Long::getStudioLTITool)
-        coEvery { course.id.getStudioLTITool() } returns DataResult.Success(mockk())
+        coEvery { submissionHandler.getStudioLTITool(any(), any()) } returns mockk()
 
         mockkStatic(MimeTypeMap::getSingleton)
         every { MimeTypeMap.getSingleton() } returns mockk()
@@ -1053,8 +968,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        mockkStatic(Long::getStudioLTITool)
-        coEvery { course.id.getStudioLTITool() } returns DataResult.Success(mockk())
+        coEvery { submissionHandler.getStudioLTITool(any(), any()) } returns mockk()
 
         mockkStatic(MimeTypeMap::getSingleton)
         every { MimeTypeMap.getSingleton() } returns mockk()
