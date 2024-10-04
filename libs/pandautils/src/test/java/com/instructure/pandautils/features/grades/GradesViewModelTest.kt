@@ -86,6 +86,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.getCourseGrade(any(), any(), any(), any()) } returns CourseGrade()
 
         every { context.getString(R.string.gradesNoDueDate) } returns "No due date"
+        every { context.getString(R.string.due, any()) } answers { "Due ${(call.invocation.args[1] as Array<*>)[0]}" }
         every { context.getString(R.string.overdueAssignments) } returns "Overdue Assignments"
         every { context.getString(R.string.upcomingAssignments) } returns "Upcoming Assignments"
         every { context.getString(R.string.undatedAssignments) } returns "Undated Assignments"
@@ -697,8 +698,8 @@ class GradesViewModelTest {
 
     private fun getFormattedDate(localDateTime: LocalDateTime): String {
         val date = Date(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-        val dateText = DateHelper.dayMonthDateFormat.format(date)
+        val dateText = DateHelper.monthDayYearDateFormatUniversalShort.format(date)
         val timeText = DateHelper.getFormattedTime(context, date)
-        return "$dateText, $timeText"
+        return "Due $dateText $timeText"
     }
 }

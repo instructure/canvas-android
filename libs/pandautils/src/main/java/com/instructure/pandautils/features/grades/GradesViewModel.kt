@@ -198,9 +198,9 @@ class GradesViewModel @Inject constructor(
         }
 
         val dateText = assignment.dueDate?.let {
-            val dateText = DateHelper.dayMonthDateFormat.format(it)
+            val dateText = DateHelper.monthDayYearDateFormatUniversalShort.format(it)
             val timeText = DateHelper.getFormattedTime(context, it)
-            "$dateText, $timeText"
+            context.getString(R.string.due, "$dateText $timeText")
         } ?: context.getString(R.string.gradesNoDueDate)
 
         val submissionStateLabel = when {
