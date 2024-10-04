@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R

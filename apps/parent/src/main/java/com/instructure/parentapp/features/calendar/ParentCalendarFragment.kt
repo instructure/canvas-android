@@ -20,7 +20,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.features.calendar.BaseCalendarFragment
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder

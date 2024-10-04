@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
 import org.junit.Test
 
-abstract class InboxDetailsInteractionTest: CanvasComposeTest() {
+abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
 
     private val inboxPage = InboxPage()
     private val inboxDetailsPage = InboxDetailsPage(composeTestRule)
@@ -272,7 +272,7 @@ abstract class InboxDetailsInteractionTest: CanvasComposeTest() {
         inboxComposePage.assertTitle("Reply")
         inboxComposePage.assertContextSelected(conversation.contextName!!)
 
-        conversation.participants.filter { it.id == conversation.messages.first().authorId }.map { it.name!!}.forEach {
+        conversation.participants.filter { it.id == conversation.messages.first().authorId }.map { it.name!! }.forEach {
             inboxComposePage.assertRecipientSelected(it)
         }
 
@@ -283,7 +283,7 @@ abstract class InboxDetailsInteractionTest: CanvasComposeTest() {
         inboxComposePage.assertTitle("Reply All")
         inboxComposePage.assertContextSelected(conversation.contextName!!)
 
-        conversation.participants.filter { it.id != getLoggedInUser().id }.map { it.name!!}.forEach {
+        conversation.participants.filter { it.id != getLoggedInUser().id }.map { it.name!! }.forEach {
             inboxComposePage.assertRecipientSelected(it)
         }
 

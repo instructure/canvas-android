@@ -43,11 +43,11 @@ import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone

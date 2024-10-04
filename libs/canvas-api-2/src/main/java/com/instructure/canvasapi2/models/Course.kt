@@ -231,11 +231,15 @@ data class Course(
         return enrollments?.any { it.multipleGradingPeriodsEnabled && it.currentGradingPeriodId != 0L } ?: false
     }
 
+    private fun parentIsTotalsForAllGradingPeriodsEnabled() = this.enrollments.orEmpty().any {
+        (it.isStudent || it.isObserver) && it.multipleGradingPeriodsEnabled && it.totalsForAllGradingPeriodsOption
+    }
+
     private fun parentIsCourseGradeLocked(forAllGradingPeriod: Boolean = true): Boolean {
         return if (hideFinalGrades) {
             true
         } else if (hasGradingPeriods) {
-            forAllGradingPeriod && !parentHasActiveGradingPeriod() && !isTotalsForAllGradingPeriodsEnabled
+            forAllGradingPeriod && !parentHasActiveGradingPeriod() && !parentIsTotalsForAllGradingPeriodsEnabled()
         } else {
             false
         }

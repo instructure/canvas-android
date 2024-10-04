@@ -34,7 +34,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AddStudentViewModel @Inject constructor(
     selectedStudentHolder: SelectedStudentHolder,
-    private val colorKeeper: ColorKeeper,
     private val repository: AddStudentRepository,
     private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
