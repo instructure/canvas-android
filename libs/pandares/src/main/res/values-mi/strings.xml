@@ -899,6 +899,21 @@
     <string name="colorPickerDialogMessage">Tautuhi to akoranga ma te whakatau he tae hou.</string>
     <string name="colorPickerError">Kaore e taea te whakatau te tae o te akoranga i tēnei wā</string>
 
+    <string name="contentDescriptionColorCottonCandy">Māwhero</string>
+    <string name="contentDescriptionColorBarbie">māwhero wera</string>
+    <string name="contentDescriptionColorBarneyPurple">puru</string>
+    <string name="contentDescriptionColorEggplant">Waiporoporo</string>
+    <string name="contentDescriptionColorUltramarine">Kikorangi pouri</string>
+    <string name="contentDescriptionColorOcean11">Kikorangi</string>
+    <string name="contentDescriptionColorCyan">Kawariki</string>
+    <string name="contentDescriptionColorAquaMarine">Aqua puru</string>
+    <string name="contentDescriptionColorEmeraldGreen">Emerara matomato</string>
+    <string name="contentDescriptionColorFreshCutLawn">Kākāriki</string>
+    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
+    <string name="contentDescriptionColorSunFlower">Kōwhai</string>
+    <string name="contentDescriptionColorTangerine">Ārani</string>
+    <string name="contentDescriptionColorBloodOrange">Ārani pouri</string>
+    <string name="contentDescriptionColorSriracha">whero</string>
 
     <string name="courseFavorited">Akoranga %s, makau.</string>
     <string name="courseNotFavorited">Akoranga %s, kaore makau.</string>

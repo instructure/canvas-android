@@ -886,6 +886,21 @@
     <string name="colorPickerDialogMessage">设置一种新颜色，让您的课程个性化。</string>
     <string name="colorPickerError">暂时无法设置课程颜色。</string>
 
+    <string name="contentDescriptionColorCottonCandy">粉红色</string>
+    <string name="contentDescriptionColorBarbie">亮粉色</string>
+    <string name="contentDescriptionColorBarneyPurple">紫色</string>
+    <string name="contentDescriptionColorEggplant">紫色</string>
+    <string name="contentDescriptionColorUltramarine">深蓝色</string>
+    <string name="contentDescriptionColorOcean11">蓝色</string>
+    <string name="contentDescriptionColorCyan">青色</string>
+    <string name="contentDescriptionColorAquaMarine">蓝绿色</string>
+    <string name="contentDescriptionColorEmeraldGreen">翠绿色</string>
+    <string name="contentDescriptionColorFreshCutLawn">绿色</string>
+    <string name="contentDescriptionColorChartreuse">黄绿色</string>
+    <string name="contentDescriptionColorSunFlower">黄色</string>
+    <string name="contentDescriptionColorTangerine">橙色</string>
+    <string name="contentDescriptionColorBloodOrange">深橙色</string>
+    <string name="contentDescriptionColorSriracha">红色</string>
 
     <string name="courseFavorited">课程%s，收藏。</string>
     <string name="courseNotFavorited">课程%s，未收藏。</string>

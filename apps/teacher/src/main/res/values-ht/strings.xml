@@ -509,6 +509,21 @@
     <string name="colorPickerDialogMessage">Sa se paramèt koulè pèsonèl ou. Sèlman ou menm k ap wè koulè sa a pou kou a.</string>
     <string name="colorPickerError">Koulè kou a paka defini nan moman sa a,</string>
 
+    <string name="contentDescriptionColorCottonCandy">Woz</string>
+    <string name="contentDescriptionColorBarbie">Woz</string>
+    <string name="contentDescriptionColorBarneyPurple">Vyolèt</string>
+    <string name="contentDescriptionColorEggplant">Mov</string>
+    <string name="contentDescriptionColorUltramarine">Ble Maren</string>
+    <string name="contentDescriptionColorOcean11">Ble</string>
+    <string name="contentDescriptionColorCyan">Blesyèl</string>
+    <string name="contentDescriptionColorAquaMarine">Ble Klè</string>
+    <string name="contentDescriptionColorEmeraldGreen">Vè Emwod</string>
+    <string name="contentDescriptionColorFreshCutLawn">Vèt</string>
+    <string name="contentDescriptionColorChartreuse">Vè jòn</string>
+    <string name="contentDescriptionColorSunFlower">Jòn</string>
+    <string name="contentDescriptionColorTangerine">Zoranj</string>
+    <string name="contentDescriptionColorBloodOrange">Oranj sonb</string>
+    <string name="contentDescriptionColorSriracha">Wouj</string>
     <string name="launch_link_in_external_browser">Lanse lyen nan navigatè ekstèn</string>
     <string name="contentDescriptionSelectedFile">Fichye Seleksyone</string>
     <string name="contentDescriptionFileIcon">Ikòn Fichye</string>

@@ -509,6 +509,21 @@
     <string name="colorPickerDialogMessage">To je vaša osebna nastavitev barve. To barvo za predmet boste videli samo vi.</string>
     <string name="colorPickerError">Barve predmeta trenutno ni mogoče nastaviti.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Rožnato</string>
+    <string name="contentDescriptionColorBarbie">Živo rožnato</string>
+    <string name="contentDescriptionColorBarneyPurple">Vijolično</string>
+    <string name="contentDescriptionColorEggplant">Škrlatno</string>
+    <string name="contentDescriptionColorUltramarine">Temno modro</string>
+    <string name="contentDescriptionColorOcean11">Modro</string>
+    <string name="contentDescriptionColorCyan">Cijan</string>
+    <string name="contentDescriptionColorAquaMarine">Zelenkasto modro</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdno</string>
+    <string name="contentDescriptionColorFreshCutLawn">Zeleno</string>
+    <string name="contentDescriptionColorChartreuse">Svetlo rumenozeleno</string>
+    <string name="contentDescriptionColorSunFlower">Rumeno</string>
+    <string name="contentDescriptionColorTangerine">Oranžno</string>
+    <string name="contentDescriptionColorBloodOrange">Temno oranžno</string>
+    <string name="contentDescriptionColorSriracha">Rdeče</string>
     <string name="launch_link_in_external_browser">Zaženi povezavo v zunanjem brskalniku</string>
     <string name="contentDescriptionSelectedFile">Izbrana datoteka</string>
     <string name="contentDescriptionFileIcon">Ikona datoteke</string>

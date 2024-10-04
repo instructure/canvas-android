@@ -925,6 +925,21 @@
     <string name="colorPickerDialogMessage">Персонализируйте свой курс, задав новый цвет.</string>
     <string name="colorPickerError">В данный момент невозможно задать цвет курса.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Розовый</string>
+    <string name="contentDescriptionColorBarbie">Ярко-розовый</string>
+    <string name="contentDescriptionColorBarneyPurple">Фиолетовый</string>
+    <string name="contentDescriptionColorEggplant">Пурпурный</string>
+    <string name="contentDescriptionColorUltramarine">Темно-синий</string>
+    <string name="contentDescriptionColorOcean11">Синий</string>
+    <string name="contentDescriptionColorCyan">Голубой</string>
+    <string name="contentDescriptionColorAquaMarine">Бирюзовый</string>
+    <string name="contentDescriptionColorEmeraldGreen">Изумрудный</string>
+    <string name="contentDescriptionColorFreshCutLawn">Зеленый</string>
+    <string name="contentDescriptionColorChartreuse">Салатовый</string>
+    <string name="contentDescriptionColorSunFlower">Желтый</string>
+    <string name="contentDescriptionColorTangerine">Оранжевый</string>
+    <string name="contentDescriptionColorBloodOrange">Темно-оранжевый</string>
+    <string name="contentDescriptionColorSriracha">Красный</string>
 
     <string name="courseFavorited">Курс %s, предпочтительный.</string>
     <string name="courseNotFavorited">Курс %s, не предпочтительный.</string>

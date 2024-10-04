@@ -511,6 +511,21 @@
     <string name="colorPickerDialogMessage">Denne er din personlige farveindstilling. Du er den eneste, der ser denne farve sammen med faget.</string>
     <string name="colorPickerError">Fagets farve kunne ikke indstilles på nuværende tidspunkt.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Lyserød</string>
+    <string name="contentDescriptionColorBarbie">Hot pink</string>
+    <string name="contentDescriptionColorBarneyPurple">Violet</string>
+    <string name="contentDescriptionColorEggplant">Lilla</string>
+    <string name="contentDescriptionColorUltramarine">Mørkeblå</string>
+    <string name="contentDescriptionColorOcean11">Blå</string>
+    <string name="contentDescriptionColorCyan">Cyan</string>
+    <string name="contentDescriptionColorAquaMarine">Vandblå</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdgrøn</string>
+    <string name="contentDescriptionColorFreshCutLawn">Grøn</string>
+    <string name="contentDescriptionColorChartreuse">Limegrøn</string>
+    <string name="contentDescriptionColorSunFlower">Gul</string>
+    <string name="contentDescriptionColorTangerine">Orange</string>
+    <string name="contentDescriptionColorBloodOrange">Mørkeorange</string>
+    <string name="contentDescriptionColorSriracha">Rød</string>
     <string name="launch_link_in_external_browser">Åbn link i ekstern browser</string>
     <string name="contentDescriptionSelectedFile">Valgt fil</string>
     <string name="contentDescriptionFileIcon">Filikon</string>
