@@ -19,11 +19,15 @@ package com.instructure.canvasapi2.unit
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Grades
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.Logger
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.time.OffsetDateTime
@@ -580,5 +584,116 @@ class CourseTest {
         assertEquals(GradingSchemeRow("A", 0.95), gradingSchemes[0])
         assertEquals(GradingSchemeRow("B", 0.9), gradingSchemes[1])
         assertEquals(GradingSchemeRow("C", 0.7), gradingSchemes[2])
+    }
+
+    @Test
+    fun `Parent grade from enrollments locked when hide final grades`() {
+        val enrollment = Enrollment()
+
+        val course = Course(enrollments = mutableListOf(enrollment), hideFinalGrades = true)
+
+        val result = course.parentGetCourseGradeFromEnrollment(enrollment)
+
+        assertTrue(result.isLocked)
+    }
+
+    @Test
+    fun `Parent grade from enrollments locked when has periods and does not have active grading period`() {
+        val enrollment = Enrollment(multipleGradingPeriodsEnabled = false)
+        val course = Course(enrollments = mutableListOf(enrollment), hasGradingPeriods = true)
+
+        val result = course.parentGetCourseGradeFromEnrollment(enrollment, true)
+
+        assertTrue(result.isLocked)
+    }
+
+    @Test
+    fun `Parent grade from enrollments not locked when has periods and has active grading period`() {
+        val enrollment = Enrollment(multipleGradingPeriodsEnabled = true, currentGradingPeriodId = 1)
+        val course = Course(enrollments = mutableListOf(enrollment), hasGradingPeriods = true)
+
+        val result = course.parentGetCourseGradeFromEnrollment(enrollment, true)
+
+        assertFalse(result.isLocked)
+    }
+
+    @Test
+    fun `Parent grade from enrollments correct when has grades and has active grading period`() {
+        val enrollment = Enrollment(
+            multipleGradingPeriodsEnabled = true,
+            currentGradingPeriodId = 1,
+            grades = Grades(
+                currentScore = 85.0,
+                finalScore = 87.0,
+                currentGrade = "B",
+                finalGrade = "B+"
+            )
+        )
+        val course = Course(enrollments = mutableListOf(enrollment), hasGradingPeriods = true)
+
+        val result = course.parentGetCourseGradeFromEnrollment(enrollment)
+
+        assertEquals(result.currentScore, 85.0)
+        assertEquals(result.finalScore, 87.0)
+        assertEquals(result.currentGrade, "B")
+        assertEquals(result.finalGrade, "B+")
+    }
+
+    @Test
+    fun `Parent grade from enrollments correct when does not have grades and has active grading period`() {
+        val enrollment = Enrollment(
+            multipleGradingPeriodsEnabled = true,
+            currentGradingPeriodId = 1,
+            currentPeriodComputedCurrentScore = 85.0,
+            currentPeriodComputedFinalScore = 87.0,
+            currentPeriodComputedCurrentGrade = "B",
+            currentPeriodComputedFinalGrade = "B+"
+        )
+        val course = Course(enrollments = mutableListOf(enrollment), hasGradingPeriods = true)
+
+        val result = course.parentGetCourseGradeFromEnrollment(enrollment)
+
+        assertEquals(result.currentScore, 85.0)
+        assertEquals(result.finalScore, 87.0)
+        assertEquals(result.currentGrade, "B")
+        assertEquals(result.finalGrade, "B+")
+    }
+
+    @Test
+    fun `Parent grade from enrollments correct when has grades but does not have active grading period`() {
+        val enrollment = Enrollment(
+            grades = Grades(
+                currentScore = 85.0,
+                finalScore = 87.0,
+                currentGrade = "B",
+                finalGrade = "B+"
+            )
+        )
+        val course = Course(enrollments = mutableListOf(enrollment), hasGradingPeriods = true)
+
+        val result = course.parentGetCourseGradeFromEnrollment(enrollment)
+
+        assertEquals(result.currentScore, 85.0)
+        assertEquals(result.finalScore, 87.0)
+        assertEquals(result.currentGrade, "B")
+        assertEquals(result.finalGrade, "B+")
+    }
+
+    @Test
+    fun `Parent grade from enrollments correct when does not have grades and does not have active grading period`() {
+        val enrollment = Enrollment(
+            computedCurrentScore = 85.0,
+            computedFinalScore = 87.0,
+            computedCurrentGrade = "B",
+            computedFinalGrade = "B+"
+        )
+        val course = Course(enrollments = mutableListOf(enrollment), hasGradingPeriods = true)
+
+        val result = course.parentGetCourseGradeFromEnrollment(enrollment)
+
+        assertEquals(result.currentScore, 85.0)
+        assertEquals(result.finalScore, 87.0)
+        assertEquals(result.currentGrade, "B")
+        assertEquals(result.finalGrade, "B+")
     }
 }

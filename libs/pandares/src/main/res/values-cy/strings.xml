@@ -899,6 +899,21 @@
     <string name="colorPickerDialogMessage">Gwnewch eich cwrs yn bersonol i chi trwy osod lliw newydd.</string>
     <string name="colorPickerError">Doedd dim modd gosod lliw’r cwrs y tro hwn.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Pinc</string>
+    <string name="contentDescriptionColorBarbie">Pinc Llachar</string>
+    <string name="contentDescriptionColorBarneyPurple">Fioled</string>
+    <string name="contentDescriptionColorEggplant">Porffor</string>
+    <string name="contentDescriptionColorUltramarine">Glas Tywyll</string>
+    <string name="contentDescriptionColorOcean11">Glas</string>
+    <string name="contentDescriptionColorCyan">Cyan</string>
+    <string name="contentDescriptionColorAquaMarine">Gwyrddlas</string>
+    <string name="contentDescriptionColorEmeraldGreen">Gwyrdd Emrallt</string>
+    <string name="contentDescriptionColorFreshCutLawn">Gwyrdd</string>
+    <string name="contentDescriptionColorChartreuse">Melynwyrdd</string>
+    <string name="contentDescriptionColorSunFlower">Melyn</string>
+    <string name="contentDescriptionColorTangerine">Oren</string>
+    <string name="contentDescriptionColorBloodOrange">Oren Tywyll</string>
+    <string name="contentDescriptionColorSriracha">Coch</string>
 
     <string name="courseFavorited">Cwrs %s, ffefryn</string>
     <string name="courseNotFavorited">Cwrs %s, ddim yn ffefryn.</string>

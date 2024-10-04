@@ -165,6 +165,9 @@ object CourseEndpoint : Endpoint(
                 if (request.url.queryParameterValues("include[]").contains("permissions")) {
                     course.permissions = data.coursePermissions[courseId]
                 }
+                if (request.url.queryParameterValues("include[]").contains("settings")) {
+                    course = course.copy(settings = data.courseSettings[courseId])
+                }
                 val userId = request.user!!.id
                 if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
                     request.successResponse(course)

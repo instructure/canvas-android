@@ -899,6 +899,21 @@
     <string name="colorPickerDialogMessage">नया रंग सेट करके अपने पाठ्यक्रम को निजीकृत बनाएं।</string>
     <string name="colorPickerError">इस समय पाठ्यक्रम का रंग सेट नहीं किया जा सका।</string>
 
+    <string name="contentDescriptionColorCottonCandy">गुलाबी</string>
+    <string name="contentDescriptionColorBarbie">सुर्ख गुलाबी</string>
+    <string name="contentDescriptionColorBarneyPurple">वायलेट</string>
+    <string name="contentDescriptionColorEggplant">बैंगनी</string>
+    <string name="contentDescriptionColorUltramarine">गहरा नीला</string>
+    <string name="contentDescriptionColorOcean11">नीला</string>
+    <string name="contentDescriptionColorCyan">सियान</string>
+    <string name="contentDescriptionColorAquaMarine">एक्वा ब्लू</string>
+    <string name="contentDescriptionColorEmeraldGreen">एमराल्ड ग्रीन</string>
+    <string name="contentDescriptionColorFreshCutLawn">हरा</string>
+    <string name="contentDescriptionColorChartreuse">शार्ट्रूज़ </string>
+    <string name="contentDescriptionColorSunFlower">पीला</string>
+    <string name="contentDescriptionColorTangerine">नारंगी</string>
+    <string name="contentDescriptionColorBloodOrange">गहरा नारंगी</string>
+    <string name="contentDescriptionColorSriracha">लाल</string>
 
     <string name="courseFavorited">पाठ्यक्रम %s, पसंदीदा।</string>
     <string name="courseNotFavorited">पाठ्यक्रम %s, गैर-पसंदीदा।</string>

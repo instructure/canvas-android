@@ -42,6 +42,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -82,14 +84,14 @@ class DashboardViewModelTest {
     private val alertCountUpdaterFlow = MutableSharedFlow<Boolean>()
     private val alertCountUpdater: AlertCountUpdater = TestAlertCountUpdater(alertCountUpdaterFlow)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
 
     @Before
     fun setup() {
         every { savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT) } returns null
-        every { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLUE)
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLUE)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
@@ -98,6 +100,7 @@ class DashboardViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -283,7 +286,6 @@ class DashboardViewModelTest {
             selectedStudentHolder = selectedStudentHolder,
             inboxCountUpdater = inboxCountUpdater,
             alertCountUpdater = alertCountUpdater,
-            colorKeeper = colorKeeper,
             savedStateHandle = savedStateHandle
         )
     }

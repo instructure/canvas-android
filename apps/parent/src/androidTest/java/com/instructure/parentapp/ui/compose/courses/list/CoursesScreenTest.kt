@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.ui.compose
+package com.instructure.parentapp.ui.compose.courses.list
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertHasClickAction

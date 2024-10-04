@@ -899,6 +899,21 @@
     <string name="colorPickerDialogMessage">Personaliza tu asignatura estableciendo un nuevo color.</string>
     <string name="colorPickerError">No se ha podido establecer el color de la asignatura en este momento.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Rosa</string>
+    <string name="contentDescriptionColorBarbie">Rosa intenso</string>
+    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
+    <string name="contentDescriptionColorEggplant">Morado</string>
+    <string name="contentDescriptionColorUltramarine">Azul oscuro</string>
+    <string name="contentDescriptionColorOcean11">Azul</string>
+    <string name="contentDescriptionColorCyan">Turquesa</string>
+    <string name="contentDescriptionColorAquaMarine">Azul agua</string>
+    <string name="contentDescriptionColorEmeraldGreen">Verde esmeralda</string>
+    <string name="contentDescriptionColorFreshCutLawn">Verde</string>
+    <string name="contentDescriptionColorChartreuse">Verde amarillento</string>
+    <string name="contentDescriptionColorSunFlower">Amarillo</string>
+    <string name="contentDescriptionColorTangerine">Naranja</string>
+    <string name="contentDescriptionColorBloodOrange">Naranja oscuro</string>
+    <string name="contentDescriptionColorSriracha">Rojo</string>
 
     <string name="courseFavorited">Asignatura %s, favorito.</string>
     <string name="courseNotFavorited">Asignatura %s, no favorito.</string>

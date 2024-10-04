@@ -886,6 +886,21 @@
     <string name="colorPickerDialogMessage">設定新顏色以個人化您的課程。</string>
     <string name="colorPickerError">無法設定課程顏色。</string>
 
+    <string name="contentDescriptionColorCottonCandy">粉色</string>
+    <string name="contentDescriptionColorBarbie">亮粉色</string>
+    <string name="contentDescriptionColorBarneyPurple">紫羅蘭色</string>
+    <string name="contentDescriptionColorEggplant">紫色</string>
+    <string name="contentDescriptionColorUltramarine">深藍色</string>
+    <string name="contentDescriptionColorOcean11">藍色</string>
+    <string name="contentDescriptionColorCyan">青色</string>
+    <string name="contentDescriptionColorAquaMarine">水藍色</string>
+    <string name="contentDescriptionColorEmeraldGreen">翡翠綠色</string>
+    <string name="contentDescriptionColorFreshCutLawn">綠色</string>
+    <string name="contentDescriptionColorChartreuse">黃綠色</string>
+    <string name="contentDescriptionColorSunFlower">黃色</string>
+    <string name="contentDescriptionColorTangerine">橙色</string>
+    <string name="contentDescriptionColorBloodOrange">深橙色</string>
+    <string name="contentDescriptionColorSriracha">紅色</string>
 
     <string name="courseFavorited">課程 %s，最愛。</string>
     <string name="courseNotFavorited">課程 %s，非最愛。</string>

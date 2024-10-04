@@ -509,6 +509,21 @@
     <string name="colorPickerDialogMessage">Dit is je persoonlijke kleurinstelling. Alleen jij kunt deze kleur voor de cursus zien.</string>
     <string name="colorPickerError">De cursuskleur kan op dit moment niet worden ingesteld.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Roze</string>
+    <string name="contentDescriptionColorBarbie">Felroze</string>
+    <string name="contentDescriptionColorBarneyPurple">Violet</string>
+    <string name="contentDescriptionColorEggplant">Paars</string>
+    <string name="contentDescriptionColorUltramarine">Donkerblauw</string>
+    <string name="contentDescriptionColorOcean11">Blauw</string>
+    <string name="contentDescriptionColorCyan">Cyaan</string>
+    <string name="contentDescriptionColorAquaMarine">Aquablauw</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdgroen</string>
+    <string name="contentDescriptionColorFreshCutLawn">Groen</string>
+    <string name="contentDescriptionColorChartreuse">Geelgroen</string>
+    <string name="contentDescriptionColorSunFlower">Geel</string>
+    <string name="contentDescriptionColorTangerine">Oranje</string>
+    <string name="contentDescriptionColorBloodOrange">Donkeroranje</string>
+    <string name="contentDescriptionColorSriracha">Rood</string>
     <string name="launch_link_in_external_browser">Link starten in externe browser</string>
     <string name="contentDescriptionSelectedFile">Geselecteerd bestand</string>
     <string name="contentDescriptionFileIcon">Bestandspictogram</string>
