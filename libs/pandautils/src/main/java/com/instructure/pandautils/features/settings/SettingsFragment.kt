@@ -63,6 +63,7 @@ class SettingsFragment : Fragment() {
     private var bitmap: Bitmap? = null
     private var xPos = 0
     private var yPos = 0
+    private var scrollValue = 0
     private var appThemeChange = false
 
 
@@ -97,6 +98,7 @@ class SettingsFragment : Fragment() {
             outState.putParcelable("bitmap", bitmap)
             outState.putInt("xPos", xPos)
             outState.putInt("yPos", yPos)
+            outState.putInt("scrollValue", scrollValue)
         }
     }
 

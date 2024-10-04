@@ -67,6 +67,7 @@ class SettingsViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val offlineEnabled = savedStateHandle.get<Boolean>(OFFLINE_ENABLED) ?: false
+    private val scrollValue = savedStateHandle.get<Int>("scrollValue") ?: 0
 
     init {
         val items = settingsBehaviour.settingsItems.filter {
@@ -95,6 +96,7 @@ class SettingsViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 items = items,
+                scrollValue = scrollValue
             )
         }
     }
@@ -110,7 +112,8 @@ class SettingsViewModel @Inject constructor(
                     _events.send(
                         SettingsViewModelAction.AppThemeClickPosition(
                             action.xPos,
-                            action.yPos
+                            action.yPos,
+                            action.scrollValue
                         )
                     )
                 }

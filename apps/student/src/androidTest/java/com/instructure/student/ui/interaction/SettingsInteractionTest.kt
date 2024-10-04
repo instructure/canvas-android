@@ -29,6 +29,7 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -37,7 +38,7 @@ import org.junit.Before
 import org.junit.Test
 
 @HiltAndroidTest
-class SettingsInteractionTest : StudentTest() {
+class SettingsInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     private lateinit var course: Course
@@ -59,7 +60,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openLegalPage()
+        settingsPage.clickOnSettingsItem("Legal")
 
         Intents.init()
         try {
@@ -80,7 +81,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openLegalPage()
+        settingsPage.clickOnSettingsItem("Legal")
         legalPage.openTermsOfUse()
         legalPage.assertTermsOfUseDisplayed()
     }
@@ -93,7 +94,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openLegalPage()
+        settingsPage.clickOnSettingsItem("Legal")
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
         canvasWebViewPage.checkWebViewURL("https://www.instructure.com/policies/product-privacy-policy")
@@ -109,7 +110,7 @@ class SettingsInteractionTest : StudentTest() {
 
         ApiPrefs.canGeneratePairingCode = true
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openPairObserverPage()
+        settingsPage.clickOnSettingsItem("Pair with Observer")
 
         pairObserverPage.hasCode("1")
         pairObserverPage.refresh()

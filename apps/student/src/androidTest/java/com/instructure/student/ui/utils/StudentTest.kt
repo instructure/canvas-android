@@ -32,6 +32,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -56,8 +57,8 @@ import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionListPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
+import com.instructure.student.ui.pages.FileChooserPage
 import com.instructure.student.ui.pages.FileListPage
-import com.instructure.student.ui.pages.FileUploadPage
 import com.instructure.student.ui.pages.GoToQuizPage
 import com.instructure.student.ui.pages.GradesPage
 import com.instructure.student.ui.pages.GroupBrowserPage
@@ -65,7 +66,6 @@ import com.instructure.student.ui.pages.HelpPage
 import com.instructure.student.ui.pages.HomeroomPage
 import com.instructure.student.ui.pages.ImportantDatesPage
 import com.instructure.student.ui.pages.InboxConversationPage
-import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
 import com.instructure.student.ui.pages.LoginFindSchoolPage
@@ -83,13 +83,13 @@ import com.instructure.student.ui.pages.PeopleListPage
 import com.instructure.student.ui.pages.PersonDetailsPage
 import com.instructure.student.ui.pages.PickerSubmissionUploadPage
 import com.instructure.student.ui.pages.ProfileSettingsPage
+import com.instructure.student.ui.pages.PushNotificationsPage
 import com.instructure.student.ui.pages.QRLoginPage
 import com.instructure.student.ui.pages.QuizListPage
 import com.instructure.student.ui.pages.QuizTakingPage
 import com.instructure.student.ui.pages.RemoteConfigSettingsPage
 import com.instructure.student.ui.pages.ResourcesPage
 import com.instructure.student.ui.pages.SchedulePage
-import com.instructure.student.ui.pages.SettingsPage
 import com.instructure.student.ui.pages.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.ShareExtensionTargetPage
 import com.instructure.student.ui.pages.SubmissionDetailsPage
@@ -137,7 +137,7 @@ abstract class StudentTest : CanvasTest() {
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val allCoursesPage = AllCoursesPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
-    val fileUploadPage = FileUploadPage()
+    val fileChooserPage = FileChooserPage()
     val helpPage = HelpPage()
     val inboxConversationPage = InboxConversationPage()
     val inboxPage = InboxPage()
@@ -163,7 +163,7 @@ abstract class StudentTest : CanvasTest() {
     val quizTakingPage = QuizTakingPage()
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
-    val settingsPage = SettingsPage()
+    val pushNotificationsPage = PushNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()

@@ -22,6 +22,8 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,12 +33,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -93,7 +97,15 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier.testTag("settingsList")) {
+    val scrollState = rememberScrollState()
+    LaunchedEffect(Unit) {
+        scrollState.scrollTo(uiState.scrollValue)
+    }
+    LazyColumn(
+        modifier = modifier
+            .testTag("settingsList")
+            .scrollable(scrollState, orientation = Orientation.Vertical)
+    ) {
         uiState.items.onEachIndexed { index, entry ->
             val (sectionTitle, items) = entry
             item {
@@ -111,7 +123,16 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
             items(items) { settingsItem ->
                 when (settingsItem) {
                     SettingsItem.APP_THEME -> {
-                        AppThemeItem(uiState)
+                        AppThemeItem(uiState.appTheme) { appTheme, x, y ->
+                            uiState.actionHandler(
+                                SettingsAction.SetAppTheme(
+                                    appTheme,
+                                    x,
+                                    y,
+                                    scrollState.value
+                                )
+                            )
+                        }
                     }
 
                     SettingsItem.OFFLINE_SYNCHRONIZATION -> {
@@ -155,7 +176,7 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
 }
 
 @Composable
-private fun AppThemeItem(uiState: SettingsUiState) {
+private fun AppThemeItem(appTheme: Int, appThemeSelected: (AppTheme, Int, Int) -> Unit) {
     val context = LocalContext.current
     val nightMode =
         (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -178,42 +199,36 @@ private fun AppThemeItem(uiState: SettingsUiState) {
             icon = if (nightMode) R.drawable.ic_panda_light_dark else R.drawable.ic_panda_light_light,
             title = R.string.appThemeLight,
             testTag = "lightThemeButton",
-            selected = uiState.appTheme == AppTheme.LIGHT.ordinal
+            selected = appTheme == AppTheme.LIGHT.ordinal
         ) {
-            uiState.actionHandler(
-                SettingsAction.SetAppTheme(
-                    AppTheme.LIGHT,
-                    it.x.toInt(),
-                    it.y.toInt()
-                )
+            appThemeSelected(
+                AppTheme.LIGHT,
+                it.x.toInt(),
+                it.y.toInt()
             )
         }
         AppThemeButton(
             icon = if (nightMode) R.drawable.ic_panda_dark_dark else R.drawable.ic_panda_dark_light,
             title = R.string.appThemeDark,
             testTag = "darkThemeButton",
-            selected = uiState.appTheme == AppTheme.DARK.ordinal
+            selected = appTheme == AppTheme.DARK.ordinal
         ) {
-            uiState.actionHandler(
-                SettingsAction.SetAppTheme(
-                    AppTheme.DARK,
-                    it.x.toInt(),
-                    it.y.toInt()
-                )
+            appThemeSelected(
+                AppTheme.DARK,
+                it.x.toInt(),
+                it.y.toInt()
             )
         }
         AppThemeButton(
             icon = if (nightMode) R.drawable.ic_panda_system_dark else R.drawable.ic_panda_system_light,
             title = R.string.appThemeAuto,
             testTag = "systemThemeButton",
-            selected = uiState.appTheme == AppTheme.SYSTEM.ordinal
+            selected = appTheme == AppTheme.SYSTEM.ordinal
         ) {
-            uiState.actionHandler(
-                SettingsAction.SetAppTheme(
-                    AppTheme.SYSTEM,
-                    it.x.toInt(),
-                    it.y.toInt()
-                )
+            appThemeSelected(
+                AppTheme.SYSTEM,
+                it.x.toInt(),
+                it.y.toInt()
             )
         }
     }
@@ -278,7 +293,7 @@ private fun OfflineSyncItem(uiState: SettingsUiState) {
                 horizontal = 16.dp,
                 vertical = 4.dp
             )
-            .testTag("settingsItem"),
+            .testTag("syncSettingsItem"),
         label = stringResource(R.string.offlineSyncSettingsTitle),
         value = uiState.offlineState?.let { stringResource(it) }
     )
