@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.composables
 
+import android.view.WindowManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -40,7 +41,10 @@ fun FullScreenDialog(
             usePlatformDefaultWidth = false
         )
     ) {
-        (LocalView.current.parent as? DialogWindowProvider)?.window?.setDimAmount(0f)
+        (LocalView.current.parent as? DialogWindowProvider)?.window?.apply {
+            setDimAmount(0f)
+            clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        }
         Box(
             modifier = Modifier.fillMaxSize()
         ) {

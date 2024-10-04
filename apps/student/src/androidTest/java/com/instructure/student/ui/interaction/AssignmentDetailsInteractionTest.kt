@@ -37,7 +37,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {
@@ -552,6 +552,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
             listOf("D", 0.6),
             listOf("F", 0.0)
         )
+
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = restrictQuantitativeData)
 
         val newCourse = course
             .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
