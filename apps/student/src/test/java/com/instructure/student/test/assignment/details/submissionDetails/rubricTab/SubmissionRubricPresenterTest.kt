@@ -21,9 +21,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

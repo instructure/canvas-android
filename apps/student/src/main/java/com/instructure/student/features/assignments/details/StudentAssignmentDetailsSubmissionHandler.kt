@@ -24,7 +24,6 @@ import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity
 import com.instructure.student.util.getStudioLTITool
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Date
 
@@ -90,7 +89,6 @@ class StudentAssignmentDetailsSubmissionHandler(
         refreshAssignment: () -> Unit,
     ) {
         submissionObserver = Observer<List<CreateSubmissionEntity>> { submissions ->
-            coroutineScope.launch {
                 val submission = submissions.lastOrNull()
                 lastSubmissionAssignmentId = submission?.assignmentId
                 lastSubmissionSubmissionType = submission?.submissionType
@@ -139,7 +137,6 @@ class StudentAssignmentDetailsSubmissionHandler(
                         refreshAssignment()
                     }
                 }
-            }
         }
     }
 }
