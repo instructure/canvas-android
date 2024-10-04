@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
@@ -176,14 +177,16 @@ class AlertsRepositoryTest {
                 observerId = 1,
                 threshold = "3",
                 alertType = AlertType.ASSIGNMENT_GRADE_LOW,
-                userId = 2
+                userId = 2,
+                workflowState = ThresholdWorkflowState.ACTIVE
             ),
             AlertThreshold(
                 id = 2,
                 observerId = 1,
                 threshold = "5",
                 alertType = AlertType.ASSIGNMENT_GRADE_HIGH,
-                userId = 2
+                userId = 2,
+                workflowState = ThresholdWorkflowState.ACTIVE
             )
         )
 

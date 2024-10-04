@@ -110,6 +110,9 @@ android {
             buildConfigField "String", "PRONOUN_TEACHER_TEST_USER", "\"$pronounTestTeacher\""
             buildConfigField "String", "PRONOUN_TEACHER_TEST_PASSWORD", "\"$pronounTestTeacherPassword\""
 
+            buildConfigField "String", "PUSH_NOTIFICATIONS_TEACHER_TEST_USER", "\"$pushNotificationsTestTeacher\""
+            buildConfigField "String", "PUSH_NOTIFICATIONS_TEACHER_TEST_PASSWORD", "\"$pushNotificationsTestTeacherPassword\""
+
             ext {
                 heapEnabled = true
             }

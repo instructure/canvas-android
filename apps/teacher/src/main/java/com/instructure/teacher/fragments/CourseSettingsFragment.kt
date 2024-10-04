@@ -31,10 +31,9 @@ import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setCourseImage
-import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentCourseSettingsBinding
 import com.instructure.teacher.dialog.EditCourseNameDialog
@@ -76,7 +75,7 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
         setupToolbar()
-        binding.courseImage.setCourseImage(course, course.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
+        binding.courseImage.setCourseImage(course, course.color, !TeacherPrefs.hideCourseColorOverlay)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -103,7 +102,7 @@ class CourseSettingsFragment : BasePresenterFragment<
         toolbar.setupBackButton(this@CourseSettingsFragment)
         toolbar.title = getString(R.string.course_settings)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
-        toolbar.setSubtitleTextColor(course.textAndIconColor)
+        toolbar.setSubtitleTextColor(course.color)
     }
 
     override fun showEditCourseNameDialog() {

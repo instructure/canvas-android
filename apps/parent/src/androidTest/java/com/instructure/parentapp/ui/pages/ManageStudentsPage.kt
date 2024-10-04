@@ -40,6 +40,13 @@ class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
             .assertHasClickAction()
     }
 
+    fun assertStudentItemNotDisplayed(user: User) {
+        composeTestRule.onNodeWithText(user.shortName.orEmpty())
+            .assertDoesNotExist()
+        composeTestRule.onNode(hasTestTag("studentListItem") and hasAnyChild(hasText(user.shortName.orEmpty())), true)
+            .assertDoesNotExist()
+    }
+
     fun tapStudent(name: String) {
         composeTestRule.onNodeWithText(name)
             .assertIsDisplayed()

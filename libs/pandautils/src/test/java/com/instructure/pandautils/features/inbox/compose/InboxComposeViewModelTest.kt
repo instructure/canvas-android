@@ -17,15 +17,26 @@ package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHiddenFields
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import io.mockk.coEvery
@@ -346,7 +357,7 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val attachment = Attachment()
         val attachmentEntity = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment)
-        val attachmentCardItem = AttachmentCardItem(Attachment(), AttachmentStatus.UPLOADED)
+        val attachmentCardItem = AttachmentCardItem(Attachment(), AttachmentStatus.UPLOADED, false)
         val uuid = UUID.randomUUID()
         coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
         viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
@@ -363,7 +374,7 @@ class InboxComposeViewModelTest {
         val fileDownloader: FileDownloader = mockk(relaxed = true)
         val viewModel = getViewModel(fileDownloader)
         val attachment = Attachment()
-        val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED)
+        val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false)
 
         viewModel.handleAction(InboxComposeActionHandler.OpenAttachment(attachmentCardItem))
 
@@ -554,7 +565,100 @@ class InboxComposeViewModelTest {
     }
     //endregion
 
+    // region Arguments
+
+    @Test
+    fun `Argument values are populated to ViewModel`() {
+        val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+
+        val mode = InboxComposeOptionsMode.REPLY
+        val conversation = Conversation(id = 2)
+        val messages = listOf(Message(id = 2), Message(id = 3))
+        val contextCode = "course_1"
+        val contextName = "Course 1"
+        val recipients = listOf(Recipient(stringId = "1"))
+        val subject = "Test subject"
+        val body = "Test body"
+        val attachments = listOf(Attachment())
+        coEvery { savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS) } returns InboxComposeOptions(
+            mode = mode,
+            previousMessages = InboxComposeOptionsPreviousMessages(conversation, messages),
+            defaultValues = InboxComposeOptionsDefaultValues(
+                contextCode = contextCode,
+                contextName = contextName,
+                recipients = recipients,
+                subject = subject,
+                body = body,
+                attachments = attachments
+            )
+        )
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val uiState = viewmodel.uiState.value
+
+        assertEquals(mode, uiState.inboxComposeMode)
+        assertEquals(conversation, uiState.previousMessages?.conversation)
+        assertEquals(messages, uiState.previousMessages?.previousMessages)
+        assertEquals(contextName, uiState.selectContextUiState.selectedCanvasContext?.name)
+        assertEquals(contextCode, uiState.selectContextUiState.selectedCanvasContext?.contextId)
+        assertEquals(recipients, uiState.recipientPickerUiState.selectedRecipients)
+        assertEquals(subject, uiState.subject.text)
+        assertEquals(body, uiState.body.text)
+        assertEquals(attachments, uiState.attachments.map { it.attachment })
+    }
+
+    @Test
+    fun `Argument disabled fields are populated to ViewModel`() {
+        val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+
+        coEvery { savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS) } returns InboxComposeOptions(
+            disabledFields = InboxComposeOptionsDisabledFields(
+                isContextDisabled = true,
+                isRecipientsDisabled = true,
+                isSendIndividualDisabled = true,
+                isSubjectDisabled = true,
+                isBodyDisabled = true,
+                isAttachmentDisabled = true
+            )
+        )
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val disabledFields = viewmodel.uiState.value.disabledFields
+
+        assertEquals(true, disabledFields.isContextDisabled)
+        assertEquals(true, disabledFields.isRecipientsDisabled)
+        assertEquals(true, disabledFields.isSendIndividualDisabled)
+        assertEquals(true, disabledFields.isSubjectDisabled)
+        assertEquals(true, disabledFields.isBodyDisabled)
+        assertEquals(true, disabledFields.isAttachmentDisabled)
+    }
+
+    @Test
+    fun `Argument hidden fields are populated to ViewModel`() {
+        val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+
+        coEvery { savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS) } returns InboxComposeOptions(
+            hiddenFields = InboxComposeOptionsHiddenFields(
+                isContextHidden = true,
+                isRecipientsHidden = true,
+                isSendIndividualHidden = true,
+                isSubjectHidden= true,
+                isBodyHidden = true,
+                isAttachmentHidden = true
+            )
+        )
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val hiddenFields = viewmodel.uiState.value.hiddenFields
+
+        assertEquals(true, hiddenFields.isContextHidden)
+        assertEquals(true, hiddenFields.isRecipientsHidden)
+        assertEquals(true, hiddenFields.isSendIndividualHidden)
+        assertEquals(true, hiddenFields.isSubjectHidden)
+        assertEquals(true, hiddenFields.isBodyHidden)
+        assertEquals(true, hiddenFields.isAttachmentHidden)
+    }
+
+    // endregion
+
     private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
-        return InboxComposeViewModel(context, fileDownloader, inboxComposeRepository, attachmentDao)
+        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao)
     }
 }

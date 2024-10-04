@@ -434,10 +434,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.assertHasAssignment(otherTypeAssignment)
         assignmentListPage.assertHasAssignment(gradedAssignment)
 
-        Log.d(STEP_TAG, "Click on the 'Filter' menu on the toolbar.")
-        assignmentListPage.clickFilterMenu()
-
-        Log.d(STEP_TAG, "Filter the MISSING assignments.")
+        Log.d(STEP_TAG, "Filter the 'MISSING' assignments.")
         assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.MISSING)
 
         Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' MISSING assignment is displayed and the others at NOT.")
@@ -446,10 +443,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
 
-        Log.d(STEP_TAG, "Click on the 'Filter' menu on the toolbar.")
-        assignmentListPage.clickFilterMenu()
-
-        Log.d(STEP_TAG, "Filter the GRADED assignments.")
+        Log.d(STEP_TAG, "Filter the 'GRADED' assignments.")
         assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.GRADED)
 
         Log.d(STEP_TAG, "Assert that the '${gradedAssignment.name}' GRADED assignment is displayed.")
@@ -458,10 +452,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(missingAssignment.name)
 
-        Log.d(STEP_TAG, "Click on the 'Filter' menu on the toolbar.")
-        assignmentListPage.clickFilterMenu()
-
-        Log.d(STEP_TAG, "Set back the filter to show ALL the assignments like by default.")
+        Log.d(STEP_TAG, "Set back the filter to show 'ALL' the assignments like by default.")
         assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.ALL)
         assignmentListPage.assertPageObjects()
 

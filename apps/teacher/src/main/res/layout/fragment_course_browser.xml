@@ -42,7 +42,7 @@
                 android:id="@+id/collapsingToolbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:contentScrim="@color/white"
+                app:contentScrim="@color/textLightest"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <FrameLayout
@@ -78,8 +78,12 @@
                             android:ellipsize="end"
                             android:gravity="center"
                             android:maxLines="3"
-                            android:textColor="@color/white"
+                            android:textColor="@color/textLightest"
                             android:textSize="24sp"
+                            android:shadowColor="@color/shadowColor"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="4"
                             tools:text="Title of Course"/>
 
                         <!-- Subtitle -->
@@ -93,8 +97,12 @@
                             android:gravity="center"
                             android:lines="1"
                             android:maxLines="1"
-                            android:textColor="@color/white"
+                            android:textColor="@color/textLightest"
                             android:textSize="16sp"
+                            android:shadowColor="@color/shadowColor"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="4"
                             tools:text="Subtitle"/>
 
                     </LinearLayout>

@@ -40,7 +40,16 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.binding.BindableSpinnerAdapter
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.asStateList
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.isAccessibilityEnabled
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withLuminance
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSubmissionDetailsBinding
@@ -49,7 +58,14 @@ import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.AnnotationSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.DiscussionSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.LtiSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.MediaSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.PdfSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.QuizSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionMessageFragment
 import com.instructure.student.mobius.common.ui.MobiusView
@@ -109,7 +125,7 @@ class SubmissionDetailsView(
         drawerTabLayout.setupWithViewPager(drawerViewPager)
 
         // Tint the tab with the course color
-        val tint = canvasContext.textAndIconColor
+        val tint = canvasContext.color
         drawerTabLayout.setSelectedTabIndicatorColor(tint)
         drawerTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), tint)
 

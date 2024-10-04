@@ -34,11 +34,19 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MASTERY_PATH_SELECTION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentAssignmentBinding
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_MASTERY_PATH_SELECTION)
 class MasteryPathSelectionFragment : ParentFragment() {
@@ -141,9 +149,9 @@ class MasteryPathSelectionFragment : ParentFragment() {
 
     //region Setup
     private fun setupTabLayoutColors() {
-        val color = canvasContext.backgroundColor
+        val color = canvasContext.color
         binding.tabLayout.setBackgroundColor(color)
-        binding.tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.white))
+        binding.tabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.transparentWhite), requireContext().getColor(R.color.textLightest))
     }
     //endregion
 

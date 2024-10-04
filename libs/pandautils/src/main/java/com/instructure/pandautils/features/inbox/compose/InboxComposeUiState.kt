@@ -21,12 +21,22 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.pandautils.compose.composables.MultipleValuesRowState
 import com.instructure.pandautils.compose.composables.SelectContextUiState
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHiddenFields
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import java.util.EnumMap
 
 data class InboxComposeUiState(
+    val inboxComposeMode: InboxComposeOptionsMode = InboxComposeOptionsMode.NEW_MESSAGE,
     val selectContextUiState: SelectContextUiState = SelectContextUiState(),
     val recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
     val inlineRecipientSelectorState: MultipleValuesRowState<Recipient> = MultipleValuesRowState(isSearchEnabled = true),
+    val disabledFields: InboxComposeOptionsDisabledFields = InboxComposeOptionsDisabledFields(),
+    val hiddenFields: InboxComposeOptionsHiddenFields = InboxComposeOptionsHiddenFields(),
+    val previousMessages: InboxComposeOptionsPreviousMessages? = null,
     val screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     val sendIndividual: Boolean = false,
     val subject: TextFieldValue = TextFieldValue(""),
@@ -47,6 +57,7 @@ sealed class InboxComposeViewModelAction {
     data object UpdateParentFragment: InboxComposeViewModelAction()
     data object OpenAttachmentPicker: InboxComposeViewModelAction()
     data class ShowScreenResult(val message: String): InboxComposeViewModelAction()
+    data class UrlSelected(val url: String): InboxComposeViewModelAction()
 }
 
 sealed class InboxComposeActionHandler {
@@ -65,6 +76,7 @@ sealed class InboxComposeActionHandler {
     data object AddAttachmentSelected : InboxComposeActionHandler()
     data class RemoveAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
     data class OpenAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
+    data class UrlSelected(val url: String) : InboxComposeActionHandler()
 }
 
 sealed class InboxComposeScreenOptions {

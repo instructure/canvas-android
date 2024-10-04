@@ -72,7 +72,7 @@ import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 private const val PAGE_COUNT = 1000
@@ -103,7 +103,7 @@ fun CalendarEvents(
     HorizontalPager(
         state = pagerState,
         modifier = modifier,
-        beyondBoundsPageCount = 2,
+        beyondViewportPageCount = 2,
         reverseLayout = false,
         pageSize = PageSize.Fill,
         pageContent = { page ->
@@ -184,7 +184,7 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
     val contextColor = if (eventUiState.canvasContext is User) {
         Color(ThemePrefs.brandColor)
     } else {
-        Color(eventUiState.canvasContext.textAndIconColor)
+        Color(eventUiState.canvasContext.color)
     }
     Row(
         modifier

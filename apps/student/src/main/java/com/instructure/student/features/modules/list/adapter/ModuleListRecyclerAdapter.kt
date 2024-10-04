@@ -43,8 +43,8 @@ import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.features.modules.list.CollapsedModulesStore
@@ -110,7 +110,7 @@ open class ModuleListRecyclerAdapter(
             val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
             holder.bind(moduleItem, itemPosition == 0, itemPosition == groupItemCount - 1)
         } else {
-            val courseColor = courseContext.textAndIconColor
+            val courseColor = courseContext.color
             val groupItemCount = getGroupItemCount(moduleObject)
             val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
 
@@ -196,7 +196,7 @@ open class ModuleListRecyclerAdapter(
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setContentView(R.layout.progress_dialog)
-        val currentColor = courseContext.textAndIconColor
+        val currentColor = courseContext.color
 
         (dialog.findViewById<View>(R.id.progressBar) as ProgressBar).indeterminateDrawable.setColorFilter(currentColor, PorterDuff.Mode.SRC_ATOP)
         return dialog

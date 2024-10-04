@@ -70,6 +70,7 @@ import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.pages.PostSettingsPage
 import com.instructure.teacher.ui.pages.ProfileSettingsPage
+import com.instructure.teacher.ui.pages.PushNotificationsPage
 import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage
@@ -114,6 +115,7 @@ abstract class TeacherTest : CanvasTest() {
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val editDashboardPage = EditDashboardPage()
+    val pushNotificationsPage = PushNotificationsPage()
     val legalPage = LegalPage()
     val helpPage = HelpPage()
     val aboutPage = AboutPage()

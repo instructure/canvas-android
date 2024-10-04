@@ -26,4 +26,9 @@ class AddStudentRepository(private val observerApi: ObserverApi) {
         val params = RestParams(isForceReadFromNetwork = true)
         return observerApi.pairStudent(pairingCode, params)
     }
+
+    suspend fun unpairStudent(studentId: Long): DataResult<Unit> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return observerApi.unpairStudent(studentId, params)
+    }
 }

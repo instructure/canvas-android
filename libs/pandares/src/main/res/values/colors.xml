@@ -63,7 +63,10 @@
     <color name="tiara">#9EA6AD</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="backgroundDarkMode">#111213</color>
+    <color name="shadowColor">#66000000</color>
+
+    <color name="backgroundDarkMode">#151D24</color>
+    <color name="textOnColorDark">#273540</color>
     <color name="elevatedDarkColor">#242526</color>
 
     <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
@@ -106,21 +109,46 @@
     <color name="login_studentAppTheme">#ee0612</color>
 
     <!-- Course Colors for customization -->
-    <color name="colorCottonCandy">#FFF26090</color>
-    <color name="colorBarbie">#FFEA1661</color>
-    <color name="colorBarneyPurple">#FF903A99</color>
-    <color name="colorEggplant">#FF65469F</color>
-    <color name="colorUltramarine">#FF4452A6</color>
-    <color name="colorOcean11">#FF1482C8</color>
-    <color name="colorCyan">#FF2CA3DE</color>
-    <color name="colorAquaMarine">#FF00BCD5</color>
-    <color name="colorEmeraldGreen">#FF009788</color>
-    <color name="colorFreshCutLawn">#FF3FA142</color>
-    <color name="colorChartreuse">#FF89C540</color>
-    <color name="colorSunFlower">#FFFFC100</color>
-    <color name="colorTangerine">#FFFA9800</color>
-    <color name="colorBloodOrange">#FFF2581B</color>
-    <color name="colorSriracha">#FFF2422E</color>
+    <color name="courseColor1">#A31C73</color>
+    <color name="courseColor2">#C54396</color>
+    <color name="courseColor3">#9E58BD</color>
+    <color name="courseColor4">#2573DF</color>
+    <color name="courseColor5">#197EAB</color>
+    <color name="courseColor6">#00828E</color>
+    <color name="courseColor7">#048660</color>
+    <color name="courseColor8">#27872B</color>
+    <color name="courseColor9">#996E00</color>
+    <color name="courseColor10">#BF5811</color>
+    <color name="courseColor11">#ED0000</color>
+    <color name="courseColor12">#767676</color>
+
+
+    <!-- We need to have the dark/light variants mapped because for the backend we always send the light variant -->
+    <color name="courseColor1light">#A31C73</color>
+    <color name="courseColor2light">#C54396</color>
+    <color name="courseColor3light">#9E58BD</color>
+    <color name="courseColor4light">#2573DF</color>
+    <color name="courseColor5light">#197EAB</color>
+    <color name="courseColor6light">#00828E</color>
+    <color name="courseColor7light">#048660</color>
+    <color name="courseColor8light">#27872B</color>
+    <color name="courseColor9light">#996E00</color>
+    <color name="courseColor10light">#BF5811</color>
+    <color name="courseColor11light">#ED0000</color>
+    <color name="courseColor12light">#767676</color>
+
+    <color name="courseColor1dark">#F26BBF</color>
+    <color name="courseColor2dark">#F7ABDB</color>
+    <color name="courseColor3dark">#CE7BE7</color>
+    <color name="courseColor4dark">#8094FF</color>
+    <color name="courseColor5dark">#61A2D2</color>
+    <color name="courseColor6dark">#4EA9AF</color>
+    <color name="courseColor7dark">#40AE84</color>
+    <color name="courseColor8dark">#4CB04C</color>
+    <color name="courseColor9dark">#BC972E</color>
+    <color name="courseColor10dark">#EA8039</color>
+    <color name="courseColor11dark">#FF6E4F</color>
+    <color name="courseColor12dark">#9C9C9C</color>
 
     <!-- Student Colors -->
     <color name="studentBlue">#FF007BC2</color>

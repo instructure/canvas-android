@@ -17,6 +17,13 @@
 package com.instructure.pandautils.utils
 
 import android.icu.text.Normalizer2
+import android.text.SpannableString
+import android.text.style.URLSpan
+import android.text.util.Linkify
+import android.util.Patterns
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 
 private val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
 
@@ -30,4 +37,38 @@ object Normalizer {
     fun normalize(text: String): String {
         return Normalizer2.getNFDInstance().normalize(text)
     }
+}
+
+fun String.linkify(
+    linkStyle: SpanStyle,
+) = buildAnnotatedString {
+    append(this@linkify)
+
+    val spannable = SpannableString(this@linkify)
+    Linkify.addLinks(spannable, Patterns.WEB_URL, null)
+    Linkify.addLinks(spannable, Patterns.EMAIL_ADDRESS, null)
+    Linkify.addLinks(spannable, Patterns.PHONE, null)
+
+    val spans = spannable.getSpans(0, spannable.length, URLSpan::class.java)
+    for (span in spans) {
+        val start = spannable.getSpanStart(span)
+        val end = spannable.getSpanEnd(span)
+
+        addStyle(
+            start = start,
+            end = end,
+            style = linkStyle,
+        )
+        addStringAnnotation(
+            tag = "URL",
+            annotation = span.url,
+            start = start,
+            end = end
+        )
+    }
+}
+
+fun AnnotatedString.handleUrlAt(position: Int, onFound: (String) -> Unit) =
+    getStringAnnotations("URL", position, position).firstOrNull()?.item?.let {
+        onFound(it)
 }

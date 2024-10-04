@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.StudentContextFragment
@@ -65,6 +66,10 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
     override fun routeToNewMessage() {
         val args = AddMessageFragment.createBundle()
         RouteMatcher.route(activity, Route(AddMessageFragment::class.java, null, args))
+    }
+
+    override fun routeToCompose(options: InboxComposeOptions) {
+        TODO("Not yet implemented")
     }
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {

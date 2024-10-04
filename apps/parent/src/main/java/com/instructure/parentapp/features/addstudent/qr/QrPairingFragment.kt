@@ -86,6 +86,7 @@ class QrPairingFragment : Fragment() {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 requireActivity().onBackPressed()
             }
+            else -> {}
         }
     }
 

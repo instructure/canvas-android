@@ -41,7 +41,7 @@ abstract class BaseRemoteViewsService : RemoteViewsService() {
             val widgetBackgroundPref = getWidgetBackgroundPref(widgetId)
             val widgetBackgroundLight = widgetBackgroundPref.equals(WidgetSetupActivity.WIDGET_BACKGROUND_COLOR_LIGHT, ignoreCase = true)
             val themedColor = ColorKeeper.getOrGenerateColor(canvasContext)
-            return if (widgetBackgroundLight) themedColor.light else themedColor.darkTextAndIconColor
+            return if (widgetBackgroundLight) themedColor.light else themedColor.dark
         }
 
         fun getWidgetBackgroundResourceId(widgetId: Int): Int {

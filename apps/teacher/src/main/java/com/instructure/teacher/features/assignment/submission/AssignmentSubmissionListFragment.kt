@@ -35,7 +35,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -176,7 +176,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         swipeRefreshLayout.isRefreshing = false
 
         // Theme the toolbar again since visibilities may have changed
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, course.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, course.color, requireContext().getColor(R.color.textLightest))
 
         updateStatuses() // Muted is now also set by not being in the new gradebook
     }
@@ -201,7 +201,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             assignmentSubmissionListToolbar.title = getString(R.string.submissions)
             assignmentSubmissionListToolbar.subtitle = course.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, course.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, course.color, requireContext().getColor(R.color.textLightest))
         ViewStyler.themeFAB(addMessage)
     }
 

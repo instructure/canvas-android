@@ -164,6 +164,7 @@ abstract class StudentTest : CanvasTest() {
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
+    val pushNotificationsPage = PushNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()

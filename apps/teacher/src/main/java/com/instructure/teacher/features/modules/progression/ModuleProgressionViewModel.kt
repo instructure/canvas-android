@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -99,7 +99,7 @@ class ModuleProgressionViewModel @Inject constructor(
                     items.map { it.first!! },
                     moduleNames,
                     position,
-                    canvasContext.textAndIconColor
+                    canvasContext.color
                 )
             )
             _state.postValue(ViewState.Success)

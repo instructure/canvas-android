@@ -60,7 +60,7 @@ class CoursesViewModel @Inject constructor(
 
     private fun loadCourses(forceRefresh: Boolean = false) {
         viewModelScope.tryLaunch {
-            val color = colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor()
+            val color = colorKeeper.getOrGenerateUserColor(selectedStudent).color()
 
             _uiState.update {
                 it.copy(

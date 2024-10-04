@@ -52,7 +52,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isGroup
 import com.instructure.pandautils.utils.isUser
@@ -159,7 +159,7 @@ private fun SelectContextItem(
         if (canvasContext is User) {
             ThemePrefs.brandColor
         } else {
-            canvasContext.backgroundColor
+            canvasContext.color
         }
     )
     Row(

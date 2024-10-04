@@ -51,7 +51,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.replaceWithURLQueryParameter
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.toast
@@ -96,7 +96,7 @@ class LtiLaunchFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.loadingView.setOverrideColor(canvasContext.backgroundColor)
+        binding.loadingView.setOverrideColor(canvasContext.color)
         binding.toolName.setTextForVisibility(title().validOrNull())
     }
 
@@ -164,7 +164,7 @@ class LtiLaunchFragment : ParentFragment() {
             .build()
 
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext.backgroundColor)
+            .setToolbarColor(canvasContext.color)
             .build()
 
         var intent = CustomTabsIntent.Builder()

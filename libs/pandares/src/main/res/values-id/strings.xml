@@ -899,21 +899,6 @@
     <string name="colorPickerDialogMessage">Personalisasikan kursus Anda dengan mengatur warna baru.</string>
     <string name="colorPickerError">Warna kursus tidak dapat diatur pada saat ini.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Merah Muda</string>
-    <string name="contentDescriptionColorBarbie">Hot Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Ungu</string>
-    <string name="contentDescriptionColorUltramarine">Biru Gelap</string>
-    <string name="contentDescriptionColorOcean11">Biru</string>
-    <string name="contentDescriptionColorCyan">Sian</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
-    <string name="contentDescriptionColorFreshCutLawn">Hijau</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Kuning</string>
-    <string name="contentDescriptionColorTangerine">Oranye</string>
-    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
-    <string name="contentDescriptionColorSriracha">Merah</string>
 
     <string name="courseFavorited">Kursus %s, favorit.</string>
     <string name="courseNotFavorited">Kursus %s, bukan favorit.</string>

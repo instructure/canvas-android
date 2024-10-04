@@ -113,4 +113,20 @@ class AddStudentViewModelTest {
 
         assert(viewModel.uiState.value.isError.not())
     }
+
+    @Test
+    fun `unpairStudent should emit UnpairStudentSuccess`() = runTest {
+        coEvery { repository.unpairStudent(any()) } returns DataResult.Success(Unit)
+
+        val events = mutableListOf<AddStudentViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.uiState.value.actionHandler(AddStudentAction.UnpairStudent(1))
+
+        events.addAll(viewModel.events.replayCache)
+
+        assert(events.last() is AddStudentViewModelAction.UnpairStudentSuccess)
+    }
 }
