@@ -75,6 +75,7 @@ class AlertsViewModelTest {
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+        mockkStatic(User::studentColor)
 
         coEvery { repository.getAlertThresholdForStudent(any(), any()) } returns emptyList()
     }
@@ -82,11 +83,13 @@ class AlertsViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
     fun `Load alerts on student change`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -176,6 +179,7 @@ class AlertsViewModelTest {
     @Test
     fun `Empty state`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         coEvery {
             repository.getAlertsForStudent(student.id, any())
@@ -213,6 +217,7 @@ class AlertsViewModelTest {
     @Test
     fun `Error state if getting alerts fail`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         coEvery {
             repository.getAlertsForStudent(student.id, any())
@@ -234,6 +239,7 @@ class AlertsViewModelTest {
     @Test
     fun `Refresh data`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -295,6 +301,7 @@ class AlertsViewModelTest {
     @Test
     fun `Dismiss alert`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -357,6 +364,7 @@ class AlertsViewModelTest {
     @Test
     fun `Dismiss error resets event`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -418,6 +426,7 @@ class AlertsViewModelTest {
     @Test
     fun `Undo dismissal`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -484,6 +493,7 @@ class AlertsViewModelTest {
     @Test
     fun `Undo does not reset event on error`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -548,6 +558,7 @@ class AlertsViewModelTest {
     @Test
     fun `Navigate to URL`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -607,6 +618,7 @@ class AlertsViewModelTest {
     @Test
     fun `Navigation to alert marks it read`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -669,6 +681,7 @@ class AlertsViewModelTest {
     @Test
     fun `If marking the alert read fails the alert will remain read until refresh`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(

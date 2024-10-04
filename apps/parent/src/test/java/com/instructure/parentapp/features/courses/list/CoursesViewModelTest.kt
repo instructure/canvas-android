@@ -67,12 +67,14 @@ class CoursesViewModelTest {
     @Before
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        mockkStatic(User::studentColor)
         Dispatchers.setMain(testDispatcher)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -80,6 +82,7 @@ class CoursesViewModelTest {
         val student = User(1L)
         coEvery { repository.getCourses(student.id, any()) } returns listOf(Course(id = 1L, name = "Course 1", courseCode = "code-1"))
         every { courseGradeFormatter.getGradeText(any(), any()) } returns "A+"
+        every { student.studentColor } returns 1
 
         createViewModel()
         selectedStudentFlow.emit(student)
@@ -111,6 +114,7 @@ class CoursesViewModelTest {
         )
         coEvery { repository.getCourses(any(), any()) } returns courses
         every { courseGradeFormatter.getGradeText(any(), any()) } returns "A+"
+        every { student.studentColor } returns 1
 
         createViewModel()
         selectedStudentFlow.emit(student)
@@ -136,6 +140,7 @@ class CoursesViewModelTest {
     fun `Error load courses`() = runTest {
         val student = User(1L)
         coEvery { repository.getCourses(student.id, any()) } throws Exception()
+        every { student.studentColor } returns 1
 
         createViewModel()
         selectedStudentFlow.emit(student)
@@ -152,7 +157,9 @@ class CoursesViewModelTest {
     @Test
     fun `Refresh reloads courses`() = runTest {
         createViewModel()
-        selectedStudentHolder.updateSelectedStudent(User(1L))
+        val student = User(1L)
+        selectedStudentHolder.updateSelectedStudent(student)
+        every { student.studentColor } returns 1
 
         viewModel.handleAction(CoursesAction.Refresh)
 
