@@ -899,6 +899,21 @@
     <string name="colorPickerDialogMessage">Gerður námskeiðið persónulegra með því að stilla inn nýjan lit.</string>
     <string name="colorPickerError">Ekki var hægt að stilla lit námskeiðs í augnablikinu.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Bleikt</string>
+    <string name="contentDescriptionColorBarbie">Skærbleikur</string>
+    <string name="contentDescriptionColorBarneyPurple">Blárauður</string>
+    <string name="contentDescriptionColorEggplant">Fjólublár</string>
+    <string name="contentDescriptionColorUltramarine">Dökkblár</string>
+    <string name="contentDescriptionColorOcean11">Blár</string>
+    <string name="contentDescriptionColorCyan">Blágrænn</string>
+    <string name="contentDescriptionColorAquaMarine">Vatnsblár</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragðsgrænn</string>
+    <string name="contentDescriptionColorFreshCutLawn">Grænn</string>
+    <string name="contentDescriptionColorChartreuse">Ljós gulgrænn</string>
+    <string name="contentDescriptionColorSunFlower">Gulur</string>
+    <string name="contentDescriptionColorTangerine">Appelsínugulur</string>
+    <string name="contentDescriptionColorBloodOrange">Dökk appelsínugulur</string>
+    <string name="contentDescriptionColorSriracha">Rauður</string>
 
     <string name="courseFavorited">Námskeið %s, uppáhalds.</string>
     <string name="courseNotFavorited">Námskeið %s, ekki uppáhalds.</string>

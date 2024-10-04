@@ -511,6 +511,21 @@
     <string name="colorPickerDialogMessage">Ini ialah tetapan warna peribadi anda. Hanya anda sahaja akan melihat warna ini untuk kursus ini.</string>
     <string name="colorPickerError">Warna kursus tidak boleh ditetapkan pada masa ini.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Merah jambu</string>
+    <string name="contentDescriptionColorBarbie">Merah jambu terang</string>
+    <string name="contentDescriptionColorBarneyPurple">Lembayung</string>
+    <string name="contentDescriptionColorEggplant">Ungu</string>
+    <string name="contentDescriptionColorUltramarine">Biru Tua</string>
+    <string name="contentDescriptionColorOcean11">Biru</string>
+    <string name="contentDescriptionColorCyan">Sian</string>
+    <string name="contentDescriptionColorAquaMarine">Biru Laut</string>
+    <string name="contentDescriptionColorEmeraldGreen">Hijau Zamrud</string>
+    <string name="contentDescriptionColorFreshCutLawn">Hijau</string>
+    <string name="contentDescriptionColorChartreuse">Hijau Pucuk Pisang</string>
+    <string name="contentDescriptionColorSunFlower">Kuning</string>
+    <string name="contentDescriptionColorTangerine">Oren</string>
+    <string name="contentDescriptionColorBloodOrange">Oren Tua</string>
+    <string name="contentDescriptionColorSriracha">Merah</string>
     <string name="launch_link_in_external_browser">Lancarkan pautan dalam pelayar luar</string>
     <string name="contentDescriptionSelectedFile">Fail Dipilih</string>
     <string name="contentDescriptionFileIcon">Ikon Fail</string>

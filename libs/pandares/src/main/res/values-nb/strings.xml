@@ -899,6 +899,21 @@
     <string name="colorPickerDialogMessage">Personifiser emnet ved å gi det en ny farge.</string>
     <string name="colorPickerError">Emnefargen kan ikke angis nå.</string>
 
+    <string name="contentDescriptionColorCottonCandy">Rosa</string>
+    <string name="contentDescriptionColorBarbie">Varmrosa</string>
+    <string name="contentDescriptionColorBarneyPurple">Fiolett</string>
+    <string name="contentDescriptionColorEggplant">Lilla</string>
+    <string name="contentDescriptionColorUltramarine">Mørkeblå</string>
+    <string name="contentDescriptionColorOcean11">Blå</string>
+    <string name="contentDescriptionColorCyan">Cyan</string>
+    <string name="contentDescriptionColorAquaMarine">Aqua blå</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdgrønt</string>
+    <string name="contentDescriptionColorFreshCutLawn">Grønn</string>
+    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
+    <string name="contentDescriptionColorSunFlower">Gul</string>
+    <string name="contentDescriptionColorTangerine">Oransje</string>
+    <string name="contentDescriptionColorBloodOrange">Mørk oransje</string>
+    <string name="contentDescriptionColorSriracha">Rød</string>
 
     <string name="courseFavorited">Emne %s, favoritt.</string>
     <string name="courseNotFavorited">Emne %s, ikke favoritt.</string>
