@@ -15,8 +15,6 @@
  */
 package com.instructure.student.ui.renderTests
 
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvas.espresso.FeatureCategory
@@ -32,7 +30,7 @@ import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsFragment
-import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
@@ -40,11 +38,10 @@ import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -283,7 +280,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val data = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.CommentData( // ?? I don't know what this does, but I need to provide it
+        val data = SubmissionDetailsTabData.CommentData( // ?? I don't know what this does, but I need to provide it
             name = "Name",
             assignment = baseAssignment,
             submission = baseSubmission,

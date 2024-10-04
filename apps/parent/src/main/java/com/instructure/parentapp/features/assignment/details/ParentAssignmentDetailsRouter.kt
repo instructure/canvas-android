@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -147,8 +148,8 @@ class ParentAssignmentDetailsRouter: AssignmentDetailsRouter {
         studioLTITool: LTITool?
     ) = Unit
 
-    override fun showCustomReminderDialog(activity: FragmentActivity) {
-        CustomReminderDialog.newInstance().show(activity.supportFragmentManager, null)
+    override fun showCustomReminderDialog(fragment: Fragment) {
+        CustomReminderDialog.newInstance().show(fragment.childFragmentManager, null)
     }
 
     override fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {

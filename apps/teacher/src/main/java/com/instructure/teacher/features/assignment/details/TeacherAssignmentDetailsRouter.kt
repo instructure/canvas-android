@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -176,7 +177,7 @@ class TeacherAssignmentDetailsRouter: AssignmentDetailsRouter {
         TODO("Not yet implemented")
     }
 
-    override fun showCustomReminderDialog(activity: FragmentActivity) {
+    override fun showCustomReminderDialog(fragment: Fragment) {
         TODO("Not yet implemented")
     }
 

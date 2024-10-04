@@ -237,7 +237,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 checkAlarmPermission()
             }
             is AssignmentDetailAction.ShowCustomReminderDialog -> {
-                assignmentDetailsRouter.showCustomReminderDialog(requireActivity())
+                assignmentDetailsRouter.showCustomReminderDialog(this)
             }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
                 assignmentDetailsRouter.showDeleteReminderConfirmationDialog(requireContext(), action.onConfirmed)

@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -51,7 +52,7 @@ interface AssignmentDetailsRouter {
 
     fun showSubmitDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit, assignment: Assignment, course: Course, isStudioEnabled: Boolean, studioLTITool: LTITool?)
 
-    fun showCustomReminderDialog(activity: FragmentActivity)
+    fun showCustomReminderDialog(fragment: Fragment)
 
     fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit)
 

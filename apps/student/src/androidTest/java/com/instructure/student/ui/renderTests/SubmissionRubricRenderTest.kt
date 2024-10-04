@@ -26,16 +26,21 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.espresso.*
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RatingData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricFragment
-import com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.ui.pages.renderPages.SubmissionRubricRenderPage
 import com.instructure.student.ui.utils.assertFontSizeSP
 import com.spotify.mobius.runners.WorkRunner
@@ -292,7 +297,7 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val data = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.RubricData(
+        val data = SubmissionDetailsTabData.RubricData(
             name = "Rubric",
             assignment = Assignment(),
             submission = Submission()
@@ -311,7 +316,7 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val data = com.instructure.pandautils.features.assignments.details.mobius.submissionDetails.ui.SubmissionDetailsTabData.RubricData(
+        val data = SubmissionDetailsTabData.RubricData(
             name = "Rubric",
             assignment = Assignment(),
             submission = Submission()

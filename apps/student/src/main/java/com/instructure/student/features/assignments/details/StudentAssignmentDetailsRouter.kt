@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -356,8 +357,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter {
         )
     }
 
-    override fun showCustomReminderDialog(activity: FragmentActivity) {
-        CustomReminderDialog.newInstance().show(activity.supportFragmentManager, null)
+    override fun showCustomReminderDialog(activity: Fragment) {
+        CustomReminderDialog.newInstance().show(activity.childFragmentManager, null)
     }
 
     override fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {
