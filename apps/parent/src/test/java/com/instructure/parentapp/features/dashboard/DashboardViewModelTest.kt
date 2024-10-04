@@ -19,7 +19,6 @@ package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
@@ -33,8 +32,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
@@ -82,14 +79,12 @@ class DashboardViewModelTest {
     private val alertCountUpdaterFlow = MutableSharedFlow<Boolean>()
     private val alertCountUpdater: AlertCountUpdater = TestAlertCountUpdater(alertCountUpdaterFlow)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
 
     @Before
     fun setup() {
         every { savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT) } returns null
-        every { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLUE)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
@@ -272,6 +267,19 @@ class DashboardViewModelTest {
         assertEquals(DashboardViewModelAction.NavigateDeepLink(uri), events.first())
     }
 
+    @Test
+    fun `Update color updates add student item color`() {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+
+        createViewModel()
+
+        val items = viewModel.data.value.studentItems
+        viewModel.updateColor(123)
+
+        assertEquals(123, (items[2] as AddStudentItemViewModel).color)
+    }
+
     private fun createViewModel() {
         viewModel = DashboardViewModel(
             context = context,
@@ -283,7 +291,6 @@ class DashboardViewModelTest {
             selectedStudentHolder = selectedStudentHolder,
             inboxCountUpdater = inboxCountUpdater,
             alertCountUpdater = alertCountUpdater,
-            colorKeeper = colorKeeper,
             savedStateHandle = savedStateHandle
         )
     }

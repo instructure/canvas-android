@@ -39,8 +39,7 @@ class SplashViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: SplashRepository,
     private val apiPrefs: ApiPrefs,
-    private val colorKeeper: ColorKeeper,
-    private val themePrefs: ThemePrefs,
+    private val colorKeeper: ColorKeeper
 ) : ViewModel() {
 
     private val _events = Channel<SplashAction>()

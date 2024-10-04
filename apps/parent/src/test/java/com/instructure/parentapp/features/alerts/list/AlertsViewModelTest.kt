@@ -27,14 +27,16 @@ import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.TestSelectStudentHolder
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +65,6 @@ class AlertsViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val repository: AlertsRepository = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val alertCountUpdater: AlertCountUpdater = mockk(relaxed = true)
     private val selectedStudentFlow = MutableStateFlow<User?>(null)
     private val selectedStudentHolder = TestSelectStudentHolder(selectedStudentFlow)
@@ -75,7 +76,6 @@ class AlertsViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
 
-        coEvery { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         coEvery { repository.getAlertThresholdForStudent(any(), any()) } returns emptyList()
     }
 
@@ -726,8 +726,25 @@ class AlertsViewModelTest {
 
     }
 
+    @Test
+    fun `Change color when student color is changed`() = runTest {
+        val student = User(1L)
+        mockkStatic(User::studentColor)
+        every { student.studentColor } returns 1
+        createViewModel()
+        selectedStudentFlow.emit(student)
+
+        assertEquals(1, viewModel.uiState.value.studentColor)
+
+        every { student.studentColor } returns 2
+        selectedStudentHolder.selectedStudentColorChanged()
+
+        assertEquals(2, viewModel.uiState.value.studentColor)
+        unmockkAll()
+    }
+
     private fun createViewModel() {
         viewModel =
-            AlertsViewModel(repository, colorKeeper, selectedStudentHolder, alertCountUpdater)
+            AlertsViewModel(repository, selectedStudentHolder, alertCountUpdater)
     }
 }
