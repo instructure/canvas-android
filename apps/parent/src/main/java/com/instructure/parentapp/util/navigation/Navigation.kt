@@ -43,8 +43,7 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     private val baseUrl = apiPrefs.fullDomain
 
-    private val courseId = "course-id"
-    private val courseDetails = "$baseUrl/courses/{$courseId}"
+    private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
@@ -125,7 +124,7 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<QrPairingFragment>(qrPairing)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {
-                argument(courseId) {
+                argument(COURSE_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
@@ -218,6 +217,10 @@ class Navigation(apiPrefs: ApiPrefs) {
         } catch (e: Exception) {
             Log.e(this.javaClass.simpleName, e.message.orEmpty())
         }
+    }
+
+    companion object {
+        const val COURSE_ID = "course-id"
     }
 }
 

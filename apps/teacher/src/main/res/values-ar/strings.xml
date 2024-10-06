@@ -553,6 +553,21 @@
     <string name="colorPickerDialogMessage">هذا إعداد اللون الشخصي الخاص بك. أنت فقط من سترى هذا اللون للمساق.</string>
     <string name="colorPickerError">تعذر تعيين لون المساق في الوقت الحالي.</string>
 
+    <string name="contentDescriptionColorCottonCandy">وردي</string>
+    <string name="contentDescriptionColorBarbie">وردي ناصع</string>
+    <string name="contentDescriptionColorBarneyPurple">بنفسجي</string>
+    <string name="contentDescriptionColorEggplant">أرجواني</string>
+    <string name="contentDescriptionColorUltramarine">أزرق داكن</string>
+    <string name="contentDescriptionColorOcean11">أزرق</string>
+    <string name="contentDescriptionColorCyan">سماوي</string>
+    <string name="contentDescriptionColorAquaMarine">أزرق مائي</string>
+    <string name="contentDescriptionColorEmeraldGreen">أخضر زمردي</string>
+    <string name="contentDescriptionColorFreshCutLawn">أخضر</string>
+    <string name="contentDescriptionColorChartreuse">أخضر مائل للصفرة</string>
+    <string name="contentDescriptionColorSunFlower">أصفر</string>
+    <string name="contentDescriptionColorTangerine">برتقالي</string>
+    <string name="contentDescriptionColorBloodOrange">برتقالي غامق</string>
+    <string name="contentDescriptionColorSriracha">أحمر</string>
     <string name="launch_link_in_external_browser">رابط تشغيل في مستعرض خارجي</string>
     <string name="contentDescriptionSelectedFile">الملف المحدد</string>
     <string name="contentDescriptionFileIcon">أيقونة الملف</string>

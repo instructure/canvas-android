@@ -30,7 +30,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
@@ -58,7 +58,6 @@ class DashboardViewModel @Inject constructor(
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
     private val alertCountUpdater: AlertCountUpdater,
-    private val colorKeeper: ColorKeeper,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -182,7 +181,7 @@ class DashboardViewModel @Inject constructor(
 
         val studentItemsWithAddStudent = if (studentItems.isNotEmpty()) {
             studentItems + AddStudentItemViewModel(
-                colorKeeper.getOrGenerateUserColor(selectedStudent).color(),
+                selectedStudent.color,
                 ::addStudent
             )
         } else {
@@ -224,7 +223,7 @@ class DashboardViewModel @Inject constructor(
                 selectedStudent = student,
                 studentItems = it.studentItems.map { item ->
                     if (item is AddStudentItemViewModel) {
-                        item.copy(color = colorKeeper.getOrGenerateUserColor(student).color())
+                        item.copy(color = student.color)
                     } else {
                         item
                     }

@@ -29,6 +29,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
@@ -77,7 +78,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 points.setGone()
             } else {
                 points.setVisible()
-                val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context, restrictQuantitativeData, gradingScheme)
+                val (grade, contentDescription) = assignment.getGrade(submission, context, restrictQuantitativeData, gradingScheme)
                 points.text = grade
                 points.contentDescription = contentDescription
             }
