@@ -63,7 +63,7 @@ fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
 }
 
 
-fun getDateInCanvasCalendarFormat(dateString: String? = null): String {
+fun getDateInCanvasCalendarFormat(dateString: String? = getCurrentDateInIso8601()): String {
     val calendar = Calendar.getInstance()
 
     val day = calendar.get(Calendar.DAY_OF_MONTH)
@@ -76,6 +76,11 @@ fun getDateInCanvasCalendarFormat(dateString: String? = null): String {
     var dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
     if (day in 1..9) dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
     return dateFormat.format(Date())
+}
+
+fun getCurrentDateInIso8601(): String {
+    val iso8601Format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+    return iso8601Format.format(Date())
 }
 
 fun formatIso8601ToCustom(iso8601DateString: String?, customDateFormat: SimpleDateFormat): String {
