@@ -29,7 +29,6 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.has
 import com.instructure.espresso.R
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click

@@ -8,7 +8,6 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.BuildConfig
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.StudentTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

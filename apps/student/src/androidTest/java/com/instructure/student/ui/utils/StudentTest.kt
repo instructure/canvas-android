@@ -183,7 +183,7 @@ abstract class StudentTest : CanvasTest() {
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
-        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight();
+        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight()
     }
 
     // Get the number of files/avatars in our panda avatars folder
