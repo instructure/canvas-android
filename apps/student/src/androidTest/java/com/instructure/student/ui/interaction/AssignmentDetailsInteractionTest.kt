@@ -37,7 +37,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {

@@ -24,6 +24,8 @@ import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradeableStudent
+import com.instructure.canvasapi2.models.ObserveeAssignment
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionSummary
 import okio.Buffer
 import org.json.JSONObject
@@ -61,7 +63,11 @@ object AssignmentEndpoint : Endpoint(
             val assignment = data.assignments[pathVars.assignmentId]
 
             if (assignment != null) {
-                request.successResponse(assignment)
+                if (request.url.queryParameterValues("include[]").contains("observed_users")) {
+                    request.successResponse(getObserveeAssignment(assignment))
+                } else {
+                    request.successResponse(assignment)
+                }
             } else {
                 request.unauthorizedResponse()
             }
@@ -147,3 +153,50 @@ object AssignmentGroupListEndpoint : Endpoint(
         }
     }
 )
+
+/**
+ * Endpoint for assignments for observees in a course
+ */
+private fun getObserveeAssignment(assignment: Assignment) = ObserveeAssignment(
+        id = assignment.id,
+        name = assignment.name,
+        description = assignment.description,
+        submissionTypesRaw = assignment.submissionTypesRaw,
+        dueAt = assignment.dueAt,
+        pointsPossible = assignment.pointsPossible,
+        courseId = assignment.courseId,
+        isGradeGroupsIndividually = assignment.isGradeGroupsIndividually,
+        gradingType = assignment.gradingType,
+        needsGradingCount = assignment.needsGradingCount,
+        htmlUrl = assignment.htmlUrl,
+        url = assignment.url,
+        quizId = assignment.quizId,
+        rubric = assignment.rubric,
+        isUseRubricForGrading = assignment.isUseRubricForGrading,
+        rubricSettings = assignment.rubricSettings,
+        allowedExtensions = assignment.allowedExtensions,
+        submissionList = listOf(assignment.submission ?: Submission()),
+        assignmentGroupId = assignment.assignmentGroupId,
+        position = assignment.position,
+        isPeerReviews = assignment.isPeerReviews,
+        lockInfo = assignment.lockInfo,
+        lockedForUser = assignment.lockedForUser,
+        lockAt = assignment.lockAt,
+        unlockAt = assignment.unlockAt,
+        lockExplanation = assignment.lockExplanation,
+        discussionTopicHeader = assignment.discussionTopicHeader,
+        needsGradingCountBySection = assignment.needsGradingCountBySection,
+        freeFormCriterionComments = assignment.freeFormCriterionComments,
+        published = assignment.published,
+        groupCategoryId = assignment.groupCategoryId,
+        allDates = assignment.allDates,
+        userSubmitted = assignment.userSubmitted,
+        unpublishable = assignment.unpublishable,
+        overrides = assignment.overrides,
+        onlyVisibleToOverrides = assignment.onlyVisibleToOverrides,
+        anonymousPeerReviews = assignment.anonymousPeerReviews,
+        moderatedGrading = assignment.moderatedGrading,
+        anonymousGrading = assignment.anonymousGrading,
+        allowedAttempts = assignment.allowedAttempts,
+        isStudioEnabled = assignment.isStudioEnabled
+    )

@@ -32,6 +32,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -44,7 +45,6 @@ import com.instructure.student.ui.pages.AboutPage
 import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
 import com.instructure.student.ui.pages.AnnouncementListPage
-import com.instructure.student.ui.pages.AssignmentDetailsPage
 import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.pages.BookmarkPage
 import com.instructure.student.ui.pages.CanvasWebViewPage
@@ -65,7 +65,6 @@ import com.instructure.student.ui.pages.HelpPage
 import com.instructure.student.ui.pages.HomeroomPage
 import com.instructure.student.ui.pages.ImportantDatesPage
 import com.instructure.student.ui.pages.InboxConversationPage
-import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
 import com.instructure.student.ui.pages.LoginFindSchoolPage
@@ -92,6 +91,7 @@ import com.instructure.student.ui.pages.SchedulePage
 import com.instructure.student.ui.pages.SettingsPage
 import com.instructure.student.ui.pages.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.ShareExtensionTargetPage
+import com.instructure.student.ui.pages.StudentAssignmentDetailsPage
 import com.instructure.student.ui.pages.SubmissionDetailsPage
 import com.instructure.student.ui.pages.SyllabusPage
 import com.instructure.student.ui.pages.TextSubmissionUploadPage
@@ -120,7 +120,7 @@ abstract class StudentTest : CanvasTest() {
      */
     val annotationCommentListPage = AnnotationCommentListPage()
     val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
+    val assignmentDetailsPage = StudentAssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()
     val canvasWebViewPage = CanvasWebViewPage()

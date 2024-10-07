@@ -14,11 +14,10 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.pages
+package com.instructure.canvas.espresso.common.pages
 
 import android.view.View
 import android.widget.ScrollView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.UiController
@@ -37,14 +36,12 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -61,7 +58,7 @@ import com.instructure.espresso.swipeDown
 import com.instructure.espresso.swipeUp
 import com.instructure.espresso.typeText
 import com.instructure.espresso.waitForCheck
-import com.instructure.student.R
+import com.instructure.pandautils.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anything
@@ -190,15 +187,6 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         waitForMatcherWithSleeps(withId(R.id.contentWebView), timeout = 30000, pollInterval = 1000).scrollTo()
     }
 
-    fun addBookmark(bookmarkName: String) {
-        openOverflowMenu()
-        Espresso.onView(withText("Add Bookmark")).click()
-        Espresso.onView(withId(R.id.bookmarkEditText)).clearText()
-        Espresso.onView(withId(R.id.bookmarkEditText)).typeText(bookmarkName)
-        if(CanvasTest.isLandscapeDevice()) Espresso.pressBack()
-        Espresso.onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("Save"))).click()
-    }
-
     fun openOverflowMenu() {
         Espresso.onView(
             allOf(
@@ -233,19 +221,6 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     private fun assertAttemptInformation() {
         waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
         waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
-    }
-
-    fun selectSubmissionType(submissionType: SubmissionType) {
-        val viewMatcher = when (submissionType) {
-            SubmissionType.ONLINE_TEXT_ENTRY -> withId(R.id.submissionEntryText)
-            SubmissionType.ONLINE_UPLOAD -> withId(R.id.submissionEntryFile)
-            SubmissionType.ONLINE_URL -> withId(R.id.submissionEntryWebsite)
-            SubmissionType.MEDIA_RECORDING -> withId(R.id.submissionEntryMedia)
-
-            else -> {withId(R.id.submissionEntryText)}
-        }
-
-        onView(viewMatcher).click()
     }
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
@@ -313,13 +288,6 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun clickDone() {
         onView(withText(R.string.done)).click()
-    }
-
-    //OfflineMethod
-    fun assertDetailsNotAvailableOffline() {
-        onView(withId(R.id.notAvailableIcon) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
-        onView(withId(R.id.title) + withText(R.string.notAvailableOfflineScreenTitle) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
-        onView(withId(R.id.description) + withText(R.string.notAvailableOfflineDescriptionForTabs) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
     }
 }
 

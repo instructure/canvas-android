@@ -33,7 +33,7 @@ class ParentAssignmentDetailsRepository(
         forceNetwork: Boolean
     ): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentApi.getAssignmentIncludeObservees(courseId, assignmentId, params).dataOrThrow.toAssignmentForObservee()!!
+        return assignmentApi.getAssignmentIncludeObservees(courseId, assignmentId, params).dataOrThrow.toAssignmentForObservee() ?: throw IllegalStateException("Assignment not found")
     }
 
     override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
