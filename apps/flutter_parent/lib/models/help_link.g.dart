@@ -55,22 +55,38 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
   Iterable<Object?> serialize(Serializers serializers, HelpLink object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
-      'id',
-      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'type',
       serializers.serialize(object.type, specifiedType: const FullType(String)),
       'available_to',
       serializers.serialize(object.availableTo,
           specifiedType:
               const FullType(BuiltList, const [const FullType(AvailableTo)])),
-      'url',
-      serializers.serialize(object.url, specifiedType: const FullType(String)),
-      'text',
-      serializers.serialize(object.text, specifiedType: const FullType(String)),
-      'subtext',
-      serializers.serialize(object.subtext,
-          specifiedType: const FullType(String)),
     ];
+    Object? value;
+    value = object.id;
+
+    result
+      ..add('id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.url;
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.text;
+
+    result
+      ..add('text')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.subtext;
+
+    result
+      ..add('subtext')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
 
     return result;
   }
@@ -88,7 +104,7 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'type':
           result.type = serializers.deserialize(value,
@@ -102,15 +118,15 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'text':
           result.text = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'subtext':
           result.subtext = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -138,36 +154,32 @@ class _$AvailableToSerializer implements PrimitiveSerializer<AvailableTo> {
 
 class _$HelpLink extends HelpLink {
   @override
-  final String id;
+  final String? id;
   @override
   final String type;
   @override
   final BuiltList<AvailableTo> availableTo;
   @override
-  final String url;
+  final String? url;
   @override
-  final String text;
+  final String? text;
   @override
-  final String subtext;
+  final String? subtext;
 
   factory _$HelpLink([void Function(HelpLinkBuilder)? updates]) =>
       (new HelpLinkBuilder()..update(updates))._build();
 
   _$HelpLink._(
-      {required this.id,
+      {this.id,
       required this.type,
       required this.availableTo,
-      required this.url,
-      required this.text,
-      required this.subtext})
+      this.url,
+      this.text,
+      this.subtext})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(id, r'HelpLink', 'id');
     BuiltValueNullFieldError.checkNotNull(type, r'HelpLink', 'type');
     BuiltValueNullFieldError.checkNotNull(
         availableTo, r'HelpLink', 'availableTo');
-    BuiltValueNullFieldError.checkNotNull(url, r'HelpLink', 'url');
-    BuiltValueNullFieldError.checkNotNull(text, r'HelpLink', 'text');
-    BuiltValueNullFieldError.checkNotNull(subtext, r'HelpLink', 'subtext');
   }
 
   @override
@@ -279,16 +291,13 @@ class HelpLinkBuilder implements Builder<HelpLink, HelpLinkBuilder> {
     try {
       _$result = _$v ??
           new _$HelpLink._(
-              id: BuiltValueNullFieldError.checkNotNull(id, r'HelpLink', 'id'),
+              id: id,
               type: BuiltValueNullFieldError.checkNotNull(
                   type, r'HelpLink', 'type'),
               availableTo: availableTo.build(),
-              url: BuiltValueNullFieldError.checkNotNull(
-                  url, r'HelpLink', 'url'),
-              text: BuiltValueNullFieldError.checkNotNull(
-                  text, r'HelpLink', 'text'),
-              subtext: BuiltValueNullFieldError.checkNotNull(
-                  subtext, r'HelpLink', 'subtext'));
+              url: url,
+              text: text,
+              subtext: subtext);
     } catch (_) {
       late String _$failedField;
       try {
