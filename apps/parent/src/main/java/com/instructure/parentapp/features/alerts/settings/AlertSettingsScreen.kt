@@ -114,7 +114,7 @@ fun AlertSettingsScreen(
                         }
                         OverflowMenu(
                             modifier = Modifier
-                                .background(color = colorResource(id = com.instructure.pandautils.R.color.backgroundLightestElevated)),
+                                .background(color = colorResource(id = R.color.backgroundLightestElevated)),
                             showMenu = showMenu,
                             iconColor = colorResource(id = R.color.textLightest),
                             onDismissRequest = { showMenu = !showMenu }) {

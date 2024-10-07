@@ -67,10 +67,10 @@ class AlertsViewModel @Inject constructor(
     }
 
     private fun updateColor() {
-        _uiState.update {
-            selectedStudent?.let { student ->
+        selectedStudent?.let { student ->
+            _uiState.update {
                 it.copy(studentColor = student.studentColor)
-            } ?: it
+            }
         }
     }
 

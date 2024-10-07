@@ -30,7 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,7 +58,7 @@ class CourseDetailsFragment : Fragment() {
     }
 
     private fun applyTheme() {
-        val color = ParentPrefs.currentStudent.color
+        val color = ParentPrefs.currentStudent.studentColor
         ViewStyler.setStatusBarDark(requireActivity(), color)
     }
 
