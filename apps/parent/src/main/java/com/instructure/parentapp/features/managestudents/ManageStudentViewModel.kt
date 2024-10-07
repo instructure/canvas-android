@@ -18,15 +18,15 @@
 package com.instructure.parentapp.features.managestudents
 
 import android.content.Context
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.createThemedColor
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -42,7 +42,8 @@ import javax.inject.Inject
 class ManageStudentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val colorKeeper: ColorKeeper,
-    private val repository: ManageStudentsRepository
+    private val repository: ManageStudentsRepository,
+    private val selectedStudentHolder: SelectedStudentHolder
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ManageStudentsUiState())
@@ -50,6 +51,8 @@ class ManageStudentViewModel @Inject constructor(
 
     private val _events = Channel<ManageStudentsViewModelAction>()
     val events = _events.receiveAsFlow()
+
+    private val studentMap = mutableMapOf<Long, User>()
 
     init {
         loadStudents()
@@ -72,7 +75,7 @@ class ManageStudentViewModel @Inject constructor(
         colorKeeper.userColors.map {
             UserColor(
                 colorRes = it,
-                color = createThemedColor(context.getColor(it)),
+                color = colorKeeper.createThemedColor(context.getColor(it)),
                 contentDescriptionRes = userColorContentDescriptionMap[it].orDefault()
             )
         }
@@ -88,6 +91,7 @@ class ManageStudentViewModel @Inject constructor(
             }
 
             val students = repository.getStudents(forceRefresh)
+            studentMap.putAll(students.associateBy { it.id })
 
             _uiState.update { state ->
                 state.copy(
@@ -116,7 +120,7 @@ class ManageStudentViewModel @Inject constructor(
     private fun saveStudentColor(studentId: Long, selected: UserColor) {
         viewModelScope.tryLaunch {
             val contextId = "user_$studentId"
-            val color = ContextCompat.getColor(context, selected.colorRes)
+            val color = context.getColor(selected.colorRes)
 
             _uiState.update {
                 it.copy(
@@ -144,6 +148,7 @@ class ManageStudentViewModel @Inject constructor(
             } else {
                 showSavingError()
             }
+            selectedStudentHolder.selectedStudentColorChanged()
         } catch {
             showSavingError()
         }
@@ -173,7 +178,7 @@ class ManageStudentViewModel @Inject constructor(
         when (action) {
             is ManageStudentsAction.StudentTapped -> {
                 viewModelScope.launch {
-                    _events.send(ManageStudentsViewModelAction.NavigateToAlertSettings(action.studentId))
+                    _events.send(ManageStudentsViewModelAction.NavigateToAlertSettings(studentMap[action.studentId] ?: throw IllegalArgumentException("Student not found")))
                 }
             }
 

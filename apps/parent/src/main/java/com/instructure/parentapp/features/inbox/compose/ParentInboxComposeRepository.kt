@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
 package com.instructure.parentapp.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -11,6 +26,7 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
@@ -68,6 +84,27 @@ class ParentInboxComposeRepository(
             contextCode = context.contextId,
             attachmentIds = attachments.map { it.id }.toLongArray(),
             isBulk = if (isIndividual) { 0 } else { 1 },
+            params = restParams
+        )
+    }
+
+    override suspend fun addMessage(
+        conversationId: Long,
+        recipients: List<Recipient>,
+        message: String,
+        includedMessages: List<Message>,
+        attachments: List<Attachment>,
+        context: CanvasContext,
+    ): DataResult<Conversation> {
+        val restParams = RestParams()
+
+        return inboxAPI.addMessage(
+            conversationId = conversationId,
+            recipientIds = recipients.mapNotNull { it.stringId },
+            body = message,
+            includedMessageIds = includedMessages.map { it.id }.toLongArray(),
+            attachmentIds = attachments.map { it.id }.toLongArray(),
+            contextCode = context.contextId,
             params = restParams
         )
     }

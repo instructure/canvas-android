@@ -227,10 +227,47 @@ class HelpDialogViewModelTest {
         assertEquals(HelpLinkViewData("Share your love title", "", HelpDialogAction.RateTheApp), linksViewData[5].helpLinkViewData)
     }
 
+    @Test
+    fun `Filter out list items that has null attribute`() {
+        // Given
+        val defaultLinks = listOf(
+            createHelpLink(listOf("student"), text = null, subText = "Test", url = "Test"),
+            createHelpLink(listOf("student"), text = "Test", subText = "Test", url = null),
+            createHelpLink(listOf("student"), text = "Test title", subText = null, url = "Test url"),
+            createHelpLink(listOf("student"), text = null, subText = null, url = null),
+            createHelpLink(listOf("student"), text = "Test title", subText = "Test", url = "Test url"),
+        )
+        val helpLinks = HelpLinks(emptyList(), defaultLinks)
+
+        every { helpLinksManager.getHelpLinksAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(helpLinks)
+        }
+
+        every { courseManager.getAllFavoriteCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { context.getString(R.string.shareYourLove) } returns "Share your love title"
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        // Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val linksViewData = viewModel.data.value?.helpLinks ?: emptyList()
+        assertEquals(3, linksViewData.size)
+        assertEquals(HelpLinkViewData("Test title", "", HelpDialogAction.OpenWebView("Test url", "Test title")), linksViewData[0].helpLinkViewData)
+        assertEquals(HelpLinkViewData("Test title", "Test", HelpDialogAction.OpenWebView("Test url", "Test title")), linksViewData[1].helpLinkViewData)
+        assertEquals(HelpLinkViewData("Share your love title", "", HelpDialogAction.RateTheApp), linksViewData[2].helpLinkViewData)
+    }
+
     private fun createViewModel() =
         HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider, helpLinkFilter)
 
-    private fun createHelpLink(availableTo: List<String>, text: String, id: String = "", url: String = ""): HelpLink {
-        return HelpLink(id, "", availableTo, url, text, "")
+    private fun createHelpLink(availableTo: List<String>, text: String?, subText: String? = "", id: String = "", url: String? = ""): HelpLink {
+        return HelpLink(id, "", availableTo, url, text, subText)
     }
 }

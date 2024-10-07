@@ -28,8 +28,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.pandautils.utils.createThemedColor
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -65,6 +65,7 @@ class ManageStudentsViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: ManageStudentsRepository = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = spyk()
+    private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
 
     private lateinit var viewModel: ManageStudentViewModel
 
@@ -77,7 +78,7 @@ class ManageStudentsViewModelTest {
         every { ColorUtils.correctContrastForText(any(), any()) } answers { firstArg() }
         every { ColorUtils.correctContrastForButtonBackground(any(), any(), any()) } answers { firstArg() }
         every { context.getColor(any()) } answers { firstArg() }
-        every { createThemedColor(any()) } answers { ThemedColor(firstArg()) }
+        every { colorKeeper.createThemedColor(any()) } answers { ThemedColor(firstArg()) }
     }
 
     @After
@@ -124,6 +125,7 @@ class ManageStudentsViewModelTest {
 
     @Test
     fun `Navigate to alert settings screen`() = runTest {
+        coEvery { repository.getStudents(any()) } returns listOf(User(id = 1))
         createViewModel()
 
         val events = mutableListOf<ManageStudentsViewModelAction>()
@@ -133,7 +135,7 @@ class ManageStudentsViewModelTest {
 
         viewModel.handleAction(ManageStudentsAction.StudentTapped(1L))
 
-        val expected = ManageStudentsViewModelAction.NavigateToAlertSettings(1L)
+        val expected = ManageStudentsViewModelAction.NavigateToAlertSettings(User(id = 1))
         Assert.assertEquals(expected, events.last())
     }
 
@@ -264,6 +266,6 @@ class ManageStudentsViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = ManageStudentViewModel(context, colorKeeper, repository)
+        viewModel = ManageStudentViewModel(context, colorKeeper, repository, selectedStudentHolder)
     }
 }

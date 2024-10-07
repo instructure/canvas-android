@@ -29,7 +29,6 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.loginapi.login.R
-import com.instructure.parentapp.ui.pages.AddStudentPage
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,8 +38,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DashboardInteractionTest : ParentComposeTest() {
-
-    private val addStudentPage = AddStudentPage(composeTestRule)
 
     @Test
     fun testObserverData() {

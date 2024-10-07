@@ -56,8 +56,8 @@ import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionListPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
+import com.instructure.student.ui.pages.FileChooserPage
 import com.instructure.student.ui.pages.FileListPage
-import com.instructure.student.ui.pages.FileUploadPage
 import com.instructure.student.ui.pages.GoToQuizPage
 import com.instructure.student.ui.pages.GradesPage
 import com.instructure.student.ui.pages.GroupBrowserPage
@@ -82,6 +82,7 @@ import com.instructure.student.ui.pages.PeopleListPage
 import com.instructure.student.ui.pages.PersonDetailsPage
 import com.instructure.student.ui.pages.PickerSubmissionUploadPage
 import com.instructure.student.ui.pages.ProfileSettingsPage
+import com.instructure.student.ui.pages.PushNotificationsPage
 import com.instructure.student.ui.pages.QRLoginPage
 import com.instructure.student.ui.pages.QuizListPage
 import com.instructure.student.ui.pages.QuizTakingPage
@@ -137,7 +138,7 @@ abstract class StudentTest : CanvasTest() {
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val allCoursesPage = AllCoursesPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
-    val fileUploadPage = FileUploadPage()
+    val fileChooserPage = FileChooserPage()
     val helpPage = HelpPage()
     val inboxConversationPage = InboxConversationPage()
     val inboxPage = InboxPage()
@@ -164,6 +165,7 @@ abstract class StudentTest : CanvasTest() {
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val settingsPage = SettingsPage()
+    val pushNotificationsPage = PushNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()

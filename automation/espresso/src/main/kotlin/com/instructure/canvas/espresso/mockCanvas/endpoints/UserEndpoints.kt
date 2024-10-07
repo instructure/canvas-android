@@ -19,6 +19,7 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addEnrollment
 import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
+import com.instructure.canvas.espresso.mockCanvas.addObserverAlertThreshold
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
 import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
@@ -42,11 +43,16 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.models.ToDo
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.postmodels.CreateObserverThresholdWrapper
 import com.instructure.canvasapi2.models.toPlannerItems
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.utils.orDefault
 import okio.Buffer
 import java.nio.charset.Charset
 import java.util.Date
+import kotlin.random.Random
 
 /**
  * ROUTES:
@@ -69,11 +75,30 @@ object UserEndpoint : Endpoint(
     Segment("observees") to ObserveeEndpoint,
     Segment("observer_alerts") to ObserverAlertsEndpoint,
     Segment("observer_alert_thresholds") to Endpoint(
+        LongId(PathVars::thresholdId) to Endpoint(
+            response = {
+                DELETE {
+                    val thresholdId = pathVars.thresholdId
+                    data.observerAlertThresholds.forEach {
+                        it.value.removeIf { threshold -> threshold.id == thresholdId }
+                    }
+                    request.successResponse(Unit)
+                }
+            }
+        ),
         response = {
             GET {
                 val userId = request.url.queryParameter("student_id")?.toLong() ?: 0L
                 val response = data.observerAlertThresholds[userId] ?: emptyList()
                 request.successResponse(response)
+            }
+            POST {
+                val buffer = Buffer()
+                request.body!!.writeTo(buffer)
+                val body = buffer.readUtf8()
+                val alert = body.fromJson<CreateObserverThresholdWrapper>().alert
+                data.addObserverAlertThreshold(Random.nextLong(), alert.alertType, User(data.currentUser?.id.orDefault()), User(alert.userId), alert.threshold)
+                request.successResponse(Unit)
             }
         }
     ),

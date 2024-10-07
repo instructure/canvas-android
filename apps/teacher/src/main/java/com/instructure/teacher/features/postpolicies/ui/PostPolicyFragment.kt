@@ -28,7 +28,11 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentPostPolicySettingsBinding
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
@@ -63,7 +67,7 @@ class PostPolicyFragment : Fragment() {
 
         ViewStyler.themeToolbarLight(requireActivity(), postPolicyToolbar)
 
-        val courseColor = course.textAndIconColor
+        val courseColor = course.color
         postPolicyTabLayout.setSelectedTabIndicatorColor(courseColor)
         postPolicyTabLayout.setTabTextColors(ContextCompat.getColor(requireContext(), R.color.textDark), courseColor)
     }

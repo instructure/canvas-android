@@ -30,14 +30,14 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.pandautils.utils.ColorUtils
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.interfaces.BookmarkAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.CacheControlFlags
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.Locale
 
 class BookmarkRecyclerAdapter(context: Context, isShortcutActivity: Boolean, private val mAdapterToFragmentCallback: BookmarkAdapterToFragmentCallback<Bookmark>)
     : BaseListRecyclerAdapter<Bookmark, BookmarkViewHolder>(context, Bookmark::class.java) {
@@ -128,7 +128,7 @@ object BookmarkBinder {
         }
 
         holder.title.text = bookmark.name
-        val courseColor = RouteMatcher.getContextFromUrl(bookmark.url).textAndIconColor
+        val courseColor = RouteMatcher.getContextFromUrl(bookmark.url).color
 
         holder.icon.setImageDrawable(ColorUtils.colorIt(courseColor, holder.icon.drawable))
         holder.overflow.visibility = if (isShortcutActivity) View.INVISIBLE else View.VISIBLE

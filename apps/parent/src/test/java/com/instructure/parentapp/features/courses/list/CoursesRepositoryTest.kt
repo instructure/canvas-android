@@ -72,9 +72,9 @@ class CoursesRepositoryTest {
         Assert.assertEquals(expected, result)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalStateException::class)
     fun `Get courses throws exception when call fails`() = runTest {
-        coEvery { courseApi.firstPageObserveeCourses(any()) } throws IllegalArgumentException()
+        coEvery { courseApi.firstPageObserveeCourses(any()) } returns DataResult.Fail()
 
         repository.getCourses(1L, true)
     }

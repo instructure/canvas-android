@@ -243,6 +243,9 @@ class InboxConversationFragment : ParentFragment() {
             }
         }
 
+        toolbar.menu.findItem(R.id.reply)?.isVisible = !conversation.cannotReply
+        toolbar.menu.findItem(R.id.replyAll)?.isVisible = !conversation.cannotReply
+
         toolbar.setOnMenuItemClickListener(menuListener)
     }
 

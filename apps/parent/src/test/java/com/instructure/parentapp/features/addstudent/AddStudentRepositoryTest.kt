@@ -52,4 +52,22 @@ class AddStudentRepositoryTest {
 
         assert(result is DataResult.Fail)
     }
+
+    @Test
+    fun `unpairStudent should return success`() = runTest {
+        coEvery { observerApi.unpairStudent(any(), any()) } returns DataResult.Success(Unit)
+
+        val result = repository.unpairStudent(1)
+
+        assert(result is DataResult.Success)
+    }
+
+    @Test
+    fun `unpairStudent should return error`() = runTest {
+        coEvery { observerApi.unpairStudent(any(), any()) } returns DataResult.Fail()
+
+        val result = repository.unpairStudent(1)
+
+        assert(result is DataResult.Fail)
+    }
 }

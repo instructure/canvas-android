@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setVisible
@@ -76,7 +76,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
     override fun applyTheme() {
         ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
-        binding.syllabusTabLayout.setBackgroundColor(canvasContext.backgroundColor)
+        binding.syllabusTabLayout.setBackgroundColor(canvasContext.color)
     }
 
     override fun onConnect(output: Consumer<SyllabusEvent>) {

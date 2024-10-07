@@ -174,6 +174,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         assertStatus(R.string.missingAssignment)
     }
 
+    fun assertStatusGraded() {
+        assertStatus(R.string.gradedSubmissionLabel)
+    }
+
     fun viewQuiz() {
         onView(withId(R.id.submitButton)).assertHasText(R.string.viewQuiz).click()
     }
@@ -288,6 +292,11 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun clickDone() {
         onView(withText(R.string.done)).click()
+    }
+
+    //OfflineMethod
+    fun assertSubmitButtonDisabled() {
+        onView(withId(R.id.submitButton)).check(matches(ViewMatchers.isNotEnabled()))
     }
 }
 

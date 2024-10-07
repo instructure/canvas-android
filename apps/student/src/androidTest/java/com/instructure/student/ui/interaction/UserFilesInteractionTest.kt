@@ -107,14 +107,14 @@ class UserFilesInteractionTest : StudentTest() {
                             hasType("*/*")
                     )
             ).respondWith(activityResult)
-            fileUploadPage.chooseDevice()
+            fileChooserPage.chooseDevice()
         }
         finally {
             Intents.release()
         }
 
         // Now press the "Upload" button and verify that the file shows up in our list
-        fileUploadPage.clickUpload()
+        fileChooserPage.clickUpload()
         // Should be on file list page now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed("sample.jpg")
@@ -149,14 +149,14 @@ class UserFilesInteractionTest : StudentTest() {
                     return Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
                 }
             })
-            fileUploadPage.chooseCamera()
+            fileChooserPage.chooseCamera()
         }
         finally {
             Intents.release()
         }
 
         // Now upload our new image and verify that it now shows up in the file list.
-        fileUploadPage.clickUpload()
+        fileChooserPage.clickUpload()
         // Should be on fileListPage by now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed(fileName!!)
@@ -180,14 +180,14 @@ class UserFilesInteractionTest : StudentTest() {
                         hasType("image/*")
                     )
             ).respondWith(activityResult)
-            fileUploadPage.chooseGallery()
+            fileChooserPage.chooseGallery()
         }
         finally {
             Intents.release()
         }
 
         // Now upload our file and verify that it shows up in the file list
-        fileUploadPage.clickUpload()
+        fileChooserPage.clickUpload()
         // Should be on file list page now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed("sample.jpg")

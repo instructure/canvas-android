@@ -67,6 +67,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.signature.ObjectKey
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
@@ -77,6 +78,7 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import kotlinx.coroutines.delay
+import java.lang.reflect.Field
 import java.util.*
 import kotlin.math.hypot
 
@@ -648,10 +650,12 @@ fun EditText.onChangeDebounce(minLength: Int = 3, debounceDuration: Long = 400, 
 
 @Suppress("PLUGIN_WARNING")
 @JvmName("addToolbarSearch")
-fun Toolbar?.addSearch(hintText: String? = null, @ColorInt color: Int = Color.WHITE, onQueryChanged: (String) -> Unit) {
+fun Toolbar?.addSearch(hintText: String? = null, @ColorInt color: Int? = null, onQueryChanged: (String) -> Unit) {
     if (this == null || menu.findItem(R.id.search) != null) return
     inflateMenu(R.menu.search)
     val searchItem = menu.findItem(R.id.search)
+    val searchColor = color ?: context.getColor(R.color.textLightest)
+    val toolbar = this
     with(searchItem.actionView as SearchView) {
         maxWidth = Int.MAX_VALUE
         setIconifiedByDefault(false)
@@ -674,12 +678,34 @@ fun Toolbar?.addSearch(hintText: String? = null, @ColorInt color: Int = Color.WH
                 return true
             }
         })
-        findViewById<EditText>(R.id.search_src_text)?.apply {
-            setTextColor(color)
-            setCursorColor(color)
-            setHintTextColor(ColorUtils.setAlphaComponent(color, 0x66))
-            setCompoundDrawables(null, null, null, null)
-        }
+        themeSearchView(toolbar, searchColor)
+    }
+}
+
+fun SearchView.themeSearchView(
+    toolbar: Toolbar,
+    searchColor: Int,
+) {
+    toolbar.colorSearchViewBackButton(searchColor)
+    findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)?.apply {
+        setColorFilter(searchColor, PorterDuff.Mode.SRC_ATOP)
+    }
+    findViewById<EditText>(R.id.search_src_text)?.apply {
+        setTextColor(searchColor)
+        setCursorColor(searchColor)
+        setHintTextColor(ColorUtils.setAlphaComponent(searchColor, 0x66))
+        setCompoundDrawables(null, null, null, null)
+    }
+}
+
+private fun Toolbar.colorSearchViewBackButton(searchColor: Int) {
+    try {
+        val backIcon: Field = javaClass.getDeclaredField("mCollapseIcon")
+        backIcon.isAccessible = true
+        val backDrawable = backIcon.get(this) as? Drawable
+        backDrawable?.setTint(searchColor)
+    } catch (e: java.lang.Exception) {
+        FirebaseCrashlytics.getInstance().recordException(e)
     }
 }
 

@@ -59,6 +59,7 @@ import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -152,6 +153,9 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     private fun setupFragmentResultListener() {
         setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
             if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
+        }
+        setFragmentResultListener(InboxDetailsFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
+            if (key == InboxDetailsFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
         }
     }
 
@@ -334,7 +338,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
-        binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        ViewStyler.themeFAB(binding.addMessage)
         binding.scopeFilterText.setTextColor(ThemePrefs.textButtonColor)
         binding.scopeFilterIcon.setColorFilter(ThemePrefs.textButtonColor)
         inboxRouter.attachNavigationIcon(binding.toolbar)

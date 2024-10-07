@@ -553,6 +553,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
             listOf("F", 0.0)
         )
 
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = restrictQuantitativeData)
+
         val newCourse = course
             .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),
                 gradingSchemeRaw = gradingScheme)

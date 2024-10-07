@@ -26,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -41,6 +42,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 fun LabelSwitchRow(
     label: String,
     checked: Boolean,
+    enabled: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -50,6 +52,7 @@ fun LabelSwitchRow(
             .height(52.dp)
             .padding(start = 16.dp, end = 8.dp)
             .padding(vertical = 8.dp)
+            .alpha(if (enabled) 1f else 0.5f)
     ) {
         Text(
             text = label,
@@ -64,6 +67,7 @@ fun LabelSwitchRow(
             onCheckedChange = {
                 onCheckedChange(it)
             },
+            enabled = enabled,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color(ThemePrefs.brandColor),
                 checkedTrackColor = Color(ThemePrefs.brandColor).copy(alpha = 0.5f),
@@ -84,6 +88,7 @@ fun LabelSwitchRowCheckedPreview() {
     LabelSwitchRow(
         label = "Switch row",
         checked = true,
+        enabled = true,
         onCheckedChange = {},
     )
 }
@@ -95,6 +100,7 @@ fun LabelSwitchRowUncheckedPreview() {
     LabelSwitchRow(
         label = "Switch row",
         checked = false,
+        enabled = true,
         onCheckedChange = {},
     )
 }

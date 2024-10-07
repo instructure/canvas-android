@@ -617,7 +617,7 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.2f}"
+            android:alpha="@{viewModel.data.submitEnabled ? 1f : 0.5f}"
             android:background="@color/backgroundInfo"
             android:backgroundTint="@{ThemePrefs.INSTANCE.buttonColor}"
             android:enabled="@{viewModel.data.submitEnabled}"
@@ -626,7 +626,7 @@
             android:onClick="@{()->viewModel.onSubmitButtonClicked()}"
             android:text="@{viewModel.data.submitButtonText}"
             android:textAllCaps="false"
-            android:textColor="@color/textLightest"
+            android:textColor="@{ThemePrefs.INSTANCE.buttonTextColor}"
             android:visibility="@{viewModel.data.submitVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Resubmit Assignment" />
