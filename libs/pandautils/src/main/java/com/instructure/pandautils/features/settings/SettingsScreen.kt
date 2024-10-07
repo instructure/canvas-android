@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,6 +36,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -101,26 +103,25 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
     LaunchedEffect(Unit) {
         scrollState.scrollTo(uiState.scrollValue)
     }
-    LazyColumn(
+    Column(
         modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
             .testTag("settingsList")
-            .scrollable(scrollState, orientation = Orientation.Vertical)
     ) {
         uiState.items.onEachIndexed { index, entry ->
             val (sectionTitle, items) = entry
-            item {
-                Text(
-                    modifier = Modifier.padding(
-                        top = 24.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 8.dp
-                    ),
-                    text = stringResource(sectionTitle),
-                    color = colorResource(id = R.color.textDark)
-                )
-            }
-            items(items) { settingsItem ->
+            Text(
+                modifier = Modifier.padding(
+                    top = 24.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 8.dp
+                ),
+                text = stringResource(sectionTitle),
+                color = colorResource(id = R.color.textDark)
+            )
+            items.forEach { settingsItem ->
                 when (settingsItem) {
                     SettingsItem.APP_THEME -> {
                         AppThemeItem(uiState.appTheme) { appTheme, x, y ->
@@ -163,13 +164,11 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
             }
 
             if (index < uiState.items.size - 1) {
-                item {
-                    Divider(
-                        color = colorResource(id = R.color.backgroundMedium),
-                        thickness = 0.5.dp,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
+                Divider(
+                    color = colorResource(id = R.color.backgroundMedium),
+                    thickness = 0.5.dp,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
         }
     }
