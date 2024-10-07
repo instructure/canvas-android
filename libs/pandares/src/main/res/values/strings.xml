@@ -1835,4 +1835,7 @@
     <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
     <string name="studioMediaProgressTitle">Studio media</string>
     <string name="add">Add</string>
+    <string name="view_description">View Description</string>
+    <string name="a11y_contentDescription_viewDescription">View Description</string>
+    <string name="errorLoadingAnnouncement">There was an error loading this announcement</string>
 </resources>

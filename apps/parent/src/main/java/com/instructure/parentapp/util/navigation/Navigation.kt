@@ -24,6 +24,7 @@ import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.qr.QrPairingFragment
+import com.instructure.parentapp.features.alerts.details.AnnouncementDetailsFragment
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
@@ -40,6 +41,9 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     private val courseId = "course-id"
     private val courseDetails = "$baseUrl/courses/{$courseId}"
+
+    private val announcementId = "announcement-id"
+    private val announcementDetails = "$baseUrl/courses/{$courseId}/discussion_topics/{$announcementId}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
@@ -104,6 +108,16 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
                 deepLink {
                     uriPattern = courseDetails
+                }
+            }
+            fragment<AnnouncementDetailsFragment>(announcementDetails) {
+                argument(AnnouncementDetailsFragment.COURSE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
                 }
             }
             fragment<EventFragment>(calendarEvent) {
