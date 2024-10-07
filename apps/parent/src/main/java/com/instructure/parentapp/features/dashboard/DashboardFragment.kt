@@ -53,6 +53,7 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
@@ -281,7 +282,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupAppColors(student: User?) {
-        val color = student.color
+        val color = student.studentColor
         if (binding.toolbar.background == null) {
             binding.toolbar.setBackgroundColor(color)
         } else {
@@ -297,6 +298,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.unreadCountBadge.setTextColor(color)
 
         binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
+        viewModel.updateColor(color)
     }
 
     private fun openNavigationDrawer() {
@@ -318,7 +320,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .showThemed(ParentPrefs.currentStudent.color)
+            .showThemed(ParentPrefs.currentStudent.studentColor)
     }
 
     private fun onSwitchUsers() {

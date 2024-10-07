@@ -16,12 +16,14 @@
  */
 package com.instructure.parentapp.features.addstudent
 
+import android.content.Context
 import android.graphics.Color
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
@@ -59,11 +61,13 @@ class AddStudentViewModelTest {
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
     private val repository: AddStudentRepository = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
+    private val context: Context = mockk(relaxed = true)
 
     @Before
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+        ContextKeeper.appContext = context
 
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLACK)

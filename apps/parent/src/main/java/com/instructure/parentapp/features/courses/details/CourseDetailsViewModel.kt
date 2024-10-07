@@ -24,8 +24,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,7 +62,7 @@ class CourseDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = true,
-                    studentColor = parentPrefs.currentStudent.color
+                    studentColor = parentPrefs.currentStudent.studentColor
                 )
             }
 

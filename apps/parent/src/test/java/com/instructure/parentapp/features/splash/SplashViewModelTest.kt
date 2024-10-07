@@ -62,7 +62,6 @@ class SplashViewModelTest {
     private val repository: SplashRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
-    private val themePrefs: ThemePrefs = mockk(relaxed = true)
 
     private lateinit var viewModel: SplashViewModel
 
@@ -96,7 +95,6 @@ class SplashViewModelTest {
 
         coVerify { apiPrefs.user = user }
         coVerify { colorKeeper.addToCache(colors) }
-        coVerify { themePrefs.applyCanvasTheme(theme, context) }
 
         val events = mutableListOf<SplashAction>()
         backgroundScope.launch(testDispatcher) {
@@ -104,6 +102,7 @@ class SplashViewModelTest {
         }
 
         Assert.assertEquals(SplashAction.InitialDataLoadingFinished, events.last())
+        Assert.assertEquals(SplashAction.ApplyTheme(theme), events.first())
     }
 
     @Test
@@ -166,8 +165,7 @@ class SplashViewModelTest {
             context = context,
             repository = repository,
             apiPrefs = apiPrefs,
-            colorKeeper = colorKeeper,
-            themePrefs = themePrefs,
+            colorKeeper = colorKeeper
         )
     }
 }
