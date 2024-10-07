@@ -36,6 +36,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.getDateInCanvasCalendarFormat
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -146,6 +147,23 @@ class OfflineGradesE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that the total grade is 60 because there is only one graded assignment and it's graded to 60% and we have the 'Base on graded assignments' checkbox enabled.")
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("60"))
 
+        Log.d(ASSERTION_TAG, "Assert that 'Base on graded assignment' checkbox is checked and the 'Show What-If Score' checkbox is NOT checked by default.")
+        courseGradesPage.assertBaseOnGradedAssignmentsChecked()
+        courseGradesPage.assertWhatIfUnChecked()
+
+        val dueDateInCanvasFormat = getDateInCanvasCalendarFormat(1.days.fromNow.iso8601)
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name} assignment's due date is tomorrow ($dueDateInCanvasFormat).")
+        courseGradesPage.assertAssignmentDueDate(assignment.name, dueDateInCanvasFormat)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment2.name} assignment's due date is tomorrow ($dueDateInCanvasFormat).")
+        courseGradesPage.assertAssignmentDueDate(assignment2.name, dueDateInCanvasFormat)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quiz.title} quiz's due date has not set.")
+        courseGradesPage.assertAssignmentDueDate(quiz.title, "No due date")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz status is 'Not Submitted'.")
+        courseGradesPage.assertAssignmentStatus(quiz.title, "Not Submitted")
+
         val assignmentMatcher = ViewMatchers.withText(assignment.name)
         Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment is displayed and there is 60% grade for it.")
         courseGradesPage.assertItemDisplayed(assignmentMatcher)
@@ -162,7 +180,10 @@ class OfflineGradesE2ETest : StudentTest() {
         courseGradesPage.assertGradeDisplayed(assignmentMatcher2, containsTextCaseInsensitive("EX/15"))
 
         Log.d(STEP_TAG, "Check in the 'What-If Score' checkbox.")
-        courseGradesPage.toggleWhatIf()
+        courseGradesPage.checkWhatIf()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Show What-If Score' checkbox is checked.")
+        courseGradesPage.assertWhatIfChecked()
 
         Log.d(STEP_TAG, "Enter '12' as a what-if grade for '${assignment.name}' assignment.")
         courseGradesPage.enterWhatIfGrade(assignmentMatcher, "12")
@@ -176,19 +197,28 @@ class OfflineGradesE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that 'Total Grade' contains the score '64'.")
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("64"))
 
-        Log.d(STEP_TAG, "Toggle 'Base on graded assignments' checkbox (while What-If Score is still enabled!). Assert that we can see the correct score (40%).")
-        courseGradesPage.toggleBaseOnGradedAssignments()
+        Log.d(STEP_TAG, "Uncheck 'Base on graded assignments' checkbox (while What-If Score is still enabled!).")
+        courseGradesPage.uncheckBaseOnGradedAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that we can see the correct score (40%) and the 'Base on graded assignments' checkbox is unchecked.")
+        courseGradesPage.assertBaseOnGradedAssignmentsUnChecked()
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("40%"))
 
-        Log.d(STEP_TAG, "Check out the 'Show What-If Score' checkbox.")
-        courseGradesPage.toggleWhatIf()
+        Log.d(STEP_TAG, "Uncheck the 'Show What-If Score' checkbox.")
+        courseGradesPage.uncheckWhatIf()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Show What-If Score' checkbox is unchecked.")
+        courseGradesPage.assertWhatIfUnChecked()
 
         Log.d(STEP_TAG, "Assert that the Total Grade is becoming 36% because there is still only one 'real' grade, but since the 'Base on graded assignments' is not checked, the score will be lower than 60% (9/30 is 36% as the 'Not Submitted' is still not counted). Also assert that the '${assignment.name}' assignment's grades has been set back to 60% as we disabled the 'Show What-If Score' checkbox.")
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("36"))
         courseGradesPage.assertGradeDisplayed(assignmentMatcher, containsTextCaseInsensitive("60"))
 
-        Log.d(STEP_TAG, "Toggle (back) the 'Base on graded assignments' checkbox. Assert that we can see the correct score (60%).")
-        courseGradesPage.toggleBaseOnGradedAssignments()
+        Log.d(STEP_TAG, "Check 'Base on graded assignments' checkbox.")
+        courseGradesPage.checkBaseOnGradedAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that we can see the correct score (60%) and the 'Base on graded assignments' checkbox is checked.")
+        courseGradesPage.assertBaseOnGradedAssignmentsChecked()
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("60%"))
 
         Log.d(STEP_TAG, "Open '${assignment.name}' assignment and assert if the Assignment Details Page is displayed with the corresponding grade." + "Navigate back to Course Grades Page.")
