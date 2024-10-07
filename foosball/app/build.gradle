@@ -34,7 +34,6 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
 
         buildConfigField "String", "FIREBASE_USERNAME", "\"$firebase_tab_username\""
         buildConfigField "String", "FIREBASE_PASSWORD", "\"$firebase_tab_password\""
