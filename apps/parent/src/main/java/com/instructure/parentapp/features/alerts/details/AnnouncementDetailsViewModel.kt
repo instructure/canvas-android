@@ -86,7 +86,7 @@ class AnnouncementDetailsViewModel @Inject constructor(
             .onEach { result ->
                 when (result) {
                     is DataResult.Success -> {
-                        handleData(result.dataOrThrow)
+                        handleData(result.data)
                         _uiState.update {
                             it.copy(
                                 isLoading = false
