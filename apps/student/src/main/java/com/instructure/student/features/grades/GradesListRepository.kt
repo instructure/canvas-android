@@ -17,7 +17,11 @@
 
 package com.instructure.student.features.grades
 
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -46,7 +50,7 @@ class GradesListRepository(
         scopeToStudent: Boolean,
         forceNetwork: Boolean
     ): List<AssignmentGroup> {
-        return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId, scopeToStudent, forceNetwork)
+        return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId, scopeToStudent, forceNetwork).filterHiddenAssignments()
     }
 
     suspend fun getSubmissionsForMultipleAssignments(
@@ -79,6 +83,10 @@ class GradesListRepository(
         courseId: Long,
         forceNetwork: Boolean,
     ): List<AssignmentGroup> {
-        return dataSource().getAssignmentGroupsWithAssignments(courseId, forceNetwork)
+        return dataSource().getAssignmentGroupsWithAssignments(courseId, forceNetwork).filterHiddenAssignments()
+    }
+
+    private fun List<AssignmentGroup>.filterHiddenAssignments(): List<AssignmentGroup> {
+        return this.map { it.copy(assignments = it.assignments.filterNot { it.isHiddenInGradeBook }) }
     }
 }
