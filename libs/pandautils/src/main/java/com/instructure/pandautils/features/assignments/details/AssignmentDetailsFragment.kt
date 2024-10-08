@@ -372,6 +372,10 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 route.arguments.putString(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID])
             }
 
+            if (route.paramsHash.containsKey(RouterParams.COURSE_ID)) {
+                route.arguments.putLong(Const.COURSE_ID, route.paramsHash[RouterParams.COURSE_ID]?.toLong().orDefault())
+            }
+
             return AssignmentDetailsFragment().withArgs(route.arguments)
         }
     }
