@@ -42,7 +42,6 @@ android {
         versionCode = 70
         versionName = '1.33.0'
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
@@ -109,6 +108,9 @@ android {
 
             buildConfigField "String", "PRONOUN_TEACHER_TEST_USER", "\"$pronounTestTeacher\""
             buildConfigField "String", "PRONOUN_TEACHER_TEST_PASSWORD", "\"$pronounTestTeacherPassword\""
+
+            buildConfigField "String", "PUSH_NOTIFICATIONS_TEACHER_TEST_USER", "\"$pushNotificationsTestTeacher\""
+            buildConfigField "String", "PUSH_NOTIFICATIONS_TEACHER_TEST_PASSWORD", "\"$pushNotificationsTestTeacherPassword\""
 
             ext {
                 heapEnabled = true

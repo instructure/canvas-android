@@ -23,13 +23,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.features.dashboard.TestSelectStudentHolder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +41,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -57,7 +58,6 @@ class CoursesViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val repository: CoursesRepository = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val selectedStudentFlow = MutableStateFlow<User?>(null)
     private val selectedStudentHolder = TestSelectStudentHolder(selectedStudentFlow)
     private val courseGradeFormatter: CourseGradeFormatter = mockk(relaxed = true)
@@ -67,13 +67,14 @@ class CoursesViewModelTest {
     @Before
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        mockkStatic(User::studentColor)
         Dispatchers.setMain(testDispatcher)
-        coEvery { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -81,6 +82,7 @@ class CoursesViewModelTest {
         val student = User(1L)
         coEvery { repository.getCourses(student.id, any()) } returns listOf(Course(id = 1L, name = "Course 1", courseCode = "code-1"))
         every { courseGradeFormatter.getGradeText(any(), any()) } returns "A+"
+        every { student.studentColor } returns 1
 
         createViewModel()
         selectedStudentFlow.emit(student)
@@ -99,7 +101,7 @@ class CoursesViewModelTest {
             studentColor = 1
         )
 
-        Assert.assertEquals(expectedState, viewModel.uiState.value)
+        assertEquals(expectedState, viewModel.uiState.value)
     }
 
     @Test
@@ -112,6 +114,7 @@ class CoursesViewModelTest {
         )
         coEvery { repository.getCourses(any(), any()) } returns courses
         every { courseGradeFormatter.getGradeText(any(), any()) } returns "A+"
+        every { student.studentColor } returns 1
 
         createViewModel()
         selectedStudentFlow.emit(student)
@@ -130,13 +133,14 @@ class CoursesViewModelTest {
             studentColor = 1
         )
 
-        Assert.assertEquals(expectedState, viewModel.uiState.value)
+        assertEquals(expectedState, viewModel.uiState.value)
     }
 
     @Test
     fun `Error load courses`() = runTest {
         val student = User(1L)
         coEvery { repository.getCourses(student.id, any()) } throws Exception()
+        every { student.studentColor } returns 1
 
         createViewModel()
         selectedStudentFlow.emit(student)
@@ -147,13 +151,15 @@ class CoursesViewModelTest {
             studentColor = 1
         )
 
-        Assert.assertEquals(expectedState, viewModel.uiState.value)
+        assertEquals(expectedState, viewModel.uiState.value)
     }
 
     @Test
     fun `Refresh reloads courses`() = runTest {
         createViewModel()
-        selectedStudentHolder.updateSelectedStudent(User(1L))
+        val student = User(1L)
+        selectedStudentHolder.updateSelectedStudent(student)
+        every { student.studentColor } returns 1
 
         viewModel.handleAction(CoursesAction.Refresh)
 
@@ -172,10 +178,27 @@ class CoursesViewModelTest {
         viewModel.handleAction(CoursesAction.CourseTapped(1L))
 
         val expected = CoursesViewModelAction.NavigateToCourseDetails(1L)
-        Assert.assertEquals(expected, events.last())
+        assertEquals(expected, events.last())
+    }
+
+    @Test
+    fun `Change color when student color is changed`() = runTest {
+        val student = User(1L)
+        mockkStatic(User::studentColor)
+        every { student.studentColor } returns 1
+        createViewModel()
+        selectedStudentFlow.emit(student)
+
+        assertEquals(1, viewModel.uiState.value.studentColor)
+
+        every { student.studentColor } returns 2
+        selectedStudentHolder.selectedStudentColorChanged()
+
+        assertEquals(2, viewModel.uiState.value.studentColor)
+        unmockkAll()
     }
 
     private fun createViewModel() {
-        viewModel = CoursesViewModel(repository, colorKeeper, selectedStudentHolder, courseGradeFormatter)
+        viewModel = CoursesViewModel(repository, selectedStudentHolder, courseGradeFormatter)
     }
 }

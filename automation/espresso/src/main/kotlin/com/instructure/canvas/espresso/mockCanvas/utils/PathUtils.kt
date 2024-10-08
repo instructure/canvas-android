@@ -53,6 +53,7 @@ class PathVars {
     var eventId: Long by map
     var studentId: Long by map
     var workflowState: String by map
+    var thresholdId: Long by map
 }
 
 /**

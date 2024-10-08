@@ -34,6 +34,7 @@ import com.instructure.pandautils.utils.isGroup
 
 @Composable
 fun InboxComposeScreenWrapper(
+    title: String,
     uiState: InboxComposeUiState,
     inboxComposeActionHandler: (InboxComposeActionHandler) -> Unit,
     contextPickerActionHandler: (ContextPickerActionHandler) -> Unit,
@@ -84,7 +85,7 @@ fun InboxComposeScreenWrapper(
         when (screenOption) {
             InboxComposeScreenOptions.None -> {
                 InboxComposeScreen(
-                    title = stringResource(id = R.string.newMessage),
+                    title = title,
                     uiState = uiState
                 ) { action ->
                     inboxComposeActionHandler(action)

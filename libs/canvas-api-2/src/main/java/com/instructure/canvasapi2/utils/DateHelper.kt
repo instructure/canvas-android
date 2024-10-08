@@ -17,12 +17,14 @@
 package com.instructure.canvasapi2.utils
 
 import android.content.Context
-import android.os.Build
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import java.text.Format
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Locale
 
 @Suppress("MemberVisibilityCanBePrivate")
 object DateHelper {
@@ -85,6 +87,9 @@ object DateHelper {
 
     val monthDayYearDateFormatUniversal: SimpleDateFormat
         get() = SimpleDateFormat("MMMM d, YYYY", Locale.getDefault())
+
+    val monthDayYearDateFormatUniversalShort: SimpleDateFormat
+        get() = SimpleDateFormat("MMM d, YYYY", Locale.getDefault())
 
 
     fun getFormattedTime(context: Context?, date: Date?): String? {

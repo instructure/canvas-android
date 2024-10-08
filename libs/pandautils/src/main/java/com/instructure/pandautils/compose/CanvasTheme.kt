@@ -23,12 +23,13 @@ import androidx.annotation.FontRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalRippleConfiguration
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RippleConfiguration
 import androidx.compose.material.Typography
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
-import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import com.instructure.pandautils.R
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CanvasTheme(content: @Composable () -> Unit) {
     MaterialTheme(
@@ -49,7 +51,7 @@ fun CanvasTheme(content: @Composable () -> Unit) {
         )
     ) {
         CompositionLocalProvider(
-            LocalRippleTheme provides CanvasRippleTheme,
+            LocalRippleConfiguration provides RippleConfiguration(color = colorResource(id = R.color.backgroundDark), getRippleAlpha(isSystemInDarkTheme())),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
             LocalTextStyle provides TextStyle(
                 fontFamily = lato,
@@ -78,15 +80,23 @@ fun overrideComposeFonts(@FontRes fontResource: Int) {
     )
 }
 
-private object CanvasRippleTheme : RippleTheme {
-    @Composable
-    override fun defaultColor(): Color = colorResource(id = R.color.backgroundDark)
+private fun getRippleAlpha(isSystemInDarkTheme: Boolean): RippleAlpha {
+    return if (isSystemInDarkTheme) {
+        RippleAlpha(
+            pressedAlpha = 0.10f,
+            focusedAlpha = 0.12f,
+            draggedAlpha = 0.08f,
+            hoveredAlpha = 0.04f
+        )
+    } else {
+        RippleAlpha(
+            pressedAlpha = 0.24f,
+            focusedAlpha = 0.24f,
+            draggedAlpha = 0.16f,
+            hoveredAlpha = 0.08f
+        )
+    }
 
-    @Composable
-    override fun rippleAlpha(): RippleAlpha = RippleTheme.defaultRippleAlpha(
-        Color.Black,
-        lightTheme = !isSystemInDarkTheme()
-    )
 }
 
 private fun getCustomTextSelectionColors(context: Context): TextSelectionColors {

@@ -18,17 +18,13 @@ package com.instructure.student.features.files.search
 
 import android.content.Context
 import android.view.View
-import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.room.offline.daos.FileFolderDao
-import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.adapter.BaseListRecyclerAdapter
 import com.instructure.student.features.files.list.FileFolderCallback
 import com.instructure.student.holders.FileViewHolder
@@ -74,7 +70,7 @@ class FileSearchAdapter(
     }
 
     override fun bindHolder(item: FileFolder, holder: FileViewHolder, position: Int) {
-        holder.bind(item, canvasContext.textAndIconColor, context, emptyList(), callback)
+        holder.bind(item, canvasContext.color, context, emptyList(), callback)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = FileViewHolder(v)

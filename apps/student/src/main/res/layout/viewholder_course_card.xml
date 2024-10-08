@@ -73,6 +73,7 @@
                 android:paddingTop="13dp"
                 android:paddingEnd="13dp"
                 android:paddingBottom="17dp"
+                app:tint="@color/textLightest"
                 app:srcCompat="@drawable/ic_overflow_white_18dp" />
 
         </FrameLayout>

@@ -25,9 +25,14 @@ import kotlinx.coroutines.flow.SharedFlow
 
 class TestSelectStudentHolder(
     override val selectedStudentState: MutableStateFlow<User?>,
-    override val selectedStudentChangedFlow: SharedFlow<User> = MutableSharedFlow()
+    override val selectedStudentChangedFlow: SharedFlow<User> = MutableSharedFlow(),
+    override val selectedStudentColorChanged: SharedFlow<Unit> = MutableSharedFlow()
 ) : SelectedStudentHolder {
     override suspend fun updateSelectedStudent(user: User) {
         selectedStudentState.emit(user)
+    }
+
+    override suspend fun selectedStudentColorChanged() {
+        (selectedStudentColorChanged as MutableSharedFlow).emit(Unit)
     }
 }

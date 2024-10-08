@@ -50,6 +50,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
@@ -62,7 +63,6 @@ import com.instructure.student.adapter.DashboardRecyclerAdapter
 import com.instructure.student.databinding.CourseGridRecyclerRefreshLayoutBinding
 import com.instructure.student.databinding.FragmentCourseGridBinding
 import com.instructure.student.decorations.VerticalGridSpacingDecoration
-import com.instructure.student.dialog.ColorPickerDialog
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent

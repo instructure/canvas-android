@@ -20,24 +20,25 @@ import android.os.Bundle
 import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.interactions.router.Route
 
 @get:ColorInt
-val CanvasContext?.backgroundColor: Int get() {
+val CanvasContext?.color: Int get() {
     val themedColor = ColorKeeper.getOrGenerateColor(this)
-    return if (ColorKeeper.darkTheme) themedColor.darkBackgroundColor else themedColor.light
-}
-
-@get:ColorInt
-val CanvasContext?.textAndIconColor: Int get() {
-    val themedColor = ColorKeeper.getOrGenerateColor(this)
-    return if (ColorKeeper.darkTheme) themedColor.darkTextAndIconColor else themedColor.light
+    return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
 }
 
 @get:ColorInt
 val CanvasContext?.lightColor: Int get() {
     val themedColor = ColorKeeper.getOrGenerateColor(this)
     return themedColor.light
+}
+
+@get:ColorInt
+val User?.studentColor: Int get() {
+    val themedColor = ColorKeeper.getOrGenerateUserColor(this)
+    return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
 }
 
 val CanvasContext.isCourse: Boolean get() = this.type == CanvasContext.Type.COURSE

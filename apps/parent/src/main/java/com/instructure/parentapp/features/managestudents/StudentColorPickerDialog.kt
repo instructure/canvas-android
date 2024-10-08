@@ -57,7 +57,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.createThemedColor
 
 
 @Composable
@@ -102,7 +101,7 @@ internal fun StudentColorPickerDialog(
                                 .let { modifier ->
                                     if (selected == it) {
                                         modifier
-                                            .border(3.dp, Color(it.color.backgroundColor()), CircleShape)
+                                            .border(3.dp, Color(it.color.color()), CircleShape)
                                             .semantics {
                                                 contentDescription = selectedContentDescription
                                             }
@@ -114,7 +113,7 @@ internal fun StudentColorPickerDialog(
                                 }
                                 .padding(8.dp)
                                 .clip(shape = CircleShape)
-                                .background(color = Color(it.color.backgroundColor()))
+                                .background(color = Color(it.color.color()))
                                 .clickable {
                                     selected = it
                                 }
@@ -183,7 +182,7 @@ fun StudentColorPickerDialogPreview() {
     val colors = ColorKeeper.userColors.map {
         UserColor(
             colorRes = it,
-            color = createThemedColor(context.getColor(it)),
+            color = ColorKeeper.createThemedColor(context.getColor(it)),
             contentDescriptionRes = 0
         )
     }

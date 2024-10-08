@@ -28,7 +28,21 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.models.EditableFile
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.isUser
+import com.instructure.pandautils.utils.onChangeDebounce
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentFileSearchBinding
 import com.instructure.teacher.holders.FileFolderViewHolder
@@ -48,9 +62,9 @@ class FileSearchFragment : BaseSyncFragment<
     var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private val searchAdapter by lazy {
-        FileSearchAdapter(requireContext(), canvasContext.textAndIconColor, presenter) {
-            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.backgroundColor, presenter.canvasContext, R.drawable.ic_document)
-            viewMedia(requireActivity(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
+        FileSearchAdapter(requireContext(), canvasContext.color, presenter) {
+            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.color, presenter.canvasContext, R.drawable.ic_document)
+            viewMedia(requireActivity(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.color, editableFile)
         }
     }
 
@@ -104,8 +118,8 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     private fun themeSearchBar() = with(binding) {
-        val primaryTextColor = if (canvasContext?.isUser.orDefault()) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.white)
-        val primaryColor = canvasContext.backgroundColor
+        val primaryTextColor = if (canvasContext?.isUser.orDefault()) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.textLightest)
+        val primaryColor = canvasContext.color
         ViewStyler.setStatusBarDark(requireActivity(), primaryColor)
         searchHeader.setBackgroundColor(primaryColor)
         queryInput.setTextColor(primaryTextColor)

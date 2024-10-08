@@ -25,12 +25,11 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.multidex.ShadowMultiDex;
 
 import instructure.instrumentationtests.BuildConfig;
 
 @RunWith(RoboTestRunner.class)
-@Config(constants = BuildConfig.class, shadows = ShadowMultiDex.class, sdk = RoboTestRunner.DEFAULT_SDK)
+@Config(constants = BuildConfig.class, sdk = RoboTestRunner.DEFAULT_SDK)
 public abstract class RoboTestCase extends TestCase {
 
     private RoboAppManager mApplication;

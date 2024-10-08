@@ -40,7 +40,7 @@ import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -109,7 +109,7 @@ open class InternalWebViewFragment : BaseFragment() {
         var courseBackgroundColor = ThemePrefs.primaryColor
         courseId?.let {
             try {
-                courseBackgroundColor = CanvasContext.emptyCourseContext(courseId.toLong()).backgroundColor
+                courseBackgroundColor = CanvasContext.emptyCourseContext(courseId.toLong()).color
             } catch (e: NumberFormatException) {
                 Logger.e(e.message)
             }
@@ -178,7 +178,7 @@ open class InternalWebViewFragment : BaseFragment() {
         if (isInModulesPager) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@InternalWebViewFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@InternalWebViewFragment)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.textLightest))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
@@ -191,7 +191,7 @@ open class InternalWebViewFragment : BaseFragment() {
         if (darkToolbar) {
             if (courseColor != -1) {
                 // Use course colors for toolbar
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.white))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.textLightest))
             } else {
                 // Use institution colors for toolbar
                 ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)

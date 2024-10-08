@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -51,6 +52,8 @@ fun TextFieldWithHeader(
     label: String,
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    enabled: Boolean,
+    headerEnabled: Boolean,
     modifier: Modifier = Modifier,
     @DrawableRes headerIconResource: Int? = null,
     iconContentDescription: String? = null,
@@ -59,9 +62,11 @@ fun TextFieldWithHeader(
 ) {
     Column(
         modifier = modifier
+            .alpha(if (enabled) 1f else 0.5f)
     ) {
         TextFieldHeader(
             label = label,
+            enabled = headerEnabled,
             headerIconResource = headerIconResource,
             iconContentDescription = iconContentDescription,
             onIconClick = onIconClick,
@@ -77,6 +82,7 @@ fun TextFieldWithHeader(
         CanvasThemedTextField(
             value = value,
             onValueChange = onValueChange,
+            enabled = enabled,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 16.dp, end = 16.dp)
@@ -89,6 +95,7 @@ fun TextFieldWithHeader(
 @Composable
 private fun TextFieldHeader(
     label: String,
+    enabled: Boolean,
     @DrawableRes headerIconResource: Int?,
     iconContentDescription: String?,
     onIconClick: (() -> Unit)?,
@@ -110,6 +117,7 @@ private fun TextFieldHeader(
 
         headerIconResource?.let { icon ->
             IconButton(
+                enabled = enabled,
                 onClick = { onIconClick?.invoke() },
                 modifier = Modifier
                     .size(24.dp)
@@ -133,6 +141,8 @@ fun TextFieldWithHeaderPreview() {
         label = "Label",
         value = TextFieldValue("Some text"),
         headerIconResource = R.drawable.ic_attachment,
+        enabled = true,
+        headerEnabled = true,
         onValueChange = {}
     )
 }

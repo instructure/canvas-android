@@ -25,15 +25,18 @@ import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.TestSelectStudentHolder
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +65,6 @@ class AlertsViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val repository: AlertsRepository = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val alertCountUpdater: AlertCountUpdater = mockk(relaxed = true)
     private val selectedStudentFlow = MutableStateFlow<User?>(null)
     private val selectedStudentHolder = TestSelectStudentHolder(selectedStudentFlow)
@@ -73,19 +75,21 @@ class AlertsViewModelTest {
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+        mockkStatic(User::studentColor)
 
-        coEvery { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         coEvery { repository.getAlertThresholdForStudent(any(), any()) } returns emptyList()
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
     fun `Load alerts on student change`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -128,14 +132,16 @@ class AlertsViewModelTest {
                 observerId = 1L,
                 threshold = null,
                 alertType = AlertType.ASSIGNMENT_MISSING,
-                userId = 1L
+                userId = 1L,
+                workflowState = ThresholdWorkflowState.ACTIVE
             ),
             AlertThreshold(
                 id = 2L,
                 observerId = 1L,
                 threshold = "50%",
                 alertType = AlertType.ASSIGNMENT_GRADE_LOW,
-                userId = 1L
+                userId = 1L,
+                workflowState = ThresholdWorkflowState.ACTIVE
             )
         )
 
@@ -173,6 +179,7 @@ class AlertsViewModelTest {
     @Test
     fun `Empty state`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         coEvery {
             repository.getAlertsForStudent(student.id, any())
@@ -210,6 +217,7 @@ class AlertsViewModelTest {
     @Test
     fun `Error state if getting alerts fail`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         coEvery {
             repository.getAlertsForStudent(student.id, any())
@@ -231,6 +239,7 @@ class AlertsViewModelTest {
     @Test
     fun `Refresh data`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -292,6 +301,7 @@ class AlertsViewModelTest {
     @Test
     fun `Dismiss alert`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -354,6 +364,7 @@ class AlertsViewModelTest {
     @Test
     fun `Dismiss error resets event`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -415,6 +426,7 @@ class AlertsViewModelTest {
     @Test
     fun `Undo dismissal`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -481,6 +493,7 @@ class AlertsViewModelTest {
     @Test
     fun `Undo does not reset event on error`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -545,6 +558,7 @@ class AlertsViewModelTest {
     @Test
     fun `Navigate to URL`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -604,6 +618,7 @@ class AlertsViewModelTest {
     @Test
     fun `Navigation to alert marks it read`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -666,6 +681,7 @@ class AlertsViewModelTest {
     @Test
     fun `If marking the alert read fails the alert will remain read until refresh`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -723,8 +739,25 @@ class AlertsViewModelTest {
 
     }
 
+    @Test
+    fun `Change color when student color is changed`() = runTest {
+        val student = User(1L)
+        mockkStatic(User::studentColor)
+        every { student.studentColor } returns 1
+        createViewModel()
+        selectedStudentFlow.emit(student)
+
+        assertEquals(1, viewModel.uiState.value.studentColor)
+
+        every { student.studentColor } returns 2
+        selectedStudentHolder.selectedStudentColorChanged()
+
+        assertEquals(2, viewModel.uiState.value.studentColor)
+        unmockkAll()
+    }
+
     private fun createViewModel() {
         viewModel =
-            AlertsViewModel(repository, colorKeeper, selectedStudentHolder, alertCountUpdater)
+            AlertsViewModel(repository, selectedStudentHolder, alertCountUpdater)
     }
 }

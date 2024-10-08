@@ -94,12 +94,12 @@ class UserGroupFilesE2ETest : StudentTest() {
         Intents.init()
         try {
             stubFilePickerIntent("samplepdf.pdf")
-            fileUploadPage.chooseDevice()
+            fileChooserPage.chooseDevice()
         }
         finally {
             Intents.release()
         }
-        fileUploadPage.clickUpload()
+        fileChooserPage.clickUpload()
 
         Log.d(STEP_TAG, "Assert that the file upload was successful.")
         fileListPage.assertItemDisplayed("samplepdf.pdf")

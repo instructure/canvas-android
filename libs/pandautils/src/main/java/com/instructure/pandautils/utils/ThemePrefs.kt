@@ -19,18 +19,14 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.graphics.Color
-import android.view.View
-import android.view.ViewTreeObserver
-import android.widget.EditText
-import androidx.core.graphics.drawable.DrawableCompat
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.utils.BooleanPref
 import com.instructure.canvasapi2.utils.ColorPref
 import com.instructure.canvasapi2.utils.IntPref
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.canvasapi2.utils.StringPref
 import com.instructure.pandautils.R
+import dagger.hilt.android.qualifiers.ActivityContext
 
 const val MIN_CONTRAST_FOR_BUTTONS = 3.0
 const val MIN_CONTRAST_FOR_TEXT = 4.5
@@ -55,7 +51,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     var buttonColor by ColorPref(R.color.backgroundInfo)
 
     // Button text color for filled button.
-    var buttonTextColor by ColorPref(R.color.white)
+    var buttonTextColor by ColorPref(R.color.textLightest)
 
     // Used for text buttons (for example dialog buttons) and small image buttons.
     var textButtonColor by ColorPref(R.color.textInfo)
@@ -67,6 +63,8 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     var appTheme by IntPref(defaultValue = 0)
 
     var themeSelectionShown by BooleanPref()
+
+    private var canvasTheme: CanvasTheme? = null
 
     override fun keepBaseProps() = listOf(::appTheme, ::themeSelectionShown)
 
@@ -102,7 +100,13 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     }
 
-    fun applyCanvasTheme(theme: CanvasTheme, context: Context) {
+    // This should not be called with application context.
+    fun reapplyCanvasTheme(@ActivityContext context: Context) {
+        applyCanvasTheme(canvasTheme ?: return, context)
+    }
+
+    // This should not be called with application context.
+    fun applyCanvasTheme(theme: CanvasTheme, @ActivityContext context: Context) {
         val tempBrandColor = parseColor(theme.brand, brandColor) // ic-brand-primary - Primary Brand Color
         brandColor = ColorUtils.correctContrastForText(tempBrandColor, context.getColor(R.color.backgroundLightestElevated))
 
@@ -111,12 +115,13 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
         val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
 
-        buttonColor = ColorUtils.correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightest), context.getColor(R.color.white))
-        buttonTextColor = context.getColor(R.color.white)
+        buttonColor = ColorUtils.correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightestElevated), context.getColor(R.color.textLightest))
+        buttonTextColor = context.getColor(R.color.textLightest)
         textButtonColor = ColorUtils.correctContrastForText(tempButtonColor, context.getColor(R.color.backgroundLightestElevated))
 
         logoUrl = theme.logoUrl
         isThemeApplied = true
+        canvasTheme = theme
     }
 
     private fun parseColor(hexColor: String, defaultColor: Int): Int {

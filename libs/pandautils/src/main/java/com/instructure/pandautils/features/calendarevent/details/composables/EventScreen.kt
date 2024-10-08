@@ -96,6 +96,12 @@ internal fun EventScreen(
             }
         }
 
+        val toolbarTextColor = if (eventUiState.toolbarUiState.isUserContext) {
+            Color(color = ThemePrefs.primaryTextColor)
+        } else {
+            colorResource(id = R.color.textLightest)
+        }
+
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
@@ -113,12 +119,13 @@ internal fun EventScreen(
                             OverFlowMenuSegment(
                                 eventUiState = eventUiState,
                                 actionHandler = actionHandler,
+                                toolbarTextColor = toolbarTextColor,
                                 modifier.testTag("overFlowMenuSegment")
                             )
                         }
                     },
                     backgroundColor = Color(color = eventUiState.toolbarUiState.toolbarColor),
-                    contentColor = Color.White,
+                    contentColor = toolbarTextColor,
                     navigationActionClick = {
                         navigationAction()
                     }
@@ -144,6 +151,7 @@ internal fun EventScreen(
 private fun OverFlowMenuSegment(
     eventUiState: EventUiState,
     actionHandler: (EventAction) -> Unit,
+    toolbarTextColor: Color,
     modifier: Modifier = Modifier
 ) {
     var showDeleteConfirmationDialog by rememberSaveable {
@@ -195,6 +203,7 @@ private fun OverFlowMenuSegment(
             .background(color = colorResource(id = R.color.backgroundLightestElevated))
             .testTag("overFlowMenu"),
         showMenu = showMenu,
+        iconColor = toolbarTextColor,
         onDismissRequest = {
             showMenu = !showMenu
         }
