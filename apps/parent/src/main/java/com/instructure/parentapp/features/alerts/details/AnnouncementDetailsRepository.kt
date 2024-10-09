@@ -3,6 +3,7 @@ package com.instructure.parentapp.features.alerts.details
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasModel
 import com.instructure.canvasapi2.utils.DataResult
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,7 @@ class AnnouncementDetailsRepository @Inject constructor(
         courseId: Long,
         announcementId: Long,
         forceNetwork: Boolean
-    ): Flow<DataResult<Any>> {
+    ): Flow<DataResult<CanvasModel<*>>> {
         return flow {
             emit(DataResult.Loading())
             try {

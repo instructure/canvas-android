@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.CanvasModel
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.User
@@ -64,7 +65,7 @@ class AnnouncementDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun handleData(data: Any?) {
+    private fun handleData(data: CanvasModel<*>?) {
         when (data) {
             is DiscussionTopicHeader -> {
                 _uiState.update {
