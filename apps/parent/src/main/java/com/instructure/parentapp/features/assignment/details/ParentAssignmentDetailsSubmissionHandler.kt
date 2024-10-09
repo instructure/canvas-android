@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewData
-import kotlinx.coroutines.CoroutineScope
 import java.io.File
 
 class ParentAssignmentDetailsSubmissionHandler(
@@ -36,7 +35,7 @@ class ParentAssignmentDetailsSubmissionHandler(
     override var lastSubmissionAssignmentId: Long? = null
     override var lastSubmissionSubmissionType: String? = null
 
-    override fun addAssignmentSubmissionObserver(assignmentId: Long, userId: Long, resources: Resources, coroutineScope: CoroutineScope, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit) = Unit
+    override fun addAssignmentSubmissionObserver(assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit) = Unit
 
     override fun removeAssignmentSubmissionObserver() = Unit
 

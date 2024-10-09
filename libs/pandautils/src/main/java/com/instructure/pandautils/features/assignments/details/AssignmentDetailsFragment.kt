@@ -240,7 +240,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 assignmentDetailsRouter.showCustomReminderDialog(this)
             }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
-                assignmentDetailsRouter.showDeleteReminderConfirmationDialog(requireContext(), action.onConfirmed)
+                assignmentDetailsRouter.showDeleteReminderConfirmationDialog(requireContext(), onConfirmed = action.onConfirmed)
             }
         }
     }

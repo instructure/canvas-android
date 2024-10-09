@@ -17,9 +17,6 @@ package com.instructure.student.features.assignments.details
 
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -36,9 +33,6 @@ import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -48,11 +42,6 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
-
     private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
     private val studentDb: StudentDb = mockk(relaxed = true)
 
@@ -60,9 +49,6 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
-
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         every { Log.e(any(), any()) } returns 0
@@ -106,7 +92,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
             studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
         } returns liveData
 
-        submissionHandler.addAssignmentSubmissionObserver(0, 0, mockk(relaxed = true), mockk(relaxed = true), data, {})
+        submissionHandler.addAssignmentSubmissionObserver(0, 0, mockk(relaxed = true), data, {})
 
         liveData.postValue(listOf(getDbSubmission()))
 
@@ -137,7 +123,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
             studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
         } returns liveData
 
-        submissionHandler.addAssignmentSubmissionObserver(0, 0, mockk(relaxed = true), mockk(relaxed = true), data, {})
+        submissionHandler.addAssignmentSubmissionObserver(0, 0, mockk(relaxed = true), data, {})
 
         liveData.postValue(listOf(getDbSubmission()))
         assertTrue(submissionHandler.isUploading)

@@ -277,7 +277,7 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.AssignmentClick -> {
                 viewModelScope.launch {
-                    _events.send(GradesViewModelAction.NavigateToAssignmentDetails(action.id))
+                    _events.send(GradesViewModelAction.NavigateToAssignmentDetails(courseId, action.id))
                 }
             }
 

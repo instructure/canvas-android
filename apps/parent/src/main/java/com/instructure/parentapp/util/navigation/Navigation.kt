@@ -10,7 +10,6 @@ import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
@@ -58,6 +57,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     val settings = "$baseUrl/settings"
 
     private val assignmentDetails = "$baseUrl/courses/{${Const.COURSE_ID}}/assignments/{${Const.ASSIGNMENT_ID}}"
+    fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
+
     private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
     fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
 
@@ -191,6 +192,9 @@ class Navigation(apiPrefs: ApiPrefs) {
                     type = NavType.LongType
                     nullable = false
                 }
+                deepLink {
+                    uriPattern = assignmentDetails
+                }
             }
             fragment<AlertSettingsFragment>(alertSettings) {
                 argument(Const.USER) {
@@ -277,25 +281,6 @@ private val ScheduleItemParametersType = object : NavType<ScheduleItem>(
     }
 }
 
-private val CanvasContextParametersType = object : NavType<CanvasContext>(
-    isNullableAllowed = false
-) {
-    override fun put(bundle: Bundle, key: String, value: CanvasContext) {
-        bundle.putParcelable(key, value)
-    }
-
-    override fun get(bundle: Bundle, key: String): CanvasContext? {
-        return bundle.getParcelable(key) as? CanvasContext
-    }
-
-    override fun serializeAsValue(value: CanvasContext): String {
-        return Uri.encode(value.toJson())
-    }
-
-    override fun parseValue(value: String): CanvasContext {
-        return value.fromJson()
-    }
-}
 private val InboxComposeOptionsParametersType = object : NavType<InboxComposeOptions>(
     isNullableAllowed = false
 ) {

@@ -33,12 +33,12 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.getVideoUri
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity
 import com.instructure.student.util.getStudioLTITool
-import kotlinx.coroutines.CoroutineScope
 import java.io.File
 import java.util.Date
 
@@ -60,13 +60,12 @@ class StudentAssignmentDetailsSubmissionHandler(
         assignmentId: Long,
         userId: Long,
         resources: Resources,
-        coroutineScope: CoroutineScope,
         data: MutableLiveData<AssignmentDetailsViewData>,
         refreshAssignment: () -> Unit,
     ) {
         submissionLiveData = studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(assignmentId, userId)
 
-        setupObserver(resources, coroutineScope, data, refreshAssignment)
+        setupObserver(resources, data, refreshAssignment)
 
         submissionObserver?.let { observer ->
             submissionLiveData?.observeForever(observer)
@@ -89,7 +88,7 @@ class StudentAssignmentDetailsSubmissionHandler(
         }
     }
 
-    override fun getVideoUri(fragment: FragmentActivity): Uri? = null
+    override fun getVideoUri(fragment: FragmentActivity): Uri? = fragment.getVideoUri()
 
     override suspend fun getStudioLTITool(assignment: Assignment, courseId: Long?): LTITool? {
         return if (assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
@@ -99,7 +98,6 @@ class StudentAssignmentDetailsSubmissionHandler(
 
     private fun setupObserver(
         resources: Resources,
-        coroutineScope: CoroutineScope,
         data: MutableLiveData<AssignmentDetailsViewData>,
         refreshAssignment: () -> Unit,
     ) {

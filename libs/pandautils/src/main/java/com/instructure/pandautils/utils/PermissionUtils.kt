@@ -98,8 +98,8 @@ fun Context.hasPermissions(vararg permissions: String): Boolean {
     return true
 }
 
-fun Context.needsPermissions(successCallback: () -> Unit, failureCallback: () -> Unit, vararg permissions: String): Boolean {
-    if (PermissionUtils.hasPermissions(this as Activity, *permissions)) {
+fun Activity.needsPermissions(successCallback: () -> Unit, failureCallback: () -> Unit, vararg permissions: String): Boolean {
+    if (PermissionUtils.hasPermissions(this, *permissions)) {
         return false
     }
 

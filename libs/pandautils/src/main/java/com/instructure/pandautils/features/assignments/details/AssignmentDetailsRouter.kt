@@ -19,6 +19,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -29,53 +30,95 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.interactions.bookmarks.Bookmarker
+import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.assignments.details.reminder.CustomReminderDialog
+import com.instructure.pandautils.utils.showThemed
 import java.io.File
 
-interface AssignmentDetailsRouter {
-    fun navigateToAssignmentUploadPicker(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, mediaUri: Uri)
+open class AssignmentDetailsRouter {
+    open fun navigateToAssignmentUploadPicker(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, mediaUri: Uri) = Unit
 
-    fun navigateToLtiScreen(activity: FragmentActivity, canvasContext: CanvasContext?, url: String)
+    open fun navigateToLtiScreen(activity: FragmentActivity, canvasContext: CanvasContext?, url: String) = Unit
 
-    fun navigateToSubmissionScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null)
+    open fun navigateToSubmissionScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null) = Unit
 
-    fun navigateToQuizScreen(activity: FragmentActivity, canvasContext: CanvasContext, quiz: Quiz, url: String)
+    open fun navigateToQuizScreen(activity: FragmentActivity, canvasContext: CanvasContext, quiz: Quiz, url: String) = Unit
 
-    fun navigateToDiscussionScreen(activity: FragmentActivity, canvasContext: CanvasContext, discussionTopicHeaderId: Long, isAnnouncement: Boolean = false)
+    open fun navigateToDiscussionScreen(activity: FragmentActivity, canvasContext: CanvasContext, discussionTopicHeaderId: Long, isAnnouncement: Boolean = false) = Unit
 
-    fun navigateToUploadScreen(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, attemptId: Long? = null)
+    open fun navigateToUploadScreen(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, attemptId: Long? = null) = Unit
 
-    fun navigateToTextEntryScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false)
+    open fun navigateToTextEntryScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false) = Unit
 
-    fun navigateToUrlSubmissionScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialUrl: String?, isFailure: Boolean = false)
+    open fun navigateToUrlSubmissionScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialUrl: String?, isFailure: Boolean = false) = Unit
 
-    fun navigateToAnnotationSubmissionScreen(activity: FragmentActivity, canvasContext: CanvasContext, annotatableAttachmentId: Long, submissionId: Long, assignmentId: Long, assignmentName: String)
+    open fun navigateToAnnotationSubmissionScreen(activity: FragmentActivity, canvasContext: CanvasContext, annotatableAttachmentId: Long, submissionId: Long, assignmentId: Long, assignmentName: String) = Unit
 
-    fun navigateToLtiLaunchScreen(activity: FragmentActivity, canvasContext: CanvasContext, url: String, title: String? = null, sessionLessLaunch: Boolean = false, isAssignmentLTI: Boolean = false, ltiTool: LTITool? = null)
+    open fun navigateToLtiLaunchScreen(activity: FragmentActivity, canvasContext: CanvasContext, url: String, title: String? = null, sessionLessLaunch: Boolean = false, isAssignmentLTI: Boolean = false, ltiTool: LTITool? = null) = Unit
 
-    fun navigateToUploadStatusScreen(activity: FragmentActivity, submissionId: Long)
+    open fun navigateToUploadStatusScreen(activity: FragmentActivity, submissionId: Long) = Unit
 
-    fun navigateToDiscussionAttachmentScreen(activity: FragmentActivity, canvasContext: CanvasContext, attachment: RemoteFile)
+    open fun navigateToDiscussionAttachmentScreen(activity: FragmentActivity, canvasContext: CanvasContext, attachment: RemoteFile) = Unit
 
-    fun navigateToUrl(activity: FragmentActivity, url: String, domain: String, extras: Bundle? = null)
+    open fun navigateToUrl(activity: FragmentActivity, url: String, domain: String, extras: Bundle? = null) = Unit
 
-    fun navigateToInternalWebView(activity: FragmentActivity, canvasContext: CanvasContext, url: String, authenticate: Boolean)
+    open fun navigateToInternalWebView(activity: FragmentActivity, canvasContext: CanvasContext, url: String, authenticate: Boolean) = Unit
 
-    fun openMedia(activity: FragmentActivity, url: String)
+    open fun openMedia(activity: FragmentActivity, url: String) = Unit
 
-    fun showMediaDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit,)
+    open fun showMediaDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit) = Unit
 
-    fun showSubmitDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit, assignment: Assignment, course: Course, isStudioEnabled: Boolean, studioLTITool: LTITool?)
+    open fun showSubmitDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit, assignment: Assignment, course: Course, isStudioEnabled: Boolean, studioLTITool: LTITool?) = Unit
 
-    fun showCustomReminderDialog(fragment: Fragment)
+    open fun showCustomReminderDialog(fragment: Fragment) {
+        CustomReminderDialog.newInstance().show(fragment.childFragmentManager, null)
+    }
 
-    fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit)
+    open fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {
+        AlertDialog.Builder(context)
+            .setTitle(R.string.deleteReminderTitle)
+            .setMessage(R.string.deleteReminderMessage)
+            .setNegativeButton(R.string.no, null)
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                onConfirmed()
+                dialog.dismiss()
+            }
+            .showThemed()
+    }
 
-    fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit)
+    open fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
+        val choices = listOf(
+            ReminderChoice.Minute(5),
+            ReminderChoice.Minute(15),
+            ReminderChoice.Minute(30),
+            ReminderChoice.Hour(1),
+            ReminderChoice.Day(1),
+            ReminderChoice.Week(1),
+            ReminderChoice.Custom,
+        )
 
-    fun canRouteInternally(activity: FragmentActivity?, url: String, domain: String, routeIfPossible: Boolean): Boolean
+        AlertDialog.Builder(context)
+            .setTitle(R.string.reminderTitle)
+            .setNegativeButton(R.string.cancel, null)
+            .setSingleChoiceItems(
+                choices.map {
+                    if (it is ReminderChoice.Custom) {
+                        it.getText(context.resources)
+                    } else {
+                        context.getString(R.string.reminderBefore, it.getText(context.resources))
+                    }
+                }.toTypedArray(), -1
+            ) { dialog, which ->
+                onReminderSelected(choices[which])
+                dialog.dismiss()
+            }
+            .showThemed()
+    }
 
-    fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?)
+    open fun canRouteInternally(activity: FragmentActivity?, url: String, domain: String, routeIfPossible: Boolean): Boolean = false
 
-    fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean
+    open fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?) = Unit
+
+    open fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
 }

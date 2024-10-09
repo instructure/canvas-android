@@ -140,7 +140,6 @@ class AssignmentDetailsViewModel @Inject constructor(
             assignmentId,
             apiPrefs.user?.id.orDefault(),
             resources,
-            viewModelScope,
             _data,
             ::refreshAssignment
         )
@@ -306,7 +305,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
         val submissionHistory = assignment.submission?.submissionHistory
         val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
-            submission?.submittedAt?.let { it.toFormattedString() }?.let {
+            submission?.submittedAt?.toFormattedString()?.let {
                 AssignmentDetailsAttemptItemViewModel(
                     AssignmentDetailsAttemptViewData(
                         resources.getString(R.string.attempt, submissionHistory.size - index),
@@ -615,6 +614,15 @@ class AssignmentDetailsViewModel @Inject constructor(
                 assignment,
                 reminderText,
                 alarmTimeInMillis
+            )
+
+            alarmScheduler.scheduleAlarm(
+                assignment.id,
+                assignment.htmlUrl.orEmpty(),
+                assignment.name.orEmpty(),
+                reminderText,
+                alarmTimeInMillis,
+                reminderId
             )
         }
     }

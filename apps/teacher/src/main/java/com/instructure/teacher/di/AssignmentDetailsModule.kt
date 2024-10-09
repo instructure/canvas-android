@@ -19,10 +19,6 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
-import com.instructure.teacher.features.assignment.details.TeacherAlarmReceiverNotificationHandler
-import com.instructure.teacher.features.assignment.details.TeacherAssignmentDetailsRepository
-import com.instructure.teacher.features.assignment.details.TeacherAssignmentDetailsRouter
-import com.instructure.teacher.features.assignment.details.TeacherAssignmentDetailsSubmissionHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,7 +31,7 @@ import dagger.hilt.components.SingletonComponent
 class AssignmentDetailsFragmentModule() {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
-        return TeacherAssignmentDetailsRouter()
+        throw NotImplementedError()
     }
 }
 
@@ -44,12 +40,12 @@ class AssignmentDetailsFragmentModule() {
 class AssignmentDetailsModule {
     @Provides
     fun provideAssignmentDetailsRepository(): AssignmentDetailsRepository {
-        return TeacherAssignmentDetailsRepository()
+        throw NotImplementedError()
     }
 
     @Provides
     fun provideAssignmentDetailsSubmissionHandler(): AssignmentDetailsSubmissionHandler {
-        return TeacherAssignmentDetailsSubmissionHandler()
+        throw NotImplementedError()
     }
 }
 
@@ -58,6 +54,6 @@ class AssignmentDetailsModule {
 class AssignmentDetailsSingletonModule {
     @Provides
     fun provideAssignmentDetailsNotificationHandler(): AlarmReceiverNotificationHandler {
-        return TeacherAlarmReceiverNotificationHandler()
+        throw NotImplementedError()
     }
 }

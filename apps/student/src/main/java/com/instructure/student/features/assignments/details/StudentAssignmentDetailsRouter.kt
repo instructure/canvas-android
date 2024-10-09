@@ -16,7 +16,6 @@
 package com.instructure.student.features.assignments.details
 
 import android.app.Dialog
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,7 +24,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -40,13 +38,10 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
-import com.instructure.pandautils.features.assignments.details.ReminderChoice
-import com.instructure.pandautils.features.assignments.details.reminder.CustomReminderDialog
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
-import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
@@ -69,7 +64,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
 import java.io.File
 
-class StudentAssignmentDetailsRouter: AssignmentDetailsRouter {
+class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
     override fun navigateToAssignmentUploadPicker(
         activity: FragmentActivity,
         canvasContext: CanvasContext,
@@ -370,51 +365,6 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter {
                 assignment
             )
         )
-    }
-
-    override fun showCustomReminderDialog(activity: Fragment) {
-        CustomReminderDialog.newInstance().show(activity.childFragmentManager, null)
-    }
-
-    override fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {
-        AlertDialog.Builder(context)
-            .setTitle(R.string.deleteReminderTitle)
-            .setMessage(R.string.deleteReminderMessage)
-            .setNegativeButton(R.string.no, null)
-            .setPositiveButton(R.string.yes) { dialog, _ ->
-                onConfirmed()
-                dialog.dismiss()
-            }
-            .showThemed()
-    }
-
-    override fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
-        val choices = listOf(
-            ReminderChoice.Minute(5),
-            ReminderChoice.Minute(15),
-            ReminderChoice.Minute(30),
-            ReminderChoice.Hour(1),
-            ReminderChoice.Day(1),
-            ReminderChoice.Week(1),
-            ReminderChoice.Custom,
-        )
-
-        AlertDialog.Builder(context)
-            .setTitle(R.string.reminderTitle)
-            .setNegativeButton(R.string.cancel, null)
-            .setSingleChoiceItems(
-                choices.map {
-                    if (it is ReminderChoice.Custom) {
-                        it.getText(context.resources)
-                    } else {
-                        context.getString(R.string.reminderBefore, it.getText(context.resources))
-                    }
-                }.toTypedArray(), -1
-            ) { dialog, which ->
-                onReminderSelected(choices[which])
-                dialog.dismiss()
-            }
-            .showThemed()
     }
 
     override fun canRouteInternally(
