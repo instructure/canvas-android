@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
