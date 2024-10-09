@@ -47,7 +47,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
 
     private val announcementId = "announcement-id"
-    private val announcementDetails = "$baseUrl/courses/{$courseId}/discussion_topics/{$announcementId}"
+    private val announcementDetails = "$baseUrl/courses/{$COURSE_ID}/discussion_topics/{$announcementId}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
