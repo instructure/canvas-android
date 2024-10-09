@@ -58,11 +58,7 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
                 val locale = Locale.getDefault().language
                 val timezone = TimeZone.getDefault().id
                 val url = "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/$id"
-                val sessionUrl = if (apiPrefs.isMasquerading) {
-                    oauthManager.getAuthenticatedSessionMasqueradingAsync(url, apiPrefs.user?.id.orDefault()).await().dataOrThrow.sessionUrl
-                } else {
-                    oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
-                }
+                val sessionUrl = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
                 val authenticatedUrl = "$sessionUrl&embed=true&session_locale=$locale&session_timezone=$timezone"
 
                 _data.postValue(DiscussionDetailsWebViewViewData(authenticatedUrl, header?.title ?: resources.getString(R.string.discussion)))
