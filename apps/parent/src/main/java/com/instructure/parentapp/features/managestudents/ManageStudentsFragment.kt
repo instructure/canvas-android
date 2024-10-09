@@ -25,19 +25,31 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
+import com.instructure.parentapp.features.addstudent.AddStudentViewModel
+import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class ManageStudentsFragment : Fragment() {
 
+    @Inject
+    lateinit var navigation: Navigation
+
     private val viewModel: ManageStudentViewModel by viewModels()
+    private val addStudentViewModel: AddStudentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +59,9 @@ class ManageStudentsFragment : Fragment() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        lifecycleScope.launch {
+            addStudentViewModel.events.collectLatest(::handleAddStudentAction)
+        }
 
         return ComposeView(requireActivity()).apply {
             setContent {
@@ -62,10 +77,28 @@ class ManageStudentsFragment : Fragment() {
         }
     }
 
+    private fun handleAddStudentAction(action: AddStudentViewModelAction) {
+        when (action) {
+            is AddStudentViewModelAction.PairStudentSuccess -> {
+                viewModel.handleAction(ManageStudentsAction.Refresh)
+            }
+            is AddStudentViewModelAction.UnpairStudentSuccess -> {
+                viewModel.handleAction(ManageStudentsAction.Refresh)
+            }
+        }
+    }
+
     private fun handleAction(action: ManageStudentsViewModelAction) {
         when (action) {
             is ManageStudentsViewModelAction.NavigateToAlertSettings -> {
-                //TODO: Navigate to alert settings
+                navigation.navigate(requireActivity(), navigation.alertSettingsRoute(action.student))
+            }
+
+            is ManageStudentsViewModelAction.AddStudent -> {
+                AddStudentBottomSheetDialogFragment().show(
+                    childFragmentManager,
+                    AddStudentBottomSheetDialogFragment::class.java.simpleName
+                )
             }
         }
     }

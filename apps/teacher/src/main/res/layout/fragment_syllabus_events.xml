@@ -72,7 +72,7 @@
             android:paddingStart="48dp"
             android:paddingEnd="48dp"
             android:text="@string/retry"
-            android:textColor="@color/white" />
+            android:textColor="@color/textLightest" />
     </LinearLayout>
 
 </FrameLayout>

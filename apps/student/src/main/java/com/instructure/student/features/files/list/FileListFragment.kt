@@ -20,6 +20,8 @@ package com.instructure.student.features.files.list
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -201,6 +203,11 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         EventBus.getDefault().register(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        themeToolbar()
+    }
+
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
@@ -305,12 +312,14 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     private fun themeToolbar() = with(binding) {
         // We style the toolbar white for user files
-        if (canvasContext.type == CanvasContext.Type.USER) {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, ThemePrefs.primaryTextColor)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
-        } else {
-            ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.white))
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        Handler(Looper.getMainLooper()).post {
+            if (canvasContext.type == CanvasContext.Type.USER) {
+                ViewStyler.themeProgressBar(fileLoadingProgressBar, ThemePrefs.brandColor)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.brandColor)
+            } else {
+                ViewStyler.themeProgressBar(fileLoadingProgressBar, requireContext().getColor(R.color.textLightest))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+            }
         }
     }
 

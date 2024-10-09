@@ -98,7 +98,7 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityInitBinding
 import com.instructure.teacher.databinding.NavigationDrawerBinding
-import com.instructure.teacher.dialog.ColorPickerDialog
+import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory
@@ -450,8 +450,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) = with(navigationDrawerBinding) {
-        val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._STUDIO_DOMAIN }
-        val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._GAUGE_DOMAIN }
+        val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
 
         navigationDrawerItemArc.setVisible(arcLaunchDefinition != null)
         navigationDrawerItemArc.tag = arcLaunchDefinition
@@ -502,7 +502,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count
             bottomBar.getOrCreateBadge(menuItemId).backgroundColor = getColor(R.color.backgroundInfo)
-            bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.white)
+            bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.textLightest)
             if (quantityContentDescription != null) {
                 bottomBar.getOrCreateBadge(menuItemId).setContentDescriptionQuantityStringsResource(quantityContentDescription)
             }

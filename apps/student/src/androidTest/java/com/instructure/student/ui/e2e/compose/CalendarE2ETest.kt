@@ -21,7 +21,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.espresso.getCurrentDateInCanvasCalendarFormat
+import com.instructure.espresso.getDateInCanvasCalendarFormat
 import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
@@ -74,7 +74,7 @@ class CalendarE2ETest : StudentComposeTest() {
         calendarEventCreateEditPage.clickSave()
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
-        var currentDate = getCurrentDateInCanvasCalendarFormat()
+        var currentDate = getDateInCanvasCalendarFormat()
         calendarScreenPage.assertItemDetails(newEventTitle, student.name, currentDate)
 
         Log.d(STEP_TAG, "Click on the previously created '$newEventTitle' event and assert the event details.")
@@ -107,7 +107,7 @@ class CalendarE2ETest : StudentComposeTest() {
         calendarEventCreateEditPage.clickSave()
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding modified details (title, context name, date) on the page.")
-        currentDate = getCurrentDateInCanvasCalendarFormat()
+        currentDate = getDateInCanvasCalendarFormat()
         calendarScreenPage.assertItemDetails(modifiedEventTitle, student.name, currentDate)
 
         Log.d(STEP_TAG, "Click on the previously created '$modifiedEventTitle' event and assert the event details.")
@@ -158,7 +158,7 @@ class CalendarE2ETest : StudentComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         Log.d(STEP_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously created To Do item is displayed with the corresponding title, context and date.")
-        val currentDate = getCurrentDateInCanvasCalendarFormat()
+        val currentDate = getDateInCanvasCalendarFormat()
         calendarScreenPage.assertItemDetails(testTodoTitle, "To Do", "$currentDate at 12:00 PM")
 
         Log.d(STEP_TAG, "Clicks on the '$testTodoTitle' To Do item.")
@@ -251,7 +251,7 @@ class CalendarE2ETest : StudentComposeTest() {
         calendarEventCreateEditPage.clickSave()
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
-        val currentDate = getCurrentDateInCanvasCalendarFormat()
+        val currentDate = getDateInCanvasCalendarFormat()
         calendarScreenPage.assertItemDetails(newEventTitle, student.name, currentDate)
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")

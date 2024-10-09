@@ -17,7 +17,12 @@ package com.instructure.teacher.ui
 
 import android.util.Log
 import com.instructure.canvas.espresso.StubMultiAPILevel
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addRubricToAssignment
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.RubricCriterion
@@ -219,7 +224,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectGradesTab()
     }

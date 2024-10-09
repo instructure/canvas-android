@@ -138,7 +138,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
     buildFeatures {
         viewBinding true
@@ -218,4 +218,7 @@ dependencies {
     implementation Libs.PLAY_IN_APP_UPDATES
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 }

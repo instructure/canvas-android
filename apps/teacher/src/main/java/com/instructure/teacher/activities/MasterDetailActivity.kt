@@ -38,7 +38,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -111,8 +111,8 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
         if (mRoute?.canvasContext is Course) {
             val course = mRoute?.canvasContext as Course
-            fakeToolbarMaster.setBackgroundColor(course.backgroundColor)
-            fakeToolbarDetail.setBackgroundColor(course.backgroundColor)
+            fakeToolbarMaster.setBackgroundColor(course.color)
+            fakeToolbarDetail.setBackgroundColor(course.color)
         } else {
             fakeToolbarMaster.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarDetail.setBackgroundColor(ThemePrefs.primaryColor)

@@ -21,7 +21,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.common.ui.Presenter
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListItemViewState
@@ -42,7 +42,7 @@ object ConferenceListPresenter : Presenter<ConferenceListModel, ConferenceListVi
 
         // Success state
         if (model.listResult?.dataOrNull?.isNotEmpty() == true) {
-            val color = model.canvasContext.textAndIconColor
+            val color = model.canvasContext.color
 
             // Sort conferences by in-progress, then not-started, then concluded
             val conferences = model.listResult.dataOrThrow.sortedBy {

@@ -64,7 +64,7 @@ class AssignmentListInteractionTest : StudentTest() {
         goToAssignmentsPage()
         assignmentListPage.assertHasAssignment(assignment)
         assignmentListPage.assertSortByButtonShowsSortByTime()
-        assignmentListPage.assertFindsUndatedAssignmentLabel()
+        assignmentListPage.assertAssignmentGroupDisplayed("Undated Assignments")
     }
 
     @Test
@@ -216,6 +216,8 @@ class AssignmentListInteractionTest : StudentTest() {
             listOf("D", 0.6),
             listOf("F", 0.0)
         )
+
+        data.courseSettings[course.id] = CourseSettings(restrictQuantitativeData = restrictQuantitativeData)
 
         val newCourse = course
             .copy(settings = CourseSettings(restrictQuantitativeData = restrictQuantitativeData),

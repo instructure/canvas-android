@@ -69,7 +69,7 @@ class OfflineSyllabusE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Expand '${course.name}' course.")
         manageOfflineContentPage.expandCollapseItem(course.name)
 
-        Log.d(STEP_TAG, "Select the 'Announcements' of '${course.name}' course for sync. Click on the 'Sync' button.")
+        Log.d(STEP_TAG, "Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState("Syllabus")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 

@@ -10,26 +10,32 @@ import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.qr.QrPairingFragment
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
+import com.instructure.parentapp.features.alerts.settings.AlertSettingsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
-import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.parentapp.features.splash.SplashFragment
 
 
@@ -37,8 +43,7 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     private val baseUrl = apiPrefs.fullDomain
 
-    private val courseId = "course-id"
-    private val courseDetails = "$baseUrl/courses/{$courseId}"
+    private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
@@ -47,7 +52,14 @@ class Navigation(apiPrefs: ApiPrefs) {
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
     val manageStudents = "$baseUrl/manage-students"
+    val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
+
+    private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
+    fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
+
+    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
+    fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
 
     private val calendarEvent =
         "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
@@ -57,6 +69,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val todo = "$baseUrl/todos/{${ToDoFragment.PLANNER_ITEM}}"
     private val createToDo = "$baseUrl/create-todo/{${CreateUpdateToDoFragment.INITIAL_DATE}}"
     private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
+    private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
 
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
 
@@ -67,6 +80,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun toDoRoute(plannerItem: PlannerItem) = "$baseUrl/todos/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
     fun createToDoRoute(initialDate: String?) = "$baseUrl/create-todo/${Uri.encode(initialDate.orEmpty())}"
     fun updateToDoRoute(plannerItem: PlannerItem) = "$baseUrl/update-todo/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
+
+    fun alertSettingsRoute(student: User) = "$baseUrl/alert-settings/${UserParametersType.serializeAsValue(student)}"
 
     fun crateMainNavGraph(navController: NavController): NavGraph {
         return navController.createGraph(
@@ -89,15 +104,27 @@ class Navigation(apiPrefs: ApiPrefs) {
                     uriPattern = alerts
                 }
             }
-            fragment<InboxFragment>(inbox) {
+            fragment<InboxFragment>(inbox)
+            fragment<InboxComposeFragment>(inboxCompose) {
+                argument(InboxComposeOptions.COMPOSE_PARAMETERS) {
+                    type = InboxComposeOptionsParametersType
+                    nullable = false
+                }
+            }
+            fragment<InboxDetailsFragment>(inboxDetails) {
+                argument(InboxDetailsFragment.CONVERSATION_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
                 deepLink {
-                    uriPattern = inbox
+                    uriPattern = inboxDetails
                 }
             }
             fragment<ManageStudentsFragment>(manageStudents)
+            fragment<QrPairingFragment>(qrPairing)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {
-                argument(courseId) {
+                argument(COURSE_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
@@ -152,6 +179,12 @@ class Navigation(apiPrefs: ApiPrefs) {
                     nullable = false
                 }
             }
+            fragment<AlertSettingsFragment>(alertSettings) {
+                argument(Const.USER) {
+                    type = UserParametersType
+                    nullable = false
+                }
+            }
         }
     }
 
@@ -184,6 +217,10 @@ class Navigation(apiPrefs: ApiPrefs) {
         } catch (e: Exception) {
             Log.e(this.javaClass.simpleName, e.message.orEmpty())
         }
+    }
+
+    companion object {
+        const val COURSE_ID = "course-id"
     }
 }
 
@@ -223,6 +260,44 @@ private val ScheduleItemParametersType = object : NavType<ScheduleItem>(
     }
 
     override fun parseValue(value: String): ScheduleItem {
+        return value.fromJson()
+    }
+}
+
+private val InboxComposeOptionsParametersType = object : NavType<InboxComposeOptions>(
+    isNullableAllowed = false
+) {
+    override fun put(bundle: Bundle, key: String, value: InboxComposeOptions) {
+        bundle.putParcelable(key, value)
+    }
+
+    override fun get(bundle: Bundle, key: String): InboxComposeOptions? {
+        return bundle.getParcelable(key) as? InboxComposeOptions
+    }
+
+    override fun serializeAsValue(value: InboxComposeOptions): String {
+        return Uri.encode(value.toJson())
+    }
+
+    override fun parseValue(value: String): InboxComposeOptions {
+        return value.fromJson()
+    }
+}
+
+private val UserParametersType = object : NavType<User>(isNullableAllowed = false) {
+    override fun put(bundle: Bundle, key: String, value: User) {
+        bundle.putParcelable(key, value)
+    }
+
+    override fun get(bundle: Bundle, key: String): User? {
+        return bundle.getParcelable(key) as? User
+    }
+
+    override fun serializeAsValue(value: User): String {
+        return Uri.encode(value.toJson())
+    }
+
+    override fun parseValue(value: String): User {
         return value.fromJson()
     }
 }

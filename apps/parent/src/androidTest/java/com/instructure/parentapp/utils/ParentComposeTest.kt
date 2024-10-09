@@ -19,7 +19,15 @@ package com.instructure.parentapp.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.instructure.parentapp.features.login.LoginActivity
+import com.instructure.parentapp.ui.pages.AddStudentPage
+import com.instructure.parentapp.ui.pages.AlertSettingsPage
 import com.instructure.parentapp.ui.pages.AlertsPage
+import com.instructure.parentapp.ui.pages.CourseDetailsPage
+import com.instructure.parentapp.ui.pages.CoursesPage
+import com.instructure.parentapp.ui.pages.ManageStudentsPage
+import com.instructure.parentapp.ui.pages.NotAParentPage
+import com.instructure.parentapp.ui.pages.PairingCodePage
+import com.instructure.parentapp.ui.pages.QrPairingPage
 import org.junit.Rule
 
 
@@ -29,6 +37,14 @@ abstract class ParentComposeTest : ParentTest() {
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
     protected val alertsPage = AlertsPage(composeTestRule)
+    protected val manageStudentsPage = ManageStudentsPage(composeTestRule)
+    protected val alertSettingsPage = AlertSettingsPage(composeTestRule)
+    protected val addStudentPage = AddStudentPage(composeTestRule)
+    protected val pairingCodePage = PairingCodePage(composeTestRule)
+    protected val qrPairingPage = QrPairingPage(composeTestRule)
+    protected val coursesPage = CoursesPage(composeTestRule)
+    protected val notAParentPage = NotAParentPage(composeTestRule)
+    protected val courseDetailsPage = CourseDetailsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }

@@ -17,7 +17,10 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.inbox.details.InboxDetailsRepository
+import com.instructure.pandautils.features.inbox.details.InboxDetailsRepositoryImpl
 import com.instructure.pandautils.features.inbox.list.InboxEntryItemCreator
 import dagger.Module
 import dagger.Provides
@@ -32,5 +35,10 @@ class InboxModule {
     @Provides
     fun provideInboxEntryCreator(@ApplicationContext context: Context, apiPrefs: ApiPrefs): InboxEntryItemCreator {
         return InboxEntryItemCreator(context, apiPrefs)
+    }
+
+    @Provides
+    fun provideInboxDetailsRepository(inboxAPI: InboxApi.InboxInterface): InboxDetailsRepository {
+        return InboxDetailsRepositoryImpl(inboxAPI)
     }
 }

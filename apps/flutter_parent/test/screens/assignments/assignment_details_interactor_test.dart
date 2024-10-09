@@ -167,5 +167,21 @@ void main() {
 
       expect(details?.assignment, assignment);
     });
+
+    test('returns assignmentEnhancementEnabled as false if response does not contain key', () async {
+      final features = ["feature1", "feature2"];
+      when(courseApi.getEnabledCourseFeatures(courseId)).thenAnswer((_) async => features);
+      final details = await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
+
+      expect(details?.assignmentEnhancementEnabled, false);
+    });
+
+    test('returns assignmentEnhancementEnabled as true if response contains key', () async {
+      final features = ["feature1", "assignments_2_student", "feature3"];
+      when(courseApi.getEnabledCourseFeatures(courseId)).thenAnswer((_) async => features);
+      final details = await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
+
+      expect(details?.assignmentEnhancementEnabled, true);
+    });
   });
 }

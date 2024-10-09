@@ -17,8 +17,12 @@
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.postmodels.CreateObserverThresholdWrapper
 import com.instructure.canvasapi2.utils.DataResult
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -38,4 +42,16 @@ interface ObserverApi {
 
     @GET("users/self/observer_alert_thresholds")
     suspend fun getObserverAlertThresholds(@Query("student_id") studentId: Long, @Tag restParams: RestParams): DataResult<List<AlertThreshold>>
+
+    @POST("users/self/observees")
+    suspend fun pairStudent(@Query("pairing_code") pairingCode: String, @Tag restParams: RestParams): DataResult<Unit>
+
+    @DELETE("users/self/observees/{studentId}")
+    suspend fun unpairStudent(@Path("studentId") studentId: Long, @Tag restParams: RestParams): DataResult<Unit>
+
+    @POST("users/self/observer_alert_thresholds")
+    suspend fun createObserverAlert(@Body data: CreateObserverThresholdWrapper, @Tag restParams: RestParams): DataResult<Unit>
+
+    @DELETE("users/self/observer_alert_thresholds/{thresholdId}")
+    suspend fun deleteObserverAlert(@Path("thresholdId") thresholdId: Long, @Tag restParams: RestParams): DataResult<Unit>
 }

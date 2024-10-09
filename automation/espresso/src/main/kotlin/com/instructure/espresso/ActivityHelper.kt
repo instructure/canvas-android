@@ -25,12 +25,12 @@
 package com.instructure.espresso
 
 import android.app.Activity
-import androidx.test.espresso.core.internal.deps.guava.base.Preconditions
-import androidx.test.espresso.core.internal.deps.guava.collect.Iterables
+import androidx.test.espresso.core.internal.deps.dagger.internal.Preconditions
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 import java.util.concurrent.atomic.AtomicReference
+import com.google.common.collect.Iterables
 
 /**
  * source: https://github.com/nenick/espresso-macchiato/blob/2c85c7461065f1cee36bbb06386e91adaef47d86/espresso-macchiato/src/main/java/de/nenick/espressomacchiato/testbase/EspCloseAllActivitiesFunction.java

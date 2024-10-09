@@ -21,7 +21,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.ical.values.DateValueImpl
+import com.google.ical.values.DateTimeValueImpl
 import com.google.ical.values.Frequency
 import com.google.ical.values.RRule
 import com.google.ical.values.Weekday
@@ -120,8 +120,8 @@ class CreateUpdateEventViewModel @Inject constructor(
 
             is CreateUpdateEventAction.UpdateCanvasContext -> {
                 _uiState.update {
-                    val selectCalendarUiState = it.selectCalendarUiState.copy(selectedCanvasContext = action.canvasContext)
-                    it.copy(selectCalendarUiState = selectCalendarUiState)
+                    val selectCalendarUiState = it.selectContextUiState.copy(selectedCanvasContext = action.canvasContext)
+                    it.copy(selectContextUiState = selectCalendarUiState)
                 }
             }
 
@@ -145,8 +145,8 @@ class CreateUpdateEventViewModel @Inject constructor(
 
             is CreateUpdateEventAction.ShowSelectCalendarScreen -> {
                 _uiState.update {
-                    val selectCalendarUiState = it.selectCalendarUiState.copy(show = true)
-                    it.copy(selectCalendarUiState = selectCalendarUiState)
+                    val selectCalendarUiState = it.selectContextUiState.copy(show = true)
+                    it.copy(selectContextUiState = selectCalendarUiState)
                 }
             }
 
@@ -265,7 +265,7 @@ class CreateUpdateEventViewModel @Inject constructor(
     }
 
     fun onBackPressed(): Boolean {
-        return if (uiState.value.selectCalendarUiState.show) {
+        return if (uiState.value.selectContextUiState.show) {
             hideSelectCalendarScreen()
             true
         } else if (uiState.value.selectFrequencyUiState.customFrequencyUiState.show) {
@@ -281,8 +281,8 @@ class CreateUpdateEventViewModel @Inject constructor(
 
     private fun hideSelectCalendarScreen() {
         _uiState.update {
-            val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
-            it.copy(selectCalendarUiState = selectCalendarUiState)
+            val selectCalendarUiState = it.selectContextUiState.copy(show = false)
+            it.copy(selectContextUiState = selectCalendarUiState)
         }
     }
 
@@ -334,7 +334,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     loadingCanvasContexts = false,
-                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                    selectContextUiState = it.selectContextUiState.copy(
                         canvasContexts = canvasContexts,
                         selectedCanvasContext = canvasContexts.firstOrNull { canvasContext ->
                             canvasContext.id == scheduleItem?.contextId
@@ -346,7 +346,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     loadingCanvasContexts = false,
-                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                    selectContextUiState = it.selectContextUiState.copy(
                         canvasContexts = emptyList(),
                         selectedCanvasContext = null
                     )
@@ -467,7 +467,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             val startDate = LocalDateTime.of(date, startTime ?: LocalTime.of(6, 0)).toApiString().orEmpty()
             val endDate = LocalDateTime.of(date, endTime ?: LocalTime.of(6, 0)).toApiString().orEmpty()
             val rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString().orEmpty()
-            val contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty()
+            val contextCode = selectContextUiState.selectedCanvasContext?.contextId.orEmpty()
 
             val result = scheduleItem?.let {
                 repository.updateEvent(
@@ -522,7 +522,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                     startTime != it.startDate?.toLocalTime() ||
                     endTime != it.endDate?.toLocalTime() ||
                     selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString() != it.getRRule()?.toApiString() ||
-                    selectCalendarUiState.selectedCanvasContext?.contextId != it.contextCode ||
+                    selectContextUiState.selectedCanvasContext?.contextId != it.contextCode ||
                     location != it.locationName.orEmpty() ||
                     address != it.locationAddress.orEmpty() ||
                     details != it.description.orEmpty()
@@ -532,7 +532,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                     startTime != null ||
                     endTime != null ||
                     selectFrequencyUiState.selectedFrequency != selectFrequencyUiState.frequencies.keys.first() ||
-                    selectCalendarUiState.selectedCanvasContext != apiPrefs.user ||
+                    selectContextUiState.selectedCanvasContext != apiPrefs.user ||
                     location.isNotEmpty() ||
                     address.isNotEmpty() ||
                     details.isNotEmpty()
@@ -644,7 +644,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
             if (customFrequencyUiState.selectedDate != null) {
                 val date = customFrequencyUiState.selectedDate
-                until = DateValueImpl(date.year, date.monthValue, date.dayOfMonth)
+                until = DateTimeValueImpl(date.year, date.monthValue, date.dayOfMonth, 0, 0, 0)
             } else {
                 count = customFrequencyUiState.selectedOccurrences
             }

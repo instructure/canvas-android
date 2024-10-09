@@ -72,6 +72,7 @@ import javax.inject.Inject
 abstract class CanvasTest : InstructureTestingContract {
 
     val STEP_TAG = "${this::class.java.simpleName} #STEP# "
+    val ASSERTION_TAG = "${this::class.java.simpleName} #ASSERTION# "
     val PREPARATION_TAG = "${this::class.java.simpleName} #PREPARATION# "
     val EMPTY_STRING = ""
 

@@ -26,8 +26,10 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -38,6 +40,7 @@ import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
@@ -50,7 +53,7 @@ import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.util.concurrent.*
+import java.util.concurrent.TimeUnit
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -58,7 +61,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val baseOnGradedAssignmentsCheckBox by WaitForViewWithId(R.id.showTotalCheckBox)
     private val showWhatIfCheckbox by WaitForViewWithId(R.id.showWhatIfCheckBox)
 
-    fun scrollToItem(itemMatcher: Matcher<View>) {
+    private fun scrollToItem(itemMatcher: Matcher<View>) {
         scrollRecyclerView(R.id.listView,itemMatcher)
     }
 
@@ -80,6 +83,17 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         // Maybe the total grade will take a beat to update properly?
         waitForView(allOf(withId(R.id.txtOverallGrade), matcher))
         gradeValue.check(matches(matcher))
+    }
+
+    fun assertAssignmentDueDate(assignmentName: String, dateString: String) {
+        val assignmentTitleMatcher = withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName) + withAncestor(R.id.courseGradesPage)
+        if(dateString != getStringFromResource(R.string.gradesNoDueDate)) onView(withId(R.id.date) + withText(dateString) + hasSibling(assignmentTitleMatcher)).assertDisplayed()
+        else onView(withId(R.id.date) + withText(R.string.gradesNoDueDate) + hasSibling(assignmentTitleMatcher)).assertDisplayed()
+    }
+
+    fun assertAssignmentStatus(assignmentName: String, status: String) {
+        val assignmentTitleMatcher = withId(R.id.title) + withParent(R.id.textContainer) + withText(assignmentName) + withAncestor(R.id.courseGradesPage)
+        onView(withId(R.id.submissionState) + withText(status) + hasSibling(assignmentTitleMatcher)).assertDisplayed()
     }
 
     fun assertEmptyView() {
@@ -106,14 +120,36 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         sleep(1000) // Allow some time to react to the update.
     }
 
-    // TODO: Explicitly check or un-check, rather than assuming current state
-    fun toggleWhatIf() {
-        showWhatIfCheckbox.perform(click())
+    fun checkWhatIf() {
+        showWhatIfCheckbox.check(matches(isNotChecked())).perform(click())
     }
 
-    // TODO: Explicitly check or un-check, rather than assuming current state
-    fun toggleBaseOnGradedAssignments() {
-        baseOnGradedAssignmentsCheckBox.perform(click())
+    fun uncheckWhatIf() {
+        showWhatIfCheckbox.check(matches(isChecked())).perform(click())
+    }
+
+    fun assertWhatIfChecked() {
+        showWhatIfCheckbox.check(matches(isChecked()))
+    }
+
+    fun assertWhatIfUnChecked() {
+        showWhatIfCheckbox.check(matches(isNotChecked()))
+    }
+
+    fun checkBaseOnGradedAssignments() {
+        baseOnGradedAssignmentsCheckBox.check(matches(isNotChecked())).perform(click())
+    }
+
+    fun uncheckBaseOnGradedAssignments() {
+        baseOnGradedAssignmentsCheckBox.check(matches(isChecked())).perform(click())
+    }
+
+    fun assertBaseOnGradedAssignmentsChecked() {
+        baseOnGradedAssignmentsCheckBox.check(matches(isChecked()))
+    }
+
+    fun assertBaseOnGradedAssignmentsUnChecked() {
+        baseOnGradedAssignmentsCheckBox.check(matches(isNotChecked()))
     }
 
     private fun openWhatIfDialog(itemMatcher: Matcher<View>) {

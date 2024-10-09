@@ -80,7 +80,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
                                 android:src="@drawable/ic_hamburger"
-                                android:importantForAccessibility="no"/>
+                                android:importantForAccessibility="no"
+                                app:tint="@color/textLightest"/>
 
                             <TextView
                                 android:id="@+id/unreadCountBadge"

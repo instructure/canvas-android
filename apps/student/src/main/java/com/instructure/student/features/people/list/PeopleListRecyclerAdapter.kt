@@ -30,7 +30,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
@@ -52,7 +52,7 @@ class PeopleListRecyclerAdapter(
     User::class.java
 ) {
 
-    private val mCourseColor = canvasContext.backgroundColor
+    private val mCourseColor = canvasContext.color
     private val mEnrollmentPriority = mapOf(
         EnrollmentType.Teacher to 4,
         EnrollmentType.Ta to 3,

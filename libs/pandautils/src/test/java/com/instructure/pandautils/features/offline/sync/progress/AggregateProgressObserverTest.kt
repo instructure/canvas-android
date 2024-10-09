@@ -27,20 +27,28 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
+import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AggregateProgressObserverTest {
 
     @get:Rule
@@ -49,6 +57,9 @@ class AggregateProgressObserverTest {
     private val context: Context = mockk(relaxed = true)
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
+    private val studioMediaProgressDao: StudioMediaProgressDao = mockk(relaxed = true)
+
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var aggregateProgressObserver: AggregateProgressObserver
 
@@ -59,11 +70,14 @@ class AggregateProgressObserverTest {
         every { NumberHelper.readableFileSize(any<Context>(), capture(captor)) } answers {
             "${captor.captured} bytes"
         }
+
+        Dispatchers.setMain(testDispatcher)
     }
 
     @After
     fun teardown() {
         unmockkAll()
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -283,6 +297,70 @@ class AggregateProgressObserverTest {
     }
 
     @Test
+    fun `Update total size and progress with studio media`() {
+        var course1Progress = CourseSyncProgressEntity(
+            1L,
+            "Course 1",
+            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
+            additionalFilesStarted = true,
+            progressState = ProgressState.IN_PROGRESS
+        )
+
+        val courseLiveData = MutableLiveData(listOf(course1Progress))
+
+        var file1Progress =
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
+                additionalFile = false,
+                progressState = ProgressState.IN_PROGRESS, fileId = 1L
+            )
+
+        var studioMediaProgress = StudioMediaProgressEntity("1234", 0, 2000, ProgressState.IN_PROGRESS, 1L)
+
+        val fileLiveData = MutableLiveData(listOf(file1Progress))
+        val studioLiveData = MutableLiveData(listOf(studioMediaProgress))
+
+        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
+        every { fileSyncProgressDao.findAllLiveData() } returns fileLiveData
+        every { studioMediaProgressDao.findAllLiveData() } returns studioLiveData
+
+        aggregateProgressObserver = createObserver()
+
+        assertEquals(0, aggregateProgressObserver.progressData.value?.progress)
+        assertEquals(
+            "${1000000 + 1000 + 2000} bytes",
+            aggregateProgressObserver.progressData.value?.totalSize
+        )
+
+        file1Progress = file1Progress.copy(
+            progress = 100,
+            progressState = ProgressState.COMPLETED
+        )
+        course1Progress = course1Progress.copy(
+            tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) },
+            progressState = ProgressState.COMPLETED
+        )
+
+        courseLiveData.postValue(listOf(course1Progress))
+        fileLiveData.postValue(listOf(file1Progress))
+
+        // Course tabs and files are completed, but studio media is still in progress
+        assertEquals(99, aggregateProgressObserver.progressData.value?.progress)
+
+        studioMediaProgress = studioMediaProgress.copy(progress = 100, progressState = ProgressState.COMPLETED)
+        studioLiveData.postValue(listOf(studioMediaProgress))
+
+        // External files are downloaded, progress should be 100%
+        assertEquals(
+            100, aggregateProgressObserver.progressData.value?.progress
+        )
+        assertEquals(ProgressState.COMPLETED, aggregateProgressObserver.progressData.value?.progressState)
+    }
+
+    @Test
     fun `Error state`() {
         var course1 = CourseSyncProgressEntity(
             1L,
@@ -308,6 +386,6 @@ class AggregateProgressObserverTest {
     }
 
     private fun createObserver(): AggregateProgressObserver {
-        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao)
+        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao, studioMediaProgressDao)
     }
 }

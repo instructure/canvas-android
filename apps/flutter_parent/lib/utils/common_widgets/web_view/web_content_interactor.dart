@@ -28,7 +28,8 @@ class WebContentInteractor {
   }
 
   Future<String> getAuthUrl(String targetUrl) async {
-    if (targetUrl.contains(ApiPrefs.getDomain()!)) {
+    final domain = ApiPrefs.getDomain();
+    if (domain != null && targetUrl.contains(domain)) {
       return _authUrl(targetUrl);
     } else {
       return targetUrl;

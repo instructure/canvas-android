@@ -216,7 +216,7 @@ class SettingsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
         settingsPage.selectAppTheme("Dark")
         settingsPage.assertAppThemeTitleTextColor("#FFFFFFFF") //Currently, this color is used in the Dark mode for the AppTheme Title text.
-        settingsPage.assertAppThemeStatusTextColor("#FFC7CDD1") //Currently, this color is used in the Dark mode for the AppTheme Status text.
+        settingsPage.assertAppThemeStatusTextColor("#FF919CA8") //Currently, this color is used in the Dark mode for the AppTheme Status text.
 
         Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Dark mode).")
         Espresso.pressBack()
@@ -234,12 +234,12 @@ class SettingsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
         settingsPage.selectAppTheme("Light")
-        settingsPage.assertAppThemeTitleTextColor("#FF2D3B45") //Currently, this color is used in the Light mode for the AppTheme Title texts.
-        settingsPage.assertAppThemeStatusTextColor("#FF556572") //Currently, this color is used in the Light mode for the AppTheme Status text.
+        settingsPage.assertAppThemeTitleTextColor("#FF273540") //Currently, this color is used in the Light mode for the AppTheme Title texts.
+        settingsPage.assertAppThemeStatusTextColor("#FF6A7883") //Currently, this color is used in the Light mode for the AppTheme Status text.
 
         Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Light mode).")
         Espresso.pressBack()
-        dashboardPage.assertCourseLabelTextColor("#FF2D3B45")
+        dashboardPage.assertCourseLabelTextColor("#FF273540")
     }
 
     @E2E

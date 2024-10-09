@@ -33,10 +33,10 @@ import com.instructure.pandautils.features.shareextension.target.itemviewmodels.
 import com.instructure.pandautils.features.shareextension.target.itemviewmodels.ShareExtensionCourseItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -81,7 +81,7 @@ class ShareExtensionTargetViewModel @Inject constructor(
                         .dataOrThrow
 
                 val courseViewModels = courses
-                        .map { ShareExtensionCourseItemViewModel(ShareExtensionCourseViewData(it.name, it.backgroundColor)) }
+                        .map { ShareExtensionCourseItemViewModel(ShareExtensionCourseViewData(it.name, it.color)) }
                 _data.postValue(ShareExtensionTargetViewData(apiPrefs.user?.name, courseViewModels, uploadType))
             } catch (e: Exception) {
                 _events.postValue(Event(ShareExtensionTargetAction.ShowToast(resources.getString(R.string.errorOccurred))))

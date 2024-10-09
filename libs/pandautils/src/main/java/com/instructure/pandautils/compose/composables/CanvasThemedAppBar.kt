@@ -29,7 +29,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -53,11 +55,18 @@ fun CanvasThemedAppBar(
     TopAppBar(
         title = {
             Column {
-                Text(text = title, modifier.testTag("todoDetailsPageTitle"))
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = modifier.testTag("todoDetailsPageTitle")
+                )
                 if (subtitle.isNotEmpty()) {
                     Text(
                         text = subtitle,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
@@ -70,7 +79,8 @@ fun CanvasThemedAppBar(
                 Icon(painterResource(id = navIconRes), contentDescription = navIconContentDescription)
             }
         },
-        modifier = modifier.testTag("toolbar")
+        modifier = modifier.testTag("toolbar"),
+        elevation = 0.dp
     )
 }
 

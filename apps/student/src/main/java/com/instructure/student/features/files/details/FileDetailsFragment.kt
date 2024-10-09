@@ -203,7 +203,7 @@ class FileDetailsFragment : ParentFragment() {
                         if (!TextUtils.isEmpty(it.thumbnailUrl)) {
 
                             fileIcon.layoutParams.apply {
-                                height = requireActivity().DP(230).toInt()
+                                height = requireActivity().DP(0).toInt()
                                 width = height
                             }
 

@@ -30,7 +30,7 @@
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="1"
-        android:textColor="@color/white" />
+        android:textColor="@color/textLightest" />
 
     <!-- Subtitle -->
     <TextView
@@ -41,6 +41,6 @@
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="1"
-        android:textColor="@color/white" />
+        android:textColor="@color/textLightest" />
 
 </com.instructure.student.view.CourseBrowserHeaderView>

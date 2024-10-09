@@ -18,6 +18,9 @@
 package com.instructure.parentapp.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -26,7 +29,7 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.loginapi.login.R
-import com.instructure.parentapp.utils.ParentTest
+import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
@@ -34,7 +37,7 @@ import org.junit.Test
 
 
 @HiltAndroidTest
-class DashboardInteractionTest : ParentTest() {
+class DashboardInteractionTest : ParentComposeTest() {
 
     @Test
     fun testObserverData() {
@@ -89,6 +92,42 @@ class DashboardInteractionTest : ParentTest() {
                 ViewMatchers.isDisplayed()
             )
         )
+    }
+
+    @Test
+    fun testAddStudentPairingCode() {
+        val data = initData()
+
+        goToDashboard(data)
+
+        try {
+            dashboardPage.tapAddStudent()
+        } catch (e: Exception) {
+            dashboardPage.openStudentSelector()
+            dashboardPage.tapAddStudent()
+        }
+
+        addStudentPage.tapPairingCode()
+
+        composeTestRule.onNodeWithTag("pairingCodeTextField").assertIsDisplayed()
+    }
+
+    @Test
+    fun testAddStudentQrCode() {
+        val data = initData()
+
+        goToDashboard(data)
+
+        try {
+            dashboardPage.tapAddStudent()
+        } catch (e: Exception) {
+            dashboardPage.openStudentSelector()
+            dashboardPage.tapAddStudent()
+        }
+
+        addStudentPage.tapQrCode()
+
+        composeTestRule.onNodeWithText("Open Canvas Student").assertIsDisplayed()
     }
 
     private fun initData(): MockCanvas {

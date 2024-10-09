@@ -20,13 +20,10 @@ import android.content.Context
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.common.ui.Presenter
 import com.instructure.student.room.StudentDb
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
 import java.util.Date
 
@@ -46,7 +43,7 @@ class SubmissionCommentsPresenter(private val studentDb: StudentDb) : Presenter<
             listOf(CommentItemState.Empty)
         )
 
-        val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
+        val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).color
 
         val comments =
             model.comments.filter { it.attempt == null || it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }
