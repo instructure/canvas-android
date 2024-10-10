@@ -205,9 +205,9 @@ class CourseDetailsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        viewModel.handleAction(CourseDetailsAction.NavigateToAssignmentDetails(1))
+        viewModel.handleAction(CourseDetailsAction.NavigateToAssignmentDetails(1, 1))
 
-        val expected = CourseDetailsViewModelAction.NavigateToAssignmentDetails(1)
+        val expected = CourseDetailsViewModelAction.NavigateToAssignmentDetails(1, 1)
         Assert.assertEquals(expected, events.last())
     }
 
