@@ -367,18 +367,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 R.id.navigationDrawerItem_files -> {
                     RouteMatcher.route(this@InitActivity, Route(FileListFragment::class.java, ApiPrefs.user))
                 }
-                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_arc -> {
+                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_arc, R.id.navigationDrawerItem_mastery -> {
                     val launchDefinition = v.tag as? LaunchDefinition ?: return@weave
-                    val user = ApiPrefs.user ?: return@weave
-                    val canvasContext = CanvasContext.currentUserContext(user)
-                    val title = getString(if (launchDefinition.isGauge) R.string.gauge else R.string.studio)
-                    val route = LtiLaunchFragment.makeBundle(
-                        canvasContext = canvasContext,
-                        url = launchDefinition.placements.globalNavigation.url,
-                        title = title,
-                        sessionLessLaunch = true
-                    )
-                    RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
+                    launchLti(launchDefinition)
                 }
                 R.id.navigationDrawerItem_help -> HelpDialogFragment.show(this@InitActivity)
                 R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
@@ -401,6 +392,19 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
     }
 
+    private fun launchLti(launchDefinition: LaunchDefinition) {
+        val user = ApiPrefs.user ?: return
+        val canvasContext = CanvasContext.currentUserContext(user)
+        val title = launchDefinition.name
+        val route = LtiLaunchFragment.makeBundle(
+            canvasContext = canvasContext,
+            url = launchDefinition.placements.globalNavigation.url,
+            title = title,
+            sessionLessLaunch = true
+        )
+        RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
+    }
+
     fun attachToolbar(toolbar: Toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_hamburger)
         toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
@@ -412,6 +416,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItemFiles.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemGauge.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemArc.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItemMastery.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemChangeUser.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemLogout.setOnClickListener(navDrawerOnClick)
         navigationDrawerSettings.setOnClickListener(navDrawerOnClick)
@@ -452,12 +457,16 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) = with(navigationDrawerBinding) {
         val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
+        val masteryLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.MASTERY_DOMAIN }
 
         navigationDrawerItemArc.setVisible(arcLaunchDefinition != null)
         navigationDrawerItemArc.tag = arcLaunchDefinition
 
         navigationDrawerItemGauge.setVisible(gaugeLaunchDefinition != null)
         navigationDrawerItemGauge.tag = gaugeLaunchDefinition
+
+        navigationDrawerItemMastery.setVisible(masteryLaunchDefinition != null)
+        navigationDrawerItemMastery.tag = masteryLaunchDefinition
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {

@@ -237,17 +237,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_files -> {
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }
                 }
-                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_studio -> {
+                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_studio, R.id.navigationDrawerItem_mastery -> {
                     val launchDefinition = v.tag as? LaunchDefinition ?: return@weave
-                    val user = ApiPrefs.user ?: return@weave
-                    val title = getString(if (launchDefinition.isGauge) R.string.gauge else R.string.studio)
-                    val route = LtiLaunchFragment.makeRoute(
-                        canvasContext = CanvasContext.currentUserContext(user),
-                        url = launchDefinition.placements.globalNavigation.url,
-                        title = title,
-                        sessionLessLaunch = true
-                    )
-                    RouteMatcher.route(this@NavigationActivity, route)
+                    launchLti(launchDefinition)
                 }
                 R.id.navigationDrawerItem_bookmarks -> {
                     val route = BookmarksFragment.makeRoute(ApiPrefs.user)
@@ -288,6 +280,18 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerSettings -> startActivity(SettingsActivity.createIntent(applicationContext, featureFlagProvider.offlineEnabled()))
             }
         }
+    }
+
+    private fun launchLti(launchDefinition: LaunchDefinition) {
+        val user = ApiPrefs.user ?: return
+        val title = launchDefinition.name
+        val route = LtiLaunchFragment.makeRoute(
+            canvasContext = CanvasContext.currentUserContext(user),
+            url = launchDefinition.placements.globalNavigation.url,
+            title = title,
+            sessionLessLaunch = true
+        )
+        RouteMatcher.route(this, route)
     }
 
     private val onBackStackChangedListener = FragmentManager.OnBackStackChangedListener {
@@ -596,6 +600,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerBinding.navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+        navigationDrawerBinding.navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
@@ -1188,6 +1193,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {
         val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
+        val masteryLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.MASTERY_DOMAIN }
 
         val studio = findViewById<View>(R.id.navigationDrawerItem_studio)
         studio.visibility = if (studioLaunchDefinition != null) View.VISIBLE else View.GONE
@@ -1196,6 +1202,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val gauge = findViewById<View>(R.id.navigationDrawerItem_gauge)
         gauge.visibility = if (gaugeLaunchDefinition != null) View.VISIBLE else View.GONE
         gauge.tag = gaugeLaunchDefinition
+
+        val mastery = findViewById<View>(R.id.navigationDrawerItem_mastery)
+        mastery.visibility = if (masteryLaunchDefinition != null) View.VISIBLE else View.GONE
+        mastery.tag = masteryLaunchDefinition
     }
 
     override fun addBookmark() {
