@@ -72,8 +72,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.LabelValueRow
-import com.instructure.pandautils.compose.composables.SelectCalendarScreen
-import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import com.instructure.pandautils.compose.composables.SelectContextScreen
+import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.getDatePickerDialog
 import com.instructure.pandautils.compose.getTimePickerDialog
@@ -99,10 +99,11 @@ internal fun CreateUpdateToDoScreenWrapper(
     val coroutineScope = rememberCoroutineScope()
 
     CanvasTheme {
-        if (uiState.selectCalendarUiState.show) {
-            SelectCalendarScreen(
-                uiState = uiState.selectCalendarUiState,
-                onCalendarSelected = {
+        if (uiState.selectContextUiState.show) {
+            SelectContextScreen(
+                title = stringResource(id = R.string.selectCalendarScreenTitle),
+                uiState = uiState.selectContextUiState,
+                onContextSelected = {
                     localView.announceForAccessibility(
                         context.getString(R.string.a11y_calendarSelected, it.name.orEmpty())
                     )
@@ -327,7 +328,7 @@ private fun CreateUpdateToDoContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createToDoCalendarLabel),
-                value = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
+                value = uiState.selectContextUiState.selectedCanvasContext?.name.orEmpty(),
                 loading = uiState.loadingCanvasContexts,
                 onClick = {
                     focusManager.clearFocus()
@@ -438,7 +439,7 @@ private fun CreateUpdateToDoPreview() {
             saving = false,
             errorSnack = null,
             loadingCanvasContexts = true,
-            selectCalendarUiState = SelectCalendarUiState(
+            selectContextUiState = SelectContextUiState(
                 selectedCanvasContext = Course(name = "Course")
             )
         ),

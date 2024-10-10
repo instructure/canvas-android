@@ -46,14 +46,18 @@ import com.instructure.pandautils.features.shareextension.progress.ShareExtensio
 import com.instructure.pandautils.features.shareextension.status.ShareExtensionStatus
 import com.instructure.pandautils.features.shareextension.status.ShareExtensionStatusDialogFragment
 import com.instructure.pandautils.features.shareextension.target.ShareExtensionTargetFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AnimationHelpers
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.Job
+import kotlinx.parcelize.Parcelize
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.UUID
 
 const val WORKER_ID = "workerId"
 
@@ -232,7 +236,7 @@ abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogPar
 
     private fun getColor(bundle: Bundle?): Int {
         return if (bundle != null && bundle.containsKey(Const.CANVAS_CONTEXT)) {
-            val color = (bundle.getParcelable<Parcelable>(Const.CANVAS_CONTEXT) as CanvasContext).backgroundColor
+            val color = (bundle.getParcelable<Parcelable>(Const.CANVAS_CONTEXT) as CanvasContext).color
             ViewStyler.setStatusBarDark(this, color)
             color
         } else {

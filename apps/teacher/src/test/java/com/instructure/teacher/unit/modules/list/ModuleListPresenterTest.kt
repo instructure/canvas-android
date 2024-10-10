@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ModuleListModel
 import com.instructure.teacher.features.modules.list.ModuleListPageData
@@ -84,7 +84,7 @@ class ModuleListPresenterTest : Assert() {
             iconResId = R.drawable.ic_assignment,
             isPublished = true,
             indent = 0,
-            tintColor = course.backgroundColor,
+            tintColor = course.color,
             enabled = true,
             type = ModuleItem.Type.Assignment,
             contentDetails = ModuleContentDetails(

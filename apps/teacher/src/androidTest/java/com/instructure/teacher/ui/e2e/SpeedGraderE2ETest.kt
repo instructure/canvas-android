@@ -137,7 +137,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of '${student.name}' student is displayed.")
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
 
@@ -180,7 +180,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of '${student.name}' student is displayed.")
-        assignmentDetailsPage.openSubmissionsPage()
+        assignmentDetailsPage.openAllSubmissionsPage()
         
         Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
         assignmentSubmissionListPage.clickOnPostPolicies()

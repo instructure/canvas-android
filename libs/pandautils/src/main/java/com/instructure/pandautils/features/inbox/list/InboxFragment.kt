@@ -40,6 +40,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +58,8 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -114,6 +117,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
+        setupFragmentResultListener()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -144,6 +148,15 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         }
 
         configureItemTouchHelper()
+    }
+
+    private fun setupFragmentResultListener() {
+        setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
+            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
+        }
+        setFragmentResultListener(InboxDetailsFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
+            if (key == InboxDetailsFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
+        }
     }
 
     private fun configureItemTouchHelper() {
@@ -189,13 +202,15 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 val height = viewHolder.itemView.height
                 val margin = 16.toPx
 
+                val iconColor = requireContext().getColor(R.color.textLightest)
+
                 if (dX > 0) {
                     paint.color = markAsColor
                     canvas.drawRect(bounds, paint)
 
                     val drawableId = if (itemViewModel.data.unread) R.drawable.ic_mark_as_read else R.drawable.ic_mark_as_unread
                     val markAsIcon = resources.getDrawable(drawableId, null)
-                    markAsIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
+                    markAsIcon.colorFilter = PorterDuffColorFilter(iconColor,PorterDuff.Mode.SRC_ATOP)
                     markAsIcon.bounds = Rect(
                         margin,
                         bounds.top + height/2 - markAsIcon.intrinsicHeight/2,
@@ -211,7 +226,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                         getString(R.string.inbox_starred) -> resources.getDrawable(R.drawable.ic_star_outline, null)
                         else -> resources.getDrawable(R.drawable.ic_archive, null)
                     }
-                    archiveIcon.colorFilter = PorterDuffColorFilter(Color.WHITE,PorterDuff.Mode.SRC_ATOP)
+                    archiveIcon.colorFilter = PorterDuffColorFilter(iconColor,PorterDuff.Mode.SRC_ATOP)
 
                     val width = resources.displayMetrics.widthPixels
                     archiveIcon.bounds = Rect(
@@ -323,7 +338,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
-        binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        ViewStyler.themeFAB(binding.addMessage)
         binding.scopeFilterText.setTextColor(ThemePrefs.textButtonColor)
         binding.scopeFilterIcon.setColorFilter(ThemePrefs.textButtonColor)
         inboxRouter.attachNavigationIcon(binding.toolbar)

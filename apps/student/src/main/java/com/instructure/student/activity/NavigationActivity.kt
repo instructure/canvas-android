@@ -591,7 +591,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         binding.drawerLayout.openDrawer(navigationDrawerBinding.navigationDrawer)
     }
 
-    override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions {
+    override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar?) where F : Fragment, F : FragmentInteractions {
         //Navigation items
         navigationDrawerBinding.navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
         navigationDrawerBinding.navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
@@ -625,13 +625,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         if (isBottomNavFragment(fragment)) {
-            toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-            toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-            toolbar.setNavigationOnClickListener {
+            toolbar?.setNavigationIcon(R.drawable.ic_hamburger)
+            toolbar?.navigationContentDescription = getString(R.string.navigation_drawer_open)
+            toolbar?.setNavigationOnClickListener {
                 openNavigationDrawer()
             }
         } else {
-            toolbar.setupAsBackButton(fragment)
+            toolbar?.setupAsBackButton(fragment)
         }
 
         binding.drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
@@ -655,18 +655,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupUserDetails(ApiPrefs.user)
 
-        ViewStyler.themeToolbarColored(this, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        toolbar?.let {
+            ViewStyler.themeToolbarColored(this, it, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        }
 
         navigationDrawerBinding.navigationDrawerItemStartMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerBinding.navigationDrawerItemStopMasquerading.setVisible(ApiPrefs.isMasquerading)
-    }
-
-    fun attachNavigationIcon(toolbar: Toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-        toolbar.setNavigationOnClickListener {
-            openNavigationDrawer()
-        }
     }
 
     private fun setUpColorOverlaySwitch() = with(navigationDrawerBinding) {
@@ -1192,8 +1186,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     //endregion
 
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {
-        val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._STUDIO_DOMAIN }
-        val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._GAUGE_DOMAIN }
+        val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
 
         val studio = findViewById<View>(R.id.navigationDrawerItem_studio)
         studio.visibility = if (studioLaunchDefinition != null) View.VISIBLE else View.GONE
@@ -1223,7 +1217,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count
             bottomBar.getOrCreateBadge(menuItemId).backgroundColor = getColor(R.color.backgroundInfo)
-            bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.white)
+            bottomBar.getOrCreateBadge(menuItemId).badgeTextColor = getColor(R.color.textLightest)
             if (quantityContentDescription != null) {
                 bottomBar.getOrCreateBadge(menuItemId).setContentDescriptionQuantityStringsResource(quantityContentDescription)
             }

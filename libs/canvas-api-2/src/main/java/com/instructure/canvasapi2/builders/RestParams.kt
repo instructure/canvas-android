@@ -31,5 +31,5 @@ data class RestParams(
     val shouldIgnoreToken: Boolean = false,
     val isForceReadFromCache: Boolean = false,
     val isForceReadFromNetwork: Boolean = false,
-    val acceptLanguageOverride: String? = null
+    val acceptLanguageOverride: String? = null,
 ) : Parcelable

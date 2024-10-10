@@ -21,24 +21,35 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.utils.DataResult
 
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Tag
 import retrofit2.http.Url
 
 
 object RecipientAPI {
 
-    internal interface RecipientInterface {
+    interface RecipientInterface {
         @GET("search/recipients?synthetic_contexts=1")
         fun getFirstPageRecipientList(@Query("search") searchQuery: String?, @Query(value = "context", encoded = true) context: String): Call<List<Recipient>>
+
+        @GET("search/recipients?synthetic_contexts=1")
+        suspend fun getFirstPageRecipientList(@Query("search") searchQuery: String?, @Query(value = "context", encoded = true) context: String, @Tag restParams: RestParams): DataResult<List<Recipient>>
 
         @GET("search/recipients")
         fun getFirstPageRecipientListNoSyntheticContexts(@Query("search") searchQuery: String?, @Query(value = "context", encoded = true) context: String): Call<List<Recipient>>
 
+        @GET("search/recipients")
+        suspend fun getFirstPageRecipientListNoSyntheticContexts(@Query("search") searchQuery: String?, @Query(value = "context", encoded = true) context: String, @Tag restParams: RestParams): DataResult<List<Recipient>>
+
         @GET
         fun getNextPageRecipientList(@Url url: String): Call<List<Recipient>>
+
+        @GET
+        suspend fun getNextPageRecipientList(@Url url: String, @Tag restParams: RestParams): DataResult<List<Recipient>>
     }
 
     fun getRecipients(searchQuery: String?, context: String, callback: StatusCallback<List<Recipient>>, adapter: RestBuilder, params: RestParams) {

@@ -63,14 +63,32 @@ fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
 }
 
 
-fun getCurrentDateInCanvasCalendarFormat(): String {
+fun getDateInCanvasCalendarFormat(dateString: String? = getCurrentDateInIso8601()): String {
     val calendar = Calendar.getInstance()
+
     val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    if(dateString != null) {
+        return if (day in 1..9) formatIso8601ToCustom(dateString, SimpleDateFormat("MMM d", Locale.getDefault()))
+        else formatIso8601ToCustom(dateString, SimpleDateFormat("MMM dd", Locale.getDefault()))
+    }
+
     var dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
-
     if (day in 1..9) dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
-
     return dateFormat.format(Date())
+}
+
+fun getCurrentDateInIso8601(): String {
+    val iso8601Format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+    return iso8601Format.format(Date())
+}
+
+fun formatIso8601ToCustom(iso8601DateString: String?, customDateFormat: SimpleDateFormat): String {
+
+    val iso8601Format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+    val date: Date? = iso8601DateString?.let { iso8601Format.parse(it) }
+
+    return customDateFormat.format(date!!)
 }
     
 fun getCustomDateCalendar(dayDiffFromToday: Int): Calendar {

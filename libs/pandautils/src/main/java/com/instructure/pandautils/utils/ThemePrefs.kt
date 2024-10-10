@@ -19,15 +19,10 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import android.graphics.Color
-import android.view.View
-import android.view.ViewTreeObserver
-import android.widget.EditText
-import androidx.core.graphics.drawable.DrawableCompat
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.utils.BooleanPref
 import com.instructure.canvasapi2.utils.ColorPref
 import com.instructure.canvasapi2.utils.IntPref
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.canvasapi2.utils.StringPref
 import com.instructure.pandautils.R
@@ -55,7 +50,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     var buttonColor by ColorPref(R.color.backgroundInfo)
 
     // Button text color for filled button.
-    var buttonTextColor by ColorPref(R.color.white)
+    var buttonTextColor by ColorPref(R.color.textLightest)
 
     // Used for text buttons (for example dialog buttons) and small image buttons.
     var textButtonColor by ColorPref(R.color.textInfo)
@@ -111,8 +106,8 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
         val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
 
-        buttonColor = ColorUtils.correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightest), context.getColor(R.color.white))
-        buttonTextColor = context.getColor(R.color.white)
+        buttonColor = ColorUtils.correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightestElevated), context.getColor(R.color.textLightest))
+        buttonTextColor = context.getColor(R.color.textLightest)
         textButtonColor = ColorUtils.correctContrastForText(tempButtonColor, context.getColor(R.color.backgroundLightestElevated))
 
         logoUrl = theme.logoUrl

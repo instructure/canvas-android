@@ -23,7 +23,7 @@
     <group
         android:translateY="-1.000000">
         <path
-            android:fillColor="#2D3B45"
+            android:fillColor="#273540"
             android:strokeWidth="1"
             android:pathData="M2.86192881,8.33333333 L1,8.33333333 C0.447905083,8.33333333 0,7.88542825
 0,7.33333333 L0,4.66666667 C0,4.11457175 0.447905083,3.66666667 1,3.66666667

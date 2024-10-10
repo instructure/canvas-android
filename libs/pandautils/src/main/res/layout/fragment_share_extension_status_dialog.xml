@@ -110,7 +110,7 @@
             android:onClick="@{() -> viewModel.onDoneClick()}"
             android:text="@string/done"
             android:textAllCaps="true"
-            android:textColor="@color/backgroundInfo"
+            android:textColor="@color/textInfo"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

@@ -59,11 +59,44 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
         )).assertDisplayed()
     }
 
+    fun assertDiscussionEntryMessageDisplayed(entryMessage: String) {
+        Web.onWebView()
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$entryMessage']")))
+    }
+
+    fun assertReplyCounter(replyCount: Int, unreadCount: Int) {
+        Web.onWebView()
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//div[@data-testid='replies-counter' and .='$replyCount Reply ($unreadCount)']/ancestor::button[@data-testid='expand-button']")))
+    }
+
+    fun clickOnExpandRepliesButton() {
+        Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//div[@data-testid='replies-counter']/ancestor::button[@data-testid='expand-button']"))
+            .perform(webClick())
+    }
+
+    fun assertReplyDisplayed(replyMessage: String) {
+        Web.onWebView()
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$replyMessage']")))
+    }
+
+
+
     fun waitForReplyButtonDisplayed() {
         waitForWebElement(
             webViewMatcher = withId(R.id.discussionWebView),
             locator = Locator.XPATH,
             value = "//button[@data-testid='discussion-topic-reply']",
+            timeoutMillis = 10000,
+            intervalMillis = 500
+        )
+    }
+
+    fun waitForReplyDisplayed(replyMessage: String) {
+        waitForWebElement(
+            webViewMatcher = withId(R.id.discussionWebView),
+            locator = Locator.XPATH,
+            value = "//span[text()='$replyMessage']",
             timeoutMillis = 10000,
             intervalMillis = 500
         )

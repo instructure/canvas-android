@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.R
@@ -68,7 +68,7 @@ class FileDetailsFragment : Fragment() {
     }
 
     private fun getFragment(fileData: FileViewData): Fragment {
-        val toolbarColor = viewModel.canvasContext.backgroundColor
+        val toolbarColor = viewModel.canvasContext.color
         return when (fileData) {
             is FileViewData.Pdf -> ViewPdfFragment.newInstance(
                 fileData.url,

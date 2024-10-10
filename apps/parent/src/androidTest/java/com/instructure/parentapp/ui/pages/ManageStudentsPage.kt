@@ -24,6 +24,7 @@ import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvasapi2.models.User
@@ -37,6 +38,13 @@ class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNode(hasTestTag("studentListItem") and hasAnyChild(hasText(user.shortName.orEmpty())), true)
             .assertIsDisplayed()
             .assertHasClickAction()
+    }
+
+    fun assertStudentItemNotDisplayed(user: User) {
+        composeTestRule.onNodeWithText(user.shortName.orEmpty())
+            .assertDoesNotExist()
+        composeTestRule.onNode(hasTestTag("studentListItem") and hasAnyChild(hasText(user.shortName.orEmpty())), true)
+            .assertDoesNotExist()
     }
 
     fun tapStudent(name: String) {
@@ -58,5 +66,9 @@ class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("OK")
             .assertIsDisplayed()
+    }
+
+    fun tapAddStudent() {
+        composeTestRule.onNodeWithTag("addStudentButton").performClick()
     }
 }

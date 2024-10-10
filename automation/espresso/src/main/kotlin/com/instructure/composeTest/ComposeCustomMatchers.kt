@@ -16,11 +16,15 @@
  */
 package com.instructure.composeTest
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasText
+import com.instructure.pandautils.utils.DrawableId
 
 //This file is the collection of our custom compose matchers
 
 fun hasSiblingWithText(text: String): SemanticsMatcher = hasAnySibling(hasText(text))
+
+fun hasDrawable(@DrawableRes id: Int): SemanticsMatcher = SemanticsMatcher.expectValue(DrawableId, id)
 

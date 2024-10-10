@@ -20,6 +20,8 @@ import android.content.Context
 import android.net.Uri
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.StudioCaption
+import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
@@ -27,26 +29,21 @@ import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
-import com.instructure.pandautils.utils.FilePrefs
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.slot
 import io.mockk.unmockkAll
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.io.File
 import java.util.Date
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class HtmlParserTest {
 
     private var localFileDao: LocalFileDao = mockk(relaxed = true)
@@ -211,5 +208,47 @@ class HtmlParserTest {
         assertEquals(1, result.internalFileIds.size)
         assertEquals(678, result.internalFileIds.first())
         assertEquals(0, result.externalFileUrls.size)
+    }
+
+    @Test
+    fun `Return html with with replaced studio iframes and studio media ids that need to be synced`() = runTest {
+        val html = """
+            <p>Studio Embed Below</p>
+            <p><iframe class="lti-embed" style="width: 720px; height: 420px; display: inline-block;" title="bookmarks"
+             src="https://test.instructure.com/courses/1/external_tools/%3Fcustom_arc_launch_type%3Dbare_embed%26custom_arc_media_id%3D123456%26custom_arc_start_at%3D0"
+              width="720" height="420"> </iframe></p>
+              <p>Video with captions</p>
+            <p><iframe class="lti-embed" style="width: 720px; height: 420px; display: inline-block;" title="bookmarks"
+             src="https://test.instructure.com/courses/1/external_tools/%3Fcustom_arc_launch_type%3Dbare_embed%26custom_arc_media_id%3D789%26custom_arc_start_at%3D0"
+              width="720" height="420"> </iframe></p>
+        """.trimIndent()
+
+        val studioMetaData = listOf(
+            StudioMediaMetadata(1, "123456", "title", "audio/mp4", 1000, emptyList(), "https://studio/media/123456"),
+            StudioMediaMetadata(2, "789", "title", "video/mp4", 1000, listOf(
+                StudioCaption("en", "caption", "English"),
+                StudioCaption("es", "caption", "Spanish")
+            ), "https://studio/media/789")
+        )
+
+        val result = htmlParser.createHtmlStringWithLocalFiles(html, 1L, studioMetaData)
+        val expectedHtml = """
+        <p>Studio Embed Below</p>
+        <p><video controls playsinline preload="auto" poster="file:///files/1/studio/123456/poster.jpg">
+          <source src="file:///files/1/studio/123456/123456.mp4" type="audio/mp4" />
+          
+        </video></p>
+          <p>Video with captions</p>
+          <p><video controls playsinline preload="auto" poster="file:///files/1/studio/789/poster.jpg">
+          <source src="file:///files/1/studio/789/789.mp4" type="video/mp4" />
+          <track kind="captions" src="file:///files/1/studio/789/en.vtt" srclang="en" />
+          <track kind="captions" src="file:///files/1/studio/789/es.vtt" srclang="es" />
+          
+        </video></p>
+        """.trimIndent().filterNot { it.isWhitespace() }
+
+        val expectedStudioMediaIds = setOf("123456", "789")
+        assertEquals(expectedStudioMediaIds, result.studioMediaIds)
+        assertEquals(expectedHtml, result.htmlWithLocalFileLinks?.filterNot { it.isWhitespace() })
     }
 }

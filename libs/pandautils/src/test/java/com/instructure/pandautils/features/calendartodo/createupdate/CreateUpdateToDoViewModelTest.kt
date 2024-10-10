@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import com.instructure.pandautils.compose.composables.SelectContextUiState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -116,7 +116,7 @@ class CreateUpdateToDoViewModelTest {
 
         val expectedState = CreateUpdateToDoUiState(
             date = LocalDate.of(2024, 2, 22),
-            selectCalendarUiState = SelectCalendarUiState(
+            selectContextUiState = SelectContextUiState(
                 selectedCanvasContext = User(1),
                 canvasContexts = listOf(User(1))
             )
@@ -137,7 +137,7 @@ class CreateUpdateToDoViewModelTest {
             date = LocalDate.now(clock),
             time = LocalTime.now(clock),
             details = "Description",
-            selectCalendarUiState = SelectCalendarUiState(
+            selectContextUiState = SelectContextUiState(
                 selectedCanvasContext = User(1),
                 canvasContexts = listOf(User(1))
             )
@@ -155,8 +155,8 @@ class CreateUpdateToDoViewModelTest {
         createViewModel()
 
         coVerify(exactly = 1) { repository.getCourses() }
-        Assert.assertEquals(listOf(apiPrefs.user) + courses, viewModel.uiState.value.selectCalendarUiState.canvasContexts)
-        Assert.assertEquals(courses.last(), viewModel.uiState.value.selectCalendarUiState.selectedCanvasContext)
+        Assert.assertEquals(listOf(apiPrefs.user) + courses, viewModel.uiState.value.selectContextUiState.canvasContexts)
+        Assert.assertEquals(courses.last(), viewModel.uiState.value.selectContextUiState.selectedCanvasContext)
     }
 
     @Test
@@ -288,10 +288,10 @@ class CreateUpdateToDoViewModelTest {
         createViewModel()
 
         viewModel.handleAction(CreateUpdateToDoAction.ShowSelectCalendarScreen)
-        Assert.assertTrue(viewModel.uiState.value.selectCalendarUiState.show)
+        Assert.assertTrue(viewModel.uiState.value.selectContextUiState.show)
 
         viewModel.onBackPressed()
-        Assert.assertFalse(viewModel.uiState.value.selectCalendarUiState.show)
+        Assert.assertFalse(viewModel.uiState.value.selectContextUiState.show)
     }
 
     @Test

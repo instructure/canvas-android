@@ -188,7 +188,7 @@ private fun CalendarFilterItem(
             }, colors = CheckboxDefaults.colors(
                 checkedColor = Color(uiState.color),
                 uncheckedColor = Color(uiState.color),
-                checkmarkColor = colorResource(id = R.color.white)
+                checkmarkColor = colorResource(id = R.color.textLightest)
             ),
             modifier = Modifier.testTag("calendarFilterCheckbox")
         )

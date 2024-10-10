@@ -17,30 +17,37 @@ package com.instructure.student.ui.pages.renderPages
 
 import android.os.SystemClock.sleep
 import android.view.View
-import android.widget.EditText
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.DirectlyPopulateEditText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.utils.Pronouns
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
+import org.hamcrest.Matchers.containsString
 
 class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
 
     val recyclerView by OnViewWithId(R.id.recyclerView)
     val commentInput by OnViewWithId(R.id.commentInput)
-    val commentAttach by OnViewWithId(R.id.addFileButton)
-    val addFileButton by OnViewWithId(R.id.addFileButton)
+    val addAttachmentButton by OnViewWithId(R.id.addFileButton)
 
     fun verifyDisplaysEmptyState() {
         onViewWithText(R.string.emptySubmissionCommentsSubtext).assertDisplayed()
@@ -143,7 +150,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
     }
 
     fun addAndSendVideoComment() {
-        addFileButton.click()
+        clickOnAddAttachmentButton()
         onView(withId(R.id.videoComment)).click()
         onView(allOf(withId(R.id.startRecordingButton), isDisplayed())).click()
         sleep(3000)
@@ -152,12 +159,16 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
     }
 
     fun addAndSendAudioComment() {
-        addFileButton.click()
+        clickOnAddAttachmentButton()
         onView(withId(R.id.audioComment)).click()
         onView(allOf(withId(R.id.recordAudioButton), isDisplayed())).click()
         sleep(3000)
         onView(allOf(withId(R.id.stopButton), isDisplayed())).click()
         onView(allOf(withId(R.id.sendAudioButton), isDisplayed())).click()
+    }
+
+    fun clickOnAddAttachmentButton() {
+        addAttachmentButton.click()
     }
 
 }

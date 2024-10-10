@@ -33,7 +33,6 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.textAndIconColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

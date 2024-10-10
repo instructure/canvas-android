@@ -26,8 +26,19 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.AppBarLayout
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseGrade
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.GradingSchemeRow
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
@@ -38,7 +49,18 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_GRADES_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.databinding.FragmentCourseGradesBinding
@@ -101,7 +123,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             adapterToGradesCallback,
             object : WhatIfDialogStyled.WhatIfDialogCallback {
                 override fun onClick(assignment: Assignment, position: Int) {
-                    WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.textAndIconColor) { whatIf, _ ->
+                    WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.color) { whatIf, _ ->
                         //Create dummy submission for what if grade
                         //check to see if grade is empty for reset
                         if (whatIf == null) {

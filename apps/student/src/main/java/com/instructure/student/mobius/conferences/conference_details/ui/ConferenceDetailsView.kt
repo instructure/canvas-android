@@ -26,7 +26,13 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setHidden
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.AdapterConferenceRecordingItemBinding
 import com.instructure.student.databinding.FragmentConferenceDetailsBinding
@@ -103,7 +109,7 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
 
     fun launchUrl(url: String) {
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext.backgroundColor)
+            .setToolbarColor(canvasContext.color)
             .build()
 
         var intent = CustomTabsIntent.Builder()
