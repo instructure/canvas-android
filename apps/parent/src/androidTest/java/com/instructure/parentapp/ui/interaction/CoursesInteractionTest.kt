@@ -22,7 +22,6 @@ import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
 import com.instructure.canvas.espresso.mockCanvas.addEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.parentapp.ui.pages.CoursesPage
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -31,8 +30,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class CoursesInteractionTest : ParentComposeTest() {
-
-    private val coursesPage = CoursesPage(composeTestRule)
 
     @Test
     fun testNoCourseDisplayed() {

@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
@@ -51,8 +52,14 @@ class ManageStudentViewModel @Inject constructor(
     private val _events = Channel<ManageStudentsViewModelAction>()
     val events = _events.receiveAsFlow()
 
+    private val studentMap = mutableMapOf<Long, User>()
+
     init {
         loadStudents()
+    }
+
+    fun refresh() {
+        loadStudents(true)
     }
 
     private val userColorContentDescriptionMap = mapOf(
@@ -84,6 +91,7 @@ class ManageStudentViewModel @Inject constructor(
             }
 
             val students = repository.getStudents(forceRefresh)
+            studentMap.putAll(students.associateBy { it.id })
 
             _uiState.update { state ->
                 state.copy(
@@ -169,12 +177,16 @@ class ManageStudentViewModel @Inject constructor(
         when (action) {
             is ManageStudentsAction.StudentTapped -> {
                 viewModelScope.launch {
-                    _events.send(ManageStudentsViewModelAction.NavigateToAlertSettings(action.studentId))
+                    _events.send(ManageStudentsViewModelAction.NavigateToAlertSettings(studentMap[action.studentId] ?: throw IllegalArgumentException("Student not found")))
                 }
             }
 
             is ManageStudentsAction.Refresh -> loadStudents(true)
-            is ManageStudentsAction.AddStudent -> {} //TODO: Add student flow
+            is ManageStudentsAction.AddStudent -> {
+                viewModelScope.launch {
+                    _events.send(ManageStudentsViewModelAction.AddStudent)
+                }
+            }
             is ManageStudentsAction.ShowColorPickerDialog -> _uiState.update {
                 it.copy(
                     colorPickerDialogUiState = it.colorPickerDialogUiState.copy(

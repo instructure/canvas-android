@@ -59,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/syncProgress_syncFailed"
-                android:textColor="@color/backgroundDanger"
+                android:textColor="@color/textDanger"
                 android:visibility="@{itemViewModel.data.state == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="@id/tabTitle"
                 app:layout_constraintStart_toStartOf="parent"

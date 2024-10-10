@@ -21,7 +21,10 @@ import android.view.Gravity
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterCoursesBinding
 import com.instructure.teacher.fragments.DashboardFragment
@@ -34,11 +37,11 @@ class CoursesViewHolder(private val binding: AdapterCoursesBinding) : RecyclerVi
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
-        titleTextView.setTextColor(course.textAndIconColor)
+        titleTextView.setTextColor(course.color)
 
-        courseImageView.setCourseImage(course, course.backgroundColor, !TeacherPrefs.hideCourseColorOverlay)
+        courseImageView.setCourseImage(course, course.color, !TeacherPrefs.hideCourseColorOverlay)
 
-        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
+        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.color)
         courseColorIndicator.setVisible(TeacherPrefs.hideCourseColorOverlay)
 
         cardView.setOnClickListener { callback?.onShowCourseDetails(course) }

@@ -95,11 +95,11 @@ class ShareExtensionE2ETest: StudentTest() {
         shareExtensionTargetPage.pressNext()
 
         Log.d(STEP_TAG, "Assert that the File Upload page is displayed with the corresponding title.")
-        fileUploadPage.assertPageObjects()
-        fileUploadPage.assertDialogTitle("Submission")
+        fileChooserPage.assertPageObjects()
+        fileChooserPage.assertDialogTitle("Submission")
 
         Log.d(STEP_TAG, "Click on 'Turn In' button to upload both of the files.")
-        fileUploadPage.clickTurnIn()
+        fileChooserPage.clickTurnIn()
 
         Log.d(STEP_TAG, "Assert that the submission upload was successful.")
         shareExtensionStatusPage.assertPageObjects(30)
@@ -156,18 +156,18 @@ class ShareExtensionE2ETest: StudentTest() {
         shareExtensionTargetPage.pressNext()
 
         Log.d(STEP_TAG,"Assert that the title of the File Upload Page is correct and both of the shared files are displayed.")
-        fileUploadPage.assertPageObjects()
-        fileUploadPage.assertDialogTitle("Upload To My Files")
-        fileUploadPage.assertFileDisplayed(jpgTestFileName)
-        fileUploadPage.assertFileDisplayed("samplepdf")
+        fileChooserPage.assertPageObjects()
+        fileChooserPage.assertDialogTitle("Upload To My Files")
+        fileChooserPage.assertFileDisplayed(jpgTestFileName)
+        fileChooserPage.assertFileDisplayed(pdfTestFileName)
 
         Log.d(STEP_TAG,"Remove '$pdfTestFileName' file and assert that it's not displayed any more on the list but the other file is displayed.")
-        fileUploadPage.removeFile("samplepdf")
-        fileUploadPage.assertFileNotDisplayed("samplepdf")
-        fileUploadPage.assertFileDisplayed(jpgTestFileName)
+        fileChooserPage.removeFile("samplepdf")
+        fileChooserPage.assertFileNotDisplayed(pdfTestFileName)
+        fileChooserPage.assertFileDisplayed(jpgTestFileName)
 
         Log.d(STEP_TAG, "Click on 'Upload' button to upload the file.")
-        fileUploadPage.clickUpload()
+        fileChooserPage.clickUpload()
 
         Log.d(STEP_TAG, "Assert that the file upload (into my 'Files') was successful.")
         shareExtensionStatusPage.assertPageObjects()

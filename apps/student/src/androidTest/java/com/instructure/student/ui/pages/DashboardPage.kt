@@ -27,7 +27,15 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -36,9 +44,34 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
-import com.instructure.espresso.*
+import com.instructure.espresso.NotificationBadgeAssertion
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.TextViewColorAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForViewToBeCompletelyDisplayed
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.replaceText
+import com.instructure.espresso.retry
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import com.instructure.student.ui.utils.ViewUtils
 import org.hamcrest.CoreMatchers.allOf
@@ -267,13 +300,19 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun openGlobalManageOfflineContentPage() {
        clickDashboardGlobalOverflowButton()
-       onView(withText(containsString("Manage Offline Content")))
-            .perform(click());
+        // We need this, because sometimes after sync we have a sync notification that covers the text for a couple of seconds.
+        retry(times = 10) {
+            onView(withText(containsString("Manage Offline Content")))
+                .perform(click());
+        }
     }
 
     private fun clickDashboardGlobalOverflowButton() {
         waitForViewToBeCompletelyDisplayed(withContentDescription("More options") + withAncestor(R.id.toolbar))
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        // We need this, because sometimes after sync we have a sync notification that covers the overflow button for a couple of seconds.
+        retry(times = 10) {
+            Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        }
     }
 
     fun openAllCoursesPage() {
@@ -385,7 +424,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     //OfflineMethod
     fun assertCourseOfflineSyncIconVisible(courseName: String) {
-        waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        WaitForViewMatcher.waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName)), 20).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     //OfflineMethod
@@ -396,7 +435,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     //OfflineMethod
     fun clickOnSyncProgressNotification() {
         Thread.sleep(2500)
-        onView(anyOf(withText(R.string.syncProgress_syncQueued),withText(R.string.syncProgress_downloadStarting), withText(R.string.syncProgress_syncingOfflineContent))).click()
+        onView(withId(R.id.syncProgressTitle) + anyOf(withText(R.string.syncProgress_syncQueued),withText(R.string.syncProgress_downloadStarting), withText(R.string.syncProgress_syncingOfflineContent))).click()
     }
 
     //OfflineMethod

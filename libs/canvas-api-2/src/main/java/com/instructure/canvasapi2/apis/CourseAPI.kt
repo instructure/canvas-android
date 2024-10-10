@@ -90,7 +90,7 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
         fun getCourseWithSyllabus(@Path("courseId") courseId: Long): Call<Course>
 
-        @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
+        @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions&include[]=settings")
         suspend fun getCourseWithSyllabus(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<Course>
 
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image&include[]=settings&include[]=grading_scheme")
@@ -165,6 +165,14 @@ object CourseAPI {
             @Path("courseId") courseId: Long,
             @Query("user_id") userId: Long,
             @Query("grading_period_id") gradingPeriodId: Long,
+            @Tag params: RestParams
+        ): DataResult<List<Enrollment>>
+
+        @GET("courses/{courseId}/enrollments?state[]=active&state[]=completed")
+        suspend fun getObservedUserEnrollmentsForGradingPeriod(
+            @Path("courseId") courseId: Long,
+            @Query("user_id") userId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long?,
             @Tag params: RestParams
         ): DataResult<List<Enrollment>>
 

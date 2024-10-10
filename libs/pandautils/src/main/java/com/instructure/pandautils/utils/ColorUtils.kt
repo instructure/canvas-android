@@ -16,7 +16,12 @@
  */
 package com.instructure.pandautils.utils
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.ColorInt
@@ -49,7 +54,7 @@ object ColorUtils {
     }
 
     /**
-     * Do not use this directly for parsing course colors. Use [CanvasContext.textAndIconColor] or [CanvasContext.backgroundColor].
+     * Do not use this directly for parsing course colors. Use [CanvasContext.color] or [CanvasContext.color].
      */
     fun parseColor(colorCode: String?, @ColorInt defaultColor: Int? = null): Int {
         return try {

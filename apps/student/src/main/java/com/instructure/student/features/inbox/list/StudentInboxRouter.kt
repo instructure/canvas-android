@@ -21,8 +21,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.fragment.InboxComposeMessageFragment
@@ -38,14 +39,18 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
     }
 
     override fun attachNavigationIcon(toolbar: Toolbar) {
-        if (activity is NavigationActivity) {
-            activity.attachNavigationIcon(toolbar)
+        if (activity is NavigationActivity && fragment is InboxFragment) {
+            activity.attachNavigationDrawer(fragment, toolbar)
         }
     }
 
     override fun routeToNewMessage() {
         val route = InboxComposeMessageFragment.makeRoute()
         RouteMatcher.route(activity, route)
+    }
+
+    override fun routeToCompose(options: InboxComposeOptions) {
+        TODO("Not yet implemented")
     }
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {

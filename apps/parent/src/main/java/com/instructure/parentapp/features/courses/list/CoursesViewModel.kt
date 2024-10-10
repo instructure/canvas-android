@@ -22,7 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -37,7 +37,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CoursesViewModel @Inject constructor(
     private val repository: CoursesRepository,
-    private val colorKeeper: ColorKeeper,
     private val selectedStudentHolder: SelectedStudentHolder,
     private val courseGradeFormatter: CourseGradeFormatter
 ) : ViewModel() {
@@ -60,7 +59,7 @@ class CoursesViewModel @Inject constructor(
 
     private fun loadCourses(forceRefresh: Boolean = false) {
         viewModelScope.tryLaunch {
-            val color = colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor()
+            val color = selectedStudent.color
 
             _uiState.update {
                 it.copy(

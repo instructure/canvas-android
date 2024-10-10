@@ -80,8 +80,8 @@ class ShareExtensionTargetViewModelTest {
         }
 
         mockkObject(ColorKeeper)
-        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0, 0, 0)
-        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0, 0, 0)
+        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0, 0)
+        every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0, 0)
 
         setupStrings()
     }

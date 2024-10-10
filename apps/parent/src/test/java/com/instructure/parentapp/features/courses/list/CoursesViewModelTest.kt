@@ -30,6 +30,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +59,6 @@ class CoursesViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val repository: CoursesRepository = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val selectedStudentFlow = MutableStateFlow<User?>(null)
     private val selectedStudentHolder = TestSelectStudentHolder(selectedStudentFlow)
     private val courseGradeFormatter: CourseGradeFormatter = mockk(relaxed = true)
@@ -68,12 +69,14 @@ class CoursesViewModelTest {
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
-        coEvery { colorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -176,6 +179,6 @@ class CoursesViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = CoursesViewModel(repository, colorKeeper, selectedStudentHolder, courseGradeFormatter)
+        viewModel = CoursesViewModel(repository, selectedStudentHolder, courseGradeFormatter)
     }
 }

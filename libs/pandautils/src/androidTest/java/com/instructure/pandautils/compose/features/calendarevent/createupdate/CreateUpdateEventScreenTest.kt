@@ -33,7 +33,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventUiState
 import com.instructure.pandautils.features.calendarevent.createupdate.SelectFrequencyUiState
 import com.instructure.pandautils.features.calendarevent.createupdate.composables.CreateUpdateEventScreen
@@ -270,7 +270,7 @@ class CreateUpdateEventScreenTest {
                 title = "New Event",
                 actionHandler = {},
                 uiState = CreateUpdateEventUiState(
-                    selectCalendarUiState = SelectCalendarUiState(
+                    selectContextUiState = SelectContextUiState(
                         selectedCanvasContext = CanvasContext.currentUserContext(User(name = "User Name"))
                     )
                 )

@@ -29,6 +29,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -42,11 +43,11 @@ import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -56,6 +57,9 @@ import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
+import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
+import com.instructure.parentapp.features.addstudent.AddStudentViewModel
+import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import com.instructure.parentapp.util.ParentLogoutTask
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -87,6 +91,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private var inboxBadge: TextView? = null
 
+    private val addStudentViewModel: AddStudentViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -97,17 +103,20 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(calendarSharedEvents.events, ::handleSharedCalendarAction)
+
+        lifecycleScope.launch {
+            addStudentViewModel.events.collectLatest(::handleAddStudentEvents)
+        }
         return binding.root
     }
 
-    private fun handleDashboardAction(dashboardAction: DashboardAction) {
-        when (dashboardAction) {
-            is DashboardAction.NavigateDeepLink -> {
-                try {
-                    navController.navigate(dashboardAction.deepLinkUri)
-                } catch (e: Exception) {
-                    firebaseCrashlytics.recordException(e)
-                }
+    private fun handleAddStudentEvents(action: AddStudentViewModelAction) {
+        when (action) {
+            is AddStudentViewModelAction.PairStudentSuccess -> {
+                viewModel.reloadData()
+            }
+            is AddStudentViewModelAction.UnpairStudentSuccess -> {
+                viewModel.reloadData()
             }
         }
     }
@@ -122,7 +131,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleDashboardAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
@@ -130,6 +139,23 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
+            }
+        }
+
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+    }
+
+    private fun handleAction(action: DashboardViewModelAction) {
+        when (action) {
+            is DashboardViewModelAction.AddStudent -> {
+                AddStudentBottomSheetDialogFragment().show(childFragmentManager, AddStudentBottomSheetDialogFragment::class.java.simpleName)
+            }
+            is DashboardViewModelAction.NavigateDeepLink -> {
+                try {
+                    navController.navigate(action.deepLinkUri)
+                } catch (e: Exception) {
+                    firebaseCrashlytics.recordException(e)
+                }
             }
         }
     }
@@ -255,7 +281,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupAppColors(student: User?) {
-        val color = ColorKeeper.getOrGenerateUserColor(student).backgroundColor()
+        val color = student.color
         if (binding.toolbar.background == null) {
             binding.toolbar.setBackgroundColor(color)
         } else {
@@ -292,7 +318,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .showThemed(ColorKeeper.getOrGenerateUserColor(ParentPrefs.currentStudent).textAndIconColor())
+            .showThemed(ParentPrefs.currentStudent.color)
     }
 
     private fun onSwitchUsers() {

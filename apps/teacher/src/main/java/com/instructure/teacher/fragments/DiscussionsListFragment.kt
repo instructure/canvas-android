@@ -31,12 +31,30 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DiscussionListAdapter
 import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
-import com.instructure.teacher.events.*
+import com.instructure.teacher.events.DiscussionCreatedEvent
+import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
+import com.instructure.teacher.events.DiscussionTopicHeaderEvent
+import com.instructure.teacher.events.DiscussionUpdatedEvent
+import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -131,7 +149,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): DiscussionListAdapter {
-        return DiscussionListAdapter(requireContext(), presenter, canvasContext.textAndIconColor, isAnnouncements,
+        return DiscussionListAdapter(requireContext(), presenter, canvasContext.color, isAnnouncements,
             { discussionTopicHeader ->
                 val route = presenter.getDetailsRoute(discussionTopicHeader)
                 RouteMatcher.route(
@@ -205,7 +223,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext.color, requireContext().getColor(R.color.textLightest))
     }
 
     private fun setupViews() = with(binding) {

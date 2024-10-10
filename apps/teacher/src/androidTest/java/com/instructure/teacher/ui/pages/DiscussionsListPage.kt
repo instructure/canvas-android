@@ -20,6 +20,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
+import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.Searchable
@@ -193,5 +194,17 @@ class DiscussionsListPage(val searchable: Searchable) : BasePage() {
         val groupChildMatcher = withId(R.id.groupName) + withText(groupName)
         waitForView(withId(R.id.discussionTitle) + withText(discussionTitle) +
                 withAncestor(withId(R.id.discussionRecyclerView) + withDescendant(groupChildMatcher))).assertDisplayed()
+    }
+
+    /**
+     * Asserts that a discussion with the specified [discussionTitle] is NOT present in the specified [groupName] group.
+     *
+     * @param groupName The name of the group NOT containing the discussion.
+     * @param discussionTitle The title of the discussion to be asserted.
+     */
+    fun assertDiscussionNotInGroup(groupName: String, discussionTitle: String) {
+        val groupChildMatcher = withId(R.id.groupName) + withText(groupName)
+        onView(withId(R.id.discussionTitle) + withText(discussionTitle) +
+                withAncestor(withId(R.id.discussionRecyclerView) + withDescendant(groupChildMatcher))).check(DoesNotExistAssertion(5))
     }
 }

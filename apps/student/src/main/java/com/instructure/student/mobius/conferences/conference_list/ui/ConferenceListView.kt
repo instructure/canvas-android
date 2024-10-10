@@ -28,7 +28,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withRequireNetwork
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusView
@@ -105,7 +111,7 @@ class ConferenceListView(
 
     fun launchUrl(url: String) {
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext.backgroundColor)
+            .setToolbarColor(canvasContext.color)
             .build()
 
         var intent = CustomTabsIntent.Builder()

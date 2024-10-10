@@ -27,7 +27,11 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -38,7 +42,20 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.replaceWithURLQueryParameter
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentLtiLaunchBinding
 import com.instructure.student.router.RouteMatcher
@@ -79,7 +96,7 @@ class LtiLaunchFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.loadingView.setOverrideColor(canvasContext.backgroundColor)
+        binding.loadingView.setOverrideColor(canvasContext.color)
         binding.toolName.setTextForVisibility(title().validOrNull())
     }
 
@@ -100,6 +117,8 @@ class LtiLaunchFragment : ParentFragment() {
                     var url = ltiUrl // Replace deep link scheme
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
+                        .replaceWithURLQueryParameter(HtmlContentFormatter.hasKalturaUrl(ltiUrl))
+
                     when {
                         sessionLessLaunch -> {
                             // This is specific for Studio and Gauge
@@ -145,7 +164,7 @@ class LtiLaunchFragment : ParentFragment() {
             .build()
 
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(canvasContext.backgroundColor)
+            .setToolbarColor(canvasContext.color)
             .build()
 
         var intent = CustomTabsIntent.Builder()

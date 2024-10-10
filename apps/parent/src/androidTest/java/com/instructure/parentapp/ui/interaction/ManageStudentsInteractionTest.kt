@@ -18,12 +18,14 @@
 package com.instructure.parentapp.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.parentapp.ui.pages.ManageStudentsPage
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -33,8 +35,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class ManageStudentsInteractionTest : ParentComposeTest() {
-
-    private val manageStudentsPage = ManageStudentsPage(composeTestRule)
 
     @Test
     fun testStudentsDisplayed() {
@@ -56,7 +56,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
 
         composeTestRule.waitForIdle()
         manageStudentsPage.tapStudent(data.students.first().shortName!!)
-        // TODO Assert alert settings when implemented
+        composeTestRule.onNodeWithText("Alert Settings").assertIsDisplayed()
     }
 
     @Test
@@ -68,6 +68,34 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
         composeTestRule.waitForIdle()
         manageStudentsPage.tapStudentColor(data.students.first().shortName!!)
         manageStudentsPage.assertColorPickerDialogDisplayed()
+    }
+
+    @Test
+    fun testAddStudentPairingCode() {
+        val data = initData()
+
+        goToManageStudents(data)
+
+        composeTestRule.waitForIdle()
+
+        manageStudentsPage.tapAddStudent()
+        addStudentPage.tapPairingCode()
+
+        composeTestRule.onNodeWithTag("pairingCodeTextField").assertIsDisplayed()
+    }
+
+    @Test
+    fun testAddStudentQrCode() {
+        val data = initData()
+
+        goToManageStudents(data)
+
+        composeTestRule.waitForIdle()
+
+        manageStudentsPage.tapAddStudent()
+        addStudentPage.tapQrCode()
+
+        composeTestRule.onNodeWithText("Open Canvas Student").assertIsDisplayed()
     }
 
     private fun initData(): MockCanvas {

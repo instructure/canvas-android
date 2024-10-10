@@ -19,15 +19,16 @@ package com.instructure.parentapp.features.dashboard
 
 import android.net.Uri
 import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.mvvm.ItemViewModel
 
 
 data class DashboardViewData(
     val userViewData: UserViewData? = null,
     val studentSelectorExpanded: Boolean = false,
-    val studentItems: List<StudentItemViewModel> = emptyList(),
+    val studentItems: List<ItemViewModel> = emptyList(),
     val selectedStudent: User? = null,
     val unreadCount: Int = 0,
-    val alertCount: Int = 0
+    val alertCount: Int = 0,
 )
 
 data class StudentItemViewData(
@@ -44,6 +45,12 @@ data class UserViewData(
     val email: String?
 )
 
-sealed class DashboardAction {
-    data class NavigateDeepLink(val deepLinkUri: Uri) : DashboardAction()
+sealed class DashboardViewModelAction {
+    data object AddStudent : DashboardViewModelAction()
+    data class NavigateDeepLink(val deepLinkUri: Uri) : DashboardViewModelAction()
+}
+
+enum class StudentListViewType(val viewType: Int) {
+    STUDENT(0),
+    ADD_STUDENT(1)
 }

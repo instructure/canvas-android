@@ -31,7 +31,7 @@ data class HelpLink(
         val type: String,
         @SerializedName("available_to")
         val availableTo: List<String>,
-        val url: String,
-        val text: String,
-        val subtext: String
+        val url: String?,
+        val text: String?,
+        val subtext: String?
 )
