@@ -152,7 +152,8 @@ data class ObserveeAssignment(
                 moderatedGrading = this.moderatedGrading,
                 anonymousGrading = this.anonymousGrading,
                 allowedAttempts = this.allowedAttempts,
-                isStudioEnabled = this.isStudioEnabled
+                isStudioEnabled = this.isStudioEnabled,
+                isHiddenInGradeBook = this.isHiddenInGradeBook
             )
         } else {
             return null
