@@ -78,7 +78,7 @@ class CustomReminderDialog : DialogFragment() {
     }
 
     private fun updateButtonState(button: Button) {
-        button.isEnabled = binding.choices.checkedRadioButtonId != -1 && binding.quantity.text.isNotEmpty() && binding.quantity.text.toString().toIntOrNull().orDefault() > 0
+        button.isEnabled = binding.choices.checkedRadioButtonId != -1 && binding.quantity.text.toString().toIntOrNull().orDefault() > 0
     }
 
     companion object {
