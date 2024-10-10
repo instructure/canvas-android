@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.student.features.grades.datasource.GradesListDataSource
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
 import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
@@ -84,9 +85,5 @@ class GradesListRepository(
         forceNetwork: Boolean,
     ): List<AssignmentGroup> {
         return dataSource().getAssignmentGroupsWithAssignments(courseId, forceNetwork).filterHiddenAssignments()
-    }
-
-    private fun List<AssignmentGroup>.filterHiddenAssignments(): List<AssignmentGroup> {
-        return this.map { it.copy(assignments = it.assignments.filterNot { it.isHiddenInGradeBook }) }
     }
 }
