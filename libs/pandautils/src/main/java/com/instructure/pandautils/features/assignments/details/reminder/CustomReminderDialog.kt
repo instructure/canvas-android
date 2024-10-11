@@ -30,6 +30,7 @@ import com.instructure.pandautils.databinding.DialogCustomReminderBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewModel
 import com.instructure.pandautils.features.assignments.details.ReminderChoice
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -77,7 +78,7 @@ class CustomReminderDialog : DialogFragment() {
     }
 
     private fun updateButtonState(button: Button) {
-        button.isEnabled = binding.choices.checkedRadioButtonId != -1 && binding.quantity.text.isNotEmpty()
+        button.isEnabled = binding.choices.checkedRadioButtonId != -1 && binding.quantity.text.toString().toIntOrNull().orDefault() > 0
     }
 
     companion object {

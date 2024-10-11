@@ -16,16 +16,8 @@
 
 package instructure.instrumentationtests;
 
-import android.content.Context;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
 
-public class AppManager extends MultiDexApplication {
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
+public class AppManager extends Application {
 
 }

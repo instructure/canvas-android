@@ -42,7 +42,6 @@ android {
         versionCode = 70
         versionName = '1.33.0'
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
