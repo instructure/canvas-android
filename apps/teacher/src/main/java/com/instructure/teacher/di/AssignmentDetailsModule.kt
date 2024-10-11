@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.di
 
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
@@ -31,6 +32,11 @@ import dagger.hilt.components.SingletonComponent
 class AssignmentDetailsFragmentModule() {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideAssignmentDetailsBehaviour(): AssignmentDetailsBehaviour {
         throw NotImplementedError()
     }
 }
