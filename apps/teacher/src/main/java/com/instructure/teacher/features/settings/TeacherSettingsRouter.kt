@@ -16,7 +16,7 @@
  */
 package com.instructure.teacher.features.settings
 
-import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
@@ -24,49 +24,48 @@ import com.instructure.pandautils.features.notification.preferences.PushNotifica
 import com.instructure.pandautils.features.settings.SettingsRouter
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.AppType
-import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.teacher.fragments.FeatureFlagsFragment
 import com.instructure.teacher.fragments.ProfileFragment
 import com.instructure.teacher.router.RouteMatcher
 
-class TeacherSettingsRouter(private val context: Context) : SettingsRouter {
+class TeacherSettingsRouter(private val activity: FragmentActivity) : SettingsRouter {
 
     override fun navigateToProfileSettings() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, ProfileFragment::class.java)
         )
     }
 
     override fun navigateToPushNotificationsSettings() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, PushNotificationPreferencesFragment::class.java)
         )
     }
 
     override fun navigateToEmailNotificationsSettings() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, EmailNotificationPreferencesFragment::class.java)
         )
     }
 
     override fun navigateToRemoteConfig() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, RemoteConfigParamsFragment::class.java)
         )
     }
 
     override fun navigateToFeatureFlags() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, FeatureFlagsFragment::class.java)
         )
     }
 
     override fun navigateToRateApp() {
-        RatingDialog.showRateDialog(context.getFragmentActivity(), AppType.TEACHER)
+        RatingDialog.showRateDialog(activity, AppType.TEACHER)
     }
 }

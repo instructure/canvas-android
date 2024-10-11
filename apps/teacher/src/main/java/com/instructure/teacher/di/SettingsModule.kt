@@ -17,6 +17,7 @@
 package com.instructure.teacher.di
 
 import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRouter
 import com.instructure.teacher.features.settings.TeacherSettingsBehaviour
@@ -25,19 +26,21 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(FragmentComponent::class)
 class SettingsRouterModule {
     @Provides
-    fun provideSettingsRouter(@ActivityContext context: Context): SettingsRouter {
-        return TeacherSettingsRouter(context)
+    fun provideSettingsRouter(activity: FragmentActivity): SettingsRouter {
+        return TeacherSettingsRouter(activity)
     }
 }
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 class SettingsModule {
 
     @Provides

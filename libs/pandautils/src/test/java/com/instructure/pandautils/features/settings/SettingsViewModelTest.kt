@@ -33,7 +33,9 @@ import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.unmockkAll
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -73,6 +75,7 @@ class SettingsViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<Boolean>(OFFLINE_ENABLED) } returns true
+        every { savedStateHandle.get<Int>("scrollValue") } returns 0
     }
 
     @After
@@ -105,7 +108,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `Change app theme`() {
+    fun `Change app theme`() = runTest {
         val items = mapOf(
             R.string.preferences to listOf(
                 SettingsItem.APP_THEME,
@@ -121,11 +124,49 @@ class SettingsViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.onThemeSelected(AppTheme.DARK)
+        val uiState = viewModel.uiState.value
+
+        uiState.actionHandler(SettingsAction.SetAppTheme(AppTheme.DARK, 0, 0, 0))
+
+        verify {
+            themePrefs.appTheme = AppTheme.DARK.ordinal
+        }
+        assertEquals(AppTheme.DARK.ordinal, viewModel.uiState.value.appTheme)
+
+        val events = mutableListOf<SettingsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+            assertEquals(SettingsViewModelAction.AppThemeClickPosition(0, 0, 0), events.last())
+        }
+    }
+
+    @Test
+    fun `Set homeroom view action`() = runTest {
+        val items = mapOf(
+            R.string.preferences to listOf(
+                SettingsItem.APP_THEME,
+                SettingsItem.PROFILE_SETTINGS,
+                SettingsItem.PUSH_NOTIFICATIONS,
+                SettingsItem.EMAIL_NOTIFICATIONS,
+                SettingsItem.HOMEROOM_VIEW
+            ),
+            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
+        )
+        every { settingsBehaviour.settingsItems } returns items
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
 
         val uiState = viewModel.uiState.value
 
-        assertEquals(R.string.appThemeDark, uiState.appTheme)
+        uiState.actionHandler(SettingsAction.SetHomeroomView(true))
+        assertEquals(true, viewModel.uiState.value.homeroomView)
+
+        verify {
+            apiPrefs.elementaryDashboardEnabledOverride = true
+        }
+
     }
 
     @Test

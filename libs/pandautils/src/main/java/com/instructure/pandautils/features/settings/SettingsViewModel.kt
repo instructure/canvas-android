@@ -101,10 +101,6 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onThemeSelected(theme: AppTheme) {
-        _uiState.update { it.copy(appTheme = theme.themeNameRes) }
-    }
-
     private fun actionHandler(action: SettingsAction) {
         when (action) {
             is SettingsAction.SetAppTheme -> {

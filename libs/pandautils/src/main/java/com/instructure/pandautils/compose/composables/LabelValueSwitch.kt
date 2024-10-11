@@ -86,7 +86,7 @@ fun LabelValueSwitch(
                 checked = it
                 onCheckedChange(checked)
             }, colors = SwitchDefaults.colors(
-                checkedThumbColor = Color(ThemePrefs.buttonColor),
+                checkedThumbColor = Color(ThemePrefs.brandColor),
             )
         )
     }

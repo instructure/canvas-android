@@ -191,7 +191,7 @@ private fun AppThemeItem(appTheme: Int, appThemeSelected: (AppTheme, Int, Int) -
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         AppThemeButton(
-            icon = if (nightMode) R.drawable.ic_panda_light_dark else R.drawable.ic_panda_light_light,
+            icon = R.drawable.ic_panda_light,
             title = R.string.appThemeLight,
             testTag = "lightThemeButton",
             selected = appTheme == AppTheme.LIGHT.ordinal
@@ -203,7 +203,7 @@ private fun AppThemeItem(appTheme: Int, appThemeSelected: (AppTheme, Int, Int) -
             )
         }
         AppThemeButton(
-            icon = if (nightMode) R.drawable.ic_panda_dark_dark else R.drawable.ic_panda_dark_light,
+            icon = R.drawable.ic_panda_dark,
             title = R.string.appThemeDark,
             testTag = "darkThemeButton",
             selected = appTheme == AppTheme.DARK.ordinal
@@ -215,7 +215,7 @@ private fun AppThemeItem(appTheme: Int, appThemeSelected: (AppTheme, Int, Int) -
             )
         }
         AppThemeButton(
-            icon = if (nightMode) R.drawable.ic_panda_system_dark else R.drawable.ic_panda_system_light,
+            icon = R.drawable.ic_panda_system,
             title = R.string.appThemeAuto,
             testTag = "systemThemeButton",
             selected = appTheme == AppTheme.SYSTEM.ordinal

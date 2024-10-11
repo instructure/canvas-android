@@ -15,7 +15,7 @@
  */
 package com.instructure.student.features.settings
 
-import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
@@ -23,7 +23,6 @@ import com.instructure.pandautils.features.notification.preferences.PushNotifica
 import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
 import com.instructure.pandautils.features.settings.SettingsRouter
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
-import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.fragment.AccountPreferencesFragment
 import com.instructure.student.fragment.FeatureFlagsFragment
@@ -32,7 +31,7 @@ import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragm
 import com.instructure.student.router.RouteMatcher
 
 class StudentSettingsRouter(
-    private val context: Context
+    private val activity: FragmentActivity
 ) : SettingsRouter {
     override fun navigateToProfileSettings() {
         val fragment = if (ApiPrefs.isStudentView) {
@@ -41,14 +40,14 @@ class StudentSettingsRouter(
             ProfileSettingsFragment::class.java
         }
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, fragment)
         )
     }
 
     override fun navigateToPushNotificationsSettings() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, PushNotificationPreferencesFragment::class.java)
         )
 
@@ -56,42 +55,42 @@ class StudentSettingsRouter(
 
     override fun navigateToEmailNotificationsSettings() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, EmailNotificationPreferencesFragment::class.java)
         )
     }
 
     override fun navigateToPairWithObserver() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, PairObserverFragment::class.java)
         )
     }
 
     override fun navigateToSyncSettings() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, SyncSettingsFragment::class.java)
         )
     }
 
     override fun navigateToAccountPreferences() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, AccountPreferencesFragment::class.java)
         )
     }
 
     override fun navigateToRemoteConfig() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, RemoteConfigParamsFragment::class.java)
         )
     }
 
     override fun navigateToFeatureFlags() {
         RouteMatcher.route(
-            context.getFragmentActivity(),
+            activity,
             Route(null, FeatureFlagsFragment::class.java)
         )
     }

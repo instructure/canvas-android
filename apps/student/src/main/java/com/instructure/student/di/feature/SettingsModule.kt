@@ -16,6 +16,7 @@
 package com.instructure.student.di.feature
 
 import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRouter
@@ -25,20 +26,22 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(FragmentComponent::class)
 class SettingsRouterModule{
     @Provides
-    fun provideSettingsRouter(@ActivityContext context: Context): SettingsRouter {
-        return StudentSettingsRouter(context)
+    fun provideSettingsRouter(activity: FragmentActivity): SettingsRouter {
+        return StudentSettingsRouter(activity)
     }
 }
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 class SettingsModule {
 
     @Provides
