@@ -40,8 +40,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 267
-        versionName = '7.6.0'
+        versionCode = 268
+        versionName = '7.6.1'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
