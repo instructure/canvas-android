@@ -61,7 +61,6 @@ class SettingsScreenTest {
             homeroomView = true,
             offlineState = R.string.daily,
             appTheme = R.string.appThemeLight,
-            onClick = {},
             actionHandler = {}
         )
         composeTestRule.setContent {
