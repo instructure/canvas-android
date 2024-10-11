@@ -287,7 +287,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val title = launchDefinition.name
         val route = LtiLaunchFragment.makeRoute(
             canvasContext = CanvasContext.currentUserContext(user),
-            url = launchDefinition.placements.globalNavigation.url,
+            url = launchDefinition.placements?.globalNavigation?.url.orEmpty(),
             title = title,
             sessionLessLaunch = true
         )

@@ -37,6 +37,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
@@ -137,6 +138,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
+                setupLaunchDefinitions(it.launchDefinitionViewData)
                 setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
@@ -157,6 +159,10 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 } catch (e: Exception) {
                     firebaseCrashlytics.recordException(e)
                 }
+            }
+            is DashboardViewModelAction.OpenLtiTool -> {
+                // TODO LTI Tool
+                //navigation.openLtiTool(requireActivity(), action.url, action.name)
             }
         }
     }
@@ -232,6 +238,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
             when (it.itemId) {
                 R.id.inbox -> menuItemSelected { navigation.navigate(activity, navigation.inbox) }
                 R.id.manage_students -> menuItemSelected { navigation.navigate(activity, navigation.manageStudents) }
+                R.id.mastery -> menuItemSelected { viewModel.openMastery() }
                 R.id.settings -> menuItemSelected { navigation.navigate(activity, navigation.settings) }
                 R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
@@ -325,6 +332,14 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private fun onSwitchUsers() {
         ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+    }
+
+    private fun setupLaunchDefinitions(launchDefinitionViewData: List<LaunchDefinitionViewData>) {
+        val masteryItem = launchDefinitionViewData.find { it.domain == LaunchDefinition.MASTERY_DOMAIN }
+        if (masteryItem != null) {
+            val masteryMenuItem = binding.navView.menu.findItem(R.id.mastery)
+            masteryMenuItem.isVisible = true
+        }
     }
 
     override fun onHandleBackPressed(): Boolean {

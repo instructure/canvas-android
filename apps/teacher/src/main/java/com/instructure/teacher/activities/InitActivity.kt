@@ -395,10 +395,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private fun launchLti(launchDefinition: LaunchDefinition) {
         val user = ApiPrefs.user ?: return
         val canvasContext = CanvasContext.currentUserContext(user)
-        val title = launchDefinition.name
+        val title = launchDefinition.name.orEmpty()
         val route = LtiLaunchFragment.makeBundle(
             canvasContext = canvasContext,
-            url = launchDefinition.placements.globalNavigation.url,
+            url = launchDefinition.placements?.globalNavigation?.url.orEmpty(),
             title = title,
             sessionLessLaunch = true
         )
