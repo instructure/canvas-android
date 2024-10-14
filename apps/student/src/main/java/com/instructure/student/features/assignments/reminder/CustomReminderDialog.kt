@@ -26,6 +26,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.databinding.DialogCustomReminderBinding
 import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
@@ -77,7 +78,7 @@ class CustomReminderDialog : DialogFragment() {
     }
 
     private fun updateButtonState(button: Button) {
-        button.isEnabled = binding.choices.checkedRadioButtonId != -1 && binding.quantity.text.isNotEmpty()
+        button.isEnabled = binding.choices.checkedRadioButtonId != -1 && binding.quantity.text.toString().toIntOrNull().orDefault() > 0
     }
 
     companion object {
