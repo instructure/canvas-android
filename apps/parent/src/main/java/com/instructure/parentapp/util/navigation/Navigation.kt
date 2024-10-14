@@ -47,7 +47,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
 
     private val announcementId = "announcement-id"
-    private val announcementDetails = "$baseUrl/courses/{$COURSE_ID}/discussion_topics/{$announcementId}"
+    private val courseAnnouncementDetails = "$baseUrl/courses/{$COURSE_ID}/discussion_topics/{$announcementId}"
+    private val globalAnnouncementDetails = "$baseUrl/account_notifications/{$announcementId}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
@@ -86,6 +87,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun updateToDoRoute(plannerItem: PlannerItem) = "$baseUrl/update-todo/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
 
     fun alertSettingsRoute(student: User) = "$baseUrl/alert-settings/${UserParametersType.serializeAsValue(student)}"
+
+    fun globalAnnouncementRoute(alertId: Long) = "$baseUrl/account_notifications/$alertId"
 
     fun crateMainNavGraph(navController: NavController): NavGraph {
         return navController.createGraph(
@@ -136,11 +139,17 @@ class Navigation(apiPrefs: ApiPrefs) {
                     uriPattern = courseDetails
                 }
             }
-            fragment<AnnouncementDetailsFragment>(announcementDetails) {
+            fragment<AnnouncementDetailsFragment>(courseAnnouncementDetails) {
                 argument(AnnouncementDetailsFragment.COURSE_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
+                argument(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+            }
+            fragment<AnnouncementDetailsFragment>(globalAnnouncementDetails) {
                 argument(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) {
                     type = NavType.LongType
                     nullable = false

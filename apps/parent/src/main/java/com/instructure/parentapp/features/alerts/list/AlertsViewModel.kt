@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.studentColor
@@ -126,7 +127,11 @@ class AlertsViewModel @Inject constructor(
         when (action) {
             is AlertsAction.Navigate -> {
                 viewModelScope.launch {
-                    _events.send(AlertsViewModelAction.Navigate(action.route))
+                    _events.send(AlertsViewModelAction.Navigate(
+                        if (action.alertType == AlertType.INSTITUTION_ANNOUNCEMENT) action.contextId else action.alertId,
+                        action.route,
+                        action.alertType
+                    ))
                     markAlertRead(action.alertId)
                     alertCountUpdater.updateShouldRefreshAlertCount(true)
                 }
@@ -205,6 +210,7 @@ class AlertsViewModel @Inject constructor(
     private fun createAlertItem(alert: Alert): AlertsItemUiState {
         return AlertsItemUiState(
             alertId = alert.id,
+            contextId = alert.contextId,
             title = alert.title,
             alertType = alert.alertType,
             date = alert.actionDate,

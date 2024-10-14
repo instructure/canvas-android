@@ -4,7 +4,9 @@ package com.instructure.parentapp.features.alerts.details
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -27,13 +29,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.R
+import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.features.inbox.utils.AttachmentCard
+import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
+import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 
 @Composable
 fun AnnounceDetailsScreen(
@@ -43,22 +49,33 @@ fun AnnounceDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
-        if (uiState.isError) {
-            ErrorContent(
-                errorMessage = stringResource(id = R.string.errorLoadingAnnouncement),
-                retryClick = {
-                    actionHandler(AnnouncementDetailsAction.Refresh)
-                }, modifier = Modifier.fillMaxSize()
-            )
-        } else if (uiState.isLoading) {
-            Loading(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .testTag("loading"),
-                color = Color(uiState.studentColor)
-            )
-        } else {
-            AnnounceDetailsSuccessScreen(uiState, actionHandler, navigationActionClick, modifier)
+        when {
+            uiState.isError -> {
+                ErrorContent(
+                    errorMessage = stringResource(id = R.string.errorLoadingAnnouncement),
+                    retryClick = {
+                        actionHandler(AnnouncementDetailsAction.Refresh)
+                    }, modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            uiState.isLoading -> {
+                Loading(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("loading"),
+                    color = Color(uiState.studentColor)
+                )
+            }
+
+            else -> {
+                AnnounceDetailsSuccessScreen(
+                    uiState,
+                    actionHandler,
+                    navigationActionClick,
+                    modifier
+                )
+            }
         }
     }
 }
@@ -74,7 +91,8 @@ private fun AnnounceDetailsSuccessScreen(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(
-                title = uiState.course?.name ?: "",
+                title = uiState.pageTitle
+                    ?: LocalContext.current.getString(R.string.announcementPageTitle),
                 backgroundColor = Color(uiState.studentColor),
                 navigationActionClick = {
                     navigationActionClick()
@@ -94,46 +112,44 @@ private fun AnnounceDetailsSuccessScreen(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    uiState.announcement?.let {
-                        Column(
-                            modifier = modifier.padding(16.dp)
-                        ) {
+                    Column(
+                        modifier = modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = uiState.announcementTitle ?: "",
+                            style = TextStyle(
+                                color = colorResource(id = R.color.textDarkest),
+                                fontSize = 24.sp
+                            )
+                        )
+                        Text(
+                            text = DateHelper.getDateAtTimeString(
+                                LocalContext.current,
+                                R.string.alertDateTime,
+                                uiState.postedDate
+                            ) ?: "",
+                            modifier = Modifier.padding(top = 4.dp, bottom = 18.dp),
+                            style = TextStyle(
+                                color = colorResource(id = R.color.textDarkest),
+                                fontSize = 14.sp
+                            )
+                        )
+                        AttachmentsRow(uiState.attachment, actionHandler)
+                        uiState.message?.let { message ->
+                            Divider()
                             Text(
-                                text = it.title ?: "",
+                                modifier = Modifier.padding(
+                                    top = 18.dp, bottom = 6.dp
+                                ),
+                                text = stringResource(R.string.description),
                                 style = TextStyle(
                                     color = colorResource(id = R.color.textDarkest),
-                                    fontSize = 24.sp
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium
                                 )
                             )
-                            Text(
-                                text = DateHelper.getDateAtTimeString(
-                                    LocalContext.current,
-                                    R.string.alertDateTime,
-                                    it.postedDate
-                                ) ?: "",
-                                modifier = Modifier.padding(top = 4.dp, bottom = 18.dp),
-                                style = TextStyle(
-                                    color = colorResource(id = R.color.textDarkest),
-                                    fontSize = 14.sp
-                                )
-                            )
-                            it.message?.let { message ->
-                                Divider()
-                                Text(
-                                    modifier = Modifier.padding(
-                                        top = 18.dp, bottom = 6.dp
-                                    ),
-                                    text = stringResource(R.string.description),
-                                    style = TextStyle(
-                                        color = colorResource(id = R.color.textDarkest),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                )
-                                ComposeCanvasWebViewWrapper(message)
-                            }
+                            ComposeCanvasWebViewWrapper(message)
                         }
-
                     }
                 }
                 PullRefreshIndicator(
@@ -146,4 +162,23 @@ private fun AnnounceDetailsSuccessScreen(
                 )
             }
         })
+}
+
+@Composable
+private fun AttachmentsRow(
+    attachment: Attachment?,
+    actionHandler: (AnnouncementDetailsAction) -> Unit
+) {
+    attachment?.let {
+        AttachmentCard(
+            AttachmentCardItem(
+                attachment = it,
+                status = AttachmentStatus.UPLOADED,
+                readOnly = true
+            ),
+            onSelect = { actionHandler(AnnouncementDetailsAction.OpenAttachment(it)) },
+            onRemove = {}
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+    }
 }

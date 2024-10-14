@@ -57,7 +57,7 @@ object AnnouncementAPI {
             @Path("courseId") courseId: Long,
             @Path("announcementId") announcementId: Long,
             @Tag restParams: RestParams
-        ): DiscussionTopicHeader
+        ): DataResult<DiscussionTopicHeader>
     }
 
     fun getFirstPageAnnouncements(canvasContext: CanvasContext, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {

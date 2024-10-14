@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import com.instructure.canvasapi2.models.AlertType
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.navigation.Navigation
@@ -59,7 +60,17 @@ class AlertsFragment : Fragment() {
     private fun handleAction(action: AlertsViewModelAction) {
         when (action) {
             is AlertsViewModelAction.Navigate -> {
-                navigation.navigate(activity, action.route)
+                when (action.alertType) {
+                    AlertType.COURSE_ANNOUNCEMENT -> {
+                        action.route?.let {
+                            navigation.navigate(activity, it)
+                        }
+                    }
+                    AlertType.INSTITUTION_ANNOUNCEMENT -> {
+                        navigation.navigate(activity, navigation.globalAnnouncementRoute(action.alertId))
+                    }
+                    else -> { /*TODO*/ }
+                }
             }
 
             is AlertsViewModelAction.ShowSnackbar -> {

@@ -1,5 +1,6 @@
 package com.instructure.canvasapi2.di
 
+import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
@@ -163,6 +164,11 @@ class ApiModule {
     @Provides
     fun provideAccountNotificationManager(): AccountNotificationManager {
         return AccountNotificationManager
+    }
+
+    @Provides
+    fun provideAccountNotificationApi(): AccountNotificationAPI.AccountNotificationInterface {
+        return RestBuilder().build(AccountNotificationAPI.AccountNotificationInterface::class.java, RestParams())
     }
 
     @Provides

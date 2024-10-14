@@ -161,6 +161,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -283,6 +284,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -334,6 +336,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -357,8 +360,14 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(R.string.alertDismissMessage, (events.last() as AlertsViewModelAction.ShowSnackbar).message)
-        assertEquals(R.string.alertDismissAction, (events.last() as AlertsViewModelAction.ShowSnackbar).action)
+        assertEquals(
+            R.string.alertDismissMessage,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).message
+        )
+        assertEquals(
+            R.string.alertDismissAction,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).action
+        )
     }
 
     @Test
@@ -397,6 +406,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -419,7 +429,10 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(R.string.alertDismissErrorMessage, (events.last() as AlertsViewModelAction.ShowSnackbar).message)
+        assertEquals(
+            R.string.alertDismissErrorMessage,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).message
+        )
         assertEquals(expected, viewModel.uiState.value)
     }
 
@@ -459,6 +472,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -482,8 +496,14 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(R.string.alertDismissMessage, (events.last() as AlertsViewModelAction.ShowSnackbar).message)
-        assertEquals(R.string.alertDismissAction, (events.last() as AlertsViewModelAction.ShowSnackbar).action)
+        assertEquals(
+            R.string.alertDismissMessage,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).message
+        )
+        assertEquals(
+            R.string.alertDismissAction,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).action
+        )
 
         (events.last() as AlertsViewModelAction.ShowSnackbar).actionCallback?.invoke()
 
@@ -526,6 +546,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -590,6 +611,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -604,7 +626,14 @@ class AlertsViewModelTest {
 
         assertEquals(expected, viewModel.uiState.value)
 
-        viewModel.handleAction(AlertsAction.Navigate(1L, "https://example.com/alert1"))
+        viewModel.handleAction(
+            AlertsAction.Navigate(
+                1L,
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            )
+        )
 
         val events = mutableListOf<AlertsViewModelAction>()
 
@@ -612,7 +641,13 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(AlertsViewModelAction.Navigate("https://example.com/alert1"), events.last())
+        assertEquals(
+            AlertsViewModelAction.Navigate(
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            ), events.last()
+        )
     }
 
     @Test
@@ -651,6 +686,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -663,14 +699,27 @@ class AlertsViewModelTest {
             studentColor = 1
         )
 
-        viewModel.handleAction(AlertsAction.Navigate(1L, "https://example.com/alert1"))
+        viewModel.handleAction(
+            AlertsAction.Navigate(
+                1L,
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            )
+        )
 
         val events = mutableListOf<AlertsViewModelAction>()
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
 
-        assertEquals(AlertsViewModelAction.Navigate("https://example.com/alert1"), events.last())
+        assertEquals(
+            AlertsViewModelAction.Navigate(
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            ), events.last()
+        )
 
         assertEquals(expected, viewModel.uiState.value)
         coVerify {
@@ -714,6 +763,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -726,14 +776,27 @@ class AlertsViewModelTest {
             studentColor = 1
         )
 
-        viewModel.handleAction(AlertsAction.Navigate(1L, "https://example.com/alert1"))
+        viewModel.handleAction(
+            AlertsAction.Navigate(
+                1L,
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            )
+        )
 
         val events = mutableListOf<AlertsViewModelAction>()
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
 
-        assertEquals(AlertsViewModelAction.Navigate("https://example.com/alert1"), events.last())
+        assertEquals(
+            AlertsViewModelAction.Navigate(
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            ), events.last()
+        )
 
         assertEquals(expected, viewModel.uiState.value)
 

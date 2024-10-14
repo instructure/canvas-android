@@ -1,115 +1,116 @@
 package com.instructure.parentapp.features.alerts.details
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.CanvasModel
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandares.R
+import com.instructure.pandautils.utils.FileDownloader
+import com.instructure.pandautils.utils.studentColor
+import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AnnouncementDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val repository: AnnouncementDetailsRepository,
-    private val colorKeeper: ColorKeeper,
-    private val selectedStudentHolder: SelectedStudentHolder
+    private val parentPrefs: ParentPrefs,
+    private val fileDownloader: FileDownloader
 ) : ViewModel() {
 
-    private val courseId = savedStateHandle.get<Long>(AnnouncementDetailsFragment.COURSE_ID) ?: 0
+    private val courseId = savedStateHandle.get<Long>(AnnouncementDetailsFragment.COURSE_ID) ?: -1
     private val announcementId =
-        savedStateHandle.get<Long>(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) ?: 0
+        savedStateHandle.get<Long>(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) ?: -1
 
     private val _uiState = MutableStateFlow(AnnouncementDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
-    private var selectedStudent: User? = null
-
     init {
-        Log.i("$courseId", "$announcementId")
-        fetchDetails()
-        viewModelScope.launch {
-            selectedStudentHolder.selectedStudentState.collectLatest {
-                studentChanged(it)
+        loadData()
+    }
+
+    fun handleAction(action: AnnouncementDetailsAction) {
+        when (action) {
+            is AnnouncementDetailsAction.Refresh -> loadData(true)
+            is AnnouncementDetailsAction.OpenAttachment -> {
+                viewModelScope.launch {
+                    fileDownloader.downloadFileToDevice(action.attachment)
+                }
             }
         }
     }
 
-    private fun studentChanged(student: User?) {
-        if (selectedStudent != student) {
-            selectedStudent = student
+    private fun loadData(forceNetwork: Boolean = false) {
+        viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
-                    studentColor = colorKeeper.getOrGenerateUserColor(student).color()
+                    isLoading = true,
+                    isError = false,
+                    studentColor = parentPrefs.currentStudent.studentColor
+                )
+            }
+            if (courseId == -1L) {
+                fetchGlobalAnnouncement(forceNetwork)
+            } else {
+                fetchCourseAnnouncement(forceNetwork)
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    isError = true
                 )
             }
         }
     }
 
-    fun handleAction(action: AnnouncementDetailsAction) {
-        when (action) {
-            is AnnouncementDetailsAction.Refresh -> fetchDetails(true)
+    private suspend fun fetchGlobalAnnouncement(forceNetwork: Boolean = false) {
+        val globalAnnouncement = repository.getGlobalAnnouncement(announcementId, forceNetwork)
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                pageTitle = context.getString(R.string.globalAnnouncementPageTitle),
+                announcementTitle = globalAnnouncement.subject,
+                message = globalAnnouncement.message,
+                postedDate = globalAnnouncement.startDate,
+            )
         }
     }
 
-    private fun handleData(data: CanvasModel<*>?) {
-        when (data) {
-            is DiscussionTopicHeader -> {
-                _uiState.update {
-                    it.copy(announcement = data)
-                }
+    private suspend fun fetchCourseAnnouncement(forceNetwork: Boolean = false) {
+        coroutineScope {
+            val course = async { repository.getCourse(courseId, forceNetwork) }
+            val announcement = async {
+                repository.getCourseAnnouncement(
+                    courseId,
+                    announcementId,
+                    forceNetwork
+                )
             }
 
-            is Course -> {
-                _uiState.update {
-                    it.copy(course = data)
+            _uiState.update {
+                with(announcement.await()) {
+                    it.copy(
+                        isLoading = false,
+                        pageTitle = course.await()?.name,
+                        announcementTitle = title,
+                        message = message,
+                        postedDate = postedDate,
+                        attachment = attachments.getOrNull(0)?.toAttachment()
+                    )
                 }
             }
         }
-    }
-
-    private fun fetchDetails(forceNetwork: Boolean = false) {
-        repository
-            .getCourseAnnouncement(courseId, announcementId, forceNetwork)
-            .onEach { result ->
-                when (result) {
-                    is DataResult.Success -> {
-                        handleData(result.data)
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false
-                            )
-                        }
-                    }
-
-                    is DataResult.Fail -> {
-                        _uiState.update {
-                            it.copy(isLoading = false, isError = true)
-                        }
-                    }
-
-                    is DataResult.Loading -> {
-                        handleData(result.data)
-                        _uiState.update {
-                            it.copy(
-                                isLoading = result.isLoading
-                            )
-                        }
-                    }
-                }
-            }.launchIn(viewModelScope)
     }
 }
