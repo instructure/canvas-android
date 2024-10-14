@@ -237,6 +237,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 R.id.inbox -> menuItemSelected { navigation.navigate(activity, navigation.inbox) }
                 R.id.manage_students -> menuItemSelected { navigation.navigate(activity, navigation.manageStudents) }
                 R.id.mastery -> menuItemSelected { viewModel.openMastery() }
+                R.id.studio -> menuItemSelected { viewModel.openStudio() }
                 R.id.settings -> menuItemSelected { navigation.navigate(activity, navigation.settings) }
                 R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
@@ -337,6 +338,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         if (masteryItem != null) {
             val masteryMenuItem = binding.navView.menu.findItem(R.id.mastery)
             masteryMenuItem.isVisible = true
+        }
+
+        val studioItem = launchDefinitionViewData.find { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        if (studioItem != null) {
+            val studioMenuItem = binding.navView.menu.findItem(R.id.studio)
+            studioMenuItem.isVisible = true
         }
     }
 

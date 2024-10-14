@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
@@ -291,7 +290,16 @@ class DashboardViewModel @Inject constructor(
 
     fun openMastery() {
         val masteryLaunchDefinition = _data.value.launchDefinitionViewData.find { it.domain == LaunchDefinition.MASTERY_DOMAIN }
-        masteryLaunchDefinition?.let {
+        openLtiTool(masteryLaunchDefinition)
+    }
+
+    fun openStudio() {
+        val studioLaunchDefinition = _data.value.launchDefinitionViewData.find { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        openLtiTool(studioLaunchDefinition)
+    }
+
+    private fun openLtiTool(ltiViewData: LaunchDefinitionViewData?) {
+        ltiViewData?.let {
             viewModelScope.launch {
                 _events.send(DashboardViewModelAction.OpenLtiTool(it.url, it.name))
             }
