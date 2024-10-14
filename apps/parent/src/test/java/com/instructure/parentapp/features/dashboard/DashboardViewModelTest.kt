@@ -42,7 +42,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -318,6 +317,50 @@ class DashboardViewModelTest {
         createViewModel()
 
         assertEquals(0, viewModel.data.value.launchDefinitionViewData.size)
+    }
+
+    @Test
+    fun `Open Mastery sends correct open LTI event`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, LaunchDefinition.MASTERY_DOMAIN,
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        val events = mutableListOf<DashboardViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.openMastery()
+
+        assertEquals(DashboardViewModelAction.OpenLtiTool("global.url", "name"), events.first())
+    }
+
+    @Test
+    fun `Open Studio sends correct open LTI event`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, LaunchDefinition.STUDIO_DOMAIN,
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        val events = mutableListOf<DashboardViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.openStudio()
+
+        assertEquals(DashboardViewModelAction.OpenLtiTool("global.url", "name"), events.first())
     }
 
     private fun createViewModel() {
