@@ -48,7 +48,6 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -161,8 +160,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 }
             }
             is DashboardViewModelAction.OpenLtiTool -> {
-                // TODO LTI Tool
-                //navigation.openLtiTool(requireActivity(), action.url, action.name)
+                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name))
             }
         }
     }
