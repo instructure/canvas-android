@@ -48,7 +48,7 @@ class LtiLaunchViewModel @Inject constructor(
                 val ltiTool = repository.getLtiFromAuthenticationUrl(it)
                 ltiTool.url?.let { url ->
                     _events.send(LtiLaunchAction.LaunchCustomTab(url))
-                }
+                } ?: _events.send(LtiLaunchAction.ShowError)
             }
         } catch {
             viewModelScope.launch {

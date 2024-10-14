@@ -26,6 +26,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.Placement
+import com.instructure.canvasapi2.models.Placements
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -281,6 +284,40 @@ class DashboardViewModelTest {
         viewModel.updateColor(123)
 
         assertEquals(123, (items[2] as AddStudentItemViewModel).color)
+    }
+
+    @Test
+    fun `Update date with launch definitions when launch definitions are received`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, "domain",
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        assertEquals(1, viewModel.data.value.launchDefinitionViewData.size)
+        val launchDefinition = viewModel.data.value.launchDefinitionViewData.first()
+        assertEquals("name", launchDefinition.name)
+        assertEquals("domain", launchDefinition.domain)
+        assertEquals("global.url", launchDefinition.url)
+    }
+
+    @Test
+    fun `Do not update launch definitions when url or domain is null`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, "domain",
+                Placements(null), null),
+            LaunchDefinition("type", 1, "name", null, null,
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        assertEquals(0, viewModel.data.value.launchDefinitionViewData.size)
     }
 
     private fun createViewModel() {
