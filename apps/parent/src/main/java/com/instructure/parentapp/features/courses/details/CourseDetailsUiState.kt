@@ -28,7 +28,8 @@ data class CourseDetailsUiState(
     @ColorInt val studentColor: Int = Color.BLACK,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val tabs: List<TabType> = emptyList()
+    val tabs: List<TabType> = emptyList(),
+    val currentTab: TabType? = null
 )
 
 enum class TabType(@StringRes val labelRes: Int) {
@@ -42,6 +43,7 @@ sealed class CourseDetailsAction {
     data object Refresh : CourseDetailsAction()
     data object SendAMessage : CourseDetailsAction()
     data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsAction()
+    data class CurrentTabChanged(val newTab: TabType) : CourseDetailsAction()
 }
 
 sealed class CourseDetailsViewModelAction {
