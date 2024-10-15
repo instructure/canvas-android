@@ -117,7 +117,7 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
                 setFragmentResult(FRAGMENT_RESULT_KEY, bundleOf())
             }
             is InboxDetailsFragmentAction.NavigateToCompose -> {
-                inboxRouter.routeToCompose(action.options)
+                inboxRouter.routeToCompose(requireActivity(), action.options)
             }
         }
     }

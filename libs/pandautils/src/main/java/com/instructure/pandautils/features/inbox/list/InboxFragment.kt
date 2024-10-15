@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.inbox.list
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -352,7 +351,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             InboxAction.OpenScopeSelector -> openScopeSelector()
             is InboxAction.ItemSelectionChanged -> animateAvatar(action.view, action.selected)
             is InboxAction.ShowConfirmationSnackbar -> showConfirmation(action)
-            InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage()
+            InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage(requireActivity())
             InboxAction.FailedToLoadNextPage -> Snackbar.make(requireView(), R.string.failedToLoadNextPage, Snackbar.LENGTH_LONG).show()
             InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
             is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
