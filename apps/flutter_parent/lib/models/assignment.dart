@@ -119,6 +119,9 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   @BuiltValueField(wireName: 'submission_types')
   BuiltList<SubmissionTypes>? get submissionTypes;
 
+  @BuiltValueField(wireName: 'hide_in_gradebook')
+  bool? get isHiddenInGradeBook;
+
   static void _initializeBuilder(AssignmentBuilder b) => b
     ..pointsPossible = 0.0
     ..useRubricForGrading = false
