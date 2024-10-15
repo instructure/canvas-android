@@ -97,7 +97,9 @@ data class ObserveeAssignment(
         val anonymousGrading: Boolean = false,
         @SerializedName("allowed_attempts")
         val allowedAttempts: Long = -1, // API gives -1 for unlimited submissions
-        var isStudioEnabled: Boolean = false
+        var isStudioEnabled: Boolean = false,
+        @SerializedName("hide_in_gradebook")
+        val isHiddenInGradeBook: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueAt.toDate()
     override val comparisonString get() = dueAt
@@ -150,7 +152,8 @@ data class ObserveeAssignment(
                 moderatedGrading = this.moderatedGrading,
                 anonymousGrading = this.anonymousGrading,
                 allowedAttempts = this.allowedAttempts,
-                isStudioEnabled = this.isStudioEnabled
+                isStudioEnabled = this.isStudioEnabled,
+                isHiddenInGradeBook = this.isHiddenInGradeBook
             )
         } else {
             return null
@@ -200,6 +203,7 @@ data class ObserveeAssignment(
         moderatedGrading = moderatedGrading,
         anonymousGrading = anonymousGrading,
         allowedAttempts = allowedAttempts,
-        isStudioEnabled = isStudioEnabled
+        isStudioEnabled = isStudioEnabled,
+        isHiddenInGradeBook = isHiddenInGradeBook
     )
 }
