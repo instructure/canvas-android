@@ -55,7 +55,7 @@ class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
                             var options = InboxComposeOptions.buildNewMessage()
                             options = options.copy(
                                 defaultValues = options.defaultValues.copy(
-                                    contextCode = action.studentContextItem.course.courseCode,
+                                    contextCode = action.studentContextItem.course.contextId,
                                     contextName = action.studentContextItem.course.name,
                                 ),
                                 disabledFields = options.disabledFields.copy(
@@ -64,6 +64,8 @@ class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
                             )
                             val route = navigation.inboxComposeRoute(options)
                             navigation.navigate(activity, route)
+
+                            dismiss()
                         }
                     }
 

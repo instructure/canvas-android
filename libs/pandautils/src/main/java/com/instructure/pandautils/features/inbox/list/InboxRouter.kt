@@ -30,7 +30,7 @@ interface InboxRouter {
 
     fun routeToNewMessage(activity: FragmentActivity)
 
-    fun routeToCompose(activity: FragmentActivity, options: InboxComposeOptions)
+    fun routeToCompose(options: InboxComposeOptions)
 
     fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope)
 }

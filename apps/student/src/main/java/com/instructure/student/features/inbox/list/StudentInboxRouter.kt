@@ -49,7 +49,7 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
         RouteMatcher.route(activity, route)
     }
 
-    override fun routeToCompose(activity: FragmentActivity, options: InboxComposeOptions) {
+    override fun routeToCompose(options: InboxComposeOptions) {
         TODO("Not yet implemented")
     }
 

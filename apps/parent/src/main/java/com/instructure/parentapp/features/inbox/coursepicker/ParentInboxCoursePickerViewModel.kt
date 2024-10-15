@@ -48,8 +48,9 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
                 return@launch
             }
 
-            val studentContextItems = courses.mapNotNull { course ->
-                val user = enrollments.find { it.courseId == course.id }?.user ?: return@mapNotNull null
+            val studentContextItems = enrollments.mapNotNull { enrollment ->
+                val course = courses.find { it.id == enrollment.courseId } ?: return@mapNotNull null
+                val user = enrollment.observedUser ?: return@mapNotNull null
                 StudentContextItem(course, user)
             }
 

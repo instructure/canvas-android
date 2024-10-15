@@ -25,8 +25,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.parentapp.R
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerAction
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerUiState
 import com.instructure.parentapp.features.inbox.coursepicker.StudentContextItem
@@ -40,8 +43,9 @@ fun ParentInboxCoursePickerScreen(
         modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp)
     ) {
         Text(
-            text = "Choose a course to message",
-            fontSize = 14.sp
+            text = stringResource(R.string.chooseACourseToMessage),
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.textDark)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -66,14 +70,17 @@ private fun StudentContextItemRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
+            .padding(vertical = 8.dp)
     ) {
         Text(
             text = studentContextItem.course.name,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.textDarkest)
         )
         Text(
             text = studentContextItem.user.name,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.textDark)
         )
     }
 }

@@ -68,7 +68,7 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
         RouteMatcher.route(activity, Route(AddMessageFragment::class.java, null, args))
     }
 
-    override fun routeToCompose(activity: FragmentActivity, options: InboxComposeOptions) {
+    override fun routeToCompose(options: InboxComposeOptions) {
         TODO("Not yet implemented")
     }
 

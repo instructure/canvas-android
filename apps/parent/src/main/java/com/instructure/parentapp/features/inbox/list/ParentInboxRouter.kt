@@ -45,8 +45,9 @@ class ParentInboxRouter(private val activity: FragmentActivity, private val navi
         ParentInboxCoursePickerBottomSheetDialog().show(activity.supportFragmentManager, "ParentInboxCoursePickerBottomSheetDialog")
     }
 
-    override fun routeToCompose(activity: FragmentActivity, options: InboxComposeOptions) {
-        ParentInboxCoursePickerBottomSheetDialog().show(activity.supportFragmentManager, "ParentInboxCoursePickerBottomSheetDialog")
+    override fun routeToCompose(options: InboxComposeOptions) {
+        val route = navigation.inboxComposeRoute(options)
+        navigation.navigate(activity, route)
     }
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {

@@ -1883,4 +1883,5 @@
     <string name="courseDetailsMessageContentDescription">Send a message about this course</string>
     <string name="gradeLockedContentDescription">Grade locked</string>
     <string name="gradesRefreshFailed">Failed to refresh grades</string>
+    <string name="chooseACourseToMessage">Choose a course to message</string>
 </resources>
