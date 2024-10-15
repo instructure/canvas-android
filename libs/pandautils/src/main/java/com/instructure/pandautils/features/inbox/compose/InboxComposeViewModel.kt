@@ -118,7 +118,8 @@ class InboxComposeViewModel @Inject constructor(
                     sendIndividual = options.defaultValues.sendIndividual,
                     subject = TextFieldValue(options.defaultValues.subject),
                     body = TextFieldValue(options.defaultValues.body),
-                    attachments = options.defaultValues.attachments.map { attachment -> AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false) }
+                    attachments = options.defaultValues.attachments.map { attachment -> AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false) },
+                    hiddenBodyMessage = options.hiddenBodyMessage,
                 )
             }
         }
@@ -396,7 +397,7 @@ class InboxComposeViewModel @Inject constructor(
                     inboxComposeRepository.createConversation(
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,
                         subject = uiState.value.subject.text,
-                        message = uiState.value.body.text,
+                        message = getMessageBody(),
                         context = canvasContext,
                         attachments = uiState.value.attachments.map { it.attachment },
                         isIndividual = uiState.value.sendIndividual
@@ -426,7 +427,7 @@ class InboxComposeViewModel @Inject constructor(
                     inboxComposeRepository.addMessage(
                         conversationId = uiState.value.previousMessages?.conversation?.id ?: 0,
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,
-                        message = uiState.value.body.text,
+                        message = getMessageBody(),
                         includedMessages = uiState.value.previousMessages?.previousMessages ?: emptyList(),
                         attachments = uiState.value.attachments.map { it.attachment },
                         context = canvasContext
@@ -444,6 +445,14 @@ class InboxComposeViewModel @Inject constructor(
                     _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
                 }
             }
+        }
+    }
+
+    private fun getMessageBody(): String {
+        return if (uiState.value.hiddenBodyMessage.isNullOrBlank()) {
+            uiState.value.body.text
+        } else {
+            "${uiState.value.body.text}\n\n${uiState.value.hiddenBodyMessage}"
         }
     }
 

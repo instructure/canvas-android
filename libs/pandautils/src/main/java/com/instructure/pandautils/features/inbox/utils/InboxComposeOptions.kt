@@ -33,6 +33,7 @@ data class InboxComposeOptions(
     val disabledFields: InboxComposeOptionsDisabledFields = InboxComposeOptionsDisabledFields(),
     val hiddenFields: InboxComposeOptionsHiddenFields = InboxComposeOptionsHiddenFields(),
     val defaultValues: InboxComposeOptionsDefaultValues = InboxComposeOptionsDefaultValues(),
+    val hiddenBodyMessage: String? = null
 ): Parcelable {
     companion object {
         const val COMPOSE_PARAMETERS = "InboxComposeOptions"

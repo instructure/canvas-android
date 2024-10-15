@@ -18,6 +18,7 @@ package com.instructure.parentapp.features.inbox.coursepicker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.ApiPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,6 +36,10 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
 
     init {
         loadCoursePickerItems()
+    }
+
+    fun getContextURL(courseId: Long): String {
+        return "${ApiPrefs.fullDomain}/courses/${courseId}"
     }
 
     private fun loadCoursePickerItems() {
