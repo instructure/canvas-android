@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthTokenResponse
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.apiAsync
@@ -53,16 +54,12 @@ object OAuthManager {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
         Logger.d("targetURL to be authed: $targetUrl")
-        OAuthAPI.getAuthenticatedSession(targetUrl, params, adapter, callback)
-    }
-
-    fun getAuthenticatedSessionMasqueradingAsync(targetUrl: String, userId: Long) = apiAsync<AuthenticatedSession> { getAuthenticatedSessionMasquerading(targetUrl, userId, it) }
-
-    fun getAuthenticatedSessionMasquerading(targetUrl: String, userId: Long, callback: StatusCallback<AuthenticatedSession>) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(isForceReadFromNetwork = true)
-        Logger.d("targetURL to be authed: $targetUrl")
-        OAuthAPI.getAuthenticatedSessionMasquerading(targetUrl, userId, params, adapter, callback)
+        val userId = ApiPrefs.user?.id
+        if (ApiPrefs.isMasquerading && userId != null) {
+            OAuthAPI.getAuthenticatedSessionMasquerading(targetUrl, userId, params, adapter, callback)
+        } else {
+            OAuthAPI.getAuthenticatedSession(targetUrl, params, adapter, callback)
+        }
     }
 
     fun getAuthenticatedSessionSynchronous(targetUrl: String): String? {
