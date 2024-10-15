@@ -22,8 +22,8 @@ import android.net.Uri
 import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.RequestCodes
-import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadEvent
-import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadEventBusSource
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEventBusSource
 import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified
 import io.mockk.every

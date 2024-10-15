@@ -20,7 +20,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.instructure.student.mobius.assignmentDetails.submissions.annnotation.AnnotationSubmissionViewModel" />
+            type="com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionViewModel" />
     </data>
 
     <FrameLayout

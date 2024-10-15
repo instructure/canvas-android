@@ -19,11 +19,11 @@ package com.instructure.student.test.assignment.details.submission
 import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionMode
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionUploadEffect
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionUploadEvent
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionUploadModel
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionUploadUpdate
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec

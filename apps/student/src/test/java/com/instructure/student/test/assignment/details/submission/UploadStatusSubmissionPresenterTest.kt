@@ -21,11 +21,11 @@ import androidx.core.content.ContextCompat
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionModel
-import com.instructure.student.mobius.assignmentDetails.submissions.file.UploadStatusSubmissionPresenter
-import com.instructure.student.mobius.assignmentDetails.submissions.file.ui.UploadListItemViewState
-import com.instructure.student.mobius.assignmentDetails.submissions.file.ui.UploadStatusSubmissionViewState
-import com.instructure.student.mobius.assignmentDetails.submissions.file.ui.UploadVisibilities
+import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
+import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionPresenter
+import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadListItemViewState
+import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionViewState
+import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadVisibilities
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import org.junit.Assert
 import org.junit.Before

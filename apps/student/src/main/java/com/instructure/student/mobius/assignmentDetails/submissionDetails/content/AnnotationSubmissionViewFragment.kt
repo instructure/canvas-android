@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.student.databinding.FragmentAnnotationSubmissionViewBinding
-import com.instructure.student.mobius.assignmentDetails.submissions.annnotation.AnnotationSubmissionViewModel
+import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

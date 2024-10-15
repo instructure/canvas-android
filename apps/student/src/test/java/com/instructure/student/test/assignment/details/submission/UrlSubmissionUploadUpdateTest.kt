@@ -17,7 +17,7 @@ package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submissions.url.*
+import com.instructure.student.mobius.assignmentDetails.submission.url.*
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers

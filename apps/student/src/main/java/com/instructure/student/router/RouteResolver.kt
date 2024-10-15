@@ -63,11 +63,11 @@ import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.fragment.ViewHtmlFragment
 import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.annnotation.AnnotationSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.file.ui.UploadStatusSubmissionFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.text.ui.TextSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.url.ui.UrlSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment

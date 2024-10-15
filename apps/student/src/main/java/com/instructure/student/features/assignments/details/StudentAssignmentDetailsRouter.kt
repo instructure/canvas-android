@@ -32,12 +32,12 @@ import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.annnotation.AnnotationSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.file.ui.UploadStatusSubmissionFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionMode
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.text.ui.TextSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.url.ui.UrlSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {

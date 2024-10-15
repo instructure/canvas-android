@@ -19,10 +19,10 @@ package com.instructure.student.test.assignment.details.submission
 import android.net.Uri
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadEffect
-import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadEvent
-import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadModel
-import com.instructure.student.mobius.assignmentDetails.submissions.text.TextSubmissionUploadUpdate
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadModel
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers

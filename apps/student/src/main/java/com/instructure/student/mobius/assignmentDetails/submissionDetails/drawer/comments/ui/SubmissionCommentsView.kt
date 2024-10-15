@@ -34,8 +34,8 @@ import com.instructure.student.databinding.DialogCommentFilePickerBinding
 import com.instructure.student.databinding.FragmentSubmissionCommentsBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionMode
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.room.StudentDb
 import com.instructure.student.router.RouteMatcher

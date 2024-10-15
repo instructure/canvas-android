@@ -30,11 +30,11 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.assertVisible
 import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionMode
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerListItemViewState
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerSubmissionUploadViewState
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerVisibilities
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerListItemViewState
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadViewState
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerVisibilities
 import com.instructure.student.ui.pages.renderPages.PickerSubmissionUploadRenderPage
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest

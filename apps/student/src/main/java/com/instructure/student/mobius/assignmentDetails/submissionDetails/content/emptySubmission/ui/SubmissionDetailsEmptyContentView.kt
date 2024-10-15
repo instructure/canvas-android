@@ -48,11 +48,11 @@ import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
-import com.instructure.student.mobius.assignmentDetails.submissions.annnotation.AnnotationSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.PickerSubmissionMode
-import com.instructure.student.mobius.assignmentDetails.submissions.picker.ui.PickerSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.text.ui.TextSubmissionUploadFragment
-import com.instructure.student.mobius.assignmentDetails.submissions.url.ui.UrlSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer

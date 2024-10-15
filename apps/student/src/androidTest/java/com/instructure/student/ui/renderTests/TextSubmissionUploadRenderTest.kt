@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.assignmentDetails.submissions.text.ui.TextSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.ui.pages.renderPages.TextSubmissionUploadRenderPage
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers.not
