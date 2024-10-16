@@ -34,6 +34,8 @@ enum class SettingsItem(val res: Int) {
     ABOUT(R.string.about),
     LEGAL(R.string.legal),
     RATE_APP(R.string.rateOnThePlayStore),
-    FEATURE_FLAGS(R.string.about),
+    FEATURE_FLAGS(R.string.featureFlags),
     REMOTE_CONFIG(R.string.remoteConfigParamsTitle),
+    ACCOUNT_PREFERENCES(R.string.accountPreferences),
+    HOMEROOM_VIEW(R.string.settingsHomeroomView)
 }

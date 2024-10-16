@@ -57,10 +57,12 @@ class SettingsScreenTest {
         )
 
         val uiState = SettingsUiState(
-            items,
+            items = items,
+            homeroomView = true,
             offlineState = R.string.daily,
-            appTheme = R.string.appThemeLight
-        ) {}
+            appTheme = R.string.appThemeLight,
+            actionHandler = {}
+        )
         composeTestRule.setContent {
             SettingsScreen(uiState = uiState) {}
         }
