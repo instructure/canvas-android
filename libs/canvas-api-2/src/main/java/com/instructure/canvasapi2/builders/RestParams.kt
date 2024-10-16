@@ -32,4 +32,5 @@ data class RestParams(
     val isForceReadFromCache: Boolean = false,
     val isForceReadFromNetwork: Boolean = false,
     val acceptLanguageOverride: String? = null,
+    val disableFileVerifiers: Boolean = true
 ) : Parcelable
