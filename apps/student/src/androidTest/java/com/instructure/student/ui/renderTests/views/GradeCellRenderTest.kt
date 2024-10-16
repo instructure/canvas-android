@@ -67,7 +67,7 @@ class GradeCellRenderTest : StudentRenderTest() {
         gradeCell.submittedTitle.assertDisplayed()
         gradeCell.submittedSubtitle.assertDisplayed()
         gradeCell.submittedTitle.assertHasText("Successfully submitted!")
-        gradeCell.submittedSubtitle.assertHasText("Your submission is now waiting to be graded")
+        gradeCell.submittedSubtitle.assertHasText("The submission is now waiting to be graded")
     }
 
     @Test
