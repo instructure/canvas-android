@@ -154,7 +154,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="36dp"
             android:gravity="center"
-            android:text="@string/submissionStatusSuccessSubtitle"
+            android:text="@string/submissionStatusWaitingSubtitle"
             android:textColor="@color/textDark"
             android:textSize="16sp"
             android:visibility="@{viewData.state == viewData.State.SUBMITTED ? View.VISIBLE : View.GONE}"

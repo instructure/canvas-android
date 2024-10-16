@@ -74,7 +74,7 @@ data class GradeCellViewData(
                     gradeCellContentDescription = getContentDescriptionText(
                         resources,
                         resources.getString(R.string.submissionStatusSuccessTitle),
-                        resources.getString(R.string.submissionStatusSuccessSubtitle)
+                        resources.getString(R.string.submissionStatusWaitingSubtitle)
                     )
                 )
                 else -> createGradedViewData(resources, courseColor, assignment!!, submission, restrictQuantitativeData, gradingScheme)
