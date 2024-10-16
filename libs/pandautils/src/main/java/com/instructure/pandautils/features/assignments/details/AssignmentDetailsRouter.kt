@@ -27,8 +27,6 @@ import com.instructure.canvasapi2.models.RemoteFile
 open class AssignmentDetailsRouter {
     open fun navigateToAssignmentUploadPicker(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, mediaUri: Uri) = Unit
 
-    open fun navigateToLtiScreen(activity: FragmentActivity, canvasContext: CanvasContext?, url: String) = Unit
-
     open fun navigateToSubmissionScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null) = Unit
 
     open fun navigateToQuizScreen(activity: FragmentActivity, canvasContext: CanvasContext, quiz: Quiz, url: String) = Unit
@@ -50,6 +48,4 @@ open class AssignmentDetailsRouter {
     open fun navigateToDiscussionAttachmentScreen(activity: FragmentActivity, canvasContext: CanvasContext, attachment: RemoteFile) = Unit
 
     open fun navigateToUrl(activity: FragmentActivity, url: String, domain: String, extras: Bundle? = null) = Unit
-
-    open fun navigateToInternalWebView(activity: FragmentActivity, canvasContext: CanvasContext, url: String, authenticate: Boolean) = Unit
 }

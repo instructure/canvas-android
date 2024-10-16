@@ -30,6 +30,7 @@ import com.instructure.parentapp.features.assignment.details.ParentAssignmentDet
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRouter
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsSubmissionHandler
 import com.instructure.parentapp.features.assignment.details.receiver.ParentAlarmReceiverNotificationHandler
+import com.instructure.parentapp.util.ParentPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,8 +47,8 @@ class AssignmentDetailsFragmentModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsBehaviour(): AssignmentDetailsBehaviour {
-        return ParentAssignmentDetailsBehaviour()
+    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs): AssignmentDetailsBehaviour {
+        return ParentAssignmentDetailsBehaviour(parentPrefs)
     }
 }
 

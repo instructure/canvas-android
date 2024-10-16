@@ -27,9 +27,12 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
+import javax.inject.Inject
 
-class ParentAssignmentDetailsBehaviour: AssignmentDetailsBehaviour() {
-    @ColorInt override val dialogColor: Int = ParentPrefs.currentStudent.studentColor
+class ParentAssignmentDetailsBehaviour @Inject constructor(
+    private val parentPrefs: ParentPrefs
+): AssignmentDetailsBehaviour() {
+    @ColorInt override val dialogColor: Int = parentPrefs.currentStudent.studentColor
 
     override fun applyTheme(
         activity: FragmentActivity,
@@ -38,7 +41,7 @@ class ParentAssignmentDetailsBehaviour: AssignmentDetailsBehaviour() {
         toolbar: Toolbar,
         course: Course?
     ) {
-        ViewStyler.themeToolbarColored(activity, toolbar, ParentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
-        ViewStyler.setStatusBarDark(activity, ParentPrefs.currentStudent.studentColor)
+        ViewStyler.themeToolbarColored(activity, toolbar, parentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
+        ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
     }
 }

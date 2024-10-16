@@ -56,10 +56,6 @@ class StudentAssignmentDetailsBehaviour(
 ): AssignmentDetailsBehaviour() {
     override val dialogColor: Int = ThemePrefs.textButtonColor
 
-    override fun openMedia(activity: FragmentActivity, url: String) {
-        RouteMatcher.openMedia(activity, url)
-    }
-
     override fun showMediaDialog(
         activity: FragmentActivity,
         binding: FragmentAssignmentDetailsBinding?,
@@ -188,15 +184,6 @@ class StudentAssignmentDetailsBehaviour(
                 assignment
             )
         )
-    }
-
-    override fun canRouteInternally(
-        activity: FragmentActivity?,
-        url: String,
-        domain: String,
-        routeIfPossible: Boolean
-    ): Boolean {
-        return RouteMatcher.canRouteInternally(activity, url, domain, routeIfPossible)
     }
 
     override fun applyTheme(

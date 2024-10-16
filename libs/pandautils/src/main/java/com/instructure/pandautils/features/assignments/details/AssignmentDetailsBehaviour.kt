@@ -33,8 +33,6 @@ abstract class AssignmentDetailsBehaviour {
     @get:ColorInt
     abstract val dialogColor: Int
 
-    open fun openMedia(activity: FragmentActivity, url: String) = Unit
-
     open fun showMediaDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit) = Unit
 
     open fun showSubmitDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit, assignment: Assignment, course: Course, isStudioEnabled: Boolean, studioLTITool: LTITool?) = Unit
@@ -42,8 +40,6 @@ abstract class AssignmentDetailsBehaviour {
     open fun showCustomReminderDialog(fragment: Fragment) {
         CustomReminderDialog.newInstance().show(fragment.childFragmentManager, null)
     }
-
-    open fun canRouteInternally(activity: FragmentActivity?, url: String, domain: String, routeIfPossible: Boolean): Boolean = false
 
     open fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?) = Unit
 

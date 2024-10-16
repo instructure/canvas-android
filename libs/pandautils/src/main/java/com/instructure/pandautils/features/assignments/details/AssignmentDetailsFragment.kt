@@ -37,7 +37,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.FragmentInteractions
@@ -50,7 +49,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.PermissionUtils
@@ -74,6 +73,9 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     @Inject
     lateinit var assignmentDetailsRouter: AssignmentDetailsRouter
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     @Inject
     lateinit var assignmentDetailsBehaviour: AssignmentDetailsBehaviour
@@ -168,7 +170,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 toast(action.message)
             }
             is AssignmentDetailAction.NavigateToLtiScreen -> {
-                assignmentDetailsRouter.navigateToLtiScreen(requireActivity(), viewModel.course.value, action.url)
+                webViewRouter.openLtiScreen(viewModel.course.value, action.url)
             }
             is AssignmentDetailAction.NavigateToSubmissionScreen -> {
                 assignmentDetailsRouter.navigateToSubmissionScreen(requireActivity(), canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
@@ -279,29 +281,24 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         binding?.descriptionWebViewWrapper?.webView?.addVideoClient(requireActivity())
         binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                assignmentDetailsBehaviour.openMedia(requireActivity(), url)
+                webViewRouter.openMedia(url)
             }
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {}
             override fun onPageStartedCallback(webView: WebView, url: String) {}
             override fun canRouteInternallyDelegate(url: String): Boolean {
-                return assignmentDetailsBehaviour.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
+                return webViewRouter.canRouteInternally(url, false)
             }
 
             override fun routeInternallyCallback(url: String) {
-                viewModel.assignment?.let { assignment ->
-                    viewModel.course.value?.let { course ->
-                        val extras = Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(course, assignment)) }
-                        assignmentDetailsRouter.navigateToUrl(requireActivity(), url, ApiPrefs.domain, extras)
-                    }
-                }
+                webViewRouter.routeInternally(url)
             }
         }
 
         binding?.descriptionWebViewWrapper?.webView?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun launchInternalWebViewFragment(url: String) {
                 viewModel.course.value?.let {
-                    assignmentDetailsRouter.navigateToInternalWebView(requireActivity(), it, url, false)
+                    webViewRouter.launchInternalWebViewFragment(url, it)
                 }
             }
 

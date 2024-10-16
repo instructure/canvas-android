@@ -26,22 +26,22 @@ import com.instructure.student.mobius.common.ui.Presenter
 import com.instructure.student.util.FileUtils
 
 object UploadStatusSubmissionPresenter :
-    Presenter<com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel, UploadStatusSubmissionViewState> {
+    Presenter<UploadStatusSubmissionModel, UploadStatusSubmissionViewState> {
 
     override fun present(
-        model: com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel,
+        model: UploadStatusSubmissionModel,
         context: Context
     ): UploadStatusSubmissionViewState {
         return when {
-            model.isFailed -> com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionPresenter.presentFailed(
+            model.isFailed -> presentFailed(
                 model,
                 context
             )
             model.isLoading -> UploadStatusSubmissionViewState.Loading
-            model.files.isEmpty() -> com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionPresenter.presentSuccess(
+            model.files.isEmpty() -> presentSuccess(
                 context
             )
-            else -> com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionPresenter.presentInProgress(
+            else -> presentInProgress(
                 model,
                 context
             )
@@ -58,13 +58,13 @@ object UploadStatusSubmissionPresenter :
     }
 
     private fun presentFailed(
-        model: com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel,
+        model: UploadStatusSubmissionModel,
         context: Context
     ): UploadStatusSubmissionViewState {
         return UploadStatusSubmissionViewState.Failed(
             context.getString(R.string.submissionStatusFailedTitle),
             context.getString(R.string.submissionUploadFailedMessage),
-            com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionPresenter.presentListItems(
+            presentListItems(
                 model,
                 context,
                 R.drawable.ic_warning,
@@ -74,7 +74,7 @@ object UploadStatusSubmissionPresenter :
     }
 
     private fun presentInProgress(
-        model: com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel,
+        model: UploadStatusSubmissionModel,
         context: Context
     ): UploadStatusSubmissionViewState {
 
@@ -93,7 +93,7 @@ object UploadStatusSubmissionPresenter :
             size,
             NumberHelper.doubleToPercentage(percent),
             percent,
-            com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionPresenter.presentListItems(
+            presentListItems(
                 model,
                 context,
                 null,
@@ -103,7 +103,7 @@ object UploadStatusSubmissionPresenter :
     }
 
     private fun presentListItems(
-        model: com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel,
+        model: UploadStatusSubmissionModel,
         context: Context,
         failedIcon: Int?,
         deletableIfError: Boolean

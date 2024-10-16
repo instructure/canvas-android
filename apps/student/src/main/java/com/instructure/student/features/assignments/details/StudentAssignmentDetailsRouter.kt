@@ -29,15 +29,14 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
@@ -51,14 +50,6 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
             activity,
             PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, mediaUri)
         )
-    }
-
-    override fun navigateToLtiScreen(
-        activity: FragmentActivity,
-        canvasContext: CanvasContext?,
-        url: String
-    ) {
-        LtiLaunchFragment.routeLtiLaunchFragment(activity, canvasContext, url)
     }
 
     override fun navigateToSubmissionScreen(
@@ -198,17 +189,5 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         extras: Bundle?
     ) {
         RouteMatcher.routeUrl(activity, url, domain, extras)
-    }
-
-    override fun navigateToInternalWebView(
-        activity: FragmentActivity,
-        canvasContext: CanvasContext,
-        url: String,
-        authenticate: Boolean
-    ) {
-        InternalWebviewFragment.loadInternalWebView(
-            activity,
-            InternalWebviewFragment.makeRoute(canvasContext, url, authenticate)
-        )
     }
 }
