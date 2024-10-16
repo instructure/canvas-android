@@ -34,6 +34,7 @@ import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
+import com.instructure.parentapp.features.lti.LtiLaunchFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
 import com.instructure.parentapp.features.splash.SplashFragment
@@ -71,6 +72,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
     private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
 
+    private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}"
+
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
 
     fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
@@ -82,6 +85,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun updateToDoRoute(plannerItem: PlannerItem) = "$baseUrl/update-todo/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
 
     fun alertSettingsRoute(student: User) = "$baseUrl/alert-settings/${UserParametersType.serializeAsValue(student)}"
+
+    fun ltiLaunchRoute(url: String, title: String) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}"
 
     fun crateMainNavGraph(navController: NavController): NavGraph {
         return navController.createGraph(
@@ -182,6 +187,16 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<AlertSettingsFragment>(alertSettings) {
                 argument(Const.USER) {
                     type = UserParametersType
+                    nullable = false
+                }
+            }
+            fragment<LtiLaunchFragment>(ltiLaunch) {
+                argument(LtiLaunchFragment.LTI_URL) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(LtiLaunchFragment.LTI_TITLE) {
+                    type = NavType.StringType
                     nullable = false
                 }
             }

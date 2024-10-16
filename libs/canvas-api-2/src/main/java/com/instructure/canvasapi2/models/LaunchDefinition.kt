@@ -26,17 +26,16 @@ data class LaunchDefinition(
         var definitionType: String,
         @SerializedName("definition_id")
         var definitionId: Long? = null,
-        var name: String,
-        var description: String,
-        var domain: String,
-        var placements: Placements,
-        var url: String
+        var name: String?,
+        var description: String?,
+        var domain: String?,
+        var placements: Placements?,
+        var url: String?
 ) : Parcelable {
-
-    val isGauge: Boolean get() = domain == GAUGE_DOMAIN
 
     companion object {
         const val GAUGE_DOMAIN = "gauge.instructure.com"
         const val STUDIO_DOMAIN = "arc.instructure.com" // NOTE: The subdomain hasn't changed to reflect the rebranding of Arc -> Studio yet
+        const val MASTERY_DOMAIN = "app.masteryconnect.com"
     }
 }
