@@ -28,7 +28,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsRepository
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
-import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.LiveDataSource
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity
@@ -52,7 +52,7 @@ class SubmissionDetailsRepositoryFragment : SubmissionDetailsFragment() {
     }
 
     override fun getExternalEventSources() = listOf(
-        ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
+        FlowSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
             when (it) {
                 is SubmissionDetailsSharedEvent.FileSelected -> SubmissionDetailsEvent.AttachmentClicked(it.file)
                 is SubmissionDetailsSharedEvent.AudioRecordingViewLaunched -> SubmissionDetailsEvent.AudioRecordingClicked

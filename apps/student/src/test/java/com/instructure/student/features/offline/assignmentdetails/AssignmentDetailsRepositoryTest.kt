@@ -33,13 +33,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class AssignmentDetailsRepositoryTest {
 
     private val networkDataSource: AssignmentDetailsNetworkDataSource = mockk(relaxed = true)

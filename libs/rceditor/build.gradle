@@ -94,7 +94,7 @@ dependencies {
 
     /* Support libs */
     implementation Libs.ANDROIDX_APPCOMPAT
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR

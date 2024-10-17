@@ -33,13 +33,11 @@ import com.instructure.pandautils.room.offline.entities.ModuleNameEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
+import java.util.Date
 
-@ExperimentalCoroutinesApi
 class LockInfoFacadeTest {
 
     private val lockInfoDao: LockInfoDao = mockk(relaxed = true)

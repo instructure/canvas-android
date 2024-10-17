@@ -17,11 +17,9 @@
 
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Grades
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
 import com.instructure.pandautils.room.offline.daos.GradesDao
 import com.instructure.pandautils.room.offline.daos.UserDao
@@ -31,12 +29,10 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class EnrollmentFacadeTest {
 
     private val userDao: UserDao = mockk(relaxed = true)

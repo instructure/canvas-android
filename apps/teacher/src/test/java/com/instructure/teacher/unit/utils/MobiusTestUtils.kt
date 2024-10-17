@@ -16,15 +16,10 @@
  */
 package com.instructure.teacher.unit.utils
 
-import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.NextMatchers
-import okhttp3.Protocol
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
@@ -35,18 +30,3 @@ fun <M, F> matchesEffects(vararg effects: F): Matcher<Next<M, F>> {
 fun <M, F> matchesFirstEffects(vararg effects: F): Matcher<First<M, F>> {
     return FirstMatchers.hasEffects(Matchers.containsInAnyOrder<F>(*effects))
 }
-
-fun <T> createError(message: String = "Error", code: Int = 400) =
-    StatusCallbackError(
-        null,
-        null,
-        retrofit2.Response.error<T>(
-            "".toResponseBody(null),
-            Response.Builder()
-                .protocol(Protocol.HTTP_1_1)
-                .message(message)
-                .code(code)
-                .request(Request.Builder().url("http://localhost/").build())
-                .build()
-        )
-    )

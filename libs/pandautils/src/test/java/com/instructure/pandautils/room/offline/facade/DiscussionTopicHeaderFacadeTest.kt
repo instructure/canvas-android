@@ -42,7 +42,6 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
@@ -50,7 +49,6 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class DiscussionTopicHeaderFacadeTest {
 
     private val discussionTopicHeaderDao: DiscussionTopicHeaderDao = mockk(relaxed = true)

@@ -25,12 +25,10 @@ import com.instructure.student.features.quiz.list.QuizListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class QuizListNetworkDataSourceTest {
     private val quizApi: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)

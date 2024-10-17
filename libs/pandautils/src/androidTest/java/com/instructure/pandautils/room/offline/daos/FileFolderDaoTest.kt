@@ -36,7 +36,6 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class FileFolderDaoTest {
 
     private lateinit var db: OfflineDatabase

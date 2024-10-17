@@ -69,9 +69,9 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleDeeplink(intent?.data)
+        handleDeeplink(intent.data)
     }
 
     private fun setupNavigation() {
