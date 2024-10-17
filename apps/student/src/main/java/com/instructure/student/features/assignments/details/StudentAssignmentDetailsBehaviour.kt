@@ -54,7 +54,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
 import java.io.File
 
-class StudentAssignmentDetailsBehaviour(
+class StudentAssignmentDetailsBehaviour (
     private val router: AssignmentDetailsRouter,
     private val colorKeeper: ColorKeeper
 ): AssignmentDetailsBehaviour() {

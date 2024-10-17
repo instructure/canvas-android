@@ -50,7 +50,7 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(FragmentComponent::class)
+@InstallIn(FragmentComponent::class, ViewModelComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
