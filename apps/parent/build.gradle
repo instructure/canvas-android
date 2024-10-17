@@ -210,7 +210,7 @@ dependencies {
     implementation Libs.ANDROIDX_BROWSER
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES

@@ -300,13 +300,15 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         // Switching languages will also trigger this method; check for our Pending intent id
-        intent?.let {
-            if (it.hasExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY) && it.getIntExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY, 0) != LocaleUtils.LANGUAGES_PENDING_INTENT_ID) {
-                handlePushNotification(hasUnreadPushNotification(it.extras))
-            }
+        if (intent.hasExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY) && intent.getIntExtra(
+                LocaleUtils.LANGUAGES_PENDING_INTENT_KEY,
+                0
+            ) != LocaleUtils.LANGUAGES_PENDING_INTENT_ID
+        ) {
+            handlePushNotification(hasUnreadPushNotification(intent.extras))
         }
     }
 

@@ -30,8 +30,8 @@ object Versions {
     const val HILT = "2.49"
     const val HILT_ANDROIDX = "1.1.0"
     const val LIFECYCLE = "2.6.2"
-    const val FRAGMENT = "1.6.2"
-    const val WORK_MANAGER = "2.9.0"
+    const val FRAGMENT = "1.8.4"
+    const val WORK_MANAGER = "2.9.1"
     const val GLIDE_VERSION = "4.16.0"
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.12.0"
@@ -54,27 +54,26 @@ object Libs {
     const val APOLLO_ANDROID_SUPPORT = "com.apollographql.apollo:apollo-android-support:${Versions.APOLLO}"
     const val APOLLO_HTTP_CACHE = "com.apollographql.apollo:apollo-http-cache:${Versions.APOLLO}"
 
-    /* Support Libs */
-    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.7.0"
-    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.6.1"
-    const val ANDROIDX_BROWSER = "androidx.browser:browser:1.7.0"
+    /* Androidx libraries */
+    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.9.0"
+    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.7.0"
+    const val ANDROIDX_BROWSER = "androidx.browser:browser:1.8.0"
     const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:1.0.0"
     const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.4"
-    const val ANDROIDX_DESIGN = "com.google.android.material:material:1.10.0"
-    const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.6"
+    const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.7"
     const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.FRAGMENT}"
-    const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
+    const val ANDROIDX_FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val ANDROIDX_PALETTE = "androidx.palette:palette:1.0.0"
     const val ANDROIDX_PERCENT = "androidx.percentlayout:percentlayout:1.0.0"
     const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.3.2"
-    const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:1.1.0"
+    const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:1.2.0"
     const val ANDROIDX_SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.2.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.9.0"
     const val ANDROIDX_DATABINDING_COMPILER = "androidx.databinding:databinding-compiler:${Versions.ANDROID_GRADLE_TOOLS}" // This is bundled with the gradle plugin so we use the same version
-    const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
+    const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.9.0"
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:33.4.0"
@@ -83,9 +82,10 @@ object Libs {
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config"
     const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk"
 
-    /* Play Services */
+    /* Google Dependencies */
     const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.1.0"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
+    const val MATERIAL_DESIGN = "com.google.android.material:material:1.10.0"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"
