@@ -47,7 +47,7 @@ import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility

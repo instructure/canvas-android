@@ -26,7 +26,7 @@ import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRepository
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import io.mockk.coEvery
@@ -48,7 +48,7 @@ class AssignmentDetailsRepositoryTest {
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val reminderDao: ReminderDao = mockk(relaxed = true)
 
-    private val repository = AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, reminderDao)
+    private val repository = StudentAssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, reminderDao)
 
     @Before
     fun setup() = runTest {

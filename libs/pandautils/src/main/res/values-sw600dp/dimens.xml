@@ -33,5 +33,7 @@
     <item name="inbox_title_top" type="dimen">.6</item>
     <item name="inbox_text_left" type="dimen">.2</item>
     <item name="inbox_text_right" type="dimen">.8</item>
+    <dimen name="grade_cell_text_top_margin">8dp</dimen>
+    <dimen name="grade_cell_chart_top_margin">0dp</dimen>
 
 </resources>

@@ -23,7 +23,7 @@ import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.ui.pages.AssignmentDetailsPage
+import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionDetailsPage
 import com.instructure.student.ui.utils.StudentActivityTestRule

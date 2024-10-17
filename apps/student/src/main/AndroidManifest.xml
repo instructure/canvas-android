@@ -304,7 +304,7 @@
 
         <!--Reminder-->
         <receiver
-            android:name=".receivers.AlarmReceiver"
+            android:name="com.instructure.pandautils.receivers.alarm.AlarmReceiver"
             android:exported="false" />
 
         <!-- To do widget -->

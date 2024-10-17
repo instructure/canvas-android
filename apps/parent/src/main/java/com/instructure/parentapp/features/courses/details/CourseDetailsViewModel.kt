@@ -113,7 +113,7 @@ class CourseDetailsViewModel @Inject constructor(
 
             is CourseDetailsAction.NavigateToAssignmentDetails -> {
                 viewModelScope.launch {
-                    _events.send(CourseDetailsViewModelAction.NavigateToAssignmentDetails(action.id))
+                    _events.send(CourseDetailsViewModelAction.NavigateToAssignmentDetails(action.courseId, action.assignmentId))
                 }
             }
         }

@@ -31,14 +31,10 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
 
 class TextSubmissionUploadUpdateTest : Assert() {
     private val initSpec = InitSpec(TextSubmissionUploadUpdate()::init)

@@ -20,10 +20,10 @@ package com.instructure.student.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.util.goAsync
 import com.instructure.student.widget.WidgetUpdater
 import dagger.hilt.android.AndroidEntryPoint

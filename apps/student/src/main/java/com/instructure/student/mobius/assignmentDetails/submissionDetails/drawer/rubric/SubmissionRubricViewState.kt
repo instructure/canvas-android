@@ -16,7 +16,8 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric
 
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
+
 
 data class SubmissionRubricViewState(
     val listData: List<RubricListData>

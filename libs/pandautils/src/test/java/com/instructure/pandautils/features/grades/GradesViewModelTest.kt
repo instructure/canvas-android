@@ -627,7 +627,7 @@ class GradesViewModelTest {
 
         viewModel.handleAction(GradesAction.AssignmentClick(1L))
 
-        val expected = GradesViewModelAction.NavigateToAssignmentDetails(1L)
+        val expected = GradesViewModelAction.NavigateToAssignmentDetails(1L, 1L)
         Assert.assertEquals(expected, events.last())
     }
 

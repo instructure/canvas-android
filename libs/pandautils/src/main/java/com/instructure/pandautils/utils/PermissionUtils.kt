@@ -98,6 +98,21 @@ fun Context.hasPermissions(vararg permissions: String): Boolean {
     return true
 }
 
+fun Activity.needsPermissions(successCallback: () -> Unit, failureCallback: () -> Unit, vararg permissions: String): Boolean {
+    if (PermissionUtils.hasPermissions(this, *permissions)) {
+        return false
+    }
+
+    this.requestPermissions(setOf(*permissions)) { results ->
+        if (results.isNotEmpty() && results.all { it.value }) {
+            successCallback()
+        } else {
+            failureCallback()
+        }
+    }
+    return true
+}
+
 /**
  * Attempts to request web permissions by mapping them to the relevant system permissions.
  *
