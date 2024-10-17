@@ -20,7 +20,7 @@ object Versions {
     const val KOTLIN_COROUTINES = "1.9.0"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.3.15"
+    const val GOOGLE_SERVICES = "4.4.2"
 
     /* Others */
     const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
@@ -77,7 +77,7 @@ object Libs {
     const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
 
     /* Firebase */
-    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:32.6.0"
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:33.4.0"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config"
@@ -187,6 +187,7 @@ object Libs {
 }
 
 object Plugins {
+    // We should upgrade this to 3.0.0, but it requires AGP 8.1+, which we are currently not supporting due to the ProjectTransformers
     const val FIREBASE_CRASHLYTICS =  "com.google.firebase:firebase-crashlytics-gradle:2.9.2"
     const val ANDROID_GRADLE_TOOLS = "com.android.tools.build:gradle:${Versions.ANDROID_GRADLE_TOOLS}"
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
