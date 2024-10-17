@@ -29,12 +29,10 @@ import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.student.features.coursebrowser.datasource.CourseBrowserLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class CourseBrowserLocalDataSourceTest {
 
     private val tabDao: TabDao = mockk(relaxed = true)

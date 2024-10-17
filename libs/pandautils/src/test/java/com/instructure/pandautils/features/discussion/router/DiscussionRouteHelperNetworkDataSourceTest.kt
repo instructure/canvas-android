@@ -28,11 +28,9 @@ import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class DiscussionRouteHelperNetworkDataSourceTest {
     private val discussionApi: DiscussionAPI.DiscussionInterface = mockk(relaxed = true)
     private val groupApi: GroupAPI.GroupInterface = mockk(relaxed = true)

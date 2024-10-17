@@ -17,7 +17,12 @@
 package com.instructure.pandautils.room.offline.facade
 
 import androidx.room.withTransaction
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.LockInfo
+import com.instructure.canvasapi2.models.MasteryPath
+import com.instructure.canvasapi2.models.ModuleCompletionRequirement
+import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
 import com.instructure.pandautils.room.offline.daos.ModuleContentDetailsDao
@@ -27,15 +32,19 @@ import com.instructure.pandautils.room.offline.entities.ModuleCompletionRequirem
 import com.instructure.pandautils.room.offline.entities.ModuleContentDetailsEntity
 import com.instructure.pandautils.room.offline.entities.ModuleItemEntity
 import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
-import io.mockk.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ModuleFacadeTest {
 
     private val moduleObjectDao: ModuleObjectDao = mockk(relaxed = true)

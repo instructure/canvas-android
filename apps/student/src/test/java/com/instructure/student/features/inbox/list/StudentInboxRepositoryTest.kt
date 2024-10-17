@@ -20,20 +20,16 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.features.inbox.list.InboxRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.*
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class StudentInboxRepositoryTest {
 
     private val inboxApi: InboxApi.InboxInterface = mockk(relaxed = true)
@@ -45,7 +41,7 @@ class StudentInboxRepositoryTest {
         StudentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
 
     @Test
-    fun `Get contexts returns only valid courses`() = runBlockingTest {
+    fun `Get contexts returns only valid courses`() = runTest {
         val courses = listOf(
             Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
             Course(11) // no active enrollment

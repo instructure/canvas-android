@@ -26,14 +26,11 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class TeacherEditDashboardRepositoryTest {
 
     private val courseManager: CourseManager = mockk(relaxed = true)
@@ -45,7 +42,7 @@ class TeacherEditDashboardRepositoryTest {
     }
 
     @Test
-    fun `Returns courses when fetching courses`() = runBlockingTest {
+    fun `Returns courses when fetching courses`() = runTest {
         // Given
         val courseActive = Course(
             id = 1L,

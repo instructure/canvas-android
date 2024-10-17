@@ -22,6 +22,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 configurations {
@@ -148,9 +149,6 @@ android {
     hilt {
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
 
     testOptions.animationsDisabled = true

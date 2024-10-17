@@ -18,7 +18,6 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
-import android.app.Activity
 import android.content.Context
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -28,7 +27,8 @@ import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
-import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.FlowSource
+import com.instructure.student.mobius.common.trySend
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 
@@ -81,13 +81,13 @@ class SubmissionCommentsEffectHandler(val context: Context, val submissionHelper
             }
             SubmissionCommentsEffect.ScrollToBottom -> view?.scrollToBottom()
             is SubmissionCommentsEffect.BroadcastSubmissionSelected -> {
-                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+                FlowSource.getFlow<SubmissionDetailsSharedEvent>().trySend(
                     SubmissionDetailsSharedEvent.SubmissionClicked(effect.submission)
                 )
                 Unit
             }
             is SubmissionCommentsEffect.BroadcastSubmissionAttachmentSelected -> {
-                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+                FlowSource.getFlow<SubmissionDetailsSharedEvent>().trySend(
                     SubmissionDetailsSharedEvent.SubmissionAttachmentClicked(
                         effect.submission,
                         effect.attachment
@@ -128,13 +128,13 @@ class SubmissionCommentsEffectHandler(val context: Context, val submissionHelper
     }
 
     private fun showVideoCommentDialog() {
-        ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+        FlowSource.getFlow<SubmissionDetailsSharedEvent>().trySend(
             SubmissionDetailsSharedEvent.VideoRecordingViewLaunched
         )
     }
 
     private fun showAudioCommentDialog() {
-        ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+        FlowSource.getFlow<SubmissionDetailsSharedEvent>().trySend(
             SubmissionDetailsSharedEvent.AudioRecordingViewLaunched
         )
     }

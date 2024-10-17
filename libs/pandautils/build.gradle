@@ -20,6 +20,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -96,10 +97,6 @@ android {
 
     sourceSets {
         debug.assets.srcDirs += files("$projectDir/schemas".toString())
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
 }
 

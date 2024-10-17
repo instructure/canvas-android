@@ -16,9 +16,8 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "1.9.25"
-    const val KOTLIN_COROUTINES = "1.6.4"
-    const val KOTLIN_COMPOSE_COMPILER_VERSION = "1.5.15"
+    const val KOTLIN = "2.0.21"
+    const val KOTLIN_COROUTINES = "1.9.0"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.15"
