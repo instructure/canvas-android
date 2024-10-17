@@ -12,7 +12,7 @@ object Versions {
 
     /* Testing */
     const val JUNIT = "4.13.2"
-    const val ROBOLECTRIC = "4.11.1"
+    const val ROBOLECTRIC = "4.13"
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
@@ -85,7 +85,7 @@ object Libs {
     /* Google Dependencies */
     const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.1.0"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
-    const val MATERIAL_DESIGN = "com.google.android.material:material:1.10.0"
+    const val MATERIAL_DESIGN = "com.google.android.material:material:1.12.0"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"
@@ -96,11 +96,11 @@ object Libs {
     /* Testing */
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
-    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.5"
-    const val MOCKK = "io.mockk:mockk:1.13.12"
-    const val THREETEN_BP = "org.threeten:threetenbp:1.6.8"
-    const val UI_AUTOMATOR = "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
-    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.4.2"
+    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.2.1"
+    const val MOCKK = "io.mockk:mockk:1.13.13"
+    const val THREETEN_BP = "org.threeten:threetenbp:1.7.0"
+    const val UI_AUTOMATOR = "androidx.test.uiautomator:uiautomator:2.3.0"
+    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.5.1"
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
