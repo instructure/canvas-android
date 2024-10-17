@@ -217,13 +217,6 @@ fun AlertsListItem(
         }
     }
 
-    fun dateTime(dateTime: Date): String {
-        val date = DateHelper.getDayMonthDateString(context, dateTime)
-        val time = DateHelper.getFormattedTime(context, dateTime)
-
-        return context.getString(R.string.alertDateTime, date, time)
-    }
-
     Row(modifier = modifier
         .fillMaxWidth()
         .clickable {
@@ -267,7 +260,11 @@ fun AlertsListItem(
             )
             alert.date?.let {
                 Text(
-                    text = dateTime(alert.date),
+                    text = DateHelper.getDateAtTimeString(
+                        LocalContext.current,
+                        com.instructure.pandares.R.string.alertDateTime,
+                        it
+                    ) ?: "",
                     style = TextStyle(
                         color = colorResource(id = R.color.textDark),
                         fontSize = 12.sp

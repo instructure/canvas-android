@@ -37,15 +37,30 @@ class AnnouncementDetailsViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
+        _uiState.update {
+            it.copy(isLoading = true)
+        }
         loadData()
     }
 
+    var first = true
+
     fun handleAction(action: AnnouncementDetailsAction) {
         when (action) {
-            is AnnouncementDetailsAction.Refresh -> loadData(true)
+            is AnnouncementDetailsAction.Refresh -> {
+                _uiState.update {
+                    it.copy(isRefreshing = true)
+                }
+                loadData(true)
+            }
             is AnnouncementDetailsAction.OpenAttachment -> {
                 viewModelScope.launch {
                     fileDownloader.downloadFileToDevice(action.attachment)
+                }
+            }
+            AnnouncementDetailsAction.SnackbarDismissed -> {
+                _uiState.update {
+                    it.copy(showErrorSnack = false)
                 }
             }
         }
@@ -55,8 +70,6 @@ class AnnouncementDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
-                    isLoading = true,
-                    isError = false,
                     studentColor = parentPrefs.currentStudent.studentColor
                 )
             }
@@ -66,11 +79,22 @@ class AnnouncementDetailsViewModel @Inject constructor(
                 fetchCourseAnnouncement(forceNetwork)
             }
         } catch {
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    isError = true
-                )
+            if (uiState.value.pageTitle == null && uiState.value.announcementTitle == null && uiState.value.message == null) {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        isError = true
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        showErrorSnack = true
+                    )
+                }
             }
         }
     }
@@ -80,6 +104,8 @@ class AnnouncementDetailsViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 isLoading = false,
+                isRefreshing = false,
+                isError = false,
                 pageTitle = context.getString(R.string.globalAnnouncementPageTitle),
                 announcementTitle = globalAnnouncement.subject,
                 message = globalAnnouncement.message,
@@ -103,6 +129,8 @@ class AnnouncementDetailsViewModel @Inject constructor(
                 with(announcement.await()) {
                     it.copy(
                         isLoading = false,
+                        isRefreshing = false,
+                        isError = false,
                         pageTitle = course.await()?.name,
                         announcementTitle = title,
                         message = message,

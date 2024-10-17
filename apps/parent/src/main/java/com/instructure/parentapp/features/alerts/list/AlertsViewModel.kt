@@ -127,11 +127,15 @@ class AlertsViewModel @Inject constructor(
         when (action) {
             is AlertsAction.Navigate -> {
                 viewModelScope.launch {
-                    _events.send(AlertsViewModelAction.Navigate(
-                        if (action.alertType == AlertType.INSTITUTION_ANNOUNCEMENT) action.contextId else action.alertId,
-                        action.route,
-                        action.alertType
-                    ))
+                        when (action.alertType) {
+                            AlertType.COURSE_ANNOUNCEMENT -> {
+                                _events.send(AlertsViewModelAction.NavigateToCourseAnnouncement(action.route))
+                            }
+                            AlertType.INSTITUTION_ANNOUNCEMENT -> {
+                                _events.send(AlertsViewModelAction.NavigateToGlobalAnnouncement(action.contextId))
+                            }
+                            else -> { /* TODO */ }
+                        }
                     markAlertRead(action.alertId)
                     alertCountUpdater.updateShouldRefreshAlertCount(true)
                 }

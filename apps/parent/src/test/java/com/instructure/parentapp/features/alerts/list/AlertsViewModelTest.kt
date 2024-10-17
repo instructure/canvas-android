@@ -589,7 +589,7 @@ class AlertsViewModelTest {
                 ),
                 title = "Alert 1",
                 workflowState = AlertWorkflowState.READ,
-                alertType = AlertType.ASSIGNMENT_MISSING,
+                alertType = AlertType.COURSE_ANNOUNCEMENT,
                 htmlUrl = "https://example.com/alert1",
                 contextId = 1L,
                 contextType = "Course",
@@ -642,10 +642,80 @@ class AlertsViewModelTest {
         }
 
         assertEquals(
-            AlertsViewModelAction.Navigate(
+            AlertsViewModelAction.NavigateToCourseAnnouncement(
+                "https://example.com/alert1"
+            ), events.last()
+        )
+    }
+
+    @Test
+    fun `Navigate to Global Announcement`() = runTest {
+        val student = User(1L)
+        every { student.studentColor } returns 1
+
+        val alerts = listOf(
+            Alert(
+                id = 1,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-03T00:00:00Z")
+                ),
+                title = "Alert 1",
+                workflowState = AlertWorkflowState.READ,
+                alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
+                htmlUrl = "https://example.com/alert1",
+                contextId = 10L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 1L,
+                observerId = 1L,
+                userId = 2L
+            )
+        )
+
+        coEvery { repository.getAlertsForStudent(student.id, any()) } returns alerts
+
+        createViewModel()
+        selectedStudentFlow.emit(student)
+
+        val expected = AlertsUiState(
+            isLoading = false,
+            isError = false,
+            alerts = alerts.map {
+                AlertsItemUiState(
+                    alertId = it.id,
+                    contextId = it.contextId,
+                    title = it.title,
+                    alertType = it.alertType,
+                    date = it.actionDate,
+                    observerAlertThreshold = null,
+                    lockedForUser = it.lockedForUser,
+                    unread = it.workflowState == AlertWorkflowState.UNREAD,
+                    htmlUrl = it.htmlUrl
+                )
+            }.sortedByDescending { it.date },
+            studentColor = 1
+        )
+
+        assertEquals(expected, viewModel.uiState.value)
+
+        viewModel.handleAction(
+            AlertsAction.Navigate(
                 1L,
+                10L,
                 "https://example.com/alert1",
-                AlertType.COURSE_ANNOUNCEMENT
+                AlertType.INSTITUTION_ANNOUNCEMENT
+            )
+        )
+
+        val events = mutableListOf<AlertsViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(
+            AlertsViewModelAction.NavigateToGlobalAnnouncement(
+                10L
             ), events.last()
         )
     }
@@ -663,7 +733,7 @@ class AlertsViewModelTest {
                 ),
                 title = "Alert 1",
                 workflowState = AlertWorkflowState.UNREAD,
-                alertType = AlertType.ASSIGNMENT_MISSING,
+                alertType = AlertType.COURSE_ANNOUNCEMENT,
                 htmlUrl = "https://example.com/alert1",
                 contextId = 1L,
                 contextType = "Course",
@@ -714,10 +784,8 @@ class AlertsViewModelTest {
         }
 
         assertEquals(
-            AlertsViewModelAction.Navigate(
-                1L,
-                "https://example.com/alert1",
-                AlertType.COURSE_ANNOUNCEMENT
+            AlertsViewModelAction.NavigateToCourseAnnouncement(
+                "https://example.com/alert1"
             ), events.last()
         )
 
@@ -740,7 +808,7 @@ class AlertsViewModelTest {
                 ),
                 title = "Alert 1",
                 workflowState = AlertWorkflowState.UNREAD,
-                alertType = AlertType.ASSIGNMENT_MISSING,
+                alertType = AlertType.COURSE_ANNOUNCEMENT,
                 htmlUrl = "https://example.com/alert1",
                 contextId = 1L,
                 contextType = "Course",
@@ -791,10 +859,8 @@ class AlertsViewModelTest {
         }
 
         assertEquals(
-            AlertsViewModelAction.Navigate(
-                1L,
-                "https://example.com/alert1",
-                AlertType.COURSE_ANNOUNCEMENT
+            AlertsViewModelAction.NavigateToCourseAnnouncement(
+                "https://example.com/alert1"
             ), events.last()
         )
 

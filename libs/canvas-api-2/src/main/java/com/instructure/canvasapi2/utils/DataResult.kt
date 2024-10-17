@@ -18,8 +18,6 @@ package com.instructure.canvasapi2.utils
 
 import okhttp3.Response
 import retrofit2.Call
-import retrofit2.HttpException
-import java.io.IOException
 
 sealed class DataResult<out A> {
 
@@ -31,21 +29,13 @@ sealed class DataResult<out A> {
         val response: Response? = null,
     ) : DataResult<Nothing>()
 
-    data class Loading<A>(
-        val data: A? = null,
-        val loading: Boolean = true
-    ): DataResult<A>()
-
     val isSuccess get() = this is Success<A>
 
     val isFail get() = this is Fail
 
-    val isLoading get() = this is Loading<A> && loading
-
     val dataOrNull: A? get() = when (this) {
         is Success -> data
         is Fail -> null
-        is Loading -> data
     }
 
     val dataOrThrow get() = dataOrNull ?: throw IllegalStateException("Cannot get data from DataResult because it is Failed")
@@ -69,7 +59,6 @@ sealed class DataResult<out A> {
         return when (this) {
             is Success -> Success(block(data), linkHeaders, apiType)
             is Fail -> this
-            is Loading -> data?.let { Loading(block(it)) } ?: Loading()
         }
     }
 
@@ -77,27 +66,6 @@ sealed class DataResult<out A> {
         return when (this) {
             is Success -> block(data)
             is Fail -> this
-            is Loading -> data?.let { block(it) } ?: Loading()
-        }
-    }
-
-    companion object {
-        fun fromException(e: Exception) : Fail {
-            val failure = when (e) {
-                is IOException -> {
-                    Failure.Network(e.message)
-                }
-                is HttpException -> {
-                    when (e.code()) {
-                        401, 403 -> Failure.Authorization(e.message())
-                        else -> Failure.Network(e.message())
-                    }
-                }
-                else -> {
-                    Failure.Exception(e, e.message)
-                }
-            }
-            return Fail(failure)
         }
     }
 

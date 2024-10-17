@@ -36,6 +36,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -47,7 +49,6 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -89,10 +90,43 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     private var inboxBadge: TextView? = null
 
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
+
+    private val onItemSelectedListener = NavigationBarView.OnItemSelectedListener {
+        when (it.itemId) {
+            R.id.courses -> navigateWithPopBackStack(navigation.courses)
+            R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
+            R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
+            else -> false
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navHostFragment?.let {
+            navController = it.navController
+            navController.graph = navigation.createDashboardNavGraph(navController)
+        }
+    }
+
+    private val onDestinationChangedListener = NavController.OnDestinationChangedListener { _, destination, _ ->
+        if (destination.route == navigation.alerts || destination.route == navigation.courses) {
+            binding.todayButtonHolder.setGone()
+        }
+        val menuId = when (destination.route) {
+            navigation.alerts -> R.id.alerts
+            navigation.courses -> R.id.courses
+            navigation.calendar -> R.id.calendar
+            else -> return@OnDestinationChangedListener
+        }
+        bottomNavigationView.menu.findItem(menuId).isChecked = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -146,6 +180,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bottomNavigationView.setOnItemSelectedListener(null)
+        navController.removeOnDestinationChangedListener(onDestinationChangedListener)
+    }
+
     private fun handleAction(action: DashboardViewModelAction) {
         when (action) {
             is DashboardViewModelAction.AddStudent -> {
@@ -187,9 +227,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupNavigation() {
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        navController.graph = navigation.createDashboardNavGraph(navController)
+        if (!this::navController.isInitialized) {
+            val navHostFragment =
+                childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            navController = navHostFragment.navController
+            navController.graph = navigation.createDashboardNavGraph(navController)
+        }
 
         setupToolbar()
         setupNavigationDrawer()
@@ -247,32 +290,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupBottomNavigationView() {
-        val bottomNavigationView = binding.bottomNav
-
-        bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.courses -> navigateWithPopBackStack(navigation.courses)
-                R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
-                R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
-                else -> false
-            }
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.route == navigation.alerts || destination.route == navigation.courses) {
-                binding.todayButtonHolder.setGone()
-            }
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            val menuId = when (destination.route) {
-                navigation.courses -> R.id.courses
-                navigation.calendar -> R.id.calendar
-                navigation.alerts -> R.id.alerts
-                else -> return@addOnDestinationChangedListener
-            }
-            bottomNavigationView.menu.findItem(menuId).isChecked = true
-        }
+        bottomNavigationView = binding.bottomNav
+        bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener)
+        navController.addOnDestinationChangedListener(onDestinationChangedListener)
     }
 
     private fun navigateWithPopBackStack(route: String): Boolean {

@@ -41,7 +41,8 @@ data class AlertsItemUiState(
 )
 
 sealed class AlertsViewModelAction {
-    data class Navigate(val alertId: Long, val route: String?, val alertType: AlertType ): AlertsViewModelAction()
+    data class NavigateToCourseAnnouncement(val route: String?): AlertsViewModelAction()
+    data class NavigateToGlobalAnnouncement(val alertId: Long): AlertsViewModelAction()
     data class ShowSnackbar(val message: Int, val action: Int?, val actionCallback: (() -> Unit)?): AlertsViewModelAction()
 }
 

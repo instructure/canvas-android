@@ -1840,7 +1840,7 @@
     <string name="alertSettingsAssignmentGradeLow">Assignment grade below</string>
     <string name="alertSettingsCourseGradeHigh">Course grade above</string>
     <string name="alertSettingsCourseGradeLow">Course grade below</string>
-    <string name="alertSettingsInstitutionAnnouncement">Global Announcements</string>
+    <string name="alertSettingsGlobalAnnouncement">Global Announcements</string>
     <string name="alertSettingsCourseAnnouncement">Course Announcements</string>
     <string name="alertSettingsPercentage">%1$s\%%</string>
     <string name="alertSettingsThresholdNever">Never</string>

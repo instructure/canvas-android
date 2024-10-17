@@ -14,10 +14,12 @@ data class AnnouncementDetailsUiState(
     @ColorInt val studentColor: Int = Color.BLACK,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val isRefreshing: Boolean = false
+    val isRefreshing: Boolean = false,
+    val showErrorSnack: Boolean = false
 )
 
 sealed class AnnouncementDetailsAction {
     data object Refresh : AnnouncementDetailsAction()
     data class OpenAttachment(val attachment: Attachment) : AnnouncementDetailsAction()
+    data object SnackbarDismissed :AnnouncementDetailsAction()
 }
