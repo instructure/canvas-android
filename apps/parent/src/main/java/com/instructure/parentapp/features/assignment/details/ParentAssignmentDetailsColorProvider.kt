@@ -17,31 +17,20 @@
 package com.instructure.parentapp.features.assignment.details
 
 import androidx.annotation.ColorInt
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
-import com.instructure.interactions.bookmarks.Bookmarker
-import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
-import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.studentColor
-import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import javax.inject.Inject
 
-class ParentAssignmentDetailsBehaviour @Inject constructor(
+class ParentAssignmentDetailsColorProvider @Inject constructor(
     private val parentPrefs: ParentPrefs
-): AssignmentDetailsBehaviour() {
-    @ColorInt override val dialogColor: Int = parentPrefs.currentStudent.studentColor
+): AssignmentDetailsColorProvider() {
+    @ColorInt
+    override val submissionAndRubricLabelColor: Int = parentPrefs.currentStudent.studentColor
 
-    override fun applyTheme(
-        activity: FragmentActivity,
-        binding: FragmentAssignmentDetailsBinding?,
-        bookmark: Bookmarker,
-        toolbar: Toolbar,
-        course: Course?
-    ) {
-        ViewStyler.themeToolbarColored(activity, toolbar, parentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
-        ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
+    override fun getContentColor(course: Course?): ThemedColor {
+        return ThemedColor(parentPrefs.currentStudent.studentColor)
     }
 }

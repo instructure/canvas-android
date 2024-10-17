@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
@@ -34,6 +35,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsBehaviour
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsColorProvider
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRepository
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRouter
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsSubmissionHandler
@@ -50,11 +52,16 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(FragmentComponent::class, ViewModelComponent::class)
+@InstallIn(FragmentComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
         return StudentAssignmentDetailsRouter()
+    }
+
+    @Provides
+    fun provideAssignmentDetailsBehaviour(router: AssignmentDetailsRouter): AssignmentDetailsBehaviour {
+        return StudentAssignmentDetailsBehaviour(router)
     }
 }
 @Module
@@ -97,8 +104,8 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsBehaviour(router: AssignmentDetailsRouter, colorKeeper: ColorKeeper): AssignmentDetailsBehaviour {
-        return StudentAssignmentDetailsBehaviour(router, colorKeeper)
+    fun provideAssignmentDetailsColorProvider(colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
+        return StudentAssignmentDetailsColorProvider(colorKeeper)
     }
 }
 

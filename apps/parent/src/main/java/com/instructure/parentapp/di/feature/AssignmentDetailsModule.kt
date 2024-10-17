@@ -20,12 +20,14 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsBehaviour
+import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsColorProvider
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRepository
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRouter
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsSubmissionHandler
@@ -44,6 +46,11 @@ class AssignmentDetailsFragmentModule {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
         return ParentAssignmentDetailsRouter()
+    }
+
+    @Provides
+    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs): AssignmentDetailsBehaviour {
+        return ParentAssignmentDetailsBehaviour(parentPrefs)
     }
 }
 
@@ -67,8 +74,8 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs): AssignmentDetailsBehaviour {
-        return ParentAssignmentDetailsBehaviour(parentPrefs)
+    fun provideAssignmentDetailsColorProvider(parentPrefs: ParentPrefs): AssignmentDetailsColorProvider {
+        return ParentAssignmentDetailsColorProvider(parentPrefs)
     }
 }
 
