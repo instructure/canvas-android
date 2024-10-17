@@ -45,11 +45,6 @@ class AssignmentDetailsFragmentModule {
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
         return ParentAssignmentDetailsRouter()
     }
-
-    @Provides
-    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs): AssignmentDetailsBehaviour {
-        return ParentAssignmentDetailsBehaviour(parentPrefs)
-    }
 }
 
 @Module
@@ -69,6 +64,11 @@ class AssignmentDetailsModule {
     @Provides
     fun provideAssignmentDetailsSubmissionHandler(): AssignmentDetailsSubmissionHandler {
         return ParentAssignmentDetailsSubmissionHandler()
+    }
+
+    @Provides
+    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs): AssignmentDetailsBehaviour {
+        return ParentAssignmentDetailsBehaviour(parentPrefs)
     }
 }
 

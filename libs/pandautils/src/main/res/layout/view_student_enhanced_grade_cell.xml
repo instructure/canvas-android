@@ -58,11 +58,11 @@
             android:layout_height="wrap_content"
             android:drawablePadding="7dp"
             android:text="@string/submissionAndRubric"
-            android:textColor="@{ThemePrefs.INSTANCE.textButtonColor}"
+            android:textColor="@{viewData.submissionAndRubricLabelColor}"
             android:textSize="16sp"
             android:visibility="@{viewData.state == viewData.State.UPLOADING || viewData.state == viewData.State.FAILED ? View.GONE : View.VISIBLE}"
             app:drawableEndCompat="@drawable/arrow_right"
-            app:drawableTint="@{ThemePrefs.INSTANCE.textButtonColor}"
+            app:drawableTint="@{viewData.submissionAndRubricLabelColor}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/gradeLabel"
             app:layout_constraintTop_toTopOf="parent" />

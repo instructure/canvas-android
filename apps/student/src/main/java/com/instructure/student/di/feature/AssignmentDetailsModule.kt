@@ -30,6 +30,7 @@ import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsBehaviour
@@ -54,11 +55,6 @@ class AssignmentDetailsFragmentModule {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
         return StudentAssignmentDetailsRouter()
-    }
-
-    @Provides
-    fun provideAssignmentDetailsBehaviour(router: AssignmentDetailsRouter): AssignmentDetailsBehaviour {
-        return StudentAssignmentDetailsBehaviour(router)
     }
 }
 @Module
@@ -98,6 +94,11 @@ class AssignmentDetailsModule {
     @Provides
     fun provideAssignmentDetailsSubmissionHandler(submissionHandler: SubmissionHelper, studentDb: StudentDb): AssignmentDetailsSubmissionHandler {
         return StudentAssignmentDetailsSubmissionHandler(submissionHandler, studentDb)
+    }
+
+    @Provides
+    fun provideAssignmentDetailsBehaviour(router: AssignmentDetailsRouter, colorKeeper: ColorKeeper): AssignmentDetailsBehaviour {
+        return StudentAssignmentDetailsBehaviour(router, colorKeeper)
     }
 }
 

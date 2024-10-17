@@ -2,6 +2,7 @@ package com.instructure.pandautils.features.assignments.details
 
 import android.content.res.Resources
 import android.text.Spanned
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -18,6 +19,7 @@ import com.instructure.pandautils.utils.ThemedColor
 
 data class AssignmentDetailsViewData(
     val courseColor: ThemedColor,
+    @ColorInt val submissionAndRubricLabelColor: Int,
     val assignmentName: String,
     val points: String,
     val submissionStatusText: String,
@@ -30,7 +32,7 @@ data class AssignmentDetailsViewData(
     val submitEnabled: Boolean = false,
     val submitVisible: Boolean = false,
     @Bindable var attempts: List<AssignmentDetailsAttemptItemViewModel> = emptyList(),
-    @Bindable var selectedGradeCellViewData: GradeCellViewData? = GradeCellViewData(courseColor, GradeCellViewData.State.EMPTY),
+    @Bindable var selectedGradeCellViewData: GradeCellViewData? = GradeCellViewData(courseColor, submissionAndRubricLabelColor, GradeCellViewData.State.EMPTY),
     val dueDate: String = "",
     val submissionTypes: String = "",
     val allowedFileTypes: String = "",

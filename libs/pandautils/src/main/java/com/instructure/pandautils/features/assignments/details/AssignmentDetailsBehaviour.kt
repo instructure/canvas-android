@@ -27,11 +27,17 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.reminder.CustomReminderDialog
+import com.instructure.pandautils.utils.ThemedColor
 import java.io.File
 
 abstract class AssignmentDetailsBehaviour {
     @get:ColorInt
     abstract val dialogColor: Int
+
+    @get:ColorInt
+    abstract val submissionAndRubricLabelColor: Int
+
+    abstract fun getContentColor(course: Course?): ThemedColor
 
     open fun showMediaDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit) = Unit
 

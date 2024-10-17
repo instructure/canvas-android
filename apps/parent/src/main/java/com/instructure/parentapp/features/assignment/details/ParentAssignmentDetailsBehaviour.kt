@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
@@ -33,6 +34,11 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
     private val parentPrefs: ParentPrefs
 ): AssignmentDetailsBehaviour() {
     @ColorInt override val dialogColor: Int = parentPrefs.currentStudent.studentColor
+    @ColorInt override val submissionAndRubricLabelColor: Int = parentPrefs.currentStudent.studentColor
+
+    override fun getContentColor(course: Course?): ThemedColor {
+        return ThemedColor(parentPrefs.currentStudent.studentColor)
+    }
 
     override fun applyTheme(
         activity: FragmentActivity,

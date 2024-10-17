@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.assignments.details.gradecellview
 
 import android.content.res.Resources
+import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingSchemeRow
@@ -15,6 +16,7 @@ import com.instructure.pandautils.utils.orDefault
 
 data class GradeCellViewData(
     val courseColor: ThemedColor,
+    @ColorInt val submissionAndRubricLabelColor: Int,
     val state: State,
     val chartPercent: Float = 0f,
     val showCompleteIcon: Boolean = false,
@@ -43,6 +45,7 @@ data class GradeCellViewData(
         fun fromSubmission(
             resources: Resources,
             courseColor: ThemedColor,
+            @ColorInt submissionAndRubricLabelColor: Int,
             assignment: Assignment?,
             submission: Submission?,
             restrictQuantitativeData: Boolean = false,
@@ -58,10 +61,11 @@ data class GradeCellViewData(
                 || hideGrades
 
             return when {
-                uploading -> GradeCellViewData(courseColor, State.UPLOADING)
-                failed -> GradeCellViewData(courseColor, State.FAILED)
+                uploading -> GradeCellViewData(courseColor, submissionAndRubricLabelColor, State.UPLOADING)
+                failed -> GradeCellViewData(courseColor, submissionAndRubricLabelColor, State.FAILED)
                 emptyGradeCell -> GradeCellViewData(
                     courseColor = courseColor,
+                    submissionAndRubricLabelColor = submissionAndRubricLabelColor,
                     state = State.EMPTY,
                     gradeCellContentDescription = getContentDescriptionText(
                         resources,
@@ -70,6 +74,7 @@ data class GradeCellViewData(
                 )
                 submission!!.isSubmitted -> GradeCellViewData(
                     courseColor = courseColor,
+                    submissionAndRubricLabelColor = submissionAndRubricLabelColor,
                     state = State.SUBMITTED,
                     gradeCellContentDescription = getContentDescriptionText(
                         resources,
@@ -77,13 +82,14 @@ data class GradeCellViewData(
                         resources.getString(R.string.submissionStatusWaitingSubtitle)
                     )
                 )
-                else -> createGradedViewData(resources, courseColor, assignment!!, submission, restrictQuantitativeData, gradingScheme)
+                else -> createGradedViewData(resources, courseColor, submissionAndRubricLabelColor, assignment!!, submission, restrictQuantitativeData, gradingScheme)
             }
         }
 
         private fun createGradedViewData(
             resources: Resources,
             courseColor: ThemedColor,
+            @ColorInt submissionAndRubricLabelColor: Int,
             assignment: Assignment,
             submission: Submission,
             restrictQuantitativeData: Boolean,
@@ -97,6 +103,7 @@ data class GradeCellViewData(
             return if (submission.excused) {
                 GradeCellViewData(
                     courseColor = courseColor,
+                    submissionAndRubricLabelColor = submissionAndRubricLabelColor,
                     state = State.GRADED,
                     chartPercent = 1f,
                     showCompleteIcon = true,
@@ -113,6 +120,7 @@ data class GradeCellViewData(
                 val grade = resources.getString(if (isComplete) R.string.gradeComplete else R.string.gradeIncomplete)
                 GradeCellViewData(
                     courseColor = courseColor,
+                    submissionAndRubricLabelColor = submissionAndRubricLabelColor,
                     state = State.GRADED,
                     chartPercent = 1f,
                     showCompleteIcon = isComplete,
@@ -139,6 +147,7 @@ data class GradeCellViewData(
 
                 GradeCellViewData(
                     courseColor = courseColor,
+                    submissionAndRubricLabelColor = submissionAndRubricLabelColor,
                     state = State.GRADED,
                     chartPercent = 1.0f,
                     showCompleteIcon = true,
@@ -207,6 +216,7 @@ data class GradeCellViewData(
 
                 GradeCellViewData(
                     courseColor = courseColor,
+                    submissionAndRubricLabelColor = submissionAndRubricLabelColor,
                     state = State.GRADED,
                     chartPercent = chartPercent,
                     showPointsLabel = true,

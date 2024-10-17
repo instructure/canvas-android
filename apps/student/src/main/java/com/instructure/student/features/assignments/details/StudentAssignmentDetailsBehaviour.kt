@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
@@ -36,7 +37,9 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -52,9 +55,16 @@ import com.instructure.student.util.getResourceSelectorUrl
 import java.io.File
 
 class StudentAssignmentDetailsBehaviour(
-    private val router: AssignmentDetailsRouter
+    private val router: AssignmentDetailsRouter,
+    private val colorKeeper: ColorKeeper
 ): AssignmentDetailsBehaviour() {
     override val dialogColor: Int = ThemePrefs.textButtonColor
+    @ColorInt
+    override val submissionAndRubricLabelColor: Int = ThemePrefs.textButtonColor
+
+    override fun getContentColor(course: Course?): ThemedColor {
+        return colorKeeper.getOrGenerateColor(course)
+    }
 
     override fun showMediaDialog(
         activity: FragmentActivity,

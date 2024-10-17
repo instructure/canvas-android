@@ -77,9 +77,6 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     @Inject
     lateinit var webViewRouter: WebViewRouter
 
-    @Inject
-    lateinit var assignmentDetailsBehaviour: AssignmentDetailsBehaviour
-
     override val navigation: Navigation? = null
 
     @get:PageViewUrlParam(name = "assignmentId")
@@ -122,7 +119,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
             title = context?.getString(R.string.assignmentDetails)
 
-            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value)
+            viewModel.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value)
         }
     }
 
@@ -156,7 +153,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return assignmentDetailsBehaviour.onOptionsItemSelected(requireActivity(), item)
+        return viewModel.onOptionsItemSelected(requireActivity(), item)
     }
 
     private fun handleAction(action: AssignmentDetailAction) {
@@ -206,7 +203,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 assignmentDetailsRouter.navigateToLtiLaunchScreen(requireActivity(), canvasContext,  action.ltiTool?.url.orEmpty(), action.title, isAssignmentLTI = true, ltiTool = action.ltiTool)
             }
             is AssignmentDetailAction.ShowMediaDialog -> {
-                assignmentDetailsBehaviour.showMediaDialog(
+                viewModel.showMediaDialog(
                     requireActivity(),
                     binding,
                     { viewModel.uploadAudioSubmission(context, it) },
@@ -216,7 +213,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             }
             is AssignmentDetailAction.ShowSubmitDialog -> {
                 viewModel.course.value?.let {
-                    assignmentDetailsBehaviour.showSubmitDialog(
+                    viewModel.showSubmitDialog(
                         requireActivity(),
                         binding,
                         { viewModel.uploadAudioSubmission(context, it) },
@@ -241,7 +238,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 checkAlarmPermission()
             }
             is AssignmentDetailAction.ShowCustomReminderDialog -> {
-                assignmentDetailsBehaviour.showCustomReminderDialog(this)
+                viewModel.showCustomReminderDialog(this)
             }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
                 showDeleteReminderConfirmationDialog(requireContext(), onConfirmed = action.onConfirmed)
@@ -350,7 +347,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 onConfirmed()
                 dialog.dismiss()
             }
-            .showThemed(assignmentDetailsBehaviour.dialogColor)
+            .showThemed(viewModel.dialogColor)
     }
 
     private fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
@@ -379,7 +376,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 onReminderSelected(choices[which])
                 dialog.dismiss()
             }
-            .showThemed(assignmentDetailsBehaviour.dialogColor)
+            .showThemed(viewModel.dialogColor)
     }
 
     companion object {

@@ -21,6 +21,10 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import android.view.MenuItem
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -50,6 +54,7 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
@@ -59,7 +64,6 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.isAudioVisualExtension
@@ -79,11 +83,11 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val resources: Resources,
     private val htmlContentFormatter: HtmlContentFormatter,
-    private val colorKeeper: ColorKeeper,
     private val application: Application,
     private val apiPrefs: ApiPrefs,
     private val submissionHandler: AssignmentDetailsSubmissionHandler,
     private val alarmScheduler: AlarmScheduler,
+    private val assignmentDetailsBehaviour: AssignmentDetailsBehaviour
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -133,6 +137,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     var checkingReminderPermission = false
+
+    @ColorInt val dialogColor: Int = assignmentDetailsBehaviour.dialogColor
 
     init {
         markSubmissionAsRead()
@@ -289,7 +295,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             }.orEmpty()
 
             return AssignmentDetailsViewData(
-                courseColor = colorKeeper.getOrGenerateColor(course.value),
+                courseColor = assignmentDetailsBehaviour.getContentColor(course.value),
+                submissionAndRubricLabelColor = assignmentDetailsBehaviour.submissionAndRubricLabelColor,
                 assignmentName = assignment.name.orEmpty(),
                 points = points,
                 submissionStatusText = submittedLabelText,
@@ -420,7 +427,8 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
 
         return AssignmentDetailsViewData(
-            courseColor = colorKeeper.getOrGenerateColor(course.value),
+            courseColor = assignmentDetailsBehaviour.getContentColor(course.value),
+            submissionAndRubricLabelColor = assignmentDetailsBehaviour.submissionAndRubricLabelColor,
             assignmentName = assignment.name.orEmpty(),
             points = points,
             submissionStatusText = submittedLabelText,
@@ -434,7 +442,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             attempts = attempts,
             selectedGradeCellViewData = GradeCellViewData.fromSubmission(
                 resources,
-                colorKeeper.getOrGenerateColor(course.value),
+                assignmentDetailsBehaviour.getContentColor(course.value),
+                assignmentDetailsBehaviour.submissionAndRubricLabelColor,
                 assignment,
                 assignment.submission,
                 restrictQuantitativeData,
@@ -485,7 +494,8 @@ class AssignmentDetailsViewModel @Inject constructor(
         this.selectedSubmission = selectedSubmission
         _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
             resources,
-            colorKeeper.getOrGenerateColor(course.value),
+            assignmentDetailsBehaviour.getContentColor(course.value),
+            assignmentDetailsBehaviour.submissionAndRubricLabelColor,
             assignment,
             selectedSubmission,
             restrictQuantitativeData,
@@ -640,5 +650,25 @@ class AssignmentDetailsViewModel @Inject constructor(
         if (assignment?.allowedExtensions?.isEmpty() == true) return true
 
         return assignment?.allowedExtensions?.any { isAudioVisualExtension(it) } ?: true
+    }
+
+    fun showMediaDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit) {
+        assignmentDetailsBehaviour.showMediaDialog(activity, binding, recordCallback, startVideoCapture, onLaunchMediaPicker)
+    }
+
+    fun showSubmitDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit, assignment: Assignment, course: Course, isStudioEnabled: Boolean, studioLTITool: LTITool?) {
+        assignmentDetailsBehaviour.showSubmitDialog(activity, binding, recordCallback, startVideoCapture, onLaunchMediaPicker, assignment, course, isStudioEnabled, studioLTITool)
+    }
+
+    fun showCustomReminderDialog(fragment: Fragment) {
+        assignmentDetailsBehaviour.showCustomReminderDialog(fragment)
+    }
+
+    fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?) {
+        assignmentDetailsBehaviour.applyTheme(activity, binding, bookmark, toolbar, course)
+    }
+
+    fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean {
+        return assignmentDetailsBehaviour.onOptionsItemSelected(activity, item)
     }
 }
