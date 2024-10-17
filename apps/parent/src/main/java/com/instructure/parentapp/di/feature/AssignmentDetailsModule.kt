@@ -26,6 +26,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsBehaviour
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsColorProvider
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRepository
@@ -74,8 +75,8 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsColorProvider(parentPrefs: ParentPrefs): AssignmentDetailsColorProvider {
-        return ParentAssignmentDetailsColorProvider(parentPrefs)
+    fun provideAssignmentDetailsColorProvider(parentPrefs: ParentPrefs, colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
+        return ParentAssignmentDetailsColorProvider(parentPrefs, colorKeeper)
     }
 }
 

@@ -19,18 +19,20 @@ package com.instructure.parentapp.features.assignment.details
 import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
 import javax.inject.Inject
 
 class ParentAssignmentDetailsColorProvider @Inject constructor(
-    private val parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs,
+    private val colorKeeper: ColorKeeper
 ): AssignmentDetailsColorProvider() {
     @ColorInt
     override val submissionAndRubricLabelColor: Int = parentPrefs.currentStudent.studentColor
 
     override fun getContentColor(course: Course?): ThemedColor {
-        return ThemedColor(parentPrefs.currentStudent.studentColor)
+        return colorKeeper.getOrGenerateUserColor(parentPrefs.currentStudent)
     }
 }
