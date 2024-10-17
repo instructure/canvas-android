@@ -264,7 +264,7 @@ fun getTitle(alertType: AlertType): Int {
         AlertType.COURSE_GRADE_HIGH -> R.string.alertSettingsCourseGradeHigh
         AlertType.COURSE_GRADE_LOW -> R.string.alertSettingsCourseGradeLow
         AlertType.COURSE_ANNOUNCEMENT -> R.string.alertSettingsCourseAnnouncement
-        AlertType.INSTITUTION_ANNOUNCEMENT -> R.string.alertSettingsInstitutionAnnouncement
+        AlertType.INSTITUTION_ANNOUNCEMENT -> R.string.alertSettingsGlobalAnnouncement
     }
 }
 
