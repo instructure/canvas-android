@@ -157,14 +157,7 @@ class ElementaryCourseViewModel @Inject constructor(
                 else -> it.htmlUrl ?: ""
             }
 
-            val authenticatedUrl = if (apiPrefs.isStudentView) {
-                apiPrefs.user?.let {
-                    oauthManager.getAuthenticatedSessionMasqueradingAsync(url, apiPrefs.user!!.id)
-                        .await().dataOrNull?.sessionUrl
-                } ?: url
-            } else {
-                oauthManager.getAuthenticatedSessionAsync(url).await().dataOrNull?.sessionUrl
-            }
+            val authenticatedUrl = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrNull?.sessionUrl
             ElementaryCourseTab(it.tabId, drawable, it.label, authenticatedUrl ?: url)
 
         }
