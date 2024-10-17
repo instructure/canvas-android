@@ -29,7 +29,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -91,15 +91,6 @@ class CourseDetailsFragment : Fragment() {
             defaultValues = options.defaultValues.copy(
                 contextCode = courseContextId,
                 contextName = viewModel.uiState.value.courseName,
-                recipients = listOf(
-                    Recipient(
-                        stringId = "${courseContextId}_teachers",
-                        name = getString(
-                            R.string.all_recipients_in_selected_context,
-                            "Teachers"
-                        )
-                    )
-                ),
                 subject = getString(
                     R.string.regardingHiddenMessage,
                     ParentPrefs.currentStudent?.name.orEmpty(),
@@ -109,6 +100,7 @@ class CourseDetailsFragment : Fragment() {
             disabledFields = options.disabledFields.copy(
                 isContextDisabled = true
             ),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
             hiddenBodyMessage = getString(
                 R.string.regardingHiddenMessage,
                 ParentPrefs.currentStudent?.name.orEmpty(),

@@ -122,6 +122,27 @@ class InboxComposeViewModel @Inject constructor(
                     hiddenBodyMessage = options.hiddenBodyMessage,
                 )
             }
+            context?.let {
+                viewModelScope.launch {
+                    val recipients = getRecipientList("", context, false).dataOrNull.orEmpty()
+                    val roleRecipients = groupRecipientList(context, recipients)
+                    val selectedRecipients = mutableListOf<Recipient>()
+                    options.autoSelectRecipientsFromRoles?.forEach { role ->
+                        roleRecipients[role]?.let { selectedRecipients.addAll(it) }
+                    }
+                    _uiState.update {
+                        it.copy(
+                            recipientPickerUiState = it.recipientPickerUiState.copy(
+                                selectedRecipients = selectedRecipients.distinct(),
+                            ),
+                            inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                selectedValues = selectedRecipients.distinct(),
+                            )
+                        )
+                    }
+                }
+            }
+
         }
     }
 
@@ -343,29 +364,8 @@ class InboxComposeViewModel @Inject constructor(
             } catch (e: Exception) {
                 newState = ScreenState.Error
             }
-            val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
 
-            recipients.forEach { recipient ->
-                if (context.isCourse) {
-                    recipient.commonCourses?.let { commonCourse ->
-                        commonCourse[context.id.toString()]?.forEach { role ->
-                            val enrollmentType = EnrollmentType.safeValueOf(role)
-                            if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
-                                roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
-                            }
-                        }
-                    }
-                } else {
-                    recipient.commonGroups?.let { commonGroup ->
-                        commonGroup[context.id.toString()]?.forEach { role ->
-                            val enrollmentType = EnrollmentType.safeValueOf(role)
-                            if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
-                                roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
-                            }
-                        }
-                    }
-                }
-            }
+            val roleRecipients = groupRecipientList(context, recipients)
 
             val recipientsToShow =
                 if (uiState.value.recipientPickerUiState.searchValue.text.isEmpty() && uiState.value.recipientPickerUiState.selectedRole != null) {
@@ -382,6 +382,34 @@ class InboxComposeViewModel @Inject constructor(
                 )
             ) }
         }
+    }
+
+    private fun groupRecipientList(context: CanvasContext, recipients: List<Recipient>): EnumMap<EnrollmentType, List<Recipient>> {
+        val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+
+        recipients.forEach { recipient ->
+            if (context.isCourse) {
+                recipient.commonCourses?.let { commonCourse ->
+                    commonCourse[context.id.toString()]?.forEach { role ->
+                        val enrollmentType = EnrollmentType.safeValueOf(role)
+                        if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
+                            roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
+                        }
+                    }
+                }
+            } else {
+                recipient.commonGroups?.let { commonGroup ->
+                    commonGroup[context.id.toString()]?.forEach { role ->
+                        val enrollmentType = EnrollmentType.safeValueOf(role)
+                        if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
+                            roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
+                        }
+                    }
+                }
+            }
+        }
+
+        return roleRecipients
     }
 
     private suspend fun getRecipientList(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false): DataResult<List<Recipient>> {
