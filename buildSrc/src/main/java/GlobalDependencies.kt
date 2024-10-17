@@ -27,19 +27,19 @@ object Versions {
     const val PSPDFKIT = "8.9.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
-    const val HILT = "2.49"
-    const val HILT_ANDROIDX = "1.1.0"
-    const val LIFECYCLE = "2.6.2"
+    const val HILT = "2.52"
+    const val HILT_ANDROIDX = "1.2.0"
+    const val LIFECYCLE = "2.8.6"
     const val FRAGMENT = "1.8.4"
     const val WORK_MANAGER = "2.9.1"
     const val GLIDE_VERSION = "4.16.0"
-    const val RETROFIT = "2.9.0"
+    const val RETROFIT = "2.11.0"
     const val OKHTTP = "4.12.0"
     const val HEAP = "1.10.6"
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.7.7"
-    const val MEDIA3 = "1.3.1"
+    const val MEDIA3 = "1.4.1"
 }
 
 object Libs {
@@ -146,7 +146,7 @@ object Libs {
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
-    const val OKIO = "com.squareup.okio:okio:3.6.0"
+    const val OKIO = "com.squareup.okio:okio:3.9.1"
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:6.2.0"
