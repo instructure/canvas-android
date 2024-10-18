@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.parentapp.util.ParentPrefs
 
 class ParentAssignmentDetailsRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
@@ -48,7 +50,7 @@ class ParentAssignmentDetailsRepository(
         forceNetwork: Boolean
     ): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentApi.getAssignmentIncludeObservees(courseId, assignmentId, params).dataOrThrow.toAssignmentForObservee() ?: throw IllegalStateException("Assignment not found")
+        return assignmentApi.getAssignmentIncludeObservees(courseId, assignmentId, params).dataOrThrow.toAssignment(ParentPrefs.currentStudent?.id.orDefault())
     }
 
     override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {

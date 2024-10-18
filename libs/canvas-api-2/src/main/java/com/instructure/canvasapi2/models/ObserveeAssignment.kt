@@ -108,51 +108,56 @@ data class ObserveeAssignment(
      * Converts an ObserveeAssignment to an Assignment, using the first submission found. Returns null if no submission
      * is found.
      */
-    fun toAssignmentForObservee(): Assignment {
-        return Assignment(
-            id = this.id,
-            name = this.name,
-            description = this.description,
-            submissionTypesRaw = this.submissionTypesRaw,
-            dueAt = this.dueAt,
-            pointsPossible = this.pointsPossible,
-            courseId = this.courseId,
-            isGradeGroupsIndividually = this.isGradeGroupsIndividually,
-            gradingType = this.gradingType,
-            needsGradingCount = this.needsGradingCount,
-            htmlUrl = this.htmlUrl,
-            url = this.url,
-            quizId = this.quizId,
-            rubric = this.rubric,
-            isUseRubricForGrading = this.isUseRubricForGrading,
-            rubricSettings = this.rubricSettings,
-            allowedExtensions = this.allowedExtensions,
-            submission = submissionList?.firstOrNull(),
-            assignmentGroupId = this.assignmentGroupId,
-            position = this.position,
-            isPeerReviews = this.isPeerReviews,
-            lockInfo = this.lockInfo,
-            lockedForUser = this.lockedForUser,
-            lockAt = this.lockAt,
-            unlockAt = this.unlockAt,
-            lockExplanation = this.lockExplanation,
-            discussionTopicHeader = this.discussionTopicHeader,
-            needsGradingCountBySection = this.needsGradingCountBySection,
-            freeFormCriterionComments = this.freeFormCriterionComments,
-            published = this.published,
-            groupCategoryId = this.groupCategoryId,
-            allDates = this.allDates,
-            userSubmitted = this.userSubmitted,
-            unpublishable = this.unpublishable,
-            overrides = this.overrides,
-            onlyVisibleToOverrides = this.onlyVisibleToOverrides,
-            anonymousPeerReviews = this.anonymousPeerReviews,
-            moderatedGrading = this.moderatedGrading,
-            anonymousGrading = this.anonymousGrading,
-            allowedAttempts = this.allowedAttempts,
-            isStudioEnabled = this.isStudioEnabled,
-            isHiddenInGradeBook = this.isHiddenInGradeBook
-        )
+    fun toAssignmentForObservee(): Assignment? {
+        val submission = submissionList?.firstOrNull()
+        if (submission != null) {
+            return Assignment(
+                id = this.id,
+                name = this.name,
+                description = this.description,
+                submissionTypesRaw = this.submissionTypesRaw,
+                dueAt = this.dueAt,
+                pointsPossible = this.pointsPossible,
+                courseId = this.courseId,
+                isGradeGroupsIndividually = this.isGradeGroupsIndividually,
+                gradingType = this.gradingType,
+                needsGradingCount = this.needsGradingCount,
+                htmlUrl = this.htmlUrl,
+                url = this.url,
+                quizId = this.quizId,
+                rubric = this.rubric,
+                isUseRubricForGrading = this.isUseRubricForGrading,
+                rubricSettings = this.rubricSettings,
+                allowedExtensions = this.allowedExtensions,
+                submission = submission,
+                assignmentGroupId = this.assignmentGroupId,
+                position = this.position,
+                isPeerReviews = this.isPeerReviews,
+                lockInfo = this.lockInfo,
+                lockedForUser = this.lockedForUser,
+                lockAt = this.lockAt,
+                unlockAt = this.unlockAt,
+                lockExplanation = this.lockExplanation,
+                discussionTopicHeader = this.discussionTopicHeader,
+                needsGradingCountBySection = this.needsGradingCountBySection,
+                freeFormCriterionComments = this.freeFormCriterionComments,
+                published = this.published,
+                groupCategoryId = this.groupCategoryId,
+                allDates = this.allDates,
+                userSubmitted = this.userSubmitted,
+                unpublishable = this.unpublishable,
+                overrides = this.overrides,
+                onlyVisibleToOverrides = this.onlyVisibleToOverrides,
+                anonymousPeerReviews = this.anonymousPeerReviews,
+                moderatedGrading = this.moderatedGrading,
+                anonymousGrading = this.anonymousGrading,
+                allowedAttempts = this.allowedAttempts,
+                isStudioEnabled = this.isStudioEnabled,
+                isHiddenInGradeBook = this.isHiddenInGradeBook
+            )
+        } else {
+            return null
+        }
     }
 
     fun toAssignment(studentId: Long) = Assignment(

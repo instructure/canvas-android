@@ -251,7 +251,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 R.string.missingAssignment
             } else if (!assignment.isSubmitted) {
                 R.string.notSubmitted
-            } else if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) {
+            } else if (assignment.isGraded()) {
                 R.string.gradedSubmissionLabel
             } else {
                 R.string.submitted
