@@ -237,7 +237,8 @@ class GradesViewModelTest {
                         ),
                         submission = Submission(
                             submittedAt = Date(),
-                            grade = "A"
+                            grade = "A",
+                            postedAt = Date()
                         )
                     ),
                     Assignment(
@@ -370,7 +371,8 @@ class GradesViewModelTest {
                         ),
                         submission = Submission(
                             submittedAt = Date(),
-                            grade = "A"
+                            grade = "A",
+                            postedAt = Date()
                         )
                     ),
                     Assignment(
@@ -380,7 +382,7 @@ class GradesViewModelTest {
                             SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
                         ),
                         submission = Submission(
-                            submittedAt = Date()
+                            submittedAt = Date(),
                         )
                     )
                 )
