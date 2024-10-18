@@ -311,7 +311,7 @@ class CalendarViewModel @Inject constructor(
     @DrawableRes
     private fun getIconForPlannerItem(plannerItem: PlannerItem): Int {
         return when (plannerItem.plannableType) {
-            PlannableType.ASSIGNMENT -> R.drawable.ic_assignment
+            PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_assignment
             PlannableType.QUIZ -> R.drawable.ic_quiz
             PlannableType.CALENDAR_EVENT -> R.drawable.ic_calendar
             PlannableType.DISCUSSION_TOPIC -> R.drawable.ic_discussion
@@ -523,6 +523,12 @@ class CalendarViewModel @Inject constructor(
             val event = when (plannerItem.plannableType) {
                 PlannableType.ASSIGNMENT -> {
                     CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id)
+                }
+
+                PlannableType.SUB_ASSIGNMENT -> {
+                    plannerItem.htmlUrl.orEmpty().split("/").lastOrNull()?.toLongOrNull()?.let {
+                        CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, it)
+                    }
                 }
 
                 PlannableType.DISCUSSION_TOPIC -> {
