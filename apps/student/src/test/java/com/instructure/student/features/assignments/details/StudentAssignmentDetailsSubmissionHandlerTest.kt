@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewData
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity
@@ -77,6 +78,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
 
         val data = MutableLiveData<AssignmentDetailsViewData>(AssignmentDetailsViewData(
             courseColor = ColorKeeper.getOrGenerateColor(Course()),
+            submissionAndRubricLabelColor = ThemePrefs.textButtonColor,
             assignmentName = "Assignment",
             points = "0",
             submissionStatusText = "Status",
@@ -108,6 +110,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
 
         val data = MutableLiveData<AssignmentDetailsViewData>(AssignmentDetailsViewData(
             courseColor = ColorKeeper.getOrGenerateColor(Course()),
+            submissionAndRubricLabelColor = ThemePrefs.textButtonColor,
             assignmentName = "Assignment",
             points = "0",
             submissionStatusText = "Status",

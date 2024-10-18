@@ -16,6 +16,7 @@
 package com.instructure.teacher.di
 
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
@@ -51,6 +52,11 @@ class AssignmentDetailsModule {
 
     @Provides
     fun provideAssignmentDetailsSubmissionHandler(): AssignmentDetailsSubmissionHandler {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideAssignmentDetailsColorProvider(): AssignmentDetailsColorProvider {
         throw NotImplementedError()
     }
 }
