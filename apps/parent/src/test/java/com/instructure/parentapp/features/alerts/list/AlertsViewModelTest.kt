@@ -577,7 +577,7 @@ class AlertsViewModelTest {
     }
 
     @Test
-    fun `Navigate to URL`() = runTest {
+    fun `Navigate to Course Announcement`() = runTest {
         val student = User(1L)
         every { student.studentColor } returns 1
 

@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -46,6 +47,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.inbox.utils.AttachmentCard
 import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.jakewharton.threetenabp.AndroidThreeTen
 import java.util.Date
 
 @Composable
@@ -209,6 +211,8 @@ private fun AttachmentsRow(
 @Preview
 @Composable
 private fun AnnouncementDetailsPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AndroidThreeTen.init(LocalContext.current)
     AnnouncementDetailsScreen(
         uiState = AnnouncementDetailsUiState(
             pageTitle = "Course Name",
@@ -224,7 +228,9 @@ private fun AnnouncementDetailsPreview() {
 
 @Preview
 @Composable
-private fun AnnouncementDetailsEPreview() {
+private fun AnnouncementDetailsAttachmentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AndroidThreeTen.init(LocalContext.current)
     AnnouncementDetailsScreen(
         uiState = AnnouncementDetailsUiState(
             pageTitle = "Course Name",

@@ -43,8 +43,6 @@ class AnnouncementDetailsViewModel @Inject constructor(
         loadData()
     }
 
-    var first = true
-
     fun handleAction(action: AnnouncementDetailsAction) {
         when (action) {
             is AnnouncementDetailsAction.Refresh -> {
