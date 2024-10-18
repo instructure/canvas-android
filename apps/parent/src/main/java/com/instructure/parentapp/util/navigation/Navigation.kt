@@ -28,6 +28,7 @@ import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.qr.QrPairingFragment
+import com.instructure.parentapp.features.alerts.details.AnnouncementDetailsFragment
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
 import com.instructure.parentapp.features.alerts.settings.AlertSettingsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
@@ -45,6 +46,10 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val baseUrl = apiPrefs.fullDomain
 
     private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
+
+    private val announcementId = "announcement-id"
+    private val courseAnnouncementDetails = "$baseUrl/courses/{$COURSE_ID}/discussion_topics/{$announcementId}"
+    private val globalAnnouncementDetails = "$baseUrl/account_notifications/{$announcementId}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
@@ -85,6 +90,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun updateToDoRoute(plannerItem: PlannerItem) = "$baseUrl/update-todo/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
 
     fun alertSettingsRoute(student: User) = "$baseUrl/alert-settings/${UserParametersType.serializeAsValue(student)}"
+
+    fun globalAnnouncementRoute(alertId: Long) = "$baseUrl/account_notifications/$alertId"
 
     fun ltiLaunchRoute(url: String, title: String) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}"
 
@@ -135,6 +142,22 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
                 deepLink {
                     uriPattern = courseDetails
+                }
+            }
+            fragment<AnnouncementDetailsFragment>(courseAnnouncementDetails) {
+                argument(AnnouncementDetailsFragment.COURSE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+            }
+            fragment<AnnouncementDetailsFragment>(globalAnnouncementDetails) {
+                argument(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
                 }
             }
             fragment<EventFragment>(calendarEvent) {
