@@ -46,6 +46,7 @@ import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -86,6 +87,8 @@ class AssignmentDetailsViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val submissionHandler: AssignmentDetailsSubmissionHandler = mockk(relaxed = true)
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
+    private val colorProvider: AssignmentDetailsColorProvider = mockk(relaxed = true)
+    private val themePrefs: ThemePrefs = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -105,6 +108,7 @@ class AssignmentDetailsViewModelTest {
 
         every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData()
         every { apiPrefs.user } returns User(id = 1)
+        every { themePrefs.textButtonColor } returns 0
     }
 
     @After
@@ -117,11 +121,11 @@ class AssignmentDetailsViewModelTest {
         assignmentDetailsRepository,
         resources,
         htmlContentFormatter,
-        colorKeeper,
         application,
         apiPrefs,
         submissionHandler,
         alarmScheduler,
+        colorProvider
     )
 
     @Test
@@ -265,12 +269,14 @@ class AssignmentDetailsViewModelTest {
         val expectedGradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(course),
+            themePrefs.textButtonColor,
             Assignment(),
             Submission(),
-            false
+            false,
         )
 
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { colorProvider.getContentColor(any()) } returns colorKeeper.getOrGenerateColor(course)
 
         val assignment = Assignment(submission = Submission())
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
@@ -400,6 +406,7 @@ class AssignmentDetailsViewModelTest {
         val expectedGradeCellViewData = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(course),
+            themePrefs.textButtonColor,
             assignment,
             firstSubmission,
             false
@@ -408,6 +415,8 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        every { colorProvider.getContentColor(any()) } returns colorKeeper.getOrGenerateColor(course)
 
         val viewModel = getViewModel()
         viewModel.onAttemptSelected(2)

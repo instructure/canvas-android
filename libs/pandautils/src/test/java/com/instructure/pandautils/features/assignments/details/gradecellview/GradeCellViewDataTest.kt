@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
@@ -34,12 +35,14 @@ class GradeCellViewDataTest {
 
     private val resources: Resources = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
+    private val themePrefs: ThemePrefs = mockk(relaxed = true)
 
     @Test
     fun `Map empty grade cell`() {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(),
             Submission()
         )
@@ -52,6 +55,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(),
             Submission(submittedAt = Date(), workflowState = "submitted")
         )
@@ -64,6 +68,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(),
             Submission(submittedAt = Date(), grade = "A")
         )
@@ -76,6 +81,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(gradingType = Assignment.POINTS_TYPE),
             Submission(submittedAt = Date(), grade = "10", score = 10.0),
             restrictQuantitativeData = true
@@ -89,6 +95,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(gradingType = Assignment.POINTS_TYPE, pointsPossible = 20.0),
             Submission(submittedAt = Date(), grade = "10", score = 17.0),
             restrictQuantitativeData = true,
@@ -111,6 +118,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(gradingType = Assignment.POINTS_TYPE),
             Submission(submittedAt = Date(), grade = "10", score = 10.0, excused = true),
             restrictQuantitativeData = true
@@ -129,6 +137,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(gradingType = Assignment.POINTS_TYPE),
             Submission(submittedAt = Date(), grade = "10", score = 10.0, excused = true),
             restrictQuantitativeData = false
@@ -146,6 +155,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 10.0),
             Submission(submittedAt = Date(), grade = "A", score = 10.0, enteredScore = 10.0),
             restrictQuantitativeData = false
@@ -165,6 +175,7 @@ class GradeCellViewDataTest {
         val gradeCell = GradeCellViewData.fromSubmission(
             resources,
             colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
             Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 10.0),
             Submission(submittedAt = Date(), grade = "A", score = 10.0, enteredScore = 10.0),
             restrictQuantitativeData = true
