@@ -54,6 +54,8 @@ class ParentInboxCoursePickerViewModelTest {
 
     @Test
     fun `getContextURL should return correct URL`() {
+        coEvery { repository.getCourses() } returns DataResult.Success(emptyList())
+        coEvery { repository.getEnrollments() } returns DataResult.Success(emptyList())
         mockkObject(ApiPrefs)
         every { ApiPrefs.fullDomain } returns "https://canvas.instructure.com"
         val viewModel = getViewModel()
