@@ -526,7 +526,9 @@ class CalendarViewModel @Inject constructor(
                 }
 
                 PlannableType.SUB_ASSIGNMENT -> {
-                    plannerItem.htmlUrl.orEmpty().split("/").lastOrNull()?.toLongOrNull()?.let {
+                    val regex = """assignments/(\d+)""".toRegex()
+                    val matchResult = regex.find(plannerItem.htmlUrl.orEmpty())
+                    matchResult?.groupValues?.getOrNull(1)?.toLongOrNull()?.let {
                         CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, it)
                     }
                 }
