@@ -76,6 +76,8 @@ enum class PlannableType {
     ANNOUNCEMENT,
     @SerializedName("assignment")
     ASSIGNMENT,
+    @SerializedName("sub_assignment")
+    SUB_ASSIGNMENT,
     @SerializedName("discussion_topic")
     DISCUSSION_TOPIC,
     @SerializedName("quiz")
