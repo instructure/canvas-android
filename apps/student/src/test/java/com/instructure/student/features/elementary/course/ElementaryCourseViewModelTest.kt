@@ -21,6 +21,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.TabManager
@@ -64,6 +65,7 @@ class ElementaryCourseViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
+    private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: ElementaryCourseViewModel
 
@@ -85,7 +87,7 @@ class ElementaryCourseViewModelTest {
         }
         setupStrings()
 
-        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager, courseManager)
+        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager, courseManager, firebaseCrashlytics)
 
         mockkObject(ColorKeeper)
         every { ColorKeeper.darkTheme } returns false
