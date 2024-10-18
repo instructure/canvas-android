@@ -38,7 +38,7 @@ object Versions {
     const val HEAP = "1.10.6"
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
-    const val NAVIGATION = "2.7.7"
+    const val NAVIGATION = "2.8.3"
     const val MEDIA3 = "1.4.1"
 }
 
@@ -149,7 +149,7 @@ object Libs {
     const val OKIO = "com.squareup.okio:okio:3.9.1"
 
     /* Other */
-    const val LOTTIE = "com.airbnb.android:lottie:6.2.0"
+    const val LOTTIE = "com.airbnb.android:lottie:6.5.2"
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"
@@ -157,7 +157,7 @@ object Libs {
     const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.1.2"
     const val PAPERDB = "io.github.pilgr:paperdb:2.7.2"
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
-    const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.10.0"
+    const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
     const val HEAP = "com.heapanalytics.android:heap-android-client:${Versions.HEAP}"

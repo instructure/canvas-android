@@ -30,7 +30,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.Date
 
-Į
 @RunWith(AndroidJUnit4::class)
 class CreatePendingSubmissionCommentDaoTest {
 
