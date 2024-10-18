@@ -27,13 +27,13 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.RubricSettings
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.pandautils.utils.color
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RatingData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricPresenter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

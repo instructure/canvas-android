@@ -40,6 +40,7 @@
     <string name="dueLabel">Due</string>
     <string name="submissionStatusSuccessTitle">Successfully submitted!</string>
     <string name="submissionStatusSuccessSubtitle">Your submission is now waiting to be graded</string>
+    <string name="submissionStatusWaitingSubtitle">The submission is now waiting to be graded</string>
     <string name="submissionStatusUploadingTitle">Submission Uploading…</string>
     <string name="submissionStatusUploadingSubtitle">Tap to view progress</string>
     <string name="submissionStatusFailedTitle">Submission Failed</string>

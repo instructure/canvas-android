@@ -39,7 +39,7 @@ internal fun ParentGradesScreen(
         events.collect { action ->
             when (action) {
                 is GradesViewModelAction.NavigateToAssignmentDetails -> {
-                    actionHandler(CourseDetailsAction.NavigateToAssignmentDetails(action.assignmentId))
+                    actionHandler(CourseDetailsAction.NavigateToAssignmentDetails(action.courseId, action.assignmentId))
                 }
             }
         }

@@ -16,7 +16,6 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.file
 
-import android.content.Context
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
 import com.instructure.student.mobius.common.ui.EffectHandler

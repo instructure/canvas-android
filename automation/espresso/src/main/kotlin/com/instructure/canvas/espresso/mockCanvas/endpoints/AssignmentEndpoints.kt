@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradeableStudent
 import com.instructure.canvasapi2.models.ObserveeAssignment
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.ObserveeAssignmentGroup
 import com.instructure.canvasapi2.models.SubmissionSummary
 import okio.Buffer
@@ -63,7 +64,11 @@ object AssignmentEndpoint : Endpoint(
             val assignment = data.assignments[pathVars.assignmentId]
 
             if (assignment != null) {
-                request.successResponse(assignment)
+                if (request.url.queryParameterValues("include[]").contains("observed_users")) {
+                    request.successResponse(assignment.toObserveeAssignment())
+                } else {
+                    request.successResponse(assignment)
+                }
             } else {
                 request.unauthorizedResponse()
             }
