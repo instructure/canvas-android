@@ -236,7 +236,7 @@ data class Assignment(
     }
 
     fun isGraded(): Boolean {
-        return submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null
+        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null) || submission?.excused == true
     }
 
     companion object {
