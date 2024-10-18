@@ -31,7 +31,9 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -106,6 +108,12 @@ private fun CourseDetailsScreenContent(
 ) {
     val pagerState = rememberPagerState { uiState.tabs.size }
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            actionHandler(CourseDetailsAction.CurrentTabChanged(uiState.tabs[page]))
+        }
+    }
 
     val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
         when (it) {

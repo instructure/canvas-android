@@ -6,6 +6,7 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.InboxComposeInteractionTest
 import com.instructure.canvas.espresso.common.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
@@ -17,10 +18,12 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.ParentInboxCoursePickerPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
+import org.junit.Test
 
 @HiltAndroidTest
 class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
@@ -30,6 +33,16 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
 
     private val dashboardPage = DashboardPage()
     private val inboxPage = InboxPage()
+    private val inboxComposePage = InboxComposePage(composeTestRule)
+    private val inboxCoursePickerPage = ParentInboxCoursePickerPage(composeTestRule)
+
+    @Test
+    fun testParentComposeDefaultValues() {
+        val data = initData(canSendToAll = true)
+        goToInboxCompose(data)
+
+        inboxComposePage.assertContextSelected(getFirstCourse().name)
+    }
 
     override fun goToInboxCompose(data: MockCanvas) {
         val parent = data.parents.first()
@@ -40,6 +53,8 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         dashboardPage.clickInbox()
 
         inboxPage.pressNewMessageButton()
+
+        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = getObservedStudent().name)
     }
 
     override fun initData(canSendToAll: Boolean, sendMessages: Boolean): MockCanvas {
@@ -81,6 +96,8 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         super.enableAndConfigureAccessibilityChecks()
     }
 
+    private fun getObservedStudent(): User = MockCanvas.data.students[0]
+
     override fun getLoggedInUser(): User = MockCanvas.data.parents[0]
 
     override fun getTeachers(): List<User> { return MockCanvas.data.teachers }
@@ -88,4 +105,6 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     override fun getFirstCourse(): Course { return MockCanvas.data.courses.values.first() }
 
     override fun getSentConversation(): Conversation? { return MockCanvas.data.sentConversation }
+
+    override fun selectContext() = Unit
 }

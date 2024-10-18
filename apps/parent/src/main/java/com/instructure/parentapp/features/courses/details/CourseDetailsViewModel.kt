@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.orDefault
@@ -45,7 +46,7 @@ class CourseDetailsViewModel @Inject constructor(
     private val parentPrefs: ParentPrefs
 ) : ViewModel() {
 
-    private val courseId = savedStateHandle.get<Long>(Navigation.COURSE_ID).orDefault()
+    val courseId = savedStateHandle.get<Long>(Navigation.COURSE_ID).orDefault()
 
     private val _uiState = MutableStateFlow(CourseDetailsUiState())
     val uiState = _uiState.asStateFlow()
@@ -116,6 +117,26 @@ class CourseDetailsViewModel @Inject constructor(
                     _events.send(CourseDetailsViewModelAction.NavigateToAssignmentDetails(action.id))
                 }
             }
+
+            is CourseDetailsAction.CurrentTabChanged -> {
+                viewModelScope.launch {
+                    _uiState.update {
+                        it.copy(currentTab = action.newTab)
+                    }
+                }
+            }
         }
+    }
+
+    fun getContextURL(courseId: Long): String {
+        val tabUrlSegment = uiState.value.currentTab?.let { tab ->
+            when (tab) {
+                TabType.GRADES -> "grades"
+                TabType.FRONT_PAGE -> ""
+                TabType.SYLLABUS -> "assignments/syllabus"
+                TabType.SUMMARY -> "assignments/syllabus"
+            }
+        }
+        return "${ApiPrefs.fullDomain}/courses/$courseId/${tabUrlSegment}"
     }
 }
