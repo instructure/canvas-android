@@ -42,7 +42,6 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -53,6 +52,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -74,7 +74,6 @@ import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
 import com.instructure.student.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.student.features.assignments.reminder.CustomReminderDialog
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.fragment.StudioWebViewFragment
@@ -91,11 +90,15 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 @AndroidEntryPoint
 class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
@@ -385,31 +388,24 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     private fun setupDescriptionView() {
         binding?.descriptionWebViewWrapper?.webView?.addVideoClient(requireActivity())
         binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                RouteMatcher.openMedia(requireActivity(), url)
-            }
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) = webViewRouter.openMedia(url)
 
-            override fun onPageFinishedCallback(webView: WebView, url: String) {}
-            override fun onPageStartedCallback(webView: WebView, url: String) {}
-            override fun canRouteInternallyDelegate(url: String): Boolean {
-                return RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
-            }
+            override fun onPageStartedCallback(webView: WebView, url: String) = Unit
+
+            override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
+
+            override fun canRouteInternallyDelegate(url: String) = webViewRouter.canRouteInternally(url)
 
             override fun routeInternallyCallback(url: String) {
-                viewModel.assignment?.let {
-                    val extras = Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(canvasContext, it)) }
-                    RouteMatcher.routeUrl(requireActivity(), url, ApiPrefs.domain, extras)
+                val extras = viewModel.assignment?.let {
+                    Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(canvasContext, it)) }
                 }
+                webViewRouter.routeInternally(url, extras)
             }
         }
 
         binding?.descriptionWebViewWrapper?.webView?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-            override fun launchInternalWebViewFragment(url: String) {
-                InternalWebviewFragment.loadInternalWebView(
-                    requireActivity(),
-                    InternalWebviewFragment.makeRoute(canvasContext, url, false)
-                )
-            }
+            override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, canvasContext)
 
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }

@@ -16,6 +16,7 @@
  */
 package com.instructure.parentapp.util.navigation
 
+import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.navigation.WebViewRouter
@@ -26,7 +27,7 @@ class ParentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
         TODO("Not yet implemented")
     }
 
-    override fun routeInternally(url: String) {
+    override fun routeInternally(url: String, extras: Bundle?) {
         TODO("Not yet implemented")
     }
 
