@@ -38,7 +38,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -46,7 +45,6 @@ import org.junit.Test
 import org.junit.function.ThrowingRunnable
 import java.time.OffsetDateTime
 
-@ExperimentalCoroutinesApi
 class OfflineContentRepositoryTest {
 
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)

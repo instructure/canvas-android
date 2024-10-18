@@ -73,7 +73,7 @@ import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -91,7 +91,7 @@ class DashboardNotificationsViewModelTest {
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val resources: Resources = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)

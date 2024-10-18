@@ -22,12 +22,10 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class DiscussionListLocalDataSourceTest {
 
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade = mockk(relaxed = true)

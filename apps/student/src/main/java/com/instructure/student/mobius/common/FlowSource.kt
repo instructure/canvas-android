@@ -22,26 +22,25 @@ import com.spotify.mobius.EventSource
 import com.spotify.mobius.disposables.Disposable
 import com.spotify.mobius.functions.Consumer
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 /**
- * An EventSource which aids in mapping Channel data of one type to events a target type. To use this class, either
- * create a subclass and override [mapEvent], or call [ChannelSource.getSource] and pass in a function that performs
+ * An EventSource which aids in mapping Flow data of one type to events a target type. To use this class, either
+ * create a subclass and override [mapEvent], or call [FlowSource.getSource] and pass in a function that performs
  * event mapping.
  */
-abstract class ChannelSource<T : Any, E : Any> (private val channel: BroadcastChannel<T>) : EventSource<E> {
+abstract class FlowSource<T : Any, E : Any> (private val sharedFlow: SharedFlow<T>) : EventSource<E> {
 
     override fun subscribe(eventConsumer: Consumer<E>): Disposable {
-        val receiveChannel = channel.openSubscription()
-        GlobalScope.launch {
-            receiveChannel.consumeEach {
+        val job = GlobalScope.launch {
+            sharedFlow.collect {
                 val event = mapEvent(it)
                 event?.let { nunNullEvent -> eventConsumer.accept(nunNullEvent) }
             }
         }
-        return Disposable { receiveChannel.cancel() }
+        return Disposable { job.cancel() }
     }
 
     /**
@@ -51,23 +50,19 @@ abstract class ChannelSource<T : Any, E : Any> (private val channel: BroadcastCh
     abstract fun mapEvent(event: T): E?
 
     companion object {
-        val channelStore = hashMapOf<String, BroadcastChannel<*>>()
+        val sharedFlowStore = hashMapOf<String, MutableSharedFlow<*>>()
 
         /**
-         * Produces a [BroadcastChannel] of the specified type [T], returning an existing channel if it exists or creating
+         * Produces a [MutableSharedFlow] of the specified type [T], returning an existing channel if it exists or creating
          * a new channel if either it does not exist, or it does exist but has been closed. Only one channel per unique
          * type [T] will exist at a time.
          */
         @Suppress("UNCHECKED_CAST")
-        inline fun <reified T : Any> getChannel(): BroadcastChannel<T> {
+        inline fun <reified T : Any> getFlow(): MutableSharedFlow<T> {
             val className = T::class.java.canonicalName!!
-            var channel = channelStore[className]
-            if ((channel as? BroadcastChannel<T>)?.isClosedForSend != false) {
-                channel?.close()
-                channel = BroadcastChannel<T>(100)
-                channelStore[className] = channel
-            }
-            return channel
+            return sharedFlowStore.computeIfAbsent(className) {
+                MutableSharedFlow<T>(replay = 0, extraBufferCapacity = 100)
+            } as MutableSharedFlow<T>
         }
 
         /**
@@ -75,13 +70,26 @@ abstract class ChannelSource<T : Any, E : Any> (private val channel: BroadcastCh
          * must be provided to map input events of type [T] to events of type [E]. This function may return a null value
          * if there is no valid mapping for the input event or if an output event should not be produced.
          */
-        inline fun <reified T : Any, reified E : Any> getSource(crossinline mapper: (T) -> E?): ChannelSource<T, E> {
-            val channel = getChannel<T>()
-            return object : ChannelSource<T, E>(channel) {
+        inline fun <reified T : Any, reified E : Any> getSource(crossinline mapper: (T) -> E?): FlowSource<T, E> {
+            val flow = getFlow<T>()
+            return object : FlowSource<T, E>(flow) {
                 override fun mapEvent(event: T): E? = mapper(event)
             }
         }
 
     }
+}
 
+/**
+ * Extension function for MutableSharedFlow that replicates the trySend behavior.
+ * It attempts to emit the event into the flow and returns a result similar to BroadcastChannel's trySend.
+ */
+fun <T> MutableSharedFlow<T>.trySend(value: T): Boolean {
+    return try {
+        // Emit value, with an immediate return of false if buffer is full (replay == 0 and no extraBufferCapacity)
+        this.tryEmit(value)
+    } catch (e: Exception) {
+        // In case of any exception (which is rare in SharedFlow), we return false
+        false
+    }
 }

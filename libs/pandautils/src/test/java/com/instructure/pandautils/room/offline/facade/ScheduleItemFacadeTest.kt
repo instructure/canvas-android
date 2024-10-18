@@ -32,15 +32,19 @@ import com.instructure.pandautils.room.offline.entities.AssignmentEntity
 import com.instructure.pandautils.room.offline.entities.AssignmentOverrideEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemAssignmentOverrideEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemEntity
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ScheduleItemFacadeTest {
     private val scheduleItemDao: ScheduleItemDao = mockk(relaxed = true)
     private val assignmentOverrideDao: AssignmentOverrideDao = mockk(relaxed = true)

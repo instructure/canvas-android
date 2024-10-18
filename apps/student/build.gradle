@@ -304,7 +304,7 @@ dependencies {
     implementation Libs.ANDROIDX_BROWSER
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES
@@ -317,7 +317,7 @@ dependencies {
     implementation Libs.VIEW_MODEL
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODE_SAVED_STATE
-    implementation Libs.FRAGMENT_KTX
+    implementation Libs.ANDROIDX_FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
 
     /* DI */

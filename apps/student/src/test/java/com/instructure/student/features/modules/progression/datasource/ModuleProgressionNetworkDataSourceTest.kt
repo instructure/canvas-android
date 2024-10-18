@@ -28,13 +28,11 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ModuleProgressionNetworkDataSourceTest {
 
     private val moduleApi: ModuleAPI.ModuleInterface = mockk()

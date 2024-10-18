@@ -7,11 +7,9 @@ import com.instructure.student.features.pages.list.datasource.PageListLocalDataS
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class PageListLocalDataSourceTest {
 
     private val pageFacade: PageFacade = mockk(relaxed = true)

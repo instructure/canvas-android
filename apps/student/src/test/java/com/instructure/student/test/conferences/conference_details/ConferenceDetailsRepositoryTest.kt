@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsRepository
@@ -32,12 +31,10 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ConferenceDetailsRepositoryTest {
 
     private val localDataSource: ConferenceDetailsLocalDataSource = mockk(relaxed = true)

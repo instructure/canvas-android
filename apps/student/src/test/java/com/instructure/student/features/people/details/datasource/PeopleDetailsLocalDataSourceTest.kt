@@ -8,11 +8,9 @@ import com.instructure.student.features.people.details.PeopleDetailsLocalDataSou
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class PeopleDetailsLocalDataSourceTest {
     private val userFacade: UserFacade = mockk(relaxed = true)
     private val dataSource = PeopleDetailsLocalDataSource(userFacade)

@@ -8,11 +8,9 @@ import com.instructure.student.features.pages.list.datasource.PageListNetworkDat
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class PageListNetworkDataSourceTest {
 
     private val pageApi: PageAPI.PagesInterface = mockk(relaxed = true)

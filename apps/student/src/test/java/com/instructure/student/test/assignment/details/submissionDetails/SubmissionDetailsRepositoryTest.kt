@@ -17,9 +17,13 @@
 
 package com.instructure.student.test.assignment.details.submissionDetails
 
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsRepository
@@ -30,13 +34,11 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class SubmissionDetailsRepositoryTest {
 
     private val localDataSource: SubmissionDetailsLocalDataSource = mockk(relaxed = true)
