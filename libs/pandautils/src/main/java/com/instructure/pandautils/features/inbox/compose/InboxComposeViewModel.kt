@@ -130,15 +130,18 @@ class InboxComposeViewModel @Inject constructor(
                     options.autoSelectRecipientsFromRoles?.forEach { role ->
                         roleRecipients[role]?.let { selectedRecipients.addAll(it) }
                     }
-                    _uiState.update {
-                        it.copy(
-                            recipientPickerUiState = it.recipientPickerUiState.copy(
-                                selectedRecipients = selectedRecipients.distinct(),
-                            ),
-                            inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
-                                selectedValues = selectedRecipients.distinct(),
+                    
+                    if (!options.autoSelectRecipientsFromRoles.isNullOrEmpty()) {
+                        _uiState.update {
+                            it.copy(
+                                recipientPickerUiState = it.recipientPickerUiState.copy(
+                                    selectedRecipients = selectedRecipients.distinct(),
+                                ),
+                                inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                    selectedValues = selectedRecipients.distinct(),
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
