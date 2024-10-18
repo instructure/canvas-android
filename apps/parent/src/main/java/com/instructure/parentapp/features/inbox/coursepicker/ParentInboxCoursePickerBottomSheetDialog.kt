@@ -73,8 +73,11 @@ class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
 
                             dismiss()
                         }
-                    }
 
+                        is ParentInboxCoursePickerAction.CloseDialog -> {
+                            dismiss()
+                        }
+                    }
                 }
             }
         }
@@ -93,6 +96,8 @@ class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
                     val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED
                     behavior.peekHeight = 0
+                    behavior.skipCollapsed = true
+                    behavior.isDraggable = false
                 }
             }
         }

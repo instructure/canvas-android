@@ -37,4 +37,5 @@ sealed class ScreenState {
 
 sealed class ParentInboxCoursePickerAction {
     data class StudentContextSelected(val studentContextItem: StudentContextItem): ParentInboxCoursePickerAction()
+    data object CloseDialog: ParentInboxCoursePickerAction()
 }
