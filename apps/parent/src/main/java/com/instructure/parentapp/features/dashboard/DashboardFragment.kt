@@ -37,13 +37,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
@@ -53,6 +53,7 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
@@ -136,6 +137,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
+                setupLaunchDefinitions(it.launchDefinitionViewData)
                 setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
@@ -156,6 +158,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 } catch (e: Exception) {
                     firebaseCrashlytics.recordException(e)
                 }
+            }
+            is DashboardViewModelAction.OpenLtiTool -> {
+                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name))
             }
         }
     }
@@ -231,6 +236,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
             when (it.itemId) {
                 R.id.inbox -> menuItemSelected { navigation.navigate(activity, navigation.inbox) }
                 R.id.manage_students -> menuItemSelected { navigation.navigate(activity, navigation.manageStudents) }
+                R.id.mastery -> menuItemSelected { viewModel.openMastery() }
+                R.id.studio -> menuItemSelected { viewModel.openStudio() }
                 R.id.settings -> menuItemSelected { navigation.navigate(activity, navigation.settings) }
                 R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
@@ -281,7 +288,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupAppColors(student: User?) {
-        val color = ColorKeeper.getOrGenerateUserColor(student).color()
+        val color = student.studentColor
         if (binding.toolbar.background == null) {
             binding.toolbar.setBackgroundColor(color)
         } else {
@@ -297,6 +304,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.unreadCountBadge.setTextColor(color)
 
         binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
+        viewModel.updateColor(color)
     }
 
     private fun openNavigationDrawer() {
@@ -318,11 +326,25 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .showThemed(ColorKeeper.getOrGenerateUserColor(ParentPrefs.currentStudent).color())
+            .showThemed(ParentPrefs.currentStudent.studentColor)
     }
 
     private fun onSwitchUsers() {
         ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+    }
+
+    private fun setupLaunchDefinitions(launchDefinitionViewData: List<LaunchDefinitionViewData>) {
+        val masteryItem = launchDefinitionViewData.find { it.domain == LaunchDefinition.MASTERY_DOMAIN }
+        if (masteryItem != null) {
+            val masteryMenuItem = binding.navView.menu.findItem(R.id.mastery)
+            masteryMenuItem.isVisible = true
+        }
+
+        val studioItem = launchDefinitionViewData.find { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        if (studioItem != null) {
+            val studioMenuItem = binding.navView.menu.findItem(R.id.studio)
+            studioMenuItem.isVisible = true
+        }
     }
 
     override fun onHandleBackPressed(): Boolean {

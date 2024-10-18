@@ -28,6 +28,18 @@
             android:icon="@drawable/ic_group_2"
             android:title="@string/screenTitleManageStudents" />
         <item
+            android:id="@+id/studio"
+            android:contentDescription=""
+            android:icon="@drawable/ic_navigation_studio"
+            android:title="@string/studio"
+            android:visible="false"/>
+        <item
+            android:id="@+id/mastery"
+            android:contentDescription=""
+            android:icon="@drawable/ic_navigation_mastery"
+            android:title="@string/masteryConnect"
+            android:visible="false"/>
+        <item
             android:id="@+id/settings"
             android:contentDescription=""
             android:icon="@drawable/ic_settings"

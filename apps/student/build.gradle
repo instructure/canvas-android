@@ -40,11 +40,10 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 266
-        versionName = '7.5.3'
+        versionCode = 268
+        versionName = '7.6.1'
 
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
         buildConfigField "boolean", "IS_TESTING", "false"
@@ -113,12 +112,6 @@ android {
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
 
-            buildConfigField "String", "PRONOUN_STUDENT_TEST_USER", "\"$pronounTestStudent\""
-            buildConfigField "String", "PRONOUN_STUDENT_TEST_PASSWORD", "\"$pronounTestStudentPassword\""
-
-            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_USER", "\"$pushNotificationsTestStudent\""
-            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_PASSWORD", "\"$pushNotificationsTestStudentPassword\""
-
             ext {
                 heapEnabled = true
             }
@@ -163,6 +156,11 @@ android {
 
         qa {
             buildConfigField "boolean", "IS_TESTING", "true"
+            buildConfigField "String", "PRONOUN_STUDENT_TEST_USER", "\"$pronounTestStudent\""
+            buildConfigField "String", "PRONOUN_STUDENT_TEST_PASSWORD", "\"$pronounTestStudentPassword\""
+
+            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_USER", "\"$pushNotificationsTestStudent\""
+            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_PASSWORD", "\"$pushNotificationsTestStudentPassword\""
             dimension 'default'
         }
 

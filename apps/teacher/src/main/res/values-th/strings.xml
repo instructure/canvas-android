@@ -511,6 +511,21 @@
     <string name="colorPickerDialogMessage">นี่เป็นค่าปรับตั้งสีส่วนตัวของคุณ เฉพาะคุณเท่านั้นที่จะเห็นสีนี้สำหรับบทเรียนนี้</string>
     <string name="colorPickerError">ระบุสีบทเรียนไม่ได้ในตอนนี้</string>
 
+    <string name="contentDescriptionColorCottonCandy">ชมพู</string>
+    <string name="contentDescriptionColorBarbie">ฮอตพิงค์</string>
+    <string name="contentDescriptionColorBarneyPurple">ไวโอเล็ต</string>
+    <string name="contentDescriptionColorEggplant">ม่วง</string>
+    <string name="contentDescriptionColorUltramarine">น้ำเงินเข้ม</string>
+    <string name="contentDescriptionColorOcean11">น้ำเงิน</string>
+    <string name="contentDescriptionColorCyan">ฟ้า</string>
+    <string name="contentDescriptionColorAquaMarine"> อะควอบลู</string>
+    <string name="contentDescriptionColorEmeraldGreen">เอมเมอรัลด์กรีน</string>
+    <string name="contentDescriptionColorFreshCutLawn">เขียว</string>
+    <string name="contentDescriptionColorChartreuse">ชาร์ทรูส</string>
+    <string name="contentDescriptionColorSunFlower">เหลือง</string>
+    <string name="contentDescriptionColorTangerine">ส้ม</string>
+    <string name="contentDescriptionColorBloodOrange">ดาร์คออเรนจ์</string>
+    <string name="contentDescriptionColorSriracha">แดง</string>
     <string name="launch_link_in_external_browser">เรียกใช้ลิงค์ในเบราเซอร์จากภายนอก</string>
     <string name="contentDescriptionSelectedFile">ไฟล์ที่เลือก</string>
     <string name="contentDescriptionFileIcon">ไอคอนไฟล์</string>

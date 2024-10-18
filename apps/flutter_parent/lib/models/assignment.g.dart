@@ -248,6 +248,11 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       ..add(serializers.serialize(value,
           specifiedType: const FullType(
               BuiltList, const [const FullType(SubmissionTypes)])));
+    value = object.isHiddenInGradeBook;
+
+    result
+      ..add('hide_in_gradebook')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
 
     return result;
   }
@@ -381,6 +386,10 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(SubmissionTypes)]))!
               as BuiltList<Object?>);
+          break;
+        case 'hide_in_gradebook':
+          result.isHiddenInGradeBook = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool?;
           break;
       }
     }
@@ -523,6 +532,8 @@ class _$Assignment extends Assignment {
   final bool isStudioEnabled;
   @override
   final BuiltList<SubmissionTypes>? submissionTypes;
+  @override
+  final bool? isHiddenInGradeBook;
 
   factory _$Assignment([void Function(AssignmentBuilder)? updates]) =>
       (new AssignmentBuilder()..update(updates))._build();
@@ -556,7 +567,8 @@ class _$Assignment extends Assignment {
       required this.moderatedGrading,
       required this.anonymousGrading,
       required this.isStudioEnabled,
-      this.submissionTypes})
+      this.submissionTypes,
+      this.isHiddenInGradeBook})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, r'Assignment', 'id');
     BuiltValueNullFieldError.checkNotNull(
@@ -626,7 +638,8 @@ class _$Assignment extends Assignment {
         moderatedGrading == other.moderatedGrading &&
         anonymousGrading == other.anonymousGrading &&
         isStudioEnabled == other.isStudioEnabled &&
-        submissionTypes == other.submissionTypes;
+        submissionTypes == other.submissionTypes &&
+        isHiddenInGradeBook == other.isHiddenInGradeBook;
   }
 
   @override
@@ -661,6 +674,7 @@ class _$Assignment extends Assignment {
     _$hash = $jc(_$hash, anonymousGrading.hashCode);
     _$hash = $jc(_$hash, isStudioEnabled.hashCode);
     _$hash = $jc(_$hash, submissionTypes.hashCode);
+    _$hash = $jc(_$hash, isHiddenInGradeBook.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -696,7 +710,8 @@ class _$Assignment extends Assignment {
           ..add('moderatedGrading', moderatedGrading)
           ..add('anonymousGrading', anonymousGrading)
           ..add('isStudioEnabled', isStudioEnabled)
-          ..add('submissionTypes', submissionTypes))
+          ..add('submissionTypes', submissionTypes)
+          ..add('isHiddenInGradeBook', isHiddenInGradeBook))
         .toString();
   }
 }
@@ -838,6 +853,11 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   set submissionTypes(ListBuilder<SubmissionTypes>? submissionTypes) =>
       _$this._submissionTypes = submissionTypes;
 
+  bool? _isHiddenInGradeBook;
+  bool? get isHiddenInGradeBook => _$this._isHiddenInGradeBook;
+  set isHiddenInGradeBook(bool? isHiddenInGradeBook) =>
+      _$this._isHiddenInGradeBook = isHiddenInGradeBook;
+
   AssignmentBuilder() {
     Assignment._initializeBuilder(this);
   }
@@ -874,6 +894,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       _anonymousGrading = $v.anonymousGrading;
       _isStudioEnabled = $v.isStudioEnabled;
       _submissionTypes = $v.submissionTypes?.toBuilder();
+      _isHiddenInGradeBook = $v.isHiddenInGradeBook;
       _$v = null;
     }
     return this;
@@ -936,7 +957,8 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
               moderatedGrading: BuiltValueNullFieldError.checkNotNull(moderatedGrading, r'Assignment', 'moderatedGrading'),
               anonymousGrading: BuiltValueNullFieldError.checkNotNull(anonymousGrading, r'Assignment', 'anonymousGrading'),
               isStudioEnabled: BuiltValueNullFieldError.checkNotNull(isStudioEnabled, r'Assignment', 'isStudioEnabled'),
-              submissionTypes: _submissionTypes?.build());
+              submissionTypes: _submissionTypes?.build(),
+              isHiddenInGradeBook: isHiddenInGradeBook);
     } catch (_) {
       late String _$failedField;
       try {

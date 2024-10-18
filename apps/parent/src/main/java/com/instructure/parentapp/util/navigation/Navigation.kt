@@ -34,6 +34,7 @@ import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
+import com.instructure.parentapp.features.lti.LtiLaunchFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
 import com.instructure.parentapp.features.splash.SplashFragment
@@ -43,8 +44,7 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     private val baseUrl = apiPrefs.fullDomain
 
-    private val courseId = "course-id"
-    private val courseDetails = "$baseUrl/courses/{$courseId}"
+    private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
@@ -72,6 +72,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
     private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
 
+    private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}"
+
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
 
     fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
@@ -83,6 +85,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun updateToDoRoute(plannerItem: PlannerItem) = "$baseUrl/update-todo/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
 
     fun alertSettingsRoute(student: User) = "$baseUrl/alert-settings/${UserParametersType.serializeAsValue(student)}"
+
+    fun ltiLaunchRoute(url: String, title: String) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}"
 
     fun crateMainNavGraph(navController: NavController): NavGraph {
         return navController.createGraph(
@@ -125,7 +129,7 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<QrPairingFragment>(qrPairing)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {
-                argument(courseId) {
+                argument(COURSE_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
@@ -186,6 +190,16 @@ class Navigation(apiPrefs: ApiPrefs) {
                     nullable = false
                 }
             }
+            fragment<LtiLaunchFragment>(ltiLaunch) {
+                argument(LtiLaunchFragment.LTI_URL) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(LtiLaunchFragment.LTI_TITLE) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            }
         }
     }
 
@@ -218,6 +232,10 @@ class Navigation(apiPrefs: ApiPrefs) {
         } catch (e: Exception) {
             Log.e(this.javaClass.simpleName, e.message.orEmpty())
         }
+    }
+
+    companion object {
+        const val COURSE_ID = "course-id"
     }
 }
 
