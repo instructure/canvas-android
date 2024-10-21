@@ -273,7 +273,11 @@ open class InternalWebviewFragment : ParentFragment() {
     override fun applyTheme() = with(binding) {
         toolbar.title = title()
         toolbar.setupAsBackButton(this@InternalWebviewFragment)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        if (canvasContext.type != CanvasContext.Type.COURSE || canvasContext.type != CanvasContext.Type.GROUP) {
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        } else {
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        }
     }
 
     override fun title(): String = title ?: canvasContext.name ?: ""

@@ -65,7 +65,7 @@ class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab,
             var attendanceId: Long = 0
 
             launchDefinitions.forEach {
-                val ltiDefinitionUrl = it.placements.courseNavigation?.url
+                val ltiDefinitionUrl = it.placements?.courseNavigation?.url
                 if (ltiDefinitionUrl != null && (
                         ltiDefinitionUrl.contains(AttendanceAPI.BASE_DOMAIN) ||
                                 ltiDefinitionUrl.contains(AttendanceAPI.BASE_TEST_DOMAIN))) {
