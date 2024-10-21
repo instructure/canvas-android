@@ -200,6 +200,26 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/navigationDrawerItem_mastery"
+                style="@style/NavigationDrawerItem"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/ic_navigation_mastery" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/masteryConnect"
+                    android:textSize="16sp"
+                    android:textColor="@color/textDarkest"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/navigationDrawerSettings"
                 style="@style/NavigationDrawerItem"
                 android:layout_marginBottom="20dp"
