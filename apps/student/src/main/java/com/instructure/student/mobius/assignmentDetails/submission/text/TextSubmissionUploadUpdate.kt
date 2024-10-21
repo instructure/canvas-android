@@ -20,8 +20,6 @@ import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.Effects.effects
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
 
 class TextSubmissionUploadUpdate :
     UpdateInit<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {

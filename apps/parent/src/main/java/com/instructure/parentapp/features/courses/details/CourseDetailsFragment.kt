@@ -32,11 +32,16 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class CourseDetailsFragment : Fragment() {
+
+    @Inject
+    lateinit var navigation: Navigation
 
     private val viewModel: CourseDetailsViewModel by viewModels()
 
@@ -69,7 +74,7 @@ class CourseDetailsFragment : Fragment() {
             }
 
             is CourseDetailsViewModelAction.NavigateToAssignmentDetails -> {
-
+                navigation.navigate(activity, navigation.assignmentDetailsRoute(action.courseId, action.assignmentId))
             }
         }
     }
