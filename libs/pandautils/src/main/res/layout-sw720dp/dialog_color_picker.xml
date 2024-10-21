@@ -19,13 +19,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="start"
-    android:gravity="start"
     android:padding="6dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/colorPickerDialogMessage"
+        android:layout_gravity="start"
         style="@style/TextFont.Regular"
         android:textColor="@color/textDark"
         android:layout_marginStart="16dp"
@@ -34,6 +34,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_marginTop="12dp"
         android:layout_marginStart="12dp"
@@ -74,6 +75,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
         android:layout_marginBottom="12dp"
         android:layout_marginStart="12dp"
