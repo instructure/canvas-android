@@ -16,6 +16,7 @@
  */
 package com.instructure.student.navigation
 
+import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -31,8 +32,12 @@ class StudentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
         return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = routeIfPossible, allowUnsupported = false)
     }
 
-    override fun routeInternally(url: String) {
-        RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)
+    override fun routeInternally(url: String, extras: Bundle?) {
+        if (extras != null) {
+            RouteMatcher.routeUrl(activity, url, ApiPrefs.domain, extras)
+        } else {
+            RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)
+        }
     }
 
     override fun openMedia(url: String, mime: String, filename: String, canvasContext: CanvasContext?) {
