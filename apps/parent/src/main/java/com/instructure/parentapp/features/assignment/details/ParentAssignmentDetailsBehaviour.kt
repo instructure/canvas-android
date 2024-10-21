@@ -59,6 +59,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
     private fun messageFAB(context: Context, actionHandler: (AssignmentDetailsBehaviorAction) -> Unit): FloatingActionButton {
         return FloatingActionButton(context).apply {
             setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
+            contentDescription = context.getString(R.string.sendMessageAboutAssignment)
             setTint(R.color.textLightest)
             backgroundTintList = ColorStateList.valueOf(ParentPrefs.currentStudent.studentColor)
             useCompatPadding = true
