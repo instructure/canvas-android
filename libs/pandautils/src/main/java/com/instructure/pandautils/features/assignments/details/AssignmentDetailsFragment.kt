@@ -49,6 +49,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
@@ -291,7 +292,12 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             }
 
             override fun routeInternallyCallback(url: String) {
-                webViewRouter.routeInternally(url)
+                val extras = viewModel.assignment?.let { assignment ->
+                    viewModel.course.value?.let { course ->
+                        Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(course, assignment)) }
+                    }
+                }
+                webViewRouter.routeInternally(url, extras)
             }
         }
 
