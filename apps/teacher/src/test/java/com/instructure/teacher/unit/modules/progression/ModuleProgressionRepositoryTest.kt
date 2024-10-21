@@ -28,12 +28,10 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.teacher.features.modules.progression.ModuleProgressionRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ModuleProgressionRepositoryTest {
 
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)

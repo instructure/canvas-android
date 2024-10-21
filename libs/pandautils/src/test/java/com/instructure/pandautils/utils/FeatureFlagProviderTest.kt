@@ -30,13 +30,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class FeatureFlagProviderTest {
 
     private val userManager: UserManager = mockk(relaxed = true)
@@ -52,7 +49,7 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Return false if feature flag is not enabled`() = runBlockingTest {
+    fun `Return false if feature flag is not enabled`() = runTest {
         // Given
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(User(k5User = false))
@@ -66,7 +63,7 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Return true if remote config flag and feature flag is enabled`() = runBlockingTest {
+    fun `Return true if remote config flag and feature flag is enabled`() = runTest {
         // Given
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(User(k5User = true))
@@ -80,7 +77,7 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Return false if feature flag request fails`() = runBlockingTest {
+    fun `Return false if feature flag request fails`() = runTest {
         // Given
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
@@ -94,7 +91,7 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Return true if feature flag request fails, but it is already cached as true`() = runBlockingTest {
+    fun `Return true if feature flag request fails, but it is already cached as true`() = runTest {
         // Given
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
@@ -109,7 +106,7 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Successful request saves feature flag to cache`() = runBlockingTest {
+    fun `Successful request saves feature flag to cache`() = runTest {
         // Given
         every { userManager.getSelfAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(User(k5User = true))
@@ -123,8 +120,7 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Return false if remote config flag and feature flag is enabled but dashboard override is false`() =
-        runBlockingTest {
+    fun `Return false if remote config flag and feature flag is enabled but dashboard override is false`() = runTest {
             // Given
             every { apiPrefs.elementaryDashboardEnabledOverride } returns false
             every { userManager.getSelfAsync(any()) } returns mockk {

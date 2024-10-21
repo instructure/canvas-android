@@ -26,11 +26,9 @@ import com.instructure.pandautils.room.offline.facade.GroupFacade
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class DiscussionRouteHelperLocalDataSourceTest {
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade = mockk(relaxed = true)
     private val groupFacade: GroupFacade = mockk(relaxed = true)
