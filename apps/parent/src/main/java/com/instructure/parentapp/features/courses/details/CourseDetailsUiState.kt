@@ -42,7 +42,7 @@ enum class TabType(@StringRes val labelRes: Int) {
 sealed class CourseDetailsAction {
     data object Refresh : CourseDetailsAction()
     data object SendAMessage : CourseDetailsAction()
-    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsAction()
+    data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsAction()
     data class CurrentTabChanged(val newTab: TabType) : CourseDetailsAction()
 }
 

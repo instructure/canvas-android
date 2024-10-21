@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviorAction
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.utils.ThemePrefs
@@ -191,7 +192,8 @@ class StudentAssignmentDetailsBehaviour (
         binding: FragmentAssignmentDetailsBinding?,
         bookmark: Bookmarker,
         toolbar: Toolbar,
-        course: Course?
+        course: Course?,
+        actionHandler: (AssignmentDetailsBehaviorAction) -> Unit
     ) {
         binding?.toolbar?.apply {
             setupAsBackButton {

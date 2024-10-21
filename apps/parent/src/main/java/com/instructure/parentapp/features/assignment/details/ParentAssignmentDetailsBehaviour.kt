@@ -16,14 +16,22 @@
  */
 package com.instructure.parentapp.features.assignment.details
 
+import android.content.Context
+import android.content.res.ColorStateList
 import androidx.annotation.ColorInt
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.bookmarks.Bookmarker
+import com.instructure.pandautils.binding.setTint
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviorAction
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
@@ -39,9 +47,28 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         binding: FragmentAssignmentDetailsBinding?,
         bookmark: Bookmarker,
         toolbar: Toolbar,
-        course: Course?
+        course: Course?,
+        actionHandler: (AssignmentDetailsBehaviorAction) -> Unit
     ) {
         ViewStyler.themeToolbarColored(activity, toolbar, parentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
         ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
+
+        binding?.assignmentDetailsPage?.addView(messageFAB(activity, actionHandler))
+    }
+
+    private fun messageFAB(context: Context, actionHandler: (AssignmentDetailsBehaviorAction) -> Unit): FloatingActionButton {
+        return FloatingActionButton(context).apply {
+            setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
+            setTint(R.color.textLightest)
+            backgroundTintList = ColorStateList.valueOf(ParentPrefs.currentStudent.studentColor)
+            useCompatPadding = true
+            layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).apply {
+                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            }
+            onClick {
+                actionHandler(AssignmentDetailsBehaviorAction.SendMessage)
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@ import com.instructure.parentapp.features.assignment.details.ParentAssignmentDet
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsSubmissionHandler
 import com.instructure.parentapp.features.assignment.details.receiver.ParentAlarmReceiverNotificationHandler
 import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,8 +46,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(FragmentComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
-    fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
-        return ParentAssignmentDetailsRouter()
+    fun provideAssignmentDetailsRouter(navigation: Navigation): AssignmentDetailsRouter {
+        return ParentAssignmentDetailsRouter(navigation)
     }
 
     @Provides

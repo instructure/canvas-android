@@ -123,7 +123,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
             title = context?.getString(R.string.assignmentDetails)
 
-            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value)
+            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value, ::assignmentDetailsBehaviorActionHandler)
         }
     }
 
@@ -386,6 +386,18 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 dialog.dismiss()
             }
             .showThemed(assignmentDetailsBehaviour.dialogColor)
+    }
+
+    private fun assignmentDetailsBehaviorActionHandler(action: AssignmentDetailsBehaviorAction) {
+        when (action) {
+            is AssignmentDetailsBehaviorAction.SendMessage -> {
+                viewModel.course.value?.let { course ->
+                    viewModel.assignment?.let { assignment ->
+                        assignmentDetailsRouter.navigateToSendMessage(requireActivity(), assignment, course)
+                    }
+                }
+            }
+        }
     }
 
     companion object {
