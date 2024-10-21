@@ -29,7 +29,7 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.router.RouteMatcher
 

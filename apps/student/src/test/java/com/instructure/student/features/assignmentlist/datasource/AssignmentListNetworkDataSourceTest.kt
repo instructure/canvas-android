@@ -27,12 +27,10 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class AssignmentListNetworkDataSourceTest {
 
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)

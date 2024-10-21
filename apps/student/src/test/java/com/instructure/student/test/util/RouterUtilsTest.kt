@@ -27,7 +27,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.student.activity.BaseRouterActivity
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.grades.GradesListFragment

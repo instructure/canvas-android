@@ -29,8 +29,8 @@ import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.R
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment.Companion.makeRoute
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment.Companion.makeRoute
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.features.files.details.FileDetailsFragment

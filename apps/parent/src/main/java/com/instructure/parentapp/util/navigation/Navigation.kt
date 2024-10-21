@@ -14,6 +14,7 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
@@ -60,6 +61,9 @@ class Navigation(apiPrefs: ApiPrefs) {
     val manageStudents = "$baseUrl/manage-students"
     val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
+
+    private val assignmentDetails = "$baseUrl/courses/{${Const.COURSE_ID}}/assignments/{${Const.ASSIGNMENT_ID}}"
+    fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
 
     private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
     fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
@@ -205,6 +209,19 @@ class Navigation(apiPrefs: ApiPrefs) {
                 argument(CreateUpdateEventFragment.SCHEDULE_ITEM) {
                     type = ScheduleItemParametersType
                     nullable = false
+                }
+            }
+            fragment<AssignmentDetailsFragment>(assignmentDetails) {
+                argument(Const.COURSE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(Const.ASSIGNMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = assignmentDetails
                 }
             }
             fragment<AlertSettingsFragment>(alertSettings) {

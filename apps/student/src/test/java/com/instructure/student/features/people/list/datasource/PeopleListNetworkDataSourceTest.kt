@@ -9,11 +9,9 @@ import com.instructure.student.features.people.list.PeopleListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class PeopleListNetworkDataSourceTest {
     private val userAPI: UserAPI.UsersInterface = mockk(relaxed = true)
     private val dataSource = PeopleListNetworkDataSource(userAPI)

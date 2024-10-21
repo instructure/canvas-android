@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.TabManager
@@ -44,7 +45,8 @@ class ElementaryCourseViewModel @Inject constructor(
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
     private val oauthManager: OAuthManager,
-    private val courseManager: CourseManager
+    private val courseManager: CourseManager,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -84,7 +86,7 @@ class ElementaryCourseViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _state.postValue(ViewState.Error(resources.getString(R.string.error_loading_course_details)))
-                Logger.e("Failed to load tabs")
+                firebaseCrashlytics.recordException(e)
             }
         }
     }

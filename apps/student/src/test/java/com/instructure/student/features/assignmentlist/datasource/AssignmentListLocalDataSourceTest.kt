@@ -26,12 +26,10 @@ import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class AssignmentListLocalDataSourceTest {
 
     private val assignmentFacade: AssignmentFacade = mockk(relaxed = true)

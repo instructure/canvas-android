@@ -16,13 +16,14 @@
  */
 package com.instructure.pandautils.navigation
 
+import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 
 interface WebViewRouter {
 
     fun canRouteInternally(url: String, routeIfPossible: Boolean = false): Boolean
 
-    fun routeInternally(url: String)
+    fun routeInternally(url: String, extras: Bundle? = null)
 
     fun openMedia(url: String, mime: String = "", filename: String = "", canvasContext: CanvasContext? = null)
 

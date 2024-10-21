@@ -207,8 +207,8 @@ class GradesViewModel @Inject constructor(
         val submissionStateLabel = when {
             assignment.submission?.late.orDefault() -> SubmissionStateLabel.LATE
             assignment.isMissing() -> SubmissionStateLabel.MISSING
-            assignment.submission?.isGraded.orDefault() || assignment.submission?.excused.orDefault() -> SubmissionStateLabel.GRADED
-            assignment.isSubmitted -> SubmissionStateLabel.SUBMITTED
+            assignment.isGraded().orDefault() -> SubmissionStateLabel.GRADED
+            assignment.submission?.submittedAt != null -> SubmissionStateLabel.SUBMITTED
             !assignment.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
             else -> SubmissionStateLabel.NONE
         }
@@ -278,7 +278,7 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.AssignmentClick -> {
                 viewModelScope.launch {
-                    _events.send(GradesViewModelAction.NavigateToAssignmentDetails(action.id))
+                    _events.send(GradesViewModelAction.NavigateToAssignmentDetails(courseId, action.id))
                 }
             }
 

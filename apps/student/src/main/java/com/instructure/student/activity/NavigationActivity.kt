@@ -126,7 +126,7 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
@@ -138,8 +138,8 @@ import com.instructure.student.fragment.InboxRecipientsFragment
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ToDoListFragment
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.navigation.AccountMenuItem
 import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.NavigationMenuItem

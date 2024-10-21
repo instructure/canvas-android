@@ -82,5 +82,5 @@ sealed class GradesAction {
 }
 
 sealed class GradesViewModelAction {
-    data class NavigateToAssignmentDetails(val assignmentId: Long) : GradesViewModelAction()
+    data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : GradesViewModelAction()
 }

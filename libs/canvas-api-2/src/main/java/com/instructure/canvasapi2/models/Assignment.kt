@@ -235,6 +235,10 @@ data class Assignment(
         return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null)
     }
 
+    fun isGraded(): Boolean {
+        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
+    }
+
     companion object {
 
         const val PASS_FAIL_TYPE = "pass_fail"
