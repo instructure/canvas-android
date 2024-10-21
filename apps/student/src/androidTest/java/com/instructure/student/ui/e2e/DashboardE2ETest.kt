@@ -62,7 +62,7 @@ class DashboardE2ETest : StudentTest() {
         GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
         GroupsApi.createGroupMembership(group2.id, student.id, teacher.token)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
