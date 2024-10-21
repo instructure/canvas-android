@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.StudentContextCardQuery
 import com.instructure.canvasapi2.enqueueQuery
 
-object StudentContextManager {
+interface StudentContextManager {
 
     fun getStudentContext(
         courseId: Long,
@@ -40,6 +40,29 @@ object StudentContextManager {
         callback.enqueueQuery(query) {
             if (forceNetwork) {
                 cachePolicy = HttpCachePolicy.NETWORK_ONLY
+            }
+        }
+    }
+
+    companion object {
+        fun getStudentContext(
+            courseId: Long,
+            studentId: Long,
+            submissionPageSize: Int,
+            forceNetwork: Boolean,
+            callback: QLCallback<StudentContextCardQuery.Data>
+        ) {
+            val query = StudentContextCardQuery.builder()
+                .courseId(courseId.toString())
+                .studentId(studentId.toString())
+                .pageSize(submissionPageSize)
+                .nextCursor(callback.nextCursor)
+                .build()
+
+            callback.enqueueQuery(query) {
+                if (forceNetwork) {
+                    cachePolicy = HttpCachePolicy.NETWORK_ONLY
+                }
             }
         }
     }
