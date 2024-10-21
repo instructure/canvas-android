@@ -79,7 +79,7 @@ class CourseDetailsFragment : Fragment() {
             }
 
             is CourseDetailsViewModelAction.NavigateToAssignmentDetails -> {
-
+                navigation.navigate(activity, navigation.assignmentDetailsRoute(action.courseId, action.assignmentId))
             }
         }
     }

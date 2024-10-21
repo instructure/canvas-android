@@ -48,5 +48,5 @@ sealed class CourseDetailsAction {
 
 sealed class CourseDetailsViewModelAction {
     data object NavigateToComposeMessageScreen : CourseDetailsViewModelAction()
-    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsViewModelAction()
+    data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsViewModelAction()
 }

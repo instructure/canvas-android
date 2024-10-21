@@ -24,9 +24,9 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
 
 object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRubricViewState> {

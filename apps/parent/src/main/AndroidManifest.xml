@@ -27,6 +27,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
@@ -160,6 +162,11 @@
             tools:node="remove">
         </provider>
         <!-- End of Providers -->
+
+        <!--Reminder-->
+        <receiver
+            android:name="com.instructure.pandautils.receivers.alarm.AlarmReceiver"
+            android:exported="false" />
 
     </application>
 

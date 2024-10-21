@@ -96,7 +96,8 @@ class AnnotationSubmissionUploadFragment : Fragment() {
         private const val SUBMISSION_ID = "submission_id"
 
         fun newInstance(route: Route): AnnotationSubmissionUploadFragment {
-            return AnnotationSubmissionUploadFragment().withArgs(route.arguments)
+            return AnnotationSubmissionUploadFragment()
+                .withArgs(route.arguments)
         }
 
         fun makeRoute(

@@ -25,13 +25,16 @@ import com.instructure.canvasapi2.models.AssignmentScoreStatistics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
-import org.junit.*
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
