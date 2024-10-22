@@ -121,7 +121,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
 
         private fun getDrawableId(streamItem: StreamItem): Int {
             when (streamItem.getStreamItemType()) {
-                StreamItem.Type.DISCUSSION_TOPIC -> return R.drawable.ic_discussion
+                StreamItem.Type.DISCUSSION_TOPIC, StreamItem.Type.DISCUSSION_ENTRY, StreamItem.Type.DISCUSSION_MENTION -> return R.drawable.ic_discussion
                 StreamItem.Type.ANNOUNCEMENT -> return R.drawable.ic_announcement
                 StreamItem.Type.SUBMISSION -> return R.drawable.ic_assignment
                 StreamItem.Type.CONVERSATION -> return R.drawable.ic_inbox
