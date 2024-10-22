@@ -58,7 +58,7 @@ class AlertsFragment : Fragment() {
 
     private fun handleAction(action: AlertsViewModelAction) {
         when (action) {
-            is AlertsViewModelAction.NavigateToCourseAnnouncement -> {
+            is AlertsViewModelAction.NavigateToRoute -> {
                 action.route?.let {
                     navigation.navigate(activity, it)
                 }

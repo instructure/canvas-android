@@ -642,7 +642,7 @@ class AlertsViewModelTest {
         }
 
         assertEquals(
-            AlertsViewModelAction.NavigateToCourseAnnouncement(
+            AlertsViewModelAction.NavigateToRoute(
                 "https://example.com/alert1"
             ), events.last()
         )
@@ -784,7 +784,7 @@ class AlertsViewModelTest {
         }
 
         assertEquals(
-            AlertsViewModelAction.NavigateToCourseAnnouncement(
+            AlertsViewModelAction.NavigateToRoute(
                 "https://example.com/alert1"
             ), events.last()
         )
@@ -859,7 +859,7 @@ class AlertsViewModelTest {
         }
 
         assertEquals(
-            AlertsViewModelAction.NavigateToCourseAnnouncement(
+            AlertsViewModelAction.NavigateToRoute(
                 "https://example.com/alert1"
             ), events.last()
         )
