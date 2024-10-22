@@ -24,7 +24,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -151,10 +150,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private fun setupFragmentResultListener() {
         setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) {
-                Log.d("InboxFragment", "setupFragmentResultListener")
-                conversationUpdated()
-            }
+            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
         }
     }
 
