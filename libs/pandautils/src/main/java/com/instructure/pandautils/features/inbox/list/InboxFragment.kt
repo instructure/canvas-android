@@ -19,12 +19,12 @@ package com.instructure.pandautils.features.inbox.list
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +59,6 @@ import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
-import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -152,10 +151,10 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private fun setupFragmentResultListener() {
         setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
-        }
-        setFragmentResultListener(InboxDetailsFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxDetailsFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
+            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) {
+                Log.d("InboxFragment", "setupFragmentResultListener")
+                conversationUpdated()
+            }
         }
     }
 
