@@ -65,6 +65,48 @@ class AnnouncementDetailsScreenTest {
     }
 
     @Test
+    fun assertSnackbar() {
+        val uiState = AnnouncementDetailsUiState(
+            showErrorSnack = true,
+            studentColor = 1,
+            pageTitle = "Course Name",
+            announcementTitle = "Alert Title",
+            message = "Alert Message",
+            postedDate = Date.from(
+                Instant.parse("2024-01-03T00:00:00Z")
+            ),
+            attachment = Attachment(
+                id = 1,
+                filename = "attachment_file_name",
+                size = 100,
+                displayName = "File Name",
+                thumbnailUrl = "thumbnail_url"
+            )
+        )
+        composeTestRule.setContent {
+            AnnouncementDetailsScreen(
+                uiState = uiState,
+                navigationActionClick = {},
+                actionHandler = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("There was an error loading this announcement")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Course Name").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Alert Title").assertIsDisplayed()
+        composeTestRule.onNodeWithText("attachment_file_name").assertIsDisplayed()
+        val dateString = DateHelper.getDateAtTimeString(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            R.string.alertDateTime,
+            uiState.postedDate
+        )
+        dateString?.let {
+            composeTestRule.onNodeWithText(it).assertIsDisplayed()
+        }
+    }
+
+    @Test
     fun assertError() {
         composeTestRule.setContent {
             AnnouncementDetailsScreen(
