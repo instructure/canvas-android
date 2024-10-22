@@ -30,11 +30,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerAction
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerUiState
@@ -102,9 +107,30 @@ private fun StudentContextItemRow(
             color = colorResource(id = R.color.textDarkest)
         )
         Text(
-            text = studentContextItem.user.name,
+            text = studentContextItem.user.shortName ?: studentContextItem.user.name,
             fontSize = 14.sp,
             color = colorResource(id = R.color.textDark)
         )
     }
+}
+
+@Preview
+@Composable
+fun ParentInboxCoursePickerScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    ParentInboxCoursePickerScreen(
+        uiState = ParentInboxCoursePickerUiState(
+            studentContextItems = listOf(
+                StudentContextItem(
+                    course = Course(name = "Course 1"),
+                    user = User(name = "Student 1")
+                ),
+                StudentContextItem(
+                    course = Course(name = "Course 2"),
+                    user = User(name = "Student 2")
+                )
+            )
+        ),
+        actionHandler = {}
+    )
 }
