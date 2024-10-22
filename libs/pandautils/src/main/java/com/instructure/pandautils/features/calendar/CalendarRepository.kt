@@ -42,8 +42,11 @@ abstract class CalendarRepository {
 
     abstract suspend fun updateCalendarFilters(calendarFilterEntity: CalendarFilterEntity)
 
+    // This is only used in the Teacher/Parent app to map Planner Items to Plannables because we use a different API.
+    // canvasContexts should already be populated before calling this function.
     protected fun List<Plannable>.toPlannerItems(): List<PlannerItem> {
         return mapNotNull { plannable ->
+            // We don't need to handle group context, because we don't have groups in the Teacher/Parent app.
             val contextType = if (plannable.courseId != null) CanvasContext.Type.COURSE.apiString else CanvasContext.Type.USER.apiString
             val contextName = if (plannable.courseId != null) canvasContexts.find { it.id == plannable.courseId }?.name else null
             val plannableDate = plannable.todoDate.toDate()
@@ -68,11 +71,14 @@ abstract class CalendarRepository {
         }
     }
 
+    // This is only used in the Teacher/Parent app to map the context name for planner items, because for some events we don't get it from the API.
+    // canvasContexts should already be populated before calling this function.
     protected fun List<PlannerItem>.mapContextName(): List<PlannerItem> {
         return map { plannerItem ->
             if (!plannerItem.contextName.isNullOrEmpty()) {
                 plannerItem
             } else {
+                // We don't need to handle group context, because we don't have groups in the Teacher/Parent app.
                 val contextName = if (plannerItem.courseId != null) canvasContexts.find { it.id == plannerItem.courseId }?.name else null
                 plannerItem.copy(contextName = contextName)
             }
