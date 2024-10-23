@@ -76,7 +76,7 @@ internal class CameraScreenFragment: BaseFragment<FragmentCameraScreenBinding>(F
             switchFlashState()
         }
         galleryButton.setOnClickListener {
-            checkForStoragePermissions()
+            selectImageFromGallery()
         }
         autoButton.setOnClickListener {
             toggleAutoManualButton()
@@ -105,24 +105,6 @@ internal class CameraScreenFragment: BaseFragment<FragmentCameraScreenBinding>(F
                     }
                     else -> {
                         onError(DocumentScannerErrorModel(DocumentScannerErrorModel.ErrorMessage.CAMERA_PERMISSION_REFUSED_GO_TO_SETTINGS))
-                    }
-                }
-            }
-    }
-
-    private fun checkForStoragePermissions() {
-        RxPermissions(this)
-            .requestEach(Manifest.permission.READ_MEDIA_IMAGES)
-            .subscribe { permission ->
-                when {
-                    permission.granted -> {
-                        selectImageFromGallery()
-                    }
-                    permission.shouldShowRequestPermissionRationale -> {
-                        onError(DocumentScannerErrorModel(DocumentScannerErrorModel.ErrorMessage.STORAGE_PERMISSION_REFUSED_WITHOUT_NEVER_ASK_AGAIN))
-                    }
-                    else -> {
-                        onError(DocumentScannerErrorModel(DocumentScannerErrorModel.ErrorMessage.STORAGE_PERMISSION_REFUSED_GO_TO_SETTINGS))
                     }
                 }
             }
