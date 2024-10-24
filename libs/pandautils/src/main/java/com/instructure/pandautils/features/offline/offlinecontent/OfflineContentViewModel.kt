@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
@@ -385,7 +387,6 @@ class OfflineContentViewModel @Inject constructor(
     fun onSyncClicked() {
         viewModelScope.launch {
             val wifiOnly = offlineContentRepository.getSyncSettings().wifiOnly
-            Analytics.logEvent(AnalyticsEventConstants.OFFLINE_SYNC_BUTTON_TAPPED)
             _events.postValue(
                 Event(
                     OfflineContentAction.Dialog(
@@ -401,6 +402,12 @@ class OfflineContentViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun logEvent() {
+        val eventName: String = AnalyticsEventConstants.OFFLINE_SYNC_BUTTON_TAPPED
+        Analytics.logEvent(eventName)
+        PageViewUtils.saveSingleEvent(eventName, "${ApiPrefs.fullDomain}/${eventName}")
     }
 
     private fun getSelectedSize(): Long {
@@ -420,6 +427,7 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     private fun startSync() {
+        logEvent()
         viewModelScope.launch {
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
