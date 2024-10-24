@@ -587,7 +587,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         return false
     }
 
-    val annotationSelectedListener = object : AnnotationManager.OnAnnotationSelectedListener {
+    private val annotationSelectedListener = object : AnnotationManager.OnAnnotationSelectedListener {
         override fun onAnnotationSelected(annotation: Annotation, isCreated: Boolean) {
             logOnAnnotationSelectedAnalytics()
         }

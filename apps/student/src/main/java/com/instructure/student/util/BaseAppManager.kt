@@ -38,6 +38,7 @@ import com.instructure.student.service.StudentPageViewService
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
+import com.pspdfkit.initialization.InitializationOptions
 import com.zynksoftware.documentscanner.ui.DocumentScanner
 
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
@@ -116,7 +117,7 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
 
     private fun initPSPDFKit() {
         try {
-            PSPDFKit.initialize(this, BuildConfig.PSPDFKIT_LICENSE_KEY)
+            PSPDFKit.initialize(this, InitializationOptions(licenseKey = BuildConfig.PSPDFKIT_LICENSE_KEY))
         } catch (e: PSPDFKitInitializationFailedException) {
             Logger.e("Current device is not compatible with PSPDFKIT!")
         } catch (e: InvalidPSPDFKitLicenseException) {
