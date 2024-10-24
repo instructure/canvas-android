@@ -44,7 +44,6 @@ import com.instructure.student.R
 import com.instructure.student.adapter.InboxConversationAdapter
 import com.instructure.student.databinding.FragmentInboxConversationBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.interfaces.MessageAdapterCallback
 import com.instructure.student.router.RouteMatcher
