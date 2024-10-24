@@ -124,12 +124,14 @@ class InboxComposeViewModel @Inject constructor(
             }
             context?.let {
                 viewModelScope.launch {
-                    _uiState.update {
-                        it.copy(
-                            inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
-                                isLoading = true
+                    if (!options.autoSelectRecipientsFromRoles.isNullOrEmpty()) {
+                        _uiState.update {
+                            it.copy(
+                                inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                    isLoading = true
+                                )
                             )
-                        )
+                        }
                     }
                     val recipients = getRecipientList("", context, false).dataOrNull.orEmpty()
                     val roleRecipients = groupRecipientList(context, recipients)

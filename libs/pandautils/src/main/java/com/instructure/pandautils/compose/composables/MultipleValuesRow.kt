@@ -168,7 +168,7 @@ fun <T> MultipleValuesRow(
         Spacer(modifier = Modifier.width(8.dp))
 
         IconButton(
-            enabled = uiState.enabled && !uiState.isLoading,
+            enabled = uiState.enabled,
             onClick = { actionHandler(MultipleValuesRowAction.AddValueClicked) },
             modifier = Modifier
                 .size(24.dp)
