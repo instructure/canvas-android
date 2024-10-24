@@ -124,6 +124,13 @@ class InboxComposeViewModel @Inject constructor(
             }
             context?.let {
                 viewModelScope.launch {
+                    _uiState.update {
+                        it.copy(
+                            inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                isLoading = true
+                            )
+                        )
+                    }
                     val recipients = getRecipientList("", context, false).dataOrNull.orEmpty()
                     val roleRecipients = groupRecipientList(context, recipients)
                     val selectedRecipients = mutableListOf<Recipient>()
@@ -139,6 +146,7 @@ class InboxComposeViewModel @Inject constructor(
                                 ),
                                 inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
                                     selectedValues = selectedRecipients.distinct(),
+                                    isLoading = false
                                 )
                             )
                         }
