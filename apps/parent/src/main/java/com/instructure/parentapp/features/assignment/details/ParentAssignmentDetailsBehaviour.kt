@@ -18,6 +18,7 @@ package com.instructure.parentapp.features.assignment.details
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.util.DisplayMetrics
 import androidx.annotation.ColorInt
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -41,6 +42,7 @@ import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import javax.inject.Inject
+
 
 class ParentAssignmentDetailsBehaviour @Inject constructor(
     private val parentPrefs: ParentPrefs,
@@ -82,16 +84,26 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
             setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
             contentDescription = context.getString(R.string.sendMessageAboutAssignment)
             setTint(R.color.textLightest)
-            useCompatPadding = true
             backgroundTintList = ColorStateList.valueOf(parentPrefs.currentStudent.studentColor)
             layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).apply {
                 bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID }
+                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                marginEnd = 16.toDp(context)
+                bottomMargin = 16.toDp(context)
+            }
             onClick {
                 actionHandler(AssignmentDetailsBehaviorAction.SendMessage(getInboxComposeOptions(context, course, assignment)))
             }
         }
         .also { fab = it }
+    }
+
+    // Android View FAB compatPadding is different from the Jetpack Compose one, so we cannot use the default values.
+    // We have to manually calculate the margin values for the FAB to be displayed correctly.
+    private fun Int.toDp(context: Context): Int {
+        val metrics: DisplayMetrics = context.resources.displayMetrics
+        val px = this * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+        return px.toInt()
     }
 
     private fun getInboxComposeOptions(context: Context, course: Course?, assignment: Assignment?): InboxComposeOptions {
