@@ -19,10 +19,16 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
@@ -379,6 +385,7 @@ class OfflineContentViewModel @Inject constructor(
     fun onSyncClicked() {
         viewModelScope.launch {
             val wifiOnly = offlineContentRepository.getSyncSettings().wifiOnly
+            Analytics.logEvent(AnalyticsEventConstants.OFFLINE_SYNC_BUTTON_TAPPED)
             _events.postValue(
                 Event(
                     OfflineContentAction.Dialog(
