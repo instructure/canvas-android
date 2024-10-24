@@ -15,6 +15,16 @@
  */
 package com.instructure.parentapp.features.assignment.details
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.parentapp.util.navigation.Navigation
 
-class ParentAssignmentDetailsRouter: AssignmentDetailsRouter()
+class ParentAssignmentDetailsRouter(
+    private val navigation: Navigation
+): AssignmentDetailsRouter() {
+    override fun navigateToSendMessage(activity: FragmentActivity, options: InboxComposeOptions) {
+        val route = navigation.inboxComposeRoute(options)
+        navigation.navigate(activity, route)
+    }
+}

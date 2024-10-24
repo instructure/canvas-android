@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
 open class AssignmentDetailsRouter {
     open fun navigateToAssignmentUploadPicker(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, mediaUri: Uri) = Unit
@@ -48,4 +49,6 @@ open class AssignmentDetailsRouter {
     open fun navigateToDiscussionAttachmentScreen(activity: FragmentActivity, canvasContext: CanvasContext, attachment: RemoteFile) = Unit
 
     open fun navigateToUrl(activity: FragmentActivity, url: String, domain: String, extras: Bundle? = null) = Unit
+
+    open fun navigateToSendMessage(activity: FragmentActivity, options: InboxComposeOptions) = Unit
 }

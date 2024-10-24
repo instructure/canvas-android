@@ -123,7 +123,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
             title = context?.getString(R.string.assignmentDetails)
 
-            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value)
+            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value, viewModel.assignment, viewModel::handleBehaviourAction)
         }
     }
 
@@ -246,6 +246,9 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
                 showDeleteReminderConfirmationDialog(requireContext(), onConfirmed = action.onConfirmed)
+            }
+            is AssignmentDetailAction.NavigateToSendMessage -> {
+                assignmentDetailsRouter.navigateToSendMessage(requireActivity(), action.options)
             }
         }
     }

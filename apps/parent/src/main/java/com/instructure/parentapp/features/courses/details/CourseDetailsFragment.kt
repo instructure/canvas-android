@@ -70,7 +70,8 @@ class CourseDetailsFragment : Fragment() {
     private fun handleAction(action: CourseDetailsViewModelAction) {
         when (action) {
             is CourseDetailsViewModelAction.NavigateToComposeMessageScreen -> {
-
+                val route = navigation.inboxComposeRoute(action.options)
+                navigation.navigate(requireActivity(), route)
             }
 
             is CourseDetailsViewModelAction.NavigateToAssignmentDetails -> {

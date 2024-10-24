@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
@@ -34,6 +35,7 @@ import com.instructure.parentapp.features.assignment.details.ParentAssignmentDet
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsSubmissionHandler
 import com.instructure.parentapp.features.assignment.details.receiver.ParentAlarmReceiverNotificationHandler
 import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,13 +47,13 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(FragmentComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
-    fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
-        return ParentAssignmentDetailsRouter()
+    fun provideAssignmentDetailsRouter(navigation: Navigation): AssignmentDetailsRouter {
+        return ParentAssignmentDetailsRouter(navigation)
     }
 
     @Provides
-    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs): AssignmentDetailsBehaviour {
-        return ParentAssignmentDetailsBehaviour(parentPrefs)
+    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs, apiPrefs: ApiPrefs): AssignmentDetailsBehaviour {
+        return ParentAssignmentDetailsBehaviour(parentPrefs, apiPrefs)
     }
 }
 
