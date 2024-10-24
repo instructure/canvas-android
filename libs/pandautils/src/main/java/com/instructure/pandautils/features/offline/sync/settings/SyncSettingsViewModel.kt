@@ -23,6 +23,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
@@ -72,12 +76,19 @@ class SyncSettingsViewModel @Inject constructor(
             )
             syncSettingsFacade.update(updated)
             if (checked) {
+                logEvent(AnalyticsEventConstants.OFFLINE_AUTO_SYNC_TURNED_ON)
                 offlineSyncHelper.scheduleWork()
             } else {
+                logEvent(AnalyticsEventConstants.OFFLINE_AUTO_SYNC_TURNED_OFF)
                 offlineSyncHelper.cancelWork()
             }
             loadData()
         }
+    }
+
+    private fun logEvent(eventName: String) {
+        Analytics.logEvent(eventName)
+        PageViewUtils.saveSingleEvent(eventName, "${ApiPrefs.fullDomain}/${eventName}")
     }
 
     fun onWifiOnlyChanged(checked: Boolean) {

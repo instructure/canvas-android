@@ -19,10 +19,18 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
@@ -396,6 +404,12 @@ class OfflineContentViewModel @Inject constructor(
         }
     }
 
+    private fun logEvent() {
+        val eventName: String = AnalyticsEventConstants.OFFLINE_SYNC_BUTTON_TAPPED
+        Analytics.logEvent(eventName)
+        PageViewUtils.saveSingleEvent(eventName, "${ApiPrefs.fullDomain}/${eventName}")
+    }
+
     private fun getSelectedSize(): Long {
         val tabSize = courseMap.values.sumOf { course ->
             course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS && it.tabId != Tab.FILES_ID }?.count {
@@ -413,6 +427,7 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     private fun startSync() {
+        logEvent()
         viewModelScope.launch {
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
