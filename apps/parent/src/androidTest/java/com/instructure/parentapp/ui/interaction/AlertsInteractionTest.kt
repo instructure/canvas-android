@@ -21,10 +21,14 @@ import com.google.android.apps.common.testing.accessibility.framework.checks.Spe
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addObserverAlert
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
@@ -116,7 +120,7 @@ class AlertsInteractionTest : ParentComposeTest() {
     }
 
     @Test
-    fun openAlert() {
+    fun openAssignmentAlert() {
         val data = initData()
         goToAlerts(data)
 
@@ -146,6 +150,78 @@ class AlertsInteractionTest : ParentComposeTest() {
 
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    fun openCourseAlert() {
+        val data = MockCanvas.init(studentCount = 1, parentCount = 1, courseCount = 1, teacherCount = 1)
+        goToAlerts(data)
+
+        val student = data.students.first()
+        val observer = data.parents.first()
+        val teacher = data.teachers.first()
+        val course = data.courses.values.first()
+
+        data.addCoursePermissions(
+            course.id,
+            CanvasContextPermission(canCreateAnnouncement = true)
+        )
+
+        val announcement = data.addDiscussionTopicToCourse(
+            course = course,
+            user = teacher,
+            isAnnouncement = true
+        )
+
+        val alert = data.addObserverAlert(
+            observer,
+            student,
+            course,
+            AlertType.COURSE_ANNOUNCEMENT,
+            AlertWorkflowState.UNREAD,
+            Date(),
+            "https://${data.domain}/courses/${course.id}/discussion_topics/${announcement.id}",
+            false
+        )
+
+        alertsPage.refresh()
+
+        composeTestRule.waitForIdle()
+        alertsPage.assertAlertItemDisplayed(alert.title)
+        alertsPage.assertAlertUnread(alert.title)
+        alertsPage.clickOnAlert(alert.title)
+
+        announcementDetailsPage.assertCourseAnnouncementDetailsDisplayed(course, announcement)
+    }
+
+    @Test
+    fun openGlobalAlert() {
+        val data = MockCanvas.init(studentCount = 1, parentCount = 1, teacherCount = 1, courseCount = 1, accountNotificationCount = 1)
+        goToAlerts(data)
+
+        val student = data.students.first()
+        val observer = data.parents.first()
+        val announcement = data.accountNotifications.values.first()
+
+        val alert = data.addObserverAlert(
+            observer,
+            student,
+            CanvasContext.getGenericContext(CanvasContext.Type.USER, announcement.id),
+            AlertType.INSTITUTION_ANNOUNCEMENT,
+            AlertWorkflowState.UNREAD,
+            Date(),
+            null,
+            false
+        )
+
+        alertsPage.refresh()
+
+        composeTestRule.waitForIdle()
+        alertsPage.assertAlertItemDisplayed(alert.title)
+        alertsPage.assertAlertUnread(alert.title)
+        alertsPage.clickOnAlert(alert.title)
+
+        announcementDetailsPage.assertGlobalAnnouncementDetailsDisplayed(announcement)
     }
 
     private fun initData(): MockCanvas {

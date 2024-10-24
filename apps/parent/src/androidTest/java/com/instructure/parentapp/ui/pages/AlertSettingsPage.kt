@@ -101,7 +101,7 @@ class AlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage
             AlertType.ASSIGNMENT_MISSING -> "Assignment missing"
             AlertType.ASSIGNMENT_GRADE_HIGH -> "Assignment grade above"
             AlertType.ASSIGNMENT_GRADE_LOW -> "Assignment grade below"
-            AlertType.INSTITUTION_ANNOUNCEMENT -> "Institution Announcements"
+            AlertType.INSTITUTION_ANNOUNCEMENT -> "Global Announcements"
         }
     }
 }
