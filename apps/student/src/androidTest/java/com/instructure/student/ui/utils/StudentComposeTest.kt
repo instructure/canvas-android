@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.student.activity.LoginActivity
 import org.junit.Rule
 
@@ -39,4 +40,5 @@ abstract class StudentComposeTest : StudentTest() {
     val calendarToDoCreateUpdatePage = CalendarToDoCreateUpdatePage(composeTestRule)
     val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     val calendarFilterPage = CalendarFilterPage(composeTestRule)
+    val settingsPage = SettingsPage(composeTestRule)
 }
