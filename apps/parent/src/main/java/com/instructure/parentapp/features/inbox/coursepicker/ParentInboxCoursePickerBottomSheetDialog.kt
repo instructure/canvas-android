@@ -33,6 +33,7 @@ import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
     @Inject

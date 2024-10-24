@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,6 +31,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -75,7 +77,10 @@ fun ParentInboxCoursePickerScreen(
                 }
             }
 
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .heightIn(min = 0.dp, max = LocalConfiguration.current.screenHeightDp.dp / 2)
+            ) {
                 items(uiState.studentContextItems) { studentContextItem ->
                     StudentContextItemRow(
                         studentContextItem = studentContextItem,
@@ -102,15 +107,18 @@ private fun StudentContextItemRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(vertical = 8.dp)
+            .padding(vertical = 12.dp)
     ) {
         Text(
             text = studentContextItem.course.name,
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             color = colorResource(id = R.color.textDarkest)
         )
         Text(
-            text = studentContextItem.user.shortName ?: studentContextItem.user.name,
+            text = stringResource(
+                R.string.forStudentLabel,
+                studentContextItem.user.shortName ?: studentContextItem.user.name
+            ),
             fontSize = 14.sp,
             color = colorResource(id = R.color.textDark)
         )

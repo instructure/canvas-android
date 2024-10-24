@@ -1888,4 +1888,5 @@
     <string name="regardingHiddenMessage">Regarding: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Regarding: %1$s, Assignment - %2$s</string>
     <string name="sendMessageAboutAssignment">"Send a message about this assignment"</string>
+    <string name="forStudentLabel">for %1$s</string>
 </resources>

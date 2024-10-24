@@ -48,6 +48,8 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
 ): AssignmentDetailsBehaviour() {
     @ColorInt override val dialogColor: Int = parentPrefs.currentStudent.studentColor
 
+    private var fab: FloatingActionButton? = null
+
     override fun applyTheme(
         activity: FragmentActivity,
         binding: FragmentAssignmentDetailsBinding?,
@@ -61,6 +63,18 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
 
         binding?.assignmentDetailsPage?.addView(messageFAB(activity, course, assignment, actionHandler))
+
+        binding?.scrollView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (binding.scrollView.scrollY == 0) {
+                fab?.show()
+            } else if (binding.scrollView.getChildAt(0).bottom <= (binding.scrollView.height + binding.scrollView.scrollY)) {
+                fab?.hide()
+            } else if (scrollY < oldScrollY) {
+                fab?.show()
+            } else if (scrollY > oldScrollY) {
+                fab?.hide()
+            }
+        }
     }
 
     private fun messageFAB(context: Context, course: Course?, assignment: Assignment?, actionHandler: (AssignmentDetailsBehaviorAction) -> Unit): FloatingActionButton {
@@ -68,16 +82,16 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
             setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
             contentDescription = context.getString(R.string.sendMessageAboutAssignment)
             setTint(R.color.textLightest)
-            backgroundTintList = ColorStateList.valueOf(parentPrefs.currentStudent.studentColor)
             useCompatPadding = true
+            backgroundTintList = ColorStateList.valueOf(parentPrefs.currentStudent.studentColor)
             layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).apply {
                 bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-            }
+                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID }
             onClick {
                 actionHandler(AssignmentDetailsBehaviorAction.SendMessage(getInboxComposeOptions(context, course, assignment)))
             }
         }
+        .also { fab = it }
     }
 
     private fun getInboxComposeOptions(context: Context, course: Course?, assignment: Assignment?): InboxComposeOptions {

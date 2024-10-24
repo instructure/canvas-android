@@ -19,6 +19,7 @@ package com.instructure.parentapp.features.inbox.coursepicker
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.parentapp.R
@@ -75,10 +76,12 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
             defaultValues = options.defaultValues.copy(
                 contextCode = item.course.contextId,
                 contextName = item.course.name,
+                subject = item.course.name
             ),
             disabledFields = options.disabledFields.copy(
                 isContextDisabled = true
             ),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
             hiddenBodyMessage = context.getString(
                 R.string.regardingHiddenMessage,
                 item.user.name,
