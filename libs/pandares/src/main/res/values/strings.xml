@@ -1886,6 +1886,6 @@
     <string name="gradesRefreshFailed">Failed to refresh grades</string>
     <string name="chooseACourseToMessage">Choose a course to message</string>
     <string name="regardingHiddenMessage">Regarding: %1$s, %2$s</string>
-    <string name="messageAssignmentPrefix">"Assignment - "</string>
+    <string name="regardingHiddenMessageWithAssignmentPrefix">Regarding: %1$s, Assignment - %2$s</string>
     <string name="sendMessageAboutAssignment">"Send a message about this assignment"</string>
 </resources>

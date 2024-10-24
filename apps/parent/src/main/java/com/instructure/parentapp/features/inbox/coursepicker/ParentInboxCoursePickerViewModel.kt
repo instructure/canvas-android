@@ -16,10 +16,14 @@
  */
 package com.instructure.parentapp.features.inbox.coursepicker
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.parentapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,7 +32,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ParentInboxCoursePickerViewModel @Inject constructor(
-    private val repository: ParentInboxCoursePickerRepository
+    @ApplicationContext private val context: Context,
+    private val repository: ParentInboxCoursePickerRepository,
+    private val apiPrefs: ApiPrefs
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ParentInboxCoursePickerUiState())
@@ -39,7 +45,7 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
     }
 
     fun getContextURL(courseId: Long): String {
-        return "${ApiPrefs.fullDomain}/courses/${courseId}"
+        return "${apiPrefs.fullDomain}/courses/${courseId}"
     }
 
     private fun loadCoursePickerItems() {
@@ -61,5 +67,24 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
 
             _uiState.update { it.copy(screenState = ScreenState.Data, studentContextItems = studentContextItems) }
         }
+    }
+
+    fun getMessageOptions(item: StudentContextItem): InboxComposeOptions {
+        var options = InboxComposeOptions.buildNewMessage()
+        options = options.copy(
+            defaultValues = options.defaultValues.copy(
+                contextCode = item.course.contextId,
+                contextName = item.course.name,
+            ),
+            disabledFields = options.disabledFields.copy(
+                isContextDisabled = true
+            ),
+            hiddenBodyMessage = context.getString(
+                R.string.regardingHiddenMessage,
+                item.user.name,
+                getContextURL(item.course.id)
+            )
+        )
+        return options
     }
 }

@@ -644,4 +644,14 @@ class AssignmentDetailsViewModel @Inject constructor(
 
         return assignment?.allowedExtensions?.any { isAudioVisualExtension(it) } ?: true
     }
+
+    fun handleBehaviourAction(action: AssignmentDetailsBehaviorAction) {
+        when (action) {
+            is AssignmentDetailsBehaviorAction.SendMessage -> {
+                viewModelScope.launch {
+                    postAction(AssignmentDetailAction.NavigateToSendMessage(action.options))
+                }
+            }
+        }
+    }
 }

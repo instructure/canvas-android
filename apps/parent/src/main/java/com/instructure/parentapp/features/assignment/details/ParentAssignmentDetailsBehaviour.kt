@@ -24,21 +24,27 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.binding.setTint
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviorAction
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import javax.inject.Inject
 
 class ParentAssignmentDetailsBehaviour @Inject constructor(
-    private val parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs,
+    private val apiPrefs: ApiPrefs,
 ): AssignmentDetailsBehaviour() {
     @ColorInt override val dialogColor: Int = parentPrefs.currentStudent.studentColor
 
@@ -48,28 +54,60 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         bookmark: Bookmarker,
         toolbar: Toolbar,
         course: Course?,
+        assignment: Assignment?,
         actionHandler: (AssignmentDetailsBehaviorAction) -> Unit
     ) {
         ViewStyler.themeToolbarColored(activity, toolbar, parentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
         ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
 
-        binding?.assignmentDetailsPage?.addView(messageFAB(activity, actionHandler))
+        binding?.assignmentDetailsPage?.addView(messageFAB(activity, course, assignment, actionHandler))
     }
 
-    private fun messageFAB(context: Context, actionHandler: (AssignmentDetailsBehaviorAction) -> Unit): FloatingActionButton {
+    private fun messageFAB(context: Context, course: Course?, assignment: Assignment?, actionHandler: (AssignmentDetailsBehaviorAction) -> Unit): FloatingActionButton {
         return FloatingActionButton(context).apply {
             setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
             contentDescription = context.getString(R.string.sendMessageAboutAssignment)
             setTint(R.color.textLightest)
-            backgroundTintList = ColorStateList.valueOf(ParentPrefs.currentStudent.studentColor)
+            backgroundTintList = ColorStateList.valueOf(parentPrefs.currentStudent.studentColor)
             useCompatPadding = true
             layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).apply {
                 bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
                 endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
             }
             onClick {
-                actionHandler(AssignmentDetailsBehaviorAction.SendMessage)
+                actionHandler(AssignmentDetailsBehaviorAction.SendMessage(getInboxComposeOptions(context, course, assignment)))
             }
         }
+    }
+
+    private fun getInboxComposeOptions(context: Context, course: Course?, assignment: Assignment?): InboxComposeOptions {
+        val courseContextId = course?.contextId.orEmpty()
+        var options = InboxComposeOptions.buildNewMessage()
+        options = options.copy(
+            defaultValues = options.defaultValues.copy(
+                contextCode = courseContextId,
+                contextName = course?.name.orEmpty(),
+                subject = context.getString(
+                    R.string.regardingHiddenMessageWithAssignmentPrefix,
+                    parentPrefs.currentStudent?.name.orEmpty(),
+                    assignment?.name.orEmpty()
+                )
+            ),
+            disabledFields = options.disabledFields.copy(
+                isContextDisabled = true
+            ),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
+            hiddenBodyMessage = context.getString(
+                R.string.regardingHiddenMessage,
+                parentPrefs.currentStudent?.name.orEmpty(),
+                getContextURL(course?.id.orDefault(), assignment?.id.orDefault())
+            )
+        )
+
+        return options
+    }
+
+    private fun getContextURL(courseId: Long, assignmentId: Long): String {
+        return "${apiPrefs.fullDomain}/courses/$courseId/assignments/$assignmentId"
     }
 }

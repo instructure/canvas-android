@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
@@ -51,8 +52,8 @@ class AssignmentDetailsFragmentModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs): AssignmentDetailsBehaviour {
-        return ParentAssignmentDetailsBehaviour(parentPrefs)
+    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs, apiPrefs: ApiPrefs): AssignmentDetailsBehaviour {
+        return ParentAssignmentDetailsBehaviour(parentPrefs, apiPrefs)
     }
 }
 

@@ -28,8 +28,6 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-import com.instructure.parentapp.R
 import com.instructure.parentapp.features.inbox.coursepicker.composables.ParentInboxCoursePickerScreen
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,21 +51,7 @@ class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
                 ParentInboxCoursePickerScreen(uiState = uiState) { action ->
                     when (action) {
                         is ParentInboxCoursePickerAction.StudentContextSelected -> {
-                            var options = InboxComposeOptions.buildNewMessage()
-                            options = options.copy(
-                                defaultValues = options.defaultValues.copy(
-                                    contextCode = action.studentContextItem.course.contextId,
-                                    contextName = action.studentContextItem.course.name,
-                                ),
-                                disabledFields = options.disabledFields.copy(
-                                    isContextDisabled = true
-                                ),
-                                hiddenBodyMessage = context.getString(
-                                    R.string.regardingHiddenMessage,
-                                    action.studentContextItem.user.name,
-                                    viewModel.getContextURL(action.studentContextItem.course.id)
-                                )
-                            )
+                            val options = viewModel.getMessageOptions(action.studentContextItem)
                             val route = navigation.inboxComposeRoute(options)
                             navigation.navigate(activity, route)
 

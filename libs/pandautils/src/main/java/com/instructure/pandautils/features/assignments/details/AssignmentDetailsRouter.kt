@@ -20,10 +20,10 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
 open class AssignmentDetailsRouter {
     open fun navigateToAssignmentUploadPicker(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, mediaUri: Uri) = Unit
@@ -50,5 +50,5 @@ open class AssignmentDetailsRouter {
 
     open fun navigateToUrl(activity: FragmentActivity, url: String, domain: String, extras: Bundle? = null) = Unit
 
-    open fun navigateToSendMessage(activity: FragmentActivity, assignment: Assignment, course: Course) = Unit
+    open fun navigateToSendMessage(activity: FragmentActivity, options: InboxComposeOptions) = Unit
 }

@@ -16,6 +16,7 @@
  */
 package com.instructure.parentapp.features.inbox.coursepicker
 
+import android.content.Context
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
@@ -24,7 +25,6 @@ import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +40,8 @@ import org.junit.Test
 class ParentInboxCoursePickerViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val repository: ParentInboxCoursePickerRepository = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val context: Context = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -56,8 +58,7 @@ class ParentInboxCoursePickerViewModelTest {
     fun `getContextURL should return correct URL`() {
         coEvery { repository.getCourses() } returns DataResult.Success(emptyList())
         coEvery { repository.getEnrollments() } returns DataResult.Success(emptyList())
-        mockkObject(ApiPrefs)
-        every { ApiPrefs.fullDomain } returns "https://canvas.instructure.com"
+        every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
         val viewModel = getViewModel()
         val courseId = 123L
         val expected = "https://canvas.instructure.com/courses/$courseId"
@@ -91,6 +92,6 @@ class ParentInboxCoursePickerViewModelTest {
     }
 
     private fun getViewModel(): ParentInboxCoursePickerViewModel {
-        return ParentInboxCoursePickerViewModel(repository)
+        return ParentInboxCoursePickerViewModel(context, repository, apiPrefs)
     }
 }

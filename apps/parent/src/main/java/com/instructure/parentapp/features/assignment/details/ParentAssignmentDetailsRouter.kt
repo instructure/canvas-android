@@ -15,52 +15,16 @@
  */
 package com.instructure.parentapp.features.assignment.details
 
-import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.type.EnrollmentType
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-import com.instructure.parentapp.R
-import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 
-class ParentAssignmentDetailsRouter(private val navigation: Navigation): AssignmentDetailsRouter() {
-    override fun navigateToSendMessage(activity: FragmentActivity, assignment: Assignment, course: Course) {
-        val route = navigation.inboxComposeRoute(getInboxComposeOptions(activity, assignment, course))
+class ParentAssignmentDetailsRouter(
+    private val navigation: Navigation
+): AssignmentDetailsRouter() {
+    override fun navigateToSendMessage(activity: FragmentActivity, options: InboxComposeOptions) {
+        val route = navigation.inboxComposeRoute(options)
         navigation.navigate(activity, route)
-    }
-
-    private fun getInboxComposeOptions(context: Context, assignment: Assignment, course: Course): InboxComposeOptions {
-        val courseContextId = course.contextId
-        var options = InboxComposeOptions.buildNewMessage()
-        options = options.copy(
-            defaultValues = options.defaultValues.copy(
-                contextCode = courseContextId,
-                contextName = course.name,
-                subject = context.getString(
-                    R.string.regardingHiddenMessage,
-                    ParentPrefs.currentStudent?.name.orEmpty(),
-                    context.getString(R.string.messageAssignmentPrefix) + assignment.name.orEmpty()
-                )
-            ),
-            disabledFields = options.disabledFields.copy(
-                isContextDisabled = true
-            ),
-            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
-            hiddenBodyMessage = context.getString(
-                R.string.regardingHiddenMessage,
-                ParentPrefs.currentStudent?.name.orEmpty(),
-                getContextURL(course.id, assignment.id)
-            )
-        )
-
-        return options
-    }
-    
-    private fun getContextURL(courseId: Long, assignmentId: Long): String {
-        return "${ApiPrefs.fullDomain}/courses/$courseId/assignments/$assignmentId"
     }
 }

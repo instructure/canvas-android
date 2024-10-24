@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerAction
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerUiState
@@ -50,41 +51,43 @@ fun ParentInboxCoursePickerScreen(
     uiState: ParentInboxCoursePickerUiState,
     actionHandler: (ParentInboxCoursePickerAction) -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(horizontal = 12.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+    CanvasTheme {
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp)
         ) {
-            Text(
-                text = stringResource(R.string.chooseACourseToMessage),
-                fontSize = 14.sp,
-                color = colorResource(id = R.color.textDark)
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            IconButton(onClick = { actionHandler(ParentInboxCoursePickerAction.CloseDialog) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = stringResource(id = R.string.close),
-                    tint = colorResource(id = R.color.textDarkest)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.chooseACourseToMessage),
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.textDark)
                 )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                IconButton(onClick = { actionHandler(ParentInboxCoursePickerAction.CloseDialog) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_close),
+                        contentDescription = stringResource(id = R.string.close),
+                        tint = colorResource(id = R.color.textDarkest)
+                    )
+                }
             }
-        }
 
-        LazyColumn {
-            items(uiState.studentContextItems) { studentContextItem ->
-                StudentContextItemRow(
-                    studentContextItem = studentContextItem,
-                    onClick = {
-                        actionHandler(
-                            ParentInboxCoursePickerAction.StudentContextSelected(
-                                studentContextItem
+            LazyColumn {
+                items(uiState.studentContextItems) { studentContextItem ->
+                    StudentContextItemRow(
+                        studentContextItem = studentContextItem,
+                        onClick = {
+                            actionHandler(
+                                ParentInboxCoursePickerAction.StudentContextSelected(
+                                    studentContextItem
+                                )
                             )
-                        )
-                    }
-                )
+                        }
+                    )
+                }
             }
         }
     }

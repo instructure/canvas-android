@@ -15,6 +15,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.ThemedColor
 
 data class AssignmentDetailsViewData(
@@ -90,6 +91,7 @@ sealed class ReminderChoice {
 
 sealed class AssignmentDetailAction {
     data class ShowToast(val message: String) : AssignmentDetailAction()
+    data class NavigateToSendMessage(val options: InboxComposeOptions) : AssignmentDetailAction()
     data class NavigateToLtiScreen(val url: String) : AssignmentDetailAction()
     data class NavigateToSubmissionScreen(val isObserver: Boolean, val selectedSubmissionAttempt: Long?) : AssignmentDetailAction()
     data class NavigateToQuizScreen(val quiz: Quiz) : AssignmentDetailAction()

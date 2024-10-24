@@ -20,6 +20,7 @@ package com.instructure.parentapp.features.courses.details
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.parentapp.R
 
 
@@ -47,6 +48,6 @@ sealed class CourseDetailsAction {
 }
 
 sealed class CourseDetailsViewModelAction {
-    data object NavigateToComposeMessageScreen : CourseDetailsViewModelAction()
+    data class NavigateToComposeMessageScreen(val options: InboxComposeOptions) : CourseDetailsViewModelAction()
     data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsViewModelAction()
 }

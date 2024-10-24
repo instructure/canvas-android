@@ -193,6 +193,7 @@ class StudentAssignmentDetailsBehaviour (
         bookmark: Bookmarker,
         toolbar: Toolbar,
         course: Course?,
+        assignment: Assignment?,
         actionHandler: (AssignmentDetailsBehaviorAction) -> Unit
     ) {
         binding?.toolbar?.apply {
