@@ -31,8 +31,11 @@ import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -57,7 +60,7 @@ class ParentInboxCoursePickerViewModelTest {
     }
 
     @Test
-    fun `getMessageOptions should return correct URL`() {
+    fun `Selecting a course navigates to the compose screen with proper attributes`() = runTest {
         coEvery { repository.getCourses() } returns DataResult.Success(emptyList())
         coEvery { repository.getEnrollments() } returns DataResult.Success(emptyList())
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
@@ -66,14 +69,20 @@ class ParentInboxCoursePickerViewModelTest {
         val courseId = 123L
         val expectedHiddenMessage = "Regarding: User 1, https://canvas.instructure.com/courses/$courseId"
         every { context.getString(R.string.regardingHiddenMessage, any(), any()) } returns expectedHiddenMessage
-        val options = viewModel.getMessageOptions(studentContextItem)
+
+        val events = mutableListOf<ParentInboxCoursePickerBottomSheetAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.actionHandler(ParentInboxCoursePickerAction.StudentContextSelected(studentContextItem))
+        val options = (events.last() as ParentInboxCoursePickerBottomSheetAction.NavigateToCompose).options
         assertEquals(expectedHiddenMessage, options.hiddenBodyMessage)
         assertEquals("Course 1", options.defaultValues.contextName)
         assertEquals("course_1", options.defaultValues.contextCode)
         assertEquals("Course 1", options.defaultValues.subject)
         assertEquals(true, options.disabledFields.isContextDisabled)
         assertEquals(listOf(EnrollmentType.TEACHERENROLLMENT), options.autoSelectRecipientsFromRoles)
-
     }
 
     @Test
