@@ -21,13 +21,16 @@ import androidx.lifecycle.LiveData
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.daos.SyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
-import io.mockk.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class SyncSettingsFacadeTest {
 
     private val syncSettingsDao: SyncSettingsDao = mockk(relaxed = true)

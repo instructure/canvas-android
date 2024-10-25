@@ -38,7 +38,7 @@ class StudentCalendarRepository(
     private val groupsApi: GroupAPI.GroupInterface,
     private val apiPrefs: ApiPrefs,
     private val calendarFilterDao: CalendarFilterDao
-) : CalendarRepository {
+) : CalendarRepository() {
 
     override suspend fun getPlannerItems(
         startDate: String,

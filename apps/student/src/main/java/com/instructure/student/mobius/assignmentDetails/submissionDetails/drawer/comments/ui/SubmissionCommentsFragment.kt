@@ -23,7 +23,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsPresenter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
-import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.LiveDataSource
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
@@ -47,7 +47,7 @@ class SubmissionCommentsFragment : BaseSubmissionCommentsFragment() {
     override fun makePresenter() = SubmissionCommentsPresenter(studentDb)
 
     override fun getExternalEventSources() = listOf(
-        ChannelSource.getSource<SubmissionCommentsSharedEvent, SubmissionCommentsEvent> {
+        FlowSource.getSource<SubmissionCommentsSharedEvent, SubmissionCommentsEvent> {
             when (it) {
                 is SubmissionCommentsSharedEvent.SendMediaCommentClicked -> SubmissionCommentsEvent.SendMediaCommentClicked(
                     it.file
@@ -55,7 +55,7 @@ class SubmissionCommentsFragment : BaseSubmissionCommentsFragment() {
                 is SubmissionCommentsSharedEvent.MediaCommentDialogClosed -> SubmissionCommentsEvent.AddFilesDialogClosed
             }
         },
-        ChannelSource.getSource<SubmissionComment, SubmissionCommentsEvent> {
+        FlowSource.getSource<SubmissionComment, SubmissionCommentsEvent> {
             SubmissionCommentsEvent.SubmissionCommentAdded(it)
         },
         LiveDataSource.of<List<CreatePendingSubmissionCommentEntity>, SubmissionCommentsEvent>(

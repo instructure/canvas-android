@@ -274,6 +274,13 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 }
                 COLLABORATION -> UnsupportedTabFragment.makeRoute(canvasContext, Tab.COLLABORATIONS_ID)
                 CONFERENCE -> ConferenceListRepositoryFragment.makeRoute(canvasContext)
+                DISCUSSION_MENTION -> {
+                    if (streamItem.htmlUrl.isNotEmpty()) {
+                        RouteMatcher.getInternalRoute(streamItem.htmlUrl, ApiPrefs.domain)
+                    } else {
+                        UnknownItemFragment.makeRoute(canvasContext, streamItem)
+                    }
+                }
                 else -> UnsupportedFeatureFragment.makeRoute(canvasContext, featureName = streamItem.type, url = streamItem.url ?: streamItem.htmlUrl)
             }
 

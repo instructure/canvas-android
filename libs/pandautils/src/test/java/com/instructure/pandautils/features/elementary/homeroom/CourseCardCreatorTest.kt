@@ -21,26 +21,37 @@ import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Plannable
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.LocalDate
-import java.util.*
+import java.util.Date
 
-@ExperimentalCoroutinesApi
 class CourseCardCreatorTest {
 
     private val plannerManager: PlannerManager = mockk(relaxed = true)
@@ -79,7 +90,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Planner items should be requested only for today`() = runBlockingTest {
+    fun `Planner items should be requested only for today`() = runTest {
         // Given
         val today = LocalDate.now()
         val todayString = today.toApiString()
@@ -95,7 +106,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Force network call for planner items and missing assignments when updating assignment info`() = runBlockingTest {
+    fun `Force network call for planner items and missing assignments when updating assignment info`() = runTest {
         // Given
         val updateAssignments = true
 
@@ -108,7 +119,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Create course card with correct course name, color and image url`() = runBlockingTest {
+    fun `Create course card with correct course name, color and image url`() = runTest {
         // Given
         val courses = listOf(Course(id = 1, name = "Test course", courseColor = "#123456", imageUrl = "www.imageurl.com"))
 
@@ -122,7 +133,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Create course card with the first announcement of the course`() = runBlockingTest {
+    fun `Create course card with the first announcement of the course`() = runTest {
         // Given
         val courses = listOf(Course(id = 1))
 
@@ -140,7 +151,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Create course card with due today text from the not submitted and not missing assignments due today`() = runBlockingTest {
+    fun `Create course card with due today text from the not submitted and not missing assignments due today`() = runTest {
         // Given
         val courses = listOf(Course(id = 1), Course(id = 2))
 
@@ -174,7 +185,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Create course card with nothing due today text if user don't have due today assignments for courses`() = runBlockingTest {
+    fun `Create course card with nothing due today text if user don't have due today assignments for courses`() = runTest {
         // Given
         val courses = listOf(Course(id = 1))
 
@@ -200,7 +211,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Create course card with missing text from the missing submissions that are not dismissed`() = runBlockingTest {
+    fun `Create course card with missing text from the missing submissions that are not dismissed`() = runTest {
         // Given
         val courses = listOf(Course(id = 1))
 
@@ -224,7 +235,7 @@ class CourseCardCreatorTest {
     }
 
     @Test
-    fun `Create course card without missing text if no assignment is missing for the course`() = runBlockingTest {
+    fun `Create course card without missing text if no assignment is missing for the course`() = runTest {
         // Given
         val courses = listOf(Course(id = 1))
 

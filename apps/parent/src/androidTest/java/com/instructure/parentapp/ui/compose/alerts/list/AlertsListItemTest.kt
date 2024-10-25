@@ -46,6 +46,7 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
+                contextId = 10L,
                 title = "Assignment Missing title",
                 alertType = AlertType.ASSIGNMENT_MISSING,
                 date = Date(),
@@ -70,6 +71,7 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
+                contextId = 10L,
                 title = "Assignment Grade High title",
                 alertType = AlertType.ASSIGNMENT_GRADE_HIGH,
                 date = Date(),
@@ -92,6 +94,7 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
+                contextId = 10L,
                 title = "Assignment Grade Low title",
                 alertType = AlertType.ASSIGNMENT_GRADE_LOW,
                 date = Date(),
@@ -114,6 +117,7 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
+                contextId = 10L,
                 title = "Course Grade High title",
                 alertType = AlertType.COURSE_GRADE_HIGH,
                 date = Date(),
@@ -136,6 +140,7 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
+                contextId = 10L,
                 title = "Course Grade Low title",
                 alertType = AlertType.COURSE_GRADE_LOW,
                 date = Date(),
@@ -158,6 +163,7 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
+                contextId = 10L,
                 title = "Course Announcement title",
                 alertType = AlertType.COURSE_ANNOUNCEMENT,
                 date = Date(),
@@ -180,7 +186,8 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
-                title = "Institution Announcement title",
+                contextId = 10L,
+                title = "Global Announcement title",
                 alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
                 date = Date(),
                 observerAlertThreshold = null,
@@ -190,8 +197,8 @@ class AlertsListItemTest {
             ), userColor = Color.BLUE, actionHandler = {})
         }
 
-        composeTestRule.onNodeWithText("Institution Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Institution Announcement title").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Global Announcement").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Global Announcement title").assertIsDisplayed()
         composeTestRule.onNode(hasDrawable(R.drawable.ic_info)).assertIsDisplayed()
         composeTestRule.onNodeWithText(parseDate(Date())).assertIsDisplayed()
         composeTestRule.onNodeWithTag("alertItem").assertHasClickAction()
@@ -202,6 +209,7 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
+                contextId = 10L,
                 title = "Locked for User title",
                 alertType = AlertType.ASSIGNMENT_MISSING,
                 date = Date(),
@@ -224,7 +232,8 @@ class AlertsListItemTest {
         composeTestRule.setContent {
             AlertsListItem(alert = AlertsItemUiState(
                 alertId = 1L,
-                title = "Institution Announcement title",
+                contextId = 10L,
+                title = "Global Announcement title",
                 alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
                 date = Date(),
                 observerAlertThreshold = null,
@@ -234,8 +243,8 @@ class AlertsListItemTest {
             ), userColor = Color.BLUE, actionHandler = {})
         }
 
-        composeTestRule.onNodeWithText("Institution Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Institution Announcement title").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Global Announcement").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Global Announcement title").assertIsDisplayed()
         composeTestRule.onNode(hasDrawable(R.drawable.ic_info)).assertIsDisplayed()
         composeTestRule.onNodeWithText(parseDate(Date())).assertIsDisplayed()
         composeTestRule.onNodeWithTag("alertItem").assertHasClickAction()

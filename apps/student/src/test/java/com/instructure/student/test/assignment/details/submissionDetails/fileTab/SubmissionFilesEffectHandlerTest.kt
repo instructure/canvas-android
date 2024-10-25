@@ -23,38 +23,52 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesView
-import com.instructure.student.mobius.common.ChannelSource
-import com.instructure.student.test.util.receiveOnce
+import com.instructure.student.mobius.common.FlowSource
 import com.spotify.mobius.functions.Consumer
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import java.util.concurrent.Executors
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SubmissionFilesEffectHandlerTest : Assert() {
     private val mockView: SubmissionFilesView = mockk(relaxed = true)
     private val effectHandler = SubmissionFilesEffectHandler().apply { view = mockView }
     private val eventConsumer: Consumer<SubmissionFilesEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `BroadcastFileSelected effect sends File selected shared event`() {
-        val channel = ChannelSource.getChannel<SubmissionDetailsSharedEvent>()
+    fun `BroadcastFileSelected effect sends File selected shared event`() = runTest(testDispatcher) {
+        val flow = FlowSource.getFlow<SubmissionDetailsSharedEvent>()
         val attachment = Attachment(id = 123L, contentType = "test/data")
         val expectedEvent = SubmissionDetailsSharedEvent.FileSelected(attachment)
-        val actualEvent = channel.receiveOnce {
-            connection.accept(SubmissionFilesEffect.BroadcastFileSelected(attachment))
+
+        val deferred = async {
+            flow.first()
         }
-        assertEquals(expectedEvent, actualEvent)
+
+        connection.accept(SubmissionFilesEffect.BroadcastFileSelected(attachment))
+        assertEquals(expectedEvent, deferred.await())
     }
 
 }

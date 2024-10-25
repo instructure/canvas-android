@@ -24,8 +24,9 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.ConversationUpdatedEvent
+import com.instructure.pandautils.utils.remove
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.router.RouteMatcher
@@ -63,6 +64,7 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
     fun onUpdateConversation(event: ConversationUpdatedEvent) {
         event.get {
             if (fragment is InboxFragment) {
+                event.remove()
                 fragment.conversationUpdated()
             }
         }

@@ -49,7 +49,6 @@ import com.instructure.student.adapter.NothingSelectedSpinnerAdapter
 import com.instructure.student.databinding.FragmentInboxComposeMessageBinding
 import com.instructure.student.dialog.UnsavedChangesExitDialog
 import com.instructure.student.events.ChooseRecipientsEvent
-import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.view.AttachmentView

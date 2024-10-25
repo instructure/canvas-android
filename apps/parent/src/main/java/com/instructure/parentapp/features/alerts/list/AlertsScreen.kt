@@ -217,19 +217,10 @@ fun AlertsListItem(
         }
     }
 
-    fun dateTime(dateTime: Date): String {
-        val date = DateHelper.getDayMonthDateString(context, dateTime)
-        val time = DateHelper.getFormattedTime(context, dateTime)
-
-        return context.getString(R.string.alertDateTime, date, time)
-    }
-
     Row(modifier = modifier
         .fillMaxWidth()
-        .clickable(enabled = alert.htmlUrl != null) {
-            alert.htmlUrl?.let {
-                actionHandler(AlertsAction.Navigate(alert.alertId, it))
-            }
+        .clickable {
+            actionHandler(AlertsAction.Navigate(alert.alertId, alert.contextId, alert.htmlUrl, alert.alertType))
         }
         .padding(8.dp)
         .testTag("alertItem"),
@@ -269,7 +260,11 @@ fun AlertsListItem(
             )
             alert.date?.let {
                 Text(
-                    text = dateTime(alert.date),
+                    text = DateHelper.getDateAtTimeString(
+                        LocalContext.current,
+                        com.instructure.pandares.R.string.alertDateTime,
+                        it
+                    ) ?: "",
                     style = TextStyle(
                         color = colorResource(id = R.color.textDark),
                         fontSize = 12.sp
@@ -300,6 +295,7 @@ fun AlertsScreenPreview() {
             alerts = listOf(
                 AlertsItemUiState(
                     alertId = 1L,
+                    contextId = 1L,
                     title = "Alert title",
                     alertType = AlertType.COURSE_ANNOUNCEMENT,
                     date = Date(),
@@ -310,6 +306,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 2L,
+                    contextId = 2L,
                     title = "Assignment missing",
                     alertType = AlertType.ASSIGNMENT_MISSING,
                     date = Date(),
@@ -320,6 +317,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 3L,
+                    contextId = 3L,
                     title = "Course grade low",
                     alertType = AlertType.COURSE_GRADE_LOW,
                     date = Date(),
@@ -330,6 +328,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 4L,
+                    contextId = 4L,
                     title = "Course grade high",
                     alertType = AlertType.COURSE_GRADE_HIGH,
                     date = Date(),
@@ -340,6 +339,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 5L,
+                    contextId = 5L,
                     title = "Institution announcement",
                     alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
                     date = Date(),
@@ -350,6 +350,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 6L,
+                    contextId = 6L,
                     title = "Assignment grade low",
                     alertType = AlertType.ASSIGNMENT_GRADE_LOW,
                     date = Date(),
@@ -360,6 +361,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 7L,
+                    contextId = 7L,
                     title = "Assignment grade high",
                     alertType = AlertType.ASSIGNMENT_GRADE_HIGH,
                     date = Date(),
@@ -370,6 +372,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 8L,
+                    contextId = 8L,
                     title = "Locked alert",
                     alertType = AlertType.COURSE_ANNOUNCEMENT,
                     date = Date(),
@@ -427,6 +430,7 @@ fun AlertsListItemPreview() {
     AlertsListItem(
         alert = AlertsItemUiState(
             alertId = 1L,
+            contextId = 1L,
             title = "Alert title",
             alertType = AlertType.COURSE_ANNOUNCEMENT,
             date = Date(),
