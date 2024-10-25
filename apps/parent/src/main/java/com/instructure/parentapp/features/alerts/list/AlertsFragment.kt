@@ -58,10 +58,14 @@ class AlertsFragment : Fragment() {
 
     private fun handleAction(action: AlertsViewModelAction) {
         when (action) {
-            is AlertsViewModelAction.Navigate -> {
-                navigation.navigate(activity, action.route)
+            is AlertsViewModelAction.NavigateToRoute -> {
+                action.route?.let {
+                    navigation.navigate(activity, it)
+                }
             }
-
+            is AlertsViewModelAction.NavigateToGlobalAnnouncement -> {
+                navigation.navigate(activity, navigation.globalAnnouncementRoute(action.alertId))
+            }
             is AlertsViewModelAction.ShowSnackbar -> {
                 Snackbar.make(requireView(), action.message, Snackbar.LENGTH_SHORT).apply {
                     action.action?.let { setAction(it) { action.actionCallback?.invoke() } }
