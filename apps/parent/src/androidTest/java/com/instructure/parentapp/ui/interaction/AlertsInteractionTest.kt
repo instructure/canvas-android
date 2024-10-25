@@ -18,11 +18,14 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
+import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockCanvas.addObserverAlert
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -32,6 +35,7 @@ import java.util.Date
 
 @HiltAndroidTest
 class AlertsInteractionTest : ParentComposeTest() {
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
 
     @Test
     fun dismissAlert() {
@@ -119,6 +123,8 @@ class AlertsInteractionTest : ParentComposeTest() {
         val student = data.students.first()
         val observer = data.parents.first()
         val course = data.courses.values.first()
+        data.addAssignmentsToGroups(course)
+        val assignment = data.assignments.values.first { it.submission != null }
 
         val alert = data.addObserverAlert(
             observer,
@@ -127,7 +133,7 @@ class AlertsInteractionTest : ParentComposeTest() {
             AlertType.ASSIGNMENT_MISSING,
             AlertWorkflowState.UNREAD,
             Date(),
-            null,
+            "https://${data.domain}/courses/${course.id}/assignments/${assignment.id}",
             false
         )
 
@@ -138,7 +144,8 @@ class AlertsInteractionTest : ParentComposeTest() {
         alertsPage.assertAlertUnread(alert.title)
         alertsPage.clickOnAlert(alert.title)
 
-        //TODO check that we route to the correct screen when ready
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertStatusSubmitted()
     }
 
     private fun initData(): MockCanvas {

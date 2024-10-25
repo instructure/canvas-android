@@ -19,6 +19,7 @@ package com.instructure.parentapp.features.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -29,7 +30,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityMainBinding
 import com.instructure.parentapp.features.dashboard.InboxCountUpdater
@@ -56,12 +59,19 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupTheme()
         setupNavigation()
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    private fun setupTheme() {
+        ThemePrefs.reapplyCanvasTheme(this)
+        val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleDeeplink(intent?.data)
+        handleDeeplink(intent.data)
     }
 
     private fun setupNavigation() {

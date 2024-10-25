@@ -23,7 +23,8 @@ import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @Parcelize
 data class Assignment(
@@ -112,7 +113,9 @@ data class Assignment(
         @SerializedName("anonymous_submissions")
         val anonymousSubmissions: Boolean = false,
         @SerializedName("omit_from_final_grade")
-        val omitFromFinalGrade: Boolean = false
+        val omitFromFinalGrade: Boolean = false,
+        @SerializedName("hide_in_gradebook")
+        val isHiddenInGradeBook: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
@@ -230,6 +233,10 @@ data class Assignment(
 
     fun isMissing(): Boolean {
         return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null)
+    }
+
+    fun isGraded(): Boolean {
+        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
     }
 
     companion object {

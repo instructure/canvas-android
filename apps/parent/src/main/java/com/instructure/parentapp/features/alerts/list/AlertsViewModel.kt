@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
@@ -58,6 +58,20 @@ class AlertsViewModel @Inject constructor(
                 studentChanged(it)
             }
         }
+
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentColorChanged.collect {
+                updateColor()
+            }
+        }
+    }
+
+    private fun updateColor() {
+        selectedStudent?.let { student ->
+            _uiState.update {
+                it.copy(studentColor = student.studentColor)
+            }
+        }
     }
 
     private suspend fun studentChanged(student: User?) {
@@ -65,7 +79,7 @@ class AlertsViewModel @Inject constructor(
             selectedStudent = student
             _uiState.update {
                 it.copy(
-                    studentColor = student.color,
+                    studentColor = student.studentColor,
                     isLoading = true
                 )
             }

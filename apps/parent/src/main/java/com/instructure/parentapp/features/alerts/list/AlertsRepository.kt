@@ -31,7 +31,7 @@ class AlertsRepository(
 ) {
 
     suspend fun getAlertsForStudent(studentId: Long, forceNetwork: Boolean): List<Alert> {
-        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        val restParams = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
         val allAlerts = observerApi.getObserverAlerts(studentId, restParams).depaginate {
             observerApi.getNextPageObserverAlerts(it, restParams)
         }.dataOrThrow.sortedByDescending { it.actionDate }

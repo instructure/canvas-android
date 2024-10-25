@@ -87,8 +87,8 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
             val popup = PopupMenu(v.context, v, Gravity.START)
             val menu = popup.menu
-            for (action in actions) {
-                menu.add(0, action.ordinal, action.ordinal, action.labelResId)
+            actions.forEachIndexed { index, action ->
+                menu.add(0, index, index, action.labelResId)
             }
 
             // Add click listener

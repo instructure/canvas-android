@@ -26,11 +26,9 @@ import com.instructure.student.features.quiz.list.QuizListLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class QuizListLocalDataSourceTest {
     private val quizDao: QuizDao = mockk(relaxed = true)
     private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)

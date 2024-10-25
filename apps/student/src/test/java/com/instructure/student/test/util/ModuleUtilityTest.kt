@@ -25,15 +25,15 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.modules.util.ModuleUtility
 import com.instructure.student.features.pages.details.PageDetailsFragment
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.util.Const
 import io.mockk.mockk
 import junit.framework.TestCase
@@ -141,6 +141,7 @@ class ModuleUtilityTest : TestCase() {
         val course = Course()
         val expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putLong(com.instructure.pandautils.utils.Const.COURSE_ID, course.id)
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123456789)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
@@ -161,6 +162,7 @@ class ModuleUtilityTest : TestCase() {
         val course = Course()
         val expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putLong(com.instructure.pandautils.utils.Const.COURSE_ID, course.id)
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123456789)
 
         val parentFragment = callGetFragment(moduleItem, course, null, isOnline = false, tabs = setOf(Tab.ASSIGNMENTS_ID))
@@ -197,6 +199,7 @@ class ModuleUtilityTest : TestCase() {
         val course = Course()
         val expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putLong(com.instructure.pandautils.utils.Const.COURSE_ID, course.id)
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123450000000006789)
 
         val parentFragment = callGetFragment(moduleItem, course, null)
@@ -217,6 +220,7 @@ class ModuleUtilityTest : TestCase() {
         val course = Course()
         val expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putLong(com.instructure.pandautils.utils.Const.COURSE_ID, course.id)
         expectedBundle.putLong(Const.ASSIGNMENT_ID, 123450000000006789)
 
         val parentFragment = callGetFragment(moduleItem, course, null)

@@ -2,6 +2,7 @@ package com.instructure.pandautils.utils
 
 import android.content.Intent
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 
@@ -114,3 +115,5 @@ class OnBackStackChangedEvent(clazz: Class<*>?) : PandaRationedBusEvent<Class<*>
 
 class FileFolderDeletedEvent(val deletedFileFolder: FileFolder, skipId: String? = null) : PandaRationedBusEvent<FileFolder>(deletedFileFolder, skipId)
 class FileFolderUpdatedEvent(val updatedFileFolder: FileFolder, skipId: String? = null) : PandaRationedBusEvent<FileFolder>(updatedFileFolder, skipId)
+
+class ConversationUpdatedEvent(conversation: Conversation, skipId: String? = null) : PandaRationedBusEvent<Conversation>(conversation, skipId)

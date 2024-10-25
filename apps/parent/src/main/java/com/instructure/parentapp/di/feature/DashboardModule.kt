@@ -18,6 +18,7 @@
 package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.AlertCountUpdaterImpl
@@ -40,9 +41,10 @@ class DashboardModule {
     @Provides
     fun provideDashboardRepository(
         enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-        unreadCountsApi: UnreadCountAPI.UnreadCountsInterface
+        unreadCountsApi: UnreadCountAPI.UnreadCountsInterface,
+        launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface
     ): DashboardRepository {
-        return DashboardRepository(enrollmentApi, unreadCountsApi)
+        return DashboardRepository(enrollmentApi, unreadCountsApi, launchDefinitionsApi)
     }
 }
 

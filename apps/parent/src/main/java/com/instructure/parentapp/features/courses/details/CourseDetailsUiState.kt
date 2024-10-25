@@ -41,10 +41,10 @@ enum class TabType(@StringRes val labelRes: Int) {
 sealed class CourseDetailsAction {
     data object Refresh : CourseDetailsAction()
     data object SendAMessage : CourseDetailsAction()
-    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsAction()
+    data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsAction()
 }
 
 sealed class CourseDetailsViewModelAction {
     data object NavigateToComposeMessageScreen : CourseDetailsViewModelAction()
-    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsViewModelAction()
+    data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsViewModelAction()
 }

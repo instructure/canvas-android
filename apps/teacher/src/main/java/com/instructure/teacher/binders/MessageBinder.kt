@@ -38,7 +38,7 @@ import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.utils.linkifyTextView
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 object MessageBinder {
     fun bind(
@@ -93,8 +93,8 @@ object MessageBinder {
             }
             val popup = PopupMenu(v.context, v, Gravity.START)
             val menu = popup.menu
-            for (action in actions) {
-                menu.add(0, action.ordinal, action.ordinal, action.labelResId)
+            actions.forEachIndexed { index, action ->
+                menu.add(0, index, index, action.labelResId)
             }
 
             // Add click listener

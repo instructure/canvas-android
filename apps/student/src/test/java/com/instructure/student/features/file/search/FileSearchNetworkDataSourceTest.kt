@@ -24,12 +24,10 @@ import com.instructure.student.features.files.search.FileSearchNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class FileSearchNetworkDataSourceTest {
 
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)

@@ -20,23 +20,26 @@ package com.instructure.parentapp.features.dashboard
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.ColorInt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
+import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -116,6 +119,7 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _state.value = ViewState.Loading
 
+            loadLaunchDefinitions()
             setupUserInfo()
             loadStudents(forceNetwork)
             updateUnreadCount()
@@ -133,6 +137,22 @@ class DashboardViewModel @Inject constructor(
         } catch {
             viewModelScope.launch {
                 _state.value = ViewState.Error(context.getString(R.string.errorOccurred))
+            }
+        }
+    }
+
+    private fun loadLaunchDefinitions() {
+        viewModelScope.async {
+            val launchDefinitions = repository.getLaunchDefinitions()
+            val launchDefinitionsViewData = launchDefinitions
+                .filter { it.domain != null && it.placements?.globalNavigation?.url != null }
+                .map { LaunchDefinitionViewData(it.name.orEmpty(), it.domain.orEmpty(), it.placements?.globalNavigation?.url.orEmpty()) }
+            if (launchDefinitionsViewData.isNotEmpty()) {
+                _data.update {
+                    it.copy(
+                        launchDefinitionViewData = launchDefinitionsViewData
+                    )
+                }
             }
         }
     }
@@ -181,7 +201,7 @@ class DashboardViewModel @Inject constructor(
 
         val studentItemsWithAddStudent = if (studentItems.isNotEmpty()) {
             studentItems + AddStudentItemViewModel(
-                selectedStudent.color,
+                selectedStudent.studentColor,
                 ::addStudent
             )
         } else {
@@ -223,7 +243,7 @@ class DashboardViewModel @Inject constructor(
                 selectedStudent = student,
                 studentItems = it.studentItems.map { item ->
                     if (item is AddStudentItemViewModel) {
-                        item.copy(color = student.color)
+                        item.copy(color = student.studentColor)
                     } else {
                         item
                     }
@@ -246,8 +266,8 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun updateAlertCount() {
-        _data.value.selectedStudent?.id?.let {
-            val alertCount = alertsRepository.getUnreadAlertCount(it)
+        _data.value.selectedStudent?.id?.let { selectedStudentId ->
+            val alertCount = alertsRepository.getUnreadAlertCount(selectedStudentId)
             _data.update {
                 it.copy(
                     alertCount = alertCount
@@ -259,6 +279,30 @@ class DashboardViewModel @Inject constructor(
     fun toggleStudentSelector() {
         _data.update {
             it.copy(studentSelectorExpanded = !it.studentSelectorExpanded)
+        }
+    }
+
+    fun updateColor(@ColorInt color: Int) {
+        _data.value.studentItems.find { it is AddStudentItemViewModel }?.let { addStudentItem ->
+            (addStudentItem as AddStudentItemViewModel).updateColor(color)
+        }
+    }
+
+    fun openMastery() {
+        val masteryLaunchDefinition = _data.value.launchDefinitionViewData.find { it.domain == LaunchDefinition.MASTERY_DOMAIN }
+        openLtiTool(masteryLaunchDefinition)
+    }
+
+    fun openStudio() {
+        val studioLaunchDefinition = _data.value.launchDefinitionViewData.find { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        openLtiTool(studioLaunchDefinition)
+    }
+
+    private fun openLtiTool(ltiViewData: LaunchDefinitionViewData?) {
+        ltiViewData?.let {
+            viewModelScope.launch {
+                _events.send(DashboardViewModelAction.OpenLtiTool(it.url, it.name))
+            }
         }
     }
 }

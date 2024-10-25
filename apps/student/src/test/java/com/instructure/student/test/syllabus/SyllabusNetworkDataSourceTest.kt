@@ -32,12 +32,10 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class SyllabusNetworkDataSourceTest {
 
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)

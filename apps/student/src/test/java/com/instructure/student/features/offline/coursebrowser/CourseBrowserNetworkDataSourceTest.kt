@@ -25,12 +25,10 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.features.coursebrowser.datasource.CourseBrowserNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class CourseBrowserNetworkDataSourceTest {
 
     private val tabApi: TabAPI.TabsInterface = mockk(relaxed = true)

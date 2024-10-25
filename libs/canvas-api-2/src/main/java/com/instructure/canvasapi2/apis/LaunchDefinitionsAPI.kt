@@ -22,12 +22,11 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.utils.DataResult
-
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import retrofit2.http.Tag
-import retrofit2.http.Url
 
 object LaunchDefinitionsAPI {
 
@@ -38,8 +37,8 @@ object LaunchDefinitionsAPI {
         @GET("accounts/self/lti_apps/launch_definitions?placements[]=global_navigation")
         suspend fun getLaunchDefinitions(@Tag params: RestParams): DataResult<List<LaunchDefinition>?>
 
-        @GET
-        suspend fun getLtiFromAuthenticationUrl(@Url url: String, @Tag restParams: RestParams): DataResult<LTITool>
+        @GET("accounts/self/external_tools/sessionless_launch")
+        suspend fun getLtiFromAuthenticationUrl(@Query("url") url: String, @Tag restParams: RestParams): DataResult<LTITool>
 
         @GET("courses/{courseId}/lti_apps/launch_definitions?placements[]=course_navigation")
         fun getLaunchDefinitionsForCourse(@Path("courseId") courseId: Long): Call<List<LaunchDefinition>>

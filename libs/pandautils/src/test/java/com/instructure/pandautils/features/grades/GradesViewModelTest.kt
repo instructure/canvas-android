@@ -237,7 +237,8 @@ class GradesViewModelTest {
                         ),
                         submission = Submission(
                             submittedAt = Date(),
-                            grade = "A"
+                            grade = "A",
+                            postedAt = Date()
                         )
                     ),
                     Assignment(
@@ -370,7 +371,8 @@ class GradesViewModelTest {
                         ),
                         submission = Submission(
                             submittedAt = Date(),
-                            grade = "A"
+                            grade = "A",
+                            postedAt = Date()
                         )
                     ),
                     Assignment(
@@ -380,7 +382,7 @@ class GradesViewModelTest {
                             SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
                         ),
                         submission = Submission(
-                            submittedAt = Date()
+                            submittedAt = Date(),
                         )
                     )
                 )
@@ -627,7 +629,7 @@ class GradesViewModelTest {
 
         viewModel.handleAction(GradesAction.AssignmentClick(1L))
 
-        val expected = GradesViewModelAction.NavigateToAssignmentDetails(1L)
+        val expected = GradesViewModelAction.NavigateToAssignmentDetails(1L, 1L)
         Assert.assertEquals(expected, events.last())
     }
 
@@ -689,6 +691,66 @@ class GradesViewModelTest {
 
         viewModel.handleAction(GradesAction.SnackbarDismissed)
         val expected = loaded.copy(snackbarMessage = null)
+        Assert.assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Filter hidden grades in Grade list`() {
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        submissionTypesRaw = listOf(
+                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                        )
+                    ),
+                    Assignment(
+                        id = 2,
+                        name = "Assignment 2",
+                        submissionTypesRaw = listOf(
+                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                        ),
+                        isHiddenInGradeBook = true
+                    ),
+                )
+            )
+        )
+
+        createViewModel()
+
+        val expected = GradesUiState(
+            isLoading = false,
+            canvasContextColor = 1,
+            gradePreferencesUiState = GradePreferencesUiState(
+                canvasContextColor = 1,
+                courseName = "Course 1"
+            ),
+            items = listOf(
+                AssignmentGroupUiState(
+                    id = 2,
+                    name = "Undated Assignments",
+                    expanded = true,
+                    assignments = listOf(
+                        AssignmentUiState(
+                            id = 1,
+                            iconRes = R.drawable.ic_assignment,
+                            name = "Assignment 1",
+                            dueDate = "No due date",
+                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            displayGrade = DisplayGrade("")
+                        )
+                    )
+                )
+            )
+        )
+
         Assert.assertEquals(expected, viewModel.uiState.value)
     }
 
