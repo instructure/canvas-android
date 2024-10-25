@@ -86,7 +86,7 @@ void main() {
       var dio = await canvasDio();
       final options = dio.options;
 
-      expect(options.queryParameters['no_verifiers'], true);
+      expect(options.queryParameters['no_verifiers'], 1);
     });
 
     test('sets as_user_id param when masquerading', () async {

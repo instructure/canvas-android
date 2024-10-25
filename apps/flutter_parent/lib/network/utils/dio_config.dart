@@ -158,7 +158,7 @@ class DioConfig {
 
     if (disableFileVerifiers) {
       extraParams ??= {};
-      extraParams['no_verifiers'] = true;
+      extraParams['no_verifiers'] = 1;
     }
 
     return DioConfig(

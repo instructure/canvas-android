@@ -93,7 +93,7 @@ class RequestInterceptor : Interceptor {
         }
 
         if (params.disableFileVerifiers) {
-            val url = request.url.newBuilder().addQueryParameter("no_verifiers", "true").build()
+            val url = request.url.newBuilder().addQueryParameter("no_verifiers", "1").build()
             request = request.newBuilder().url(url).build()
         }
 
