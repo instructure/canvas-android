@@ -12,8 +12,10 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
+import java.lang.IllegalStateException
 import java.time.Instant
 import java.util.Date
 
@@ -80,6 +82,28 @@ class AnnouncementDetailsRepositoryTest {
     fun `getGlobalAnnouncement should return proper data`() = runTest {
         val result = announcementDetailsRepository.getGlobalAnnouncement(1L, false)
         assertEquals(globalAnnouncementTestResponse, result)
+    }
+
+    @Test
+    fun `getCourse returns null if call fails`() = runTest {
+        coEvery { courseApi.getCourse(any(), any()) } returns DataResult.Fail()
+
+        val result = announcementDetailsRepository.getCourse(1L, false)
+        assertNull(result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `getCourseAnnouncement throw exception if call fails`() = runTest {
+        coEvery { announcementApi.getCourseAnnouncement(any(), any(), any()) } returns DataResult.Fail()
+
+        announcementDetailsRepository.getCourseAnnouncement(1L, 1L, false)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `getGlobalAnnouncement throw exception if call fails`() = runTest {
+        coEvery { accountNotificationApi.getAccountNotification(any(), any()) } returns DataResult.Fail()
+
+        announcementDetailsRepository.getGlobalAnnouncement(1L, false)
     }
 
     private fun createRepository() {
