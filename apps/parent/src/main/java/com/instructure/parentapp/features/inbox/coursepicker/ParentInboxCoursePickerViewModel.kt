@@ -45,7 +45,7 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
         loadCoursePickerItems()
     }
 
-    fun getContextURL(courseId: Long): String {
+    private fun getContextURL(courseId: Long): String {
         return "${apiPrefs.fullDomain}/courses/${courseId}"
     }
 

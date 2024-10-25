@@ -42,7 +42,7 @@ abstract class AssignmentDetailsBehaviour {
         CustomReminderDialog.newInstance().show(fragment.childFragmentManager, null)
     }
 
-    open fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?, assignment: Assignment?, actionHandler: (AssignmentDetailsBehaviorAction) -> Unit) = Unit
+    open fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?) = Unit
 
     open fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
 }

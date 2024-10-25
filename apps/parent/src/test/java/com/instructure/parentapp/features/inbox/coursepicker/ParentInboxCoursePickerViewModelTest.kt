@@ -20,8 +20,10 @@ import android.content.Context
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.parentapp.R
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -55,14 +57,23 @@ class ParentInboxCoursePickerViewModelTest {
     }
 
     @Test
-    fun `getContextURL should return correct URL`() {
+    fun `getMessageOptions should return correct URL`() {
         coEvery { repository.getCourses() } returns DataResult.Success(emptyList())
         coEvery { repository.getEnrollments() } returns DataResult.Success(emptyList())
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
+        val studentContextItem = StudentContextItem(Course(1, "Course 1"), User(1, "User 1"))
         val viewModel = getViewModel()
         val courseId = 123L
-        val expected = "https://canvas.instructure.com/courses/$courseId"
-        assertEquals(expected, viewModel.getContextURL(courseId))
+        val expectedHiddenMessage = "Regarding: User 1, https://canvas.instructure.com/courses/$courseId"
+        every { context.getString(R.string.regardingHiddenMessage, any(), any()) } returns expectedHiddenMessage
+        val options = viewModel.getMessageOptions(studentContextItem)
+        assertEquals(expectedHiddenMessage, options.hiddenBodyMessage)
+        assertEquals("Course 1", options.defaultValues.contextName)
+        assertEquals("course_1", options.defaultValues.contextCode)
+        assertEquals("Course 1", options.defaultValues.subject)
+        assertEquals(true, options.disabledFields.isContextDisabled)
+        assertEquals(listOf(EnrollmentType.TEACHERENROLLMENT), options.autoSelectRecipientsFromRoles)
+
     }
 
     @Test

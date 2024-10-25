@@ -18,7 +18,6 @@ package com.instructure.parentapp.features.assignment.details
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.util.DisplayMetrics
 import androidx.annotation.ColorInt
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -32,9 +31,9 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.binding.setTint
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviorAction
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.orDefault
@@ -59,12 +58,12 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         toolbar: Toolbar,
         course: Course?,
         assignment: Assignment?,
-        actionHandler: (AssignmentDetailsBehaviorAction) -> Unit
+        routeToCompose: ((InboxComposeOptions) -> Unit)?
     ) {
         ViewStyler.themeToolbarColored(activity, toolbar, parentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
         ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
 
-        binding?.assignmentDetailsPage?.addView(messageFAB(activity, course, assignment, actionHandler))
+        binding?.assignmentDetailsPage?.addView(messageFAB(activity, course, assignment, routeToCompose))
 
         binding?.scrollView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (binding.scrollView.scrollY == 0) {
@@ -79,7 +78,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         }
     }
 
-    private fun messageFAB(context: Context, course: Course?, assignment: Assignment?, actionHandler: (AssignmentDetailsBehaviorAction) -> Unit): FloatingActionButton {
+    private fun messageFAB(context: Context, course: Course?, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?): FloatingActionButton {
         return FloatingActionButton(context).apply {
             setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
             contentDescription = context.getString(R.string.sendMessageAboutAssignment)
@@ -88,22 +87,14 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
             layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).apply {
                 bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
                 endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                marginEnd = 16.toDp(context)
-                bottomMargin = 16.toDp(context)
+                marginEnd = context.DP(16).toInt()
+                bottomMargin = context.DP(16).toInt()
             }
             onClick {
-                actionHandler(AssignmentDetailsBehaviorAction.SendMessage(getInboxComposeOptions(context, course, assignment)))
+                routeToCompose?.invoke(getInboxComposeOptions(context, course, assignment))
             }
         }
         .also { fab = it }
-    }
-
-    // Android View FAB compatPadding is different from the Jetpack Compose one, so we cannot use the default values.
-    // We have to manually calculate the margin values for the FAB to be displayed correctly.
-    private fun Int.toDp(context: Context): Int {
-        val metrics: DisplayMetrics = context.resources.displayMetrics
-        val px = this * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-        return px.toInt()
     }
 
     private fun getInboxComposeOptions(context: Context, course: Course?, assignment: Assignment?): InboxComposeOptions {

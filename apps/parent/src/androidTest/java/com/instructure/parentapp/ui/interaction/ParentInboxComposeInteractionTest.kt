@@ -54,7 +54,7 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
 
         inboxPage.pressNewMessageButton()
 
-        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = getObservedStudent().shortName ?: getObservedStudent().name)
+        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = "for ${getObservedStudent().shortName ?: getObservedStudent().name}")
     }
 
     override fun initData(canSendToAll: Boolean, sendMessages: Boolean): MockCanvas {

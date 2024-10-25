@@ -46,11 +46,7 @@ class ParentInboxCoursePickerRepository @Inject constructor(
 
     suspend fun getEnrollments(): DataResult<List<Enrollment>> {
         val params = RestParams(usePerPageQueryParam = true)
-        val enrollmentsResult = enrollmentApi.firstPageObserveeEnrollmentsParent(params)
+        return enrollmentApi.firstPageObserveeEnrollmentsParent(params)
             .depaginate { nextUrl -> enrollmentApi.getNextPage(nextUrl, params) }
-
-        val enrollments = enrollmentsResult.dataOrNull ?: return enrollmentsResult
-
-        return DataResult.Success(enrollments)
     }
 }
