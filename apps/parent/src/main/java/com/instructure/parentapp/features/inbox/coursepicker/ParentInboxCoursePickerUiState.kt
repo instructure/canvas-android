@@ -18,6 +18,7 @@ package com.instructure.parentapp.features.inbox.coursepicker
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
 data class ParentInboxCoursePickerUiState(
     val screenState: ScreenState = ScreenState.Loading,
@@ -38,4 +39,9 @@ sealed class ScreenState {
 sealed class ParentInboxCoursePickerAction {
     data class StudentContextSelected(val studentContextItem: StudentContextItem): ParentInboxCoursePickerAction()
     data object CloseDialog: ParentInboxCoursePickerAction()
+}
+
+sealed class ParentInboxCoursePickerBottomSheetAction {
+    data class NavigateToCompose(val options: InboxComposeOptions): ParentInboxCoursePickerBottomSheetAction()
+    data object Dismiss: ParentInboxCoursePickerBottomSheetAction()
 }

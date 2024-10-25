@@ -25,9 +25,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.features.inbox.coursepicker.composables.ParentInboxCoursePickerScreen
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,24 +48,12 @@ class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
         return ComposeView(requireContext()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                ParentInboxCoursePickerScreen(uiState = uiState) { action ->
-                    when (action) {
-                        is ParentInboxCoursePickerAction.StudentContextSelected -> {
-                            val options = viewModel.getMessageOptions(action.studentContextItem)
-                            val route = navigation.inboxComposeRoute(options)
-                            navigation.navigate(activity, route)
-
-                            dismiss()
-                        }
-
-                        is ParentInboxCoursePickerAction.CloseDialog -> {
-                            dismiss()
-                        }
-                    }
-                }
+                ParentInboxCoursePickerScreen(uiState, viewModel::actionHandler)
             }
         }
     }
@@ -85,6 +75,17 @@ class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
                     behavior.isDraggable = false
                 }
             }
+        }
+    }
+
+    private fun handleAction(action: ParentInboxCoursePickerBottomSheetAction) {
+        when(action) {
+            is ParentInboxCoursePickerBottomSheetAction.NavigateToCompose -> {
+                val route = navigation.inboxComposeRoute(action.options)
+                navigation.navigate(requireActivity(), route)
+                dismiss()
+            }
+            is ParentInboxCoursePickerBottomSheetAction.Dismiss -> dismiss()
         }
     }
 }
