@@ -2,10 +2,12 @@ package com.instructure.student.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.appDatabaseMigrations
 import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
 import com.instructure.pandautils.room.calendar.calendarDatabaseMigrations
+import com.instructure.pandautils.room.utils.DestructiveMigrationReporter
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.studentDbMigrations
 import dagger.Module
@@ -41,10 +43,12 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideStudentDb(@ApplicationContext context: Context): StudentDb {
-        return Room.databaseBuilder(context, StudentDb::class.java, "student.db")
+    fun provideStudentDb(@ApplicationContext context: Context, firebaseCrashlytics: FirebaseCrashlytics): StudentDb {
+        val dbName = "student.db"
+        return Room.databaseBuilder(context, StudentDb::class.java, dbName)
             .addMigrations(*studentDbMigrations)
             .fallbackToDestructiveMigration()
+            .addCallback(DestructiveMigrationReporter(dbName, firebaseCrashlytics))
             .build()
     }
 }
