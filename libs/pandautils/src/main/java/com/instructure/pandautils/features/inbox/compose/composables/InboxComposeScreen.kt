@@ -115,7 +115,9 @@ fun InboxComposeScreen(
                     navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelDismissDialog(true)) },
                     actions = {
                         if (uiState.screenState == ScreenState.Loading) {
-                            Loading()
+                            Loading(
+                                modifier = Modifier.testTag("Loading"),
+                            )
                         } else {
                             IconButton(
                                 onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },

@@ -14,7 +14,9 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
@@ -39,9 +41,31 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     @Test
     fun testParentComposeDefaultValues() {
         val data = initData(canSendToAll = true)
-        goToInboxCompose(data)
+        data.recipientGroups[getFirstCourse().id] = listOf(
+            Recipient(
+                stringId = getTeachers().first().id.toString(),
+                name = getTeachers().first().name,
+                commonCourses = hashMapOf(
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                )
+            )
+        )
+        val parent = data.parents.first()
+        val token = data.tokenFor(parent)!!
+        tokenLogin(data.domain, token, parent)
+
+        dashboardPage.openNavigationDrawer()
+        dashboardPage.clickInbox()
+
+        inboxPage.pressNewMessageButton()
+
+        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = "for ${getObservedStudent().shortName ?: getObservedStudent().name}")
+
+        composeTestRule.waitUntil { !inboxComposePage.isRecipientsLoading() }
 
         inboxComposePage.assertContextSelected(getFirstCourse().name)
+        inboxComposePage.assertSubjectText(getFirstCourse().name)
+        inboxComposePage.assertRecipientSelected(getTeachers().first().name)
     }
 
     override fun goToInboxCompose(data: MockCanvas) {
@@ -55,6 +79,9 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         inboxPage.pressNewMessageButton()
 
         inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = "for ${getObservedStudent().shortName ?: getObservedStudent().name}")
+
+        composeTestRule.waitUntil { !inboxComposePage.isRecipientsLoading() }
+        inboxComposePage.removeAllRecipients()
     }
 
     override fun initData(canSendToAll: Boolean, sendMessages: Boolean): MockCanvas {

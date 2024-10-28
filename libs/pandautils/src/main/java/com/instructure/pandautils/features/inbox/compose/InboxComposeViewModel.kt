@@ -132,15 +132,14 @@ class InboxComposeViewModel @Inject constructor(
                                 )
                             )
                         }
-                    }
-                    val recipients = getRecipientList("", context, false).dataOrNull.orEmpty()
-                    val roleRecipients = groupRecipientList(context, recipients)
-                    val selectedRecipients = mutableListOf<Recipient>()
-                    options.autoSelectRecipientsFromRoles?.forEach { role ->
-                        roleRecipients[role]?.let { selectedRecipients.addAll(it) }
-                    }
-                    
-                    if (!options.autoSelectRecipientsFromRoles.isNullOrEmpty()) {
+
+                        val recipients = getRecipientList("", context, false).dataOrNull.orEmpty()
+                        val roleRecipients = groupRecipientList(context, recipients)
+                        val selectedRecipients = mutableListOf<Recipient>()
+                        options.autoSelectRecipientsFromRoles?.forEach { role ->
+                            roleRecipients[role]?.let { selectedRecipients.addAll(it) }
+                        }
+
                         _uiState.update {
                             it.copy(
                                 recipientPickerUiState = it.recipientPickerUiState.copy(
