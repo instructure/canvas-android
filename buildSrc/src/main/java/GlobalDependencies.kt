@@ -40,6 +40,7 @@ object Versions {
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.8.3"
     const val MEDIA3 = "1.4.1"
+    const val DATASTORE = "1.1.1"
 }
 
 object Libs {
@@ -184,6 +185,9 @@ object Libs {
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_KTX = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
+
+    // DataStore
+    const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
 }
 
 object Plugins {

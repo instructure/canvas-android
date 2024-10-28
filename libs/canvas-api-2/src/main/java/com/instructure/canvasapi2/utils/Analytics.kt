@@ -123,6 +123,7 @@ object AnalyticsEventConstants {
     const val OFFLINE_SYNC_BUTTON_TAPPED = "offline_sync_button_tapped"
     const val OFFLINE_AUTO_SYNC_TURNED_ON = "offline_auto_sync_turned_on"
     const val OFFLINE_AUTO_SYNC_TURNED_OFF = "offline_auto_sync_turned_off"
+    const val OFFLINE_COURSE_OPENED = "offline_course_opened"
 }
 
 /**
@@ -137,4 +138,5 @@ object AnalyticsParamConstants {
 
     //custom
     const val MANUAL_C4E_STATE = "manual_c4e_state"
+    const val DURATION = "duration"
 }

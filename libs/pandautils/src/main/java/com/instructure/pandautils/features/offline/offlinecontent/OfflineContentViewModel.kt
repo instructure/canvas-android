@@ -27,11 +27,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.FileViewModel
@@ -59,7 +56,8 @@ class OfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val offlineContentRepository: OfflineContentRepository,
     private val storageUtils: StorageUtils,
-    private val offlineSyncHelper: OfflineSyncHelper
+    private val offlineSyncHelper: OfflineSyncHelper,
+    private val offlineAnalyticsManager: OfflineAnalyticsManager,
 ) : ViewModel() {
 
     val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
@@ -404,12 +402,6 @@ class OfflineContentViewModel @Inject constructor(
         }
     }
 
-    private fun logEvent() {
-        val eventName: String = AnalyticsEventConstants.OFFLINE_SYNC_BUTTON_TAPPED
-        Analytics.logEvent(eventName)
-        PageViewUtils.saveSingleEvent(eventName, "${ApiPrefs.fullDomain}/${eventName}")
-    }
-
     private fun getSelectedSize(): Long {
         val tabSize = courseMap.values.sumOf { course ->
             course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS && it.tabId != Tab.FILES_ID }?.count {
@@ -427,7 +419,7 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     private fun startSync() {
-        logEvent()
+        offlineAnalyticsManager.reportOfflineSyncStarted()
         viewModelScope.launch {
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())

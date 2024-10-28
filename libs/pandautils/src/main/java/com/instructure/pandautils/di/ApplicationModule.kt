@@ -27,6 +27,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
@@ -132,5 +133,10 @@ class ApplicationModule {
     @Singleton
     fun provideThemePrefs(): ThemePrefs {
         return ThemePrefs
+    }
+
+    @Provides
+    fun provideOfflineAnalyticsManager(): OfflineAnalyticsManager {
+        return OfflineAnalyticsManager
     }
 }
