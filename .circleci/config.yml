@@ -32,7 +32,8 @@ jobs:
               echo "RUN_E2E is set to: $RUN_E2E"
   
   build-qa-debug:
-    executor: android/android-machine  # Select an Android image with the right SDK/tools
+    machine:
+      image: android:2024.04.1 # Select an Android image with the right SDK/tools
     environment:
       ANDROID_KEYSTORE_PATH: "ANDROID_KEYSTORE_PATH"  # Set your path
       ANDROID_KEYSTORE_URL: "ANDROID_KEYSTORE_URL"
@@ -58,7 +59,8 @@ jobs:
           destination: TEST_QA_DEBUG
   
   build-and-comment-dev-debug-minify:
-    executor: android/android-machine # Use an Android image with required SDK/tools
+    machine:
+      image: android:2024.04.1 # Use an Android image with required SDK/tools
     environment:
       ANDROID_KEYSTORE_PATH: "/path/to/keystore.jks"  # Adjust path as needed
       ANDROID_KEYSTORE_URL: "$ANDROID_KEYSTORE_URL"
@@ -93,7 +95,8 @@ jobs:
             fi
 
   unit-tests:
-    executor: android/android-machine # Use an Android image with required SDK/tools
+    machine:
+      image: android:2024.04.1 # Use an Android image with required SDK/tools
     environment:
       # Define environment variables as needed; replace paths as necessary
       SOURCE_DIR: "~/project"  # Adjust the project directory as needed
