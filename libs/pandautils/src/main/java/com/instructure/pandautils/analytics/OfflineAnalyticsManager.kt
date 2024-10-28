@@ -56,7 +56,7 @@ object OfflineAnalyticsManager {
         if (startTimeInMillis == null) return
 
         val endTimeInMillis = System.currentTimeMillis()
-        val duration = endTimeInMillis - startTimeInMillis
+        val duration = ((endTimeInMillis - startTimeInMillis) / 1000) // Convert ms to s
 
         context.dataStore.edit { preferences ->
             preferences.remove(SESSION_STARTED_KEY)
