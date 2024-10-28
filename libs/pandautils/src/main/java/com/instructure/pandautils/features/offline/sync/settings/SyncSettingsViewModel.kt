@@ -73,8 +73,13 @@ class SyncSettingsViewModel @Inject constructor(
                 autoSyncEnabled = checked
             )
             syncSettingsFacade.update(updated)
-            offlineAnalyticsManager.reportOfflineAutoSyncSwitchChanged(checked)
+            if (checked) {
+                offlineSyncHelper.scheduleWork()
+            } else {
+                offlineSyncHelper.cancelWork()
+            }
             loadData()
+            offlineAnalyticsManager.reportOfflineAutoSyncSwitchChanged(checked)
         }
     }
 
