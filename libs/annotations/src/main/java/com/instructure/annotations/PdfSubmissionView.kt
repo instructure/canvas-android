@@ -228,6 +228,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                     pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
                     pdfFragment?.notifyAnnotationHasChanged(annotation)
                     pdfFragment?.clearSelectedAnnotations()
+                    pdfFragment?.exitCurrentlyActiveMode()
                     pdfFragment?.enterAnnotationCreationMode()
                     return@setOnMenuItemClickListener true
                 }
