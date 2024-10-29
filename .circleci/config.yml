@@ -12,11 +12,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install OpenJDK 18
+          name: Install OpenJDK 17
           command: |
-            sudo apt-get update && sudo apt-get install openjdk-18-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-18-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-18-openjdk-amd64/bin/javac
+            sudo apt-get update && sudo apt-get install openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
       - run:
           name: Check Git Message and Set RUN_E2E
@@ -49,11 +49,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install OpenJDK 18
+          name: Install OpenJDK 17
           command: |
-            sudo apt-get update && sudo apt-get install openjdk-18-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-18-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-18-openjdk-amd64/bin/javac
+            sudo apt-get update && sudo apt-get install openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
       - run:
           name: Download Keystore
@@ -85,11 +85,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install OpenJDK 18
+          name: Install OpenJDK 17
           command: |
-            sudo apt-get update && sudo apt-get install openjdk-18-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-18-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-18-openjdk-amd64/bin/javac
+            sudo apt-get update && sudo apt-get install openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
       - run:
           name: Download Keystore
