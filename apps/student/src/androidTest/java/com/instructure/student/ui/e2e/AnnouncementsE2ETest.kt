@@ -98,12 +98,12 @@ class AnnouncementsE2ETest : StudentTest() {
         announcementListPage.searchable.clickOnSearchButton()
         announcementListPage.searchable.typeToSearchBar(announcement.title)
 
-        Log.d(STEP_TAG,"Assert that only the matching announcement is displayed on the Discussion List Page.")
+        Log.d(STEP_TAG,"Assert that only the matching announcement is displayed on the Announcement List Page.")
         announcementListPage.pullToUpdate()
         announcementListPage.assertTopicDisplayed(announcement.title)
         announcementListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
-        Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Discussion List Page.")
+        Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Announcement List Page.")
         announcementListPage.searchable.clickOnClearSearchButton()
         announcementListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
         announcementListPage.assertTopicDisplayed(announcement.title)
@@ -117,7 +117,7 @@ class AnnouncementsE2ETest : StudentTest() {
         announcementListPage.assertTopicNotDisplayed(announcement.title)
         announcementListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
-        Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Discussion List Page.")
+        Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Announcement List Page.")
         announcementListPage.searchable.clickOnClearSearchButton()
         announcementListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
         announcementListPage.assertTopicDisplayed(announcement.title)
