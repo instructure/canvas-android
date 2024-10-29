@@ -35,8 +35,8 @@ jobs:
     machine:
       image: android:2024.04.1 # Select an Android image with the right SDK/tools
     environment:
-      ANDROID_KEYSTORE_PATH: "ANDROID_KEYSTORE_PATH"  # Set your path
-      ANDROID_KEYSTORE_URL: "ANDROID_KEYSTORE_URL"
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Set your path
+      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
       # Make sure necessary secrets are set in CircleCI's project settings for access
       
     steps:
@@ -45,7 +45,7 @@ jobs:
           name: Download Keystore
           command: |
             # Download keystore using the environment variable for the URL
-            curl -L "$ANDROID_KEYSTORE_URL" -o "$ANDROID_KEYSTORE_PATH"
+            echo $ANDROID_KEYSTORE_BASE64 | base64 -d > $ANDROID_KEYSTORE_PATH
       - run:
           name: Build QaDebug with Gradle
           command: |
@@ -62,8 +62,8 @@ jobs:
     machine:
       image: android:2024.04.1 # Use an Android image with required SDK/tools
     environment:
-      ANDROID_KEYSTORE_PATH: "/path/to/keystore.jks"  # Adjust path as needed
-      ANDROID_KEYSTORE_URL: "$ANDROID_KEYSTORE_URL"
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Adjust path as needed
+      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
       # Make sure all the sensitive values below are added to CircleCI's environment variables
       ANDROID_KEYSTORE_PASSWORD: "$ANDROID_KEYSTORE_PASSWORD"
       DEBUG_KEY_ALIAS: "$DEBUG_KEY_ALIAS"
@@ -74,7 +74,7 @@ jobs:
           name: Download Keystore
           command: |
             # Download keystore using the environment variable for the URL
-            curl -L "$ANDROID_KEYSTORE_URL" -o "$ANDROID_KEYSTORE_PATH"   
+            echo $ANDROID_KEYSTORE_BASE64 | base64 -d > $ANDROID_KEYSTORE_PATH   
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
