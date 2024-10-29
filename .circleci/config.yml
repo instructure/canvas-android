@@ -46,7 +46,8 @@ jobs:
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-            cd ~/canvas-android
+            ls
+            cd canvas-android
       - run:
           name: Build QaDebug with Gradle
           command: |
