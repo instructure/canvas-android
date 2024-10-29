@@ -46,7 +46,7 @@ jobs:
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-            chmod 777 gradlew
+            cd ~/canvas-android
       - run:
           name: Build QaDebug with Gradle
           command: |
@@ -76,7 +76,7 @@ jobs:
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-            chmod 777 gradlew
+            cd ~/canvas-android
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
