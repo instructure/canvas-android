@@ -46,13 +46,11 @@ jobs:
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-            ls
-            cd canvas-android
       - run:
           name: Build QaDebug with Gradle
           command: |
             # Run the Gradle tasks to assemble the debug APKs
-            ./gradlew -p apps :student:assembleQaDebug :student:assembleQaDebugAndroidTest --build-cache
+            ./gradle/gradlew -p apps :student:assembleQaDebug :student:assembleQaDebugAndroidTest --build-cache
       - store_artifacts:
           path: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
           destination: APP_QA_DEBUG
@@ -77,12 +75,11 @@ jobs:
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-            cd ~/canvas-android
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
             # Run the Gradle task with required signing options
-            ./gradlew -p apps clean :student:assembleDevDebugMinify --build-cache \
+            ./gradle/gradlew -p apps clean :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
@@ -112,7 +109,7 @@ jobs:
             cd "$SOURCE_DIR/apps"
             
             # Run unit tests for the specified module and variant
-            ./gradlew :student:testDevDebugUnitTest
+            ./gradle/gradlew :student:testDevDebugUnitTest
       - store_test_results:
           path: "$SOURCE_DIR/apps/student/build/test-results/testDevDebugUnitTest"
       - store_artifacts:
