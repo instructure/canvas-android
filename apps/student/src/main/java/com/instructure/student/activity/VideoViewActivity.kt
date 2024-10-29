@@ -48,6 +48,8 @@ import androidx.media3.extractor.DefaultExtractorsFactory
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.databinding.ActivityVideoViewBinding
 import com.instructure.student.util.Const
 
@@ -78,10 +80,11 @@ class VideoViewActivity : AppCompatActivity() {
         player?.playWhenReady = true
         player?.setMediaSource(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
         player?.prepare()
+        ViewStyler.setStatusBarDark(this, ThemePrefs.primaryColor)
     }
 
-    public override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         player?.release()
     }
 
