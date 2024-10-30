@@ -24,7 +24,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -37,7 +36,6 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
-import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setVisible
@@ -192,10 +190,8 @@ class StudentAssignmentDetailsBehaviour (
         activity: FragmentActivity,
         binding: FragmentAssignmentDetailsBinding?,
         bookmark: Bookmarker,
-        toolbar: Toolbar,
-        course: LiveData<Course>,
-        assignment: Assignment?,
-        routeToCompose: ((InboxComposeOptions) -> Unit)?
+        course: Course?,
+        toolbar: Toolbar
     ) {
         binding?.toolbar?.apply {
             setupAsBackButton {
@@ -203,11 +199,11 @@ class StudentAssignmentDetailsBehaviour (
             }
 
             title = activity.getString(R.string.assignmentDetails)
-            subtitle = course.value?.name
+            subtitle = course?.name
 
             setupToolbarMenu(activity, bookmark, toolbar)
 
-            ViewStyler.themeToolbarColored(activity, this, course.value)
+            ViewStyler.themeToolbarColored(activity, this, course)
         }
     }
 

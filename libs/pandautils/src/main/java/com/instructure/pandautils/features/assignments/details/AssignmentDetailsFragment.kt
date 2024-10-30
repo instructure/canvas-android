@@ -123,9 +123,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
             title = context?.getString(R.string.assignmentDetails)
 
-            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course, viewModel.assignment) { options ->
-                assignmentDetailsRouter.navigateToSendMessage(requireActivity(), options)
-            }
+            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, viewModel.course.value, this)
         }
     }
 
@@ -149,6 +147,19 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
+            }
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            if (state.isSuccessState()) {
+                assignmentDetailsBehaviour.setupAppSpecificViews(
+                    requireActivity(),
+                    binding,
+                    viewModel.course.value!!,
+                    viewModel.assignment
+                ) { options ->
+                    assignmentDetailsRouter.navigateToSendMessage(requireActivity(), options)
+                }
             }
         }
     }

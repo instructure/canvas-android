@@ -23,7 +23,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -56,17 +55,23 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         activity: FragmentActivity,
         binding: FragmentAssignmentDetailsBinding?,
         bookmark: Bookmarker,
-        toolbar: Toolbar,
-        course: LiveData<Course>,
-        assignment: Assignment?,
-        routeToCompose: ((InboxComposeOptions) -> Unit)?
+        course: Course?,
+        toolbar: Toolbar
     ) {
         ViewStyler.themeToolbarColored(activity, toolbar, parentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
         ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
+    }
 
+    override fun setupAppSpecificViews(
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        course: Course,
+        assignment: Assignment?,
+        routeToCompose: ((InboxComposeOptions) -> Unit)?
+    ) {
         binding?.assignmentDetailsPage?.addView(messageFAB(activity, course, assignment, routeToCompose))
 
-        binding?.scrollView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        binding?.scrollView?.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             if (binding.scrollView.scrollY == 0) {
                 fab?.show()
             } else if (binding.scrollView.getChildAt(0).bottom <= (binding.scrollView.height + binding.scrollView.scrollY)) {
@@ -79,7 +84,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         }
     }
 
-    private fun messageFAB(context: Context, course: LiveData<Course>, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?): FloatingActionButton {
+    private fun messageFAB(context: Context, course: Course, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?): FloatingActionButton {
         return FloatingActionButton(context).apply {
             setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
             contentDescription = context.getString(R.string.sendMessageAboutAssignment)
@@ -92,7 +97,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
                 bottomMargin = context.DP(16).toInt()
             }
             onClick {
-                routeToCompose?.invoke(getInboxComposeOptions(context, course.value, assignment))
+                routeToCompose?.invoke(getInboxComposeOptions(context, course, assignment))
             }
         }
         .also { fab = it }
