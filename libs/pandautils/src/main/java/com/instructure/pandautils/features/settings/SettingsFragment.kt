@@ -66,6 +66,10 @@ class SettingsFragment : Fragment() {
     private var scrollValue = 0
     private var appThemeChange = false
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        ThemePrefs.reapplyCanvasTheme(requireActivity())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
