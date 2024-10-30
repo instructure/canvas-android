@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -192,7 +193,7 @@ class StudentAssignmentDetailsBehaviour (
         binding: FragmentAssignmentDetailsBinding?,
         bookmark: Bookmarker,
         toolbar: Toolbar,
-        course: Course?,
+        course: LiveData<Course>,
         assignment: Assignment?,
         routeToCompose: ((InboxComposeOptions) -> Unit)?
     ) {
@@ -202,11 +203,11 @@ class StudentAssignmentDetailsBehaviour (
             }
 
             title = activity.getString(R.string.assignmentDetails)
-            subtitle = course?.name
+            subtitle = course.value?.name
 
             setupToolbarMenu(activity, bookmark, toolbar)
 
-            ViewStyler.themeToolbarColored(activity, this, course)
+            ViewStyler.themeToolbarColored(activity, this, course.value)
         }
     }
 

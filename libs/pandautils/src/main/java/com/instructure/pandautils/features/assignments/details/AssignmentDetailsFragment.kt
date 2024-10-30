@@ -123,7 +123,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
             title = context?.getString(R.string.assignmentDetails)
 
-            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course.value, viewModel.assignment) { options ->
+            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, this, viewModel.course, viewModel.assignment) { options ->
                 assignmentDetailsRouter.navigateToSendMessage(requireActivity(), options)
             }
         }

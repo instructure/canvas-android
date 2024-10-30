@@ -21,6 +21,7 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
@@ -42,7 +43,8 @@ abstract class AssignmentDetailsBehaviour {
         CustomReminderDialog.newInstance().show(fragment.childFragmentManager, null)
     }
 
-    open fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?) = Unit
+    open fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: LiveData<Course>, assignment
+                        : Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?) = Unit
 
     open fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
 }

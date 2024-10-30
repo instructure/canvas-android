@@ -23,6 +23,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LiveData
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -56,7 +57,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         binding: FragmentAssignmentDetailsBinding?,
         bookmark: Bookmarker,
         toolbar: Toolbar,
-        course: Course?,
+        course: LiveData<Course>,
         assignment: Assignment?,
         routeToCompose: ((InboxComposeOptions) -> Unit)?
     ) {
@@ -78,7 +79,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
         }
     }
 
-    private fun messageFAB(context: Context, course: Course?, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?): FloatingActionButton {
+    private fun messageFAB(context: Context, course: LiveData<Course>, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?): FloatingActionButton {
         return FloatingActionButton(context).apply {
             setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
             contentDescription = context.getString(R.string.sendMessageAboutAssignment)
@@ -91,7 +92,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
                 bottomMargin = context.DP(16).toInt()
             }
             onClick {
-                routeToCompose?.invoke(getInboxComposeOptions(context, course, assignment))
+                routeToCompose?.invoke(getInboxComposeOptions(context, course.value, assignment))
             }
         }
         .also { fab = it }
