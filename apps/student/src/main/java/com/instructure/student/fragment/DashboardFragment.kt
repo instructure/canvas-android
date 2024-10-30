@@ -208,9 +208,11 @@ class DashboardFragment : ParentFragment() {
             }
 
             override fun onCourseSelected(course: Course) {
-                if (!repository.isOnline()) { offlineAnalyticsManager.reportCourseOpenedInOfflineMode() }
-                canvasContext = course
-                RouteMatcher.route(requireActivity(), CourseBrowserFragment.makeRoute(course))
+                lifecycleScope.launch {
+                    if (!repository.isOnline()) { offlineAnalyticsManager.reportCourseOpenedInOfflineMode() }
+                    canvasContext = course
+                    RouteMatcher.route(requireActivity(), CourseBrowserFragment.makeRoute(course))
+                }
             }
 
             @Suppress("EXPERIMENTAL_FEATURE_WARNING")

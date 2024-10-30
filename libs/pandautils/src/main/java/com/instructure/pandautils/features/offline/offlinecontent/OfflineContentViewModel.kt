@@ -419,8 +419,8 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     private fun startSync() {
-        offlineAnalyticsManager.reportOfflineSyncStarted()
         viewModelScope.launch {
+            offlineAnalyticsManager.reportOfflineSyncStarted()
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
             _events.postValue(Event(OfflineContentAction.Back))
