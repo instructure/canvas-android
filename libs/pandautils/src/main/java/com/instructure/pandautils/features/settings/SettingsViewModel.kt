@@ -33,6 +33,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -45,7 +46,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    settingsBehaviour: SettingsBehaviour,
+    private val settingsBehaviour: SettingsBehaviour,
     @ApplicationContext private val context: Context,
     private val syncSettingsFacade: SyncSettingsFacade,
     private val colorKeeper: ColorKeeper,
@@ -139,6 +140,10 @@ class SettingsViewModel @Inject constructor(
             context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         colorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
         themePrefs.isThemeApplied = false
+        viewModelScope.launch {
+            delay(100)
+            settingsBehaviour.applyAppSpecificColorSettings()
+        }
 
         _uiState.update {
             it.copy(

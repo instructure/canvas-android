@@ -21,6 +21,8 @@ import com.instructure.pandautils.R
 interface SettingsBehaviour {
 
     val settingsItems: Map<Int, List<SettingsItem>>
+
+    suspend fun applyAppSpecificColorSettings() = Unit
 }
 
 enum class SettingsItem(val res: Int) {

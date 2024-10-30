@@ -18,11 +18,16 @@
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsItem
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 
-class ParentSettingsBehaviour : SettingsBehaviour {
+class ParentSettingsBehaviour(private val selectedStudentHolder: SelectedStudentHolder) : SettingsBehaviour {
     override val settingsItems: Map<Int, List<SettingsItem>>
         get() = mapOf(
             R.string.preferences to listOf(SettingsItem.APP_THEME),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         )
+
+    override suspend fun applyAppSpecificColorSettings() {
+        selectedStudentHolder.selectedStudentColorChanged()
+    }
 }
