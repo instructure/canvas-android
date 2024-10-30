@@ -64,6 +64,7 @@ jobs:
           name: Build QaDebug with Gradle
           command: |
             # Run the Gradle tasks to assemble the debug APKs
+            ./gradle/gradlew clean
             ./gradle/gradlew -p apps :student:assembleQaDebug :student:assembleQaDebugAndroidTest
       - store_artifacts:
           path: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
@@ -100,6 +101,7 @@ jobs:
           name: Build DevDebugMinify with Gradle
           command: |
             # Run the Gradle task with required signing options
+            ./gradle/gradlew clean
             ./gradle/gradlew -p apps clean :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
