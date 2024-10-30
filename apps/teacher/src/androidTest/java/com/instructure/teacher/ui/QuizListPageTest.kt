@@ -58,7 +58,7 @@ class QuizListPageTest : TeacherTest() {
         quizListPage.assertQuizCount(quizzes.size)
         quizListPage.searchable.clickOnSearchButton()
         quizListPage.searchable.typeToSearchBar(searchQuiz.title!!.take(searchQuiz.title!!.length / 2))
-        quizListPage.assertQuizCount(2) // header + single search result
+        quizListPage.assertQuizCount(1)
         quizListPage.assertHasQuiz(searchQuiz)
     }
 
