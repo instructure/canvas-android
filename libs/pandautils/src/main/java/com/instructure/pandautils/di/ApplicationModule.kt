@@ -40,6 +40,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -139,7 +140,19 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideOfflineAnalyticsManager(analytics: Analytics, pageViewUtils: PageViewUtils, apiPrefs: ApiPrefs, featureFlagProvider: FeatureFlagProvider): OfflineAnalyticsManager {
-        return OfflineAnalyticsManager(analytics, pageViewUtils, apiPrefs, featureFlagProvider)
+    fun providePageViewUtils(): PageViewUtils {
+        return PageViewUtils
+    }
+
+    @Provides
+    fun provideOfflineAnalyticsManager(
+        @ApplicationContext context: Context,
+        analytics: Analytics,
+        pageViewUtils: PageViewUtils,
+        apiPrefs: ApiPrefs,
+        dateTimeProvider: DateTimeProvider,
+        featureFlagProvider: FeatureFlagProvider
+    ): OfflineAnalyticsManager {
+        return OfflineAnalyticsManager(context, analytics, pageViewUtils, apiPrefs, dateTimeProvider, featureFlagProvider)
     }
 }
