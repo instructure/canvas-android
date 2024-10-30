@@ -18,10 +18,13 @@
 package com.instructure.pandautils.room.offline
 
 import android.content.Context
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.pandautils.room.utils.DestructiveMigrationReporter
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.LogoutHelper
+import com.instructure.pandautils.utils.toast
 
 private const val OFFLINE_DB_PREFIX = "offline-db-"
 
@@ -45,8 +48,6 @@ class OfflineDatabaseProvider(
         return dbMap.getOrPut(userId) {
             Room.databaseBuilder(context, OfflineDatabase::class.java, "$OFFLINE_DB_PREFIX$userId")
                 .addMigrations(*offlineDatabaseMigrations)
-                .fallbackToDestructiveMigration()
-                .addCallback(DestructiveMigrationReporter("offline-db", firebaseCrashlytics))
                 .build()
         }
     }
