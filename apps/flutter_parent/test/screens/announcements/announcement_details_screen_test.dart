@@ -93,7 +93,7 @@ void main() {
 
       final response = AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, null);
       when(interactor.getAnnouncement(
-              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().globalAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
@@ -119,7 +119,7 @@ void main() {
 
       final response = AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, null);
       when(interactor.getAnnouncement(
-              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().globalAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
@@ -145,7 +145,7 @@ void main() {
       final response =
           AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, attachment);
       when(interactor.getAnnouncement(
-              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().globalAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
@@ -167,7 +167,7 @@ void main() {
       final announcementMessage = 'hodor';
       final announcementSubject = 'hodor subject';
       final postedAt = DateTime.now();
-      final toolbarTitle = AppLocalizations().institutionAnnouncementTitle;
+      final toolbarTitle = AppLocalizations().globalAnnouncementTitle;
 
       final response = AnnouncementViewState(toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
       when(interactor.getAnnouncement(announcementId, AnnouncementType.INSTITUTION, courseId, toolbarTitle, any))

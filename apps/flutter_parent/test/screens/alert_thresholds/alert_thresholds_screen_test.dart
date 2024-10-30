@@ -99,7 +99,7 @@ void main() {
       expect(_percentageThresholdFinder(AppLocalizations().assignmentGradeBelow), findsOneWidget);
       expect(_percentageThresholdFinder(AppLocalizations().assignmentGradeAbove), findsOneWidget);
       expect(_switchThresholdFinder(AppLocalizations().courseAnnouncements), findsOneWidget);
-      expect(_switchThresholdFinder(AppLocalizations().institutionAnnouncements), findsOneWidget);
+      expect(_switchThresholdFinder(AppLocalizations().globalAnnouncements), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('shows delete option if student can be deleted', (tester) async {
