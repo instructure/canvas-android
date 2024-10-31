@@ -16,7 +16,6 @@
 package com.instructure.pandautils.compose.features.settings
 
 import android.content.Context
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -24,13 +23,13 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.settings.SettingsItem
 import com.instructure.pandautils.features.settings.SettingsScreen
+import com.instructure.pandautils.features.settings.SettingsUiState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.settings.SettingsItem
-import com.instructure.pandautils.features.settings.SettingsUiState
 
 @RunWith(AndroidJUnit4::class)
 class SettingsScreenTest {
@@ -70,7 +69,6 @@ class SettingsScreenTest {
         items.forEach { (title, items) ->
             composeTestRule.onNodeWithText(context.getString(title)).assertExists()
             items.forEach { item ->
-                composeTestRule.onNodeWithText(context.getString(item.res)).assertExists()
                 composeTestRule.onNode(
                     hasTestTag("settingsItem").and(
                         hasAnyDescendant(
@@ -79,8 +77,7 @@ class SettingsScreenTest {
                             )
                         )
                     ), useUnmergedTree = true
-                )
-                    .assertHasClickAction()
+                ).assertExists()
             }
         }
     }

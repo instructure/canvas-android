@@ -179,7 +179,7 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
 
 @Composable
 private fun AppThemeItem(appTheme: Int, appThemeSelected: (AppTheme, Int, Int) -> Unit) {
-    Column(modifier = Modifier.testTag("appThemeItem")) {
+    Column(modifier = Modifier.testTag("settingsItem")) {
         Text(
             modifier = Modifier
                 .testTag("label")
