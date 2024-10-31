@@ -70,7 +70,7 @@ jobs:
       - run:
           name: Opensource setup
           command:
-            ./open_source.sh           
+            ../open_source.sh           
       - run:
           name: Build QaDebug with Gradle
           command: |
