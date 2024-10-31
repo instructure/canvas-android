@@ -45,7 +45,7 @@ jobs:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Set your path
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
       # Make sure necessary secrets are set in CircleCI's project settings for access
-    working_directory: ~/project
+    working_directory: ~/project/apps
     steps:
       - checkout
       - run:
@@ -74,7 +74,7 @@ jobs:
           command: |
             # Run the Gradle tasks to assemble the debug APKs
             ./gradle/gradlew clean
-            ./gradle/gradlew -p apps :student:assembleQaDebug :student:assembleQaDebugAndroidTest
+            ./gradle/gradlew :student:assembleQaDebug :student:assembleQaDebugAndroidTest
       - store_artifacts:
           path: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
           destination: APP_QA_DEBUG
