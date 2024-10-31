@@ -38,7 +38,7 @@ jobs:
           command: | 
               echo "RUN_E2E is set to: $RUN_E2E"
   
-  build-qa-debug:
+  build-dev-debug:
     machine:
       image: android:2024.04.1 # Select an Android image with the right SDK/tools
     environment:
@@ -78,12 +78,12 @@ jobs:
           command: |
             # Run the Gradle tasks to assemble the debug APKs
             ./gradlew clean
-            ./gradlew -p :student:assembleQaDebug :student:assembleQaDebugAndroidTest
+            ./gradlew -p :student:assembleDevDebug :student:assembleDevDebugAndroidTest
       - store_artifacts:
-          path: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
+          path: ./apps/student/build/outputs/apk/dev/debug/student-dev-debug.apk
           destination: APP_QA_DEBUG
       - store_artifacts:
-          path: ./apps/student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+          path: ./apps/student/build/outputs/apk/androidTest/dev/debug/student-dev-debug-androidTest.apk
           destination: TEST_QA_DEBUG
   
   build-and-comment-dev-debug-minify:
