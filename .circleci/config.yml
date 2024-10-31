@@ -51,10 +51,8 @@ jobs:
       - run:
           name: Confirm Directory Structure
           command: |
-            echo "Root directory contents:"
-            ls -la
-            echo "Apps directory contents:"
-            ls -la apps
+            cd apps
+            pwd
       - run:
           name: Install OpenJDK 17
           command: |
@@ -65,10 +63,7 @@ jobs:
       - run:
           name: Confirm Directory Structure
           command: |
-            echo "Root directory contents:"
-            ls -la
-            echo "Apps directory contents:"
-            ls -la apps
+            pwd
       - run:
           name: Download Keystore
           command: |
