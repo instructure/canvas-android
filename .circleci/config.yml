@@ -63,18 +63,14 @@ jobs:
             echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
             export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
       - run:
-          name: Confirm Directory Structure
-          command: |
-            pwd
-      - run:
           name: Download Keystore
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
       - run:
-          name: Submodule update
+          name: Opensource setup
           command:
-            git submodule update --init           
+            ./open_source.sh           
       - run:
           name: Build QaDebug with Gradle
           command: |
