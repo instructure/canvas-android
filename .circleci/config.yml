@@ -70,6 +70,7 @@ jobs:
       - run:
           name: Opensource setup
           command:
+            mkdir private-data
             ../open_source.sh           
       - run:
           name: Build QaDebug with Gradle
