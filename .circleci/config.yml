@@ -78,7 +78,7 @@ jobs:
           command: |
             # Run the Gradle tasks to assemble the debug APKs
             ./gradlew clean
-            ./gradlew -p :student:assembleDevDebug :student:assembleDevDebugAndroidTest
+            ./gradlew -p :student:assembleDevDebug
       - store_artifacts:
           path: ./apps/student/build/outputs/apk/dev/debug/student-dev-debug.apk
           destination: APP_QA_DEBUG
