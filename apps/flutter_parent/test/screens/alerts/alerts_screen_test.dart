@@ -181,7 +181,7 @@ void main() {
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
-      final title = find.text(AppLocalizations().institutionAnnouncement);
+      final title = find.text(AppLocalizations().globalAnnouncement);
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style!.color, ParentColors.ash);
       expect(find.text(alerts.first.title), findsOneWidget);

@@ -46,7 +46,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         widget.announcementId,
         widget.announcementType,
         widget.courseId,
-        L10n(context).institutionAnnouncementTitle,
+        L10n(context).globalAnnouncementTitle,
         forceRefresh,
       );
 

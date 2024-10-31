@@ -224,7 +224,7 @@ class __AlertsListState extends State<_AlertsList> {
     String title = '';
     switch (alert.alertType) {
       case AlertType.institutionAnnouncement:
-        title = l10n.institutionAnnouncement;
+        title = l10n.globalAnnouncement;
         break;
       case AlertType.courseAnnouncement:
         title = l10n.courseAnnouncement;

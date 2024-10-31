@@ -900,10 +900,10 @@ class AppLocalizations {
         desc: 'Title for alerts when there is a course announcement',
       );
 
-  String get institutionAnnouncement => Intl.message(
-        'Institution Announcement',
-        desc: 'Title for alerts when there is an institution announcement',
-      );
+  String get globalAnnouncement => Intl.message(
+    'Global Announcement',
+    desc: 'Title for alerts when there is a global announcement',
+  );
 
   String assignmentGradeAboveThreshold(String threshold) => Intl.message(
         'Assignment Grade Above $threshold',
@@ -1033,7 +1033,7 @@ class AppLocalizations {
 
   String get courseAnnouncements => Intl.message('Course Announcements');
 
-  String get institutionAnnouncements => Intl.message('Institution Announcements');
+  String get globalAnnouncements => Intl.message('Global Announcements');
 
   String get never => Intl.message('Never',
       desc: 'Indication that tells the user they will not receive alert notifications of a specific kind');
@@ -1619,8 +1619,8 @@ class AppLocalizations {
   String get errorLoadingAnnouncement => Intl.message('There was an error loading this announcement',
       desc: 'Message shown when an announcement detail screen fails to load');
 
-  String get institutionAnnouncementTitle =>
-      Intl.message('Institution Announcement', desc: 'Title text shown for institution level announcements');
+  String get globalAnnouncementTitle =>
+      Intl.message('Global Announcement', desc: 'Title text shown for institution level announcements');
 
   String get genericNetworkError => Intl.message('Network error');
 
