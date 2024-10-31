@@ -23,6 +23,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import com.instructure.espresso.retry
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.settings.SettingsItem
 import com.instructure.pandautils.features.settings.SettingsScreen
@@ -69,15 +71,29 @@ class SettingsScreenTest {
         items.forEach { (title, items) ->
             composeTestRule.onNodeWithText(context.getString(title)).assertExists()
             items.forEach { item ->
-                composeTestRule.onNode(
-                    hasTestTag("settingsItem").and(
-                        hasAnyDescendant(
-                            hasText(
-                                context.getString(item.res)
+                retry(catchBlock = {
+                    UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
+                        500,
+                        1500,
+                        500,
+                        500,
+                        10
+                    )
+                }) {
+                    val testTag = when (item) {
+                        SettingsItem.OFFLINE_SYNCHRONIZATION -> "syncSettingsItem"
+                        else -> "settingsItem"
+                    }
+                    composeTestRule.onNode(
+                        hasTestTag(testTag).and(
+                            hasAnyDescendant(
+                                hasText(
+                                    context.getString(item.res)
+                                )
                             )
-                        )
-                    ), useUnmergedTree = true
-                ).assertExists()
+                        ), useUnmergedTree = true
+                    ).assertExists()
+                }
             }
         }
     }
