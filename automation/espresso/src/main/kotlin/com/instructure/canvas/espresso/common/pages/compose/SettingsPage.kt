@@ -29,11 +29,14 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.instructure.espresso.R
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.retry
 import com.instructure.pandautils.utils.AppTheme
 
 class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
@@ -48,10 +51,20 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun clickOnSettingsItem(title: String) {
         val nodeMatcher = hasTestTag("settingsItem").and(hasAnyDescendant(hasText(title)))
-        composeTestRule.onNodeWithTag("settingsList", useUnmergedTree = true)
-            .performScrollToNode(nodeMatcher)
-        composeTestRule.waitForIdle()
-        composeTestRule.onNode(nodeMatcher, useUnmergedTree = true).performClick()
+        retry(catchBlock = {
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
+                500,
+                1500,
+                500,
+                500,
+                10
+            )
+        }) {
+            composeTestRule.onNode(nodeMatcher, useUnmergedTree = true)
+                .assertIsDisplayed()
+                .performClick()
+        }
+
     }
 
     fun assertAboutDialogOpened() {
@@ -91,13 +104,21 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun clickOnSyncSettingsItem() {
-        composeTestRule.onNodeWithTag("settingsList", useUnmergedTree = true)
-            .performScrollToNode(hasTestTag("syncSettingsItem"))
-        composeTestRule.waitForIdle()
-        composeTestRule.onNode(
-            hasTestTag("syncSettingsItem"),
-            useUnmergedTree = true
-        ).performClick()
+        retry(catchBlock = {
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
+                500,
+                1500,
+                500,
+                500,
+                10
+            )
+        }) {
+            composeTestRule.onNode(
+                hasTestTag("syncSettingsItem"),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+                .performClick()
+        }
     }
 
     fun clickOnSubscribeButton() {
@@ -105,13 +126,20 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun assertOfflineContentDisplayed() {
-        composeTestRule.onNodeWithTag("settingsList", useUnmergedTree = true)
-            .performScrollToNode(hasTestTag("syncSettingsItem"))
-        composeTestRule.waitForIdle()
-        composeTestRule.onNode(
-            hasTestTag("syncSettingsItem"),
-            useUnmergedTree = true
-        ).assertIsDisplayed()
+        retry(catchBlock = {
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
+                500,
+                1500,
+                500,
+                500,
+                10
+            )
+        }) {
+            composeTestRule.onNode(
+                hasTestTag("syncSettingsItem"),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+        }
     }
 
     fun assertOfflineSyncSettingsStatus(status: String) {
