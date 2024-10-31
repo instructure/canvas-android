@@ -1890,4 +1890,6 @@
     <string name="announcementPageTitle">Announcement</string>
     <string name="globalAnnouncementPageTitle">Global Announcement</string>
     <string name="openTheQuizButton">Open the Quiz</string>
+    <string name="newQuizSubmissionTitle">Quiz Submission</string>
+    <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
 </resources>

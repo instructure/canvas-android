@@ -249,7 +249,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     private fun configureSubmissionTypes(assignment: Assignment) = with(binding) {
         submissionTypesTextView.text = assignment.submissionTypesRaw.map {
-            submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext()) }.joinToString("\n")
+            submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext(), assignment.isNewQuizLti()) }.joinToString("\n")
 
         if(assignment.submissionTypesRaw.contains(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)) {
             // External tool
