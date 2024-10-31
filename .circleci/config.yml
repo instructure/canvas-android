@@ -45,7 +45,7 @@ jobs:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Set your path
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
       # Make sure necessary secrets are set in CircleCI's project settings for access
-      
+    working_directory: ~/project/apps
     steps:
       - checkout
       - run:
@@ -83,6 +83,7 @@ jobs:
       ANDROID_KEYSTORE_PASSWORD: "$ANDROID_KEYSTORE_PASSWORD"
       DEBUG_KEY_ALIAS: "$DEBUG_KEY_ALIAS"
       DEBUG_KEY_PASSWORD: "$DEBUG_KEY_PASSWORD"
+    working_directory: ~/project/apps
     steps:
       - checkout
       - run:
