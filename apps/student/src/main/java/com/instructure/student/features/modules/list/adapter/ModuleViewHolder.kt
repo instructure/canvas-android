@@ -109,6 +109,7 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         // Icon
         val drawableResource: Int = when {
+            moduleItem.quizLti -> R.drawable.ic_quiz
             ModuleItem.Type.Assignment.toString()
                 .equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_assignment
             ModuleItem.Type.Discussion.toString()

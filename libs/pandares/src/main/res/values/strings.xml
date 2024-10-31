@@ -1889,4 +1889,5 @@
     <string name="errorLoadingAnnouncement">There was an error loading this announcement</string>
     <string name="announcementPageTitle">Announcement</string>
     <string name="globalAnnouncementPageTitle">Global Announcement</string>
+    <string name="openTheQuizButton">Open the Quiz</string>
 </resources>

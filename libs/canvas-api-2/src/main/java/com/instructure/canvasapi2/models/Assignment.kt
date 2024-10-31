@@ -239,6 +239,10 @@ data class Assignment(
         return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
     }
 
+    fun isNewQuizLti(): Boolean {
+        return submissionTypesRaw.contains(SubmissionType.EXTERNAL_TOOL.apiString) && externalToolAttributes?.url?.contains("quiz-lti") == true
+    }
+
     companion object {
 
         const val PASS_FAIL_TYPE = "pass_fail"
