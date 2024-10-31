@@ -70,11 +70,14 @@ jobs:
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
       - run:
+          name: Clear Gradle Cache
+          command: rm -rf ~/.gradle/caches/
+      - run:
           name: Build QaDebug with Gradle
           command: |
             # Run the Gradle tasks to assemble the debug APKs
             ./gradlew clean
-            ./gradlew -p apps :student:assembleQaDebug :student:assembleQaDebugAndroidTest
+            ./gradlew -p :student:assembleQaDebug :student:assembleQaDebugAndroidTest
       - store_artifacts:
           path: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
           destination: APP_QA_DEBUG
