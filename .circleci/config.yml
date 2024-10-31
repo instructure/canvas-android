@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Confirm Directory Structure
           command: |
-            cd apps
+            cd /home/circleci/project/apps/apps
             pwd
       - run:
           name: Install OpenJDK 17
