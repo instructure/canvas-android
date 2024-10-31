@@ -161,9 +161,9 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - share-env-vars
-      - build-qa-debug:
+      - build-dev-debug:
           requires: [share-env-vars]
       - build-and-comment-dev-debug-minify:
           requires: [share-env-vars]
       - unit-tests:
-          requires: [build-qa-debug, build-and-comment-dev-debug-minify]
+          requires: [build-dev-debug, build-and-comment-dev-debug-minify]
