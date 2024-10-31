@@ -111,8 +111,8 @@ jobs:
           name: Build DevDebugMinify with Gradle
           command: |
             # Run the Gradle task with required signing options
-            ./gradle/gradlew clean
-            ./gradle/gradlew -p apps clean :student:assembleDevDebugMinify --build-cache \
+            ./gradlew -p apps clean
+            ./gradlew -p apps :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
