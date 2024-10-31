@@ -69,7 +69,7 @@ jobs:
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
       - run:
           name: Opensource setup
-          command:
+          command: |
             cd ..
             ./open_source.sh
             cd apps           
