@@ -45,14 +45,14 @@ jobs:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Set your path
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
       # Make sure necessary secrets are set in CircleCI's project settings for access
-    working_directory: ~/project
+    working_directory: ~/project/apps
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - run:
           name: Confirm Directory Structure
           command: |
-            cd /home/circleci/project/apps/apps
-            pwd
+            pwd & ls -a
       - run:
           name: Install OpenJDK 17
           command: |
