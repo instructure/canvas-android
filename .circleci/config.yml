@@ -94,7 +94,8 @@ jobs:
       DEBUG_KEY_PASSWORD: "$DEBUG_KEY_PASSWORD"
     working_directory: ~/project/apps
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - run:
           name: Install OpenJDK 17
           command: |
@@ -102,6 +103,9 @@ jobs:
             sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
             sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
+      - run:
+          name: Clear Gradle Cache
+          command: rm -rf ~/.gradle/caches/
       - run:
           name: Download Keystore
           command: |
