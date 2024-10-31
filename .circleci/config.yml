@@ -70,6 +70,11 @@ jobs:
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
       - run:
+          name: Set JAVA_HOME to Java 17
+          command: |
+            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
+      - run:
           name: Clear Gradle Cache
           command: rm -rf ~/.gradle/caches/
       - run:
@@ -118,8 +123,8 @@ jobs:
           name: Build DevDebugMinify with Gradle
           command: |
             # Run the Gradle task with required signing options
-            ./gradlew -p apps clean
-            ./gradlew -p apps :student:assembleDevDebugMinify --build-cache \
+            ./gradlew clean
+            ./gradlew :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
