@@ -69,7 +69,7 @@ jobs:
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
       - run:
           name: Submodule update
-          command:
+          command: |
             git submodule update --init
       - run:
           name: Build QaDebug with Gradle
