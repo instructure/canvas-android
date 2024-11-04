@@ -190,8 +190,8 @@ class StudentAssignmentDetailsBehaviour (
         activity: FragmentActivity,
         binding: FragmentAssignmentDetailsBinding?,
         bookmark: Bookmarker,
-        toolbar: Toolbar,
-        course: Course?
+        course: Course?,
+        toolbar: Toolbar
     ) {
         binding?.toolbar?.apply {
             setupAsBackButton {

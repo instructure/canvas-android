@@ -1884,6 +1884,11 @@
     <string name="courseDetailsMessageContentDescription">Send a message about this course</string>
     <string name="gradeLockedContentDescription">Grade locked</string>
     <string name="gradesRefreshFailed">Failed to refresh grades</string>
+    <string name="chooseACourseToMessage">Choose a course to message</string>
+    <string name="regardingHiddenMessage">Regarding: %1$s, %2$s</string>
+    <string name="regardingHiddenMessageWithAssignmentPrefix">Regarding: %1$s, Assignment - %2$s</string>
+    <string name="sendMessageAboutAssignment">"Send a message about this assignment"</string>
+    <string name="forStudentLabel">for %1$s</string>
     <string name="view_description">View Description</string>
     <string name="a11y_contentDescription_viewDescription">View Description</string>
     <string name="errorLoadingAnnouncement">There was an error loading this announcement</string>

@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.reminder.CustomReminderDialog
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import java.io.File
 
 abstract class AssignmentDetailsBehaviour {
@@ -41,7 +42,19 @@ abstract class AssignmentDetailsBehaviour {
         CustomReminderDialog.newInstance().show(fragment.childFragmentManager, null)
     }
 
-    open fun applyTheme(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, bookmark: Bookmarker, toolbar: Toolbar, course: Course?) = Unit
+    open fun applyTheme(activity: FragmentActivity,
+                        binding: FragmentAssignmentDetailsBinding?,
+                        bookmark: Bookmarker,
+                        course: Course?,
+                        toolbar: Toolbar) = Unit
+
+    open fun setupAppSpecificViews(
+        activity: FragmentActivity,
+        binding: FragmentAssignmentDetailsBinding?,
+        course: Course,
+        assignment: Assignment?,
+        routeToCompose: ((InboxComposeOptions) -> Unit)?
+    ) = Unit
 
     open fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
 }

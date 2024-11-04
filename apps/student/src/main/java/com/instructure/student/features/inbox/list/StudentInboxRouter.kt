@@ -45,7 +45,7 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
         }
     }
 
-    override fun routeToNewMessage() {
+    override fun routeToNewMessage(activity: FragmentActivity) {
         val route = InboxComposeMessageFragment.makeRoute()
         RouteMatcher.route(activity, route)
     }
