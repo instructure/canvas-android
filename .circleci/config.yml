@@ -109,7 +109,10 @@ jobs:
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-            
+      - run:
+          name: Submodule update
+          command: |
+            git submodule update --init
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
