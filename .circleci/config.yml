@@ -38,7 +38,7 @@ jobs:
           command: | 
               echo "RUN_E2E is set to: $RUN_E2E"
   
-  build-dev-debug:
+  build-qa-debug:
     machine:
       image: android:2024.04.1 # Select an Android image with the right SDK/tools
     resource_class: xlarge
@@ -50,10 +50,6 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run:
-          name: Confirm Directory Structure
-          command: |
-            pwd & ls -a
       - run:
           name: Install OpenJDK 17
           command: |
@@ -76,12 +72,12 @@ jobs:
           name: Build QaDebug with Gradle
           command: |
             # Run the Gradle tasks to assemble the debug APKs
-            ../gradle/gradlew :student:assembleDevDebug
+            ../gradle/gradlew :student:assembleQaDebug :student:assembleQaDebugAndroidTest
       - store_artifacts:
-          path: ./apps/student/build/outputs/apk/dev/debug/student-dev-debug.apk
+          path: ./student/build/outputs/apk/qa/debug/student-qa-debug.apk
           destination: APP_QA_DEBUG
       - store_artifacts:
-          path: ./apps/student/build/outputs/apk/androidTest/dev/debug/student-dev-debug-androidTest.apk
+          path: ./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
           destination: TEST_QA_DEBUG
   
   build-and-comment-dev-debug-minify:
@@ -106,9 +102,8 @@ jobs:
             sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
             sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
-      - run:
-          name: Clear Gradle Cache
-          command: rm -rf ~/.gradle/caches/
+            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
+            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
       - run:
           name: Download Keystore
           command: |
@@ -118,8 +113,7 @@ jobs:
           name: Build DevDebugMinify with Gradle
           command: |
             # Run the Gradle task with required signing options
-            ./gradlew clean
-            ./gradlew :student:assembleDevDebugMinify --build-cache \
+            ..gradle/gradlew :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
@@ -156,13 +150,13 @@ jobs:
           path: "$SOURCE_DIR/apps/student/build/reports/tests/testDevDebugUnitTest"
 
 workflows:
-  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
+  pr-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - share-env-vars
-      - build-dev-debug:
+      - build-qa-debug:
           requires: [share-env-vars]
       - build-and-comment-dev-debug-minify:
           requires: [share-env-vars]
       - unit-tests:
-          requires: [build-dev-debug, build-and-comment-dev-debug-minify]
+          requires: [build-qa-debug, build-and-comment-dev-debug-minify]
