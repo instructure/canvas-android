@@ -87,7 +87,7 @@ class OfflineAnalyticsManager @Inject constructor(
         }
 
         val extrasBundle = Bundle().apply {
-            putLong(AnalyticsParamConstants.DURATION, duration)
+            putString(AnalyticsParamConstants.DURATION, duration.toString())
         }
         analytics.logEvent(eventName, extrasBundle)
         pageViewUtils.saveSingleEvent(eventName, "${apiPrefs.fullDomain}/$eventName?${AnalyticsParamConstants.DURATION}=$duration")
