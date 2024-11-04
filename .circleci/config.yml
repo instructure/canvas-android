@@ -75,7 +75,7 @@ jobs:
           name: Build QaDebug with Gradle
           command: |
             # Run the Gradle tasks to assemble the debug APKs
-            ../gradle/gradlew -p apps :student:assembleDevDebug
+            ../gradle/gradlew :student:assembleDevDebug
       - store_artifacts:
           path: ./apps/student/build/outputs/apk/dev/debug/student-dev-debug.apk
           destination: APP_QA_DEBUG
