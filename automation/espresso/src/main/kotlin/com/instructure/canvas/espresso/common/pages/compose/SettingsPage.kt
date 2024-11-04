@@ -29,13 +29,12 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import com.instructure.espresso.R
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.retry
 import com.instructure.pandautils.utils.AppTheme
 
@@ -79,7 +78,7 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun assertFiveStarRatingDisplayed() {
-        onView(withId(R.id.star1))
+        onView(withText("How are we doing?"))
             .inRoot(RootMatchers.isDialog())
             .assertDisplayed()
     }
