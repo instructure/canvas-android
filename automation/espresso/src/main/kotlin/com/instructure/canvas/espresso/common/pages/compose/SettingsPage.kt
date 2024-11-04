@@ -25,7 +25,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -150,10 +149,20 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun assertOfflineSyncSettingsStatus(status: String) {
-        composeTestRule.onNodeWithTag("settingsList", useUnmergedTree = true)
-            .performScrollToNode(hasTestTag("syncSettingsItem"))
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(status, useUnmergedTree = true).assertIsDisplayed()
+        retry(catchBlock = {
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            val y = device.displayHeight / 2
+            val x = device.displayWidth / 2
+            device.swipe(
+                x,
+                y,
+                x,
+                0,
+                10
+            )
+        }) {
+            composeTestRule.onNodeWithText(status, useUnmergedTree = true).assertIsDisplayed()
+        }
     }
 
     fun assertOfflineContentNotDisplayed() {
