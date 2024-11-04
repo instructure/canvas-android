@@ -140,6 +140,11 @@ class ApplicationModule {
     }
 
     @Provides
+    fun provideAnalytics(): Analytics {
+        return Analytics
+    }
+
+    @Provides
     fun providePageViewUtils(): PageViewUtils {
         return PageViewUtils
     }

@@ -402,9 +402,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun logOfflineEvents(isOnline: Boolean) {
         lifecycleScope.launch {
             if (isOnline) {
-                offlineAnalyticsManager.offlineModeEnded(this@NavigationActivity)
+                offlineAnalyticsManager.offlineModeEnded()
             } else {
-                offlineAnalyticsManager.offlineModeStarted(this@NavigationActivity)
+                offlineAnalyticsManager.offlineModeStarted()
             }
         }
     }
