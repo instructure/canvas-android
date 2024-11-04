@@ -40,6 +40,7 @@ object Versions {
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.8.3"
     const val MEDIA3 = "1.4.1"
+    const val DATASTORE = "1.1.1"
 }
 
 object Libs {
@@ -74,6 +75,7 @@ object Libs {
     const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.9.0"
     const val ANDROIDX_DATABINDING_COMPILER = "androidx.databinding:databinding-compiler:${Versions.ANDROID_GRADLE_TOOLS}" // This is bundled with the gradle plugin so we use the same version
     const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.9.0"
+    const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:33.4.0"

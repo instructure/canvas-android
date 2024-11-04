@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
@@ -37,10 +38,13 @@ import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.invoke
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.runs
 import io.mockk.slot
+import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -70,11 +74,15 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkObject(Analytics)
+        every { Analytics.logEvent(any()) } just runs
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test

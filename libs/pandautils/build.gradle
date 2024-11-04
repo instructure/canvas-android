@@ -208,6 +208,9 @@ dependencies {
     api composeBom
     androidTestApi composeBom
 
+    // Data Store
+    implementation Libs.DATASTORE
+
     api Libs.COMPOSE_BOM
     api Libs.COMPOSE_MATERIAL
     api Libs.COMPOSE_MATERIAL_ICONS
