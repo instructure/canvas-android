@@ -41,6 +41,7 @@ jobs:
   build-dev-debug:
     machine:
       image: android:2024.04.1 # Select an Android image with the right SDK/tools
+    resource_class: xlarge
     environment:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Set your path
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
@@ -86,6 +87,7 @@ jobs:
   build-and-comment-dev-debug-minify:
     machine:
       image: android:2024.04.1 # Use an Android image with required SDK/tools
+    resource_class: xlarge
     environment:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Adjust path as needed
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
