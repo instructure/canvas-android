@@ -72,11 +72,14 @@ class SettingsScreenTest {
             composeTestRule.onNodeWithText(context.getString(title)).assertExists()
             items.forEach { item ->
                 retry(catchBlock = {
-                    UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
-                        500,
-                        1500,
-                        500,
-                        500,
+                    val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+                    val y = device.displayHeight / 2
+                    val x = device.displayWidth / 2
+                    device.swipe(
+                        x,
+                        y,
+                        x,
+                        0,
                         10
                     )
                 }) {

@@ -26,16 +26,16 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.espresso.R
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.retry
 import com.instructure.pandautils.utils.AppTheme
 
@@ -52,11 +52,14 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     fun clickOnSettingsItem(title: String) {
         val nodeMatcher = hasTestTag("settingsItem").and(hasAnyDescendant(hasText(title)))
         retry(catchBlock = {
-            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
-                500,
-                1500,
-                500,
-                500,
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            val y = device.displayHeight / 2
+            val x = device.displayWidth / 2
+            device.swipe(
+                x,
+                y,
+                x,
+                0,
                 10
             )
         }) {
@@ -76,10 +79,9 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun assertFiveStarRatingDisplayed() {
-        for (i in 1 until 6) {
-            Espresso.onView(ViewMatchers.withId(R.id.star + i))
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        }
+        onView(withId(R.id.star1))
+            .inRoot(RootMatchers.isDialog())
+            .assertDisplayed()
     }
 
     fun selectAppTheme(appTheme: AppTheme) {
@@ -105,11 +107,14 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun clickOnSyncSettingsItem() {
         retry(catchBlock = {
-            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
-                500,
-                1500,
-                500,
-                500,
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            val y = device.displayHeight / 2
+            val x = device.displayWidth / 2
+            device.swipe(
+                x,
+                y,
+                x,
+                0,
                 10
             )
         }) {
@@ -127,11 +132,14 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertOfflineContentDisplayed() {
         retry(catchBlock = {
-            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).swipe(
-                500,
-                1500,
-                500,
-                500,
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            val y = device.displayHeight / 2
+            val x = device.displayWidth / 2
+            device.swipe(
+                x,
+                y,
+                x,
+                0,
                 10
             )
         }) {

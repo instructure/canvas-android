@@ -159,7 +159,7 @@ class SettingsE2ETest : TeacherComposeTest() {
             Log.d(STEP_TAG, "Check if the user has landed on Settings Page. If yes, navigate back to Profile Settings Page.")
             //Sometimes in Bitrise it's working different than locally, because in Bitrise sometimes the user has been navigated to Settings Page after saving a new name,
             settingsPage.clickOnSettingsItem("Profile Settings")
-        } catch (e: NoMatchingViewException) {
+        } catch (e: IllegalStateException) {
             Log.d(STEP_TAG, "Did not throw the user back to the Settings Page, so the scenario can be continued.")
         }
 
