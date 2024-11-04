@@ -109,11 +109,12 @@ jobs:
           command: |
             # Download keystore using the environment variable for the URL
             echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
+            
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
             # Run the Gradle task with required signing options
-            ..gradle/gradlew :student:assembleDevDebugMinify --build-cache \
+            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
