@@ -35,7 +35,7 @@ class StudentResourcesRouter(private val activity: FragmentActivity) : Resources
             ltiTool.url ?: ltiTool.courseNavigation?.url ?: "",
             ltiTool.courseNavigation?.text ?: ltiTool.name ?: "",
             sessionLessLaunch = true,
-            isAssignmentLTI = false,
+            assignmentLti = false,
             ltiTool = ltiTool)
         RouteMatcher.route(activity, route)
     }

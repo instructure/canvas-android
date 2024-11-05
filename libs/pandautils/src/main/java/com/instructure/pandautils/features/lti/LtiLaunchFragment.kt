@@ -151,13 +151,13 @@ class LtiLaunchFragment : Fragment() {
             url: String,
             title: String? = null,
             sessionLessLaunch: Boolean = false,
-            isAssignmentLTI: Boolean = false,
+            assignmentLti: Boolean = false,
             ltiTool: LTITool? = null
         ): Route {
             val bundle = Bundle().apply {
                 putString(LTI_URL, url)
                 putBoolean(SESSION_LESS_LAUNCH, sessionLessLaunch)
-                putBoolean(IS_ASSIGNMENT_LTI, isAssignmentLTI)
+                putBoolean(IS_ASSIGNMENT_LTI, assignmentLti)
                 putString(LTI_TITLE, title) // For 'title' property in InternalWebViewFragment
                 putParcelable(LTI_TOOL, ltiTool)
             }

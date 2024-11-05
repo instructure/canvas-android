@@ -36,6 +36,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Const.CANVAS_STUDENT_ID
@@ -285,11 +286,8 @@ class CourseBrowserFragment : BaseSyncFragment<
                                 Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
                             )
                         } else {
-                            val args = LtiLaunchFragment.makeTabBundle(presenter.canvasContext, tab)
-                            RouteMatcher.route(
-                                requireActivity(),
-                                Route(LtiLaunchFragment::class.java, presenter.canvasContext, args)
-                            )
+                            val route = LtiLaunchFragment.makeRoute(presenter.canvasContext, tab)
+                            RouteMatcher.route(requireActivity(), route)
                         }
                     }
                 }

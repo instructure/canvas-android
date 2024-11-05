@@ -163,7 +163,7 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
                 url,
                 title,
                 sessionLessLaunch = sessionLessLaunch,
-                isAssignmentLTI = isAssignmentLTI,
+                assignmentLti = isAssignmentLTI,
                 ltiTool = ltiTool
             )
         )

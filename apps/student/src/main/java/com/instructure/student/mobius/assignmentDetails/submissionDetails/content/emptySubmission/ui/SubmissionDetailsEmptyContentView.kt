@@ -145,7 +145,7 @@ class SubmissionDetailsEmptyContentView(
             canvasContext,
             ltiTool?.url ?: "",
             title,
-            isAssignmentLTI = true,
+            assignmentLti = true,
             ltiTool = ltiTool
         ))
     }

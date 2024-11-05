@@ -47,7 +47,7 @@ class LtiLaunchViewModel @Inject constructor(
     private val ltiTab: Tab? = savedStateHandle.get<Tab>(LtiLaunchFragment.LTI_TAB)
     private val ltiTool: LTITool? = savedStateHandle.get<LTITool>(LtiLaunchFragment.LTI_TOOL)
     private val sessionLessLaunch: Boolean = savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) ?: false
-    private val isAssignmentLTI: Boolean = savedStateHandle.get<Boolean>(LtiLaunchFragment.IS_ASSIGNMENT_LTI) ?: false
+    private val assignmentLti: Boolean = savedStateHandle.get<Boolean>(LtiLaunchFragment.IS_ASSIGNMENT_LTI) ?: false
     private val canvasContext: CanvasContext? = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT)
 
     private val _events = Channel<LtiLaunchAction>()
@@ -87,7 +87,7 @@ class LtiLaunchViewModel @Inject constructor(
                             loadLtiAuthenticatedUrl(url)
                         }
 
-                        isAssignmentLTI -> loadLtiAuthenticatedUrl(url)
+                        assignmentLti -> loadLtiAuthenticatedUrl(url)
                         else -> launchLti(url)
                     }
                 }
