@@ -123,6 +123,9 @@ jobs:
   unit-tests:
     machine:
       image: android:2024.04.1 # Use an Android image with required SDK/tools
+    environment:
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
+      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
     working_directory: ~/project/apps
     steps:
       - checkout:
@@ -133,7 +136,7 @@ jobs:
       - run:
           name: Run Android Unit Tests
           command: |          
-            ./gradle/gradlew :student:testDevDebugUnitTest
+            ../gradle/gradlew :student:testDevDebugUnitTest
       - store_test_results:
           path: "$SOURCE_DIR/apps/student/build/test-results/testDevDebugUnitTest"
       - store_artifacts:
