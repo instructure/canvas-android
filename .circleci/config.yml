@@ -170,14 +170,9 @@ jobs:
           path: ./student/build/reports/tests/testDevDebugUnitTest
 
   ui-tests-portrait:
-    machine:
-      image: android:2024.04.1
+    docker:
+      - image: cimg/base:stable
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
-      TEST_APK_PATH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
     working_directory: ~/project
     steps:
       - checkout:
@@ -190,15 +185,11 @@ jobs:
           flank-yml: ./apps/student/flank.yml
       - store_test_results:
           path: ./results
+
   ui-tests-landscape:
-    machine:
-      image: android:2024.04.1
+    docker:
+      - image: cimg/base:stable
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
-      TEST_APK_PATH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
     working_directory: ~/project
     steps:
       - checkout:
@@ -211,15 +202,11 @@ jobs:
           flank-yml: ./apps/student/flank_landscape.yml
       - store_test_results:
           path: ./results
+
   ui-tests-tablet:
-    machine:
-      image: android:2024.04.1
+    docker:
+      - image: cimg/base:stable
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
-      TEST_APK_PATH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
     working_directory: ~/project
     steps:
       - checkout:
