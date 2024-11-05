@@ -154,7 +154,7 @@ jobs:
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
       APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
       TEST_APK_PATH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
-    working_directory: ~/project/apps
+    working_directory: ~/project
     steps:
       - checkout:
           path: ~/project
@@ -164,16 +164,14 @@ jobs:
       - run:
           name: Download flank
           command: |
-            cd ~/project
             wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
       - run:
           command: |
-            cd ~/project
             echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
             export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
             gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
             gcloud config set project delta-essence-114723
-            java -jar ./flank.jar firebase test android run -c ./student/flank.yml
+            java -jar ./flank.jar firebase test android run -c ./apps/student/flank.yml
           name: Integration Tests
       - store_test_results:
           path: ./results
