@@ -139,9 +139,9 @@ jobs:
           command: |          
             ../gradle/gradlew :student:testDevDebugUnitTest
       - store_test_results:
-          path: "$SOURCE_DIR/apps/student/build/test-results/testDevDebugUnitTest"
+          path: ./student/build/test-results/testDevDebugUnitTest
       - store_artifacts:
-          path: "$SOURCE_DIR/apps/student/build/reports/tests/testDevDebugUnitTest"
+          path: ./student/build/reports/tests/testDevDebugUnitTest
 
 workflows:
   pr-workflow:
