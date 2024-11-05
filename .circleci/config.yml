@@ -123,18 +123,16 @@ jobs:
   unit-tests:
     machine:
       image: android:2024.04.1 # Use an Android image with required SDK/tools
-    environment:
-      # Define environment variables as needed; replace paths as necessary
-      SOURCE_DIR: "~/project"  # Adjust the project directory as needed
+    working_directory: ~/project/apps
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
+      - install-jdk
+      - decrypt-keystore
+      - submodule-update
       - run:
           name: Run Android Unit Tests
-          command: |
-            # Navigate to the project location
-            cd "$SOURCE_DIR/apps"
-            
-            # Run unit tests for the specified module and variant
+          command: |          
             ./gradle/gradlew :student:testDevDebugUnitTest
       - store_test_results:
           path: "$SOURCE_DIR/apps/student/build/test-results/testDevDebugUnitTest"
