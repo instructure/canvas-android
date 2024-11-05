@@ -15,21 +15,27 @@
  */
 package com.instructure.pandautils.features.settings
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.unmockkAll
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,14 +61,21 @@ class SettingsViewModelTest {
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
+    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val settingsBehaviour: SettingsBehaviour = mockk(relaxed = true)
     private val syncSettingsFacade: SyncSettingsFacade = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val context: Context = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     @Before
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        every { savedStateHandle.get<Boolean>(OFFLINE_ENABLED) } returns true
+        every { savedStateHandle.get<Int>("scrollValue") } returns 0
     }
 
     @After
@@ -90,12 +103,12 @@ class SettingsViewModelTest {
 
         val uiState = viewModel.uiState.value
 
-        assertEquals(R.string.appThemeLight, uiState.appTheme)
+        assertEquals(AppTheme.LIGHT.ordinal, uiState.appTheme)
         assertEquals(items, uiState.items)
     }
 
     @Test
-    fun `Change app theme`() {
+    fun `Change app theme`() = runTest {
         val items = mapOf(
             R.string.preferences to listOf(
                 SettingsItem.APP_THEME,
@@ -111,11 +124,49 @@ class SettingsViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.onThemeSelected(AppTheme.DARK)
+        val uiState = viewModel.uiState.value
+
+        uiState.actionHandler(SettingsAction.SetAppTheme(AppTheme.DARK, 0, 0, 0))
+
+        verify {
+            themePrefs.appTheme = AppTheme.DARK.ordinal
+        }
+        assertEquals(AppTheme.DARK.ordinal, viewModel.uiState.value.appTheme)
+
+        val events = mutableListOf<SettingsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+            assertEquals(SettingsViewModelAction.AppThemeClickPosition(0, 0, 0), events.last())
+        }
+    }
+
+    @Test
+    fun `Set homeroom view action`() = runTest {
+        val items = mapOf(
+            R.string.preferences to listOf(
+                SettingsItem.APP_THEME,
+                SettingsItem.PROFILE_SETTINGS,
+                SettingsItem.PUSH_NOTIFICATIONS,
+                SettingsItem.EMAIL_NOTIFICATIONS,
+                SettingsItem.HOMEROOM_VIEW
+            ),
+            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
+        )
+        every { settingsBehaviour.settingsItems } returns items
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
 
         val uiState = viewModel.uiState.value
 
-        assertEquals(R.string.appThemeDark, uiState.appTheme)
+        uiState.actionHandler(SettingsAction.SetHomeroomView(true))
+        assertEquals(true, viewModel.uiState.value.homeroomView)
+
+        verify {
+            apiPrefs.elementaryDashboardEnabledOverride = true
+        }
+
     }
 
     @Test
@@ -165,7 +216,7 @@ class SettingsViewModelTest {
         val viewModel = createViewModel()
 
         viewModel.uiState.value.items.flatMap { it.value }.forEach { item ->
-            viewModel.uiState.value.onClick(item)
+            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item))
             val events = mutableListOf<SettingsViewModelAction>()
             backgroundScope.launch(testDispatcher) {
                 viewModel.events.toList(events)
@@ -176,6 +227,6 @@ class SettingsViewModelTest {
 
 
     private fun createViewModel(): SettingsViewModel {
-        return SettingsViewModel(settingsBehaviour, themePrefs, syncSettingsFacade)
+        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs)
     }
 }
