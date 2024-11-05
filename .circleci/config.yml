@@ -6,7 +6,7 @@ orbs:
   android: circleci/android@2.0.3
 
 commands:
-  download-keystore:
+  decrypt-keystore:
     steps:
       - run: echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
   install-jdk:
@@ -18,11 +18,17 @@ commands:
           java -version
           echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+  submodule-update:
+    steps:
+      - run:
+          name: Submodule update
+          command: |
+            git submodule update --init
 
 jobs:
   share-env-vars:
     docker:
-      - image: cimg/base:stable # Adjust as needed for your environment
+      - image: cimg/base:stable
     steps:
       - checkout
       - install-jdk
@@ -48,27 +54,21 @@ jobs:
   
   build-qa-debug:
     machine:
-      image: android:2024.04.1 # Select an Android image with the right SDK/tools
+      image: android:2024.04.1
     resource_class: xlarge
     environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Set your path
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      # Make sure necessary secrets are set in CircleCI's project settings for access
     working_directory: ~/project/apps
     steps:
       - checkout:
           path: ~/project
       - install-jdk
-      - download-keystore
-      - run:
-          name: Submodule update
-          command: |
-            git submodule update --init
+      - decrypt-keystore
+      - submodule-update
       - run:
           name: Build QaDebug with Gradle
-          command: |
-            # Run the Gradle tasks to assemble the debug APKs
-            ../gradle/gradlew :student:assembleQaDebug :student:assembleQaDebugAndroidTest
+          command: ../gradle/gradlew :student:assembleQaDebug :student:assembleQaDebugAndroidTest
       - store_artifacts:
           path: ./student/build/outputs/apk/qa/debug/student-qa-debug.apk
           destination: APP_QA_DEBUG
@@ -78,12 +78,11 @@ jobs:
   
   build-and-comment-dev-debug-minify:
     machine:
-      image: android:2024.04.1 # Use an Android image with required SDK/tools
+      image: android:2024.04.1
     resource_class: xlarge
     environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Adjust path as needed
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      # Make sure all the sensitive values below are added to CircleCI's environment variables
       ANDROID_KEYSTORE_PASSWORD: "$ANDROID_KEYSTORE_PASSWORD"
       DEBUG_KEY_ALIAS: "$DEBUG_KEY_ALIAS"
       DEBUG_KEY_PASSWORD: "$DEBUG_KEY_PASSWORD"
@@ -91,34 +90,22 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - install-jdk
+      - decrypt-keystore
+      - submodule-update
+
       - run:
-          name: Install OpenJDK 17
-          command: |
-            sudo apt-get update && sudo apt-get install openjdk-17-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
-            java -version
-            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
-            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-      - run:
-          name: Download Keystore
-          command: |
-            # Download keystore using the environment variable for the URL
-            echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-      - run:
-          name: Submodule update
-          command: |
-            git submodule update --init
+          name: DEBUG
+          command: echo $ANDROID_KEYSTORE_PATH
+
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
-            # Run the Gradle task with required signing options
-            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache \
+            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
               -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
               -Pandroid.injected.signing.key.password="$DEBUG_KEY_PASSWORD"     
-      # Optionally, add a comment back to the VCS (e.g., GitHub)
       - run:
           name: Comment on PR with Build Details
           command: |
@@ -150,8 +137,7 @@ jobs:
           path: "$SOURCE_DIR/apps/student/build/reports/tests/testDevDebugUnitTest"
 
 workflows:
-  pr-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  pr-workflow:
     jobs:
       - share-env-vars
       - build-qa-debug:
