@@ -3,7 +3,7 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.0.3
+  android: circleci/android@3.0.1
 
 commands:
   decrypt-keystore:
@@ -143,6 +143,31 @@ jobs:
       - store_artifacts:
           path: ./student/build/reports/tests/testDevDebugUnitTest
 
+  ui-tests:
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    environment:
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
+      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
+    working_directory: ~/project/apps
+    steps:
+      - checkout:
+          path: ~/project
+      - android/create_avd:
+          avd_name: myavd
+          install: true
+          system_image: system-images;android-29;default;x86_64
+      - android/start_emulator:
+          avd_name: myavd
+          no_window: true
+          restore_gradle_cache_prefix: v1a
+      - android/run_tests:
+          test_command: ../gradle/gradlew :student:connectedQaDebugAndroidTest 
+          working_directory: ~/project/apps 
+      - android/save_gradle_cache:
+          cache_prefix: v1a
+
 workflows:
   pr-workflow:
     jobs:
@@ -150,4 +175,6 @@ workflows:
       - build-qa-debug:
           requires: [share-env-vars]
       - unit-tests:
+          requires: [share-env-vars]
+      - ui-tests:
           requires: [share-env-vars]
