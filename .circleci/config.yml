@@ -77,6 +77,11 @@ jobs:
       - store_artifacts:
           path: ./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
           destination: TEST_QA_DEBUG
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - ./student/build/outputs/apk/qa/debug/student-qa-debug.apk
+            - ./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
   
   build-and-comment-dev-debug-minify:
     machine:
@@ -153,13 +158,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run:
-          name: Copy APKs
-          command: |
-            mkdir -p ./apps/student/build/outputs/apk/qa/debug
-            cp APP_QA_DEBUG $APP_APK_PATH
-            mkdir -p ./apps/student/build/outputs/apk/androidTest/qa/debug
-            cp TEST_QA_DEBUG $TEST_APK_PATH
+      - attach_workspace:
+          at: ~/project
       - run:
           command: |
             echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
