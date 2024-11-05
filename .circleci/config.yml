@@ -5,19 +5,27 @@ version: 2.1
 orbs:
   android: circleci/android@2.0.3
 
+commands:
+  download-keystore:
+    steps:
+      - run: echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
+  install-jdk:
+    steps:
+      - run: 
+          sudo apt-get update && sudo apt-get install openjdk-17-jdk
+          sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+          sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
+          java -version
+          echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
 jobs:
   share-env-vars:
     docker:
       - image: cimg/base:stable # Adjust as needed for your environment
     steps:
       - checkout
-      - run:
-          name: Install OpenJDK 17
-          command: |
-            sudo apt-get update && sudo apt-get install openjdk-17-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
-            java -version
+      - install-jdk
       - run:
           name: Check Git Message and Set RUN_E2E
           command: |
@@ -50,20 +58,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run:
-          name: Install OpenJDK 17
-          command: |
-            sudo apt-get update && sudo apt-get install openjdk-17-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
-            java -version
-            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
-            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-      - run:
-          name: Download Keystore
-          command: |
-            # Download keystore using the environment variable for the URL
-            echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
+      - install-jdk
+      - download-keystore
       - run:
           name: Submodule update
           command: |
