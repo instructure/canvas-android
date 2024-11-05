@@ -165,14 +165,13 @@ jobs:
           name: Download flank
           command: |
             wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
-            java -jar ./flank.jar android run
       - run:
           command: |
             echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
             export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
             gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
             gcloud config set project delta-essence-114723
-            java -jar flank.jar firebase test android run -c ./student/flank.yml
+            java -jar ./flank.jar firebase test android run -c ./student/flank.yml
           name: Integration Tests
       - store_test_results:
           path: ./results
