@@ -166,8 +166,6 @@ jobs:
             export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
             gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
             gcloud config set project delta-essence-114723
-            yq w -i ./student/flank.yml gcloud.app "$APP_APK_PATH"
-            yq w -i ./student/flank.yml gcloud.test "$TEST_APK_PATH"
             flank firebase test android run -c ./student/flank.yml
           name: Integration Tests
       - store_test_results:
