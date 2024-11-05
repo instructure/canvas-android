@@ -164,7 +164,8 @@ jobs:
       - run:
           name: Download flank
           command: |
-            curl -O https://github.com/Flank/flank/releases/latest/download/flank.jar
+            wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
+            java -jar ./flank.jar android run
       - run:
           command: |
             echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
