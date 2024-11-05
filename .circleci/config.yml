@@ -208,7 +208,7 @@ jobs:
       - download-flank
       - flank:
           title: UI tests landscape
-          flank-yml: ./apps/student/flank-landscape.yml
+          flank-yml: ./apps/student/flank_landscape.yml
       - store_test_results:
           path: ./results
   ui-tests-tablet:
@@ -229,7 +229,7 @@ jobs:
       - download-flank
       - flank:
           title: UI tests tablet
-          flank-yml: ./apps/student/flank-tablet.yml
+          flank-yml: ./apps/student/flank_tablet.yml
       - store_test_results:
           path: ./results
 
