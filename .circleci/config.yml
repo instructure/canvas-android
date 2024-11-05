@@ -147,7 +147,5 @@ workflows:
       - share-env-vars
       - build-qa-debug:
           requires: [share-env-vars]
-      - build-and-comment-dev-debug-minify:
-          requires: [share-env-vars]
       - unit-tests:
-          requires: [build-qa-debug, build-and-comment-dev-debug-minify]
+          requires: [build-qa-debug]
