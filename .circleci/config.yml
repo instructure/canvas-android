@@ -2,10 +2,6 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-orbs:
-  android: circleci/android@3.0.1
-  firebase-testlab: freeletics/firebase-testlab@1.1.1
-
 commands:
   decrypt-keystore:
     steps:
@@ -152,7 +148,7 @@ jobs:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
       APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
-      TEST_APK_PTH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
+      TEST_APK_PATH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
     working_directory: ~/project/apps
     steps:
       - checkout:
@@ -164,11 +160,18 @@ jobs:
             cp APP_QA_DEBUG $APP_APK_PATH
             mkdir -p ./apps/student/build/outputs/apk/androidTest/qa/debug
             cp TEST_QA_DEBUG $TEST_APK_PATH
-            - firebase-testlab/run-android-tests:
-          app_apk_path: $APP_APK_PATH
-          firebase_project: delta-essence-114723
-          flank_configuration: ./student/flank.yml
-          test_apk_path: $TEST_APK_PATH
+      - run:
+          command: |
+            echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
+            gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
+            gcloud config set project delta-essence-114723
+            yq w -i ./student/flank.yml gcloud.app "$APP_APK_PATH"
+            yq w -i ./student/flank.yml gcloud.test "$TEST_APK_PATH"
+            flank firebase test android run -c ./student/flank.yml
+          name: Integration Tests
+      - store_test_results:
+          path: ./results
 
 
 workflows:
@@ -179,10 +182,5 @@ workflows:
           requires: [share-env-vars]
       - unit-tests:
           requires: [share-env-vars]
-      - firebase-testlab/run-android-tests:
+      - ui-tests:
           requires: [build-qa-debug]
-          app_apk_path: APP_QA_DEBUG
-          firebase_project: delta-essence-114723
-          flank_configuration: ./student/flank.yml
-          test_apk_path: TEST_QA_DEBUG
-          working_directory: ~/project/apps
