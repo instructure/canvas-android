@@ -26,6 +26,30 @@ commands:
           name: Submodule update
           command: |
             git submodule update --init
+  download-flank:
+    steps:
+      - run:
+          name: Download flank
+          command: |
+            wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
+  flank:
+    parameters:
+      title:
+        default: UI tests
+        type: string
+      flank-yml:
+        default: ./apps/student/flank.yml
+        type: string
+    steps:
+      - run:
+          command: |
+            echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
+            gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
+            gcloud config set project delta-essence-114723
+            java -jar ./flank.jar firebase test android run -c << parameters.flank-yml >>
+          name: << parameters.title >> 
+
 
 jobs:
   share-env-vars:
@@ -145,7 +169,7 @@ jobs:
       - store_artifacts:
           path: ./student/build/reports/tests/testDevDebugUnitTest
 
-  ui-tests:
+  ui-tests-portrait:
     machine:
       image: android:2024.04.1
     resource_class: xlarge
@@ -160,19 +184,52 @@ jobs:
           path: ~/project
       - attach_workspace:
           at: ~/project/apps/student
-      - install-jdk
-      - run:
-          name: Download flank
-          command: |
-            wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
-      - run:
-          command: |
-            echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
-            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
-            gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
-            gcloud config set project delta-essence-114723
-            java -jar ./flank.jar firebase test android run -c ./apps/student/flank.yml
-          name: Integration Tests
+      - download-flank
+      - flank:
+          title: UI tests portrait
+          flank-yml: ./apps/student/flank.yml
+      - store_test_results:
+          path: ./results
+  ui-tests-landscape:
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    environment:
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
+      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
+      APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
+      TEST_APK_PATH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/student
+      - download-flank
+      - flank:
+          title: UI tests landscape
+          flank-yml: ./apps/student/flank-landscape.yml
+      - store_test_results:
+          path: ./results
+  ui-tests-tablet:
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    environment:
+      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
+      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
+      APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
+      TEST_APK_PATH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/student
+      - download-flank
+      - flank:
+          title: UI tests tablet
+          flank-yml: ./apps/student/flank-tablet.yml
       - store_test_results:
           path: ./results
 
@@ -185,5 +242,9 @@ workflows:
           requires: [share-env-vars]
       - unit-tests:
           requires: [share-env-vars]
-      - ui-tests:
+      - ui-tests-portrait:
+          requires: [build-qa-debug]
+      - ui-tests-landscape:
+          requires: [build-qa-debug]
+      - ui-tests-tablet:
           requires: [build-qa-debug]
