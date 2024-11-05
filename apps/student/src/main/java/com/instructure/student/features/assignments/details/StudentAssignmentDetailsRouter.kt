@@ -27,9 +27,9 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode

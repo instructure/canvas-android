@@ -81,7 +81,7 @@ class LtiLaunchViewModel @Inject constructor(
                                 else -> when (canvasContext) {
                                     is Course -> "${apiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
                                     is Group -> "${apiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
-                                    else -> url
+                                    else -> "${apiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
                                 }
                             }
                             loadLtiAuthenticatedUrl(url)

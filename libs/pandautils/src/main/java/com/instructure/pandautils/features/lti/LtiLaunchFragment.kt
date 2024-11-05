@@ -26,28 +26,53 @@ import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentLtiLaunchBinding
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
+import java.net.URLDecoder
 
 @AndroidEntryPoint
+@ScreenView(SCREEN_VIEW_LTI_LAUNCH)
+@PageView
 class LtiLaunchFragment : Fragment() {
 
     private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
 
     private val viewModel: LtiLaunchViewModel by viewModels()
 
-    var title: String? by NullableStringArg(key = LTI_TITLE)
+    private var title: String? by NullableStringArg(key = LTI_TITLE)
+    private var ltiTab: Tab? by NullableParcelableArg(key = LTI_TAB)
+    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() = ltiTab?.externalUrl ?: (ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_lti_launch, container, false)
@@ -55,7 +80,7 @@ class LtiLaunchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.loadingView.setOverrideColor(ParentPrefs.currentStudent?.studentColor ?: ThemePrefs.primaryColor) TODO
+//        binding.loadingView.setOverrideColor(ParentPrefs.currentStudent?.studentColor ?: ThemePrefs.primaryColor) TODO Set color
         binding.toolName.setTextForVisibility(title.validOrNull())
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
@@ -83,7 +108,7 @@ class LtiLaunchFragment : Fragment() {
             .build()
 
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ThemePrefs.primaryColor)
+            .setToolbarColor(ThemePrefs.primaryColor) // TODO set color
             .build()
 
         var intent = CustomTabsIntent.Builder()
@@ -111,5 +136,53 @@ class LtiLaunchFragment : Fragment() {
         const val LTI_TOOL = "lti_tool"
         const val SESSION_LESS_LAUNCH = "session_less_launch"
         const val IS_ASSIGNMENT_LTI = "is_assignment_lti"
+
+        fun makeRoute(canvasContext: CanvasContext, ltiTab: Tab): Route {
+            val bundle = Bundle().apply { putParcelable(LTI_TAB, ltiTab) }
+            return Route(LtiLaunchFragment::class.java, canvasContext, bundle)
+        }
+
+        /**
+         * The ltiTool param is used specifically for launching assignment based lti tools, where its possible to have
+         * a tool "collision". As such, we need to pre-fetch the correct tool to use here.
+         */
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String,
+            title: String? = null,
+            sessionLessLaunch: Boolean = false,
+            isAssignmentLTI: Boolean = false,
+            ltiTool: LTITool? = null
+        ): Route {
+            val bundle = Bundle().apply {
+                putString(LTI_URL, url)
+                putBoolean(SESSION_LESS_LAUNCH, sessionLessLaunch)
+                putBoolean(IS_ASSIGNMENT_LTI, isAssignmentLTI)
+                putString(LTI_TITLE, title) // For 'title' property in InternalWebViewFragment
+                putParcelable(LTI_TOOL, ltiTool)
+            }
+            return Route(LtiLaunchFragment::class.java, canvasContext, bundle)
+        }
+
+        private fun validateRoute(route: Route): Boolean {
+            route.canvasContext ?: return false
+            return route.arguments.getParcelable<Tab>(LTI_TAB) != null || route.arguments.getString(LTI_URL).isValid()
+        }
+
+        fun newInstance(route: Route): LtiLaunchFragment? {
+            if (!validateRoute(route)) return null
+            return LtiLaunchFragment().withArgs(route.argsWithContext)
+        }
+
+        fun makeSessionlessLtiUrlRoute(activity: FragmentActivity, canvasContext: CanvasContext?, ltiUrl: String): Route {
+            val decodedUrl = URLDecoder.decode(ltiUrl, "utf-8")
+            val title = activity.getString(R.string.utils_externalToolTitle)
+            val args = Bundle()
+            args.putString(LTI_URL, decodedUrl)
+            args.putBoolean(SESSION_LESS_LAUNCH, true)
+            args.putString(LTI_TITLE, title)
+
+            return Route(LtiLaunchFragment::class.java, canvasContext, args)
+        }
     }
 }

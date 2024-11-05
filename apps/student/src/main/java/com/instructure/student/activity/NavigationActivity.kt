@@ -85,6 +85,7 @@ import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
@@ -136,7 +137,6 @@ import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.fragment.InboxRecipientsFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler

@@ -58,7 +58,7 @@ import com.instructure.teacher.router.RouteMatcher
 import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
-@PageView
+//@PageView
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 class LtiLaunchFragment : BaseFragment() {
 

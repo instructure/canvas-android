@@ -3,6 +3,7 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
@@ -12,6 +13,7 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
@@ -19,7 +21,6 @@ import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFra
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
@@ -52,7 +53,6 @@ import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.fragment.InboxRecipientsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment

@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
@@ -30,7 +31,6 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentLtiSubmissionViewBinding
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType.ExternalToolContent
 import com.instructure.student.router.RouteMatcher
 
