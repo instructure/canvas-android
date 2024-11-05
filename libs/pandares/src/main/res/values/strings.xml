@@ -99,7 +99,7 @@
     <string name="reminderNotificationChannelName">Reminder Notifications</string>
     <string name="reminderNotificationChannelDescription">Canvas Notifications for assignment reminders.</string>
     <string name="reminderNotificationTitle">Due Date Reminder</string>
-    <string name="reminderNotificationDescription">This assignment is due in %s: %s</string>
+    <string name="reminderNotificationDueAtDescription">This assignment is due at %s: %s</string>
     <string name="reminderInPast">Please choose a future time for your reminder!</string>
     <string name="reminderAlreadySet">You have already set a reminder for this time</string>
     <string name="deleteReminderTitle">Delete Reminder</string>

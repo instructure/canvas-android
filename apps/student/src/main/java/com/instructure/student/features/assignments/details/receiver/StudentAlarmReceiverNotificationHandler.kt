@@ -43,7 +43,7 @@ class StudentAlarmReceiverNotificationHandler: AlarmReceiverNotificationHandler 
         val builder = NotificationCompat.Builder(context, AlarmReceiver.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
             .setContentTitle(context.getString(R.string.reminderNotificationTitle))
-            .setContentText(context.getString(R.string.reminderNotificationDescription, dueIn, assignmentName))
+            .setContentText(context.getString(R.string.reminderNotificationDueAtDescription, dueIn, assignmentName))
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

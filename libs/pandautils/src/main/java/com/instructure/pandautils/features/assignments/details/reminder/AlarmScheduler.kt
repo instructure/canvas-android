@@ -30,12 +30,12 @@ class AlarmScheduler(private val context: Context, private val reminderDao: Remi
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    fun scheduleAlarm(assignmentId: Long, assignmentPath: String, assignmentName: String, dueIn: String, timeInMillis: Long, reminderId: Long) {
+    fun scheduleAlarm(assignmentId: Long, assignmentPath: String, assignmentName: String, dueAt: String, timeInMillis: Long, reminderId: Long) {
         val intent = Intent(context, AlarmReceiver::class.java)
         intent.putExtra(AlarmReceiver.ASSIGNMENT_ID, assignmentId)
         intent.putExtra(AlarmReceiver.ASSIGNMENT_PATH, assignmentPath)
         intent.putExtra(AlarmReceiver.ASSIGNMENT_NAME, assignmentName)
-        intent.putExtra(AlarmReceiver.DUE_IN, dueIn)
+        intent.putExtra(AlarmReceiver.DUE_AT, dueAt)
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,

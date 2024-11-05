@@ -41,7 +41,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val assignmentId = intent.getLongExtra(ASSIGNMENT_ID, 0L)
             val assignmentPath = intent.getStringExtra(ASSIGNMENT_PATH) ?: return
             val assignmentName = intent.getStringExtra(ASSIGNMENT_NAME) ?: return
-            val dueIn = intent.getStringExtra(DUE_IN) ?: return
+            val dueIn = intent.getStringExtra(DUE_AT) ?: return
 
             notificationHandler.createNotificationChannel(context)
             notificationHandler.showNotification(context, assignmentId, assignmentPath, assignmentName, dueIn)
@@ -59,6 +59,6 @@ class AlarmReceiver : BroadcastReceiver() {
         const val ASSIGNMENT_ID = "ASSIGNMENT_ID"
         const val ASSIGNMENT_PATH = "ASSIGNMENT_PATH"
         const val ASSIGNMENT_NAME = "ASSIGNMENT_NAME"
-        const val DUE_IN = "DUE_IN"
+        const val DUE_AT = "DUE_AT"
     }
 }

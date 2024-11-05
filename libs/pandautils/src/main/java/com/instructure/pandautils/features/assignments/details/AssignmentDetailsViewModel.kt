@@ -461,7 +461,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun mapReminders(reminders: List<ReminderEntity>) = reminders.map {
-        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text))) {
+        ReminderItemViewModel(ReminderViewData(it.id, it.text)) {
             postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog {
                 deleteReminderById(it)
             })
