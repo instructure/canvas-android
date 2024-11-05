@@ -47,7 +47,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -56,6 +55,7 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.URLDecoder
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
@@ -70,6 +70,9 @@ class LtiLaunchFragment : Fragment() {
     private var ltiTab: Tab? by NullableParcelableArg(key = LTI_TAB)
     private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
 
+    @Inject
+    lateinit var ltiLaunchFragmentBehavior: LtiLaunchFragmentBehavior
+
     @Suppress("unused")
     @PageViewUrl
     private fun makePageViewUrl() = ltiTab?.externalUrl ?: (ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools")
@@ -80,7 +83,7 @@ class LtiLaunchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.loadingView.setOverrideColor(ParentPrefs.currentStudent?.studentColor ?: ThemePrefs.primaryColor) TODO Set color
+        binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
@@ -108,7 +111,7 @@ class LtiLaunchFragment : Fragment() {
             .build()
 
         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ThemePrefs.primaryColor) // TODO set color
+            .setToolbarColor(ltiLaunchFragmentBehavior.toolbarColor)
             .build()
 
         var intent = CustomTabsIntent.Builder()
