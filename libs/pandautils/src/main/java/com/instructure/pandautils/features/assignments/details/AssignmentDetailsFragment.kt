@@ -24,6 +24,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -49,6 +50,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.assignments.details.reminder.DateTimePicker
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
@@ -376,32 +378,9 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     }
 
     private fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
-        val choices = listOf(
-            ReminderChoice.Minute(5),
-            ReminderChoice.Minute(15),
-            ReminderChoice.Minute(30),
-            ReminderChoice.Hour(1),
-            ReminderChoice.Day(1),
-            ReminderChoice.Week(1),
-            ReminderChoice.Custom,
-        )
-
-        AlertDialog.Builder(context)
-            .setTitle(R.string.reminderTitle)
-            .setNegativeButton(R.string.cancel, null)
-            .setSingleChoiceItems(
-                choices.map {
-                    if (it is ReminderChoice.Custom) {
-                        it.getText(context.resources)
-                    } else {
-                        context.getString(R.string.reminderBefore, it.getText(context.resources))
-                    }
-                }.toTypedArray(), -1
-            ) { dialog, which ->
-                onReminderSelected(choices[which])
-                dialog.dismiss()
-            }
-            .showThemed(assignmentDetailsBehaviour.dialogColor)
+        DateTimePicker(requireContext()).show {
+            Log.d("DateTimePicker", "DateTimePicker: ${it.timeInMillis}")
+        }
     }
 
     companion object {
