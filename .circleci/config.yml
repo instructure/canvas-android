@@ -164,15 +164,11 @@ jobs:
       - run:
           name: Download flank
           command: |
+            cd ~/project
             wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
       - run:
           command: |
-            cd ~/project/apps/student/build/outputs/apk/androidTest/qa/debug
-            ls
-            cd ~/project/apps/student/build/outputs/apk/qa/debug/
-            ls
-      - run:
-          command: |
+            cd ~/project
             echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
             export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
             gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
