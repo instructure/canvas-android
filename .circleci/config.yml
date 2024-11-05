@@ -78,10 +78,10 @@ jobs:
           path: ./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
           destination: TEST_QA_DEBUG
       - persist_to_workspace:
-          root: ~/project
+          root: ~/project/apps/student
           paths:
-            - ./student/build/outputs/apk/qa/debug/student-qa-debug.apk
-            - ./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+            - ./build/outputs/apk/qa/debug/student-qa-debug.apk
+            - ./build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
   
   build-and-comment-dev-debug-minify:
     machine:
@@ -159,7 +159,7 @@ jobs:
       - checkout:
           path: ~/project
       - attach_workspace:
-          at: ~/project
+          at: ~/project/apps/student
       - run:
           command: |
             echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
