@@ -239,6 +239,10 @@ data class Assignment(
         return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
     }
 
+    fun isNewQuizLti(): Boolean {
+        return submissionTypesRaw.contains(SubmissionType.EXTERNAL_TOOL.apiString) && externalToolAttributes?.url?.contains("quiz-lti") == true
+    }
+
     companion object {
 
         const val PASS_FAIL_TYPE = "pass_fail"
@@ -294,14 +298,11 @@ data class Assignment(
         )
             ?: ""
 
-        fun submissionTypeStringToPrettyPrintString(submissionType: String?, context: Context): String? =
-                submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(submissionType), context)
-
-        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, context: Context): String? {
-            return submissionTypeToPrettyPrintString(submissionType, context.resources)
+        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, context: Context, newQuizLti: Boolean = false): String? {
+            return submissionTypeToPrettyPrintString(submissionType, context.resources, newQuizLti)
         }
 
-        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, resources: Resources): String? {
+        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, resources: Resources, newQuizLti: Boolean = false): String? {
             submissionType ?: return null
 
             return when (submissionType) {
@@ -309,7 +310,14 @@ data class Assignment(
                 SubmissionType.NONE -> resources.getString(R.string.canvasAPI_none)
                 SubmissionType.ON_PAPER -> resources.getString(R.string.canvasAPI_onPaper)
                 SubmissionType.DISCUSSION_TOPIC -> resources.getString(R.string.canvasAPI_discussionTopic)
-                SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> resources.getString(R.string.canvasAPI_externalTool)
+                SubmissionType.EXTERNAL_TOOL -> {
+                    if (newQuizLti) {
+                        resources.getString(R.string.canvasAPI_quiz)
+                    } else {
+                        resources.getString(R.string.canvasAPI_externalTool)
+                    }
+                }
+                SubmissionType.BASIC_LTI_LAUNCH -> resources.getString(R.string.canvasAPI_externalTool)
                 SubmissionType.ONLINE_UPLOAD -> resources.getString(R.string.canvasAPI_onlineUpload)
                 SubmissionType.ONLINE_TEXT_ENTRY -> resources.getString(R.string.canvasAPI_onlineTextEntry)
                 SubmissionType.ONLINE_URL -> resources.getString(R.string.canvasAPI_onlineURL)
