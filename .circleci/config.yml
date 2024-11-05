@@ -3,6 +3,7 @@
 version: 2.1
 
 orbs:
+  firebase-testlab: freeletics/firebase-testlab@1.1.1
   android: circleci/android@3.0.1
 
 commands:
@@ -146,27 +147,29 @@ jobs:
   ui-tests:
     machine:
       image: android:2024.04.1
+    executor: firebase-testlab
     resource_class: xlarge
     environment:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
+      APP_APK_PATH: "./student/build/outputs/apk/qa/debug/student-qa-debug.apk"
+      TEST_APK_PTH: "./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk"
     working_directory: ~/project/apps
     steps:
       - checkout:
           path: ~/project
-      - android/create_avd:
-          avd_name: myavd
-          install: true
-          system_image: system-images;android-29;default;x86_64
-      - android/start_emulator:
-          avd_name: myavd
-          no_window: true
-          restore_gradle_cache_prefix: v1a
-      - android/run_tests:
-          test_command: ../gradle/gradlew :student:connectedQaDebugAndroidTest 
-          working_directory: ~/project/apps 
-      - android/save_gradle_cache:
-          cache_prefix: v1a
+      - run:
+          name: Copy APKs
+          command: |
+            mkdir -p ./apps/student/build/outputs/apk/qa/debug
+            cp APP_QA_DEBUG $APP_APK_PATH
+            mkdir -p ./apps/student/build/outputs/apk/androidTest/qa/debug
+            cp TEST_QA_DEBUG $TEST_APK_PATH
+      - firebase-testlab/run-android-tests:
+          app_apk_path: $APP_APK_PATH
+          firebase_project: delta-essence-114723
+          flank_configuration: ./student/flank.yml
+          test_apk_path: $TEST_APK_PATH
 
 workflows:
   pr-workflow:
