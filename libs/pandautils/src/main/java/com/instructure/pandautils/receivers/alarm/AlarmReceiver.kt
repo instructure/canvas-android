@@ -45,10 +45,11 @@ class AlarmReceiver : BroadcastReceiver() {
 
             notificationHandler.createNotificationChannel(context)
             notificationHandler.showNotification(context, assignmentId, assignmentPath, assignmentName, dueIn)
-            goAsync()
+            val pendingTask = goAsync()
 
             CoroutineScope(Dispatchers.IO).launch {
                 reminderDao.deletePastReminders(System.currentTimeMillis())
+                pendingTask.finish()
             }
         }
     }

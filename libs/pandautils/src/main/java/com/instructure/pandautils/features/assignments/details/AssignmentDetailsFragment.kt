@@ -24,7 +24,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -34,10 +33,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.FragmentInteractions
@@ -50,7 +51,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.assignments.details.reminder.DateTimePicker
+import com.instructure.pandautils.features.assignments.details.reminder.ReminderManager
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
@@ -67,6 +68,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
@@ -82,6 +84,9 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     @Inject
     lateinit var assignmentDetailsBehaviour: AssignmentDetailsBehaviour
+
+    @Inject
+    lateinit var reminderManager: ReminderManager
 
     override val navigation: Navigation? = null
 
@@ -378,8 +383,16 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     }
 
     private fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
-        DateTimePicker(requireContext()).show {
-            Log.d("DateTimePicker", "DateTimePicker: ${it.timeInMillis}")
+        viewModel.assignment?.let { assignment ->
+            lifecycleScope.launch {
+                reminderManager.setReminder(
+                    context,
+                    ApiPrefs.user?.id.orDefault(),
+                    assignment.id,
+                    assignment.name.orEmpty(),
+                    assignment.htmlUrl.orEmpty()
+                )
+            }
         }
     }
 

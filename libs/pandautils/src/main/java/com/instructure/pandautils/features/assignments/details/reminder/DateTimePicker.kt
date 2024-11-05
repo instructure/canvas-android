@@ -20,13 +20,14 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.text.format.DateFormat
-import dagger.hilt.android.qualifiers.ApplicationContext
+import android.widget.DatePicker
+import android.widget.TimePicker
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import java.util.Calendar
-import javax.inject.Inject
 
-class DateTimePicker @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class DateTimePicker {
     private val calendar = Calendar.getInstance()
 
     private var year: Int
@@ -49,42 +50,51 @@ class DateTimePicker @Inject constructor(
         get() = calendar.get(Calendar.MINUTE)
         set(value) = calendar.set(Calendar.MINUTE, value)
 
-    fun show(dateTimeSelected: (Calendar) -> Unit) {
-        showDatePicker(dateTimeSelected)
+    private val selectedDate = MutableStateFlow<Calendar?>(null)
+
+    fun show(context: Context): Flow<Calendar> {
+        showDatePicker(context)
+        return selectedDate.filterNotNull()
     }
 
-    private fun showDatePicker(dateTimeSelected: (Calendar) -> Unit) {
+    private fun showDatePicker(context: Context) {
         DatePickerDialog(
             context,
-            { _, year, month, day -> onDateSet(year, month, day, dateTimeSelected) },
+            { _: DatePicker, year: Int, month: Int, day: Int -> onDateSet(context, year, month, day) },
             year,
             month,
             day
         ).show()
     }
 
-    private fun showTimePicker(dateTimeSelected: (Calendar) -> Unit) {
+    private fun showTimePicker(context: Context) {
         TimePickerDialog(
             context,
-            { _, hour, minute -> onTimeSet(hour, minute, dateTimeSelected) },
+            { _: TimePicker, hour: Int, minute: Int -> onTimeSet(hour, minute) },
             hour,
             minute,
             DateFormat.is24HourFormat(context)
         ).show()
     }
 
-    private fun onDateSet(year: Int, month: Int, day: Int, dateTimeSelected: (Calendar) -> Unit) {
+    private fun onDateSet(context: Context, year: Int, month: Int, day: Int) {
         this.year = year
         this.month = month
         this.day = day
 
-        showTimePicker(dateTimeSelected)
+        showTimePicker(context)
     }
 
-    private fun onTimeSet(hourOfDay: Int, minute: Int, dateTimeSelected: (Calendar) -> Unit) {
+    private fun onTimeSet(hourOfDay: Int, minute: Int) {
         this.hour = hourOfDay
         this.minute = minute
 
-        dateTimeSelected(calendar)
+        selectedDate.tryEmit(calendar)
+    }
+
+    companion object {
+        fun getInstance(): DateTimePicker {
+            return DateTimePicker()
+        }
     }
 }

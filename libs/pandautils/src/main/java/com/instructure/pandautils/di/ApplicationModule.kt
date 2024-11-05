@@ -30,7 +30,10 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
+import com.instructure.pandautils.features.assignments.details.reminder.ReminderManager
 import com.instructure.pandautils.features.offline.sync.HtmlParser
+import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
@@ -159,5 +162,13 @@ class ApplicationModule {
         featureFlagProvider: FeatureFlagProvider
     ): OfflineAnalyticsManager {
         return OfflineAnalyticsManager(context, analytics, pageViewUtils, apiPrefs, dateTimeProvider, featureFlagProvider)
+    }
+
+    @Provides
+    fun provideReminderManager(
+        reminderDao: ReminderDao,
+        alarmScheduler: AlarmScheduler,
+    ): ReminderManager {
+        return ReminderManager(reminderDao, alarmScheduler)
     }
 }
