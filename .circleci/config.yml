@@ -122,7 +122,8 @@ jobs:
 
   unit-tests:
     machine:
-      image: android:2024.04.1 # Use an Android image with required SDK/tools
+      image: android:2024.04.1
+    resource_class: xlarge
     environment:
       ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
       ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
