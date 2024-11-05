@@ -14,10 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di.feature
+package com.instructure.pandautils.di
 
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
-import com.instructure.parentapp.features.lti.LtiLaunchRepository
+import com.instructure.pandautils.features.lti.LtiLaunchRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +29,10 @@ import dagger.hilt.android.components.ViewModelComponent
 class LtiLaunchModule {
 
     @Provides
-    fun provideLtiLaunchRepository(launchDefinitionsInterface: LaunchDefinitionsAPI.LaunchDefinitionsInterface): LtiLaunchRepository {
-        return LtiLaunchRepository(launchDefinitionsInterface)
+    fun provideLtiLaunchRepository(
+        launchDefinitionsInterface: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
+        assignmentApi: AssignmentAPI.AssignmentInterface
+    ): LtiLaunchRepository {
+        return LtiLaunchRepository(launchDefinitionsInterface, assignmentApi)
     }
 }

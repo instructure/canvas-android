@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.lti
+package com.instructure.pandautils.features.lti
 
 import android.net.Uri
 import android.os.Bundle
@@ -29,17 +29,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.databinding.FragmentLtiLaunchBinding
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.setTextForVisibility
-import com.instructure.pandautils.utils.studentColor
 import com.instructure.pandautils.utils.toast
-import com.instructure.parentapp.R
-import com.instructure.parentapp.databinding.FragmentLtiLaunchBinding
-import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -57,7 +55,7 @@ class LtiLaunchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.loadingView.setOverrideColor(ParentPrefs.currentStudent?.studentColor ?: ThemePrefs.primaryColor)
+//        binding.loadingView.setOverrideColor(ParentPrefs.currentStudent?.studentColor ?: ThemePrefs.primaryColor) TODO
         binding.toolName.setTextForVisibility(title.validOrNull())
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
@@ -109,5 +107,9 @@ class LtiLaunchFragment : Fragment() {
     companion object {
         const val LTI_URL = "lti_url"
         const val LTI_TITLE = "lti_title"
+        const val LTI_TAB = "lti_tab"
+        const val LTI_TOOL = "lti_tool"
+        const val SESSION_LESS_LAUNCH = "session_less_launch"
+        const val IS_ASSIGNMENT_LTI = "is_assignment_lti"
     }
 }

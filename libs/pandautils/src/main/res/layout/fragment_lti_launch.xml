@@ -21,7 +21,7 @@
     android:orientation="vertical"
     android:padding="32dp">
 
-    <com.instructure.loginapi.login.view.CanvasLoadingView
+    <com.instructure.pandautils.views.CanvasLoadingView
         android:id="@+id/loadingView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

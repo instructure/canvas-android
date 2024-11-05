@@ -36,7 +36,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.canvasapi2.utils.LocaleUtils
-import com.instructure.loginapi.login.view.CanvasLoadingView
+import com.instructure.pandautils.views.CanvasLoadingView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.R

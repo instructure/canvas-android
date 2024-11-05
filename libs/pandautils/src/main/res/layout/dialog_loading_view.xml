@@ -39,7 +39,7 @@
             android:layout_gravity="center_horizontal|bottom"
             style="@style/TextFont.Medium"/>
 
-        <com.instructure.loginapi.login.view.CanvasLoadingView
+        <com.instructure.pandautils.views.CanvasLoadingView
             android:layout_width="42dp"
             android:layout_height="42dp"
             app:clv_override_color="@color/login_studentAppTheme"

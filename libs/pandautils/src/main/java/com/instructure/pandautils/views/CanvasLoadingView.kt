@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.loginapi.login.view
+package com.instructure.pandautils.views
 
 import android.content.Context
 import android.graphics.*
@@ -23,7 +23,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import androidx.annotation.ColorInt
-import com.instructure.loginapi.login.R
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.obtainFor
 import kotlin.math.cos
