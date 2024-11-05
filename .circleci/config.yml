@@ -170,8 +170,8 @@ jobs:
           path: ./student/build/reports/tests/testDevDebugUnitTest
 
   ui-tests-portrait:
-    docker:
-      - image: cimg/base:stable
+    machine:
+      image: android:2024.04.1
     resource_class: xlarge
     working_directory: ~/project
     steps:
@@ -187,8 +187,8 @@ jobs:
           path: ./results
 
   ui-tests-landscape:
-    docker:
-      - image: cimg/base:stable
+    machine:
+      image: android:2024.04.1
     resource_class: xlarge
     working_directory: ~/project
     steps:
@@ -204,8 +204,8 @@ jobs:
           path: ./results
 
   ui-tests-tablet:
-    docker:
-      - image: cimg/base:stable
+    machine:
+      image: android:2024.04.1
     resource_class: xlarge
     working_directory: ~/project
     steps:
