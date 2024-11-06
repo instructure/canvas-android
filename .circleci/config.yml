@@ -8,7 +8,7 @@ commands:
       - run:
           name: Decrypt Keystore
           command: |
-            echo $KEYSTORE_BASE64 | base64 --decode > ~/project/keystore.jks
+            echo $KEYSTORE_BASE64 | base64 --decode > $ANDROID_KEYSTORE_PATH
   install-jdk:
     steps:
       - run:
@@ -82,9 +82,6 @@ jobs:
     machine:
       image: android:2024.04.1
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
     working_directory: ~/project/apps
     steps:
       - checkout:
@@ -112,6 +109,7 @@ jobs:
       image: android:2024.04.1
     resource_class: xlarge
     environment:
+      ANDROID_KEYSTORE_PATH: /home/circleci/project/keystore.jks
     working_directory: ~/project/apps
     steps:
       - checkout:
@@ -123,7 +121,7 @@ jobs:
           name: Build DevDebugMinify with Gradle
           command: |
             ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
-              -Pandroid.injected.signing.store.file=/home/circleci/project/keystore.jks \
+              -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
               -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
               -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
               -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD     
@@ -133,16 +131,13 @@ jobs:
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
                 -d '{"body": "DevDebugMinify build completed successfully."}' \
-                "https://api.github.com/repos/your_org/your_repo/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
+                "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
             fi
 
   unit-tests:
     machine:
       image: android:2024.04.1
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
     working_directory: ~/project/apps
     steps:
       - checkout:
