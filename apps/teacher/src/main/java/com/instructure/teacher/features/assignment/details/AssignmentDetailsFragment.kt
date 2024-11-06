@@ -249,7 +249,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     private fun configureSubmissionTypes(assignment: Assignment) = with(binding) {
         submissionTypesTextView.text = assignment.submissionTypesRaw.map {
-            submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext(), assignment.isNewQuizLti()) }.joinToString("\n")
+            submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext(), assignment.isInternalLti()) }.joinToString("\n")
 
         if(assignment.submissionTypesRaw.contains(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)) {
             // External tool
@@ -262,7 +262,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
-                    val route = LtiLaunchFragment.makeRoute(course, ltiUrl, assignment.name!!, assignmentLti = true)
+                    val route = LtiLaunchFragment.makeRoute(course, ltiUrl, assignment.name!!, assignmentLti = true, openInternally = assignment.isInternalLti())
                     RouteMatcher.route(requireActivity(), route)
                 }
             }

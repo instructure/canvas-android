@@ -42,7 +42,7 @@ open class AssignmentDetailsRouter {
 
     open fun navigateToAnnotationSubmissionScreen(activity: FragmentActivity, canvasContext: CanvasContext, annotatableAttachmentId: Long, submissionId: Long, assignmentId: Long, assignmentName: String) = Unit
 
-    open fun navigateToLtiLaunchScreen(activity: FragmentActivity, canvasContext: CanvasContext, url: String, title: String? = null, sessionLessLaunch: Boolean = false, isAssignmentLTI: Boolean = false, ltiTool: LTITool? = null) = Unit
+    open fun navigateToLtiLaunchScreen(activity: FragmentActivity, canvasContext: CanvasContext, url: String, title: String? = null, sessionLessLaunch: Boolean = false, isAssignmentLTI: Boolean = false, ltiTool: LTITool? = null, openInternally: Boolean = false) = Unit
 
     open fun navigateToUploadStatusScreen(activity: FragmentActivity, submissionId: Long) = Unit
 

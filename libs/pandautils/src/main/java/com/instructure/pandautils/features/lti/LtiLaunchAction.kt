@@ -18,5 +18,6 @@ package com.instructure.pandautils.features.lti
 
 sealed class LtiLaunchAction {
     data class LaunchCustomTab(val url: String) : LtiLaunchAction()
+    data class LoadLtiWebView(val url: String) : LtiLaunchAction()
     data object ShowError : LtiLaunchAction()
 }

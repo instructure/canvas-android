@@ -239,8 +239,10 @@ data class Assignment(
         return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
     }
 
-    fun isNewQuizLti(): Boolean {
-        return submissionTypesRaw.contains(SubmissionType.EXTERNAL_TOOL.apiString) && externalToolAttributes?.url?.contains("quiz-lti") == true
+    fun isInternalLti(): Boolean {
+        return submissionTypesRaw.contains(SubmissionType.EXTERNAL_TOOL.apiString) && internalLtiTools.any {
+            externalToolAttributes?.url?.contains(it) == true
+        }
     }
 
     companion object {
@@ -251,6 +253,8 @@ data class Assignment(
         const val POINTS_TYPE = "points"
         const val GPA_SCALE_TYPE = "gpa_scale"
         const val NOT_GRADED_TYPE = "not_graded"
+
+        val internalLtiTools = setOf("quiz-lti")
 
         val onlineSubmissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY.apiString,

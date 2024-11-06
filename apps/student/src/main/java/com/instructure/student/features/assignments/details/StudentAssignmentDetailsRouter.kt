@@ -154,7 +154,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         title: String?,
         sessionLessLaunch: Boolean,
         isAssignmentLTI: Boolean,
-        ltiTool: LTITool?
+        ltiTool: LTITool?,
+        openInternally: Boolean
     ) {
         RouteMatcher.route(
             activity,
@@ -164,7 +165,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
                 title,
                 sessionLessLaunch = sessionLessLaunch,
                 assignmentLti = isAssignmentLTI,
-                ltiTool = ltiTool
+                ltiTool = ltiTool,
+                openInternally = openInternally
             )
         )
     }

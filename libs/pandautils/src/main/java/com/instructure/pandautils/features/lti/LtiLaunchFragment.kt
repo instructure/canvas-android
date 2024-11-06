@@ -23,6 +23,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
@@ -47,12 +48,18 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
+import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.URLDecoder
 import javax.inject.Inject
@@ -85,21 +92,24 @@ class LtiLaunchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textDarkest))
+        binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.title = title
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
     }
 
     private fun handleAction(action: LtiLaunchAction) {
         when (action) {
-            is LtiLaunchAction.LaunchCustomTab -> {
-                launchCustomTab(action.url)
-            }
+            is LtiLaunchAction.LaunchCustomTab -> launchCustomTab(action.url)
             is LtiLaunchAction.ShowError -> {
                 toast(R.string.errorOccurred)
                 if (activity != null) {
                     requireActivity().onBackPressed()
                 }
             }
+
+            is LtiLaunchAction.LoadLtiWebView -> loadLtiToolIntoWebView(action.url)
         }
     }
 
@@ -132,6 +142,39 @@ class LtiLaunchFragment : Fragment() {
         }, 500)
     }
 
+    private fun loadLtiToolIntoWebView(url: String) {
+        binding.webView.enableAlgorithmicDarkening()
+        binding.webView.setZoomSettings(false)
+        binding.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
+
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                binding.webViewProgress.setVisible()
+            }
+
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                binding.webViewProgress.setGone()
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                // Handle return button in external tools. Links to course homepage should close the tool.
+                return url == contextLink()
+            }
+
+            override fun routeInternallyCallback(url: String) {
+                // Handle return button in external tools. Links to course homepage should close the tool.
+                if (url == contextLink()) {
+                    requireActivity().onBackPressed()
+                }
+            }
+        }
+        binding.loadingLayout.setGone()
+        binding.webView.setVisible()
+        binding.webView.loadUrl(url)
+    }
+
+    fun contextLink() = "${ApiPrefs.fullDomain}${canvasContext.toAPIString()}"
+
     companion object {
         const val LTI_URL = "lti_url"
         const val LTI_TITLE = "lti_title"
@@ -139,6 +182,7 @@ class LtiLaunchFragment : Fragment() {
         const val LTI_TOOL = "lti_tool"
         const val SESSION_LESS_LAUNCH = "session_less_launch"
         const val IS_ASSIGNMENT_LTI = "is_assignment_lti"
+        const val OPEN_INTERNALLY = "open_internally"
 
         fun makeRoute(canvasContext: CanvasContext, ltiTab: Tab): Route {
             val bundle = Bundle().apply { putParcelable(LTI_TAB, ltiTab) }
@@ -155,7 +199,8 @@ class LtiLaunchFragment : Fragment() {
             title: String? = null,
             sessionLessLaunch: Boolean = false,
             assignmentLti: Boolean = false,
-            ltiTool: LTITool? = null
+            ltiTool: LTITool? = null,
+            openInternally: Boolean = false
         ): Route {
             val bundle = Bundle().apply {
                 putString(LTI_URL, url)
@@ -163,6 +208,7 @@ class LtiLaunchFragment : Fragment() {
                 putBoolean(IS_ASSIGNMENT_LTI, assignmentLti)
                 putString(LTI_TITLE, title) // For 'title' property in InternalWebViewFragment
                 putParcelable(LTI_TOOL, ltiTool)
+                putBoolean(OPEN_INTERNALLY, openInternally)
             }
             return Route(LtiLaunchFragment::class.java, canvasContext, bundle)
         }

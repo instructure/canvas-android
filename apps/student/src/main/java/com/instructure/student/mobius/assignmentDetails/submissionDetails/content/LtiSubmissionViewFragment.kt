@@ -39,7 +39,8 @@ class LtiSubmissionViewFragment : Fragment() {
     private val binding by viewBinding(FragmentLtiSubmissionViewBinding::bind)
     private var canvasContext: CanvasContext by ParcelableArg()
     private var url: String by StringArg()
-    private var newQuizLti: Boolean by BooleanArg()
+    private var internalLti: Boolean by BooleanArg()
+    private var title: String by StringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_lti_submission_view, container, false)
@@ -50,22 +51,23 @@ class LtiSubmissionViewFragment : Fragment() {
         ViewStyler.themeButton(binding.viewLtiButton)
         setUpViews()
         binding.viewLtiButton.onClickWithRequireNetwork {
-            val route = LtiLaunchFragment.makeRoute(canvasContext = canvasContext, url = url)
+            val route = LtiLaunchFragment.makeRoute(canvasContext = canvasContext, url = url, title = title, openInternally = internalLti)
             RouteMatcher.route(requireActivity(), route)
         }
     }
 
     private fun setUpViews() {
-        binding.viewLtiButton.text = if (newQuizLti) getString(R.string.openTheQuizButton) else getString(R.string.openTool)
-        binding.ltiSubmissionTitle.text = if (newQuizLti) getString(R.string.newQuizSubmissionTitle) else getString(R.string.commentSubmissionTypeExternalTool)
-        binding.ltiSubmissionSubtitle.text = if (newQuizLti) getString(R.string.newQuizSubmissionSubtitle) else getString(R.string.speedGraderExternalToolMessage)
+        binding.viewLtiButton.text = if (internalLti) getString(R.string.openTheQuizButton) else getString(R.string.openTool)
+        binding.ltiSubmissionTitle.text = if (internalLti) getString(R.string.newQuizSubmissionTitle) else getString(R.string.commentSubmissionTypeExternalTool)
+        binding.ltiSubmissionSubtitle.text = if (internalLti) getString(R.string.newQuizSubmissionSubtitle) else getString(R.string.speedGraderExternalToolMessage)
     }
 
     companion object {
         fun newInstance(data: ExternalToolContent) = LtiSubmissionViewFragment().apply {
             canvasContext = data.canvasContext
             url = data.url
-            newQuizLti = data.newQuizLti
+            internalLti = data.internalLti
+            title = data.title
         }
     }
 }

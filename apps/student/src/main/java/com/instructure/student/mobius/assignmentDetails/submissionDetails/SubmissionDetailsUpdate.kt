@@ -166,7 +166,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.OnPaperContent
             Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw.orEmpty() -> {
                 if (assignment?.isAllowedToSubmit == true)
-                    SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "", assignment.isNewQuizLti())
+                    SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "", assignment.name.orEmpty(), assignment.isInternalLti())
                 else SubmissionDetailsContentType.LockedContent
             }
             submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool, isObserver, ltiUrl)
@@ -175,8 +175,10 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
 
                 // LTI submission
                 Assignment.SubmissionType.BASIC_LTI_LAUNCH -> SubmissionDetailsContentType.ExternalToolContent(
-                        canvasContext,
-                        submission.previewUrl.validOrNull() ?: assignment?.url?.validOrNull() ?: assignment?.htmlUrl ?: "", false
+                    canvasContext,
+                    submission.previewUrl.validOrNull() ?: assignment?.url?.validOrNull() ?: assignment?.htmlUrl ?: "",
+                    title = assignment?.name.orEmpty(),
+                    false
                 )
 
                 // Text submission

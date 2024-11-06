@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.lti
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
@@ -49,6 +50,7 @@ class LtiLaunchViewModel @Inject constructor(
     private val sessionLessLaunch: Boolean = savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) ?: false
     private val assignmentLti: Boolean = savedStateHandle.get<Boolean>(LtiLaunchFragment.IS_ASSIGNMENT_LTI) ?: false
     private val canvasContext: CanvasContext? = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT)
+    private val openInternally: Boolean = savedStateHandle.get<Boolean>(LtiLaunchFragment.OPEN_INTERNALLY) ?: false
 
     private val _events = Channel<LtiLaunchAction>()
     val events = _events.receiveAsFlow()
@@ -114,7 +116,11 @@ class LtiLaunchViewModel @Inject constructor(
 
     private fun launchLti(url: String) {
         viewModelScope.launch {
-            _events.send(LtiLaunchAction.LaunchCustomTab(url))
+            if (openInternally || Assignment.internalLtiTools.any { url.contains(it) }) {
+                _events.send(LtiLaunchAction.LoadLtiWebView(url))
+            } else {
+                _events.send(LtiLaunchAction.LaunchCustomTab(url))
+            }
         }
     }
 

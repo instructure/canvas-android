@@ -317,7 +317,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         }.orEmpty()
 
         val submissionTypes = assignment.getSubmissionTypes()
-            .map { Assignment.submissionTypeToPrettyPrintString(it, resources, assignment.isNewQuizLti()) }
+            .map { Assignment.submissionTypeToPrettyPrintString(it, resources, assignment.isInternalLti()) }
             .joinToString()
 
         val allowedFileTypes = assignment.allowedExtensions.joinToString().takeIf {
@@ -335,7 +335,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         val submitButtonText = resources.getString(
             when {
                 !submitEnabled -> R.string.noAttemptsLeft
-                assignment.isNewQuizLti() -> R.string.openTheQuizButton
+                assignment.isInternalLti() -> R.string.openTheQuizButton
                 assignment.turnInType == Assignment.TurnInType.QUIZ -> R.string.viewQuiz
                 assignment.turnInType == Assignment.TurnInType.DISCUSSION -> R.string.viewDiscussion
                 assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL -> R.string.launchExternalTool
@@ -567,7 +567,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> {
                     externalLTITool.let {
                         Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-                        postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), it))
+                        postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), it, assignment.isInternalLti()))
                     }
                 }
                 else -> Unit
