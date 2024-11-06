@@ -8,7 +8,7 @@ commands:
       - run:
           name: Decrypt Keystore
           command: |
-            echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > ~/project/keystore.jks
+            echo $KEYSTORE_BASE64 | base64 --decode > ~/project/keystore.jks
   install-jdk:
     steps:
       - run:
