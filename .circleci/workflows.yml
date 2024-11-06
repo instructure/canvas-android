@@ -235,11 +235,9 @@ jobs:
 workflows:
   student-pr:
     when:
-      condition:
-        or: 
-          - equal: [ true, << pipeline.parameters.student >> ]
-          - equal: [ true, << pipeline.parameters.all >> ]
-
+      or: 
+        - << pipeline.parameters.student >>
+        - << pipeline.parameters.all >>
     jobs:
       - share-env-vars
       - build-qa-debug:
