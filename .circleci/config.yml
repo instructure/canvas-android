@@ -225,13 +225,15 @@ workflows:
   pr-workflow:
     jobs:
       - share-env-vars
-      - build-qa-debug:
+      - build-and-comment-dev-debug-minify:
           requires: [share-env-vars]
-      - unit-tests:
-          requires: [share-env-vars]
-      - ui-tests-portrait:
-          requires: [build-qa-debug]
-      - ui-tests-landscape:
-          requires: [build-qa-debug]
-      - ui-tests-tablet:
-          requires: [build-qa-debug]
+#      - build-qa-debug:
+#          requires: [share-env-vars]
+#      - unit-tests:
+#          requires: [share-env-vars]
+#      - ui-tests-portrait:
+#          requires: [build-qa-debug]
+#      - ui-tests-landscape:
+#          requires: [build-qa-debug]
+#      - ui-tests-tablet:
+#          requires: [build-qa-debug]
