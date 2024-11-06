@@ -112,11 +112,6 @@ jobs:
       image: android:2024.04.1
     resource_class: xlarge
     environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      ANDROID_KEYSTORE_PASSWORD: "$ANDROID_KEYSTORE_PASSWORD"
-      DEBUG_KEY_ALIAS: "$DEBUG_KEY_ALIAS"
-      DEBUG_KEY_PASSWORD: "$DEBUG_KEY_PASSWORD"
     working_directory: ~/project/apps
     steps:
       - checkout:
@@ -129,9 +124,9 @@ jobs:
           command: |
             ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
               -Pandroid.injected.signing.store.file=~/project/keystore.jks \
-              -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
-              -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
-              -Pandroid.injected.signing.key.password="$DEBUG_KEY_PASSWORD"     
+              -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
+              -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
+              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD     
       - run:
           name: Comment on PR with Build Details
           command: |
