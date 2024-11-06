@@ -126,8 +126,8 @@ jobs:
       - submodule-update
 
       - run:
-          name: DEBUG
-          command: echo $ANDROID_KEYSTORE_PATH
+          name: Print Keystore Path
+          command: ls -l $ANDROID_KEYSTORE_PATH
 
       - run:
           name: Build DevDebugMinify with Gradle
