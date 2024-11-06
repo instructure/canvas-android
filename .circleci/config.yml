@@ -1,37 +1,37 @@
 version: 2.1
 setup: true
 orbs:
-  path-filtering: circleci/path-filtering@0.0.2
+  path-filtering: circleci/path-filtering@1.1.0
 workflows:
   setup:
     jobs:
       - path-filtering/filter:
           base-revision: master
           mapping: |
-            candroid/** student true
-            libs/DocumentScanner/** student true
-            apps/student/** student true
-            private-data/candroid/** student true
-            teacher/** teacher true
-            private-data/teacher/** teacher true
-            apps/teacher/** teacher true
-            automation/espresso/** all true
-            login-api-2/** all true
-            recyclerview/** all true
-            pandautils/** all true
-            canvas-api-2/** all true
-            blueprint/** all true
-            annotations/** all true
-            rceditor/** all true
-            buildSrc/** all true
-            gradle/** all true
-            libs/login-api-2/** all true
-            libs/recyclerview/** all true
-            libs/pandautils/** all true
-            libs/canvas-api-2/** all true
-            libs/blueprint/** all true
-            libs/annotations/** all true
-            libs/rceditor/** all true
-            libs/pandares/** all true
-            libs/DocumentScanner/** all true
+            candroid/.* student true
+            libs/DocumentScanner/.* student true
+            apps/student/.* student true
+            private-data/candroid/.* student true
+            teacher/.* teacher true
+            private-data/teacher/.* teacher true
+            apps/teacher/.* teacher true
+            automation/espresso/.* all true
+            login-api-2/.* all true
+            recyclerview/.* all true
+            pandautils/.* all true
+            canvas-api-2/.* all true
+            blueprint/.* all true
+            annotations/.* all true
+            rceditor/.* all true
+            buildSrc/.* all true
+            gradle/.* all true
+            libs/login-api-2/.* all true
+            libs/recyclerview/.* all true
+            libs/pandautils/.* all true
+            libs/canvas-api-2/.* all true
+            libs/blueprint/.* all true
+            libs/annotations/.* all true
+            libs/rceditor/.* all true
+            libs/pandares/.* all true
+            libs/DocumentScanner/.* all true
           config-path: .circleci/workflows.yml
