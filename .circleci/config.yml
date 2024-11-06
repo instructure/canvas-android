@@ -133,7 +133,7 @@ jobs:
           name: Build DevDebugMinify with Gradle
           command: |
             ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
-              -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
+              -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
               -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
               -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
               -Pandroid.injected.signing.key.password="$DEBUG_KEY_PASSWORD"     
