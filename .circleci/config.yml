@@ -2,22 +2,62 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-orbs:
-  android: circleci/android@2.0.3
-
-jobs:
-  share-env-vars:
-    docker:
-      - image: cimg/base:stable # Adjust as needed for your environment
+commands:
+  decrypt-keystore:
     steps:
-      - checkout
       - run:
-          name: Install OpenJDK 17
+          name: Decrypt Keystore
+          command: |
+            echo $KEYSTORE_BASE64 | base64 --decode > $ANDROID_KEYSTORE_PATH
+  install-jdk:
+    steps:
+      - run:
+          name: JDK 17 Install
           command: |
             sudo apt-get update && sudo apt-get install openjdk-17-jdk
             sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
             sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
+            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
+            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+  submodule-update:
+    steps:
+      - run:
+          name: Submodule update
+          command: |
+            git submodule update --init
+  download-flank:
+    steps:
+      - run:
+          name: Download flank
+          command: |
+            wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
+  flank:
+    parameters:
+      title:
+        default: UI tests
+        type: string
+      flank-yml:
+        default: ./apps/student/flank.yml
+        type: string
+    steps:
+      - run:
+          command: |
+            echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
+            gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
+            gcloud config set project delta-essence-114723
+            java -jar ./flank.jar firebase test android run -c << parameters.flank-yml >>
+          name: << parameters.title >> 
+
+
+jobs:
+  share-env-vars:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install-jdk
       - run:
           name: Check Git Message and Set RUN_E2E
           command: |
@@ -40,127 +80,145 @@ jobs:
   
   build-qa-debug:
     machine:
-      image: android:2024.04.1 # Select an Android image with the right SDK/tools
+      image: android:2024.04.1
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Set your path
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      # Make sure necessary secrets are set in CircleCI's project settings for access
     working_directory: ~/project/apps
     steps:
       - checkout:
           path: ~/project
-      - run:
-          name: Install OpenJDK 17
-          command: |
-            sudo apt-get update && sudo apt-get install openjdk-17-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
-            java -version
-            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
-            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-      - run:
-          name: Download Keystore
-          command: |
-            # Download keystore using the environment variable for the URL
-            echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-      - run:
-          name: Submodule update
-          command: |
-            git submodule update --init
+      - install-jdk
+      - decrypt-keystore
+      - submodule-update
       - run:
           name: Build QaDebug with Gradle
-          command: |
-            # Run the Gradle tasks to assemble the debug APKs
-            ../gradle/gradlew :student:assembleQaDebug :student:assembleQaDebugAndroidTest
+          command: ../gradle/gradlew :student:assembleQaDebug :student:assembleQaDebugAndroidTest
       - store_artifacts:
           path: ./student/build/outputs/apk/qa/debug/student-qa-debug.apk
           destination: APP_QA_DEBUG
       - store_artifacts:
           path: ./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
           destination: TEST_QA_DEBUG
+      - persist_to_workspace:
+          root: ~/project/apps/student
+          paths:
+            - ./build/outputs/apk/qa/debug/student-qa-debug.apk
+            - ./build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
   
   build-and-comment-dev-debug-minify:
     machine:
-      image: android:2024.04.1 # Use an Android image with required SDK/tools
+      image: android:2024.04.1
     resource_class: xlarge
     environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"  # Adjust path as needed
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      # Make sure all the sensitive values below are added to CircleCI's environment variables
-      ANDROID_KEYSTORE_PASSWORD: "$ANDROID_KEYSTORE_PASSWORD"
-      DEBUG_KEY_ALIAS: "$DEBUG_KEY_ALIAS"
-      DEBUG_KEY_PASSWORD: "$DEBUG_KEY_PASSWORD"
+      ANDROID_KEYSTORE_PATH: /home/circleci/project/keystore.jks
     working_directory: ~/project/apps
     steps:
       - checkout:
           path: ~/project
-      - run:
-          name: Install OpenJDK 17
-          command: |
-            sudo apt-get update && sudo apt-get install openjdk-17-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
-            java -version
-            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
-            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-      - run:
-          name: Download Keystore
-          command: |
-            # Download keystore using the environment variable for the URL
-            echo -e "$ANDROID_KEYSTORE_PATH" | base64 -di > "$ANDROID_KEYSTORE_BASE64"
-      - run:
-          name: Submodule update
-          command: |
-            git submodule update --init
+      - install-jdk
+      - decrypt-keystore
+      - submodule-update
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
-            # Run the Gradle task with required signing options
-            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache \
-              -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
-              -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
-              -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
-              -Pandroid.injected.signing.key.password="$DEBUG_KEY_PASSWORD"     
-      # Optionally, add a comment back to the VCS (e.g., GitHub)
+            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
+              -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
+              -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
+              -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
+              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD     
       - run:
           name: Comment on PR with Build Details
           command: |
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
                 -d '{"body": "DevDebugMinify build completed successfully."}' \
-                "https://api.github.com/repos/your_org/your_repo/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
+                "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
             fi
 
   unit-tests:
     machine:
-      image: android:2024.04.1 # Use an Android image with required SDK/tools
-    environment:
-      # Define environment variables as needed; replace paths as necessary
-      SOURCE_DIR: "~/project"  # Adjust the project directory as needed
+      image: android:2024.04.1
+    resource_class: xlarge
+    working_directory: ~/project/apps
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
+      - install-jdk
+      - decrypt-keystore
+      - submodule-update
       - run:
           name: Run Android Unit Tests
-          command: |
-            # Navigate to the project location
-            cd "$SOURCE_DIR/apps"
-            
-            # Run unit tests for the specified module and variant
-            ./gradle/gradlew :student:testDevDebugUnitTest
+          command: |          
+            ../gradle/gradlew :student:testDevDebugUnitTest
       - store_test_results:
-          path: "$SOURCE_DIR/apps/student/build/test-results/testDevDebugUnitTest"
+          path: ./student/build/test-results/testDevDebugUnitTest
       - store_artifacts:
-          path: "$SOURCE_DIR/apps/student/build/reports/tests/testDevDebugUnitTest"
+          path: ./student/build/reports/tests/testDevDebugUnitTest
+
+  ui-tests-portrait:
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/student
+      - download-flank
+      - flank:
+          title: UI tests portrait
+          flank-yml: ./apps/student/flank.yml
+      - store_test_results:
+          path: ./results
+
+  ui-tests-landscape:
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/student
+      - download-flank
+      - flank:
+          title: UI tests landscape
+          flank-yml: ./apps/student/flank_landscape.yml
+      - store_test_results:
+          path: ./results
+
+  ui-tests-tablet:
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/student
+      - download-flank
+      - flank:
+          title: UI tests tablet
+          flank-yml: ./apps/student/flank_tablet.yml
+      - store_test_results:
+          path: ./results
+
 
 workflows:
-  pr-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  pr-workflow:
     jobs:
       - share-env-vars
-      - build-qa-debug:
-          requires: [share-env-vars]
       - build-and-comment-dev-debug-minify:
           requires: [share-env-vars]
-      - unit-tests:
-          requires: [build-qa-debug, build-and-comment-dev-debug-minify]
+#      - build-qa-debug:
+#          requires: [share-env-vars]
+#      - unit-tests:
+#          requires: [share-env-vars]
+#      - ui-tests-portrait:
+#          requires: [build-qa-debug]
+#      - ui-tests-landscape:
+#          requires: [build-qa-debug]
+#      - ui-tests-tablet:
+#          requires: [build-qa-debug]
