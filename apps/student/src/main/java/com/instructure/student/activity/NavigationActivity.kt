@@ -174,6 +174,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
     private lateinit var canvasLoadingBinding: LoadingCanvasViewBinding
+    //DELETE ME
 
     @Inject
     lateinit var navigationBehavior: NavigationBehavior
