@@ -247,10 +247,6 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.reminderAdd)).scrollTo().click()
     }
 
-    fun selectTimeOption(timeOption: String) {
-        onView(withText(timeOption)).scrollTo().click()
-    }
-
     fun assertReminderDisplayedWithText(text: String) {
         onView(withText(text)).scrollTo().assertDisplayed()
     }

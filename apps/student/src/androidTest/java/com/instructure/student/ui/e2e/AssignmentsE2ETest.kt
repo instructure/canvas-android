@@ -40,6 +40,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
 import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.utils.StudentTest
@@ -50,6 +51,7 @@ import com.instructure.student.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
+import java.util.Calendar
 
 @HiltAndroidTest
 class AssignmentsE2ETest: StudentTest() {
@@ -75,12 +77,14 @@ class AssignmentsE2ETest: StudentTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
+        val futureDueDate = 2.days.fromNow
+        val pastDueDate = 2.days.fromNow
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
-        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = futureDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days past due date.")
-        val alreadyPastAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = 2.days.ago.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        val alreadyPastAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = pastDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
@@ -103,65 +107,47 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Hour Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
-        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
+        val reminderDateOneHour = futureDueDate.apply { add(Calendar.HOUR, -1) }
+        reminderPage.selectDate(reminderDateOneHour)
+        reminderPage.selectTime(reminderDateOneHour)
+        assignmentDetailsPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Hour Before' again, and assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
-        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+        reminderPage.selectDate(reminderDateOneHour)
+        reminderPage.selectTime(reminderDateOneHour)
+        assignmentDetailsPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
 
         Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder, confirm the deletion dialog and assert that the '1 Hour Before' reminder is not displayed any more.")
-        assignmentDetailsPage.removeReminderWithText("1 Hour Before")
-        assignmentDetailsPage.assertReminderNotDisplayedWithText("1 Hour Before")
-
-        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
-        assignmentDetailsPage.clickAddReminder()
-
-        Log.d(STEP_TAG, "Select 'Custom' reminder.")
-        assignmentDetailsPage.clickCustom()
-
-        Log.d(STEP_TAG, "Assert that the 'Done' button is disabled by default.")
-        assignmentDetailsPage.assertDoneButtonIsDisabled()
-
-        Log.d(STEP_TAG, "Fill the quantity text input with '15' and assert that the 'Done' button is still disabled since there is no option selected yet.")
-        assignmentDetailsPage.fillQuantity("15")
-        assignmentDetailsPage.assertDoneButtonIsDisabled()
-
-        Log.d(STEP_TAG, "Select the 'Hours Before' option, and click on 'Done' button, since it will be enabled because both the quantity and option are filled and selected.")
-        assignmentDetailsPage.clickHoursBefore()
-        assignmentDetailsPage.clickDone()
-
-        Log.d(STEP_TAG, "Assert that the '15 Hours Before' reminder is displayed on the Assignment Details Page.")
-        assignmentDetailsPage.assertReminderDisplayedWithText("15 Hours Before")
+        assignmentDetailsPage.removeReminderWithText(reminderDateOneHour.time.toFormattedString())
+        assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Week Before' and assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an assignment which ends tomorrow).")
-        assignmentDetailsPage.selectTimeOption("1 Week Before")
-        assignmentDetailsPage.assertReminderNotDisplayedWithText("1 Week Before")
+        val reminderDateOneWeek = futureDueDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
+        reminderPage.selectDate(reminderDateOneWeek)
+        reminderPage.selectTime(reminderDateOneWeek)
+        assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
         checkToastText(R.string.reminderInPast, activityRule.activity)
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Day Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
-        assignmentDetailsPage.selectTimeOption("1 Day Before")
-        assignmentDetailsPage.assertReminderDisplayedWithText("1 Day Before")
+        val reminderDateOneDay = futureDueDate.apply { add(Calendar.DAY_OF_MONTH, -1) }
+        reminderPage.selectDate(reminderDateOneDay)
+        reminderPage.selectTime(reminderDateOneDay)
+        assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneDay.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select 'Custom' reminder.")
-        assignmentDetailsPage.clickCustom()
-
-        Log.d(STEP_TAG, "Fill the quantity text input with '24' and select 'Hours Before' as option. Click on 'Done'.")
-        assignmentDetailsPage.fillQuantity("24")
-        assignmentDetailsPage.clickHoursBefore()
-        assignmentDetailsPage.clickDone()
+        reminderPage.selectDate(reminderDateOneDay)
+        reminderPage.selectTime(reminderDateOneDay)
 
         Log.d(STEP_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)

@@ -19,12 +19,12 @@ package com.instructure.pandautils.features.reminder
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.text.format.DateFormat
 import android.widget.DatePicker
 import android.widget.TimePicker
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import java.util.Calendar
 
 class DateTimePicker {
@@ -50,54 +50,59 @@ class DateTimePicker {
         get() = calendar.get(Calendar.MINUTE)
         set(value) = calendar.set(Calendar.MINUTE, value)
 
-    private var selectedDate = MutableStateFlow<Calendar?>(null)
-
     private fun initPicker() {
-        selectedDate = MutableStateFlow(null)
         calendar = Calendar.getInstance()
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
     }
 
-    fun show(context: Context): Flow<Calendar> {
+    fun show(context: Context) = callbackFlow<Calendar> {
         initPicker()
-        showDatePicker(context)
-        return selectedDate.filterNotNull()
+
+        showDatePicker(context, { trySend(it) }, { close() })
+
+        awaitClose {
+            close()
+        }
     }
 
-    private fun showDatePicker(context: Context) {
+    private fun showDatePicker(context: Context, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
         DatePickerDialog(
             context,
-            { _: DatePicker, year: Int, month: Int, day: Int -> onDateSet(context, year, month, day) },
+            { _: DatePicker, year: Int, month: Int, day: Int -> onDateSet(context, year, month, day, onDateSelected, onCancel) },
             year,
             month,
             day
-        ).show()
+        )
+            .apply { setButton(DialogInterface.BUTTON_NEGATIVE, context.getText(android.R.string.cancel)) { _, _ -> onCancel() } }
+            .show()
     }
 
-    private fun showTimePicker(context: Context) {
+    private fun showTimePicker(context: Context, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
         TimePickerDialog(
             context,
-            { _: TimePicker, hour: Int, minute: Int -> onTimeSet(hour, minute) },
+            { _: TimePicker, hour: Int, minute: Int -> onTimeSet(hour, minute, onDateSelected, onCancel) },
             hour,
             minute,
             DateFormat.is24HourFormat(context)
-        ).show()
+        )
+            .apply { setButton(DialogInterface.BUTTON_NEGATIVE, context.getText(android.R.string.cancel)) { _, _ -> onCancel() } }
+            .show()
     }
 
-    private fun onDateSet(context: Context, year: Int, month: Int, day: Int) {
-        this.year = year
-        this.month = month
-        this.day = day
+    private fun onDateSet(context: Context, year: Int, month: Int, day: Int, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
+        this@DateTimePicker.year = year
+        this@DateTimePicker.month = month
+        this@DateTimePicker.day = day
 
-        showTimePicker(context)
+        showTimePicker(context, onDateSelected, onCancel)
     }
 
-    private fun onTimeSet(hourOfDay: Int, minute: Int) {
+    private fun onTimeSet(hourOfDay: Int, minute: Int, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
         this.hour = hourOfDay
         this.minute = minute
 
-        selectedDate.tryEmit(calendar)
+        onDateSelected(calendar)
     }
 
     companion object {

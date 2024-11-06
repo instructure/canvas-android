@@ -825,107 +825,25 @@ class AssignmentDetailsViewModelTest {
         assertEquals(AssignmentDetailAction.ShowReminderDialog, viewModel.events.value?.peekContent())
     }
 
-    @Test
-    fun `Selected reminder choice`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-        every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 1
-        every { resources.getQuantityString(R.plurals.reminderDay, 3, 3) } returns "3 days"
-
-        val assignment = Assignment(
-            name = "Test",
-            submissionTypesRaw = listOf("online_text_entry"),
-            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 4) }.time.toApiString()
-        )
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-
-        val viewModel = getViewModel()
-
-        viewModel.onReminderSelected(ReminderChoice.Day(3))
-
-        val time = assignment.dueDate?.time?.minus(3 * 24 * 60 * 60 * 1000L)
-
-        coVerify(exactly = 1) {
-            assignmentDetailsRepository.addReminder(1, assignment, "3 days", time!!)
-        }
-    }
-
-    @Test
-    fun `Selected reminder choice custom`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-
-        val assignment = Assignment(
-            name = "Test",
-            submissionTypesRaw = listOf("online_text_entry"),
-            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
-        )
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-
-        val viewModel = getViewModel()
-
-        viewModel.onReminderSelected(ReminderChoice.Custom)
-
-        assertEquals(AssignmentDetailAction.ShowCustomReminderDialog, viewModel.events.value?.peekContent())
-    }
-
-    @Test
-    fun `Selected past reminder choice`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-        every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 1
-        every { resources.getQuantityString(R.plurals.reminderDay, 3, 3) } returns "3 days"
-        every { resources.getString(R.string.reminderInPast) } returns "Reminder in past"
-
-        val assignment = Assignment(
-            name = "Test",
-            submissionTypesRaw = listOf("online_text_entry"),
-            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
-        )
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-
-        val viewModel = getViewModel()
-
-        viewModel.onReminderSelected(ReminderChoice.Day(3))
-
-        assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
-    }
-
-    @Test
-    fun `Selected reminder already set up`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-        every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 1
-        every { resources.getQuantityString(R.plurals.reminderDay, 3, 3) } returns "3 days"
-        every { resources.getString(R.string.reminderAlreadySet) } returns "Reminder in past"
-        val assignment = Assignment(
-            name = "Test",
-            submissionTypesRaw = listOf("online_text_entry"),
-            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 4) }.time.toApiString()
-        )
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-        val time = assignment.dueDate?.time?.minus(3 * 24 * 60 * 60 * 1000L)
-        val reminderEntities = listOf(
-            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", time!!)
-        )
-        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
-
-        val viewModel = getViewModel()
-
-        viewModel.onReminderSelected(ReminderChoice.Day(3))
-
-        assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
-    }
 
     @Test
     fun `studio disabled if not allowed in assignment`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        val course =
+            Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
         coEvery { submissionHandler.getStudioLTITool(any(), any()) } returns null
 
-        val assignment = Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_upload"))
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        val assignment =
+            Assignment(name = "Test assignment", submissionTypesRaw = listOf("online_upload"))
+        coEvery {
+            assignmentDetailsRepository.getAssignment(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns assignment
 
         val viewModel = getViewModel()
 

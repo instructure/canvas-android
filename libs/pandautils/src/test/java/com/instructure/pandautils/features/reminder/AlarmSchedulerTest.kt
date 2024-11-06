@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.assignments.details.reminder
+package com.instructure.pandautils.features.reminder
 
 import android.app.AlarmManager
 import android.content.Context

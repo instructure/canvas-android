@@ -20,7 +20,6 @@ import android.content.Context
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.pandautils.utils.toast
-import kotlinx.coroutines.flow.first
 import java.util.Calendar
 
 class ReminderManager(
@@ -34,9 +33,9 @@ class ReminderManager(
         contentName: String,
         contentHtmlUrl: String
     ) {
-        val selectedDateTime = dateTimePicker.show(context).first()
-
-        createReminder(context, selectedDateTime, userId, contentId, contentName, contentHtmlUrl)
+        dateTimePicker.show(context).collect { selectedDateTime ->
+            createReminder(context, selectedDateTime, userId, contentId, contentName, contentHtmlUrl)
+        }
     }
 
     private suspend fun createReminder(
