@@ -53,8 +53,10 @@ class DateTimePicker {
     private var selectedDate = MutableStateFlow<Calendar?>(null)
 
     private fun initPicker() {
-        selectedDate = MutableStateFlow<Calendar?>(null)
+        selectedDate = MutableStateFlow(null)
         calendar = Calendar.getInstance()
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
     }
 
     fun show(context: Context): Flow<Calendar> {
