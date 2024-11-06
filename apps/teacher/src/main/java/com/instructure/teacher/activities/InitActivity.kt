@@ -135,6 +135,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private val binding by viewBinding(ActivityInitBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
+    //DELETE ME
 
     @Inject
     lateinit var updateManager: UpdateManager

@@ -90,6 +90,10 @@ jobs:
               echo "RUN_E2E is set to: $RUN_E2E"
   
   build-qa-debug:
+    parameters:
+      module:
+        type: string
+        default: student
     machine:
       image: android:2024.04.1
     resource_class: xlarge
@@ -105,18 +109,18 @@ jobs:
       - submodule-update
       - run:
           name: Build QaDebug with Gradle
-          command: ../gradle/gradlew :student:assembleQaDebug :student:assembleQaDebugAndroidTest
+          command: ../gradle/gradlew :<< parameters.module >>:assembleQaDebug :<< parameters.module >>:assembleQaDebugAndroidTest
       - store_artifacts:
-          path: ./student/build/outputs/apk/qa/debug/student-qa-debug.apk
+          path: ./<< parameters.module >>/build/outputs/apk/qa/debug/<< parameters.module >>-qa-debug.apk
           destination: APP_QA_DEBUG
       - store_artifacts:
-          path: ./student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+          path: ./<< parameters.module >>/build/outputs/apk/androidTest/qa/debug/<< parameters.module >>-qa-debug-androidTest.apk
           destination: TEST_QA_DEBUG
       - persist_to_workspace:
-          root: ~/project/apps/student
+          root: ~/project/apps/<< parameters.module >>
           paths:
-            - ./build/outputs/apk/qa/debug/student-qa-debug.apk
-            - ./build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+            - ./build/outputs/apk/qa/debug/<< parameters.module >>-qa-debug.apk
+            - ./build/outputs/apk/androidTest/qa/debug/<< parameters.module >>-qa-debug-androidTest.apk
   
   build-and-comment-dev-debug-minify:
     machine:
@@ -158,6 +162,10 @@ jobs:
             fi
 
   unit-tests:
+    parameters:
+      module:
+        type: string
+        default: student
     machine:
       image: android:2024.04.1
     resource_class: xlarge
@@ -174,11 +182,11 @@ jobs:
       - run:
           name: Run Android Unit Tests
           command: |          
-            ../gradle/gradlew :student:testDevDebugUnitTest
+            ../gradle/gradlew :<< parameters.module >>:testDevDebugUnitTest
       - store_test_results:
-          path: ./student/build/test-results/testDevDebugUnitTest
+          path: ./<< parameters.module >>/build/test-results/testDevDebugUnitTest
       - store_artifacts:
-          path: ./student/build/reports/tests/testDevDebugUnitTest
+          path: ./<< parameters.module >>/build/reports/tests/testDevDebugUnitTest
 
   ui-tests-portrait:
     machine:
@@ -241,8 +249,10 @@ workflows:
     jobs:
       - share-env-vars
       - build-qa-debug:
+          module: student
           requires: [share-env-vars]
       - unit-tests:
+          module: student
           requires: [share-env-vars]
       - ui-tests-portrait:
           requires: [build-qa-debug]
@@ -250,3 +260,17 @@ workflows:
           requires: [build-qa-debug]
       - ui-tests-tablet:
           requires: [build-qa-debug]
+
+  teacher-pr:
+    when:
+      or:
+        - << pipeline.parameters.teacher >>
+        - << pipeline.parameters.all >>
+    jobs:
+      - share-env-vars
+      - build-qa-debug:
+          module: teacher
+          requires: [share-env-vars]
+      - unit-tests:
+          module: teacher
+          requires: [share-env-vars]
