@@ -51,7 +51,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.assignments.details.reminder.ReminderManager
+import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
@@ -261,9 +261,6 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             is AssignmentDetailAction.ShowReminderDialog -> {
                 checkAlarmPermission()
             }
-            is AssignmentDetailAction.ShowCustomReminderDialog -> {
-                assignmentDetailsBehaviour.showCustomReminderDialog(this)
-            }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
                 showDeleteReminderConfirmationDialog(requireContext(), onConfirmed = action.onConfirmed)
             }
@@ -344,7 +341,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
+                showCreateReminderDialog(requireActivity())
             } else {
                 viewModel.checkingReminderPermission = true
                 startActivity(
@@ -355,14 +352,14 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 )
             }
         } else {
-            showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
+            showCreateReminderDialog(requireActivity())
         }
     }
 
     private fun checkAlarmPermissionResult() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
             if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
-                showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
+                showCreateReminderDialog(requireActivity())
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }
@@ -382,7 +379,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             .showThemed(assignmentDetailsBehaviour.dialogColor)
     }
 
-    private fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
+    private fun showCreateReminderDialog(context: Context) {
         viewModel.assignment?.let { assignment ->
             lifecycleScope.launch {
                 reminderManager.setReminder(

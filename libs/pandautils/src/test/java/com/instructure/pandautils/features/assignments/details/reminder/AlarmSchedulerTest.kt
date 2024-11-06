@@ -21,6 +21,7 @@ import android.app.AlarmManager
 import android.content.Context
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import io.mockk.Runs

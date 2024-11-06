@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.assignments.details.reminder
+package com.instructure.pandautils.features.reminder
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import java.util.Calendar
 
 class DateTimePicker {
-    private val calendar = Calendar.getInstance()
+    private var calendar = Calendar.getInstance()
 
     private var year: Int
         get() = calendar.get(Calendar.YEAR)
@@ -50,9 +50,15 @@ class DateTimePicker {
         get() = calendar.get(Calendar.MINUTE)
         set(value) = calendar.set(Calendar.MINUTE, value)
 
-    private val selectedDate = MutableStateFlow<Calendar?>(null)
+    private var selectedDate = MutableStateFlow<Calendar?>(null)
+
+    private fun initPicker() {
+        selectedDate = MutableStateFlow<Calendar?>(null)
+        calendar = Calendar.getInstance()
+    }
 
     fun show(context: Context): Flow<Calendar> {
+        initPicker()
         showDatePicker(context)
         return selectedDate.filterNotNull()
     }

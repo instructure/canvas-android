@@ -54,7 +54,7 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
@@ -586,53 +586,6 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     fun onAddReminderClicked() {
         postAction(AssignmentDetailAction.ShowReminderDialog)
-    }
-
-    fun onReminderSelected(reminderChoice: ReminderChoice) {
-        if (reminderChoice == ReminderChoice.Custom) {
-            postAction(AssignmentDetailAction.ShowCustomReminderDialog)
-        } else {
-            setReminder(reminderChoice)
-        }
-    }
-
-    private fun setReminder(reminderChoice: ReminderChoice) {
-        val assignment = assignment ?: return
-        val alarmTimeInMillis = getAlarmTimeInMillis(reminderChoice) ?: return
-        val reminderText = reminderChoice.getText(resources)
-
-        if (alarmTimeInMillis < System.currentTimeMillis()) {
-            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderInPast)))
-            return
-        }
-
-        if (remindersLiveData.value?.any { it.time == alarmTimeInMillis }.orDefault()) {
-            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderAlreadySet)))
-            return
-        }
-
-        viewModelScope.launch {
-            val reminderId = assignmentDetailsRepository.addReminder(
-                apiPrefs.user?.id.orDefault(),
-                assignment,
-                reminderText,
-                alarmTimeInMillis
-            )
-
-            alarmScheduler.scheduleAlarm(
-                assignment.id,
-                assignment.htmlUrl.orEmpty(),
-                assignment.name.orEmpty(),
-                reminderText,
-                alarmTimeInMillis,
-                reminderId
-            )
-        }
-    }
-
-    private fun getAlarmTimeInMillis(reminderChoice: ReminderChoice): Long? {
-        val dueDate = assignment?.dueDate?.time ?: return null
-        return dueDate - reminderChoice.getTimeInMillis()
     }
 
     fun isStudioAccepted(): Boolean {

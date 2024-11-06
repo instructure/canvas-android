@@ -65,30 +65,6 @@ data class DiscussionHeaderViewData(
 
 data class ReminderViewData(val id: Long, val text: String)
 
-sealed class ReminderChoice {
-    data class Minute(val quantity: Int) : ReminderChoice()
-    data class Hour(val quantity: Int) : ReminderChoice()
-    data class Day(val quantity: Int) : ReminderChoice()
-    data class Week(val quantity: Int) : ReminderChoice()
-    data object Custom : ReminderChoice()
-
-    fun getText(resources: Resources) = when (this) {
-        is Minute -> resources.getQuantityString(R.plurals.reminderMinute, quantity, quantity)
-        is Hour -> resources.getQuantityString(R.plurals.reminderHour, quantity, quantity)
-        is Day -> resources.getQuantityString(R.plurals.reminderDay, quantity, quantity)
-        is Week -> resources.getQuantityString(R.plurals.reminderWeek, quantity, quantity)
-        is Custom -> resources.getString(R.string.reminderCustom)
-    }
-
-    fun getTimeInMillis() = when (this) {
-        is Minute -> quantity * 60 * 1000L
-        is Hour -> quantity * 60 * 60 * 1000L
-        is Day -> quantity * 24 * 60 * 60 * 1000L
-        is Week -> quantity * 7 * 24 * 60 * 60 * 1000L
-        else -> 0
-    }
-}
-
 sealed class AssignmentDetailAction {
     data class ShowToast(val message: String) : AssignmentDetailAction()
     data class NavigateToSendMessage(val options: InboxComposeOptions) : AssignmentDetailAction()
@@ -116,6 +92,5 @@ sealed class AssignmentDetailAction {
     data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()
     data class OnDiscussionHeaderAttachmentClicked(val attachments: List<RemoteFile>) : AssignmentDetailAction()
     data object ShowReminderDialog : AssignmentDetailAction()
-    data object ShowCustomReminderDialog : AssignmentDetailAction()
     data class ShowDeleteReminderConfirmationDialog(val onConfirmed: () -> Unit) : AssignmentDetailAction()
 }

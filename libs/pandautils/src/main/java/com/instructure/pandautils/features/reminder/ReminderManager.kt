@@ -14,20 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.assignments.details.reminder
+package com.instructure.pandautils.features.reminder
 
 import android.content.Context
 import com.instructure.pandautils.R
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
-import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.pandautils.utils.toast
 import kotlinx.coroutines.flow.first
 import java.util.Calendar
 
 class ReminderManager(
-    private val reminderDao: ReminderDao,
-    private val alarmScheduler: AlarmScheduler,
+    private val dateTimePicker: DateTimePicker,
+    private val reminderRepository: ReminderRepository
 ) {
     suspend fun setReminder(
         context: Context,
@@ -36,7 +34,6 @@ class ReminderManager(
         contentName: String,
         contentHtmlUrl: String
     ) {
-        val dateTimePicker = DateTimePicker()
         val selectedDateTime = dateTimePicker.show(context).first()
 
         createReminder(context, selectedDateTime, userId, contentId, contentName, contentHtmlUrl)
@@ -50,37 +47,26 @@ class ReminderManager(
         contentName: String,
         contentHtmlUrl: String
     ) {
-        val existingAlerts = reminderDao.findByAssignmentId(userId, contentId)
         val alarmTimeInMillis = calendar.timeInMillis
+        if (reminderRepository.isReminderAlreadySetForTime(userId, contentId, calendar.timeInMillis)) {
+            context.toast(R.string.reminderAlreadySet)
+            return
+        }
 
         if (alarmTimeInMillis < System.currentTimeMillis()) {
             context.toast(R.string.reminderInPast)
             return
         }
 
-        if (existingAlerts.any { it.time == alarmTimeInMillis }) {
-            context.toast(R.string.reminderAlreadySet)
-            return
-        }
-
         val dateTimeString = calendar.time.toFormattedString()
 
-        val reminderId = reminderDao.insert(ReminderEntity(
-            userId = userId,
-            assignmentId = contentId,
-            htmlUrl = contentHtmlUrl,
-            name = contentName,
-            text = dateTimeString,
-            time = alarmTimeInMillis
-        ))
-
-        alarmScheduler.scheduleAlarm(
+        reminderRepository.createReminder(
+            userId,
             contentId,
-            contentHtmlUrl,
             contentName,
+            contentHtmlUrl,
             dateTimeString,
-            alarmTimeInMillis,
-            reminderId
+            alarmTimeInMillis
         )
     }
 }

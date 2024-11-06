@@ -29,7 +29,7 @@ import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.activity.LoginActivity
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
 import java.io.File
