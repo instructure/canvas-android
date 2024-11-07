@@ -48,7 +48,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -726,7 +725,7 @@ class AssignmentDetailsViewModelTest {
     }
 
     @Test
-    fun `Reminder section is not visible if there's no future deadline`() {
+    fun `Reminder section is visible if there's no future deadline`() {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
@@ -735,7 +734,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.data.value?.showReminders!!)
+        assertTrue(viewModel.data.value?.showReminders!!)
     }
 
     @Test
@@ -777,7 +776,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
 
         assertEquals(
-            reminderEntities.map { ReminderViewData(it.id, "${it.text} Before") },
+            reminderEntities.map { ReminderViewData(it.id, it.text) },
             viewModel.data.value?.reminders?.map { it.data }
         )
     }
@@ -803,7 +802,7 @@ class AssignmentDetailsViewModelTest {
 
         remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000))
 
-        assertEquals(ReminderViewData(1, "1 day Before"), viewModel.data.value?.reminders?.first()?.data)
+        assertEquals(ReminderViewData(1, "1 day"), viewModel.data.value?.reminders?.first()?.data)
     }
 
     @Test
