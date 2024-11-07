@@ -135,15 +135,15 @@ jobs:
             OUTPUT=$(firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
              --app $STUDENT_APP_ID \
              --groups "testers")
-            echo "$OUTPUT"
-            export FIREBASE_CONSOLE_URI=$(echo "$OUTPUT" | grep -oP 'firebase_console_uri: \K.*')
+            export SHARE_URI=$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*' | sed "s|/[*]\+|/$STUDENT_APP_ID|")
+            echo $SHARE_URI
       - run:
           name: Comment on PR with Build Details
           command: |
-            echo "Firebase Console URI: $FIREBASE_CONSOLE_URI"
+            echo "Firebase Console URI: $SHARE_URI"
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                -d '{"body": "DevDebugMinify build completed successfully. $FIREBASE_CONSOLE_URI"}' \
+                -d '{"body": "DevDebugMinify build completed successfully. $SHARE_URI"}' \
                 "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
             fi
 
