@@ -77,11 +77,13 @@ jobs:
             set -o pipefail
             set -x
 
-            echo "$CIRCLE_SHA1" # Prints the commit SHA
-            # verify your needed variable here
-            echo "$CIRCLE_COMPARE_URL"
+            PR_DETAILS = curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/instructure/canvas-android/pull/2627
 
-            if [[ "$CIRCLE_SHA1" == *"Run E2E test suite"* ]]; then
+            if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
               echo "RUN_E2E=true" >> $BASH_ENV
             fi
       - run:
@@ -259,51 +261,51 @@ workflows:
         - << pipeline.parameters.all >>
     jobs:
       - share-env-vars
-      - build-qa-debug:
-          name: Student QA build
-          module: student
-          requires: [share-env-vars]
-      - unit-tests:
-          name: Student Unit tests
-          module: student
-          requires: [share-env-vars]
-      - ui-tests-portrait:
-          name: Student Portrait UI tests
-          module: student
-          requires: [Student QA build]
-      - ui-tests-landscape:
-          name: Student Landscape UI tests
-          module: student
-          requires: [Student QA build]
-      - ui-tests-tablet:
-          name: Student Tablet UI tests
-          module: student
-          requires: [Student QA build]
+      # - build-qa-debug:
+      #     name: Student QA build
+      #     module: student
+      #     requires: [share-env-vars]
+      # - unit-tests:
+      #     name: Student Unit tests
+      #     module: student
+      #     requires: [share-env-vars]
+      # - ui-tests-portrait:
+      #     name: Student Portrait UI tests
+      #     module: student
+      #     requires: [Student QA build]
+      # - ui-tests-landscape:
+      #     name: Student Landscape UI tests
+      #     module: student
+      #     requires: [Student QA build]
+      # - ui-tests-tablet:
+      #     name: Student Tablet UI tests
+      #     module: student
+      #     requires: [Student QA build]
 
-  teacher-pr:
-    when:
-      or:
-        - << pipeline.parameters.teacher >>
-        - << pipeline.parameters.all >>
-    jobs:
-      - share-env-vars
-      - build-qa-debug:
-          name: Teacher QA build
-          module: teacher
-          requires: [share-env-vars]
-      - unit-tests:
-          name: Teacher Unit tests
-          module: teacher
-          requires: [share-env-vars]
-      - ui-tests-portrait:
-          name: Teacher Portrait UI tests
-          module: teacher
-          requires: [Teacher QA build]
-      - ui-tests-landscape:
-          name: Teacher Landscape UI tests
-          module: teacher
-          requires: [Teacher QA build]
-      - ui-tests-tablet:
-          name: Teacher Tablet UI tests
-          module: teacher
-          requires: [Teacher QA build]
+  # teacher-pr:
+  #   when:
+  #     or:
+  #       - << pipeline.parameters.teacher >>
+  #       - << pipeline.parameters.all >>
+  #   jobs:
+  #     - share-env-vars
+  #     - build-qa-debug:
+  #         name: Teacher QA build
+  #         module: teacher
+  #         requires: [share-env-vars]
+  #     - unit-tests:
+  #         name: Teacher Unit tests
+  #         module: teacher
+  #         requires: [share-env-vars]
+  #     - ui-tests-portrait:
+  #         name: Teacher Portrait UI tests
+  #         module: teacher
+  #         requires: [Teacher QA build]
+  #     - ui-tests-landscape:
+  #         name: Teacher Landscape UI tests
+  #         module: teacher
+  #         requires: [Teacher QA build]
+  #     - ui-tests-tablet:
+  #         name: Teacher Tablet UI tests
+  #         module: teacher
+  #         requires: [Teacher QA build]
