@@ -135,6 +135,7 @@ jobs:
             OUTPUT=$(firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
              --app $STUDENT_APP_ID \
              --groups "testers")
+            echo "$OUTPUT"
             export FIREBASE_CONSOLE_URI=$(echo "$OUTPUT" | grep -oP 'firebase_console_uri: \K.*')
       - run:
           name: Comment on PR with Build Details
