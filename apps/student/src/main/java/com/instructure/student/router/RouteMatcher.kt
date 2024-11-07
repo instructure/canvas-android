@@ -96,6 +96,7 @@ import com.instructure.student.util.FileUtils
 import com.instructure.student.util.onMainThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -517,9 +518,19 @@ object RouteMatcher : BaseRouteMatcher() {
 
     fun route(activity: FragmentActivity, route: Route?) {
         val dialog = showLoadingDialog(activity)
-        CoroutineScope(Dispatchers.IO).launch {
+        val job = CoroutineScope(Dispatchers.IO).launch {
             routeWithPermissionCheck(activity, route)
-            dialog.dismiss()
+            if (dialog.isShowing) {
+                withContext(Dispatchers.Main) { dialog.dismiss() }
+            }
+        }
+        // Show the dialog if the route takes longer than 200ms to load
+        // This is a hack to avoid popping dialogs when the data is already cached
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(200)
+            if (!job.isCompleted) {
+                withContext(Dispatchers.Main) { dialog.show() }
+            }
         }
     }
 
@@ -527,7 +538,6 @@ object RouteMatcher : BaseRouteMatcher() {
         val dialog = AlertDialog.Builder(activity, R.style.CustomViewAlertDialog)
             .setView(R.layout.dialog_loading_view)
             .create()
-        dialog.show()
         return dialog
     }
 
