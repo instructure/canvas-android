@@ -124,7 +124,22 @@ jobs:
               -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
               -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
               -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
-              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD     
+              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD
+      - run:
+          name: Install Firebase CLI
+          command: |
+            curl -sL https://firebase.tools | bash
+      - run:
+          name: Authenticate Firebase CLI with Service Account
+          command: |
+           echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
+           export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
+      - run:
+          name: Deploy APK to Firebase App Distribution
+          command: |
+            firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
+             --app automatic-rite-88319 \
+             --groups "Testers"
       - run:
           name: Comment on PR with Build Details
           command: |
