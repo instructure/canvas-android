@@ -67,8 +67,6 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - checkout
-      - install-jdk
       - run:
           name: Check Git Message and Set RUN_E2E
           command: |
@@ -77,11 +75,11 @@ jobs:
             set -o pipefail
             set -x
 
-            PR_DETAILS = curl -L \
+            PR_DETAILS=$(curl -L \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/instructure/canvas-android/pull/2627
+            https://api.github.com/repos/instructure/canvas-android/pull/2627)
 
             if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
               echo "RUN_E2E=true" >> $BASH_ENV
