@@ -135,9 +135,11 @@ jobs:
       - run:
           name: Deploy APK to Firebase App Distribution
           command: |
+            firebase projects:list
             firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
              --app $STUDENT_APP_ID \
-             --groups "Testers"
+             --groups "testers" \
+             --debug
       - run:
           name: Comment on PR with Build Details
           command: |
