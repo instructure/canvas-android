@@ -446,8 +446,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        reminderPage.selectDate(reminderCalendar.get(Calendar.YEAR), reminderCalendar.get(Calendar.MONTH) + 1, reminderCalendar.get(Calendar.DAY_OF_MONTH))
-        reminderPage.selectTime(reminderCalendar.get(Calendar.HOUR_OF_DAY), reminderCalendar.get(Calendar.MINUTE))
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
         assignmentDetailsPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
     }

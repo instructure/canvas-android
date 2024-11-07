@@ -78,7 +78,7 @@ class AssignmentsE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val futureDueDate = 2.days.fromNow
-        val pastDueDate = 2.days.fromNow
+        val pastDueDate = 2.days.ago
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = futureDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
@@ -118,11 +118,12 @@ class AssignmentsE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Select '1 Hour Before' again, and assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
         reminderPage.selectDate(reminderDateOneHour)
         reminderPage.selectTime(reminderDateOneHour)
-        assignmentDetailsPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
 
         Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder, confirm the deletion dialog and assert that the '1 Hour Before' reminder is not displayed any more.")
         assignmentDetailsPage.removeReminderWithText(reminderDateOneHour.time.toFormattedString())
         assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+        futureDueDate.apply { add(Calendar.HOUR, 1) }
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
@@ -133,6 +134,7 @@ class AssignmentsE2ETest: StudentTest() {
         reminderPage.selectTime(reminderDateOneWeek)
         assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
         checkToastText(R.string.reminderInPast, activityRule.activity)
+        futureDueDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
@@ -141,7 +143,7 @@ class AssignmentsE2ETest: StudentTest() {
         val reminderDateOneDay = futureDueDate.apply { add(Calendar.DAY_OF_MONTH, -1) }
         reminderPage.selectDate(reminderDateOneDay)
         reminderPage.selectTime(reminderDateOneDay)
-        assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneDay.time.toFormattedString())
+        assignmentDetailsPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
@@ -151,6 +153,8 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+
+        futureDueDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
 
         Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()

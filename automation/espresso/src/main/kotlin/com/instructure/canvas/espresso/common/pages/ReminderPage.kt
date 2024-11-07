@@ -52,7 +52,7 @@ class ReminderPage: BasePage() {
 
     fun selectTime(calendar: Calendar) {
         onView(withClassName(Matchers.equalTo(TimePicker::class.java.name)))
-            .perform(PickerActions.setTime(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE)))
+            .perform(PickerActions.setTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)))
 
         onView(withId(android.R.id.button1)).perform(click())
     }
