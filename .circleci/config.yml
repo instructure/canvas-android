@@ -136,9 +136,11 @@ jobs:
              --app $STUDENT_APP_ID \
              --groups "testers")
             export SHARE_URI=$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*' | sed "s|/[*]\+|/$STUDENT_APP_ID|")
-            echo $SHARE_URI
+            echo "SHARE_URI is: $SHARE_URI"
       - run:
           name: Comment on PR with Build Details
+          environment:
+              SHARE_URI: $SHARE_URI
           command: |
             echo "Firebase Console URI: $SHARE_URI"
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
