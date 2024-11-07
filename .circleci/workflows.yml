@@ -189,6 +189,10 @@ jobs:
           path: ./<< parameters.module >>/build/reports/tests/testDevDebugUnitTest
 
   ui-tests-portrait:
+    parameters:
+      module:
+        type: string
+        default: student
     machine:
       image: android:2024.04.1
     resource_class: xlarge
@@ -197,15 +201,19 @@ jobs:
       - checkout:
           path: ~/project
       - attach_workspace:
-          at: ~/project/apps/student
+          at: ~/project/apps/<< parameters.module >>
       - download-flank
       - flank:
           title: UI tests portrait
-          flank-yml: ./apps/student/flank.yml
+          flank-yml: ./apps/<< parameters.module >>/flank.yml
       - store_test_results:
           path: ./results
 
   ui-tests-landscape:
+    parameters:
+      module:
+        type: string
+        default: student
     machine:
       image: android:2024.04.1
     resource_class: xlarge
@@ -214,15 +222,19 @@ jobs:
       - checkout:
           path: ~/project
       - attach_workspace:
-          at: ~/project/apps/student
+          at: ~/project/apps/<< parameters.module >>
       - download-flank
       - flank:
           title: UI tests landscape
-          flank-yml: ./apps/student/flank_landscape.yml
+          flank-yml: ./apps/<< parameters.module >>/flank_landscape.yml
       - store_test_results:
           path: ./results
 
   ui-tests-tablet:
+    parameters:
+      module:
+        type: string
+        default: student
     machine:
       image: android:2024.04.1
     resource_class: xlarge
@@ -231,14 +243,13 @@ jobs:
       - checkout:
           path: ~/project
       - attach_workspace:
-          at: ~/project/apps/student
+          at: ~/project/apps/<< parameters.module >>
       - download-flank
       - flank:
           title: UI tests tablet
-          flank-yml: ./apps/student/flank_tablet.yml
+          flank-yml: ./apps/<< parameters.module >>/flank_tablet.yml
       - store_test_results:
           path: ./results
-
 
 workflows:
   student-pr:
@@ -255,10 +266,13 @@ workflows:
           module: student
           requires: [share-env-vars]
       - ui-tests-portrait:
+          module: student
           requires: [build-qa-debug]
       - ui-tests-landscape:
+          module: student
           requires: [build-qa-debug]
       - ui-tests-tablet:
+          module: student
           requires: [build-qa-debug]
 
   teacher-pr:
@@ -274,3 +288,12 @@ workflows:
       - unit-tests:
           module: teacher
           requires: [share-env-vars]
+      - ui-tests-portrait:
+          module: teacher
+          requires: [build-qa-debug]
+      - ui-tests-landscape:
+          module: teacher
+          requires: [build-qa-debug]
+      - ui-tests-tablet:
+          module: teacher
+          requires: [build-qa-debug]
