@@ -260,18 +260,23 @@ workflows:
     jobs:
       - share-env-vars
       - build-qa-debug:
+          name: Student QA build
           module: student
           requires: [share-env-vars]
       - unit-tests:
+          name: Student Unit tests
           module: student
           requires: [share-env-vars]
       - ui-tests-portrait:
+          name: Student Portrait UI tests
           module: student
           requires: [build-qa-debug]
       - ui-tests-landscape:
+          name: Student Landscape UI tests
           module: student
           requires: [build-qa-debug]
       - ui-tests-tablet:
+          name: Student Tablet UI tests
           module: student
           requires: [build-qa-debug]
 
@@ -283,17 +288,22 @@ workflows:
     jobs:
       - share-env-vars
       - build-qa-debug:
+          name: Teacher QA build
           module: teacher
           requires: [share-env-vars]
       - unit-tests:
+          name: Teacher Unit tests
           module: teacher
           requires: [share-env-vars]
       - ui-tests-portrait:
+          name: Teacher Portrait UI tests
           module: teacher
           requires: [build-qa-debug]
       - ui-tests-landscape:
+          name: Teacher Landscape UI tests
           module: teacher
           requires: [build-qa-debug]
       - ui-tests-tablet:
+          name: Teacher Tablet UI tests
           module: teacher
           requires: [build-qa-debug]
