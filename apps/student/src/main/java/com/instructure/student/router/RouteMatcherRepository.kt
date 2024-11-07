@@ -16,10 +16,12 @@
  */
 package com.instructure.student.router
 
+import android.net.Uri
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.orDefault
 
 class RouteMatcherRepository(
     private val courseApi: CourseAPI.CoursesInterface
@@ -27,45 +29,45 @@ class RouteMatcherRepository(
     private suspend fun getCourseTabs(courseId: Long): List<Tab> {
         val params = RestParams()
         val course = courseApi.getCourse(courseId, params)
-        val enabledTabs = course.dataOrNull?.tabs?.filter { it.enabled && !it.isHidden }
+        val enabledTabs = course.dataOrNull?.tabs
+            ?.filter { it.enabled && !it.isHidden }
+            ?.map { // Replace wiki with pages to match the url scheme
+                if (it.htmlUrl?.contains("wiki").orDefault()) {
+                    it.copy(htmlUrl = it.htmlUrl?.replace("wiki", "pages"))
+                } else {
+                    it
+                }
+            }
 
         return enabledTabs ?: emptyList()
     }
 
-    private suspend fun isPathTabEnabled(courseId: Long, path: String): Boolean {
-        val tabUrls = getCourseTabs(courseId)
-        val pathSegments = path.split("/")
+    private suspend fun isPathTabEnabled(courseId: Long, uri: Uri): Boolean {
+        val tabs = getCourseTabs(courseId)
+        val pathSegments = uri.pathSegments
+        val relativePath = uri.path?.replaceBefore("/courses/$courseId", "".orEmpty())
+        println(relativePath)
         // Details urls should be accepted, like /assignments/1, but assignments/syllabus should not
-        return if (pathSegments.last().toIntOrNull() != null) { // it's not a details url
-            tabUrls.any { path.contains(it.htmlUrl.orEmpty()) && it.tabId != "home" }
+        return if (relativePath == "/courses/$courseId") { // handle home url which is prefix of every other urls
+            return tabs.any { it.tabId == "home" }
+        } else if (pathSegments.last() != "syllabus") { // handle syllabus which has the same url scheme as assignment details
+            tabs.any { relativePath?.contains(it.htmlUrl.orEmpty()).orDefault() && it.tabId != "home" }
         } else {
-            val relativePath = path.replaceBefore("/", "")
-            tabUrls.any { relativePath == it.htmlUrl }
+            tabs.any { relativePath == it.htmlUrl }
         }
     }
 
     suspend fun isRouteNotAvailable(route: Route?): Boolean {
         route?.uri?.let { uri ->
             route.courseId?.let { courseId ->
-                return !isPathTabEnabled(courseId, uri.path.orEmpty())
+                return !isPathTabEnabled(courseId, uri)
             }
             if (uri.pathSegments.contains("courses")) {
                 val courseIdIndex = uri.pathSegments.indexOf("courses") + 1
                 val courseId = uri.pathSegments[courseIdIndex]
-                return !isPathTabEnabled(courseId.toLong(), uri.path.orEmpty())
+                return !isPathTabEnabled(courseId.toLong(), uri)
             }
 
-        }
-        route?.routePath?.let { path ->
-            route.courseId?.let { courseId ->
-                return !isPathTabEnabled(courseId, path)
-            }
-            if (path.contains("courses")) {
-                val pathSegments = path.split("/")
-                val courseIdIndex = pathSegments.indexOf("courses") + 1
-                val courseId = pathSegments[courseIdIndex]
-                return !isPathTabEnabled(courseId.toLong(), path)
-            }
         }
         return false
     }
