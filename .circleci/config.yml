@@ -117,14 +117,14 @@ jobs:
       - install-jdk
       - decrypt-keystore
       - submodule-update
-      - run:
-          name: Build DevDebugMinify with Gradle
-          command: |
-            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
-              -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
-              -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
-              -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
-              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD
+  #    - run:
+  #        name: Build DevDebugMinify with Gradle
+  #        command: |
+  #          ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
+  #            -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
+  #            -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
+  #            -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
+  #            -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD
       - run:
           name: Install Firebase CLI
           command: |
@@ -134,6 +134,14 @@ jobs:
           command: |
            echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
+
+      - run:
+          name: Verify JSON Credentials File
+          command: |
+            cat /tmp/service-account.json
+            ls -la /tmp/service-account.json
+            firebase projects:list
+
       - run:
           name: Deploy APK to Firebase App Distribution
           command: |
