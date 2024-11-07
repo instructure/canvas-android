@@ -135,7 +135,7 @@ jobs:
             OUTPUT=$(firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
              --app $STUDENT_APP_ID \
              --groups "testers")
-            echo 'export SHARE_URI="$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*')"' >> "$BASH_ENV"
+            echo "export SHARE_URI=\$(echo \"\$OUTPUT\" | grep -oP 'Share this release with testers who have access: \Khttps://.*')" >> "$BASH_ENV"
       - run:
           name: Comment on PR with Build Details
           environment:
