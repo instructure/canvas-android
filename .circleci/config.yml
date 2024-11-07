@@ -123,6 +123,8 @@ jobs:
               -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
               -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
               -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD
+      - store_artifacts:
+          path: ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk
       - run:
           name: Install Firebase CLI
           command: |
