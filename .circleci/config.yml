@@ -131,7 +131,7 @@ jobs:
           name: Authenticate Firebase CLI with Service Account
           command: |
             echo $GOOGLE_APPLICATION_CREDENTIALS_JSON > credentials.json
-            GOOGLE_APPLICATION_CREDENTIALS=credentials.json
+            GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase projects:list
 
       - run:
           name: Verify JSON Credentials File
