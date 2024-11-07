@@ -240,6 +240,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 DiscussionRouterFragment::class.java
             )
         )
+        routes.add(Route(courseOrGroup("/:course_id/users"), PeopleListFragment::class.java))
     }
 
     private fun initClassMap() {
