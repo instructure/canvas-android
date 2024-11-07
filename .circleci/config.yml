@@ -118,7 +118,7 @@ jobs:
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
-            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
+            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
               -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
               -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
@@ -128,14 +128,10 @@ jobs:
           command: |
             curl -sL https://firebase.tools | bash
       - run:
-          name: Set Up Service Account JSON
+          name: Deploy APK to Firebase App Distribution
           command: |
             echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
             export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
-      - run:
-          name: Deploy APK to Firebase App Distribution
-          command: |
-            firebase projects:list
             firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
              --app $STUDENT_APP_ID \
              --groups "testers" \
