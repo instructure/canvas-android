@@ -149,11 +149,11 @@ class LtiLaunchFragment : Fragment() {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
 
             override fun onPageStartedCallback(webView: WebView, url: String) {
-                binding.webViewProgress.setVisible()
+                if (isAdded) binding.webViewProgress.setVisible()
             }
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
-                binding.webViewProgress.setGone()
+                if (isAdded) binding.webViewProgress.setGone()
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
