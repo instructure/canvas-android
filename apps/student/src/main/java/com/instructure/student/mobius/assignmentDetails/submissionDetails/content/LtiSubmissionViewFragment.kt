@@ -22,9 +22,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.LtiType
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.pandautils.utils.StringArg
@@ -42,6 +44,7 @@ class LtiSubmissionViewFragment : Fragment() {
     private var url: String by StringArg()
     private var ltiType: LtiType by SerializableArg(LtiType.EXTERNAL_TOOL)
     private var title: String by StringArg()
+    private var ltiTool: LTITool? by NullableParcelableArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_lti_submission_view, container, false)
@@ -52,8 +55,18 @@ class LtiSubmissionViewFragment : Fragment() {
         ViewStyler.themeButton(binding.viewLtiButton)
         setUpViews()
         binding.viewLtiButton.onClickWithRequireNetwork {
-            val route = LtiLaunchFragment.makeRoute(canvasContext = canvasContext, url = url, title = title, openInternally = ltiType.openInternally)
-            RouteMatcher.route(requireActivity(), route)
+            RouteMatcher.route(
+                requireActivity(),
+                LtiLaunchFragment.makeRoute(
+                    canvasContext,
+                    url,
+                    title,
+                    sessionLessLaunch = false,
+                    assignmentLti = true,
+                    ltiTool = ltiTool,
+                    openInternally = ltiType.openInternally
+                )
+            )
         }
     }
 
@@ -66,7 +79,8 @@ class LtiSubmissionViewFragment : Fragment() {
     companion object {
         fun newInstance(data: ExternalToolContent) = LtiSubmissionViewFragment().apply {
             canvasContext = data.canvasContext
-            url = data.url
+            url = data.ltiTool?.url.orEmpty()
+            ltiTool = data.ltiTool
             title = data.title
             ltiType = data.ltiType
         }

@@ -76,7 +76,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     event.assignment.dataOrNull,
                     model.canvasContext,
                     event.isStudioEnabled,
-                    event.ltiUrlResult?.dataOrNull,
+                    event.ltiTool?.dataOrNull,
                     event.quizResult?.dataOrNull,
                     event.studioLTIToolResult?.dataOrNull,
                     event.isObserver
@@ -156,7 +156,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
         assignment: Assignment?,
         canvasContext: CanvasContext,
         isStudioEnabled: Boolean?,
-        ltiUrl: LTITool?,
+        ltiTool: LTITool?,
         quiz: Quiz?,
         studioLTITool: LTITool?,
         isObserver: Boolean = false
@@ -166,17 +166,17 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.OnPaperContent
             Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw.orEmpty() -> {
                 if (assignment?.isAllowedToSubmit == true)
-                    SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "", assignment.name.orEmpty(), assignment.ltiToolType())
+                    SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiTool, assignment.name.orEmpty(), assignment.ltiToolType())
                 else SubmissionDetailsContentType.LockedContent
             }
-            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool, isObserver, ltiUrl)
+            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool, isObserver, ltiTool)
             submission.workflowState != "submitted" && AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz)
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 
                 // LTI submission
                 Assignment.SubmissionType.BASIC_LTI_LAUNCH -> SubmissionDetailsContentType.ExternalToolContent(
                     canvasContext,
-                    submission.previewUrl.validOrNull() ?: assignment?.url?.validOrNull() ?: assignment?.htmlUrl ?: "",
+                    ltiTool,
                     title = assignment?.name.orEmpty(),
                     assignment?.ltiToolType() ?: LtiType.EXTERNAL_TOOL
                 )
