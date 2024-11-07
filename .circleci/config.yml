@@ -128,14 +128,16 @@ jobs:
           command: |
             curl -sL https://firebase.tools | bash
       - run:
-          name: Authenticate Firebase CLI with Service Account
+          name: Verify and Set Up Service Account JSON
           command: |
-            echo $GOOGLE_APPLICATION_CREDENTIALS_JSON > credentials.json
-            GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase projects:list
-
-      - run:
-          name: Verify JSON Credentials File
-          command: |
+            echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
+            # Check the content of the JSON file
+            cat /tmp/service-account.json
+            # Check that the file exists and is readable
+            ls -la /tmp/service-account.json
+            # Try to validate the JSON using jq (optional, but helps ensure correct format)
+            cat /tmp/service-account.json | jq . || exit 1
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
             firebase projects:list
 
       - run:
