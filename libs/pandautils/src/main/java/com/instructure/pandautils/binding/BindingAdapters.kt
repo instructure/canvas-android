@@ -47,10 +47,25 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.DonutChartView
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeStatisticsView
 import com.instructure.pandautils.features.inbox.list.AvatarViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.JsGoogleDocsInterface
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.accessibleTouchTarget
+import com.instructure.pandautils.utils.collapse
+import com.instructure.pandautils.utils.expand
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAvatarA11y
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.pandautils.views.EmptyView
@@ -344,4 +359,19 @@ fun rotationAnim(view: View, rotation: Int) {
 @BindingAdapter("expandCollapseAnim")
 fun expandCollapseAnim(view: View, visible: Boolean) {
     if (visible) view.expand() else view.collapse()
+}
+
+@BindingAdapter("progress", "color", "trackColor")
+fun DonutChartView.setProgress(progress: Float, @ColorInt color: Int, @ColorInt trackColor: Int) {
+    setColor(color)
+    setTrackColor(trackColor)
+    setPercentage(progress, true)
+}
+
+@BindingAdapter("stats", "color")
+fun GradeStatisticsView.setStatistics(stats: GradeCellViewState.GradeStats?, @ColorInt color: Int) {
+    stats?.let {
+        setStats(stats)
+        setAccentColor(color)
+    }
 }

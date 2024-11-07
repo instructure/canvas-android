@@ -33,10 +33,18 @@ object UploadStatusSubmissionPresenter :
         context: Context
     ): UploadStatusSubmissionViewState {
         return when {
-            model.isFailed -> presentFailed(model, context)
+            model.isFailed -> presentFailed(
+                model,
+                context
+            )
             model.isLoading -> UploadStatusSubmissionViewState.Loading
-            model.files.isEmpty() -> presentSuccess(context)
-            else -> presentInProgress(model, context)
+            model.files.isEmpty() -> presentSuccess(
+                context
+            )
+            else -> presentInProgress(
+                model,
+                context
+            )
         }
     }
 
@@ -56,7 +64,12 @@ object UploadStatusSubmissionPresenter :
         return UploadStatusSubmissionViewState.Failed(
             context.getString(R.string.submissionStatusFailedTitle),
             context.getString(R.string.submissionUploadFailedMessage),
-            presentListItems(model, context, R.drawable.ic_warning, true)
+            presentListItems(
+                model,
+                context,
+                R.drawable.ic_warning,
+                true
+            )
         )
     }
 
@@ -80,7 +93,12 @@ object UploadStatusSubmissionPresenter :
             size,
             NumberHelper.doubleToPercentage(percent),
             percent,
-            presentListItems(model, context, null, false)
+            presentListItems(
+                model,
+                context,
+                null,
+                false
+            )
         )
     }
 

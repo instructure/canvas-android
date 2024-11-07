@@ -87,7 +87,8 @@ class APIHelperTest {
     @Test
     @Throws(Exception::class)
     fun stringToDate() {
-        val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz", Locale.US)
+        val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        df.timeZone = TimeZone.getTimeZone("UTC")
         val calendar = Calendar.getInstance()
         //clear out milliseconds because we're not displaying that in the simple date format
         calendar.set(Calendar.MILLISECOND, 0)
@@ -97,7 +98,7 @@ class APIHelperTest {
 
         //add a 'Z' at the end. Dates have a Z at the end of the string ("2037-07-28T19:38:31Z")
         //so we parse that out in the function
-        assertEquals(date, "${nowAsString}Z".toDate())
+        assertEquals(date, nowAsString.toDate())
     }
 
     @Test

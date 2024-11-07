@@ -16,8 +16,6 @@
  */
 package com.instructure.student.mobius.syllabus.ui
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
@@ -26,7 +24,13 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.databinding.FragmentSyllabusBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.instructure.student.mobius.syllabus.*
+import com.instructure.student.mobius.syllabus.SyllabusEffect
+import com.instructure.student.mobius.syllabus.SyllabusEffectHandler
+import com.instructure.student.mobius.syllabus.SyllabusEvent
+import com.instructure.student.mobius.syllabus.SyllabusModel
+import com.instructure.student.mobius.syllabus.SyllabusPresenter
+import com.instructure.student.mobius.syllabus.SyllabusRepository
+import com.instructure.student.mobius.syllabus.SyllabusUpdate
 
 @ScreenView(SCREEN_VIEW_SYLLABUS)
 @PageView(url = "{canvasContext}/assignments/syllabus")
@@ -37,8 +41,6 @@ abstract class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, S
     override fun makeEffectHandler() = SyllabusEffectHandler(getRepository())
 
     override fun makeUpdate() = SyllabusUpdate()
-
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SyllabusView(canvasContext, inflater, parent)
 
     override fun makePresenter() = SyllabusPresenter
 

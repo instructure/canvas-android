@@ -17,12 +17,18 @@
 
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.daos.AttachmentDao
+import com.instructure.pandautils.room.offline.daos.AuthorDao
+import com.instructure.pandautils.room.offline.daos.GroupDao
+import com.instructure.pandautils.room.offline.daos.MediaCommentDao
+import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
+import com.instructure.pandautils.room.offline.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.offline.daos.SubmissionDao
+import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.GroupEntity
 import com.instructure.pandautils.room.offline.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionEntity
@@ -30,12 +36,10 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class SubmissionFacadeTest {
 
     private val submissionDao: SubmissionDao = mockk(relaxed = true)

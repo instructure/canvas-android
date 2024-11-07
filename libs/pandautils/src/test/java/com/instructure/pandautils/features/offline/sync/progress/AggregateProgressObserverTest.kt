@@ -21,6 +21,7 @@ package com.instructure.pandautils.features.offline.sync.progress
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
 import com.instructure.pandautils.features.offline.sync.ProgressState
@@ -58,6 +59,7 @@ class AggregateProgressObserverTest {
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
     private val studioMediaProgressDao: StudioMediaProgressDao = mockk(relaxed = true)
+    private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -386,6 +388,6 @@ class AggregateProgressObserverTest {
     }
 
     private fun createObserver(): AggregateProgressObserver {
-        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao, studioMediaProgressDao)
+        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao, studioMediaProgressDao, firebaseCrashlytics)
     }
 }

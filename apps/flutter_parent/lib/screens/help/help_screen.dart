@@ -65,8 +65,8 @@ class _HelpScreenState extends State<HelpScreen> {
   List<Widget> _generateLinks(List<HelpLink>? links) {
     List<Widget> helpLinks = List.from(links?.map(
       (l) => ListTile(
-        title: Text(l.text, style: Theme.of(context).textTheme.titleMedium),
-        subtitle: Text(l.subtext, style: Theme.of(context).textTheme.bodySmall),
+        title: Text(l.text ?? '', style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(l.subtext ?? '', style: Theme.of(context).textTheme.bodySmall),
         onTap: () => _linkClick(l),
       ),
     ) ?? []);
@@ -84,7 +84,7 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   void _linkClick(HelpLink link) {
-    String url = link.url;
+    String url = link.url ?? '';
     if (url[0] == '#') {
       // Internal link
       if (url.contains('#create_ticket')) {
@@ -93,24 +93,24 @@ class _HelpScreenState extends State<HelpScreen> {
         // Custom for Android
         _showShareLove();
       }
-    } else if (link.id.contains('submit_feature_idea')) {
+    } else if (link.id?.contains('submit_feature_idea') == true) {
       _showRequestFeature();
-    } else if (link.url.startsWith('tel:+')) {
+    } else if (url.startsWith('tel:+')) {
       // Support phone links: https://community.canvaslms.com/docs/DOC-12664-4214610054
-      locator<AndroidIntentVeneer>().launchPhone(link.url);
-    } else if (link.url.startsWith('mailto:')) {
+      locator<AndroidIntentVeneer>().launchPhone(url);
+    } else if (url.startsWith('mailto:')) {
       // Support mailto links: https://community.canvaslms.com/docs/DOC-12664-4214610054
-      locator<AndroidIntentVeneer>().launchEmail(link.url);
-    } else if (link.url.contains('cases.canvaslms.com/liveagentchat')) {
+      locator<AndroidIntentVeneer>().launchEmail(url);
+    } else if (url.contains('cases.canvaslms.com/liveagentchat')) {
       // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
       // to the external browser
-      locator<UrlLauncher>().launch(link.url);
-    } else if (link.id.contains('search_the_canvas_guides')) {
+      locator<UrlLauncher>().launch(url);
+    } else if (link.id?.contains('search_the_canvas_guides') == true) {
       // Send them to the mobile Canvas guides
       _showSearch();
     } else {
       // External url
-      locator<UrlLauncher>().launch(link.url);
+      locator<UrlLauncher>().launch(url);
     }
   }
 

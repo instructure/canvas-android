@@ -47,12 +47,5 @@
     "resource_dir": "apps/flutter_parent/lib/l10n/res",
     "flutter_dir": "apps/flutter_parent",
     "extension": "arb"
-  },
-  {
-    "name": "flutter_student_embed",
-    "source_path": "libs/flutter_student_embed/lib/l10n/res/intl_en.arb",
-    "resource_dir": "libs/flutter_student_embed/lib/l10n/res",
-    "flutter_dir": "libs/flutter_student_embed",
-    "extension": "arb"
   }
 ]

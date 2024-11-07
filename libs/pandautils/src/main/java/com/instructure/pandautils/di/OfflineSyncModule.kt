@@ -78,9 +78,10 @@ class OfflineSyncModule {
         @ApplicationContext context: Context,
         courseSyncProgressDao: CourseSyncProgressDao,
         fileSyncProgressDao: FileSyncProgressDao,
-        studioMediaProgressDao: StudioMediaProgressDao
+        studioMediaProgressDao: StudioMediaProgressDao,
+        firebaseCrashlytics: FirebaseCrashlytics
     ): AggregateProgressObserver {
-        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao, studioMediaProgressDao)
+        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao, studioMediaProgressDao, firebaseCrashlytics)
     }
 
     @Provides

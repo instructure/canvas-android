@@ -13,14 +13,12 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class FileDetailsLocalDataSourceTest {
 
     private val fileFolderDao: FileFolderDao = mockk(relaxed = true)

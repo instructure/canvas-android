@@ -44,6 +44,7 @@ data class InboxComposeUiState(
     val attachments: List<AttachmentCardItem> = emptyList(),
     val screenState: ScreenState = ScreenState.Data,
     val showConfirmationDialog: Boolean = false,
+    val hiddenBodyMessage: String? = null,
 ) {
     val isSendButtonEnabled: Boolean
         get() = selectContextUiState.selectedCanvasContext != null &&

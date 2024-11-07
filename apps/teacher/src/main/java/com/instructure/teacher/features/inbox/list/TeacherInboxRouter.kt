@@ -63,7 +63,7 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
         }
     }
 
-    override fun routeToNewMessage() {
+    override fun routeToNewMessage(activity: FragmentActivity) {
         val args = AddMessageFragment.createBundle()
         RouteMatcher.route(activity, Route(AddMessageFragment::class.java, null, args))
     }

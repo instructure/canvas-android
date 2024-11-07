@@ -17,9 +17,12 @@
 
 package com.instructure.parentapp.features.splash
 
+import com.instructure.canvasapi2.models.CanvasTheme
+
 
 sealed class SplashAction {
     data object LocaleChanged : SplashAction()
     data object InitialDataLoadingFinished : SplashAction()
     data object NavigateToNotAParentScreen : SplashAction()
+    data class ApplyTheme(val canvasTheme: CanvasTheme) : SplashAction()
 }

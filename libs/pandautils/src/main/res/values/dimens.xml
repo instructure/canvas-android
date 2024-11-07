@@ -51,4 +51,7 @@
     <dimen name="homeroomCardMinRequiredSpace">320dp</dimen>
 
     <dimen name="ltiAppsBottomMargin">28dp</dimen>
+
+    <dimen name="grade_cell_text_top_margin">16dp</dimen>
+    <dimen name="grade_cell_chart_top_margin">8dp</dimen>
 </resources>

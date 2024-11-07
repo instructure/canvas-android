@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentImportantDatesRouter(private val activity: FragmentActivity) : ImportantDatesRouter {

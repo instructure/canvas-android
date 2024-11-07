@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
+    <com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellView
         android:id="@+id/gradeCell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -27,12 +27,10 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class PageDetailsNetworkDataSourceTest {
 
     private val pageApi: PageAPI.PagesInterface = mockk(relaxed = true)

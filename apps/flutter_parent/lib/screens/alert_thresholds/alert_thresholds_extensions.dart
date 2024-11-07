@@ -40,7 +40,7 @@ extension GetTitleFromAlert on AlertType {
         title = L10n(context).courseAnnouncements;
         break;
       case AlertType.institutionAnnouncement:
-        title = L10n(context).institutionAnnouncements;
+        title = L10n(context).globalAnnouncements;
         break;
       default:
         title = L10n(context).unexpectedError;

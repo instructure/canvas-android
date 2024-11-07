@@ -17,8 +17,12 @@
 
 package com.instructure.student.features.grades
 
-import com.instructure.canvasapi2.models.*
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
@@ -27,13 +31,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class GradesListRepositoryTest {
 
     private val networkDataSource: GradesListNetworkDataSource = mockk(relaxed = true)
@@ -131,6 +133,40 @@ class GradesListRepositoryTest {
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns onlineExpected
         coEvery { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns offlineExpected
+
+        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
+
+        coVerify { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true) }
+        assertEquals(offlineExpected, result)
+    }
+
+    @Test
+    fun `Get assignment groups with assignments for grading period if there are hidden assignments and device is online`() = runTest {
+        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3))))
+        val onlineResult = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1), Assignment(2, isHiddenInGradeBook = true))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3), Assignment(4, isHiddenInGradeBook = true))))
+        val offlineExpected = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7))))
+        val offlineResult = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5), Assignment(6, isHiddenInGradeBook = true))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7), Assignment(8, isHiddenInGradeBook = true))))
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns onlineResult
+        coEvery { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns offlineResult
+
+        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
+
+        coVerify { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true) }
+        assertEquals(onlineExpected, result)
+    }
+
+    @Test
+    fun `Get assignment groups with assignments for grading period if there are hidden assignments and device is offline`() = runTest {
+        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3))))
+        val onlineResult = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1), Assignment(2, isHiddenInGradeBook = true))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3), Assignment(4, isHiddenInGradeBook = true))))
+        val offlineExpected = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7))))
+        val offlineResult = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5), Assignment(6, isHiddenInGradeBook = true))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7), Assignment(8, isHiddenInGradeBook = true))))
+
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns onlineResult
+        coEvery { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns offlineResult
 
         val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
 
@@ -281,6 +317,40 @@ class GradesListRepositoryTest {
         every { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns onlineExpected
         coEvery { localDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns offlineExpected
+
+        val result = repository.getAssignmentGroupsWithAssignments(1, true)
+
+        coVerify { localDataSource.getAssignmentGroupsWithAssignments(1, true) }
+        assertEquals(offlineExpected, result)
+    }
+
+    @Test
+    fun `Get assignment groups with assignments if there are hidden assignments and device is online`() = runTest {
+        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3))))
+        val onlineResult = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1), Assignment(2, isHiddenInGradeBook = true))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3), Assignment(4, isHiddenInGradeBook = true))))
+        val offlineExpected = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7))))
+        val offlineResult = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5), Assignment(6, isHiddenInGradeBook = true))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7), Assignment(8, isHiddenInGradeBook = true))))
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns onlineResult
+        coEvery { localDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns offlineResult
+
+        val result = repository.getAssignmentGroupsWithAssignments(1, true)
+
+        coVerify { networkDataSource.getAssignmentGroupsWithAssignments(1, true) }
+        assertEquals(onlineExpected, result)
+    }
+
+    @Test
+    fun `Get assignment groups with assignments if there are hidden assignments and device is offline`() = runTest {
+        val onlineExpected = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3))))
+        val onlineResult = listOf(AssignmentGroup(id = 1, assignments = listOf(Assignment(1), Assignment(2, isHiddenInGradeBook = true))), AssignmentGroup(id = 2, assignments = listOf(Assignment(3), Assignment(4, isHiddenInGradeBook = true))))
+        val offlineExpected = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7))))
+        val offlineResult = listOf(AssignmentGroup(id = 3, assignments = listOf(Assignment(5), Assignment(6, isHiddenInGradeBook = true))), AssignmentGroup(id = 4, assignments = listOf(Assignment(7), Assignment(8, isHiddenInGradeBook = true))))
+
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns onlineResult
+        coEvery { localDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns offlineResult
 
         val result = repository.getAssignmentGroupsWithAssignments(1, true)
 

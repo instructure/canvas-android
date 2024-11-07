@@ -18,19 +18,16 @@
 
 package com.instructure.pandautils.repository
 
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class RepositoryTest {
 
     val localDataSource: MockDataSource = mockk(relaxed = true)

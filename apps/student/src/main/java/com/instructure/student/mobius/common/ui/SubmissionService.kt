@@ -26,7 +26,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -57,7 +56,8 @@ import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
-import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.FlowSource
+import com.instructure.student.mobius.common.trySend
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
@@ -533,9 +533,9 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 }
 
                 val newComment = submission.submissionComments.last()
-                ChannelSource.getChannel<SubmissionComment>().trySend(newComment)
+                FlowSource.getFlow<SubmissionComment>().trySend(newComment)
 
-                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().trySend(
+                FlowSource.getFlow<SubmissionDetailsSharedEvent>().trySend(
                     SubmissionDetailsSharedEvent.SubmissionCommentsUpdated(submission.submissionComments)
                 )
 

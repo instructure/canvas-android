@@ -26,7 +26,6 @@ import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
 import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
 import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -34,7 +33,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class CreateSubmissionCommentFileDaoTest {
 

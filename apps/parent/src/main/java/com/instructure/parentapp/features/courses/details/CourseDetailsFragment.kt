@@ -30,13 +30,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class CourseDetailsFragment : Fragment() {
+
+    @Inject
+    lateinit var navigation: Navigation
 
     private val viewModel: CourseDetailsViewModel by viewModels()
 
@@ -58,18 +63,19 @@ class CourseDetailsFragment : Fragment() {
     }
 
     private fun applyTheme() {
-        val color = ParentPrefs.currentStudent.color
+        val color = ParentPrefs.currentStudent.studentColor
         ViewStyler.setStatusBarDark(requireActivity(), color)
     }
 
     private fun handleAction(action: CourseDetailsViewModelAction) {
         when (action) {
             is CourseDetailsViewModelAction.NavigateToComposeMessageScreen -> {
-
+                val route = navigation.inboxComposeRoute(action.options)
+                navigation.navigate(requireActivity(), route)
             }
 
             is CourseDetailsViewModelAction.NavigateToAssignmentDetails -> {
-
+                navigation.navigate(activity, navigation.assignmentDetailsRoute(action.courseId, action.assignmentId))
             }
         }
     }

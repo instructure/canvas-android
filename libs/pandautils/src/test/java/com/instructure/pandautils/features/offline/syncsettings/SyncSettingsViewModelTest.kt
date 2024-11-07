@@ -22,22 +22,30 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
-import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Before
-import org.junit.Test
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsAction
 import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewData
 import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewModel
-import io.mockk.*
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class SyncSettingsViewModelTest {
@@ -50,6 +58,7 @@ class SyncSettingsViewModelTest {
     private val syncSettingsFacade: SyncSettingsFacade = mockk(relaxed = true)
     private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
+    private val offlineAnalyticsManager: OfflineAnalyticsManager = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -65,7 +74,7 @@ class SyncSettingsViewModelTest {
         coEvery { syncSettingsFacade.update(any()) } just runs
         coEvery { offlineSyncHelper.updateWork() } just runs
 
-        viewModel = SyncSettingsViewModel(syncSettingsFacade, offlineSyncHelper, resources)
+        viewModel = SyncSettingsViewModel(syncSettingsFacade, offlineSyncHelper, resources, offlineAnalyticsManager)
     }
 
     @Test
@@ -95,6 +104,7 @@ class SyncSettingsViewModelTest {
         coVerify {
             syncSettingsFacade.update(updated)
             offlineSyncHelper.scheduleWork()
+            offlineAnalyticsManager.reportOfflineAutoSyncSwitchChanged(true)
         }
     }
 
@@ -223,6 +233,7 @@ class SyncSettingsViewModelTest {
         coVerify {
             syncSettingsFacade.update(updated)
             offlineSyncHelper.cancelWork()
+            offlineAnalyticsManager.reportOfflineAutoSyncSwitchChanged(false)
         }
     }
 

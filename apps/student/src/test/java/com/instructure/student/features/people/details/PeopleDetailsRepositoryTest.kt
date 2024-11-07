@@ -2,19 +2,16 @@ package com.instructure.student.features.people.details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class PeopleDetailsRepositoryTest {
     private val networkDataSource: PeopleDetailsNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: PeopleDetailsLocalDataSource = mockk(relaxed = true)

@@ -23,7 +23,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -50,7 +50,7 @@ class AlertSettingsViewModel @Inject constructor(
             avatarUrl = student.avatarUrl.orEmpty(),
             studentName = student.shortName ?: student.name,
             studentPronouns = student.pronouns,
-            userColor = student.color,
+            userColor = student.studentColor,
             actionHandler = this::handleAction
         )
     )

@@ -40,11 +40,10 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 268
-        versionName = '7.6.1'
+        versionCode = 269
+        versionName = '7.7.0'
 
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
         buildConfigField "boolean", "IS_TESTING", "false"
@@ -113,12 +112,6 @@ android {
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
 
-            buildConfigField "String", "PRONOUN_STUDENT_TEST_USER", "\"$pronounTestStudent\""
-            buildConfigField "String", "PRONOUN_STUDENT_TEST_PASSWORD", "\"$pronounTestStudentPassword\""
-
-            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_USER", "\"$pushNotificationsTestStudent\""
-            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_PASSWORD", "\"$pushNotificationsTestStudentPassword\""
-
             ext {
                 heapEnabled = true
             }
@@ -163,6 +156,11 @@ android {
 
         qa {
             buildConfigField "boolean", "IS_TESTING", "true"
+            buildConfigField "String", "PRONOUN_STUDENT_TEST_USER", "\"$pronounTestStudent\""
+            buildConfigField "String", "PRONOUN_STUDENT_TEST_PASSWORD", "\"$pronounTestStudentPassword\""
+
+            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_USER", "\"$pushNotificationsTestStudent\""
+            buildConfigField "String", "PUSH_NOTIFICATIONS_STUDENT_TEST_PASSWORD", "\"$pushNotificationsTestStudentPassword\""
             dimension 'default'
         }
 
@@ -306,7 +304,7 @@ dependencies {
     implementation Libs.ANDROIDX_BROWSER
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES
@@ -319,7 +317,7 @@ dependencies {
     implementation Libs.VIEW_MODEL
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODE_SAVED_STATE
-    implementation Libs.FRAGMENT_KTX
+    implementation Libs.ANDROIDX_FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
 
     /* DI */

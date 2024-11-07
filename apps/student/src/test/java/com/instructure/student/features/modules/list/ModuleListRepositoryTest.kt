@@ -22,20 +22,17 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.list.datasource.ModuleListLocalDataSource
 import com.instructure.student.features.modules.list.datasource.ModuleListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ModuleListRepositoryTest {
 
     private val networkDataSource: ModuleListNetworkDataSource = mockk(relaxed = true)

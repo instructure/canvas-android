@@ -27,12 +27,10 @@ import com.instructure.student.features.modules.progression.ModuleItemAsset
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ModuleProgressionLocalDataSourceTest {
 
     private val moduleFacade: ModuleFacade = mockk(relaxed = true)

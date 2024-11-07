@@ -31,7 +31,7 @@ class ParentCalendarRouter(
     override fun openNavigationDrawer() = Unit
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {
-        // TODO Implement in the assignment details ticket
+        navigation.navigate(activity, navigation.assignmentDetailsRoute(canvasContext.id, assignmentId))
     }
 
     override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long) {

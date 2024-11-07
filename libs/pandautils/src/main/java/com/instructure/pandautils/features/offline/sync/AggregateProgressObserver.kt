@@ -23,6 +23,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
@@ -39,7 +40,8 @@ class AggregateProgressObserver(
     private val context: Context,
     courseSyncProgressDao: CourseSyncProgressDao,
     fileSyncProgressDao: FileSyncProgressDao,
-    studioMediaProgressDao: StudioMediaProgressDao
+    studioMediaProgressDao: StudioMediaProgressDao,
+    firebaseCrashlytics: FirebaseCrashlytics
 ) {
 
     val progressData: LiveData<AggregateProgressViewData?>
@@ -79,7 +81,12 @@ class AggregateProgressObserver(
             fileProgressLiveData = fileSyncProgressDao.findAllLiveData()
             fileProgressLiveData?.observeForever(fileProgressObserver)
 
-            studioMediaProgressLiveData = studioMediaProgressDao.findAllLiveData()
+            studioMediaProgressLiveData = try {
+                studioMediaProgressDao.findAllLiveData()
+            } catch (e: Exception) {
+                firebaseCrashlytics.recordException(e)
+                null
+            }
             studioMediaProgressLiveData?.observeForever(studioMediaProgressObserver)
         }
     }

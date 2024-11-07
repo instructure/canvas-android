@@ -96,6 +96,21 @@ void main() {
         observerLinks);
   });
 
+  test('filterObserverLinks only returns links that has text and url', () async {
+    var validLinks = [
+      createHelpLink(availableTo: [AvailableTo.observer]),
+      createHelpLink(availableTo: [AvailableTo.user]),
+    ];
+
+    var invalidLinks = [
+      createNullableHelpLink(url: 'url', availableTo: [AvailableTo.observer]),
+      createNullableHelpLink(text: 'text', availableTo: [AvailableTo.observer]),
+    ];
+
+    expect(HelpScreenInteractor().filterObserverLinks(BuiltList.from([...validLinks, ...invalidLinks])),
+        validLinks);
+  });
+
   test('custom list is returned if there are any custom lists', () async {
     var api = MockHelpLinksApi();
     var customLinks = [
@@ -143,4 +158,12 @@ HelpLink createHelpLink({String? id, String? text, String? url, List<AvailableTo
   ..availableTo = ListBuilder(availableTo != null ? availableTo : <AvailableTo>[])
   ..url = url ?? 'https://www.instructure.com'
   ..text = text ?? 'text'
+  ..subtext = 'subtext');
+
+HelpLink createNullableHelpLink({String? id, String? text, String? url, List<AvailableTo>? availableTo}) => HelpLink((b) => b
+  ..id = id
+  ..type = ''
+  ..availableTo = ListBuilder(availableTo != null ? availableTo : <AvailableTo>[])
+  ..url = url
+  ..text = text
   ..subtext = 'subtext');

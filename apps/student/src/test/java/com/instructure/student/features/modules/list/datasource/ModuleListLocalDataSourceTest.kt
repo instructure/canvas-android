@@ -30,13 +30,11 @@ import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class ModuleListLocalDataSourceTest {
 
     private val tabDao = mockk<TabDao>(relaxed = true)

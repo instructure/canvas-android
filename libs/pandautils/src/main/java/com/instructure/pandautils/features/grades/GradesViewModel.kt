@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -89,7 +90,7 @@ class GradesViewModel @Inject constructor(
             this@GradesViewModel.course = course
             val gradingPeriods = repository.loadGradingPeriods(courseId, forceRefresh)
             val selectedGradingPeriodId = _uiState.value.gradePreferencesUiState.selectedGradingPeriod?.id
-            val assignmentGroups = repository.loadAssignmentGroups(courseId, selectedGradingPeriodId, forceRefresh)
+            val assignmentGroups = repository.loadAssignmentGroups(courseId, selectedGradingPeriodId, forceRefresh).filterHiddenAssignments()
             val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriodId, forceRefresh)
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriodId)
@@ -206,8 +207,8 @@ class GradesViewModel @Inject constructor(
         val submissionStateLabel = when {
             assignment.submission?.late.orDefault() -> SubmissionStateLabel.LATE
             assignment.isMissing() -> SubmissionStateLabel.MISSING
-            assignment.submission?.isGraded.orDefault() || assignment.submission?.excused.orDefault() -> SubmissionStateLabel.GRADED
-            assignment.isSubmitted -> SubmissionStateLabel.SUBMITTED
+            assignment.isGraded().orDefault() -> SubmissionStateLabel.GRADED
+            assignment.submission?.submittedAt != null -> SubmissionStateLabel.SUBMITTED
             !assignment.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
             else -> SubmissionStateLabel.NONE
         }
@@ -277,7 +278,7 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.AssignmentClick -> {
                 viewModelScope.launch {
-                    _events.send(GradesViewModelAction.NavigateToAssignmentDetails(action.id))
+                    _events.send(GradesViewModelAction.NavigateToAssignmentDetails(courseId, action.id))
                 }
             }
 

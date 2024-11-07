@@ -37,6 +37,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.loginapi.login.view.CanvasLoadingView
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.navigation.Navigation
@@ -92,6 +93,8 @@ class SplashFragment : Fragment() {
                 findNavController().popBackStack()
                 navigation.navigate(activity, navigation.notAParent)
             }
+
+            is SplashAction.ApplyTheme -> ThemePrefs.applyCanvasTheme(action.canvasTheme, requireContext())
         }
     }
 

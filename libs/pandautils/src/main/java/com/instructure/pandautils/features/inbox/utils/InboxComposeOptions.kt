@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import kotlinx.parcelize.Parcelize
@@ -33,6 +34,8 @@ data class InboxComposeOptions(
     val disabledFields: InboxComposeOptionsDisabledFields = InboxComposeOptionsDisabledFields(),
     val hiddenFields: InboxComposeOptionsHiddenFields = InboxComposeOptionsHiddenFields(),
     val defaultValues: InboxComposeOptionsDefaultValues = InboxComposeOptionsDefaultValues(),
+    val hiddenBodyMessage: String? = null,
+    val autoSelectRecipientsFromRoles: List<EnrollmentType>? = null,
 ): Parcelable {
     companion object {
         const val COMPOSE_PARAMETERS = "InboxComposeOptions"

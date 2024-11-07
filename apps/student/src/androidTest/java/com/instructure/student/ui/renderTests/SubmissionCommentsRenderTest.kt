@@ -15,8 +15,6 @@
  */
 package com.instructure.student.ui.renderTests
 
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvas.espresso.FeatureCategory
@@ -40,11 +38,10 @@ import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @HiltAndroidTest

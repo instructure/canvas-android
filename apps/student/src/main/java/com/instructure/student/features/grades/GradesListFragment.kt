@@ -65,7 +65,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.databinding.FragmentCourseGradesBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher

@@ -19,7 +19,6 @@ package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
@@ -27,14 +26,15 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.Placement
+import com.instructure.canvasapi2.models.Placements
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
@@ -42,7 +42,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -90,8 +89,6 @@ class DashboardViewModelTest {
     @Before
     fun setup() {
         every { savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT) } returns null
-        mockkObject(ColorKeeper)
-        every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLUE)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
@@ -273,6 +270,97 @@ class DashboardViewModelTest {
         }
 
         assertEquals(DashboardViewModelAction.NavigateDeepLink(uri), events.first())
+    }
+
+    @Test
+    fun `Update color updates add student item color`() {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+
+        createViewModel()
+
+        val items = viewModel.data.value.studentItems
+        viewModel.updateColor(123)
+
+        assertEquals(123, (items[2] as AddStudentItemViewModel).color)
+    }
+
+    @Test
+    fun `Update date with launch definitions when launch definitions are received`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, "domain",
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        assertEquals(1, viewModel.data.value.launchDefinitionViewData.size)
+        val launchDefinition = viewModel.data.value.launchDefinitionViewData.first()
+        assertEquals("name", launchDefinition.name)
+        assertEquals("domain", launchDefinition.domain)
+        assertEquals("global.url", launchDefinition.url)
+    }
+
+    @Test
+    fun `Do not update launch definitions when url or domain is null`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, "domain",
+                Placements(null), null),
+            LaunchDefinition("type", 1, "name", null, null,
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        assertEquals(0, viewModel.data.value.launchDefinitionViewData.size)
+    }
+
+    @Test
+    fun `Open Mastery sends correct open LTI event`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, LaunchDefinition.MASTERY_DOMAIN,
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        val events = mutableListOf<DashboardViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.openMastery()
+
+        assertEquals(DashboardViewModelAction.OpenLtiTool("global.url", "name"), events.first())
+    }
+
+    @Test
+    fun `Open Studio sends correct open LTI event`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getLaunchDefinitions() } returns listOf(
+            LaunchDefinition("type", 1, "name", null, LaunchDefinition.STUDIO_DOMAIN,
+                Placements(Placement("", "global.url", "")), null)
+        )
+
+        createViewModel()
+
+        val events = mutableListOf<DashboardViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.openStudio()
+
+        assertEquals(DashboardViewModelAction.OpenLtiTool("global.url", "name"), events.first())
     }
 
     private fun createViewModel() {

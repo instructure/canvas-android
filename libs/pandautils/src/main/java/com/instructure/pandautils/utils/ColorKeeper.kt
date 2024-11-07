@@ -76,6 +76,11 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         }
     }
 
+    /**
+     * Gets the themed color associated with the given [User] if it exists, otherwise generates a new color
+     * This should be used directly  only in special cases where we need a [ThemedColor] object instead of a specific color.
+     * To get user color use [User.studentColor]
+     * **/
     fun getOrGenerateUserColor(user: User?): ThemedColor {
        return if (user == null) {
            ThemedColor(ThemePrefs.primaryColor)
@@ -120,6 +125,19 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
     fun addToCache(contextId: String, colorCode: String) {
         val color = parseColor(colorCode)
         cachedThemedColors += contextId to createThemedColor(color)
+    }
+
+    fun createThemedColor(@ColorInt color: Int): ThemedColor {
+        // There are some custom colors that we can map to a specific dark variant. For others we use our accessibility algorithm.
+        val entry = lightDarkColorMap.entries.find { it.key == color }
+        if (entry != null) {
+            return ThemedColor(entry.key, entry.value)
+        }
+
+        val light = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.white))
+        val dark = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.textOnColorDark))
+
+        return ThemedColor(light, dark)
     }
 
     /**
@@ -247,20 +265,8 @@ object ColorApiHelper {
     suspend fun awaitSync(): Boolean = suspendCancellableCoroutine { cr -> performSync { cr.resumeSafely(it) } }
 }
 
-fun createThemedColor(@ColorInt color: Int): ThemedColor {
-    // There are some custom colors that we can map to a specific dark variant. For others we use our accessibility algorithm.
-    val entry = lightDarkColorMap.entries.find { it.key == color }
-    if (entry != null) {
-        return ThemedColor(entry.key, entry.value)
-    }
-
-    val light = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.white))
-    val dark = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.textOnColorDark))
-
-    return ThemedColor(light, dark)
-}
-
 // There are some custom colors that we can map to a specific dark variant. For others we use our accessibility algorithm.
+// Since the student colors in the Parent app are using some of these colors we don't add them, because that would be a duplicate entry in the map.
 private val lightDarkColorMap: Map<Int, Int> = mapOf(
     ContextKeeper.appContext.getColor(R.color.courseColor1light) to ContextKeeper.appContext.getColor(R.color.courseColor1dark),
     ContextKeeper.appContext.getColor(R.color.courseColor2light) to ContextKeeper.appContext.getColor(R.color.courseColor2dark),

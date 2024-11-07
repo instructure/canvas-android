@@ -34,6 +34,7 @@ class HelpScreenInteractor {
       link.availableTo.contains(AvailableTo.user));
 
   List<HelpLink> filterObserverLinks(BuiltList<HelpLink> list) => list
+      .where((link) => link.url != null && link.text != null)
       .where((link) =>
           link.availableTo.contains(AvailableTo.observer) ||
           link.availableTo.contains(AvailableTo.user))

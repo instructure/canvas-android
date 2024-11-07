@@ -118,9 +118,43 @@ class InboxComposeViewModel @Inject constructor(
                     sendIndividual = options.defaultValues.sendIndividual,
                     subject = TextFieldValue(options.defaultValues.subject),
                     body = TextFieldValue(options.defaultValues.body),
-                    attachments = options.defaultValues.attachments.map { attachment -> AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false) }
+                    attachments = options.defaultValues.attachments.map { attachment -> AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false) },
+                    hiddenBodyMessage = options.hiddenBodyMessage,
                 )
             }
+            context?.let {
+                viewModelScope.launch {
+                    if (!options.autoSelectRecipientsFromRoles.isNullOrEmpty()) {
+                        _uiState.update {
+                            it.copy(
+                                inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                    isLoading = true
+                                )
+                            )
+                        }
+
+                        val recipients = getRecipientList("", context, false).dataOrNull.orEmpty()
+                        val roleRecipients = groupRecipientList(context, recipients)
+                        val selectedRecipients = mutableListOf<Recipient>()
+                        options.autoSelectRecipientsFromRoles?.forEach { role ->
+                            roleRecipients[role]?.let { selectedRecipients.addAll(it) }
+                        }
+
+                        _uiState.update {
+                            it.copy(
+                                recipientPickerUiState = it.recipientPickerUiState.copy(
+                                    selectedRecipients = selectedRecipients.distinct(),
+                                ),
+                                inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                                    selectedValues = selectedRecipients.distinct(),
+                                    isLoading = false
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -342,29 +376,8 @@ class InboxComposeViewModel @Inject constructor(
             } catch (e: Exception) {
                 newState = ScreenState.Error
             }
-            val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
 
-            recipients.forEach { recipient ->
-                if (context.isCourse) {
-                    recipient.commonCourses?.let { commonCourse ->
-                        commonCourse[context.id.toString()]?.forEach { role ->
-                            val enrollmentType = EnrollmentType.safeValueOf(role)
-                            if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
-                                roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
-                            }
-                        }
-                    }
-                } else {
-                    recipient.commonGroups?.let { commonGroup ->
-                        commonGroup[context.id.toString()]?.forEach { role ->
-                            val enrollmentType = EnrollmentType.safeValueOf(role)
-                            if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
-                                roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
-                            }
-                        }
-                    }
-                }
-            }
+            val roleRecipients = groupRecipientList(context, recipients)
 
             val recipientsToShow =
                 if (uiState.value.recipientPickerUiState.searchValue.text.isEmpty() && uiState.value.recipientPickerUiState.selectedRole != null) {
@@ -383,6 +396,34 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
+    private fun groupRecipientList(context: CanvasContext, recipients: List<Recipient>): EnumMap<EnrollmentType, List<Recipient>> {
+        val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+
+        recipients.forEach { recipient ->
+            if (context.isCourse) {
+                recipient.commonCourses?.let { commonCourse ->
+                    commonCourse[context.id.toString()]?.forEach { role ->
+                        val enrollmentType = EnrollmentType.safeValueOf(role)
+                        if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
+                            roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
+                        }
+                    }
+                }
+            } else {
+                recipient.commonGroups?.let { commonGroup ->
+                    commonGroup[context.id.toString()]?.forEach { role ->
+                        val enrollmentType = EnrollmentType.safeValueOf(role)
+                        if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
+                            roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
+                        }
+                    }
+                }
+            }
+        }
+
+        return roleRecipients
+    }
+
     private suspend fun getRecipientList(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false): DataResult<List<Recipient>> {
         return inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh)
     }
@@ -396,7 +437,7 @@ class InboxComposeViewModel @Inject constructor(
                     inboxComposeRepository.createConversation(
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,
                         subject = uiState.value.subject.text,
-                        message = uiState.value.body.text,
+                        message = getMessageBody(),
                         context = canvasContext,
                         attachments = uiState.value.attachments.map { it.attachment },
                         isIndividual = uiState.value.sendIndividual
@@ -426,7 +467,7 @@ class InboxComposeViewModel @Inject constructor(
                     inboxComposeRepository.addMessage(
                         conversationId = uiState.value.previousMessages?.conversation?.id ?: 0,
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,
-                        message = uiState.value.body.text,
+                        message = getMessageBody(),
                         includedMessages = uiState.value.previousMessages?.previousMessages ?: emptyList(),
                         attachments = uiState.value.attachments.map { it.attachment },
                         context = canvasContext
@@ -444,6 +485,14 @@ class InboxComposeViewModel @Inject constructor(
                     _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
                 }
             }
+        }
+    }
+
+    private fun getMessageBody(): String {
+        return if (uiState.value.hiddenBodyMessage.isNullOrBlank()) {
+            uiState.value.body.text
+        } else {
+            "${uiState.value.body.text}\n\n${uiState.value.hiddenBodyMessage}"
         }
     }
 

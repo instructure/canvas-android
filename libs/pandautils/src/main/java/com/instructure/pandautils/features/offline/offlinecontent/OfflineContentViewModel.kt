@@ -19,11 +19,16 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.FileViewModel
@@ -51,7 +56,8 @@ class OfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val offlineContentRepository: OfflineContentRepository,
     private val storageUtils: StorageUtils,
-    private val offlineSyncHelper: OfflineSyncHelper
+    private val offlineSyncHelper: OfflineSyncHelper,
+    private val offlineAnalyticsManager: OfflineAnalyticsManager,
 ) : ViewModel() {
 
     val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
@@ -414,6 +420,7 @@ class OfflineContentViewModel @Inject constructor(
 
     private fun startSync() {
         viewModelScope.launch {
+            offlineAnalyticsManager.reportOfflineSyncStarted()
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
             _events.postValue(Event(OfflineContentAction.Back))

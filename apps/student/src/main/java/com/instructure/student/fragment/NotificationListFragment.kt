@@ -43,7 +43,7 @@ import com.instructure.student.activity.ParentActivity
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListNotificationBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.router.RouteMatcher
@@ -274,6 +274,13 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 }
                 COLLABORATION -> UnsupportedTabFragment.makeRoute(canvasContext, Tab.COLLABORATIONS_ID)
                 CONFERENCE -> ConferenceListRepositoryFragment.makeRoute(canvasContext)
+                DISCUSSION_MENTION -> {
+                    if (streamItem.htmlUrl.isNotEmpty()) {
+                        RouteMatcher.getInternalRoute(streamItem.htmlUrl, ApiPrefs.domain)
+                    } else {
+                        UnknownItemFragment.makeRoute(canvasContext, streamItem)
+                    }
+                }
                 else -> UnsupportedFeatureFragment.makeRoute(canvasContext, featureName = streamItem.type, url = streamItem.url ?: streamItem.htmlUrl)
             }
 

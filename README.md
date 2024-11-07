@@ -8,9 +8,9 @@ The open source code provided by the Android Team at Instructure.
 
 First, install the Flutter SDK using the instructions found [here](https://flutter.dev/docs/get-started/install).
 
-Next, run `./open_source.sh` once. You may now use Gradle to build the apps. Prior to building the Student app for the first time, navigate to `libs/flutter_student_embed` and run the command `flutter pub get`.
+Next, run `./open_source.sh` once. You may now use Gradle to build the apps.
 
-### Student and Teacher
+### Student, Teacher and native Parent
 
 1. Open `apps/build.gradle` in Android Studio
 ```
@@ -20,7 +20,7 @@ Android Studio > Import Project > canvas-android/apps/build.gradle
 2. Select the app from the list of configurations (`student` or `teacher`)
 3. Tap 'Run' (`^R`) to run the app
 
-### Parent
+### Flutter Parent
 
 1. Open `canvas-android/apps/flutter_parent` in Android Studio.
 2. Make sure the `main.dart` configuration is selected
@@ -34,7 +34,7 @@ Parent  | (in apps/flutter_parent) `flutter pub get; flutter build apk` | [![Par
 
 ## Running tests
 
-To run unit tests for Student and Teacher
+To run unit tests for Student, Teacher and native Parent
 1. Open the Build Variants window and set the variant to `qaDebug` for the app that you wish to test.
 2. You can run the tests by tapping on the play button next to the test case or the test class.
 
@@ -58,19 +58,19 @@ App | Description
 
 Module | Description
    --- | ---
-BluePrint    | An MVP Architecture that depends on PandaRecyclerView. 
-Canvas-Api   | *Deprecated* - Canvas for Android Api used to talk to Canvas LMS. (deprecated)
-Canvas-Api-2 | Canvas for Android Api used to talk to the Canvas LMS and is testable.
-dataseedingapi| gRPC wrapper for Canvas that enables creating data to test the apps
-Espresso     | The UI testing library built on Espresso.
-SoSeedyCLI   | CLI for using data seeding API manually
-SoSeedyGRPC  | gRPC server for using data seeding with iOS from Xcode
-Foosball     | A Foosball Application created and used interally to boost fun by over 120%.
-Login-Api    | *Deprecated* - The Library used to making logging in and getting a token relatively easy. (deprecated)
-Login-Api-2  | The libarary used to make logging in and getting a token relative easy and is testable.
-PandaUtils   | The core library for new features in the Student and Teacher apps.
-PandaRecyclerView | A fancy RecyclerView library that supports expanding and collapsing, pagination, and stuff like that.
-Rceditor     | A wrapper for rich content editing used in Canvas Teacher.
+annotations     | A wrapper for the PSPDFKit library and logic for annotation handling and converting in PDF documents.
+blueprint       | An MVP Architecture that depends on PandaRecyclerView. (deprecated)
+buildSrc        | Library for common gradle dependencies and gradle transformers that are used by the project.
+canvas-api-2    | Canvas for Android Api used to talk to the Canvas LMS and is testable.
+dataseedingapi  | gRPC wrapper for Canvas that enables creating data to test the apps.
+DocumentScanner | A wrapper for document scanning features.
+espresso        | The UI testing library built on Espresso.
+interactions    | Interactions for navigation used in the apps.
+login-api-2     | The libarary used to make logging in and getting a token relative easy and is testable.
+pandares        | Collection of resources used in our apps.
+pandautils      | The core library for the apps. All the common code is implemented here that is reused by the 3 apps.
+rceditor        | A wrapper for rich content editing used in our apps.
+recyclerview    | A fancy RecyclerView library that supports expanding and collapsing, pagination, and stuff like that. (deprecated)
 
 #### Our applications are licensed under the GPLv3 License.
 
