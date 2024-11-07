@@ -147,6 +147,7 @@ import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.NavigationMenuItem
 import com.instructure.student.navigation.OptionsMenuItem
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.router.RouteMatcherRepository
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
@@ -215,6 +216,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var offlineAnalyticsManager: OfflineAnalyticsManager
+
+    @Inject
+    lateinit var routeMatcherRepository: RouteMatcherRepository
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -348,6 +352,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         super.onCreate(savedInstanceState)
         RouteMatcher.offlineDb = offlineDatabase
         RouteMatcher.networkStateProvider = networkStateProvider
+        RouteMatcher.routeMatcherRepository = routeMatcherRepository
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)

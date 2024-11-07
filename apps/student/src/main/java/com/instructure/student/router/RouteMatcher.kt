@@ -34,8 +34,13 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.interactions.router.*
+import com.instructure.interactions.router.BaseRouteMatcher
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
+import com.instructure.interactions.router.RouteType
+import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -48,9 +53,14 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
-import com.instructure.student.activity.*
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.activity.InterwebsToApplication
+import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.activity.ViewMediaActivity
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
@@ -65,13 +75,30 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.AnnouncementListFragment
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.CourseSettingsFragment
+import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.InboxConversationFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.ProfileSettingsFragment
+import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.UnsupportedFeatureFragment
+import com.instructure.student.fragment.UnsupportedTabFragment
+import com.instructure.student.fragment.ViewHtmlFragment
+import com.instructure.student.fragment.ViewImageFragment
+import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.util.FileUtils
 import com.instructure.student.util.onMainThread
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 import java.util.regex.Pattern
 
 object RouteMatcher : BaseRouteMatcher() {
@@ -81,6 +108,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     var offlineDb: OfflineDatabase? = null
     var networkStateProvider: NetworkStateProvider? = null
+    var routeMatcherRepository: RouteMatcherRepository? = null
 
     init {
         initRoutes()
@@ -488,6 +516,26 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     fun route(activity: FragmentActivity, route: Route?) {
+        val dialog = showLoadingDialog(activity)
+        CoroutineScope(Dispatchers.IO).launch {
+            routeWithPermissionCheck(activity, route)
+            dialog.dismiss()
+        }
+    }
+
+    private fun showLoadingDialog(activity: FragmentActivity): AlertDialog {
+        val dialog = AlertDialog.Builder(activity, R.style.CustomViewAlertDialog)
+            .setView(R.layout.dialog_loading_view)
+            .create()
+        dialog.show()
+        return dialog
+    }
+
+    private suspend fun routeWithPermissionCheck(activity: FragmentActivity, route: Route?) {
+        if (routeMatcherRepository?.isRouteNotAvailable(route).orDefault()) {
+            withContext(Dispatchers.Main) { activity.toast(R.string.route_not_available) }
+            return
+        }
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
                 // No route, no problem
