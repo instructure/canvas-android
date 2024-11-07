@@ -86,6 +86,9 @@ class SyncSettingsFragment : Fragment(), FragmentInteractions {
                 confirmationCallback(true)
                 dialog.dismiss()
             }
+            .setOnDismissListener {
+                confirmationCallback(false)
+            }
             .showThemed()
     }
 
