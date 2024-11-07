@@ -270,15 +270,15 @@ workflows:
       - ui-tests-portrait:
           name: Student Portrait UI tests
           module: student
-          requires: [build-qa-debug]
+          requires: [Student QA build]
       - ui-tests-landscape:
           name: Student Landscape UI tests
           module: student
-          requires: [build-qa-debug]
+          requires: [Student QA build]
       - ui-tests-tablet:
           name: Student Tablet UI tests
           module: student
-          requires: [build-qa-debug]
+          requires: [Student QA build]
 
   teacher-pr:
     when:
@@ -298,12 +298,12 @@ workflows:
       - ui-tests-portrait:
           name: Teacher Portrait UI tests
           module: teacher
-          requires: [build-qa-debug]
+          requires: [Teacher QA build]
       - ui-tests-landscape:
           name: Teacher Landscape UI tests
           module: teacher
-          requires: [build-qa-debug]
+          requires: [Teacher QA build]
       - ui-tests-tablet:
           name: Teacher Tablet UI tests
           module: teacher
-          requires: [build-qa-debug]
+          requires: [Teacher QA build]
