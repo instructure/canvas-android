@@ -307,7 +307,7 @@ workflows:
         - or: 
           - << pipeline.parameters.student >>
           - << pipeline.parameters.all >>
-        - $CIRCLE_PR_NUMBER
+        - equal: [ true, $CIRCLE_PR_NUMBER ]
 
     jobs:
       - build-qa-debug:
@@ -344,7 +344,7 @@ workflows:
         - or:
           - << pipeline.parameters.teacher >>
           - << pipeline.parameters.all >>
-        - $CIRCLE_PR_NUMBER
+        - equal: [ true, $CIRCLE_PR_NUMBER ]
     jobs:
       - build-qa-debug:
           name: Teacher QA build
