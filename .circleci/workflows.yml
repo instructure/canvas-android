@@ -71,15 +71,11 @@ jobs:
     machine:
       image: android:2024.04.1
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
     working_directory: ~/project/apps
     steps:
       - checkout:
           path: ~/project
       - install-jdk
-      - decrypt-keystore
       - submodule-update
       - run:
           name: Build QaDebug with Gradle
@@ -101,11 +97,7 @@ jobs:
       image: android:2024.04.1
     resource_class: xlarge
     environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
-      ANDROID_KEYSTORE_PASSWORD: "$ANDROID_KEYSTORE_PASSWORD"
-      DEBUG_KEY_ALIAS: "$DEBUG_KEY_ALIAS"
-      DEBUG_KEY_PASSWORD: "$DEBUG_KEY_PASSWORD"
+      ANDROID_KEYSTORE_PATH: /home/circleci/project/keystore.jks
     working_directory: ~/project/apps
     steps:
       - checkout:
@@ -113,26 +105,36 @@ jobs:
       - install-jdk
       - decrypt-keystore
       - submodule-update
-
-      - run:
-          name: DEBUG
-          command: echo $ANDROID_KEYSTORE_PATH
-
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
-            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
-              -Pandroid.injected.signing.store.file="$ANDROID_KEYSTORE_PATH" \
-              -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
-              -Pandroid.injected.signing.key.alias="$DEBUG_KEY_ALIAS" \
-              -Pandroid.injected.signing.key.password="$DEBUG_KEY_PASSWORD"     
+            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache \
+              -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
+              -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
+              -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
+              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD
+      - run:
+          name: Install Firebase CLI
+          command: |
+            curl -sL https://firebase.tools | bash
+      - run:
+          name: Deploy APK to Firebase App Distribution
+          command: |
+            echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
+            OUTPUT=$(firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
+             --app $STUDENT_APP_ID \
+             --groups "testers")
+            SHARE_URI=$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*')
+            echo "export SHARE_URI=\"$SHARE_URI\"" >> "$BASH_ENV"
       - run:
           name: Comment on PR with Build Details
           command: |
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              COMMENT="DevDebugMinify build completed successfully: $SHARE_URI"
               curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                -d '{"body": "DevDebugMinify build completed successfully."}' \
-                "https://api.github.com/repos/your_org/your_repo/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
+                -d "{\"body\": \"$COMMENT\"}" \
+                "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
             fi
 
   unit-tests:
@@ -143,15 +145,11 @@ jobs:
     machine:
       image: android:2024.04.1
     resource_class: xlarge
-    environment:
-      ANDROID_KEYSTORE_PATH: "$KEYSTORE_PATH"
-      ANDROID_KEYSTORE_BASE64: "$KEYSTORE_BASE64"
     working_directory: ~/project/apps
     steps:
       - checkout:
           path: ~/project
       - install-jdk
-      - decrypt-keystore
       - submodule-update
       - run:
           name: Run Android Unit Tests
@@ -169,7 +167,6 @@ jobs:
         default: student
     machine:
       image: android:2024.04.1
-    resource_class: xlarge
     working_directory: ~/project
     steps:
       - checkout:
@@ -190,7 +187,6 @@ jobs:
         default: student
     machine:
       image: android:2024.04.1
-    resource_class: xlarge
     working_directory: ~/project
     steps:
       - checkout:
@@ -211,7 +207,6 @@ jobs:
         default: student
     machine:
       image: android:2024.04.1
-    resource_class: xlarge
     working_directory: ~/project
     steps:
       - checkout:
@@ -246,7 +241,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/instructure/canvas-android/pulls/2627)
+            https://api.github.com/repos/instructure/canvas-android/pulls/$CIRCLE_PR_NUMBER)
 
             if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
               echo "RUN_E2E=true" >> $BASH_ENV
@@ -286,7 +281,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/instructure/canvas-android/pulls/2627)
+            https://api.github.com/repos/instructure/canvas-android/pulls/$CIRCLE_PR_NUMBER)
 
             if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
               echo "RUN_E2E=true" >> $BASH_ENV
@@ -308,13 +303,17 @@ jobs:
 workflows:
   student-pr:
     when:
-      or: 
-        - << pipeline.parameters.student >>
-        - << pipeline.parameters.all >>
+      and:
+        - or: 
+          - << pipeline.parameters.student >>
+          - << pipeline.parameters.all >>
+        - $CIRCLE_PR_NUMBER
+
     jobs:
       - build-qa-debug:
           name: Student QA build
           module: student
+      - build-and-comment-dev-debug-minify
       - unit-tests:
           name: Student Unit tests
           module: student
@@ -341,9 +340,11 @@ workflows:
 
   teacher-pr:
     when:
-      or:
-        - << pipeline.parameters.teacher >>
-        - << pipeline.parameters.all >>
+      and:
+        - or:
+          - << pipeline.parameters.teacher >>
+          - << pipeline.parameters.all >>
+        - $CIRCLE_PR_NUMBER
     jobs:
       - build-qa-debug:
           name: Teacher QA build
