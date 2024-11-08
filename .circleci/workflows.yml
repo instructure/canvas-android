@@ -317,6 +317,7 @@ workflows:
           name: Student QA build
           module: student
       - build-and-comment-dev-debug-minify:
+          name: Student DevDebug build
           module: student
           app-id: $STUDENT_APP_ID
       - unit-tests:
@@ -353,6 +354,7 @@ workflows:
           name: Teacher QA build
           module: teacher
       - build-and-comment-dev-debug-minify:
+          name: Teacher DevDebug build
           module: teacher
           app-id: $TEACHER_APP_ID
       - unit-tests:
