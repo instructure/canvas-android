@@ -75,7 +75,6 @@ import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage
 import com.instructure.teacher.ui.pages.RemoteConfigSettingsPage
-import com.instructure.teacher.ui.pages.SettingsPage
 import com.instructure.teacher.ui.pages.SpeedGraderCommentsPage
 import com.instructure.teacher.ui.pages.SpeedGraderFilesPage
 import com.instructure.teacher.ui.pages.SpeedGraderGradePage
@@ -116,7 +115,6 @@ abstract class TeacherTest : CanvasTest() {
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val editDashboardPage = EditDashboardPage()
-    val settingsPage = SettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
     val legalPage = LegalPage()
     val helpPage = HelpPage()

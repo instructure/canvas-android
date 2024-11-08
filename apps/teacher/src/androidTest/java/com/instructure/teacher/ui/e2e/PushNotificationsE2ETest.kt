@@ -7,12 +7,12 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.teacher.BuildConfig
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class PushNotificationsE2ETest : TeacherTest() {
+class PushNotificationsE2ETest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -41,7 +41,7 @@ class PushNotificationsE2ETest : TeacherTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open Push Notifications Page.")
-        settingsPage.openPushNotificationsPage()
+        settingsPage.clickOnSettingsItem("Push Notifications")
 
         Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Push Notifications' on the Push Notifications Page.")
         pushNotificationsPage.assertToolbarTitle()

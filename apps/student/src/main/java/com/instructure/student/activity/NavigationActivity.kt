@@ -88,6 +88,7 @@ import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
@@ -281,7 +282,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
-                R.id.navigationDrawerSettings -> startActivity(SettingsActivity.createIntent(applicationContext, featureFlagProvider.offlineEnabled()))
+                R.id.navigationDrawerSettings -> {
+                    val route = SettingsFragment.makeRoute(featureFlagProvider.offlineEnabled())
+                    val fragment = SettingsFragment.newInstance(route)
+                    addFragment(fragment, route)
+                }
             }
         }
     }

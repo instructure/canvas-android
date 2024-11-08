@@ -18,6 +18,8 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
+import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
+import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -49,6 +51,7 @@ import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.DiscussionsReplyFragment
 import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
+import com.instructure.student.fragment.FeatureFlagsFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.fragment.InboxRecipientsFragment
@@ -73,6 +76,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
+import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 
 object RouteResolver {
@@ -178,6 +182,10 @@ object RouteResolver {
             cls.isA<DiscussionRouterFragment>() -> DiscussionRouterFragment.newInstance(route.canvasContext!!, route)
             cls.isA<OfflineContentFragment>() -> OfflineContentFragment.newInstance(route)
             cls.isA<SyncProgressFragment>() -> SyncProgressFragment.newInstance()
+            cls.isA<PairObserverFragment>() -> PairObserverFragment.newInstance()
+            cls.isA<SyncSettingsFragment>() -> SyncSettingsFragment.newInstance()
+            cls.isA<FeatureFlagsFragment>() -> FeatureFlagsFragment()
+            cls.isA<RemoteConfigParamsFragment>() -> RemoteConfigParamsFragment()
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }
