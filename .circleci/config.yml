@@ -1,5 +1,3 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
 commands:
@@ -120,17 +118,33 @@ jobs:
       - run:
           name: Build DevDebugMinify with Gradle
           command: |
-            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache --stacktrace \
+            ../gradle/gradlew :student:assembleDevDebugMinify --build-cache \
               -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
               -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
               -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
-              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD     
+              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD
+      - run:
+          name: Install Firebase CLI
+          command: |
+            curl -sL https://firebase.tools | bash
+      - run:
+          name: Deploy APK to Firebase App Distribution
+          command: |
+            echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
+            OUTPUT=$(firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
+             --app $STUDENT_APP_ID \
+             --groups "testers")
+            SHARE_URI=$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*')
+            echo "export SHARE_URI=\"$SHARE_URI\"" >> "$BASH_ENV"
+            echo "Firebase Console URI: ${SHARE_URI}"
       - run:
           name: Comment on PR with Build Details
           command: |
+            echo "Firebase Console URI: ${SHARE_URI}"
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                -d '{"body": "DevDebugMinify build completed successfully."}' \
+                -d '{"body": "DevDebugMinify build completed successfully. $SHARE_URI"}' \
                 "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
             fi
 
