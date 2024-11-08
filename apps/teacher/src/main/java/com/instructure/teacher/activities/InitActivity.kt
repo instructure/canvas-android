@@ -108,7 +108,6 @@ import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.fragments.FileListFragment
-import com.instructure.teacher.fragments.SettingsFragment
 import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
