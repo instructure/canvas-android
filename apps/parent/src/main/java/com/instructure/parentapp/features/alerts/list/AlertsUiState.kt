@@ -30,6 +30,7 @@ data class AlertsUiState(
 
 data class AlertsItemUiState(
     val alertId: Long,
+    val contextId: Long,
     val title: String,
     val alertType: AlertType,
     val date: Date?,
@@ -40,12 +41,13 @@ data class AlertsItemUiState(
 )
 
 sealed class AlertsViewModelAction {
-    data class Navigate(val route: String): AlertsViewModelAction()
+    data class NavigateToRoute(val route: String?): AlertsViewModelAction()
+    data class NavigateToGlobalAnnouncement(val alertId: Long): AlertsViewModelAction()
     data class ShowSnackbar(val message: Int, val action: Int?, val actionCallback: (() -> Unit)?): AlertsViewModelAction()
 }
 
 sealed class AlertsAction {
     data object Refresh : AlertsAction()
-    data class Navigate(val alertId: Long, val route: String) : AlertsAction()
+    data class Navigate(val alertId: Long, val contextId: Long, val route: String?, val alertType: AlertType) : AlertsAction()
     data class DismissAlert(val alertId: Long) : AlertsAction()
 }

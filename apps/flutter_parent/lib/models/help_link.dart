@@ -28,18 +28,18 @@ abstract class HelpLink implements Built<HelpLink, HelpLinkBuilder> {
 
   factory HelpLink([void Function(HelpLinkBuilder) updates]) = _$HelpLink;
 
-  String get id;
+  String? get id;
 
   String get type;
 
   @BuiltValueField(wireName: 'available_to')
   BuiltList<AvailableTo> get availableTo;
 
-  String get url;
+  String? get url;
 
-  String get text;
+  String? get text;
 
-  String get subtext;
+  String? get subtext;
 }
 
 class AvailableTo extends EnumClass {

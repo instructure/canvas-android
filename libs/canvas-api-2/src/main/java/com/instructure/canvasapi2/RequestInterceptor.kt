@@ -16,7 +16,6 @@
  */
 package com.instructure.canvasapi2
 
-import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -90,6 +89,11 @@ class RequestInterceptor : Interceptor {
 
         if (params.usePerPageQueryParam) {
             val url = request.url.newBuilder().addQueryParameter("per_page", Integer.toString(ApiPrefs.perPageCount)).build()
+            request = request.newBuilder().url(url).build()
+        }
+
+        if (params.disableFileVerifiers) {
+            val url = request.url.newBuilder().addQueryParameter("no_verifiers", "1").build()
             request = request.newBuilder().url(url).build()
         }
 

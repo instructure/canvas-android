@@ -141,10 +141,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
                 StudentPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
             }
 
-            val launchDefinitions = awaitApi<List<LaunchDefinition>?> { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
+            val launchDefinitions = awaitApi { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
             launchDefinitions?.let {
-                val definitions = launchDefinitions.filter { it.domain == LaunchDefinition.STUDIO_DOMAIN || it.domain == LaunchDefinition.GAUGE_DOMAIN }
-                gotLaunchDefinitions(definitions)
+                gotLaunchDefinitions(it)
             }
 
             if (!ApiPrefs.isMasquerading) {

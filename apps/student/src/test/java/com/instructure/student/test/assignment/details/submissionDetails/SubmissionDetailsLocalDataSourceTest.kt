@@ -33,13 +33,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class SubmissionDetailsLocalDataSourceTest {
 
     private val enrollmentFacade: EnrollmentFacade = mockk(relaxed = true)

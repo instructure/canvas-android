@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.IntPref
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.canvasapi2.utils.StringPref
 import com.instructure.pandautils.R
+import dagger.hilt.android.qualifiers.ActivityContext
 
 const val MIN_CONTRAST_FOR_BUTTONS = 3.0
 const val MIN_CONTRAST_FOR_TEXT = 4.5
@@ -63,6 +64,8 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     var themeSelectionShown by BooleanPref()
 
+    private var canvasTheme: CanvasTheme? = null
+
     override fun keepBaseProps() = listOf(::appTheme, ::themeSelectionShown)
 
     override fun onClearPrefs() {
@@ -97,7 +100,13 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     }
 
-    fun applyCanvasTheme(theme: CanvasTheme, context: Context) {
+    // This should not be called with application context.
+    fun reapplyCanvasTheme(@ActivityContext context: Context) {
+        applyCanvasTheme(canvasTheme ?: return, context)
+    }
+
+    // This should not be called with application context.
+    fun applyCanvasTheme(theme: CanvasTheme, @ActivityContext context: Context) {
         val tempBrandColor = parseColor(theme.brand, brandColor) // ic-brand-primary - Primary Brand Color
         brandColor = ColorUtils.correctContrastForText(tempBrandColor, context.getColor(R.color.backgroundLightestElevated))
 
@@ -112,6 +121,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
         logoUrl = theme.logoUrl
         isThemeApplied = true
+        canvasTheme = theme
     }
 
     private fun parseColor(hexColor: String, defaultColor: Int): Int {

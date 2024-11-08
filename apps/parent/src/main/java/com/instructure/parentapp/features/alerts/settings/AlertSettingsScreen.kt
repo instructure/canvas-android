@@ -99,7 +99,7 @@ fun AlertSettingsScreen(
                     navIconRes = R.drawable.ic_back_arrow,
                     navigationActionClick = navigationActionClick,
                     backgroundColor = Color(uiState.userColor),
-                    textColor = colorResource(id = R.color.white),
+                    textColor = colorResource(id = R.color.textLightest),
                     actions = {
                         var showMenu by remember { mutableStateOf(false) }
                         var showConfirmationDialog by remember { mutableStateOf(false) }
@@ -113,7 +113,10 @@ fun AlertSettingsScreen(
                             }
                         }
                         OverflowMenu(
+                            modifier = Modifier
+                                .background(color = colorResource(id = R.color.backgroundLightestElevated)),
                             showMenu = showMenu,
+                            iconColor = colorResource(id = R.color.textLightest),
                             onDismissRequest = { showMenu = !showMenu }) {
                             DropdownMenuItem(
                                 modifier = Modifier.testTag("deleteMenuItem"),
@@ -123,7 +126,7 @@ fun AlertSettingsScreen(
                                         showConfirmationDialog = true
                                     }
                                 }) {
-                                Text(text = stringResource(id = R.string.delete))
+                                Text(text = stringResource(id = R.string.delete), color = colorResource(id = R.color.textDarkest))
                             }
                         }
                     }
@@ -261,7 +264,7 @@ fun getTitle(alertType: AlertType): Int {
         AlertType.COURSE_GRADE_HIGH -> R.string.alertSettingsCourseGradeHigh
         AlertType.COURSE_GRADE_LOW -> R.string.alertSettingsCourseGradeLow
         AlertType.COURSE_ANNOUNCEMENT -> R.string.alertSettingsCourseAnnouncement
-        AlertType.INSTITUTION_ANNOUNCEMENT -> R.string.alertSettingsInstitutionAnnouncement
+        AlertType.INSTITUTION_ANNOUNCEMENT -> R.string.alertSettingsGlobalAnnouncement
     }
 }
 

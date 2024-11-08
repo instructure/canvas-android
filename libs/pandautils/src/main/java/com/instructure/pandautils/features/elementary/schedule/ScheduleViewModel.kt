@@ -401,7 +401,7 @@ class ScheduleViewModel @Inject constructor(
             PlannableType.ANNOUNCEMENT -> resources.getString(R.string.a11y_announcement)
             PlannableType.DISCUSSION_TOPIC -> resources.getString(R.string.a11y_discussion_topic)
             PlannableType.CALENDAR_EVENT -> resources.getString(R.string.a11y_calendar_event)
-            PlannableType.ASSIGNMENT -> resources.getString(R.string.a11y_assignment)
+            PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> resources.getString(R.string.a11y_assignment)
             PlannableType.PLANNER_NOTE -> resources.getString(R.string.a11y_planner_note)
             PlannableType.QUIZ -> resources.getString(R.string.a11y_quiz)
             PlannableType.TODO -> resources.getString(R.string.a11y_todo)
@@ -528,7 +528,7 @@ class ScheduleViewModel @Inject constructor(
 
     private fun getTypeForPlannerItem(plannerItem: PlannerItem): PlannerItemType {
         return when (plannerItem.plannableType) {
-            PlannableType.ASSIGNMENT -> PlannerItemType.ASSIGNMENT
+            PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> PlannerItemType.ASSIGNMENT
             PlannableType.ANNOUNCEMENT -> PlannerItemType.ANNOUNCEMENT
             PlannableType.QUIZ -> PlannerItemType.QUIZ
             PlannableType.WIKI_PAGE -> PlannerItemType.PAGE

@@ -94,7 +94,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         // Icon
         val drawableResId: Int
         when (item.getStreamItemType()) {
-            StreamItem.Type.DISCUSSION_TOPIC -> {
+            StreamItem.Type.DISCUSSION_TOPIC, StreamItem.Type.DISCUSSION_ENTRY, StreamItem.Type.DISCUSSION_MENTION -> {
                 drawableResId = R.drawable.ic_discussion
                 icon.contentDescription = context.getString(R.string.discussionIcon)
             }

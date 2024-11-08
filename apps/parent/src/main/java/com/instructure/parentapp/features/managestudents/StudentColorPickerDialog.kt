@@ -57,7 +57,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.createThemedColor
 
 
 @Composable
@@ -183,7 +182,7 @@ fun StudentColorPickerDialogPreview() {
     val colors = ColorKeeper.userColors.map {
         UserColor(
             colorRes = it,
-            color = createThemedColor(context.getColor(it)),
+            color = ColorKeeper.createThemedColor(context.getColor(it)),
             contentDescriptionRes = 0
         )
     }

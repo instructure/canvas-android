@@ -51,6 +51,13 @@ object AnnouncementAPI {
          */
         @GET("announcements?include[]=sections&active_only=true&per_page=1")
         fun getLatestAnnouncement(@Query("context_codes[]") courseCode: String): Call<List<DiscussionTopicHeader>>
+
+        @GET("courses/{courseId}/discussion_topics/{announcementId}")
+        suspend fun getCourseAnnouncement(
+            @Path("courseId") courseId: Long,
+            @Path("announcementId") announcementId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<DiscussionTopicHeader>
     }
 
     fun getFirstPageAnnouncements(canvasContext: CanvasContext, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {

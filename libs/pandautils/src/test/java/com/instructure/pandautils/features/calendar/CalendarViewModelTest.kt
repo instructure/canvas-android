@@ -674,6 +674,46 @@ class CalendarViewModelTest {
     }
 
     @Test
+    fun `Open assignment when sub assignment is selected`() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
+            createPlannerItem(1, 1, PlannableType.SUB_ASSIGNMENT, createDate(2023, 4, 20, 12)).copy(
+                htmlUrl = "/courses/1/assignments/123"
+            )
+        )
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.EventSelected(1))
+
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 123)
+        assertEquals(expectedAction, events.last())
+    }
+
+    @Test
+    fun `Open assignment when submitted sub assignment is selected`() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
+            createPlannerItem(1, 1, PlannableType.SUB_ASSIGNMENT, createDate(2023, 4, 20, 12)).copy(
+                htmlUrl = "/courses/1/assignments/123/submissions/321"
+            )
+        )
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.EventSelected(1))
+
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 123)
+        assertEquals(expectedAction, events.last())
+    }
+
+    @Test
     fun `Open discussion when discussion is selected`() = runTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
             createPlannerItem(1, 1, PlannableType.DISCUSSION_TOPIC, createDate(2023, 4, 20, 12)),

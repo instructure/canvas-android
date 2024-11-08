@@ -27,11 +27,9 @@ import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class CreateUpdateToDoRepositoryTest {
 
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)

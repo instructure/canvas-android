@@ -23,7 +23,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Placements(
         @SerializedName("global_navigation")
-        var globalNavigation: Placement,
+        var globalNavigation: Placement?,
         @SerializedName("course_navigation")
         var courseNavigation: Placement? = null
 ) : Parcelable

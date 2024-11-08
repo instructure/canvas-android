@@ -9,13 +9,11 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNull
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class DiscussionRouteHelperTest {
 
     @get:Rule

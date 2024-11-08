@@ -27,8 +27,7 @@ import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.TestSelectStudentHolder
@@ -36,7 +35,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -76,9 +75,8 @@ class AlertsViewModelTest {
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+        mockkStatic(User::studentColor)
 
-        mockkObject(ColorKeeper)
-        every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         coEvery { repository.getAlertThresholdForStudent(any(), any()) } returns emptyList()
     }
 
@@ -91,6 +89,7 @@ class AlertsViewModelTest {
     @Test
     fun `Load alerts on student change`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -162,6 +161,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -180,6 +180,7 @@ class AlertsViewModelTest {
     @Test
     fun `Empty state`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         coEvery {
             repository.getAlertsForStudent(student.id, any())
@@ -217,6 +218,7 @@ class AlertsViewModelTest {
     @Test
     fun `Error state if getting alerts fail`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         coEvery {
             repository.getAlertsForStudent(student.id, any())
@@ -238,6 +240,7 @@ class AlertsViewModelTest {
     @Test
     fun `Refresh data`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -281,6 +284,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -299,6 +303,7 @@ class AlertsViewModelTest {
     @Test
     fun `Dismiss alert`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -331,6 +336,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -354,13 +360,20 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(R.string.alertDismissMessage, (events.last() as AlertsViewModelAction.ShowSnackbar).message)
-        assertEquals(R.string.alertDismissAction, (events.last() as AlertsViewModelAction.ShowSnackbar).action)
+        assertEquals(
+            R.string.alertDismissMessage,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).message
+        )
+        assertEquals(
+            R.string.alertDismissAction,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).action
+        )
     }
 
     @Test
     fun `Dismiss error resets event`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -393,6 +406,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -415,13 +429,17 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(R.string.alertDismissErrorMessage, (events.last() as AlertsViewModelAction.ShowSnackbar).message)
+        assertEquals(
+            R.string.alertDismissErrorMessage,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).message
+        )
         assertEquals(expected, viewModel.uiState.value)
     }
 
     @Test
     fun `Undo dismissal`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -454,6 +472,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -477,8 +496,14 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(R.string.alertDismissMessage, (events.last() as AlertsViewModelAction.ShowSnackbar).message)
-        assertEquals(R.string.alertDismissAction, (events.last() as AlertsViewModelAction.ShowSnackbar).action)
+        assertEquals(
+            R.string.alertDismissMessage,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).message
+        )
+        assertEquals(
+            R.string.alertDismissAction,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).action
+        )
 
         (events.last() as AlertsViewModelAction.ShowSnackbar).actionCallback?.invoke()
 
@@ -488,6 +513,7 @@ class AlertsViewModelTest {
     @Test
     fun `Undo does not reset event on error`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -520,6 +546,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -550,8 +577,9 @@ class AlertsViewModelTest {
     }
 
     @Test
-    fun `Navigate to URL`() = runTest {
+    fun `Navigate to Course Announcement`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -561,7 +589,7 @@ class AlertsViewModelTest {
                 ),
                 title = "Alert 1",
                 workflowState = AlertWorkflowState.READ,
-                alertType = AlertType.ASSIGNMENT_MISSING,
+                alertType = AlertType.COURSE_ANNOUNCEMENT,
                 htmlUrl = "https://example.com/alert1",
                 contextId = 1L,
                 contextType = "Course",
@@ -583,6 +611,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -597,7 +626,14 @@ class AlertsViewModelTest {
 
         assertEquals(expected, viewModel.uiState.value)
 
-        viewModel.handleAction(AlertsAction.Navigate(1L, "https://example.com/alert1"))
+        viewModel.handleAction(
+            AlertsAction.Navigate(
+                1L,
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            )
+        )
 
         val events = mutableListOf<AlertsViewModelAction>()
 
@@ -605,12 +641,89 @@ class AlertsViewModelTest {
             viewModel.events.toList(events)
         }
 
-        assertEquals(AlertsViewModelAction.Navigate("https://example.com/alert1"), events.last())
+        assertEquals(
+            AlertsViewModelAction.NavigateToRoute(
+                "https://example.com/alert1"
+            ), events.last()
+        )
+    }
+
+    @Test
+    fun `Navigate to Global Announcement`() = runTest {
+        val student = User(1L)
+        every { student.studentColor } returns 1
+
+        val alerts = listOf(
+            Alert(
+                id = 1,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-03T00:00:00Z")
+                ),
+                title = "Alert 1",
+                workflowState = AlertWorkflowState.READ,
+                alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
+                htmlUrl = "https://example.com/alert1",
+                contextId = 10L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 1L,
+                observerId = 1L,
+                userId = 2L
+            )
+        )
+
+        coEvery { repository.getAlertsForStudent(student.id, any()) } returns alerts
+
+        createViewModel()
+        selectedStudentFlow.emit(student)
+
+        val expected = AlertsUiState(
+            isLoading = false,
+            isError = false,
+            alerts = alerts.map {
+                AlertsItemUiState(
+                    alertId = it.id,
+                    contextId = it.contextId,
+                    title = it.title,
+                    alertType = it.alertType,
+                    date = it.actionDate,
+                    observerAlertThreshold = null,
+                    lockedForUser = it.lockedForUser,
+                    unread = it.workflowState == AlertWorkflowState.UNREAD,
+                    htmlUrl = it.htmlUrl
+                )
+            }.sortedByDescending { it.date },
+            studentColor = 1
+        )
+
+        assertEquals(expected, viewModel.uiState.value)
+
+        viewModel.handleAction(
+            AlertsAction.Navigate(
+                1L,
+                10L,
+                "https://example.com/alert1",
+                AlertType.INSTITUTION_ANNOUNCEMENT
+            )
+        )
+
+        val events = mutableListOf<AlertsViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(
+            AlertsViewModelAction.NavigateToGlobalAnnouncement(
+                10L
+            ), events.last()
+        )
     }
 
     @Test
     fun `Navigation to alert marks it read`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -620,7 +733,7 @@ class AlertsViewModelTest {
                 ),
                 title = "Alert 1",
                 workflowState = AlertWorkflowState.UNREAD,
-                alertType = AlertType.ASSIGNMENT_MISSING,
+                alertType = AlertType.COURSE_ANNOUNCEMENT,
                 htmlUrl = "https://example.com/alert1",
                 contextId = 1L,
                 contextType = "Course",
@@ -643,6 +756,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -655,14 +769,25 @@ class AlertsViewModelTest {
             studentColor = 1
         )
 
-        viewModel.handleAction(AlertsAction.Navigate(1L, "https://example.com/alert1"))
+        viewModel.handleAction(
+            AlertsAction.Navigate(
+                1L,
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            )
+        )
 
         val events = mutableListOf<AlertsViewModelAction>()
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
 
-        assertEquals(AlertsViewModelAction.Navigate("https://example.com/alert1"), events.last())
+        assertEquals(
+            AlertsViewModelAction.NavigateToRoute(
+                "https://example.com/alert1"
+            ), events.last()
+        )
 
         assertEquals(expected, viewModel.uiState.value)
         coVerify {
@@ -673,6 +798,7 @@ class AlertsViewModelTest {
     @Test
     fun `If marking the alert read fails the alert will remain read until refresh`() = runTest {
         val student = User(1L)
+        every { student.studentColor } returns 1
 
         val alerts = listOf(
             Alert(
@@ -682,7 +808,7 @@ class AlertsViewModelTest {
                 ),
                 title = "Alert 1",
                 workflowState = AlertWorkflowState.UNREAD,
-                alertType = AlertType.ASSIGNMENT_MISSING,
+                alertType = AlertType.COURSE_ANNOUNCEMENT,
                 htmlUrl = "https://example.com/alert1",
                 contextId = 1L,
                 contextType = "Course",
@@ -705,6 +831,7 @@ class AlertsViewModelTest {
             alerts = alerts.map {
                 AlertsItemUiState(
                     alertId = it.id,
+                    contextId = it.contextId,
                     title = it.title,
                     alertType = it.alertType,
                     date = it.actionDate,
@@ -717,17 +844,45 @@ class AlertsViewModelTest {
             studentColor = 1
         )
 
-        viewModel.handleAction(AlertsAction.Navigate(1L, "https://example.com/alert1"))
+        viewModel.handleAction(
+            AlertsAction.Navigate(
+                1L,
+                1L,
+                "https://example.com/alert1",
+                AlertType.COURSE_ANNOUNCEMENT
+            )
+        )
 
         val events = mutableListOf<AlertsViewModelAction>()
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
 
-        assertEquals(AlertsViewModelAction.Navigate("https://example.com/alert1"), events.last())
+        assertEquals(
+            AlertsViewModelAction.NavigateToRoute(
+                "https://example.com/alert1"
+            ), events.last()
+        )
 
         assertEquals(expected, viewModel.uiState.value)
 
+    }
+
+    @Test
+    fun `Change color when student color is changed`() = runTest {
+        val student = User(1L)
+        mockkStatic(User::studentColor)
+        every { student.studentColor } returns 1
+        createViewModel()
+        selectedStudentFlow.emit(student)
+
+        assertEquals(1, viewModel.uiState.value.studentColor)
+
+        every { student.studentColor } returns 2
+        selectedStudentHolder.selectedStudentColorChanged()
+
+        assertEquals(2, viewModel.uiState.value.studentColor)
+        unmockkAll()
     }
 
     private fun createViewModel() {

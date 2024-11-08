@@ -19,7 +19,8 @@ package com.instructure.parentapp.features.addstudent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,7 +41,7 @@ class AddStudentViewModel @Inject constructor(
     private val _uiState =
         MutableStateFlow(
             AddStudentUiState(
-                color = selectedStudentHolder.selectedStudentState.value.color,
+                color = selectedStudentHolder.selectedStudentState.value.studentColor,
                 actionHandler = this::handleAction
             )
         )
@@ -53,7 +54,7 @@ class AddStudentViewModel @Inject constructor(
         viewModelScope.launch {
             selectedStudentHolder.selectedStudentChangedFlow.collectLatest { user ->
                 _uiState.value = _uiState.value.copy(
-                    color = user.color
+                    color = user.studentColor
                 )
             }
         }

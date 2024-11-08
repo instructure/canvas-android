@@ -17,7 +17,11 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withParent
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.DirectlyPopulateEditText
 import com.instructure.canvas.espresso.explicitClick
@@ -56,7 +60,7 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
 
     fun waitForDiscussionTopicToDisplay(topicTitle: String) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
-        waitForView(matcher)
+        waitForView(matcher).assertDisplayed()
     }
 
     fun assertTopicDisplayed(topicTitle: String) {

@@ -26,15 +26,12 @@ import com.instructure.student.room.entities.CreateSubmissionEntity
 import com.instructure.student.room.entities.daos.CreateSubmissionDao
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
-@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class CreateSubmissionDaoTest {
 

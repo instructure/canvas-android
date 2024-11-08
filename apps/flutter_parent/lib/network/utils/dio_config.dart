@@ -22,7 +22,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'private_consts.dart';
 
@@ -153,8 +152,15 @@ class DioConfig {
     String? overrideToken = null,
     Map<String, String>? extraHeaders = null,
     PageSize pageSize = PageSize.none,
+    bool disableFileVerifiers = true,
   }) {
     Map<String, dynamic>? extraParams = ApiPrefs.isMasquerading() ? {'as_user_id': ApiPrefs.getUser()?.id} : null;
+
+    if (disableFileVerifiers) {
+      extraParams ??= {};
+      extraParams['no_verifiers'] = 1;
+    }
+
     return DioConfig(
       baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
       baseHeaders: ApiPrefs.getHeaderMap(
@@ -236,6 +242,7 @@ Dio canvasDio({
   String? overrideToken = null,
   Map<String, String>? extraHeaders = null,
   PageSize pageSize = PageSize.none,
+  bool disableFileVerifiers = true,
 }) {
   return DioConfig.canvas(
           forceRefresh: forceRefresh,
@@ -243,7 +250,8 @@ Dio canvasDio({
           overrideToken: overrideToken,
           extraHeaders: extraHeaders,
           pageSize: pageSize,
-          includeApiPath: includeApiPath)
+          includeApiPath: includeApiPath,
+          disableFileVerifiers: disableFileVerifiers)
       .dio;
 }
 

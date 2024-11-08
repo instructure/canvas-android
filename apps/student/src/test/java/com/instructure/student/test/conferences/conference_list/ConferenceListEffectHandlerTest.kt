@@ -16,7 +16,10 @@
  */
 package com.instructure.student.test.conferences.conference_list
 
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.AuthenticatedSession
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffect
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffectHandler
@@ -24,10 +27,19 @@ import com.instructure.student.mobius.conferences.conference_list.ConferenceList
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListView
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -35,7 +47,7 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class ConferenceListEffectHandlerTest : Assert() {
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
     private val view: ConferenceListView = mockk(relaxed = true)
     private val repository: ConferenceListRepository = mockk(relaxed = true)
     private val effectHandler = ConferenceListEffectHandler(repository).apply {
@@ -53,11 +65,8 @@ class ConferenceListEffectHandlerTest : Assert() {
     @After
     fun cleanUp() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
         clearAllMocks()
     }
-
-    fun test(block: suspend TestCoroutineScope.() -> Unit) = testDispatcher.runBlockingTest(block)
 
     @Suppress("DeferredResultUnused")
     @Test
@@ -79,7 +88,7 @@ class ConferenceListEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `LaunchInBrowser calls API, calls launchUrl and produces LaunchInBrowserFinished`() = test {
+    fun `LaunchInBrowser calls API, calls launchUrl and produces LaunchInBrowserFinished`() = runTest {
         val url = "url"
         val sessionUrl = "session-url"
 

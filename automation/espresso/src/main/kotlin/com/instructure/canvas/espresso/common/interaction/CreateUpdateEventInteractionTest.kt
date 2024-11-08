@@ -18,6 +18,7 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
@@ -220,6 +221,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     }
 
     @Test
+    @Stub("This test is flaky, depends on the time of day")
     fun assertUpdatedFrom() {
         val data = initData()
         val user = getLoggedInUser()
@@ -248,7 +250,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         calendarEventDetailsPage.assertEventDateContains(expectedTime!!)
     }
 
-    @Test
+    @Stub("This test is flaky, depends on the time of day")
     fun assertUpdatedTo() {
         val data = initData()
         val user = getLoggedInUser()

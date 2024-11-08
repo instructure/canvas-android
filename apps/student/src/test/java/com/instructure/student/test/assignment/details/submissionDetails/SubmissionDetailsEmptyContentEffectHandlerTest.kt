@@ -15,14 +15,18 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
@@ -41,7 +45,15 @@ import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.excludeRecords
+import io.mockk.invoke
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -202,7 +214,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities())
+            view.showSubmitDialogView(assignment,
+                SubmissionTypesVisibilities()
+            )
         }
 
         confirmVerified(view)
@@ -413,7 +427,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities())
+            view.showSubmitDialogView(assignment,
+                SubmissionTypesVisibilities()
+            )
         }
 
         confirmVerified(view)
@@ -429,7 +445,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             view.showSubmitDialogView(
                 assignment,
-                SubmissionTypesVisibilities(fileUpload = true, studioUpload = true)
+                SubmissionTypesVisibilities(
+                    fileUpload = true,
+                    studioUpload = true
+                )
             )
         }
 
@@ -446,7 +465,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(fileUpload = true))
+            view.showSubmitDialogView(assignment,
+                SubmissionTypesVisibilities(
+                    fileUpload = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -461,7 +484,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(textEntry = true))
+            view.showSubmitDialogView(assignment,
+                SubmissionTypesVisibilities(
+                    textEntry = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -476,7 +503,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(urlEntry = true))
+            view.showSubmitDialogView(assignment,
+                SubmissionTypesVisibilities(
+                    urlEntry = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -492,7 +523,11 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(studentAnnotation = true))
+            view.showSubmitDialogView(assignment,
+                SubmissionTypesVisibilities(
+                    studentAnnotation = true
+                )
+            )
         }
 
         confirmVerified(view)
@@ -509,7 +544,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             view.showSubmitDialogView(
                 assignment,
-                SubmissionTypesVisibilities(mediaRecording = true)
+                SubmissionTypesVisibilities(
+                    mediaRecording = true
+                )
             )
         }
 
@@ -533,7 +570,8 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                     fileUpload = true,
                     mediaRecording = true,
                     studioUpload = true,
-                    studentAnnotation = true)
+                    studentAnnotation = true
+                )
             )
         }
 

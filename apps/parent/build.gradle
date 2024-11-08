@@ -22,6 +22,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 configurations {
@@ -39,8 +40,8 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode 50
-        versionName "3.10.0"
+        versionCode 52
+        versionName "3.12.0"
 
         buildConfigField "boolean", "IS_TESTING", "false"
         testInstrumentationRunner 'com.instructure.parentapp.ui.espresso.ParentHiltTestRunner'
@@ -149,9 +150,6 @@ android {
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
-    }
 
     testOptions.animationsDisabled = true
 }
@@ -212,7 +210,7 @@ dependencies {
     implementation Libs.ANDROIDX_BROWSER
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES

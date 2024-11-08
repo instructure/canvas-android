@@ -17,18 +17,34 @@
 
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.models.*
-import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.entities.*
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.Term
+import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseGradingPeriodDao
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.daos.GradingPeriodDao
+import com.instructure.pandautils.room.offline.daos.SectionDao
+import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.daos.TermDao
+import com.instructure.pandautils.room.offline.entities.CourseEntity
+import com.instructure.pandautils.room.offline.entities.CourseGradingPeriodEntity
+import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
+import com.instructure.pandautils.room.offline.entities.GradingPeriodEntity
+import com.instructure.pandautils.room.offline.entities.SectionEntity
+import com.instructure.pandautils.room.offline.entities.TabEntity
+import com.instructure.pandautils.room.offline.entities.TermEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class CourseFacadeTest {
 
     private val termDao: TermDao = mockk(relaxed = true)
