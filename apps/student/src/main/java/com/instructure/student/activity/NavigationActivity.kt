@@ -176,6 +176,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private lateinit var canvasLoadingBinding: LoadingCanvasViewBinding
     //DELETE ME
 
+
+
     @Inject
     lateinit var navigationBehavior: NavigationBehavior
 
