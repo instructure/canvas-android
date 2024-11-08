@@ -53,7 +53,6 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
@@ -94,11 +93,6 @@ import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceL
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.util.FileUtils
 import com.instructure.student.util.onMainThread
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.regex.Pattern
 
@@ -109,7 +103,6 @@ object RouteMatcher : BaseRouteMatcher() {
 
     var offlineDb: OfflineDatabase? = null
     var networkStateProvider: NetworkStateProvider? = null
-    var routeMatcherRepository: RouteMatcherRepository? = null
 
     init {
         initRoutes()
@@ -517,38 +510,11 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     fun route(activity: FragmentActivity, route: Route?) {
-        val dialog = showLoadingDialog(activity)
-        val job = CoroutineScope(Dispatchers.IO).launch {
-            routeWithPermissionCheck(activity, route)
-            if (dialog.isShowing) {
-                withContext(Dispatchers.Main) { dialog.dismiss() }
+        if (EnabledTabs.isPathTabNotEnabled(route)) {
+            if (activity is InterwebsToApplication) {
+                route(activity, DashboardFragment.makeRoute(null))
             }
-        }
-        // Show the dialog if the route takes longer than 200ms to load
-        // This is a hack to avoid popping dialogs when the data is already cached
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(200)
-            if (!job.isCompleted) {
-                withContext(Dispatchers.Main) { dialog.show() }
-            }
-        }
-    }
-
-    private fun showLoadingDialog(activity: FragmentActivity): AlertDialog {
-        val dialog = AlertDialog.Builder(activity, R.style.CustomViewAlertDialog)
-            .setView(R.layout.dialog_loading_view)
-            .create()
-        return dialog
-    }
-
-    private suspend fun routeWithPermissionCheck(activity: FragmentActivity, route: Route?) {
-        if (routeMatcherRepository?.isRouteNotAvailable(route).orDefault()) {
-            withContext(Dispatchers.Main) {
-                if (activity is InterwebsToApplication) {
-                    route(activity, DashboardFragment.makeRoute(null))
-                }
-                activity.toast(R.string.route_not_available)
-            }
+            activity.toast(R.string.route_not_available)
             return
         }
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {

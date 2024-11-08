@@ -27,12 +27,15 @@ import android.view.View
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -40,6 +43,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -47,7 +51,7 @@ import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
+import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
@@ -70,6 +74,9 @@ class InterwebsToApplication : AppCompatActivity() {
 
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
+    lateinit var courseApi: CourseAPI.CoursesInterface
 
     private var loadingJob: Job? = null
 
@@ -100,6 +107,10 @@ class InterwebsToApplication : AppCompatActivity() {
     private fun loadRoute(data: Uri, url: String) {
         loadingJob = tryWeave {
             val host = data.host.orEmpty() // example: "mobiledev.instructure.com"
+
+            EnabledTabs.enabledTabs = courseApi.getFirstPageCourses(RestParams()).depaginate {
+                courseApi.next(it, RestParams())
+            }.dataOrNull?.mapNotNull { it.tabs }?.flatten() ?: emptyList()
 
             // Do some logging
             LoggingUtility.log(Log.WARN, data.toString())

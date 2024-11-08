@@ -18,9 +18,7 @@
 
 package com.instructure.student.di
 
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.utils.LogoutHelper
-import com.instructure.student.router.RouteMatcherRepository
 import com.instructure.student.util.StudentLogoutHelper
 import dagger.Module
 import dagger.Provides
@@ -34,10 +32,5 @@ class ApplicationModule {
     @Provides
     fun provideLogoutHelper(): LogoutHelper {
         return StudentLogoutHelper()
-    }
-
-    @Provides
-    fun provideRouteMatcherRepository(courseApi: CourseAPI.CoursesInterface): RouteMatcherRepository {
-        return RouteMatcherRepository(courseApi)
     }
 }
