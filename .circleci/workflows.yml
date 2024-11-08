@@ -63,32 +63,6 @@ commands:
 
 
 jobs:
-  share-env-vars:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run:
-          name: Check Git Message and Set RUN_E2E
-          command: |
-            #!/usr/bin/env bash
-            set -e
-            set -o pipefail
-            set -x
-
-            PR_DETAILS=$(curl -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/instructure/canvas-android/pulls/2627)
-
-            if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
-              echo "RUN_E2E=true" >> $BASH_ENV
-            fi
-      - run:
-          name: Print RUN_E2E for Debug
-          command: | 
-              echo "RUN_E2E is set to: $RUN_E2E"
-  
   build-qa-debug:
     parameters:
       module:
@@ -288,6 +262,48 @@ jobs:
             - flank:
                 title: E2E
                 flank-yml: ./apps/<< parameters.module >>/flank_e2e.yml
+            - store_test_results:
+                path: ./results
+
+  e2e-offline:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    working_directory: ~/project
+    steps:
+      - run:
+          name: Check Git Message and Set RUN_E2E
+          command: |
+            #!/usr/bin/env bash
+            set -e
+            set -o pipefail
+            set -x
+
+            PR_DETAILS=$(curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/instructure/canvas-android/pulls/2627)
+
+            if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
+              echo "RUN_E2E=true" >> $BASH_ENV
+            fi
+      - when:
+          condition: $RUN_E2E
+          steps:
+            - checkout:
+                path: ~/project
+            - attach_workspace:
+                at: ~/project/apps/<< parameters.module >>
+            - download-flank
+            - flank:
+                title: E2E
+                flank-yml: ./apps/<< parameters.module >>/flank_e2e_offline.yml
+            - store_test_results:
+                path: ./results
 
 workflows:
   student-pr:
@@ -316,6 +332,10 @@ workflows:
           requires: [Student QA build]
       - e2e:
           name: Student E2E
+          module: student
+          requires: [Student QA build]
+      - e2e-offline:
+          name: Student Offline E2E
           module: student
           requires: [Student QA build]
 
