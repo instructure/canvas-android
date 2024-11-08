@@ -543,7 +543,12 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private suspend fun routeWithPermissionCheck(activity: FragmentActivity, route: Route?) {
         if (routeMatcherRepository?.isRouteNotAvailable(route).orDefault()) {
-            withContext(Dispatchers.Main) { activity.toast(R.string.route_not_available) }
+            withContext(Dispatchers.Main) {
+                if (activity is InterwebsToApplication) {
+                    route(activity, DashboardFragment.makeRoute(null))
+                }
+                activity.toast(R.string.route_not_available)
+            }
             return
         }
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
