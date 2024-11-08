@@ -278,18 +278,16 @@ jobs:
               echo "RUN_E2E=true" >> $BASH_ENV
             fi
       - when:
-        condition: ${RUN_E2E}
-        steps:
-          - checkout:
-              path: ~/project
-          - attach_workspace:
-              at: ~/project/apps/<< parameters.module >>
-          - download-flank
-          - flank:
-              title: UI tests tablet
-              flank-yml: ./apps/<< parameters.module >>/e2e.yml
-          - store_test_results:
-              path: ./results
+          condition: $RUN_E2E
+          steps:
+            - checkout:
+                path: ~/project
+            - attach_workspace:
+                at: ~/project/apps/<< parameters.module >>
+            - download-flank
+            - flank:
+                title: E2E
+                flank-yml: ./apps/<< parameters.module >>/flank_e2e.yml
 
 workflows:
   student-pr:
@@ -301,50 +299,47 @@ workflows:
       - build-qa-debug:
           name: Student QA build
           module: student
+      - unit-tests:
+          name: Student Unit tests
+          module: student
+      - ui-tests-portrait:
+          name: Student Portrait UI tests
+          module: student
+          requires: [Student QA build]
+      - ui-tests-landscape:
+          name: Student Landscape UI tests
+          module: student
+          requires: [Student QA build]
+      - ui-tests-tablet:
+          name: Student Tablet UI tests
+          module: student
+          requires: [Student QA build]
       - e2e:
-        name: Student E2E
-        requires: [Student QA build]
-      # - unit-tests:
-      #     name: Student Unit tests
-      #     module: student
-      #     requires: [share-env-vars]
-      # - ui-tests-portrait:
-      #     name: Student Portrait UI tests
-      #     module: student
-      #     requires: [Student QA build]
-      # - ui-tests-landscape:
-      #     name: Student Landscape UI tests
-      #     module: student
-      #     requires: [Student QA build]
-      # - ui-tests-tablet:
-      #     name: Student Tablet UI tests
-      #     module: student
-      #     requires: [Student QA build]
+          name: Student E2E
+          module: student
+          requires: [Student QA build]
 
-  # teacher-pr:
-  #   when:
-  #     or:
-  #       - << pipeline.parameters.teacher >>
-  #       - << pipeline.parameters.all >>
-  #   jobs:
-  #     - share-env-vars
-  #     - build-qa-debug:
-  #         name: Teacher QA build
-  #         module: teacher
-  #         requires: [share-env-vars]
-  #     - unit-tests:
-  #         name: Teacher Unit tests
-  #         module: teacher
-  #         requires: [share-env-vars]
-  #     - ui-tests-portrait:
-  #         name: Teacher Portrait UI tests
-  #         module: teacher
-  #         requires: [Teacher QA build]
-  #     - ui-tests-landscape:
-  #         name: Teacher Landscape UI tests
-  #         module: teacher
-  #         requires: [Teacher QA build]
-  #     - ui-tests-tablet:
-  #         name: Teacher Tablet UI tests
-  #         module: teacher
-  #         requires: [Teacher QA build]
+  teacher-pr:
+    when:
+      or:
+        - << pipeline.parameters.teacher >>
+        - << pipeline.parameters.all >>
+    jobs:
+      - build-qa-debug:
+          name: Teacher QA build
+          module: teacher
+      - unit-tests:
+          name: Teacher Unit tests
+          module: teacher
+      - ui-tests-portrait:
+          name: Teacher Portrait UI tests
+          module: teacher
+          requires: [Teacher QA build]
+      - ui-tests-landscape:
+          name: Teacher Landscape UI tests
+          module: teacher
+          requires: [Teacher QA build]
+      - ui-tests-tablet:
+          name: Teacher Tablet UI tests
+          module: teacher
+          requires: [Teacher QA build]
