@@ -123,7 +123,7 @@ class RouteMatcherRepositoryTest {
 
         val result = routeMatcherRepository.isRouteNotAvailable(route)
 
-        assertTrue(result)
+        assertFalse(result)
     }
 
     @Test
