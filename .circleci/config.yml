@@ -141,8 +141,9 @@ jobs:
           name: Comment on PR with Build Details
           command: |
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              COMMENT="DevDebugMinify build completed successfully: $SHARE_URI"
               curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                -d '{"body": "DevDebugMinify build completed successfully. ${SHARE_URI}"}' \
+                -d "{\"body\": \"$COMMENT\"}" \
                 "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
             fi
 
