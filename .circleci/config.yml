@@ -137,14 +137,12 @@ jobs:
              --groups "testers")
             SHARE_URI=$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*')
             echo "export SHARE_URI=\"$SHARE_URI\"" >> "$BASH_ENV"
-            echo "Firebase Console URI: ${SHARE_URI}"
       - run:
           name: Comment on PR with Build Details
           command: |
-            echo "Firebase Console URI: ${SHARE_URI}"
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                -d '{"body": "DevDebugMinify build completed successfully. $SHARE_URI"}' \
+                -d '{"body": "DevDebugMinify build completed successfully. ${SHARE_URI}"}' \
                 "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
             fi
 
@@ -161,7 +159,7 @@ jobs:
       - submodule-update
       - run:
           name: Run Android Unit Tests
-          command: |          
+          command: |
             ../gradle/gradlew :student:testDevDebugUnitTest
       - store_test_results:
           path: ./student/build/test-results/testDevDebugUnitTest
