@@ -93,6 +93,12 @@ jobs:
             - ./build/outputs/apk/androidTest/qa/debug/<< parameters.module >>-qa-debug-androidTest.apk
   
   build-and-comment-dev-debug-minify:
+    parameters:
+      app-id:
+        type: string
+      module:
+        type: string
+        default: student
     machine:
       image: android:2024.04.1
     resource_class: xlarge
@@ -122,8 +128,8 @@ jobs:
           command: |
             echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
             export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
-            OUTPUT=$(firebase appdistribution:distribute ./student/build/outputs/apk/dev/debugMinify/student-dev-debugMinify.apk \
-             --app $STUDENT_APP_ID \
+            OUTPUT=$(firebase appdistribution:distribute ./<< parameters.module >>/build/outputs/apk/dev/debugMinify/<< parameters.module >>-dev-debugMinify.apk \
+             --app << parameters.app-id >> \
              --groups "testers")
             SHARE_URI=$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*')
             echo "export SHARE_URI=\"$SHARE_URI\"" >> "$BASH_ENV"
@@ -313,7 +319,9 @@ workflows:
       - build-qa-debug:
           name: Student QA build
           module: student
-      - build-and-comment-dev-debug-minify
+      - build-and-comment-dev-debug-minify:
+          module: student
+          app-id: $STUDENT_APP_ID
       - unit-tests:
           name: Student Unit tests
           module: student
@@ -349,6 +357,9 @@ workflows:
       - build-qa-debug:
           name: Teacher QA build
           module: teacher
+      - build-and-comment-dev-debug-minify:
+          module: teacher
+          app-id: $TEACHER_APP_ID
       - unit-tests:
           name: Teacher Unit tests
           module: teacher
