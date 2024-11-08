@@ -343,3 +343,7 @@ workflows:
           name: Teacher Tablet UI tests
           module: teacher
           requires: [Teacher QA build]
+      - e2e:
+          name: Teacher E2E
+          module: teacher
+          requires: [Teacher QA build]
