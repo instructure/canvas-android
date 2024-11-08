@@ -172,6 +172,7 @@ internal fun CreateUpdateEventScreen(
         }
     }
 
+    
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
