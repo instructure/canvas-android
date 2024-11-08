@@ -239,6 +239,21 @@ class CourseDetailsViewModelTest {
         Assert.assertEquals(expected, events.last())
     }
 
+    @Test
+    fun `Navigate to LTI screen`() = runTest {
+        createViewModel()
+
+        val events = mutableListOf<CourseDetailsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(CourseDetailsAction.OnLtiClicked("ltiUrl"))
+
+        val expected = CourseDetailsViewModelAction.OpenLtiScreen("ltiUrl")
+        Assert.assertEquals(expected, events.last())
+    }
+
     private fun createViewModel() {
         viewModel = CourseDetailsViewModel(context, savedStateHandle, repository, parentPrefs, apiPrefs)
     }

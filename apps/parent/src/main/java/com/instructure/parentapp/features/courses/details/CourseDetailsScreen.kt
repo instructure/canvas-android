@@ -17,7 +17,6 @@
 
 package com.instructure.parentapp.features.courses.details
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -52,6 +51,7 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.launch
 
 
@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 internal fun CourseDetailsScreen(
     uiState: CourseDetailsUiState,
     actionHandler: (CourseDetailsAction) -> Unit,
+    applyOnWebView: (CanvasWebView.() -> Unit),
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
@@ -90,6 +91,7 @@ internal fun CourseDetailsScreen(
                         uiState = uiState,
                         actionHandler = actionHandler,
                         navigationActionClick = navigationActionClick,
+                        applyOnWebView = applyOnWebView,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -98,12 +100,12 @@ internal fun CourseDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CourseDetailsScreenContent(
     uiState: CourseDetailsUiState,
     actionHandler: (CourseDetailsAction) -> Unit,
     navigationActionClick: () -> Unit,
+    applyOnWebView: (CanvasWebView.() -> Unit),
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState { uiState.tabs.size }
@@ -126,7 +128,14 @@ private fun CourseDetailsScreenContent(
             }
 
             TabType.SYLLABUS -> {
-                { SyllabusScreen() }
+                {
+                    SyllabusScreen(
+                        uiState.syllabus,
+                        applyOnWebView
+                    ) { ltiUrl ->
+                        actionHandler(CourseDetailsAction.OnLtiClicked(ltiUrl))
+                    }
+                }
             }
 
             TabType.SUMMARY -> {
@@ -219,6 +228,7 @@ private fun CourseDetailsScreenPreview() {
             )
         ),
         actionHandler = {},
+        applyOnWebView = {},
         navigationActionClick = {}
     )
 }
@@ -233,6 +243,7 @@ private fun CourseDetailsScreenErrorPreview() {
             isError = true,
         ),
         actionHandler = {},
+        applyOnWebView = {},
         navigationActionClick = {}
     )
 }

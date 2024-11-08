@@ -96,7 +96,8 @@ class CourseDetailsViewModel @Inject constructor(
                 it.copy(
                     courseName = course.name,
                     isLoading = false,
-                    tabs = tabTypes
+                    tabs = tabTypes,
+                    syllabus = course.syllabusBody.orEmpty()
                 )
             }
         } catch {
@@ -130,6 +131,12 @@ class CourseDetailsViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(currentTab = action.newTab)
                     }
+                }
+            }
+
+            is CourseDetailsAction.OnLtiClicked -> {
+                viewModelScope.launch {
+                    _events.send(CourseDetailsViewModelAction.OpenLtiScreen(action.url))
                 }
             }
         }

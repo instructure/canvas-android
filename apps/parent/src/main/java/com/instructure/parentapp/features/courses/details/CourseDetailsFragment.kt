@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -28,9 +29,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.studentColor
+import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +46,28 @@ class CourseDetailsFragment : Fragment() {
     @Inject
     lateinit var navigation: Navigation
 
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
+
     private val viewModel: CourseDetailsViewModel by viewModels()
+
+    private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+        override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, null)
+
+        override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
+    }
+
+    private val webViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        override fun openMediaFromWebView(mime: String, url: String, filename: String) = webViewRouter.openMedia(url)
+
+        override fun onPageStartedCallback(webView: WebView, url: String) = Unit
+
+        override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
+
+        override fun canRouteInternallyDelegate(url: String) = webViewRouter.canRouteInternally(url)
+
+        override fun routeInternallyCallback(url: String) = webViewRouter.routeInternally(url)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,9 +79,18 @@ class CourseDetailsFragment : Fragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CourseDetailsScreen(uiState, viewModel::handleAction) {
-                    findNavController().popBackStack()
-                }
+                CourseDetailsScreen(
+                    uiState = uiState,
+                    actionHandler = viewModel::handleAction,
+                    applyOnWebView = {
+                        addVideoClient(requireActivity())
+                        canvasEmbeddedWebViewCallback = embeddedWebViewCallback
+                        canvasWebViewClientCallback = webViewClientCallback
+                    },
+                    navigationActionClick = {
+                        findNavController().popBackStack()
+                    }
+                )
             }
         }
     }
@@ -76,6 +109,10 @@ class CourseDetailsFragment : Fragment() {
 
             is CourseDetailsViewModelAction.NavigateToAssignmentDetails -> {
                 navigation.navigate(activity, navigation.assignmentDetailsRoute(action.courseId, action.assignmentId))
+            }
+
+            is CourseDetailsViewModelAction.OpenLtiScreen -> {
+                navigation.navigate(activity, navigation.ltiLaunchRoute(action.url, ""))
             }
         }
     }
