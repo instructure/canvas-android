@@ -46,14 +46,17 @@ class RouteMatcherRepository(
         val tabs = getCourseTabs(courseId)
         val pathSegments = uri.pathSegments
         val relativePath = uri.path?.replaceBefore("/courses/$courseId", "".orEmpty())
-        println(relativePath)
         // Details urls should be accepted, like /assignments/1, but assignments/syllabus should not
         return if (relativePath == "/courses/$courseId") { // handle home url which is prefix of every other urls
             return tabs.any { it.tabId == "home" }
-        } else if (pathSegments.last() != "syllabus") { // handle syllabus which has the same url scheme as assignment details
-            tabs.any { relativePath?.contains(it.htmlUrl.orEmpty()).orDefault() && it.tabId != "home" }
-        } else {
+        } else if (pathSegments.last() == "syllabus") { // handle syllabus which has the same url scheme as assignment details
             tabs.any { relativePath == it.htmlUrl }
+        } else if (pathSegments.size == 3) { // tab urls
+            tabs.any { relativePath?.contains(it.htmlUrl.orEmpty()).orDefault() && it.tabId != "home" }
+        } else if (pathSegments.contains("external_tools") && pathSegments.size == 4) { // external tools
+            return tabs.any { relativePath == it.htmlUrl }
+        } else {
+            true
         }
     }
 
