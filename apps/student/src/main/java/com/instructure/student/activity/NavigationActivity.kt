@@ -917,7 +917,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     when {
                         RouteContext.FILE == route.routeContext && route.secondaryClass != CourseModuleProgressionFragment::class.java -> {
                             if (route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD)) {
-                                if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString())
+                                if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString(), null)
                             }
                             route.paramsHash[RouterParams.FILE_ID]?.let { handleSpecificFile(contextId, it) }
 

@@ -37,13 +37,26 @@ import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getModuleItemId
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileDetailsBinding
 import com.instructure.student.events.ModuleUpdatedEvent
@@ -51,7 +64,7 @@ import com.instructure.student.events.post
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.util.StringUtilities
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_FILE_DETAILS)
@@ -124,7 +137,7 @@ class FileDetailsFragment : ParentFragment() {
     private fun setupClickListeners() {
         binding.openButton.setOnClickListener {
             file?.let { fileFolder ->
-                openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, canvasContext, fileFolder.isLocalFile)
+                openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, fileFolder.id.toString(), canvasContext, fileFolder.isLocalFile)
                 markAsRead()
             }
         }

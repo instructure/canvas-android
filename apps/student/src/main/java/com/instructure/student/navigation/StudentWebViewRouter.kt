@@ -42,7 +42,7 @@ class StudentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
 
     override fun openMedia(url: String, mime: String, filename: String, canvasContext: CanvasContext?) {
         if (canvasContext != null && activity is BaseRouterActivity) {
-            activity.openMedia(canvasContext, mime, url, filename)
+            activity.openMedia(canvasContext, mime, url, filename, null)
         } else {
             RouteMatcher.openMedia(activity, url)
         }
