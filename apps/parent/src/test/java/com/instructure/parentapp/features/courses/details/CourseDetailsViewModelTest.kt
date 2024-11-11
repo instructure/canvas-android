@@ -128,7 +128,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES, TabType.SYLLABUS)
+            tabs = listOf(TabType.GRADES, TabType.SYLLABUS),
+            syllabus = "Syllabus body"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -152,7 +153,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY)
+            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY),
+            syllabus = "Syllabus body"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -203,10 +205,15 @@ class CourseDetailsViewModelTest {
 
         val expectedAfterRefresh = expected.copy(
             courseName = "Course 2",
-            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY)
+            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY),
+            syllabus = "Syllabus body",
+            forceRefreshGrades = true
         )
 
         Assert.assertEquals(expectedAfterRefresh, viewModel.uiState.value)
+
+        viewModel.handleAction(CourseDetailsAction.GradesRefreshed)
+        Assert.assertEquals(false, viewModel.uiState.value.forceRefreshGrades)
     }
 
     @Test

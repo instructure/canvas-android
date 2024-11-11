@@ -32,6 +32,7 @@ data class CourseDetailsUiState(
     val tabs: List<TabType> = emptyList(),
     val currentTab: TabType? = null,
     val syllabus: String = "",
+    val forceRefreshGrades: Boolean = false
 )
 
 enum class TabType(@StringRes val labelRes: Int) {
@@ -47,6 +48,7 @@ sealed class CourseDetailsAction {
     data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsAction()
     data class CurrentTabChanged(val newTab: TabType) : CourseDetailsAction()
     data class OnLtiClicked(val url: String) : CourseDetailsAction()
+    data object GradesRefreshed : CourseDetailsAction()
 }
 
 sealed class CourseDetailsViewModelAction {

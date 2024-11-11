@@ -97,7 +97,8 @@ class CourseDetailsViewModel @Inject constructor(
                     courseName = course.name,
                     isLoading = false,
                     tabs = tabTypes,
-                    syllabus = course.syllabusBody.orEmpty()
+                    syllabus = course.syllabusBody.orEmpty(),
+                    forceRefreshGrades = forceRefresh
                 )
             }
         } catch {
@@ -138,6 +139,10 @@ class CourseDetailsViewModel @Inject constructor(
                 viewModelScope.launch {
                     _events.send(CourseDetailsViewModelAction.OpenLtiScreen(action.url))
                 }
+            }
+
+            is CourseDetailsAction.GradesRefreshed -> {
+                _uiState.update { it.copy(forceRefreshGrades = false) }
             }
         }
     }

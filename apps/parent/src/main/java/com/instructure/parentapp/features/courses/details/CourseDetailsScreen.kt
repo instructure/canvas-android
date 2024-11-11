@@ -24,6 +24,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
@@ -120,7 +121,7 @@ private fun CourseDetailsScreenContent(
     val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
         when (it) {
             TabType.GRADES -> {
-                { ParentGradesScreen(actionHandler) }
+                { ParentGradesScreen(actionHandler, uiState.forceRefreshGrades) }
             }
 
             TabType.FRONT_PAGE -> {
@@ -153,7 +154,24 @@ private fun CourseDetailsScreenContent(
                     navigationActionClick()
                 },
                 backgroundColor = Color(uiState.studentColor),
-                contentColor = colorResource(id = R.color.textLightest)
+                contentColor = colorResource(id = R.color.textLightest),
+                actions = {
+                    if (uiState.tabs.size > 1) {
+                        IconButton(
+                            onClick = {
+                                actionHandler(CourseDetailsAction.Refresh)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_refresh),
+                                tint = colorResource(id = R.color.textLightest),
+                                contentDescription = stringResource(
+                                    id = R.string.a11y_refresh
+                                )
+                            )
+                        }
+                    }
+                }
             )
         },
         content = { padding ->
