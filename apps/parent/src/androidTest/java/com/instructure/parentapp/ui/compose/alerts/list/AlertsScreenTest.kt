@@ -114,6 +114,7 @@ class AlertsScreenTest {
         val items = listOf(
             AlertsItemUiState(
                 alertId = 1,
+                contextId = 10,
                 title = "Alert 1",
                 alertType = AlertType.ASSIGNMENT_GRADE_LOW,
                 date = Date.from(Instant.parse("2023-09-15T09:02:00Z")),
@@ -124,6 +125,7 @@ class AlertsScreenTest {
             ),
             AlertsItemUiState(
                 alertId = 2,
+                contextId = 20,
                 title = "Alert 2",
                 alertType = AlertType.ASSIGNMENT_GRADE_HIGH,
                 date = Date.from(Instant.parse("2023-09-16T09:02:00Z")),
@@ -134,6 +136,7 @@ class AlertsScreenTest {
             ),
             AlertsItemUiState(
                 alertId = 3,
+                contextId = 30,
                 title = "Alert 3",
                 alertType = AlertType.COURSE_GRADE_LOW,
                 date = Date.from(Instant.parse("2023-09-17T09:02:00Z")),
@@ -144,6 +147,7 @@ class AlertsScreenTest {
             ),
             AlertsItemUiState(
                 alertId = 4,
+                contextId = 40,
                 title = "Alert 4",
                 alertType = AlertType.COURSE_GRADE_HIGH,
                 date = Date.from(Instant.parse("2023-09-18T09:02:00Z")),
@@ -154,6 +158,7 @@ class AlertsScreenTest {
             ),
             AlertsItemUiState(
                 alertId = 5,
+                contextId = 50,
                 title = "Alert 5",
                 alertType = AlertType.ASSIGNMENT_MISSING,
                 date = Date.from(Instant.parse("2023-09-19T09:02:00Z")),
@@ -164,6 +169,7 @@ class AlertsScreenTest {
             ),
             AlertsItemUiState(
                 alertId = 6,
+                contextId = 60,
                 title = "Alert 6",
                 alertType = AlertType.COURSE_ANNOUNCEMENT,
                 date = Date.from(Instant.parse("2023-09-20T09:02:00Z")),
@@ -174,6 +180,7 @@ class AlertsScreenTest {
             ),
             AlertsItemUiState(
                 alertId = 7,
+                contextId = 70,
                 title = "Alert 7",
                 alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
                 date = Date.from(Instant.parse("2023-09-21T09:02:00Z")),
@@ -216,7 +223,7 @@ class AlertsScreenTest {
             AlertType.COURSE_GRADE_HIGH -> "Course Grade Above $threshold"
             AlertType.ASSIGNMENT_MISSING -> "Assignment missing"
             AlertType.COURSE_ANNOUNCEMENT -> "Course Announcement"
-            AlertType.INSTITUTION_ANNOUNCEMENT -> "Institution Announcement"
+            AlertType.INSTITUTION_ANNOUNCEMENT -> "Global Announcement"
             else -> "Unknown"
         }
     }

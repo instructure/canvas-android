@@ -17,18 +17,24 @@
 
 package com.instructure.parentapp.features.courses.details
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.studentColor
+import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,9 +46,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CourseDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val repository: CourseDetailsRepository,
-    private val parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs,
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     private val courseId = savedStateHandle.get<Long>(Navigation.COURSE_ID).orDefault()
@@ -62,7 +70,7 @@ class CourseDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = true,
-                    studentColor = parentPrefs.currentStudent.color
+                    studentColor = parentPrefs.currentStudent.studentColor
                 )
             }
 
@@ -107,15 +115,62 @@ class CourseDetailsViewModel @Inject constructor(
 
             is CourseDetailsAction.SendAMessage -> {
                 viewModelScope.launch {
-                    _events.send(CourseDetailsViewModelAction.NavigateToComposeMessageScreen)
+                    _events.send(CourseDetailsViewModelAction.NavigateToComposeMessageScreen(getInboxComposeOptions()))
                 }
             }
 
             is CourseDetailsAction.NavigateToAssignmentDetails -> {
                 viewModelScope.launch {
-                    _events.send(CourseDetailsViewModelAction.NavigateToAssignmentDetails(action.id))
+                    _events.send(CourseDetailsViewModelAction.NavigateToAssignmentDetails(action.courseId, action.assignmentId))
+                }
+            }
+
+            is CourseDetailsAction.CurrentTabChanged -> {
+                viewModelScope.launch {
+                    _uiState.update {
+                        it.copy(currentTab = action.newTab)
+                    }
                 }
             }
         }
+    }
+
+    private fun getInboxComposeOptions(): InboxComposeOptions {
+        val courseContextId = Course(courseId).contextId
+        var options = InboxComposeOptions.buildNewMessage()
+        options = options.copy(
+            defaultValues = options.defaultValues.copy(
+                contextCode = courseContextId,
+                contextName = uiState.value.courseName,
+                subject = context.getString(
+                    R.string.regardingHiddenMessage,
+                    parentPrefs.currentStudent?.shortName.orEmpty(),
+                    uiState.value.currentTab?.labelRes?.let { context.getString(it) }.orEmpty()
+                )
+            ),
+            disabledFields = options.disabledFields.copy(
+                isContextDisabled = true
+            ),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
+            hiddenBodyMessage = context.getString(
+                R.string.regardingHiddenMessage,
+                parentPrefs.currentStudent?.shortName.orEmpty(),
+                getContextURL(courseId)
+            )
+        )
+
+        return options
+    }
+
+    private fun getContextURL(courseId: Long): String {
+        val tabUrlSegment = uiState.value.currentTab?.let { tab ->
+            when (tab) {
+                TabType.GRADES -> "grades"
+                TabType.FRONT_PAGE -> ""
+                TabType.SYLLABUS -> "assignments/syllabus"
+                TabType.SUMMARY -> "assignments/syllabus"
+            }
+        }
+        return "${apiPrefs.fullDomain}/courses/$courseId/${tabUrlSegment}"
     }
 }

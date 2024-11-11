@@ -22,7 +22,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -55,11 +56,25 @@ class CoursesViewModel @Inject constructor(
                 studentChanged(it)
             }
         }
+
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentColorChanged.collect {
+                updateColor()
+            }
+        }
+    }
+
+    private fun updateColor() {
+        selectedStudent?.let { student ->
+            _uiState.update {
+                it.copy(studentColor = student.studentColor)
+            }
+        }
     }
 
     private fun loadCourses(forceRefresh: Boolean = false) {
         viewModelScope.tryLaunch {
-            val color = selectedStudent.color
+            val color = selectedStudent.studentColor
 
             _uiState.update {
                 it.copy(

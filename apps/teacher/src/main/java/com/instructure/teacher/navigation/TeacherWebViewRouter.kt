@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.navigation
 
+import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -33,7 +34,7 @@ class TeacherWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
         return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = routeIfPossible)
     }
 
-    override fun routeInternally(url: String) {
+    override fun routeInternally(url: String, extras: Bundle?) {
         RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = true)
     }
 

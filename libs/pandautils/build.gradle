@@ -20,6 +20,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -97,10 +98,6 @@ android {
     sourceSets {
         debug.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
-    }
 }
 
 tasks.withType(Test) {
@@ -177,7 +174,7 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_APPCOMPAT
     implementation Libs.ANDROIDX_CARDVIEW
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_EXIF
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
@@ -198,7 +195,7 @@ dependencies {
     implementation Libs.VIEW_MODEL
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODE_SAVED_STATE
-    implementation Libs.FRAGMENT_KTX
+    implementation Libs.ANDROIDX_FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
 
     /* ROOM */
@@ -210,6 +207,9 @@ dependencies {
     def composeBom = platform(Libs.COMPOSE_BOM)
     api composeBom
     androidTestApi composeBom
+
+    // Data Store
+    implementation Libs.DATASTORE
 
     api Libs.COMPOSE_BOM
     api Libs.COMPOSE_MATERIAL

@@ -29,6 +29,8 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.isNotEnabled
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -57,7 +59,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertContextSelected(contextName: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(contextName).assertIsDisplayed()
+        composeTestRule.onNode(hasText(contextName).and(isNotEnabled())).assertIsDisplayed()
     }
 
     fun assertRecipientSelected(recipientName: String) {
@@ -165,5 +167,18 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     fun pressIndividualSendSwitch() {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("switch").performClick()
+    }
+
+    fun isRecipientsLoading(): Boolean {
+        composeTestRule.waitForIdle()
+        return composeTestRule.onNodeWithTag("Loading").isDisplayed()
+    }
+
+    fun removeAllRecipients() {
+        composeTestRule.waitForIdle()
+        val nodes = composeTestRule.onAllNodesWithContentDescription("Remove Recipient")
+        if (nodes.fetchSemanticsNodes().isNotEmpty()) {
+            nodes.onFirst().performClick()
+        }
     }
 }

@@ -7,11 +7,9 @@ import com.instructure.pandautils.room.offline.daos.GroupUserDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class GroupFacadeTest {
     private val userDao: UserDao = mockk(relaxed = true)
     private val groupDao: GroupDao = mockk(relaxed = true)

@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.EmptyCourseContentViewModel
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
@@ -40,13 +41,22 @@ import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.junit.*
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class OfflineContentViewModelTest {
@@ -59,6 +69,7 @@ class OfflineContentViewModelTest {
     private val offlineContentRepository: OfflineContentRepository = mockk(relaxed = true)
     private val storageUtils: StorageUtils = mockk(relaxed = true)
     private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
+    private val offlineAnalyticsManager: OfflineAnalyticsManager = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -424,6 +435,7 @@ class OfflineContentViewModelTest {
 
         coVerify {
             offlineSyncHelper.syncCourses(any())
+            offlineAnalyticsManager.reportOfflineSyncStarted()
         }
     }
 
@@ -511,7 +523,8 @@ class OfflineContentViewModelTest {
             context,
             offlineContentRepository,
             storageUtils,
-            offlineSyncHelper
+            offlineSyncHelper,
+            offlineAnalyticsManager
         )
 
         viewModel.state.observe(lifecycleOwner) {}

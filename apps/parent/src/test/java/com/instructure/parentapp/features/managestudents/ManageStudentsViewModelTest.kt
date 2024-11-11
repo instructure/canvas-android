@@ -28,8 +28,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.pandautils.utils.createThemedColor
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -49,6 +49,7 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 
 
 @ExperimentalCoroutinesApi
@@ -64,6 +65,7 @@ class ManageStudentsViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: ManageStudentsRepository = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = spyk()
+    private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
 
     private lateinit var viewModel: ManageStudentViewModel
 
@@ -76,7 +78,7 @@ class ManageStudentsViewModelTest {
         every { ColorUtils.correctContrastForText(any(), any()) } answers { firstArg() }
         every { ColorUtils.correctContrastForButtonBackground(any(), any(), any()) } answers { firstArg() }
         every { context.getColor(any()) } answers { firstArg() }
-        every { createThemedColor(any()) } answers { ThemedColor(firstArg()) }
+        every { colorKeeper.createThemedColor(any()) } answers { ThemedColor(firstArg()) }
     }
 
     @After
@@ -85,7 +87,7 @@ class ManageStudentsViewModelTest {
         unmockkObject(ColorUtils)
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Load students`() {
         val students = listOf(User(id = 1, shortName = "Student 1", pronouns = "He/Him"))
         val expectedState = ManageStudentsUiState(
@@ -101,7 +103,7 @@ class ManageStudentsViewModelTest {
         Assert.assertEquals(expectedState, viewModel.uiState.value)
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Load students error`() {
         val expectedState = ManageStudentsUiState(isLoadError = true)
         coEvery { repository.getStudents(any()) } throws Exception()
@@ -111,7 +113,7 @@ class ManageStudentsViewModelTest {
         Assert.assertEquals(expectedState, viewModel.uiState.value)
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Load students empty`() {
         val expectedState = ManageStudentsUiState(isLoading = false, isLoadError = false, studentListItems = emptyList())
         coEvery { repository.getStudents(any()) } returns emptyList()
@@ -121,7 +123,7 @@ class ManageStudentsViewModelTest {
         Assert.assertEquals(expectedState, viewModel.uiState.value)
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Navigate to alert settings screen`() = runTest {
         coEvery { repository.getStudents(any()) } returns listOf(User(id = 1))
         createViewModel()
@@ -137,7 +139,7 @@ class ManageStudentsViewModelTest {
         Assert.assertEquals(expected, events.last())
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Refresh reloads students`() {
         createViewModel()
 
@@ -146,7 +148,7 @@ class ManageStudentsViewModelTest {
         coVerify { repository.getStudents(true) }
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Show color picker dialog`() {
         val userColors = listOf(
             UserColor(
@@ -198,7 +200,7 @@ class ManageStudentsViewModelTest {
         Assert.assertEquals(expected, viewModel.uiState.value)
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Hide color picker dialog`() = runTest {
         every { colorKeeper.userColors } returns emptyList()
 
@@ -211,7 +213,7 @@ class ManageStudentsViewModelTest {
         Assert.assertFalse(viewModel.uiState.value.colorPickerDialogUiState.showColorPickerDialog)
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Save student color`() {
         val expectedUiState = ManageStudentsUiState(
             colorPickerDialogUiState = ColorPickerDialogUiState(),
@@ -237,7 +239,7 @@ class ManageStudentsViewModelTest {
         Assert.assertEquals(expectedUiState, viewModel.uiState.value)
     }
 
-    //@Test - Gonna be fixed when new student colors will be added
+    @Test
     fun `Save student color error`() {
         val expectedUiState = ManageStudentsUiState(
             colorPickerDialogUiState = ColorPickerDialogUiState(isSavingColorError = true),
@@ -264,6 +266,6 @@ class ManageStudentsViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = ManageStudentViewModel(context, colorKeeper, repository)
+        viewModel = ManageStudentViewModel(context, colorKeeper, repository, selectedStudentHolder)
     }
 }

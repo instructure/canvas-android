@@ -155,7 +155,7 @@ data class StreamItem(
         } else discussion_topic_id
 
     enum class Type {
-        DISCUSSION_TOPIC, SUBMISSION, ANNOUNCEMENT, CONVERSATION, MESSAGE, CONFERENCE, COLLABORATION, COLLECTION_ITEM, UNKNOWN, NOT_SET;
+        DISCUSSION_TOPIC, SUBMISSION, ANNOUNCEMENT, CONVERSATION, MESSAGE, CONFERENCE, COLLABORATION, COLLECTION_ITEM, UNKNOWN, NOT_SET, DISCUSSION_MENTION, DISCUSSION_ENTRY;
 
 
         companion object {
@@ -193,11 +193,13 @@ data class StreamItem(
         type.lowercase(Locale.getDefault()) == "submission" -> Type.SUBMISSION
         type.lowercase(Locale.getDefault()) == "discussiontopic" -> Type.DISCUSSION_TOPIC
         type.lowercase(Locale.getDefault()) == "announcement" -> Type.ANNOUNCEMENT
+        type.lowercase(Locale.getDefault()) == "message" && notificationCategory.lowercase() == "discussionmention" -> Type.DISCUSSION_MENTION
         type.lowercase(Locale.getDefault()) == "message" -> Type.MESSAGE
         type.lowercase(Locale.getDefault()) == "conference" -> Type.CONFERENCE
         type.lowercase(Locale.getDefault()) == "webconference" -> Type.CONFERENCE
         type.lowercase(Locale.getDefault()) == "collaboration" -> Type.COLLABORATION
         type.lowercase(Locale.getDefault()) == "collectionitem" -> Type.COLLECTION_ITEM
+        type.lowercase(Locale.getDefault()) == "discussionentry" -> Type.DISCUSSION_ENTRY
         else -> Type.UNKNOWN
     }
 

@@ -39,8 +39,7 @@ class SplashViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: SplashRepository,
     private val apiPrefs: ApiPrefs,
-    private val colorKeeper: ColorKeeper,
-    private val themePrefs: ThemePrefs,
+    private val colorKeeper: ColorKeeper
 ) : ViewModel() {
 
     private val _events = Channel<SplashAction>()
@@ -59,7 +58,7 @@ class SplashViewModel @Inject constructor(
             colors?.let { colorKeeper.addToCache(it) }
 
             val theme = repository.getTheme()
-            theme?.let { themePrefs.applyCanvasTheme(it, context) }
+            theme?.let { _events.send(SplashAction.ApplyTheme(it)) }
 
             val students = repository.getStudents()
             if (students.isEmpty()) {

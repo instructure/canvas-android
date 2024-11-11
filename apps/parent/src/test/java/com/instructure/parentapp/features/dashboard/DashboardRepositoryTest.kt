@@ -18,8 +18,10 @@
 package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
@@ -35,8 +37,9 @@ class DashboardRepositoryTest {
 
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
     private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface = mockk(relaxed = true)
+    private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface = mockk(relaxed = true)
 
-    private val repository = DashboardRepository(enrollmentApi, unreadCountApi)
+    private val repository = DashboardRepository(enrollmentApi, unreadCountApi, launchDefinitionsApi)
 
     @Test
     fun `Get students successfully returns data`() = runTest {
@@ -103,5 +106,22 @@ class DashboardRepositoryTest {
 
         val result = repository.getUnreadCounts()
         assertEquals(42, result)
+    }
+
+    @Test
+    fun `Get launch definitions returns empty list when failed`() = runTest {
+        coEvery { launchDefinitionsApi.getLaunchDefinitions(any()) } returns DataResult.Fail()
+
+        val result = repository.getLaunchDefinitions()
+        assertEquals(emptyList<LaunchDefinition>(), result)
+    }
+
+    @Test
+    fun `Get launch definitions returns data when successful`() = runTest {
+        val expected = listOf(LaunchDefinition("type", 1, "name", null, null, null, null))
+        coEvery { launchDefinitionsApi.getLaunchDefinitions(any()) } returns DataResult.Success(expected)
+
+        val result = repository.getLaunchDefinitions()
+        assertEquals(expected, result)
     }
 }

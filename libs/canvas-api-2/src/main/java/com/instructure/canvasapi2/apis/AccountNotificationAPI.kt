@@ -21,11 +21,13 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.utils.DataResult
 
 import retrofit2.Call
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Tag
 import retrofit2.http.Url
 
 /**
@@ -33,7 +35,7 @@ import retrofit2.http.Url
  */
 object AccountNotificationAPI {
 
-    internal interface AccountNotificationInterface {
+    interface AccountNotificationInterface {
 
         @GET("accounts/self/users/self/account_notifications")
         fun getAccountNotifications(): Call<List<AccountNotification>>
@@ -46,6 +48,9 @@ object AccountNotificationAPI {
 
         @GET("accounts/self/users/self/account_notifications/{accountNotificationId}")
         fun getAccountNotification(@Path("accountNotificationId") accountNotificationId: Long): Call<AccountNotification>
+
+        @GET("accounts/self/users/self/account_notifications/{accountNotificationId}")
+        suspend fun getAccountNotification(@Path("accountNotificationId") accountNotificationId: Long, @Tag params: RestParams): DataResult<AccountNotification>
     }
 
     fun getAccountNotifications(adapter: RestBuilder, params: RestParams, callback: StatusCallback<List<AccountNotification>>) {

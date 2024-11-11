@@ -25,13 +25,11 @@ import com.instructure.student.features.files.search.FileSearchNetworkDataSource
 import com.instructure.student.features.files.search.FileSearchRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class FileSearchRepositoryTest {
 
     private val fileSearchLocalDataSource: FileSearchLocalDataSource = mockk(relaxed = true)

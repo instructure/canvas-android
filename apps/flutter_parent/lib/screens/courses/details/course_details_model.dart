@@ -84,7 +84,7 @@ class CourseDetailsModel extends BaseModel {
     final groupFuture = _interactor()
         .loadAssignmentGroups(courseId, student?.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh).then((groups) async {
       // Remove unpublished assignments to match web
-      return groups?.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build()).toList();
+      return groups?.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published || assignment.isHiddenInGradeBook == true)).build()).toList();
     });
 
     final gradingPeriodsFuture =

@@ -36,7 +36,10 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
@@ -47,12 +50,12 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
@@ -88,10 +91,43 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     private var inboxBadge: TextView? = null
 
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
+
+    private val onItemSelectedListener = NavigationBarView.OnItemSelectedListener {
+        when (it.itemId) {
+            R.id.courses -> navigateWithPopBackStack(navigation.courses)
+            R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
+            R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
+            else -> false
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navHostFragment?.let {
+            navController = it.navController
+            navController.graph = navigation.createDashboardNavGraph(navController)
+        }
+    }
+
+    private val onDestinationChangedListener = NavController.OnDestinationChangedListener { _, destination, _ ->
+        if (destination.route == navigation.alerts || destination.route == navigation.courses) {
+            binding.todayButtonHolder.setGone()
+        }
+        val menuId = when (destination.route) {
+            navigation.alerts -> R.id.alerts
+            navigation.courses -> R.id.courses
+            navigation.calendar -> R.id.calendar
+            else -> return@OnDestinationChangedListener
+        }
+        bottomNavigationView.menu.findItem(menuId).isChecked = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -136,6 +172,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
+                setupLaunchDefinitions(it.launchDefinitionViewData)
                 setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
@@ -143,6 +180,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         }
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bottomNavigationView.setOnItemSelectedListener(null)
+        navController.removeOnDestinationChangedListener(onDestinationChangedListener)
     }
 
     private fun handleAction(action: DashboardViewModelAction) {
@@ -156,6 +199,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 } catch (e: Exception) {
                     firebaseCrashlytics.recordException(e)
                 }
+            }
+            is DashboardViewModelAction.OpenLtiTool -> {
+                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name))
             }
         }
     }
@@ -186,9 +232,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupNavigation() {
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        navController.graph = navigation.createDashboardNavGraph(navController)
+        if (!this::navController.isInitialized) {
+            val navHostFragment =
+                childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            navController = navHostFragment.navController
+            navController.graph = navigation.createDashboardNavGraph(navController)
+        }
 
         setupToolbar()
         setupNavigationDrawer()
@@ -231,6 +280,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
             when (it.itemId) {
                 R.id.inbox -> menuItemSelected { navigation.navigate(activity, navigation.inbox) }
                 R.id.manage_students -> menuItemSelected { navigation.navigate(activity, navigation.manageStudents) }
+                R.id.mastery -> menuItemSelected { viewModel.openMastery() }
+                R.id.studio -> menuItemSelected { viewModel.openStudio() }
                 R.id.settings -> menuItemSelected { navigation.navigate(activity, navigation.settings) }
                 R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
@@ -246,32 +297,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupBottomNavigationView() {
-        val bottomNavigationView = binding.bottomNav
-
-        bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.courses -> navigateWithPopBackStack(navigation.courses)
-                R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
-                R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
-                else -> false
-            }
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.route == navigation.alerts || destination.route == navigation.courses) {
-                binding.todayButtonHolder.setGone()
-            }
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            val menuId = when (destination.route) {
-                navigation.courses -> R.id.courses
-                navigation.calendar -> R.id.calendar
-                navigation.alerts -> R.id.alerts
-                else -> return@addOnDestinationChangedListener
-            }
-            bottomNavigationView.menu.findItem(menuId).isChecked = true
-        }
+        bottomNavigationView = binding.bottomNav
+        bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener)
+        navController.addOnDestinationChangedListener(onDestinationChangedListener)
     }
 
     private fun navigateWithPopBackStack(route: String): Boolean {
@@ -281,7 +309,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupAppColors(student: User?) {
-        val color = student.color
+        val color = student.studentColor
         if (binding.toolbar.background == null) {
             binding.toolbar.setBackgroundColor(color)
         } else {
@@ -297,6 +325,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.unreadCountBadge.setTextColor(color)
 
         binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
+        viewModel.updateColor(color)
     }
 
     private fun openNavigationDrawer() {
@@ -318,11 +347,25 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .showThemed(ParentPrefs.currentStudent.color)
+            .showThemed(ParentPrefs.currentStudent.studentColor)
     }
 
     private fun onSwitchUsers() {
         ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+    }
+
+    private fun setupLaunchDefinitions(launchDefinitionViewData: List<LaunchDefinitionViewData>) {
+        val masteryItem = launchDefinitionViewData.find { it.domain == LaunchDefinition.MASTERY_DOMAIN }
+        if (masteryItem != null) {
+            val masteryMenuItem = binding.navView.menu.findItem(R.id.mastery)
+            masteryMenuItem.isVisible = true
+        }
+
+        val studioItem = launchDefinitionViewData.find { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        if (studioItem != null) {
+            val studioMenuItem = binding.navView.menu.findItem(R.id.studio)
+            studioMenuItem.isVisible = true
+        }
     }
 
     override fun onHandleBackPressed(): Boolean {

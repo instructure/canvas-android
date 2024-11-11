@@ -18,8 +18,10 @@
 package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.utils.orDefault
@@ -27,7 +29,8 @@ import com.instructure.pandautils.utils.orDefault
 
 class DashboardRepository(
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-    private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface
+    private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface,
+    private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface
 ) {
 
     suspend fun getStudents(forceNetwork: Boolean): List<User> {
@@ -45,5 +48,10 @@ class DashboardRepository(
         val params = RestParams(isForceReadFromNetwork = true)
         val unreadCount = unreadCountApi.getUnreadConversationCount(params).dataOrNull?.unreadCount ?: "0"
         return unreadCount.toIntOrNull().orDefault()
+    }
+
+    suspend fun getLaunchDefinitions(): List<LaunchDefinition> {
+        val params = RestParams(isForceReadFromNetwork = false)
+        return launchDefinitionsApi.getLaunchDefinitions(params).dataOrNull.orEmpty()
     }
 }

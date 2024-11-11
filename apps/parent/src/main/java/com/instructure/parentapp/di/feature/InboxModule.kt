@@ -19,6 +19,7 @@ package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
@@ -27,6 +28,7 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeRepository
+import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
 import com.instructure.parentapp.util.navigation.Navigation
@@ -67,5 +69,13 @@ class InboxModule {
         inboxAPI: InboxApi.InboxInterface,
     ): InboxComposeRepository {
         return ParentInboxComposeRepository(courseAPI, recipientAPI, inboxAPI)
+    }
+
+    @Provides
+    fun provideInboxCoursePickerRepository(
+        courseAPI: CourseAPI.CoursesInterface,
+        enrollmentAPI: EnrollmentAPI.EnrollmentInterface,
+    ): ParentInboxCoursePickerRepository {
+        return ParentInboxCoursePickerRepository(courseAPI, enrollmentAPI)
     }
 }

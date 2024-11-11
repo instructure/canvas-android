@@ -38,13 +38,11 @@ import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class StudentCalendarRepositoryTest {
 
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)

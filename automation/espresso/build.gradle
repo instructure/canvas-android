@@ -113,7 +113,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
 
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
 
     implementation Libs.GSON

@@ -62,10 +62,9 @@ class InitActivityPresenter : Presenter<InitActivityView> {
             val count = todos.sumOf { it.needsGradingCount }
             view?.updateTodoCount(count)
 
-            val launchDefinitions = awaitApi<List<LaunchDefinition>?> { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
+            val launchDefinitions = awaitApi { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
             launchDefinitions?.let {
-                val definitions = launchDefinitions.filter { it.domain == LaunchDefinition.STUDIO_DOMAIN || it.domain == LaunchDefinition.GAUGE_DOMAIN }
-                view?.gotLaunchDefinitions(definitions)
+                view?.gotLaunchDefinitions(it)
             }
 
             val inboxUnreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }

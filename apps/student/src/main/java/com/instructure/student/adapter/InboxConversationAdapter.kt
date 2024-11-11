@@ -17,7 +17,6 @@ package com.instructure.student.adapter
 
 import android.content.Context
 import android.view.View
-import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.holders.InboxMessageHolder
 import com.instructure.student.interfaces.MessageAdapterCallback
 import com.instructure.canvasapi2.managers.InboxManager
@@ -28,6 +27,7 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.utils.ConversationUpdatedEvent
 import org.greenrobot.eventbus.EventBus
 
 class InboxConversationAdapter(

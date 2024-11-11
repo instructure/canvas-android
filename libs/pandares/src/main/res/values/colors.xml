@@ -151,12 +151,13 @@
     <color name="courseColor12dark">#9C9C9C</color>
 
     <!-- Student Colors -->
-    <color name="studentBlue">#FF007BC2</color>
-    <color name="studentPurple">#FF5F4DCE</color>
-    <color name="studentPink">#FFBF32A4</color>
-    <color name="studentRed">#FFE9162E</color>
-    <color name="studentOrange">#FFD34503</color>
-    <color name="studentGreen">#FF008A12</color>
+    <!-- We have dark variants of these, but we only use the light resource and generate the dark variant because those are derived from the course colors -->
+    <color name="studentBlue">#2573DF</color> <!-- Course 4 -->
+    <color name="studentGreen">#27872B</color> <!-- Course 8 -->
+    <color name="studentOrange">#BF5811</color> <!-- Course 10 -->
+    <color name="studentPink">#C54396</color> <!-- Course 2 -->
+    <color name="studentPurple">#9E58BD</color> <!-- Course 3 -->
+    <color name="studentRed">#ED0000</color> <!-- Course 11 -->
 
     <!-- Attachment View colors -->
     <color name="attachmentColorDoc">#2ca3de</color>

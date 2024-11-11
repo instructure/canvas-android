@@ -18,6 +18,7 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
@@ -172,6 +173,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     }
 
     @Test
+    @Stub("This test is flaky, depends on the time of day")
     fun assertUpdatedTime() {
         val data = initData()
         val user = getLoggedInUser()

@@ -40,6 +40,7 @@
     <string name="dueLabel">Due</string>
     <string name="submissionStatusSuccessTitle">Successfully submitted!</string>
     <string name="submissionStatusSuccessSubtitle">Your submission is now waiting to be graded</string>
+    <string name="submissionStatusWaitingSubtitle">The submission is now waiting to be graded</string>
     <string name="submissionStatusUploadingTitle">Submission Uploading…</string>
     <string name="submissionStatusUploadingSubtitle">Tap to view progress</string>
     <string name="submissionStatusFailedTitle">Submission Failed</string>
@@ -1793,7 +1794,7 @@
     <string name="courseGradeHighAlertTitle">Course Grade Above %s</string>
     <string name="courseGradeLowAlertTitle">Course Grade Below %s</string>
     <string name="courseAnnouncementAlertTitle">Course Announcement</string>
-    <string name="institutionAnnouncementAlertTitle">Institution Announcement</string>
+    <string name="institutionAnnouncementAlertTitle">Global Announcement</string>
     <string name="a11y_contentDescription_observerAlertDelete">Delete Alert</string>
     <string name="alertDateTime">%s at %s</string>
     <string name="alertDismissMessage">Alert dismissed</string>
@@ -1840,7 +1841,7 @@
     <string name="alertSettingsAssignmentGradeLow">Assignment grade below</string>
     <string name="alertSettingsCourseGradeHigh">Course grade above</string>
     <string name="alertSettingsCourseGradeLow">Course grade below</string>
-    <string name="alertSettingsInstitutionAnnouncement">Institution Announcements</string>
+    <string name="alertSettingsGlobalAnnouncement">Global Announcements</string>
     <string name="alertSettingsCourseAnnouncement">Course Announcements</string>
     <string name="alertSettingsPercentage">%1$s\%%</string>
     <string name="alertSettingsThresholdNever">Never</string>
@@ -1883,4 +1884,14 @@
     <string name="courseDetailsMessageContentDescription">Send a message about this course</string>
     <string name="gradeLockedContentDescription">Grade locked</string>
     <string name="gradesRefreshFailed">Failed to refresh grades</string>
+    <string name="chooseACourseToMessage">Choose a course to message</string>
+    <string name="regardingHiddenMessage">Regarding: %1$s, %2$s</string>
+    <string name="regardingHiddenMessageWithAssignmentPrefix">Regarding: %1$s, Assignment - %2$s</string>
+    <string name="sendMessageAboutAssignment">"Send a message about this assignment"</string>
+    <string name="forStudentLabel">for %1$s</string>
+    <string name="view_description">View Description</string>
+    <string name="a11y_contentDescription_viewDescription">View Description</string>
+    <string name="errorLoadingAnnouncement">There was an error loading this announcement</string>
+    <string name="announcementPageTitle">Announcement</string>
+    <string name="globalAnnouncementPageTitle">Global Announcement</string>
 </resources>

@@ -17,7 +17,6 @@
 
 package com.instructure.parentapp.di
 
-import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.QRLogin
@@ -43,11 +42,6 @@ class ApplicationModule {
     @Provides
     fun provideQRLogin(): QRLogin {
         return QRLogin
-    }
-
-    @Provides
-    fun provideAnalytics(): Analytics {
-        return Analytics
     }
 
     @Provides

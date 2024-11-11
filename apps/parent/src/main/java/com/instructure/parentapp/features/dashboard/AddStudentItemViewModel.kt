@@ -16,13 +16,21 @@
  */    package com.instructure.parentapp.features.dashboard
 
 import androidx.annotation.ColorInt
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.parentapp.R
+import com.instructure.parentapp.BR
 
 data class AddStudentItemViewModel(
-    @ColorInt val color: Int,
+    @Bindable @ColorInt var color: Int,
     val onAddStudentClicked: () -> Unit
-) : ItemViewModel {
+) : BaseObservable(), ItemViewModel {
     override val viewType: Int = StudentListViewType.ADD_STUDENT.viewType
     override val layoutId = R.layout.item_add_student
+
+    fun updateColor(@ColorInt color: Int) {
+        this.color = color
+        notifyPropertyChanged(BR.color)
+    }
 }

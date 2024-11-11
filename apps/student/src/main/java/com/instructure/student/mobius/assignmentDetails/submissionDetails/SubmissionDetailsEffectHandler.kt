@@ -24,11 +24,10 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
-import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.FlowSource
+import com.instructure.student.mobius.common.trySend
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.getStudioLTITool
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -36,8 +35,6 @@ class SubmissionDetailsEffectHandler(
     private val repository: SubmissionDetailsRepository
 ) : EffectHandler<SubmissionDetailsView, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
 
-    @ObsoleteCoroutinesApi
-    @ExperimentalCoroutinesApi
     override fun accept(effect: SubmissionDetailsEffect) {
         when (effect) {
             is SubmissionDetailsEffect.LoadData -> loadData(effect)
@@ -150,16 +147,14 @@ class SubmissionDetailsEffectHandler(
         return dataOrNull?.getSubmissionTypes()?.contains(type).orDefault()
     }
 
-    @ObsoleteCoroutinesApi
     private fun uploadMediaComment(file: File) {
-        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().trySend(
+        FlowSource.getFlow<SubmissionCommentsSharedEvent>().trySend(
             SubmissionCommentsSharedEvent.SendMediaCommentClicked(file)
         )
     }
 
-    @ObsoleteCoroutinesApi
     private fun mediaDialogClosed() {
-        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().trySend(
+        FlowSource.getFlow<SubmissionCommentsSharedEvent>().trySend(
             SubmissionCommentsSharedEvent.MediaCommentDialogClosed
         )
     }

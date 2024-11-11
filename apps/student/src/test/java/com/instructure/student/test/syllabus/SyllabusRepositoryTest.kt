@@ -23,10 +23,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
 import com.instructure.student.mobius.syllabus.SyllabusRepository
 import com.instructure.student.mobius.syllabus.datasource.SyllabusLocalDataSource
 import com.instructure.student.mobius.syllabus.datasource.SyllabusNetworkDataSource
@@ -35,12 +33,10 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class SyllabusRepositoryTest {
 
     private val syllabusLocalDataSource: SyllabusLocalDataSource = mockk(relaxed = true)

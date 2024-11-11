@@ -25,28 +25,35 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSyllabusBinding
 import com.instructure.student.databinding.FragmentSyllabusEventsBinding
 import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 
-class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<SyllabusViewState, SyllabusEvent, FragmentSyllabusBinding>(
-        inflater,
-        FragmentSyllabusBinding::inflate,
-        parent) {
+class SyllabusView(
+    val canvasContext: CanvasContext,
+    val webViewRouter: WebViewRouter,
+    inflater: LayoutInflater,
+    parent: ViewGroup
+) : MobiusView<SyllabusViewState, SyllabusEvent, FragmentSyllabusBinding>(
+    inflater,
+    FragmentSyllabusBinding::inflate,
+    parent
+) {
 
     private val adapter: SyllabusTabAdapter
 
@@ -106,15 +113,31 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
                 pager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
 
-                if (state.syllabus != null) webviewBinding?.syllabusWebViewWrapper?.loadHtml(
-                    state.syllabus,
-                    context.getString(com.instructure.pandares.R.string.syllabus)
-                )
+                if (state.syllabus != null) renderWebView(state.syllabus)
 
                 if (state.eventsState != null) renderEvents(state.eventsState)
 
                 setupSwipeableChildren(pager.currentItem)
             }
+        }
+    }
+
+    private fun renderWebView(syllabus: String) {
+        webviewBinding?.syllabusWebViewWrapper?.apply {
+            webView.canvasWebViewClientCallback?.let {
+                webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by it {
+                    override fun openMediaFromWebView(mime: String, url: String, filename: String) = webViewRouter.openMedia(url)
+
+                    override fun canRouteInternallyDelegate(url: String) = webViewRouter.canRouteInternally(url)
+
+                    override fun routeInternallyCallback(url: String) = webViewRouter.routeInternally(url)
+                }
+            }
+
+            loadHtml(
+                syllabus,
+                context.getString(com.instructure.pandares.R.string.syllabus)
+            )
         }
     }
 

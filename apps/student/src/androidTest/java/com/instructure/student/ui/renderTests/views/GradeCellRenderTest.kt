@@ -17,12 +17,16 @@ package com.instructure.student.ui.renderTests.views
 
 import android.view.ViewGroup
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.page.BasePage
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellView
+import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
-import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -63,7 +67,7 @@ class GradeCellRenderTest : StudentRenderTest() {
         gradeCell.submittedTitle.assertDisplayed()
         gradeCell.submittedSubtitle.assertDisplayed()
         gradeCell.submittedTitle.assertHasText("Successfully submitted!")
-        gradeCell.submittedSubtitle.assertHasText("Your submission is now waiting to be graded")
+        gradeCell.submittedSubtitle.assertHasText("The submission is now waiting to be graded")
     }
 
     @Test

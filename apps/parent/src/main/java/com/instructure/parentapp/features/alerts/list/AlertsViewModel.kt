@@ -20,9 +20,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
@@ -58,6 +59,20 @@ class AlertsViewModel @Inject constructor(
                 studentChanged(it)
             }
         }
+
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentColorChanged.collect {
+                updateColor()
+            }
+        }
+    }
+
+    private fun updateColor() {
+        selectedStudent?.let { student ->
+            _uiState.update {
+                it.copy(studentColor = student.studentColor)
+            }
+        }
     }
 
     private suspend fun studentChanged(student: User?) {
@@ -65,7 +80,7 @@ class AlertsViewModel @Inject constructor(
             selectedStudent = student
             _uiState.update {
                 it.copy(
-                    studentColor = student.color,
+                    studentColor = student.studentColor,
                     isLoading = true
                 )
             }
@@ -112,7 +127,14 @@ class AlertsViewModel @Inject constructor(
         when (action) {
             is AlertsAction.Navigate -> {
                 viewModelScope.launch {
-                    _events.send(AlertsViewModelAction.Navigate(action.route))
+                        when (action.alertType) {
+                            AlertType.INSTITUTION_ANNOUNCEMENT -> {
+                                _events.send(AlertsViewModelAction.NavigateToGlobalAnnouncement(action.contextId))
+                            }
+                            else -> {
+                                _events.send(AlertsViewModelAction.NavigateToRoute(action.route))
+                            }
+                        }
                     markAlertRead(action.alertId)
                     alertCountUpdater.updateShouldRefreshAlertCount(true)
                 }
@@ -191,6 +213,7 @@ class AlertsViewModel @Inject constructor(
     private fun createAlertItem(alert: Alert): AlertsItemUiState {
         return AlertsItemUiState(
             alertId = alert.id,
+            contextId = alert.contextId,
             title = alert.title,
             alertType = alert.alertType,
             date = alert.actionDate,

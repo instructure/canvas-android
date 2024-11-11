@@ -26,11 +26,16 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -38,7 +43,17 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getModuleItemId
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withRequireNetwork
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.events.PageUpdatedEvent
@@ -50,8 +65,8 @@ import com.instructure.student.util.LockInfoHTMLHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.Subscribe
-import java.util.*
-import java.util.regex.*
+import java.util.Locale
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
@@ -61,6 +76,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: PageDetailsRepository
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
@@ -124,9 +142,11 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                     if (isUpdated) getCanvasWebView()?.clearHistory()
                 }
 
-                override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                    RouteMatcher.openMedia(activity, url)
-                }
+                override fun openMediaFromWebView(mime: String, url: String, filename: String) = webViewRouter.openMedia(url)
+
+                override fun canRouteInternallyDelegate(url: String) = webViewRouter.canRouteInternally(url)
+
+                override fun routeInternallyCallback(url: String) = webViewRouter.routeInternally(url)
             }
         }
     }

@@ -143,7 +143,7 @@ abstract class TeacherTest : CanvasTest() {
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val peopleListPage = PeopleListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val quizDetailsPage = QuizDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
-    val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.clearButton, R.id.backButton))
+    val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
     val quizSubmissionListPage = QuizSubmissionListPage()
     val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderFilesPage = SpeedGraderFilesPage()

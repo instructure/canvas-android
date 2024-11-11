@@ -19,8 +19,11 @@
 package com.instructure.student.mobius.syllabus.ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.syllabus.SyllabusRepository
@@ -33,10 +36,15 @@ class SyllabusRepositoryFragment : SyllabusFragment() {
     @Inject
     lateinit var syllabusRepository: SyllabusRepository
 
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = false
     }
+
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SyllabusView(canvasContext, webViewRouter, inflater, parent)
 
     companion object {
 
