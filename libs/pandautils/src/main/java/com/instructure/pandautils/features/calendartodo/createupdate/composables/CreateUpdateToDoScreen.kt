@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
@@ -235,16 +234,13 @@ private fun ActionsSegment(
             actionHandler(CreateUpdateToDoAction.Save)
         },
         enabled = saveEnabled,
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Transparent,
-            contentColor = Color(color = ThemePrefs.textButtonColor),
-            disabledBackgroundColor = Color.Transparent,
-        )
+        modifier = modifier
     ) {
         Text(
             text = stringResource(id = R.string.save),
+            color = Color(color = ThemePrefs.textButtonColor),
             fontSize = 14.sp,
+            modifier = Modifier.alpha(if (saveEnabled) 1f else .4f)
         )
     }
 }
