@@ -99,7 +99,7 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     override fun onDestroy() {
         val path = filesDir.path + intent.data?.path?.replace("/files", "")
         document?.let {
-            val annotations = it.annotationProvider.getAnnotations((0..it.pageCount).toMutableList())
+            val annotations = 0.until(it.pageCount).map { page -> it.annotationProvider.getAnnotations(page) }.flatten()
             if (annotations.isEmpty()) {
                 val file = File(path)
                 if (file.exists()) {
