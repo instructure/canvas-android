@@ -32,6 +32,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
@@ -268,7 +270,7 @@ private fun ActionsSegment(
         )
     }
 
-    val saveEnabled = uiState.title.isNotEmpty()
+    val saveEnabled = uiState.title.isNotBlank()
     val focusManager = LocalFocusManager.current
     TextButton(
         onClick = {
@@ -280,13 +282,16 @@ private fun ActionsSegment(
             }
         },
         enabled = saveEnabled,
-        modifier = modifier
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Transparent,
+            contentColor = Color(color = ThemePrefs.textButtonColor),
+            disabledBackgroundColor = Color.Transparent,
+        )
     ) {
         Text(
             text = stringResource(id = R.string.save),
-            color = Color(color = ThemePrefs.textButtonColor),
             fontSize = 14.sp,
-            modifier = Modifier.alpha(if (saveEnabled) 1f else .4f)
         )
     }
 }
