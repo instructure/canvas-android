@@ -17,7 +17,11 @@
 
 package com.instructure.parentapp.features.courses.details
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.views.CanvasWebView
 
@@ -28,9 +32,11 @@ internal fun SyllabusScreen(
     applyOnWebView: (CanvasWebView) -> Unit,
     onLtiButtonPressed: (String) -> Unit
 ) {
-    ComposeCanvasWebViewWrapper(
-        html = syllabus,
-        onLtiButtonPressed = onLtiButtonPressed,
-        applyOnWebView = applyOnWebView
-    )
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        ComposeCanvasWebViewWrapper(
+            html = syllabus,
+            onLtiButtonPressed = onLtiButtonPressed,
+            applyOnWebView = applyOnWebView
+        )
+    }
 }
