@@ -48,7 +48,9 @@ import com.pspdfkit.ui.toolbar.ContextualToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.io.File
+import java.util.EnumSet
+import java.util.Locale
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PSPDFKIT)
@@ -91,6 +93,22 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
         } else {
             toolbar.menuItems = menuItems as List<ContextualToolbarMenuItem>
         }
+    }
+
+
+    override fun onDestroy() {
+        val path = filesDir.path + intent.data?.path?.replace("/files", "")
+        document?.let {
+            val annotations = it.annotationProvider.getAnnotations((0..it.pageCount).toMutableList())
+            if (annotations.isEmpty()) {
+                val file = File(path)
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
+        }
+
+        super.onDestroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
