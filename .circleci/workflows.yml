@@ -1,0 +1,378 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/configuration-reference
+version: 2.1
+
+parameters:
+  student:
+    type: boolean
+    default: false
+  teacher:
+    type: boolean
+    default: false
+  all:
+    type: boolean
+    default: false
+
+commands:
+  decrypt-keystore:
+    steps:
+      - run:
+          name: Decrypt Keystore
+          command: |
+            echo $KEYSTORE_BASE64 | base64 --decode > $ANDROID_KEYSTORE_PATH
+  install-jdk:
+    steps:
+      - run:
+          name: JDK 17 Install
+          command: |
+            sudo apt-get update && sudo apt-get install openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
+            java -version
+            echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> $BASH_ENV
+            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+  submodule-update:
+    steps:
+      - run:
+          name: Submodule update
+          command: |
+            git submodule update --init
+  download-flank:
+    steps:
+      - run:
+          name: Download flank
+          command: |
+            wget --quiet https://github.com/Flank/flank/releases/download/v23.10.1/flank.jar -O ./flank.jar
+  flank:
+    parameters:
+      title:
+        default: UI tests
+        type: string
+      flank-yml:
+        default: ./apps/student/flank.yml
+        type: string
+    steps:
+      - run:
+          command: |
+            echo $GCLOUD_SERVICE_ACCOUNT_JSON > /tmp/google_service_account.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/google_service_account.json
+            gcloud auth activate-service-account  --key-file=/tmp/google_service_account.json
+            gcloud config set project delta-essence-114723
+            java -jar ./flank.jar firebase test android run -c << parameters.flank-yml >>
+          name: << parameters.title >> 
+
+
+jobs:
+  build-qa-debug:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    working_directory: ~/project/apps
+    steps:
+      - checkout:
+          path: ~/project
+      - install-jdk
+      - submodule-update
+      - run:
+          name: Build QaDebug with Gradle
+          command: ../gradle/gradlew :<< parameters.module >>:assembleQaDebug :<< parameters.module >>:assembleQaDebugAndroidTest
+      - store_artifacts:
+          path: ./<< parameters.module >>/build/outputs/apk/qa/debug/<< parameters.module >>-qa-debug.apk
+          destination: APP_QA_DEBUG
+      - store_artifacts:
+          path: ./<< parameters.module >>/build/outputs/apk/androidTest/qa/debug/<< parameters.module >>-qa-debug-androidTest.apk
+          destination: TEST_QA_DEBUG
+      - persist_to_workspace:
+          root: ~/project/apps/<< parameters.module >>
+          paths:
+            - ./build/outputs/apk/qa/debug/<< parameters.module >>-qa-debug.apk
+            - ./build/outputs/apk/androidTest/qa/debug/<< parameters.module >>-qa-debug-androidTest.apk
+  
+  build-and-comment-dev-debug-minify:
+    parameters:
+      app-id:
+        type: string
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    environment:
+      ANDROID_KEYSTORE_PATH: /home/circleci/project/keystore.jks
+    working_directory: ~/project/apps
+    steps:
+      - checkout:
+          path: ~/project
+      - install-jdk
+      - decrypt-keystore
+      - submodule-update
+      - run:
+          name: Build DevDebugMinify with Gradle
+          command: |
+            ../gradle/gradlew :<< parameters.module >>:assembleDevDebugMinify --build-cache \
+              -Pandroid.injected.signing.store.file=$ANDROID_KEYSTORE_PATH \
+              -Pandroid.injected.signing.store.password=$ANDROID_KEYSTORE_PASSWORD \
+              -Pandroid.injected.signing.key.alias=$DEBUG_KEY_ALIAS \
+              -Pandroid.injected.signing.key.password=$DEBUG_KEY_PASSWORD
+      - run:
+          name: Install Firebase CLI
+          command: |
+            curl -sL https://firebase.tools | bash
+      - run:
+          name: Deploy APK to Firebase App Distribution
+          command: |
+            echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/service-account.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/service-account.json
+            OUTPUT=$(firebase appdistribution:distribute ./<< parameters.module >>/build/outputs/apk/dev/debugMinify/<< parameters.module >>-dev-debugMinify.apk \
+             --app << parameters.app-id >> \
+             --groups "testers")
+            SHARE_URI=$(echo "$OUTPUT" | grep -oP 'Share this release with testers who have access: \Khttps://.*')
+            echo "export SHARE_URI=\"$SHARE_URI\"" >> "$BASH_ENV"
+      - run:
+          name: Comment on PR with Build Details
+          command: |
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              COMMENT="DevDebugMinify build completed successfully: $SHARE_URI"
+              curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+                -d "{\"body\": \"$COMMENT\"}" \
+                "https://api.github.com/repos/instructure/canvas-android/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
+            fi
+
+  unit-tests:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    resource_class: xlarge
+    working_directory: ~/project/apps
+    steps:
+      - checkout:
+          path: ~/project
+      - install-jdk
+      - submodule-update
+      - run:
+          name: Run Android Unit Tests
+          command: |          
+            ../gradle/gradlew :<< parameters.module >>:testDevDebugUnitTest
+      - store_test_results:
+          path: ./<< parameters.module >>/build/test-results/testDevDebugUnitTest
+      - store_artifacts:
+          path: ./<< parameters.module >>/build/reports/tests/testDevDebugUnitTest
+
+  ui-tests-portrait:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/<< parameters.module >>
+      - download-flank
+      - flank:
+          title: UI tests portrait
+          flank-yml: ./apps/<< parameters.module >>/flank.yml
+      - store_test_results:
+          path: ./results
+
+  ui-tests-landscape:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/<< parameters.module >>
+      - download-flank
+      - flank:
+          title: UI tests landscape
+          flank-yml: ./apps/<< parameters.module >>/flank_landscape.yml
+      - store_test_results:
+          path: ./results
+
+  ui-tests-tablet:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    working_directory: ~/project
+    steps:
+      - checkout:
+          path: ~/project
+      - attach_workspace:
+          at: ~/project/apps/<< parameters.module >>
+      - download-flank
+      - flank:
+          title: UI tests tablet
+          flank-yml: ./apps/<< parameters.module >>/flank_tablet.yml
+      - store_test_results:
+          path: ./results
+  
+  e2e:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    working_directory: ~/project
+    steps:
+      - run:
+          name: Check Git Message and Set RUN_E2E
+          command: |
+            #!/usr/bin/env bash
+            set -e
+            set -o pipefail
+            set -x
+
+            PR_DETAILS=$(curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/instructure/canvas-android/pulls/$CIRCLE_PR_NUMBER)
+
+            if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
+              echo "RUN_E2E=true" >> $BASH_ENV
+            fi
+      - when:
+          condition: $RUN_E2E
+          steps:
+            - checkout:
+                path: ~/project
+            - attach_workspace:
+                at: ~/project/apps/<< parameters.module >>
+            - download-flank
+            - flank:
+                title: E2E
+                flank-yml: ./apps/<< parameters.module >>/flank_e2e.yml
+            - store_test_results:
+                path: ./results
+
+  e2e-offline:
+    parameters:
+      module:
+        type: string
+        default: student
+    machine:
+      image: android:2024.04.1
+    working_directory: ~/project
+    steps:
+      - run:
+          name: Check Git Message and Set RUN_E2E
+          command: |
+            #!/usr/bin/env bash
+            set -e
+            set -o pipefail
+            set -x
+
+            PR_DETAILS=$(curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/instructure/canvas-android/pulls/$CIRCLE_PR_NUMBER)
+
+            if [[ "$PR_DETAILS" == *"Run E2E test suite"* ]]; then
+              echo "RUN_E2E=true" >> $BASH_ENV
+            fi
+      - when:
+          condition: $RUN_E2E
+          steps:
+            - checkout:
+                path: ~/project
+            - attach_workspace:
+                at: ~/project/apps/<< parameters.module >>
+            - download-flank
+            - flank:
+                title: E2E
+                flank-yml: ./apps/<< parameters.module >>/flank_e2e_offline.yml
+            - store_test_results:
+                path: ./results
+
+workflows:
+  student-pr:
+    when:
+      or: 
+        - << pipeline.parameters.student >>
+        - << pipeline.parameters.all >>
+    jobs:
+      - build-qa-debug:
+          name: Student QA build
+          module: student
+      - build-and-comment-dev-debug-minify:
+          name: Student DevDebug build
+          module: student
+          app-id: $STUDENT_APP_ID
+      - unit-tests:
+          name: Student Unit tests
+          module: student
+      - ui-tests-portrait:
+          name: Student Portrait UI tests
+          module: student
+          requires: [Student QA build]
+      - ui-tests-landscape:
+          name: Student Landscape UI tests
+          module: student
+          requires: [Student QA build]
+      - ui-tests-tablet:
+          name: Student Tablet UI tests
+          module: student
+          requires: [Student QA build]
+      - e2e:
+          name: Student E2E
+          module: student
+          requires: [Student QA build]
+      - e2e-offline:
+          name: Student Offline E2E
+          module: student
+          requires: [Student QA build]
+
+  teacher-pr:
+    when:
+      or:
+        - << pipeline.parameters.teacher >>
+        - << pipeline.parameters.all >>
+    jobs:
+      - build-qa-debug:
+          name: Teacher QA build
+          module: teacher
+      - build-and-comment-dev-debug-minify:
+          name: Teacher DevDebug build
+          module: teacher
+          app-id: $TEACHER_APP_ID
+      - unit-tests:
+          name: Teacher Unit tests
+          module: teacher
+      - ui-tests-portrait:
+          name: Teacher Portrait UI tests
+          module: teacher
+          requires: [Teacher QA build]
+      - ui-tests-landscape:
+          name: Teacher Landscape UI tests
+          module: teacher
+          requires: [Teacher QA build]
+      - ui-tests-tablet:
+          name: Teacher Tablet UI tests
+          module: teacher
+          requires: [Teacher QA build]
+      - e2e:
+          name: Teacher E2E
+          module: teacher
+          requires: [Teacher QA build]
