@@ -44,6 +44,8 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentLtiLaunchBinding
+import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
@@ -67,7 +69,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 @PageView
-class LtiLaunchFragment : Fragment() {
+class LtiLaunchFragment : Fragment(), NavigationCallbacks {
 
     private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
 
@@ -75,10 +77,14 @@ class LtiLaunchFragment : Fragment() {
 
     private var title: String? by NullableStringArg(key = LTI_TITLE)
     private var ltiTab: Tab? by NullableParcelableArg(key = LTI_TAB)
+    private var ltiUrl: String? by NullableStringArg(key = LTI_URL)
     private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
 
     @Inject
     lateinit var ltiLaunchFragmentBehavior: LtiLaunchFragmentBehavior
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     @Suppress("unused")
     @PageViewUrl
@@ -158,13 +164,18 @@ class LtiLaunchFragment : Fragment() {
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
                 // Handle return button in external tools. Links to course homepage should close the tool.
-                return url == contextLink()
+                return url == contextLink() || canRouteInternally(url)
             }
+
+            private fun canRouteInternally(url: String) =
+                webViewRouter.canRouteInternally(url) && ltiUrl?.substringBefore("?") != url.substringBefore("?")
 
             override fun routeInternallyCallback(url: String) {
                 // Handle return button in external tools. Links to course homepage should close the tool.
                 if (url == contextLink()) {
                     requireActivity().onBackPressed()
+                } else {
+                    webViewRouter.routeInternally(url)
                 }
             }
         }
@@ -233,5 +244,9 @@ class LtiLaunchFragment : Fragment() {
 
             return Route(LtiLaunchFragment::class.java, canvasContext, args)
         }
+    }
+
+    override fun onHandleBackPressed(): Boolean {
+        return binding.webView.handleGoBack()
     }
 }
