@@ -15,13 +15,19 @@
  *
  */
 
-package com.instructure.parentapp.features.courses.details
+package com.instructure.parentapp.features.courses.details.frontpage
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Page
 
 
-@Composable
-internal fun FrontPageScreen() {
-    Text(text = "Front Page")
+class FrontPageRepository(private val pageApi: PageAPI.PagesInterface) {
+
+    suspend fun loadFrontPage(courseId: Long, forceRefresh: Boolean): Page {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+
+        return pageApi.getFrontPage(CanvasContext.Type.COURSE.apiString, courseId, params).dataOrThrow
+    }
 }

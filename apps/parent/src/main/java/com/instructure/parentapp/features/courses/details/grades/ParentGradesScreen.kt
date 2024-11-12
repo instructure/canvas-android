@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.features.courses.details
+package com.instructure.parentapp.features.courses.details.grades
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +27,7 @@ import com.instructure.pandautils.features.grades.GradesAction
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
 import com.instructure.pandautils.features.grades.GradesViewModelAction
+import com.instructure.parentapp.features.courses.details.CourseDetailsAction
 
 
 @Composable

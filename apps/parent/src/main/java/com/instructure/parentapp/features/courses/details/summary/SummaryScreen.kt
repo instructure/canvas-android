@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.features.courses.details
+package com.instructure.parentapp.features.courses.details.summary
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
