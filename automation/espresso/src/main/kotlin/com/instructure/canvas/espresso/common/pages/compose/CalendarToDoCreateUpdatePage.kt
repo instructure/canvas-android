@@ -19,6 +19,8 @@ import android.content.Context
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -124,5 +126,13 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
 
     fun clickClose() {
         composeTestRule.onNodeWithContentDescription("Close").performClick()
+    }
+
+    fun assertSaveDisabled() {
+        composeTestRule.onNodeWithText("Save").assertIsNotEnabled()
+    }
+
+    fun assertSaveEnabled() {
+        composeTestRule.onNodeWithText("Save").assertIsEnabled()
     }
 }
