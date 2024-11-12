@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.instructure.pandautils.features.grades.GradesAction
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
 import com.instructure.pandautils.features.grades.GradesViewModelAction
@@ -30,7 +31,8 @@ import com.instructure.pandautils.features.grades.GradesViewModelAction
 
 @Composable
 internal fun ParentGradesScreen(
-    actionHandler: (CourseDetailsAction) -> Unit
+    actionHandler: (CourseDetailsAction) -> Unit,
+    forceRefresh: Boolean
 ) {
     val gradesViewModel: GradesViewModel = viewModel()
     val gradeUiState by remember { gradesViewModel.uiState }.collectAsState()
@@ -45,5 +47,10 @@ internal fun ParentGradesScreen(
         }
     }
 
-    GradesScreen(gradeUiState, gradesViewModel::handleAction)
+    if (forceRefresh) {
+        gradesViewModel.handleAction(GradesAction.Refresh(true))
+        actionHandler(CourseDetailsAction.GradesRefreshed)
+    } else {
+        GradesScreen(gradeUiState, gradesViewModel::handleAction)
+    }
 }

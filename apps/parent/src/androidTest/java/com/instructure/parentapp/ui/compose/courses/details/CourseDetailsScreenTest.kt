@@ -50,6 +50,7 @@ class CourseDetailsScreenTest {
                     isLoading = true
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
@@ -67,6 +68,7 @@ class CourseDetailsScreenTest {
                     isError = true
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
@@ -89,6 +91,7 @@ class CourseDetailsScreenTest {
                     tabs = listOf(TabType.SYLLABUS, TabType.SUMMARY)
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
@@ -124,6 +127,7 @@ class CourseDetailsScreenTest {
                     tabs = listOf(TabType.SYLLABUS)
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
