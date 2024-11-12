@@ -112,7 +112,7 @@ class CourseDetailsFragment : Fragment() {
             }
 
             is CourseDetailsViewModelAction.OpenLtiScreen -> {
-                navigation.navigate(activity, navigation.ltiLaunchRoute(action.url, ""))
+                navigation.navigate(activity, navigation.ltiLaunchRoute(action.url, "", sessionlessLaunch = true))
             }
         }
     }
