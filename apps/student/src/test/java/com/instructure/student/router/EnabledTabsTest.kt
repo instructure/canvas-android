@@ -34,11 +34,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class RouteMatcherRepositoryTest {
+class EnabledTabsTest {
     private val mockUri: Uri = mockk(relaxed = true)
-    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-
-    private val routeMatcherRepository = RouteMatcherRepository(courseApi)
 
     @Before
     fun setup() {
@@ -52,108 +49,123 @@ class RouteMatcherRepositoryTest {
     }
 
     @Test
-    fun `isRouteNotAvailable should return false when route is null`() = runTest {
-        val result = routeMatcherRepository.isRouteNotAvailable(null)
+    fun `isPathTabNotEnabled should return false when route is null`() = runTest {
+
+        val result = EnabledTabs.isPathTabNotEnabled(null)
 
         assertFalse(result)
     }
 
     @Test
-    fun `isRouteNotAvailable should return false when uri not contains uri or path`() = runTest {
+    fun `isPathTabNotEnabled should return false when uri not contains uri or path`() = runTest {
         val route = Route(uri = null, routePath = null, courseId = null)
 
-        val result = routeMatcherRepository.isRouteNotAvailable(route)
+        val result = EnabledTabs.isPathTabNotEnabled(route)
 
         assertFalse(result)
     }
 
     @Test
-    fun `isRouteNotAvailable should return false when uri not contains courseId`() = runTest {
+    fun `isPathTabNotEnabled should return false when enabled tabs is null`() = runTest {
         val route = Route(uri = mockUri)
         every { mockUri.path } returns "http://www.google.com"
         every { mockUri.pathSegments } returns emptyList()
 
-        val result = routeMatcherRepository.isRouteNotAvailable(route)
+        EnabledTabs.enabledTabs = null
+        val result = EnabledTabs.isPathTabNotEnabled(route)
 
         assertFalse(result)
     }
 
     @Test
-    fun `isRouteNotAvailable should return false value for valid details urls`() = runTest {
-        val mockCourse: Course = mockk(relaxed = true)
-        coEvery { courseApi.getCourse(1, any()) } returns DataResult.Success(mockCourse)
-        coEvery { mockCourse.tabs } returns listOf(
+    fun `isPathTabNotEnabled should return false when enabled tabs is empty`() = runTest {
+        val route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com"
+        every { mockUri.pathSegments } returns emptyList()
+
+        EnabledTabs.enabledTabs = emptyList()
+        val result = EnabledTabs.isPathTabNotEnabled(route)
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `isPathTabNotEnabled should return false when uri not contains courseId`() = runTest {
+        val route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com"
+        every { mockUri.pathSegments } returns emptyList()
+
+        val result = EnabledTabs.isPathTabNotEnabled(route)
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `isPathTabNotEnabled should return false value for valid details urls`() = runTest {
+        EnabledTabs.enabledTabs = listOf(
             Tab(tabId = "assignment", htmlUrl = "/courses/1/assignments"),
         )
         val route = Route(uri = mockUri)
         every { mockUri.path } returns "http://www.google.com/courses/1/assignments/1"
         every { mockUri.pathSegments } returns listOf("courses", "1", "assignments", "1")
 
-        val result = routeMatcherRepository.isRouteNotAvailable(route)
+        val result = EnabledTabs.isPathTabNotEnabled(route)
 
         assertFalse(result)
     }
 
     @Test
-    fun `isRouteNotAvailable handle home urls correctly`() = runTest {
-        val mockCourse: Course = mockk(relaxed = true)
-        coEvery { courseApi.getCourse(1, any()) } returns DataResult.Success(mockCourse)
-        coEvery { mockCourse.tabs } returns listOf(
+    fun `isPathTabNotEnabled handle home urls correctly`() = runTest {
+       EnabledTabs.enabledTabs = listOf(
             Tab(tabId = "home", htmlUrl = "/courses/1"),
         )
         val route = Route(uri = mockUri)
         every { mockUri.path } returns "http://www.google.com/courses/1"
         every { mockUri.pathSegments } returns listOf("courses", "1")
 
-        val result = routeMatcherRepository.isRouteNotAvailable(route)
+        val result = EnabledTabs.isPathTabNotEnabled(route)
 
         assertFalse(result)
     }
 
     @Test
-    fun `isRouteNotAvailable handle home urls correctly with details url`() = runTest {
-        val mockCourse: Course = mockk(relaxed = true)
-        coEvery { courseApi.getCourse(1, any()) } returns DataResult.Success(mockCourse)
-        coEvery { mockCourse.tabs } returns listOf(
+    fun `isPathTabNotEnabled handle home urls correctly with details url`() = runTest {
+        EnabledTabs.enabledTabs = listOf(
             Tab(tabId = "home", htmlUrl = "/courses/1"),
         )
         val route = Route(uri = mockUri)
         every { mockUri.path } returns "http://www.google.com/courses/1/assignments/1"
         every { mockUri.pathSegments } returns listOf("courses", "1", "assignments", "1")
 
-        val result = routeMatcherRepository.isRouteNotAvailable(route)
+        val result = EnabledTabs.isPathTabNotEnabled(route)
 
-        assertTrue(result)
+        assertFalse(result)
     }
 
     @Test
-    fun `isRouteNotAvailable handle syllabus urls correctly with disabled tab`() = runTest {
-        val mockCourse: Course = mockk(relaxed = true)
-        coEvery { courseApi.getCourse(1, any()) } returns DataResult.Success(mockCourse)
-        coEvery { mockCourse.tabs } returns listOf(
+    fun `isPathTabNotEnabled handle syllabus urls correctly with disabled tab`() = runTest {
+        EnabledTabs.enabledTabs = listOf(
             Tab(tabId = "assignments", htmlUrl = "/courses/1/assignments"),
         )
         val route = Route(uri = mockUri)
         every { mockUri.path } returns "http://www.google.com/courses/1/assignments/syllabus"
         every { mockUri.pathSegments } returns listOf("courses", "1", "assignments", "syllabus")
 
-        val result = routeMatcherRepository.isRouteNotAvailable(route)
+        val result = EnabledTabs.isPathTabNotEnabled(route)
 
         assertTrue(result)
     }
 
     @Test
-    fun `isRouteNotAvailable handle syllabus urls correctly with enabled tab`() = runTest {
-        val mockCourse: Course = mockk(relaxed = true)
-        coEvery { courseApi.getCourse(1, any()) } returns DataResult.Success(mockCourse)
-        coEvery { mockCourse.tabs } returns listOf(
+    fun `isPathTabNotEnabled handle syllabus urls correctly with enabled tab`() = runTest {
+        EnabledTabs.enabledTabs = listOf(
             Tab(tabId = "syllabus", htmlUrl = "/courses/1/assignments/syllabus"),
         )
         val route = Route(uri = mockUri)
         every { mockUri.path } returns "http://www.google.com/courses/1/assignments/syllabus"
         every { mockUri.pathSegments } returns listOf("courses", "1", "assignments", "syllabus")
 
-        val result = routeMatcherRepository.isRouteNotAvailable(route)
+        val result = EnabledTabs.isPathTabNotEnabled(route)
 
         assertFalse(result)
     }

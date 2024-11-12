@@ -9,9 +9,11 @@ object EnabledTabs {
     var enabledTabs: List<Tab>? = null
 
     private fun isPathTabEnabled(courseId: Long, uri: Uri): Boolean {
-        val tabs = EnabledTabs.enabledTabs ?: return true
+        val tabs = enabledTabs ?: return true
+        if (tabs.isEmpty()) return true
+
         val pathSegments = uri.pathSegments
-        val relativePath = uri.path?.replaceBefore("/courses/$courseId", "".orEmpty())
+        val relativePath = uri.path?.replaceBefore("/courses/$courseId", "")
         // Details urls should be accepted, like /assignments/1, but assignments/syllabus should not
         return if (relativePath == "/courses/$courseId") { // handle home url which is prefix of every other urls
             return tabs.any { it.tabId == "home" }
