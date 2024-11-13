@@ -404,6 +404,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
+                        assignment.dueDate ?: Date(),
                         assignmentDetailsBehaviour.dialogColor
                     )
                 }

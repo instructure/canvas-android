@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Date
 
 class ReminderManager(
     private val dateTimePicker: DateTimePicker,
@@ -42,15 +43,17 @@ class ReminderManager(
         contentId: Long,
         contentName: String,
         contentHtmlUrl: String,
+        dueDate: Date,
         @ColorInt color: Int
     ) {
-        showBeforeDueDateReminderDialog(context, color).collect { calendar ->
+        showBeforeDueDateReminderDialog(context, dueDate, color).collect { calendar ->
             createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl)
         }
     }
 
     private fun showBeforeDueDateReminderDialog(
         context: Context,
+        dueDate: Date,
         @ColorInt color: Int,
     ) = callbackFlow<Calendar> {
         val choices = listOf(
@@ -87,7 +90,7 @@ class ReminderManager(
                     }
                     dialog.dismiss()
                 } else {
-                    trySend(choices[which].getCalendar())
+                    trySend(choices[which].getCalendar(dueDate))
                     close()
                     dialog.dismiss()
                 }
@@ -178,7 +181,8 @@ sealed class ReminderChoice {
         else -> 0
     }
 
-    fun getCalendar(): Calendar = Calendar.getInstance().apply {
-        add(Calendar.MILLISECOND, this@ReminderChoice.getTimeInMillis().toInt())
+    fun getCalendar(dueDate: Date): Calendar = Calendar.getInstance().apply {
+        time = dueDate
+        add(Calendar.MILLISECOND, -this@ReminderChoice.getTimeInMillis().toInt())
     }
 }
