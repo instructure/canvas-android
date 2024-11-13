@@ -25,7 +25,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
@@ -49,7 +49,7 @@ import com.instructure.student.util.CacheControlFlags
 import kotlinx.coroutines.Job
 
 @ScreenView(SCREEN_VIEW_BOOKMARK_CREATION)
-class BookmarkCreationDialog : AppCompatDialogFragment() {
+class BookmarkCreationDialog : BaseCanvasAppCompatDialogFragment() {
     private var bookmarkJob: Job? = null
     private var bookmarkEditText: AppCompatEditText? = null
 

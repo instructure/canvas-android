@@ -19,14 +19,14 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 
 import com.instructure.loginapi.login.R
 import com.instructure.pandautils.utils.ThemePrefs
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
-class NoInternetConnectionDialog : AppCompatDialogFragment() {
+class NoInternetConnectionDialog : BaseCanvasAppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())

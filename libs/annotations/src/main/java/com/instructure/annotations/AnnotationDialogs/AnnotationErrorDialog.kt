@@ -19,14 +19,14 @@ package com.instructure.annotations.AnnotationDialogs
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.R
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.dismissExisting
 import kotlin.properties.Delegates
 
-class AnnotationErrorDialog : AppCompatDialogFragment() {
+class AnnotationErrorDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var callback: () -> Unit by Delegates.notNull()
 

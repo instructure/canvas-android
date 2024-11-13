@@ -35,7 +35,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -70,7 +70,7 @@ import com.instructure.student.util.onMainThread
 import java.io.File
 import java.io.FileOutputStream
 
-abstract class ParentFragment : DialogFragment(), FragmentInteractions, NavigationCallbacks {
+abstract class ParentFragment : BaseCanvasDialogFragment(), FragmentInteractions, NavigationCallbacks {
 
     private var openMediaBundle: Bundle? = null
     private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? = null

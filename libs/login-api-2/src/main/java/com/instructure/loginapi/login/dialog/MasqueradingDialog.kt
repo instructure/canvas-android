@@ -25,7 +25,7 @@ import android.util.Patterns
 import android.view.*
 import android.view.animation.Interpolator
 import androidx.annotation.FloatRange
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.isValid
@@ -36,7 +36,7 @@ import com.instructure.pandautils.utils.*
 import java.util.Locale
 
 
-class MasqueradingDialog : DialogFragment() {
+class MasqueradingDialog : BaseCanvasDialogFragment() {
 
     private val binding by viewBinding(DialogMasqueradingBinding::bind)
 

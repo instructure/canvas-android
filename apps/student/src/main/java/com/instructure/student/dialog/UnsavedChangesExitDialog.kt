@@ -18,14 +18,14 @@ package com.instructure.student.dialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.utils.BlindSerializableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.student.R
 
-class UnsavedChangesExitDialog : AppCompatDialogFragment() {
+class UnsavedChangesExitDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var callback: (() -> Unit)? by BlindSerializableArg()
 

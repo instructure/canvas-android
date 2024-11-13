@@ -31,7 +31,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -44,7 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
 @AndroidEntryPoint
-class FileUploadDialogFragment : DialogFragment() {
+class FileUploadDialogFragment : BaseCanvasDialogFragment() {
 
     private val viewModel: FileUploadDialogViewModel by viewModels()
 

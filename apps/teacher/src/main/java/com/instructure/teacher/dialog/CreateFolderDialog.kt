@@ -23,7 +23,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_FOLDER
@@ -35,7 +35,7 @@ import com.instructure.teacher.R
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_CREATE_FOLDER)
-class CreateFolderDialog : AppCompatDialogFragment() {
+class CreateFolderDialog : BaseCanvasAppCompatDialogFragment() {
     init {
         retainInstance = true
     }

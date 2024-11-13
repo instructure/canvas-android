@@ -27,7 +27,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -39,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class PairingCodeDialogFragment : DialogFragment() {
+class PairingCodeDialogFragment : BaseCanvasDialogFragment() {
 
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
 

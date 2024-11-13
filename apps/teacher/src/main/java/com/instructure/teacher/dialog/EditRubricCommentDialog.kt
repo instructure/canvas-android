@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.Pronouns
@@ -37,7 +37,7 @@ import com.instructure.teacher.view.edit_rubric.RubricCommentEditedEvent
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_EDIT_RUBRIC_COMMENT)
-class EditRubricCommentDialog : AppCompatDialogFragment() {
+class EditRubricCommentDialog : BaseCanvasAppCompatDialogFragment() {
 
     private lateinit var binding: ViewEditGradeCommentBinding
 

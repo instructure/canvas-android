@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +35,7 @@ import com.instructure.pandautils.utils.dismissExisting
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_ATTACHMENT_PICKER)
-class AttachmentPickerDialog : AppCompatDialogFragment() {
+class AttachmentPickerDialog : BaseCanvasAppCompatDialogFragment() {
 
     init {
         retainInstance = true

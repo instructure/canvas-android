@@ -32,7 +32,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -129,7 +128,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         super.onCreate(savedInstanceState)
         // We only want full screen dialog style if its user files
         if (canvasContext.type == CanvasContext.Type.USER) {
-            setStyle(DialogFragment.STYLE_NORMAL, R.style.LightStatusBarDialog)
+            setStyle(STYLE_NORMAL, R.style.LightStatusBarDialog)
         }
         setUpCallbacks()
     }

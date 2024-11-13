@@ -24,7 +24,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CUSTOMIZE_GRADE
@@ -36,7 +36,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_CUSTOMIZE_GRADE)
-class CustomizeGradeDialog : AppCompatDialogFragment() {
+class CustomizeGradeDialog : BaseCanvasAppCompatDialogFragment() {
 
     init {
         retainInstance = true

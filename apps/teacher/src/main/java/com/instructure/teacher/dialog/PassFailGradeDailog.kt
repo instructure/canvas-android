@@ -23,7 +23,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PASS_FAIL_GRADE
@@ -38,7 +38,7 @@ import java.util.Locale
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_PASS_FAIL_GRADE)
-class PassFailGradeDailog : AppCompatDialogFragment() {
+class PassFailGradeDailog : BaseCanvasAppCompatDialogFragment() {
 
     init {
         retainInstance = true

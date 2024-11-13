@@ -26,7 +26,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.widget.CompoundButtonCompat
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_MOVE_TO
@@ -41,7 +41,7 @@ import com.instructure.teacher.utils.getColorCompat
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_MOVE_TO)
-class DiscussionsMoveToDialog : DialogFragment() {
+class DiscussionsMoveToDialog : BaseCanvasDialogFragment() {
 
     init {
         retainInstance = true

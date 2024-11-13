@@ -26,7 +26,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.transition.TransitionManager
@@ -41,7 +41,7 @@ import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ShareExtensionTargetFragment : DialogFragment() {
+class ShareExtensionTargetFragment : BaseCanvasDialogFragment() {
 
     companion object {
         const val TAG = "ShareExtensionTargetFragment"

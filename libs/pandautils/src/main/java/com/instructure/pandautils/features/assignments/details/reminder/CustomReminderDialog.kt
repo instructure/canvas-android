@@ -23,7 +23,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.DialogCustomReminderBinding
@@ -34,7 +34,7 @@ import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CustomReminderDialog : DialogFragment() {
+class CustomReminderDialog : BaseCanvasDialogFragment() {
 
     private lateinit var binding: DialogCustomReminderBinding
     private val parentViewModel: AssignmentDetailsViewModel by viewModels(ownerProducer = {

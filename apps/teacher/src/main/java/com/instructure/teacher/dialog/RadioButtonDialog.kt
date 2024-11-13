@@ -27,9 +27,8 @@ import android.view.ViewGroup
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatRadioButton
-import androidx.core.content.ContextCompat
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.utils.*
@@ -39,7 +38,7 @@ import java.util.Locale
 
 typealias OnRadioButtonSelected = ((selectedIdx: Int) -> Unit)?
 
-class RadioButtonDialog : AppCompatDialogFragment() {
+class RadioButtonDialog : BaseCanvasAppCompatDialogFragment() {
 
     init {
         retainInstance = true

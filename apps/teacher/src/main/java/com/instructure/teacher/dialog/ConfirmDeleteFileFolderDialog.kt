@@ -20,7 +20,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFIRM_DELETE_FILE_FOLDER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
@@ -30,7 +30,7 @@ import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.dismissExisting
 
 @ScreenView(SCREEN_VIEW_CONFIRM_DELETE_FILE_FOLDER)
-class ConfirmDeleteFileFolderDialog : AppCompatDialogFragment() {
+class ConfirmDeleteFileFolderDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var deleteCallback: (() -> Unit)? by BlindSerializableArg()
     private var isFile: Boolean by BooleanArg(false)

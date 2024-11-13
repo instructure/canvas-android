@@ -20,7 +20,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.utils.StringArrayArg
 import com.instructure.pandautils.utils.ThemePrefs
@@ -28,7 +28,7 @@ import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.student.R
 import java.util.Locale
 
-class PickerBadExtensionDialog : DialogFragment() {
+class PickerBadExtensionDialog : BaseCanvasDialogFragment() {
 
     private var extensions by StringArrayArg()
 

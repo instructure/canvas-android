@@ -23,14 +23,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentAboutBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AboutFragment : DialogFragment() {
+class AboutFragment : BaseCanvasDialogFragment() {
 
     companion object {
         fun newInstance() = AboutFragment()

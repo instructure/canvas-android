@@ -23,7 +23,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
@@ -35,7 +35,7 @@ import java.util.Locale
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_EDIT_COURSE_NICKNAME)
-class EditCourseNicknameDialog : AppCompatDialogFragment() {
+class EditCourseNicknameDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var mEditNicknameCallback: (String) -> Unit by Delegates.notNull()
 

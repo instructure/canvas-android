@@ -24,7 +24,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.R
@@ -32,7 +32,7 @@ import com.instructure.pandautils.utils.*
 import kotlin.properties.Delegates
 
 
-class AnnotationCommentDialog : AppCompatDialogFragment() {
+class AnnotationCommentDialog : BaseCanvasAppCompatDialogFragment() {
 
     init {
         retainInstance = true

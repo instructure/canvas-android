@@ -23,7 +23,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -40,7 +40,7 @@ import javax.inject.Inject
 @PageView(url = "help")
 @ScreenView(SCREEN_VIEW_HELP)
 @AndroidEntryPoint
-class HelpDialogFragment : DialogFragment() {
+class HelpDialogFragment : BaseCanvasDialogFragment() {
 
     private val viewModel: HelpDialogViewModel by viewModels()
 

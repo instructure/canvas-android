@@ -21,7 +21,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.utils.*
@@ -31,7 +31,7 @@ import com.instructure.teacher.databinding.DialogSgAddAttachmentCommentBinding
 import com.instructure.teacher.view.MediaCommentDialogClosedEvent
 import org.greenrobot.eventbus.EventBus
 
-class SGAddMediaCommentDialog : AppCompatDialogFragment() {
+class SGAddMediaCommentDialog : BaseCanvasAppCompatDialogFragment() {
 
     var assignmentId: Long by LongArg()
     var courseId: Long by LongArg()

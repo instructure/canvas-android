@@ -25,7 +25,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
@@ -37,7 +37,7 @@ import com.instructure.teacher.R
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_EDIT_COURSE_NAME)
-class EditCourseNameDialog : AppCompatDialogFragment() {
+class EditCourseNameDialog : BaseCanvasAppCompatDialogFragment() {
 
     init {
         retainInstance = true

@@ -19,7 +19,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
@@ -37,7 +37,7 @@ import com.instructure.pandautils.views.ColorPickerIcon
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_COLOR_PICKER)
-class ColorPickerDialog: AppCompatDialogFragment() {
+class ColorPickerDialog: BaseCanvasAppCompatDialogFragment() {
 
     init {
         retainInstance = true

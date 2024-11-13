@@ -21,7 +21,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DATE_PICKER
 import com.instructure.pandautils.analytics.ScreenView
@@ -33,7 +33,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_DATE_PICKER)
-class DatePickerDialogFragment : AppCompatDialogFragment(), DatePickerDialog.OnDateSetListener {
+class DatePickerDialogFragment : BaseCanvasAppCompatDialogFragment(), DatePickerDialog.OnDateSetListener {
 
     var callback: (year: Int, month: Int, dayOfMonth: Int) -> Unit by Delegates.notNull()
     var defaultDate by SerializableArg(Date())

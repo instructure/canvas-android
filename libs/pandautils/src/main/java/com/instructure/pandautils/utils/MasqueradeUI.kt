@@ -47,14 +47,6 @@ fun DialogFragment.showMasqueradeNotification(startingClass: Class<Activity>? = 
     dialog?.window?.showMasqueradeNotification(startingClass)
 }
 
-/**
- * Adds a masquerade UI if the user is currently masquerading AND this DialogFragment is being displayed as a dialog.
- */
-@Suppress("unused") // Added at compile time via MasqueradeUIInjector
-fun android.app.DialogFragment.showMasqueradeNotification(startingClass: Class<Activity>? = null) {
-    dialog?.window?.showMasqueradeNotification(startingClass)
-}
-
 private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = null) {
     if (!ApiPrefs.isMasquerading) return
     decorView.rootView?.let { rootView ->

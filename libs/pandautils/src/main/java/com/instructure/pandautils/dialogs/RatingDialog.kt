@@ -27,7 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.BuildConfig
@@ -42,7 +42,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
 
 @ScreenView(SCREEN_VIEW_RATING)
-class RatingDialog : DialogFragment() {
+class RatingDialog : BaseCanvasDialogFragment() {
 
     object Prefs : PrefManager("rating_dialog") {
         var dateShowAgain by IntPref(FOUR_WEEKS, keyName = "date_show_again")
