@@ -460,13 +460,17 @@ class AssignmentDetailsViewModel @Inject constructor(
         _events.postValue(Event(action))
     }
 
-    private fun mapReminders(reminders: List<ReminderEntity>) = reminders.map {
-        ReminderItemViewModel(ReminderViewData(it.id, it.text)) {
-            postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog {
-                deleteReminderById(it)
-            })
+    private fun mapReminders(reminders: List<ReminderEntity>) = reminders
+        .sortedBy {
+            it.time
         }
-    }
+        .map {
+            ReminderItemViewModel(ReminderViewData(it.id, it.text)) {
+                postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog {
+                    deleteReminderById(it)
+                })
+            }
+        }
 
     private fun deleteReminderById(id: Long) {
         alarmScheduler.cancelAlarm(id)
