@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

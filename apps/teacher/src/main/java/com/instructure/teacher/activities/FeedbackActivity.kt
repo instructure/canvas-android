@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.webkit.WebChromeClient
-import instructure.androidblueprint.BaseCanvasActivity
+import com.instructure.pandautils.blueprint.BaseCanvasActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FEEDBACK
 import com.instructure.pandautils.analytics.ScreenView

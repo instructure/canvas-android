@@ -13,15 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.content.Context
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.utils.showMasqueradeNotification
 
 open class BaseCanvasActivity : AppCompatActivity() {
 
     override fun attachBaseContext(base: Context?) {
         val newBase = if (base != null) LocaleUtils.wrapContext(base) else base
         super.attachBaseContext(newBase)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        showMasqueradeNotification()
     }
 }

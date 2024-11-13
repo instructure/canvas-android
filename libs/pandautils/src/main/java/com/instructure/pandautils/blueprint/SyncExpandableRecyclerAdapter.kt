@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context

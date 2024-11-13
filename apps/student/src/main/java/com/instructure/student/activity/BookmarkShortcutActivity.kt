@@ -19,7 +19,7 @@ package com.instructure.student.activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import instructure.androidblueprint.BaseCanvasActivity
+import com.instructure.pandautils.blueprint.BaseCanvasActivity
 import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_SHORTCUT

@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import androidx.recyclerview.widget.SortedList
 import com.instructure.pandarecycler.util.UpdatableSortedList

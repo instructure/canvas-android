@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import androidx.recyclerview.widget.SortedList
 import com.instructure.canvasapi2.models.CanvasComparable
@@ -22,7 +22,8 @@ import com.instructure.pandarecycler.util.UpdatableSortedList
 
 abstract class SyncPresenter<
         MODEL : CanvasComparable<*>,
-        VIEW : SyncManager<MODEL>>(clazz: Class<MODEL>) : Presenter<VIEW> {
+        VIEW : SyncManager<MODEL>>(clazz: Class<MODEL>) :
+    Presenter<VIEW> {
 
     private var listChangeCallback: ListChangeCallback? = null
 
@@ -35,7 +36,7 @@ abstract class SyncPresenter<
     var viewCallback: VIEW? = null
         private set
 
-    override fun onViewAttached(view: VIEW): Presenter<VIEW> {
+    override fun onViewAttached(view: VIEW): com.instructure.pandautils.blueprint.Presenter<VIEW> {
         viewCallback = view
         return this
     }
@@ -72,7 +73,7 @@ abstract class SyncPresenter<
         return item1.id == item2.id
     }
 
-    fun setListChangeCallback(callback: ListChangeCallback?) {
+    fun setListChangeCallback(callback: com.instructure.pandautils.blueprint.ListChangeCallback?) {
         listChangeCallback = callback
     }
 

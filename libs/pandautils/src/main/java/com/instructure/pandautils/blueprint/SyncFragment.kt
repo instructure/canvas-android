@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,16 +22,17 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.utils.ApiPrefs.perPageCount
 import com.instructure.pandarecycler.PaginatedScrollListener
 import com.instructure.pandarecycler.util.UpdatableSortedList
 
-abstract class ListFragment<
-        MODEL,
-        PRESENTER : ListPresenter<MODEL, VIEW>,
-        VIEW : ListManager<MODEL>,
+abstract class SyncFragment<
+        MODEL : CanvasComparable<*>,
+        PRESENTER : SyncPresenter<MODEL, VIEW>,
+        VIEW : SyncManager<MODEL>,
         HOLDER : RecyclerView.ViewHolder,
-        ADAPTER : ListRecyclerAdapter<MODEL, HOLDER, VIEW>> : Fragment() {
+        ADAPTER : SyncRecyclerAdapter<MODEL, HOLDER, VIEW>> : Fragment() {
 
     protected abstract fun onReadySetGo(presenter: PRESENTER)
 
@@ -43,23 +44,22 @@ abstract class ListFragment<
 
     protected open val adapter: ADAPTER by lazy { createAdapter() }
 
-    protected abstract val recyclerView: RecyclerView
+    protected abstract val recyclerView: RecyclerView?
 
-    private fun hitRockBottom() {}
+    protected open fun hitRockBottom() {}
 
-    // boolean flag to avoid delivering the result twice. Calling initLoader in onActivityCreated makes
+    // Boolean flag to avoid delivering the result twice. Calling initLoader in onActivityCreated makes
     // onLoadFinished will be called twice during configuration change.
     private var delivered = false
 
     lateinit var presenter: PRESENTER
         private set
 
-    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         // LoaderCallbacks as an object, so no hint regarding loader will be leak to the subclasses.
-        loaderManager.initLoader(
+        LoaderManager.getInstance(this).initLoader(
             LOADER_ID,
             null,
             object : LoaderManager.LoaderCallbacks<PRESENTER> {
@@ -69,7 +69,7 @@ abstract class ListFragment<
 
                 override fun onLoadFinished(loader: Loader<PRESENTER>, presenter: PRESENTER) {
                     if (!delivered) {
-                        this@ListFragment.presenter = presenter
+                        this@SyncFragment.presenter = presenter
                         delivered = true
                         onPresenterPrepared(presenter)
                     }
@@ -85,7 +85,7 @@ abstract class ListFragment<
     @Suppress("UNCHECKED_CAST")
     override fun onResume() {
         super.onResume()
-        presenter.onViewAttached(presenterView).let { onReadySetGo(it as PRESENTER) }
+        onReadySetGo(presenter.onViewAttached(presenterView) as PRESENTER)
     }
 
     override fun onPause() {
@@ -97,7 +97,7 @@ abstract class ListFragment<
         // hook for subclasses
     }
 
-    fun withPagination(): Boolean {
+    open fun withPagination(): Boolean {
         return true
     }
 
@@ -110,10 +110,9 @@ abstract class ListFragment<
     protected val presenterView: VIEW
         get() = this as VIEW
 
-    private fun addPagination() {
+    protected fun addPagination() {
         if (withPagination()) {
-            recyclerView.clearOnScrollListeners()
-            recyclerView.addOnScrollListener(PaginatedScrollListener(perPageCount()) { hitRockBottom() })
+            recyclerView!!.addOnScrollListener(PaginatedScrollListener(perPageCount()) { hitRockBottom() })
         }
     }
 
@@ -124,10 +123,9 @@ abstract class ListFragment<
         }
     }
 
-    open val list: UpdatableSortedList<MODEL>
-        get() = presenter.data
+    open val list: UpdatableSortedList<MODEL> get() = presenter.data
 
-    protected fun perPageCount(): Int {
+    protected open fun perPageCount(): Int {
         return perPageCount
     }
 

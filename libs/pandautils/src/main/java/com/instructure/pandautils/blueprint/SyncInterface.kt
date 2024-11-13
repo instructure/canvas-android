@@ -14,8 +14,12 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
-interface PresenterFactory<VIEW, PRESENTER : Presenter<VIEW>> {
-    fun create(): PRESENTER
+interface SyncInterface {
+    // UI Updating
+    fun onRefreshFinished()
+    fun onRefreshStarted()
+    fun checkIfEmpty()
+    fun clearAdapter()
 }

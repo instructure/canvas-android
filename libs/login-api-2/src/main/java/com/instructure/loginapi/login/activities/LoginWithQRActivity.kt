@@ -21,7 +21,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
-import instructure.androidblueprint.BaseCanvasActivity
+import com.instructure.pandautils.blueprint.BaseCanvasActivity
 import androidx.core.content.ContextCompat
 import com.google.zxing.integration.android.IntentIntegrator
 import com.instructure.canvasapi2.utils.APIHelper

@@ -14,14 +14,13 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.pandarecycler.util.UpdatableSortedList
 import java.lang.ref.WeakReference
 
@@ -29,21 +28,16 @@ import java.lang.ref.WeakReference
  * This is a stripped down base for our ListRecyclerAdapters. Most of the coupled functionality
  * was torn out of this and added to BaseListPresenter
  */
-abstract class SyncRecyclerAdapter<
-        MODEL : CanvasComparable<*>,
-        HOLDER : RecyclerView.ViewHolder,
-        VIEW : SyncManager<MODEL>>(
+@Suppress("LeakingThis")
+abstract class ListRecyclerAdapter<MODEL, HOLDER : RecyclerView.ViewHolder, VIEW : ListManager<MODEL>>(
     context: Context,
-    private val presenter: SyncPresenter<MODEL, VIEW>
+    val presenter: ListPresenter<MODEL, VIEW>
 ) : RecyclerView.Adapter<HOLDER>() {
 
-    abstract fun bindHolder(model: MODEL, holder: HOLDER, position: Int)
-
-    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
-
-    private val contextReference: WeakReference<Context> = WeakReference(context)
+    private val contextReference: WeakReference<Context>?
 
     init {
+        contextReference = WeakReference(context)
         presenter.setListChangeCallback(object : ListChangeCallback {
             override fun onInserted(position: Int, count: Int) {
                 notifyItemRangeInserted(position, count)
@@ -63,6 +57,10 @@ abstract class SyncRecyclerAdapter<
         })
         notifyDataSetChanged()
     }
+
+    abstract fun bindHolder(model: MODEL, holder: HOLDER, position: Int)
+
+    abstract fun createViewHolder(binding: ViewBinding, viewType: Int): HOLDER
 
     abstract fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding
 
@@ -94,11 +92,13 @@ abstract class SyncRecyclerAdapter<
      * @param position The position of the item requested
      * @return A model item
      */
-    fun getItemAtPosition(position: Int): MODEL? {
-        return if (list.size() == 0) null else list[position]
+    fun getItemAtPosition(position: Int): MODEL {
+        return list[position]
     }
 
-    fun indexOf(item: MODEL): Int = list.indexOf(item)
+    fun indexOf(item: MODEL): Int {
+        return list.indexOf(item)
+    }
 
     fun add(item: MODEL) {
         list.addOrUpdate(item)
@@ -117,11 +117,7 @@ abstract class SyncRecyclerAdapter<
     }
 
     fun remove(item: MODEL) {
-        removeItem(item)
-    }
-
-    fun removeItem(item: MODEL): Boolean {
-        return list.remove(item)
+        list.remove(item)
     }
 
     // endregion
@@ -129,5 +125,6 @@ abstract class SyncRecyclerAdapter<
         get() = presenter.data
 
     protected val context: Context?
-        get() = contextReference.get()
+        get() = contextReference?.get()
+
 }

@@ -26,9 +26,9 @@ import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
-import instructure.androidblueprint.FragmentPresenter
-import instructure.androidblueprint.FragmentViewInterface
-import instructure.androidblueprint.PresenterFragment
+import com.instructure.pandautils.blueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.PresenterFragment
 
 abstract class BasePresenterFragment<PRESENTER : FragmentPresenter<VIEW>, VIEW : FragmentViewInterface, BINDING : ViewBinding> :
     PresenterFragment<PRESENTER, VIEW>(), NavigationCallbacks {

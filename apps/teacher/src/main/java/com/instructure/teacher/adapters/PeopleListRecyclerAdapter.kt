@@ -27,7 +27,7 @@ import com.instructure.teacher.holders.UserViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.PeopleListPresenter
 import com.instructure.teacher.viewinterface.PeopleListView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class PeopleListRecyclerAdapter(
     context: Context, presenter: PeopleListPresenter, private val mCallback: AdapterToFragmentCallback<User>

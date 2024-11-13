@@ -23,7 +23,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import instructure.androidblueprint.BaseCanvasActivity
+import com.instructure.pandautils.blueprint.BaseCanvasActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment

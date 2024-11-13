@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
 import com.instructure.teacher.interfaces.RceMediaUploadView
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface CreateDiscussionView : FragmentViewInterface, RceMediaUploadView {
     fun startSavingDiscussion()

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.content.Context
 import android.content.Intent

@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 abstract class FragmentPresenter<VIEW : FragmentViewInterface> : Presenter<VIEW> {
     abstract fun loadData(forceNetwork: Boolean)

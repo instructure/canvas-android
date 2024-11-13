@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,17 +22,16 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.instructure.canvasapi2.models.CanvasComparable
+import com.instructure.canvasapi2.utils.ApiPrefs.perPageCount
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandarecycler.util.GroupSortedList
+import com.instructure.pandarecycler.util.UpdatableSortedList
 
-abstract class SyncExpandableFragment<
-        GROUP,
-        MODEL : CanvasComparable<*>,
-        VIEW : SyncExpandableManager<GROUP, MODEL>,
-        PRESENTER : SyncExpandablePresenter<GROUP, MODEL, VIEW>,
+abstract class ListFragment<
+        MODEL,
+        PRESENTER : ListPresenter<MODEL, VIEW>,
+        VIEW : ListManager<MODEL>,
         HOLDER : RecyclerView.ViewHolder,
-        ADAPTER : SyncExpandableRecyclerAdapter<GROUP, MODEL, HOLDER, VIEW>> : Fragment() {
+        ADAPTER : ListRecyclerAdapter<MODEL, HOLDER, VIEW>> : Fragment() {
 
     protected abstract fun onReadySetGo(presenter: PRESENTER)
 
@@ -47,8 +46,6 @@ abstract class SyncExpandableFragment<
     protected abstract val recyclerView: RecyclerView
 
     private fun hitRockBottom() {}
-
-    protected abstract fun perPageCount(): Int
 
     // boolean flag to avoid delivering the result twice. Calling initLoader in onActivityCreated makes
     // onLoadFinished will be called twice during configuration change.
@@ -66,26 +63,20 @@ abstract class SyncExpandableFragment<
             LOADER_ID,
             null,
             object : LoaderManager.LoaderCallbacks<PRESENTER> {
-                override fun onCreateLoader(
-                    id: Int,
-                    args: Bundle?
-                ): Loader<PRESENTER> {
-                    return PresenterLoader(context!!, getPresenterFactory())
+                override fun onCreateLoader(id: Int, args: Bundle?): Loader<PRESENTER> {
+                    return PresenterLoader(requireContext(), getPresenterFactory())
                 }
 
-                override fun onLoadFinished(
-                    loader: Loader<PRESENTER>,
-                    presenter: PRESENTER
-                ) {
+                override fun onLoadFinished(loader: Loader<PRESENTER>, presenter: PRESENTER) {
                     if (!delivered) {
-                        this@SyncExpandableFragment.presenter = presenter
+                        this@ListFragment.presenter = presenter
                         delivered = true
                         onPresenterPrepared(presenter)
                     }
                 }
 
                 override fun onLoaderReset(loader: Loader<PRESENTER>) {
-                    //this@SyncExpandableFragment.presenter = null
+                    //presenter = null
                     onPresenterDestroyed()
                 }
             })
@@ -94,7 +85,7 @@ abstract class SyncExpandableFragment<
     @Suppress("UNCHECKED_CAST")
     override fun onResume() {
         super.onResume()
-        onReadySetGo(presenter.onViewAttached(presenterView) as PRESENTER)
+        presenter.onViewAttached(presenterView).let { onReadySetGo(it as PRESENTER) }
     }
 
     override fun onPause() {
@@ -106,7 +97,7 @@ abstract class SyncExpandableFragment<
         // hook for subclasses
     }
 
-    open fun withPagination(): Boolean {
+    fun withPagination(): Boolean {
         return true
     }
 
@@ -116,7 +107,7 @@ abstract class SyncExpandableFragment<
 
     // Override in case of fragment not implementing Presenter<View> interface
     @Suppress("UNCHECKED_CAST")
-    private val presenterView: VIEW
+    protected val presenterView: VIEW
         get() = this as VIEW
 
     private fun addPagination() {
@@ -133,8 +124,12 @@ abstract class SyncExpandableFragment<
         }
     }
 
-    open val list: GroupSortedList<GROUP, MODEL>
+    open val list: UpdatableSortedList<MODEL>
         get() = presenter.data
+
+    protected fun perPageCount(): Int {
+        return perPageCount
+    }
 
     companion object {
         private const val LOADER_ID = 1002

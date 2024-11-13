@@ -14,12 +14,11 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
-interface SyncInterface {
-    // UI Updating
-    fun onRefreshFinished()
-    fun onRefreshStarted()
-    fun checkIfEmpty()
-    fun clearAdapter()
+import com.instructure.pandarecycler.util.UpdatableSortedList
+
+interface ListManager<MODEL> : SyncInterface {
+    // Data Syncing
+    val list: UpdatableSortedList<MODEL>
 }

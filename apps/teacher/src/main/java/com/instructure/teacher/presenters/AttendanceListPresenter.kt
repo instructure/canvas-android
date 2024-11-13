@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.AttendanceListView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import retrofit2.Call
@@ -39,7 +39,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class AttendanceListPresenter(private val mCanvasContext: CanvasContext, private val mTab: Tab) :
-        SyncPresenter<Attendance, AttendanceListView>(Attendance::class.java) {
+        com.instructure.pandautils.blueprint.SyncPresenter<Attendance, AttendanceListView>(Attendance::class.java) {
 
     private var mToken: String? = null
     private var mCookie: String? = null

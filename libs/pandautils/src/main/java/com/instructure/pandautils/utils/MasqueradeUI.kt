@@ -15,15 +15,12 @@
  */
 @file:JvmName("MasqueradeUI")
 
-package com.instructure.loginapi.login.util
+package com.instructure.pandautils.utils
 
 import android.app.Activity
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -31,10 +28,8 @@ import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
-import com.instructure.loginapi.login.R
-import com.instructure.loginapi.login.databinding.LayoutMasqueradeNotificationBinding
-import com.instructure.pandautils.utils.lastAncestorOrNull
-import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.LayoutMasqueradeNotificationBinding
 
 /**
  * Adds a masquerade UI to this Activity if the user is currently masquerading.

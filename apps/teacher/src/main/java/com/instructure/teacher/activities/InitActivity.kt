@@ -51,7 +51,7 @@ import com.instructure.canvasapi2.models.CourseNickname
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import instructure.androidblueprint.LocaleUtils
+import com.instructure.pandautils.blueprint.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns

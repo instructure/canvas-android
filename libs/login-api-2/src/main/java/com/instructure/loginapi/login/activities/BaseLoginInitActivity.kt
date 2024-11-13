@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
-import instructure.androidblueprint.BaseCanvasActivity
+import com.instructure.pandautils.blueprint.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken

@@ -14,10 +14,9 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.os.Bundle
-import instructure.androidblueprint.BaseCanvasActivity
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 

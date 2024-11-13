@@ -25,12 +25,12 @@ import com.instructure.teacher.databinding.AdapterAttendanceBinding
 import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 import com.instructure.teacher.viewinterface.AttendanceListView
-import instructure.androidblueprint.SyncPresenter
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class AttendanceListRecyclerAdapter(
     mContext: Context,
-    presenter: SyncPresenter<Attendance, AttendanceListView>,
+    presenter: com.instructure.pandautils.blueprint.SyncPresenter<Attendance, AttendanceListView>,
     private val mCallback: AttendanceToFragmentCallback<Attendance>
 ) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder, AttendanceListView>(mContext, presenter) {
 

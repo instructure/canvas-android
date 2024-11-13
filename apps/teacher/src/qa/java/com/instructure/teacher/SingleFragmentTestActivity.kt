@@ -19,7 +19,7 @@ package com.instructure.teacher
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import instructure.androidblueprint.BaseCanvasActivity
+import com.instructure.pandautils.blueprint.BaseCanvasActivity
 import androidx.fragment.app.Fragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.teacher.databinding.ActivitySingleFragmentTestBinding

@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -23,16 +23,16 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.models.CanvasComparable
-import com.instructure.canvasapi2.utils.ApiPrefs.perPageCount
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandarecycler.util.UpdatableSortedList
+import com.instructure.pandarecycler.util.GroupSortedList
 
-abstract class SyncFragment<
+abstract class SyncExpandableFragment<
+        GROUP,
         MODEL : CanvasComparable<*>,
-        PRESENTER : SyncPresenter<MODEL, VIEW>,
-        VIEW : SyncManager<MODEL>,
+        VIEW : SyncExpandableManager<GROUP, MODEL>,
+        PRESENTER : SyncExpandablePresenter<GROUP, MODEL, VIEW>,
         HOLDER : RecyclerView.ViewHolder,
-        ADAPTER : SyncRecyclerAdapter<MODEL, HOLDER, VIEW>> : Fragment() {
+        ADAPTER : SyncExpandableRecyclerAdapter<GROUP, MODEL, HOLDER, VIEW>> : Fragment() {
 
     protected abstract fun onReadySetGo(presenter: PRESENTER)
 
@@ -44,39 +44,48 @@ abstract class SyncFragment<
 
     protected open val adapter: ADAPTER by lazy { createAdapter() }
 
-    protected abstract val recyclerView: RecyclerView?
+    protected abstract val recyclerView: RecyclerView
 
-    protected open fun hitRockBottom() {}
+    private fun hitRockBottom() {}
 
-    // Boolean flag to avoid delivering the result twice. Calling initLoader in onActivityCreated makes
+    protected abstract fun perPageCount(): Int
+
+    // boolean flag to avoid delivering the result twice. Calling initLoader in onActivityCreated makes
     // onLoadFinished will be called twice during configuration change.
     private var delivered = false
 
     lateinit var presenter: PRESENTER
         private set
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         // LoaderCallbacks as an object, so no hint regarding loader will be leak to the subclasses.
-        LoaderManager.getInstance(this).initLoader(
+        loaderManager.initLoader(
             LOADER_ID,
             null,
             object : LoaderManager.LoaderCallbacks<PRESENTER> {
-                override fun onCreateLoader(id: Int, args: Bundle?): Loader<PRESENTER> {
-                    return PresenterLoader(requireContext(), getPresenterFactory())
+                override fun onCreateLoader(
+                    id: Int,
+                    args: Bundle?
+                ): Loader<PRESENTER> {
+                    return PresenterLoader(context!!, getPresenterFactory())
                 }
 
-                override fun onLoadFinished(loader: Loader<PRESENTER>, presenter: PRESENTER) {
+                override fun onLoadFinished(
+                    loader: Loader<PRESENTER>,
+                    presenter: PRESENTER
+                ) {
                     if (!delivered) {
-                        this@SyncFragment.presenter = presenter
+                        this@SyncExpandableFragment.presenter = presenter
                         delivered = true
                         onPresenterPrepared(presenter)
                     }
                 }
 
                 override fun onLoaderReset(loader: Loader<PRESENTER>) {
-                    //presenter = null
+                    //this@SyncExpandableFragment.presenter = null
                     onPresenterDestroyed()
                 }
             })
@@ -107,12 +116,13 @@ abstract class SyncFragment<
 
     // Override in case of fragment not implementing Presenter<View> interface
     @Suppress("UNCHECKED_CAST")
-    protected val presenterView: VIEW
+    private val presenterView: VIEW
         get() = this as VIEW
 
-    protected fun addPagination() {
+    private fun addPagination() {
         if (withPagination()) {
-            recyclerView!!.addOnScrollListener(PaginatedScrollListener(perPageCount()) { hitRockBottom() })
+            recyclerView.clearOnScrollListeners()
+            recyclerView.addOnScrollListener(PaginatedScrollListener(perPageCount()) { hitRockBottom() })
         }
     }
 
@@ -123,11 +133,8 @@ abstract class SyncFragment<
         }
     }
 
-    open val list: UpdatableSortedList<MODEL> get() = presenter.data
-
-    protected open fun perPageCount(): Int {
-        return perPageCount
-    }
+    open val list: GroupSortedList<GROUP, MODEL>
+        get() = presenter.data
 
     companion object {
         private const val LOADER_ID = 1002

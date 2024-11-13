@@ -14,10 +14,11 @@
  *     limitations under the License.
  *
  */
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
-interface FragmentViewInterface {
-    // UI Updating
-    fun onRefreshFinished()
-    fun onRefreshStarted()
+interface ListChangeCallback {
+    fun onInserted(position: Int, count: Int)
+    fun onRemoved(position: Int, count: Int)
+    fun onMoved(fromPosition: Int, toPosition: Int)
+    fun onChanged(position: Int, count: Int)
 }

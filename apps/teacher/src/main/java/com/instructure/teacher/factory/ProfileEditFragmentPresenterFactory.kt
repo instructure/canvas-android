@@ -18,7 +18,7 @@ package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.ProfileEditFragmentPresenter
 import com.instructure.teacher.viewinterface.ProfileEditFragmentView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class ProfileEditFragmentPresenterFactory : PresenterFactory<ProfileEditFragmentView, ProfileEditFragmentPresenter> {
     override fun create() = ProfileEditFragmentPresenter()

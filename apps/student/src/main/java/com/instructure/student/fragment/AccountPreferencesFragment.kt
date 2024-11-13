@@ -25,8 +25,8 @@ import android.widget.BaseAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
-import instructure.androidblueprint.LocaleUtils
-import instructure.androidblueprint.cleanDisplayName
+import com.instructure.pandautils.blueprint.LocaleUtils
+import com.instructure.pandautils.blueprint.cleanDisplayName
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ACCOUNT_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView

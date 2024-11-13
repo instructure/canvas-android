@@ -14,14 +14,12 @@
  *     limitations under the License.
  *
  */
-
-package instructure.androidblueprint
+package com.instructure.pandautils.blueprint
 
 import com.instructure.canvasapi2.models.CanvasComparable
-import com.instructure.pandarecycler.util.UpdatableSortedList
+import com.instructure.pandarecycler.util.GroupSortedList
 
-
-interface SyncManager<MODEL : CanvasComparable<*>> : SyncInterface {
+interface SyncExpandableManager<GROUP, MODEL : CanvasComparable<*>> : SyncInterface {
     // Data Syncing
-    val list: UpdatableSortedList<MODEL>
+    val list: GroupSortedList<GROUP, MODEL>
 }

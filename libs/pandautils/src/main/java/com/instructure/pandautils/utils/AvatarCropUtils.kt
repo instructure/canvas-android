@@ -30,7 +30,7 @@ import android.view.ViewGroup
 import android.view.animation.Interpolator
 import android.widget.Toast
 import androidx.annotation.FloatRange
-import instructure.androidblueprint.BaseCanvasActivity
+import com.instructure.pandautils.blueprint.BaseCanvasActivity
 import androidx.exifinterface.media.ExifInterface
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView

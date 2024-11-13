@@ -27,14 +27,14 @@ import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
-import instructure.androidblueprint.SyncFragment
-import instructure.androidblueprint.SyncManager
-import instructure.androidblueprint.SyncPresenter
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncFragment
+import com.instructure.pandautils.blueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 abstract class BaseSyncFragment<
         MODEL : CanvasComparable<*>,
-        PRESENTER : SyncPresenter<MODEL, VIEW>,
+        PRESENTER : com.instructure.pandautils.blueprint.SyncPresenter<MODEL, VIEW>,
         VIEW : SyncManager<MODEL>,
         HOLDER : RecyclerView.ViewHolder,
         ADAPTER : SyncRecyclerAdapter<MODEL, HOLDER, VIEW>>

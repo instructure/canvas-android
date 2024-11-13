@@ -209,14 +209,7 @@ android {
         javaMaxHeapSize '4g'
     }
 
-    registerTransform(
-            new ProjectTransformer(
-                    android,
-                    new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
-                    new PageViewTransformer(),
-                    new ScreenViewTransformer("student")
-            )
-    )
+
 
     compileOptions {
         sourceCompatibility 1.8

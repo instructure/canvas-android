@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.viewinterface.QuizDetailsView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 
 class QuizDetailsPresenter(val mCourse: Course, var mQuiz: Quiz) : FragmentPresenter<QuizDetailsView>() {
