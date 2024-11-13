@@ -36,7 +36,7 @@ class ReminderManager(
     private val dateTimePicker: DateTimePicker,
     private val reminderRepository: ReminderRepository
 ) {
-    suspend fun showCreateReminder(
+    suspend fun showBeforeDueDateReminderDialog(
         context: Context,
         userId: Long,
         contentId: Long,
@@ -44,12 +44,12 @@ class ReminderManager(
         contentHtmlUrl: String,
         @ColorInt color: Int
     ) {
-        showCreateReminderDialog(context, color).collect { calendar ->
+        showBeforeDueDateReminderDialog(context, color).collect { calendar ->
             createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl)
         }
     }
 
-    private fun showCreateReminderDialog(
+    private fun showBeforeDueDateReminderDialog(
         context: Context,
         @ColorInt color: Int,
     ) = callbackFlow<Calendar> {
@@ -80,7 +80,7 @@ class ReminderManager(
             ) { dialog, which ->
                 if (choices[which] is ReminderChoice.Custom) {
                     this.launch {
-                        setCustomReminder(context).collect { calendar ->
+                        showCustomReminderDialog(context).collect { calendar ->
                             trySend(calendar)
                             close()
                         }
@@ -97,19 +97,19 @@ class ReminderManager(
         awaitClose()
     }
 
-    suspend fun showCustomReminder(
+    suspend fun showCustomReminderDialog(
         context: Context,
         userId: Long,
         contentId: Long,
         contentName: String,
         contentHtmlUrl: String
     ) {
-        setCustomReminder(context).collect { calendar ->
+        showCustomReminderDialog(context).collect { calendar ->
             createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl)
         }
     }
 
-    private fun setCustomReminder(
+    private fun showCustomReminderDialog(
         context: Context,
     ) = callbackFlow<Calendar> {
         dateTimePicker.show(context)

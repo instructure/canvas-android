@@ -69,6 +69,7 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
@@ -382,14 +383,30 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     private fun showCreateReminderDialog(context: Context) {
         viewModel.assignment?.let { assignment ->
             lifecycleScope.launch {
-                reminderManager.showCreateReminder(
-                    context,
-                    ApiPrefs.user?.id.orDefault(),
-                    assignment.id,
-                    assignment.name.orEmpty(),
-                    assignment.htmlUrl.orEmpty(),
-                    assignmentDetailsBehaviour.dialogColor
-                )
+                when {
+                    assignment.dueDate == null -> reminderManager.showCustomReminderDialog(
+                        context,
+                        ApiPrefs.user?.id.orDefault(),
+                        assignment.id,
+                        assignment.name.orEmpty(),
+                        assignment.htmlUrl.orEmpty()
+                    )
+                    assignment.dueDate?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
+                        context,
+                        ApiPrefs.user?.id.orDefault(),
+                        assignment.id,
+                        assignment.name.orEmpty(),
+                        assignment.htmlUrl.orEmpty()
+                    )
+                    else -> reminderManager.showBeforeDueDateReminderDialog(
+                        context,
+                        ApiPrefs.user?.id.orDefault(),
+                        assignment.id,
+                        assignment.name.orEmpty(),
+                        assignment.htmlUrl.orEmpty(),
+                        assignmentDetailsBehaviour.dialogColor
+                    )
+                }
             }
         }
     }
