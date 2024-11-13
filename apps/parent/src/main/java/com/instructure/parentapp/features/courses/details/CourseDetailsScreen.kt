@@ -53,6 +53,9 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.parentapp.features.courses.details.frontpage.FrontPageScreen
+import com.instructure.parentapp.features.courses.details.grades.ParentGradesScreen
+import com.instructure.parentapp.features.courses.details.summary.SummaryScreen
 import kotlinx.coroutines.launch
 
 
@@ -121,16 +124,28 @@ private fun CourseDetailsScreenContent(
     val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
         when (it) {
             TabType.GRADES -> {
-                { ParentGradesScreen(actionHandler, uiState.forceRefreshGrades) }
+                {
+                    ParentGradesScreen(
+                        actionHandler,
+                        uiState.forceRefreshGrades
+                    )
+                }
             }
 
             TabType.FRONT_PAGE -> {
-                { FrontPageScreen() }
+                {
+                    FrontPageScreen(
+                        uiState.forceRefreshGrades,
+                        applyOnWebView
+                    ) { ltiUrl ->
+                        actionHandler(CourseDetailsAction.OnLtiClicked(ltiUrl))
+                    }
+                }
             }
 
             TabType.SYLLABUS -> {
                 {
-                    SyllabusScreen(
+                    CourseDetailsWebViewScreen(
                         uiState.syllabus,
                         applyOnWebView
                     ) { ltiUrl ->

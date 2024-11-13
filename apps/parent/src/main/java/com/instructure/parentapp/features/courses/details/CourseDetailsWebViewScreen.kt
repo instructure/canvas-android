@@ -18,25 +18,43 @@
 package com.instructure.parentapp.features.courses.details
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.views.CanvasWebView
 
 
 @Composable
-internal fun SyllabusScreen(
-    syllabus: String,
+internal fun CourseDetailsWebViewScreen(
+    html: String,
     applyOnWebView: (CanvasWebView) -> Unit,
     onLtiButtonPressed: (String) -> Unit
 ) {
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .testTag("CourseDetailsWebViewScreen")
+    ) {
         ComposeCanvasWebViewWrapper(
-            html = syllabus,
+            html = html,
             onLtiButtonPressed = onLtiButtonPressed,
             applyOnWebView = applyOnWebView
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CourseDetailsWebViewScreenPreview() {
+    CourseDetailsWebViewScreen(
+        html = "Html content",
+        applyOnWebView = {},
+        onLtiButtonPressed = {}
+    )
 }
