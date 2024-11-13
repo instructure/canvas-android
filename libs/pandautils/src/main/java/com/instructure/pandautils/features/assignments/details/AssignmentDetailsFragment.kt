@@ -382,12 +382,13 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
     private fun showCreateReminderDialog(context: Context) {
         viewModel.assignment?.let { assignment ->
             lifecycleScope.launch {
-                reminderManager.setReminder(
+                reminderManager.showCreateReminder(
                     context,
                     ApiPrefs.user?.id.orDefault(),
                     assignment.id,
                     assignment.name.orEmpty(),
-                    assignment.htmlUrl.orEmpty()
+                    assignment.htmlUrl.orEmpty(),
+                    assignmentDetailsBehaviour.dialogColor
                 )
             }
         }

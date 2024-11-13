@@ -37,7 +37,7 @@ class ReminderManagerTest {
     fun `Test set reminder not creates reminder if no values was selected`() = runTest {
         coEvery { dateTimePicker.show(any()) } returns callbackFlow { close() }
 
-        reminderManager.setReminder(mockk(), 1, 1, "Assignment 1", "path1")
+        reminderManager.showCustomReminder(mockk(), 1, 1, "Assignment 1", "path1")
 
         coVerify { reminderRepository wasNot Called }
     }
@@ -57,7 +57,7 @@ class ReminderManagerTest {
             close()
         }
 
-        reminderManager.setReminder(context, userId, contentId, contentName, contentHtmlUrl)
+        reminderManager.showCustomReminder(context, userId, contentId, contentName, contentHtmlUrl)
 
         coVerify { reminderRepository.createReminder(userId, contentId, contentName, contentHtmlUrl, calendar.time.toFormattedString(), calendar.timeInMillis) }
     }

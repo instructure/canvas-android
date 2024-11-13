@@ -61,9 +61,7 @@ class DateTimePicker {
 
         showDatePicker(context, { trySend(it) }, { close() })
 
-        awaitClose {
-            close()
-        }
+        awaitClose()
     }
 
     private fun showDatePicker(context: Context, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
@@ -81,7 +79,7 @@ class DateTimePicker {
     private fun showTimePicker(context: Context, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
         TimePickerDialog(
             context,
-            { _: TimePicker, hour: Int, minute: Int -> onTimeSet(hour, minute, onDateSelected, onCancel) },
+            { _: TimePicker, hour: Int, minute: Int -> onTimeSet(hour, minute, onDateSelected) },
             hour,
             minute,
             DateFormat.is24HourFormat(context)
@@ -98,7 +96,7 @@ class DateTimePicker {
         showTimePicker(context, onDateSelected, onCancel)
     }
 
-    private fun onTimeSet(hourOfDay: Int, minute: Int, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
+    private fun onTimeSet(hourOfDay: Int, minute: Int, onDateSelected: (Calendar) -> Unit) {
         this.hour = hourOfDay
         this.minute = minute
 
