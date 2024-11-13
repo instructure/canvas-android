@@ -14,9 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.lti
+package com.instructure.teacher.features.lti
 
-sealed class LtiLaunchAction {
-    data class LaunchCustomTab(val url: String) : LtiLaunchAction()
-    data object ShowError : LtiLaunchAction()
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
+import com.instructure.pandautils.utils.color
+
+class TeacherLtiLaunchFragmentBehavior(canvasContext: CanvasContext) : LtiLaunchFragmentBehavior {
+    override val toolbarColor: Int = canvasContext.color
 }

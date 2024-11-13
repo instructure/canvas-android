@@ -13,11 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.parentapp.di.feature
+package com.instructure.teacher.di
 
+import androidx.fragment.app.Fragment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
-import com.instructure.parentapp.features.lti.ParentLtiLaunchFragmentBehavior
-import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.pandautils.utils.Const
+import com.instructure.teacher.features.lti.TeacherLtiLaunchFragmentBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +30,8 @@ import dagger.hilt.android.components.FragmentComponent
 class LtiLaunchModule {
 
     @Provides
-    fun provideLtiLaunchFragmentBehavior(parentPrefs: ParentPrefs): LtiLaunchFragmentBehavior {
-        return ParentLtiLaunchFragmentBehavior(parentPrefs)
+    fun provideLtiLaunchFragmentBehavior(fragment: Fragment): LtiLaunchFragmentBehavior {
+        val canvasContext = fragment.arguments?.getParcelable(Const.CANVAS_CONTEXT) ?: CanvasContext.emptyUserContext()
+        return TeacherLtiLaunchFragmentBehavior(canvasContext)
     }
 }

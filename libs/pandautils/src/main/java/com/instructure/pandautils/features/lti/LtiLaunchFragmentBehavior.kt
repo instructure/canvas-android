@@ -13,22 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.parentapp.di.feature
+package com.instructure.pandautils.features.lti
 
-import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
-import com.instructure.parentapp.features.lti.ParentLtiLaunchFragmentBehavior
-import com.instructure.parentapp.util.ParentPrefs
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import androidx.annotation.ColorInt
 
-@Module
-@InstallIn(FragmentComponent::class)
-class LtiLaunchModule {
-
-    @Provides
-    fun provideLtiLaunchFragmentBehavior(parentPrefs: ParentPrefs): LtiLaunchFragmentBehavior {
-        return ParentLtiLaunchFragmentBehavior(parentPrefs)
-    }
+interface LtiLaunchFragmentBehavior {
+    @get:ColorInt
+    val toolbarColor: Int
 }

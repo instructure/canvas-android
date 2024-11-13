@@ -14,64 +14,21 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="none">
+    android:fillViewport="true">
 
-    <LinearLayout
+    <com.instructure.pandautils.views.CanvasWebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/webViewProgress"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="32dp"
-        android:contentDescription="@string/scrollInstructions">
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-        <ImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:importantForAccessibility="no"
-            android:scaleType="fitCenter"
-            android:tint="@color/textLight"
-            app:srcCompat="@drawable/ic_lti"/>
-
-        <TextView
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/speedGraderExternalToolSubmission"
-            android:textColor="@color/textDarkest"
-            android:textSize="20sp"
-            android:focusable="true"
-            android:importantForAccessibility="yes"/>
-
-        <TextView
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:text="@string/speedGraderExternalToolMessage"
-            android:textColor="@color/textDark"
-            android:textSize="12sp"
-            android:focusable="true"
-            android:importantForAccessibility="yes"/>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="32dp"/>
-
-        <Button
-            android:id="@+id/viewLtiButton"
-            style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:text="@string/openTool"/>
-
-    </LinearLayout>
-
-</ScrollView>
+</FrameLayout>

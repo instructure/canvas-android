@@ -50,6 +50,7 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
@@ -96,7 +97,6 @@ import com.instructure.teacher.fragments.EditQuizDetailsFragment
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.fragments.MessageThreadFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.PageListFragment
@@ -513,7 +513,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 .newInstance(route.arguments)
             SettingsFragment::class.java.isAssignableFrom(cls) -> fragment = SettingsFragment.newInstance(route)
             ProfileEditFragment::class.java.isAssignableFrom(cls) -> fragment = ProfileEditFragment.newInstance(route.arguments)
-            LtiLaunchFragment::class.java.isAssignableFrom(cls) -> fragment = LtiLaunchFragment.newInstance(route.arguments)
+            LtiLaunchFragment::class.java.isAssignableFrom(cls) -> fragment = LtiLaunchFragment.newInstance(route)
             PeopleListFragment::class.java.isAssignableFrom(cls) -> fragment = PeopleListFragment.newInstance(canvasContext!!)
             StudentContextFragment::class.java.isAssignableFrom(cls) -> fragment = StudentContextFragment.newInstance(route.arguments)
             AttendanceListFragment::class.java.isAssignableFrom(cls) -> fragment = AttendanceListFragment
