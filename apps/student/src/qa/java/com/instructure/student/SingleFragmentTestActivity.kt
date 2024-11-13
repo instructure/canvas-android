@@ -21,14 +21,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
+import instructure.androidblueprint.BaseCanvasActivity
 import androidx.fragment.app.Fragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.student.databinding.ActivitySingleFragmentTestBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SingleFragmentTestActivity : AppCompatActivity() {
+class SingleFragmentTestActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivitySingleFragmentTestBinding::inflate)
 

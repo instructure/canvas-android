@@ -201,7 +201,6 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(project),
                     new ScreenViewTransformer("teacher")
             )
     )

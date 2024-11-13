@@ -23,7 +23,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import instructure.androidblueprint.BaseCanvasActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -44,7 +44,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
+class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 

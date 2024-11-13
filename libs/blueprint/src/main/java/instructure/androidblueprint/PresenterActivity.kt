@@ -17,7 +17,7 @@
 package instructure.androidblueprint
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import instructure.androidblueprint.BaseCanvasActivity
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 
@@ -25,7 +25,7 @@ import androidx.loader.content.Loader
  * The Presenter will decide what to do for every incoming event,
  * retrieving or updating data from the Model and preparing the data so the View can display it.
  */
-abstract class PresenterActivity<PRESENTER : Presenter<VIEW>, VIEW> : AppCompatActivity() {
+abstract class PresenterActivity<PRESENTER : Presenter<VIEW>, VIEW> : BaseCanvasActivity() {
 
     /**
      * This point in time we have a presenter prepared and the view interface has been initialized

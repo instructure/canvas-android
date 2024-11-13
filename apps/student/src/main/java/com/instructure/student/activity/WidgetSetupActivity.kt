@@ -21,14 +21,14 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import instructure.androidblueprint.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityWidgetSetupBinding
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater.updateWidgets
 
-class WidgetSetupActivity : AppCompatActivity() {
+class WidgetSetupActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityWidgetSetupBinding::inflate)
 

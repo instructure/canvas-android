@@ -214,8 +214,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new ScreenViewTransformer("student"),
-                    new LocaleTransformer(project)
+                    new ScreenViewTransformer("student")
             )
     )
 

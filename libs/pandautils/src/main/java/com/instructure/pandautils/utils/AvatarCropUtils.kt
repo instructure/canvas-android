@@ -30,7 +30,7 @@ import android.view.ViewGroup
 import android.view.animation.Interpolator
 import android.widget.Toast
 import androidx.annotation.FloatRange
-import androidx.appcompat.app.AppCompatActivity
+import instructure.androidblueprint.BaseCanvasActivity
 import androidx.exifinterface.media.ExifInterface
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -85,7 +85,7 @@ data class AvatarCropConfig(
  *
  * The output file may safely be deleted when no longer needed.
  */
-class AvatarCropActivity : AppCompatActivity() {
+class AvatarCropActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(AvatarCropActivityBinding::inflate)
 

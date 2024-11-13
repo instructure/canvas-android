@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
-import androidx.appcompat.app.AppCompatActivity
+import instructure.androidblueprint.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken
@@ -36,7 +36,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
 import javax.inject.Inject
 
-abstract class BaseLoginInitActivity : AppCompatActivity() {
+abstract class BaseLoginInitActivity : BaseCanvasActivity() {
 
     /**** Login Flow:
      *

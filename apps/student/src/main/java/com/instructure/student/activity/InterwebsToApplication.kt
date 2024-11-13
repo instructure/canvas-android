@@ -26,7 +26,7 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import instructure.androidblueprint.BaseCanvasActivity
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
@@ -57,7 +57,7 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class InterwebsToApplication : AppCompatActivity() {
+class InterwebsToApplication : BaseCanvasActivity() {
 
     private val binding by viewBinding(InterwebsToApplicationBinding::inflate)
     private lateinit var loadingBinding: LoadingCanvasViewBinding

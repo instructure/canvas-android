@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvasapi2.utils
+package instructure.androidblueprint
 
 import android.content.Context
 import android.content.Intent
@@ -23,6 +23,10 @@ import android.os.Handler
 import android.os.LocaleList
 import android.os.Looper
 import androidx.core.os.ConfigurationCompat
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.capitalized
+import com.instructure.canvasapi2.utils.isValid
 import java.util.Locale
 import kotlin.system.exitProcess
 
