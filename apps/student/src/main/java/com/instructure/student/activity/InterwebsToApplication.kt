@@ -28,14 +28,12 @@ import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -78,6 +76,9 @@ class InterwebsToApplication : AppCompatActivity() {
     @Inject
     lateinit var courseApi: CourseAPI.CoursesInterface
 
+    @Inject
+    lateinit var enabledTabs: EnabledTabs
+
     private var loadingJob: Job? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,9 +109,7 @@ class InterwebsToApplication : AppCompatActivity() {
         loadingJob = tryWeave {
             val host = data.host.orEmpty() // example: "mobiledev.instructure.com"
 
-            EnabledTabs.enabledTabs = courseApi.getFirstPageCourses(RestParams()).depaginate {
-                courseApi.next(it, RestParams())
-            }.dataOrNull?.mapNotNull { it.tabs }?.flatten() ?: emptyList()
+            enabledTabs.initTabs()
 
             // Do some logging
             LoggingUtility.log(Log.WARN, data.toString())

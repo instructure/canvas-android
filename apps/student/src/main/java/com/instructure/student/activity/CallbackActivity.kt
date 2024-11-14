@@ -22,7 +22,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -44,7 +43,6 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -80,6 +78,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     @Inject
     lateinit var courseApi: CourseAPI.CoursesInterface
 
+    @Inject
+    lateinit var enabledTabs: EnabledTabs
+
     private var loadInitialDataJob: Job? = null
 
     abstract fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
@@ -98,9 +99,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             setupHeapTracking()
 
             // Get enabled tabs
-            EnabledTabs.enabledTabs = courseApi.getFirstPageCourses(RestParams()).depaginate {
-                courseApi.next(it, RestParams())
-            }.dataOrNull?.mapNotNull { it.tabs }?.flatten() ?: emptyList()
+            enabledTabs.initTabs()
 
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {

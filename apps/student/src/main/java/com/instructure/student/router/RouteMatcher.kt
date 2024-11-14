@@ -54,6 +54,7 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
@@ -104,6 +105,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     var offlineDb: OfflineDatabase? = null
     var networkStateProvider: NetworkStateProvider? = null
+    var enabledTabs: EnabledTabs? = null
 
     init {
         initRoutes()
@@ -511,7 +513,7 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     fun route(activity: FragmentActivity, route: Route?) {
-        if (EnabledTabs.isPathTabNotEnabled(route)) {
+        if (enabledTabs?.isPathTabNotEnabled(route).orDefault()) {
             if (activity is InterwebsToApplication) {
                 val intent = Intent(activity, NavigationActivity.startActivityClass)
                 activity.startActivity(intent)
