@@ -18,6 +18,7 @@ package com.instructure.student.router
 
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -512,7 +513,8 @@ object RouteMatcher : BaseRouteMatcher() {
     fun route(activity: FragmentActivity, route: Route?) {
         if (EnabledTabs.isPathTabNotEnabled(route)) {
             if (activity is InterwebsToApplication) {
-                route(activity, DashboardFragment.makeRoute(null))
+                val intent = Intent(activity, NavigationActivity.startActivityClass)
+                activity.startActivity(intent)
             }
             activity.toast(R.string.route_not_available)
             return
