@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.features.shareextension.StudentShareExtensionActivity
+import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.document.processor.PdfProcessorTask
 import com.pspdfkit.document.sharing.DefaultDocumentSharingController
 import com.pspdfkit.document.sharing.DocumentSharingIntentHelper
@@ -99,7 +100,9 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     override fun onDestroy() {
         val path = filesDir.path + intent.data?.path?.replace("/files", "")
         document?.let {
-            val annotations = 0.until(it.pageCount).map { page -> it.annotationProvider.getAnnotations(page) }.flatten()
+            val annotations = it.annotationProvider.getAllAnnotationsOfType(
+                EnumSet.allOf(AnnotationType::class.java)
+            )
             if (annotations.isEmpty()) {
                 val file = File(path)
                 if (file.exists()) {
