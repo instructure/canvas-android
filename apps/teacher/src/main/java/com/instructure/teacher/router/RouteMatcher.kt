@@ -660,10 +660,10 @@ object RouteMatcher : BaseRouteMatcher() {
         return openMediaCallbacks!!
     }
 
-    fun openMedia(activity: FragmentActivity?, url: String?, fileName: String? = null) {
+    fun openMedia(activity: FragmentActivity?, url: String?, fileName: String? = null, fileId: String? = null) {
         if (activity != null) {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, fileName)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, fileName, fileId)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
                 LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID
             )
