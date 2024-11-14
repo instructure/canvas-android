@@ -14,16 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.lti
 
-import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
+package com.instructure.parentapp.features.courses.details.frontpage
+
+import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Page
 
-class LtiLaunchRepository(
-    private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface
-) {
-    suspend fun getLtiFromAuthenticationUrl(url: String): LTITool {
-        return launchDefinitionsApi.getLtiFromAuthenticationUrl(url, RestParams(isForceReadFromNetwork = true)).dataOrThrow
+
+class FrontPageRepository(private val pageApi: PageAPI.PagesInterface) {
+
+    suspend fun loadFrontPage(courseId: Long, forceRefresh: Boolean): Page {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+
+        return pageApi.getFrontPage(CanvasContext.Type.COURSE.apiString, courseId, params).dataOrThrow
     }
 }

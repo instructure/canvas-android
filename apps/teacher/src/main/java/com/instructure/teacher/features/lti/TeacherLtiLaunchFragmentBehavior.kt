@@ -14,14 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.teacher.features.lti
 
-package com.instructure.parentapp.features.courses.details
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
+import com.instructure.pandautils.utils.color
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-
-
-@Composable
-internal fun FrontPageScreen() {
-    Text(text = "Front Page")
+class TeacherLtiLaunchFragmentBehavior(canvasContext: CanvasContext) : LtiLaunchFragmentBehavior {
+    override val toolbarColor: Int = canvasContext.color
 }

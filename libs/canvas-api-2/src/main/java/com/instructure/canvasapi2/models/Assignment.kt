@@ -239,8 +239,10 @@ data class Assignment(
         return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
     }
 
-    fun isNewQuizLti(): Boolean {
-        return submissionTypesRaw.contains(SubmissionType.EXTERNAL_TOOL.apiString) && externalToolAttributes?.url?.contains("quiz-lti") == true
+    fun ltiToolType(): LtiType {
+        return LtiType.entries.firstOrNull {
+            it.id != null && externalToolAttributes?.url?.contains(it.id) == true
+        } ?: LtiType.EXTERNAL_TOOL
     }
 
     companion object {
@@ -251,6 +253,8 @@ data class Assignment(
         const val POINTS_TYPE = "points"
         const val GPA_SCALE_TYPE = "gpa_scale"
         const val NOT_GRADED_TYPE = "not_graded"
+
+        val internalLtiTools = setOf("quiz-lti")
 
         val onlineSubmissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY.apiString,
@@ -298,11 +302,11 @@ data class Assignment(
         )
             ?: ""
 
-        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, context: Context, newQuizLti: Boolean = false): String? {
-            return submissionTypeToPrettyPrintString(submissionType, context.resources, newQuizLti)
+        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, context: Context, ltiType: LtiType = LtiType.EXTERNAL_TOOL): String? {
+            return submissionTypeToPrettyPrintString(submissionType, context.resources, ltiType)
         }
 
-        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, resources: Resources, newQuizLti: Boolean = false): String? {
+        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, resources: Resources, ltiType: LtiType = LtiType.EXTERNAL_TOOL): String? {
             submissionType ?: return null
 
             return when (submissionType) {
@@ -310,14 +314,8 @@ data class Assignment(
                 SubmissionType.NONE -> resources.getString(R.string.canvasAPI_none)
                 SubmissionType.ON_PAPER -> resources.getString(R.string.canvasAPI_onPaper)
                 SubmissionType.DISCUSSION_TOPIC -> resources.getString(R.string.canvasAPI_discussionTopic)
-                SubmissionType.EXTERNAL_TOOL -> {
-                    if (newQuizLti) {
-                        resources.getString(R.string.canvasAPI_quiz)
-                    } else {
-                        resources.getString(R.string.canvasAPI_externalTool)
-                    }
-                }
-                SubmissionType.BASIC_LTI_LAUNCH -> resources.getString(R.string.canvasAPI_externalTool)
+                SubmissionType.EXTERNAL_TOOL -> resources.getString(ltiType.submissionTypeRes)
+                SubmissionType.BASIC_LTI_LAUNCH -> resources.getString(ltiType.submissionTypeRes)
                 SubmissionType.ONLINE_UPLOAD -> resources.getString(R.string.canvasAPI_onlineUpload)
                 SubmissionType.ONLINE_TEXT_ENTRY -> resources.getString(R.string.canvasAPI_onlineTextEntry)
                 SubmissionType.ONLINE_URL -> resources.getString(R.string.canvasAPI_onlineURL)

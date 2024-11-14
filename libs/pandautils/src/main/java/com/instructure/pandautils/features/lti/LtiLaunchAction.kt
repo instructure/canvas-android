@@ -14,14 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.pandautils.features.lti
 
-package com.instructure.parentapp.features.courses.details
-
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-
-
-@Composable
-internal fun SummaryScreen() {
-    Text(text = "Summary")
+sealed class LtiLaunchAction {
+    data class LaunchCustomTab(val url: String) : LtiLaunchAction()
+    data class LoadLtiWebView(val url: String) : LtiLaunchAction()
+    data object ShowError : LtiLaunchAction()
 }

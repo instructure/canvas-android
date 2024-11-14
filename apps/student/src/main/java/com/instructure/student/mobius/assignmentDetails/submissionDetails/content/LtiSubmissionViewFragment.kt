@@ -22,15 +22,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.LtiType
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentLtiSubmissionViewBinding
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType.ExternalToolContent
 import com.instructure.student.router.RouteMatcher
 
@@ -39,7 +42,9 @@ class LtiSubmissionViewFragment : Fragment() {
     private val binding by viewBinding(FragmentLtiSubmissionViewBinding::bind)
     private var canvasContext: CanvasContext by ParcelableArg()
     private var url: String by StringArg()
-    private var newQuizLti: Boolean by BooleanArg()
+    private var ltiType: LtiType by SerializableArg(LtiType.EXTERNAL_TOOL)
+    private var title: String by StringArg()
+    private var ltiTool: LTITool? by NullableParcelableArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_lti_submission_view, container, false)
@@ -50,22 +55,34 @@ class LtiSubmissionViewFragment : Fragment() {
         ViewStyler.themeButton(binding.viewLtiButton)
         setUpViews()
         binding.viewLtiButton.onClickWithRequireNetwork {
-            val route = LtiLaunchFragment.makeRoute(canvasContext = canvasContext, url = url)
-            RouteMatcher.route(requireActivity(), route)
+            RouteMatcher.route(
+                requireActivity(),
+                LtiLaunchFragment.makeRoute(
+                    canvasContext,
+                    url,
+                    title,
+                    sessionLessLaunch = false,
+                    assignmentLti = true,
+                    ltiTool = ltiTool,
+                    openInternally = ltiType.openInternally
+                )
+            )
         }
     }
 
     private fun setUpViews() {
-        binding.viewLtiButton.text = if (newQuizLti) getString(R.string.openTheQuizButton) else getString(R.string.openTool)
-        binding.ltiSubmissionTitle.text = if (newQuizLti) getString(R.string.newQuizSubmissionTitle) else getString(R.string.commentSubmissionTypeExternalTool)
-        binding.ltiSubmissionSubtitle.text = if (newQuizLti) getString(R.string.newQuizSubmissionSubtitle) else getString(R.string.speedGraderExternalToolMessage)
+        binding.viewLtiButton.text = getString(ltiType.openButtonRes)
+        binding.ltiSubmissionTitle.text = getString(ltiType.ltiTitleRes)
+        binding.ltiSubmissionSubtitle.text = getString(ltiType.ltiDescriptionRes)
     }
 
     companion object {
         fun newInstance(data: ExternalToolContent) = LtiSubmissionViewFragment().apply {
             canvasContext = data.canvasContext
-            url = data.url
-            newQuizLti = data.newQuizLti
+            url = data.ltiTool?.url.orEmpty()
+            ltiTool = data.ltiTool
+            title = data.title
+            ltiType = data.ltiType
         }
     }
 }

@@ -30,7 +30,9 @@ data class CourseDetailsUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val tabs: List<TabType> = emptyList(),
-    val currentTab: TabType? = null
+    val currentTab: TabType? = null,
+    val syllabus: String = "",
+    val forceRefreshGrades: Boolean = false
 )
 
 enum class TabType(@StringRes val labelRes: Int) {
@@ -45,9 +47,12 @@ sealed class CourseDetailsAction {
     data object SendAMessage : CourseDetailsAction()
     data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsAction()
     data class CurrentTabChanged(val newTab: TabType) : CourseDetailsAction()
+    data class OnLtiClicked(val url: String) : CourseDetailsAction()
+    data object GradesRefreshed : CourseDetailsAction()
 }
 
 sealed class CourseDetailsViewModelAction {
     data class NavigateToComposeMessageScreen(val options: InboxComposeOptions) : CourseDetailsViewModelAction()
     data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsViewModelAction()
+    data class OpenLtiScreen(val url: String) : CourseDetailsViewModelAction()
 }

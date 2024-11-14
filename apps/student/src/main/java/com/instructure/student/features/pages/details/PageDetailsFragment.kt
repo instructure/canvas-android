@@ -43,6 +43,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.NullableStringArg
@@ -59,7 +60,6 @@ import com.instructure.student.R
 import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -230,7 +230,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
                 canvasWebViewWrapper.loadHtml(it, page.title, baseUrl = page.htmlUrl)
             }) {
-                LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
+                RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
             }
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)

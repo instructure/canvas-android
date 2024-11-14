@@ -14,9 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.lti
 
-sealed class LtiLaunchAction {
-    data class LaunchCustomTab(val url: String) : LtiLaunchAction()
-    data object ShowError : LtiLaunchAction()
+package com.instructure.parentapp.features.courses.details.summary
+
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+
+
+@Composable
+internal fun SummaryScreen() {
+    Text(text = "Summary")
 }
