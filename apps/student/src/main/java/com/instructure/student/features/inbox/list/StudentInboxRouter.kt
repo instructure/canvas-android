@@ -18,6 +18,7 @@ package com.instructure.student.features.inbox.list
 
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation

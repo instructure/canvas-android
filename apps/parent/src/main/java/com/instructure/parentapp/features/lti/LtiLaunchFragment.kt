@@ -25,7 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.validOrNull
@@ -43,7 +43,7 @@ import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LtiLaunchFragment : Fragment() {
+class LtiLaunchFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
 

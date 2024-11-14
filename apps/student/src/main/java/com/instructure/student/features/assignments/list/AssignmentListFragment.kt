@@ -146,6 +146,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             inflater.inflate(R.layout.assignment_list_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerAdapter = createRecyclerAdapter()
 
         binding.sortByTextView.setText(sortOrder.buttonTextRes)

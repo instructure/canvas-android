@@ -21,7 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +39,7 @@ import javax.inject.Inject
 @PageView
 @ScreenView(SCREEN_VIEW_K5_SCHEDULE)
 @AndroidEntryPoint
-class ScheduleFragment : Fragment() {
+class ScheduleFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var scheduleRouter: ScheduleRouter

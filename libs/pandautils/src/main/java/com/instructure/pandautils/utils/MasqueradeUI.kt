@@ -35,20 +35,23 @@ import com.instructure.pandautils.databinding.LayoutMasqueradeNotificationBindin
  * Adds a masquerade UI to this Activity if the user is currently masquerading.
  */
 @Suppress("unused") // Added at compile time via MasqueradeUIInjector
-fun Activity.showMasqueradeNotification(startingClass: Class<Activity>? = null) {
-    window.showMasqueradeNotification(startingClass)
+fun Activity.showMasqueradeNotification() {
+    window.showMasqueradeNotification()
 }
 
 /**
  * Adds a masquerade UI if the user is currently masquerading AND this DialogFragment is being displayed as a dialog.
  */
 @Suppress("unused") // Added at compile time via MasqueradeUIInjector
-fun DialogFragment.showMasqueradeNotification(startingClass: Class<Activity>? = null) {
-    dialog?.window?.showMasqueradeNotification(startingClass)
+fun DialogFragment.showMasqueradeNotification() {
+    dialog?.window?.showMasqueradeNotification()
 }
 
-private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = null) {
+private fun Window.showMasqueradeNotification() {
     if (!ApiPrefs.isMasquerading) return
+
+    val startingActivityClass = AppConfigProvider.appConfig?.startingActivityClass
+
     decorView.rootView?.let { rootView ->
         if (findViewById<View>(R.id.masqueradeUINotificationContainer) != null) return
         // Add border
@@ -71,7 +74,7 @@ private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = 
                     .setMessage(context.getString(R.string.stopActingAsMessage, ApiPrefs.user?.name))
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
-                        MasqueradeHelper.stopMasquerading(startingClass)
+                        MasqueradeHelper.stopMasquerading(startingActivityClass)
                     }
                     .show()
             }

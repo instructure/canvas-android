@@ -19,7 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.NullableStringArg
@@ -30,7 +30,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.FragmentUrlSubmissionViewBinding
 
-class UrlSubmissionViewFragment : Fragment() {
+class UrlSubmissionViewFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentUrlSubmissionViewBinding::bind)
 

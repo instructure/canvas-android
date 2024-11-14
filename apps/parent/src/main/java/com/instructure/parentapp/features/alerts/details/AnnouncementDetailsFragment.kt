@@ -24,14 +24,14 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AnnouncementDetailsFragment : Fragment() {
+class AnnouncementDetailsFragment : BaseCanvasFragment() {
 
     private val viewModel: AnnouncementDetailsViewModel by viewModels()
 

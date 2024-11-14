@@ -25,7 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
@@ -38,7 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RemoteConfigParamsFragment : Fragment() {
+class RemoteConfigParamsFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var toolbarSetupBehavior: ToolbarSetupBehavior

@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CoursesFragment : Fragment() {
+class CoursesFragment : BaseCanvasFragment() {
 
     private val viewModel: CoursesViewModel by viewModels()
 

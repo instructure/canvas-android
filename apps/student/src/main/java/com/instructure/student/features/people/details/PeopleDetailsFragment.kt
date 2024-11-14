@@ -93,6 +93,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.fragment_people_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.compose.backgroundTintList = ColorStateList.valueOf(ThemePrefs.buttonColor)
         binding.compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, ThemePrefs.buttonTextColor))
         binding.compose.setOnClickListener {

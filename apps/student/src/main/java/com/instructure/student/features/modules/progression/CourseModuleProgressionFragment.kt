@@ -48,6 +48,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_MODULE_PROGRESSION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.BooleanArg
@@ -70,7 +71,6 @@ import com.instructure.student.R
 import com.instructure.student.databinding.CourseModuleProgressionBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.util.ModuleProgressionUtility

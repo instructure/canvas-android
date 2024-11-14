@@ -31,7 +31,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -46,7 +46,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SplashFragment : Fragment() {
+class SplashFragment : BaseCanvasFragment() {
 
     private val viewModel: SplashViewModel by viewModels()
 

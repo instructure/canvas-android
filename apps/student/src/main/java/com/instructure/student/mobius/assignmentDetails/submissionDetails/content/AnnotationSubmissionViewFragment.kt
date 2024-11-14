@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.student.databinding.FragmentAnnotationSubmissionViewBinding
@@ -28,7 +28,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.annnotation.A
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AnnotationSubmissionViewFragment : Fragment() {
+class AnnotationSubmissionViewFragment : BaseCanvasFragment() {
 
     private var submissionId by LongArg()
     private var submissionAttempt by LongArg()

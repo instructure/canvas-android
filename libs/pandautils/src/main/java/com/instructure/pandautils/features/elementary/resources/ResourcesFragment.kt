@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -47,7 +47,7 @@ import javax.inject.Inject
 @PageView
 @ScreenView(SCREEN_VIEW_K5_RESOURCES)
 @AndroidEntryPoint
-class ResourcesFragment : Fragment() {
+class ResourcesFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var resourcesRouter: ResourcesRouter

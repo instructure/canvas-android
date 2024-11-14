@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -46,7 +47,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class CreateUpdateEventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CreateUpdateEventViewModel by viewModels()
 

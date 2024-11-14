@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -52,7 +53,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
-class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     @Inject
     lateinit var eventRouter: EventRouter

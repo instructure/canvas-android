@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
@@ -38,7 +38,7 @@ import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMISSION)
-class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
+class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNavigator {
 
     private val binding by viewBinding(FragmentSpeedGraderTextSubmissionBinding::bind)
 

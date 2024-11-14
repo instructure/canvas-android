@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.instructure.interactions.router.Route
@@ -34,7 +34,7 @@ import com.instructure.student.databinding.FragmentUnsupportedFileTypeBinding
 import org.greenrobot.eventbus.EventBus
 
 //TODO: make this generic enough teacher and student can use most/all of the code
-class ViewUnsupportedFileFragment : Fragment() {
+class ViewUnsupportedFileFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentUnsupportedFileTypeBinding::bind)
 

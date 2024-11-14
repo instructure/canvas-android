@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -43,7 +43,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class DiscussionSubmissionViewFragment : Fragment() {
+class DiscussionSubmissionViewFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentDiscussionSubmissionViewBinding::bind)
 

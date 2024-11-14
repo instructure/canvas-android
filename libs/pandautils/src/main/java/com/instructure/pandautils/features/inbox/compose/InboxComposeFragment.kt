@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -49,7 +50,7 @@ import java.util.UUID
 
 
 @AndroidEntryPoint
-class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogParent {
+class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUploadDialogParent {
 
     private val viewModel: InboxComposeViewModel by viewModels()
 

@@ -15,7 +15,12 @@
  */
 package com.instructure.pandautils.blueprint
 
+import android.content.Context
+import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.utils.AppConfigProvider
+import com.instructure.pandautils.utils.ScreenViewAnnotationProcessor
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
 open class BaseCanvasAppCompatDialogFragment : AppCompatDialogFragment() {
@@ -23,5 +28,19 @@ open class BaseCanvasAppCompatDialogFragment : AppCompatDialogFragment() {
     override fun onStart() {
         super.onStart()
         showMasqueradeNotification()
+    }
+
+    override fun onAttach(context: Context) {
+        if (AppConfigProvider.appConfig?.appName == "teacher") {
+            ScreenViewAnnotationProcessor.processScreenView(this::class.java)
+        }
+        super.onAttach(context)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (AppConfigProvider.appConfig?.appName == "student" && isAdded && isVisible && userVisibleHint) {
+            ScreenViewAnnotationProcessor.processScreenView(this::class.java)
+        }
+        super.onViewCreated(view, savedInstanceState)
     }
 }

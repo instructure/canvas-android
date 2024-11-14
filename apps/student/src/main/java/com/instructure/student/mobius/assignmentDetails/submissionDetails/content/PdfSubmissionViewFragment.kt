@@ -20,10 +20,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.instructure.pandautils.utils.StringArg
 
-class PdfSubmissionViewFragment : Fragment() {
+class PdfSubmissionViewFragment : BaseCanvasFragment() {
 
     private var pdfUrl by StringArg()
 

@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -46,7 +46,7 @@ import javax.inject.Inject
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN)
 @AndroidEntryPoint
-class DiscussionDetailsWebViewFragment : Fragment() {
+class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var webViewRouter: WebViewRouter

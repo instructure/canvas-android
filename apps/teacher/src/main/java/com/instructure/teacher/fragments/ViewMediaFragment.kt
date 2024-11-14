@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -50,7 +50,7 @@ import com.instructure.teacher.view.MediaContent
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
-class ViewMediaFragment : Fragment(), ShareableFile {
+class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
 
     private val binding by viewBinding(FragmentSpeedGraderMediaBinding::bind)
 

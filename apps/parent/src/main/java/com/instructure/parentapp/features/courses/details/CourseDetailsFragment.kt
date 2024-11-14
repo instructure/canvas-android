@@ -25,7 +25,7 @@ import android.webkit.WebView
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -41,7 +41,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CourseDetailsFragment : Fragment() {
+class CourseDetailsFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var navigation: Navigation

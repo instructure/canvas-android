@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_EMPTY
 import com.instructure.pandautils.analytics.ScreenView
@@ -33,7 +33,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedgraderEmptyBinding
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_EMPTY)
-class SpeedGraderEmptyFragment : Fragment() {
+class SpeedGraderEmptyFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentSpeedgraderEmptyBinding::bind)
 

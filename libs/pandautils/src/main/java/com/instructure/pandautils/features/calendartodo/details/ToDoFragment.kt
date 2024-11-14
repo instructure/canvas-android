@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.PlannerItem
@@ -47,7 +48,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR_TODO)
-class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     @Inject
     lateinit var toDoRouter: ToDoRouter

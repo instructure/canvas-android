@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.FragmentInteractions
@@ -36,7 +37,7 @@ import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OfflineContentFragment : Fragment(), FragmentInteractions {
+class OfflineContentFragment : BaseCanvasFragment(), FragmentInteractions {
 
     private val viewModel: OfflineContentViewModel by viewModels()
 

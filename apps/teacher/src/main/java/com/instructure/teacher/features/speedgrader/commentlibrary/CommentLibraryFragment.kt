@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COMMENT_LIBRARY
 import com.instructure.pandautils.analytics.ScreenView
@@ -33,7 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @ScreenView(SCREEN_VIEW_COMMENT_LIBRARY)
 @AndroidEntryPoint
-class CommentLibraryFragment : Fragment() {
+class CommentLibraryFragment : BaseCanvasFragment() {
 
     private lateinit var binding: FragmentCommentLibraryBinding
 

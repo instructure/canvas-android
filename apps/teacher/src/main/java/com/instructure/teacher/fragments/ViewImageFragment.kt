@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -48,7 +48,7 @@ import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_IMAGE)
-class ViewImageFragment : Fragment(), ShareableFile {
+class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
 
     private val binding by viewBinding(FragmentViewImageBinding::bind)
 

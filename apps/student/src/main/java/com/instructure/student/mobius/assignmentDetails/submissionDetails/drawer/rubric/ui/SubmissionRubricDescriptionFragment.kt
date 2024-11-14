@@ -49,6 +49,7 @@ class SubmissionRubricDescriptionFragment : BaseCanvasDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         with (binding) {
             toolbar.title = title
             toolbar.setupAsBackButton(this@SubmissionRubricDescriptionFragment)

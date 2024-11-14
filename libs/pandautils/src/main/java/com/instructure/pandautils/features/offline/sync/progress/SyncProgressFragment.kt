@@ -23,7 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
@@ -38,7 +38,7 @@ import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SyncProgressFragment : Fragment() {
+class SyncProgressFragment : BaseCanvasFragment() {
 
     private val viewModel: SyncProgressViewModel by viewModels()
 

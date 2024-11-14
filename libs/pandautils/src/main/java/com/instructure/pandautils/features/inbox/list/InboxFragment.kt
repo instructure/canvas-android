@@ -38,6 +38,7 @@ import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -85,7 +86,7 @@ private const val ANIM_DURATION = 150L
 @ScreenView(SCREEN_VIEW_INBOX)
 @PageView(url = "conversations")
 @AndroidEntryPoint
-class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: InboxViewModel by viewModels()
 

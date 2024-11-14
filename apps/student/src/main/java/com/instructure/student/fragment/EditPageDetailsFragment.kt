@@ -79,6 +79,7 @@ class EditPageDetailsFragment : ParentFragment() {
             inflater.inflate(R.layout.fragment_edit_page, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupDescription()
     }

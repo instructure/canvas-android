@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD_NOTIFICATIONS
 import com.instructure.pandautils.analytics.ScreenView
@@ -37,7 +37,7 @@ import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DASHBOARD_NOTIFICATIONS)
 @AndroidEntryPoint
-class DashboardNotificationsFragment : Fragment() {
+class DashboardNotificationsFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var shareExtensionRouter: ShareExtensionRouter

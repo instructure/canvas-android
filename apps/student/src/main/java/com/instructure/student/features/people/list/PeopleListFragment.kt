@@ -76,6 +76,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerAdapter = PeopleListRecyclerAdapter(requireContext(), lifecycleScope, repository, canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,

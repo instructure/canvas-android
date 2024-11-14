@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION
@@ -36,7 +36,7 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.ExternalToolContent
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION)
-class SpeedGraderLtiSubmissionFragment : Fragment() {
+class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentSpeedGraderLtiSubmissionBinding::bind)
 

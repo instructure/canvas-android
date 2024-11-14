@@ -18,6 +18,7 @@ package com.instructure.pandautils.blueprint
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.utils.ScreenViewAnnotationProcessor
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
 open class BaseCanvasActivity : AppCompatActivity() {
@@ -30,5 +31,10 @@ open class BaseCanvasActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         showMasqueradeNotification()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ScreenViewAnnotationProcessor.processScreenView(this::class.java)
     }
 }

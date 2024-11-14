@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -38,7 +38,7 @@ import javax.inject.Inject
 @PageView
 @ScreenView(SCREEN_VIEW_K5_GRADES)
 @AndroidEntryPoint
-class GradesFragment : Fragment() {
+class GradesFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var gradesRouter: GradesRouter

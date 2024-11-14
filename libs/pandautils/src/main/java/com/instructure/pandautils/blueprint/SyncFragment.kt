@@ -17,7 +17,7 @@
 package com.instructure.pandautils.blueprint
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +32,7 @@ abstract class SyncFragment<
         PRESENTER : SyncPresenter<MODEL, VIEW>,
         VIEW : SyncManager<MODEL>,
         HOLDER : RecyclerView.ViewHolder,
-        ADAPTER : SyncRecyclerAdapter<MODEL, HOLDER, VIEW>> : Fragment() {
+        ADAPTER : SyncRecyclerAdapter<MODEL, HOLDER, VIEW>> : BaseCanvasFragment() {
 
     protected abstract fun onReadySetGo(presenter: PRESENTER)
 

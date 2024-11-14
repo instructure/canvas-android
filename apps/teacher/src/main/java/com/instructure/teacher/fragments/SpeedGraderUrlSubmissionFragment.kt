@@ -19,7 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_URL_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
@@ -33,7 +33,7 @@ import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.databinding.FragmentSpeedgraderUrlSubmissionBinding
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_URL_SUBMISSION)
-class SpeedGraderUrlSubmissionFragment : Fragment() {
+class SpeedGraderUrlSubmissionFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentSpeedgraderUrlSubmissionBinding::bind)
 

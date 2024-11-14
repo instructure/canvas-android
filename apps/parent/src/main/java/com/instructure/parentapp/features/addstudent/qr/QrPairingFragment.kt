@@ -25,7 +25,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.loginapi.login.R
@@ -40,7 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class QrPairingFragment : Fragment() {
+class QrPairingFragment : BaseCanvasFragment() {
 
     private val viewModel: AddStudentViewModel by activityViewModels()
 

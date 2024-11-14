@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -35,7 +35,7 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @PageView(url = "profile/communication")
 @AndroidEntryPoint
-class PushNotificationPreferencesFragment : Fragment() {
+class PushNotificationPreferencesFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var toolbarSetupBehavior: ToolbarSetupBehavior

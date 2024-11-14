@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_IMPORTANT_DATES
 import com.instructure.pandautils.analytics.ScreenView
@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_K5_IMPORTANT_DATES)
 @AndroidEntryPoint
-class ImportantDatesFragment : Fragment() {
+class ImportantDatesFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var router: ImportantDatesRouter

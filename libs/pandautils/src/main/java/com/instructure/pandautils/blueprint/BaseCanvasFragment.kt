@@ -18,17 +18,11 @@ package com.instructure.pandautils.blueprint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.instructure.pandautils.utils.AppConfigProvider
 import com.instructure.pandautils.utils.ScreenViewAnnotationProcessor
-import com.instructure.pandautils.utils.showMasqueradeNotification
 
-open class BaseCanvasDialogFragment : DialogFragment() {
-
-    override fun onStart() {
-        super.onStart()
-        showMasqueradeNotification()
-    }
+open class BaseCanvasFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         if (AppConfigProvider.appConfig?.appName == "teacher") {

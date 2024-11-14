@@ -22,12 +22,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.Analytics.logEvent
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.loginapi.login.R
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 
 class AuthenticationDialog : BaseCanvasDialogFragment() {
     interface OnAuthenticationSet {

@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -41,7 +41,7 @@ import javax.inject.Inject
 @PageView(url = "courses")
 @ScreenView(SCREEN_VIEW_EDIT_DASHBOARD)
 @AndroidEntryPoint
-class EditDashboardFragment : Fragment() {
+class EditDashboardFragment : BaseCanvasFragment() {
 
     private val viewModel: EditDashboardViewModel by viewModels()
 

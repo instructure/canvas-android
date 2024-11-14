@@ -78,6 +78,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.quiz_list_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = QuizListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback, quizListRepository, lifecycleScope)
         configureRecyclerView(

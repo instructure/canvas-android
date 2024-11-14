@@ -20,15 +20,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFERENCE_DETAILS
-import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.databinding.FragmentConferenceDetailsBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.instructure.student.mobius.conferences.conference_details.*
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEffect
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEffectHandler
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEvent
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsModel
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsPresenter
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsRepository
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsUpdate
 
-@ScreenView(SCREEN_VIEW_CONFERENCE_DETAILS)
 abstract class ConferenceDetailsFragment : MobiusFragment<ConferenceDetailsModel, ConferenceDetailsEvent,
         ConferenceDetailsEffect, ConferenceDetailsView, ConferenceDetailsViewState, FragmentConferenceDetailsBinding>() {
 

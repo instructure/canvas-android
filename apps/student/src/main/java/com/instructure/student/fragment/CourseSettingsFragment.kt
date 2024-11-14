@@ -58,6 +58,7 @@ class CourseSettingsFragment : ParentFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        super.onViewCreated(view, savedInstanceState)
         courseName.text = course.name
         courseCode.text = course.courseCode
         license.text = course.license?.prettyString

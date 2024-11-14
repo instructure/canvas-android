@@ -21,7 +21,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
@@ -42,7 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @PageView(url = "{canvasContext}")
 @ScreenView(SCREEN_VIEW_ELEMENTARY_COURSE)
 @AndroidEntryPoint
-class ElementaryCourseFragment : Fragment() {
+class ElementaryCourseFragment : BaseCanvasFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var tabId: String by StringArg(key = TAB_ID)

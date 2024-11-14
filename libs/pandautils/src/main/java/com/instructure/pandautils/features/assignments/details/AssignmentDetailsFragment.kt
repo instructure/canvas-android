@@ -32,6 +32,7 @@ import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -70,7 +71,7 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "courses/{courseId}/assignments/{assignmentId}")
 @AndroidEntryPoint
-class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable {
+class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmarkable {
 
     @Inject
     lateinit var assignmentDetailsRouter: AssignmentDetailsRouter

@@ -35,7 +35,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -53,6 +52,7 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.pandarecycler.BaseRecyclerAdapter
 import com.instructure.pandarecycler.PandaRecyclerView
 import com.instructure.pandarecycler.interfaces.EmptyViewInterface
+import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const

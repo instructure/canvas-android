@@ -17,12 +17,12 @@
 package com.instructure.pandautils.blueprint
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
-abstract class PresenterFragment<PRESENTER : FragmentPresenter<VIEW>, VIEW : FragmentViewInterface> : Fragment() {
+abstract class PresenterFragment<PRESENTER : FragmentPresenter<VIEW>, VIEW : FragmentViewInterface> : BaseCanvasFragment() {
 
     protected abstract fun onReadySetGo(presenter: PRESENTER)
 
