@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
@@ -66,10 +67,12 @@ import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.databinding.FragmentCourseGradesBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.grades.GradeFormatter
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
@@ -81,6 +84,9 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: GradesListRepository
+
+    @Inject
+    lateinit var gradeFormatter: GradeFormatter
 
     private val binding by viewBinding(FragmentCourseGradesBinding::bind)
 
@@ -98,8 +104,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     private lateinit var allTermsGradingPeriod: GradingPeriod
     private var recyclerAdapter: GradesListRecyclerAdapter? = null
 
-    private val course: Course
-        get() = canvasContext as Course
+    private lateinit var course: Course
+    private var courseGrade: CourseGrade? = null
 
     override fun title(): String = getString(R.string.grades)
 
@@ -114,41 +120,45 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_course_grades, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerAdapter = GradesListRecyclerAdapter(
-            requireContext(),
-            course,
-            adapterToFragmentCallback,
-            repository,
-            ::onGradingPeriodResponse,
-            adapterToGradesCallback,
-            object : WhatIfDialogStyled.WhatIfDialogCallback {
-                override fun onClick(assignment: Assignment, position: Int) {
-                    WhatIfDialogStyled.show(requireFragmentManager(), assignment, course.color) { whatIf, _ ->
-                        //Create dummy submission for what if grade
-                        //check to see if grade is empty for reset
-                        if (whatIf == null) {
-                            assignment.submission = null
-                            recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission = null
-                        } else {
-                            recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission = Submission(
-                                score = whatIf,
-                                grade = whatIf.toString()
-                            )
-                        }
+        lifecycleScope.launch {
+            course = repository.getCourseWithGrade(canvasContext.id, false)
+            recyclerAdapter = GradesListRecyclerAdapter(
+                requireContext(),
+                course,
+                adapterToFragmentCallback,
+                repository,
+                ::onGradingPeriodResponse,
+                adapterToGradesCallback,
+                object : WhatIfDialogStyled.WhatIfDialogCallback {
+                    override fun onClick(assignment: Assignment, position: Int) {
+                        WhatIfDialogStyled.show(parentFragmentManager, assignment, course.color) { whatIf, _ ->
+                            //Create dummy submission for what if grade
+                            //check to see if grade is empty for reset
+                            if (whatIf == null) {
+                                assignment.submission = null
+                                recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission = null
+                            } else {
+                                recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission = Submission(
+                                    score = whatIf,
+                                    grade = whatIf.toString()
+                                )
+                            }
 
-                        //Compute new overall grade
-                        computeGrades(binding.showTotalCheckBox.isChecked, position)
+                            //Compute new overall grade
+                            computeGrades(binding.showTotalCheckBox.isChecked, position)
+                        }
                     }
                 }
-            }
-        )
-        view.let {
-            configureViews(it)
-            recyclerAdapter?.let {recyclerAdapter ->
-                configureRecyclerView(it, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.gradesEmptyView, R.id.listView)
-            }
+            )
+            view.let {
+                configureViews(it)
+                recyclerAdapter?.let {recyclerAdapter ->
+                    configureRecyclerView(it, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.gradesEmptyView, R.id.listView)
+                }
 
+            }
         }
+
     }
 
     override fun onDestroyView() {
@@ -162,7 +172,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             setupToolbarMenu(toolbar)
             toolbar.title = title()
             toolbar.setupAsBackButton(this@GradesListFragment)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, course)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
     }
 
@@ -183,10 +193,10 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         setupListeners()
         lockGrade(course.hideFinalGrades)
 
-        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, i ->
+        appBarLayout.addOnOffsetChangedListener { _, i ->
             // workaround for Toolbar not showing with swipe to refresh
             if (i == 0) setRefreshingEnabled(true) else setRefreshingEnabled(false)
-        })
+        }
     }
 
     private fun setupListeners() = with(binding) {
@@ -196,7 +206,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             if (showWhatIfCheckBox.isChecked) {
                 computeGrades(showTotalCheckBox.isChecked, -1)
             } else {
-                val gradeString = getGradeString(
+                val gradeString = gradeFormatter.getGradeString(
+                    course,
                     recyclerAdapter?.courseGrade,
                     !isChecked
                 )
@@ -234,7 +245,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun round(value: Double, places: Int): Double {
+    private fun round(value: Double, places: Int = 2): Double {
         if (places < 0) throw IllegalArgumentException()
 
         var bd = BigDecimal(value)
@@ -257,7 +268,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             if (!isAdded) return
             this@GradesListFragment.restrictQuantitativeData = restrictQuantitativeData
             this@GradesListFragment.gradingScheme = gradingScheme
-            val gradeString = getGradeString(courseGrade, !binding.showTotalCheckBox.isChecked)
+            this@GradesListFragment.courseGrade = courseGrade
+            val gradeString = gradeFormatter.getGradeString(course, courseGrade, !binding.showTotalCheckBox.isChecked)
             Logger.d("Logging for Grades E2E, new total grade is: $gradeString")
             binding.txtOverallGrade.text = gradeString
             binding.txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
@@ -338,34 +350,6 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun getGradeString(
-        courseGrade: CourseGrade?,
-        isFinal: Boolean
-    ): String {
-        if (courseGrade == null) return getString(R.string.noGradeText)
-        return if (isFinal) {
-            formatGrade(courseGrade.noFinalGrade, courseGrade.hasFinalGradeString(), courseGrade.finalGrade, courseGrade.finalScore)
-        } else {
-            formatGrade(courseGrade.noCurrentGrade, courseGrade.hasCurrentGradeString(), courseGrade.currentGrade, courseGrade.currentScore)
-        }
-    }
-
-    private fun formatGrade(noGrade: Boolean, hasGradeString: Boolean, grade: String?, score: Double?): String {
-        return if (noGrade) {
-            getString(R.string.noGradeText)
-        } else {
-            if (restrictQuantitativeData) {
-                when {
-                    hasGradeString -> grade.orEmpty()
-                    gradingScheme.isNotEmpty() && score != null -> convertPercentScoreToLetterGrade(score / 100, gradingScheme)
-                    else -> getString(R.string.noGradeText)
-                }
-            } else {
-                NumberHelper.doubleToPercentage(score) + if (hasGradeString) String.format(" (%s)", grade) else ""
-            }
-        }
-    }
-
     private fun lockGrade(isLocked: Boolean) {
         if (isLocked || recyclerAdapter?.isAllGradingPeriodsSelected == true && !course.isTotalsForAllGradingPeriodsEnabled) {
             binding.txtOverallGrade.setInvisible()
@@ -401,7 +385,18 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             }
 
             recyclerAdapter?.whatIfGrade = result
-            binding.txtOverallGrade.text = NumberHelper.doubleToPercentage(result)
+            val resultStr = if (course.pointsBasedGradingScheme) {
+                "${NumberHelper.formatDecimal(course.scalingFactor.orDefault() * (result.orDefault() / 100.0), 2, true)} / " +
+                        NumberHelper.formatDecimal(course.scalingFactor.orDefault(), 2, true)
+            } else {
+                NumberHelper.doubleToPercentage(result)
+            }
+
+            binding.txtOverallGrade.text = if (courseGrade?.hasFinalGradeString() == true) {
+                "$resultStr (${convertPercentScoreToLetterGrade(result.orDefault() / 100.0, course.gradingScheme)})"
+            } else {
+                resultStr
+            }
 
             if(lastPositionChanged >= 0) recyclerAdapter?.notifyItemChanged(lastPositionChanged)
         }
@@ -439,7 +434,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             }
         }
 
-        return round(earnedScore, 2)
+        return round(earnedScore)
     }
 
     /**
@@ -488,7 +483,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             earnedScore = earnedScore / totalWeight * 100//Cumulative
         }
 
-        return round(earnedScore, 2)
+        return round(earnedScore)
     }
 
     /**
@@ -522,7 +517,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             earnedScore += earnedPoints / totalPoints * 100 //Cumulative
         }
 
-        return round(earnedScore, 2)
+        return round(earnedScore)
     }
 
     /**
@@ -556,7 +551,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             earnedScore += earnedPoints / totalPoints * 100
         }
 
-        return round(earnedScore, 2)
+        return round(earnedScore)
     }
 
     //endregion

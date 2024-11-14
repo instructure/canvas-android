@@ -73,8 +73,14 @@ class GradeFormatter(@ApplicationContext private val context: Context) {
                     else -> context.getString(R.string.noGradeText)
                 }
             } else {
-                val percentage = NumberHelper.doubleToPercentage(score.orDefault())
-                if (hasGradeString) "$percentage $grade" else percentage
+                val result = if (course?.pointsBasedGradingScheme == true) {
+                    "${NumberHelper.formatDecimal(course.scalingFactor.orDefault() * (score.orDefault() / 100.0), 2, true)} / " +
+                            NumberHelper.formatDecimal(course.scalingFactor.orDefault(), 2, true)
+
+                } else {
+                    NumberHelper.doubleToPercentage(score.orDefault())
+                }
+                if (hasGradeString) "$result ($grade)" else result
             }
         }
     }
