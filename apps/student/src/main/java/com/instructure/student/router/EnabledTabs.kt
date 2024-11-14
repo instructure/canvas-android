@@ -23,7 +23,7 @@ class EnabledTabs(
         return if (pathSegments.last() == Tab.SYLLABUS_ID) { // handle syllabus which has the same url scheme as assignment details
             tabs.any { relativePath == it.htmlUrl }
         } else if (pathSegments.size == 3) { // tab urls
-            tabs.any { relativePath?.contains(it.htmlUrl.orEmpty()).orDefault() && it.tabId != "home" }
+            tabs.any { relativePath?.contains(it.htmlUrl.orEmpty()).orDefault() && it.tabId != Tab.HOME_ID}
         } else if (pathSegments.contains("external_tools") && pathSegments.size == 4) { // external tools
             return tabs.any { relativePath == it.htmlUrl }
         } else {
@@ -47,8 +47,8 @@ class EnabledTabs(
     }
 
     suspend fun initTabs() {
-        enabledTabs = courseApi.getFirstPageCourses(RestParams()).depaginate {
-            courseApi.next(it, RestParams())
+        enabledTabs = courseApi.getFirstPageCourses(RestParams(usePerPageQueryParam = true)).depaginate {
+            courseApi.next(it, RestParams(usePerPageQueryParam = true))
         }.dataOrNull?.mapNotNull { it.tabs }?.flatten() ?: emptyList()
     }
 }

@@ -21,7 +21,6 @@ import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -74,9 +73,6 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
-
-    @Inject
-    lateinit var courseApi: CourseAPI.CoursesInterface
 
     @Inject
     lateinit var enabledTabs: EnabledTabs

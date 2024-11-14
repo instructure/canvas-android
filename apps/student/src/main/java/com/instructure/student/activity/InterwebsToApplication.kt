@@ -27,7 +27,6 @@ import android.view.View
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
@@ -72,9 +71,6 @@ class InterwebsToApplication : AppCompatActivity() {
 
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
-
-    @Inject
-    lateinit var courseApi: CourseAPI.CoursesInterface
 
     @Inject
     lateinit var enabledTabs: EnabledTabs
