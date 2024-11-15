@@ -79,7 +79,7 @@ class GradeFormatter(@ApplicationContext private val context: Context) {
                 } else {
                     NumberHelper.doubleToPercentage(score.orDefault())
                 }
-                if (hasGradeString) "$result ($grade)" else result
+                if (hasGradeString) "$result $grade" else result
             }
         }
     }
