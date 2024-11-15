@@ -21,6 +21,8 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import androidx.annotation.ColorInt
+import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -55,6 +57,8 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
 import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.ReminderItem
+import com.instructure.pandautils.features.reminder.ReminderViewState
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
@@ -65,6 +69,9 @@ import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DateFormat
@@ -120,10 +127,17 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var selectedSubmission: Submission? = null
 
-    private val remindersObserver = Observer<List<ReminderEntity>> {
-        _data.value?.reminders = mapReminders(it)
+    private val remindersObserver = Observer<List<ReminderEntity>> { reminderEntities ->
+        _data.value?.reminders = mapReminders(reminderEntities)
+        _reminderViewState.update { it.copy(
+            reminders = reminderEntities.map { ReminderItem(it.id, it.text, Date(it.time)) },
+            dueDate = assignment?.dueDate
+        ) }
         _data.value?.notifyPropertyChanged(BR.reminders)
     }
+
+    private val _reminderViewState = MutableStateFlow(ReminderViewState())
+    val reminderViewState = _reminderViewState.asStateFlow()
 
     private val remindersLiveData = assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(
         apiPrefs.user?.id.orDefault(), assignmentId
@@ -204,6 +218,9 @@ class AssignmentDetailsViewModel @Inject constructor(
                 val hasDraft = submissionHandler.lastSubmissionIsDraft
 
                 assignment = assignmentResult
+                _reminderViewState.update { it.copy(
+                    dueDate = if (assignment?.submission?.excused.orDefault()) null else assignment?.dueDate
+                ) }
                 _data.postValue(getViewData(assignmentResult, hasDraft))
                 _state.postValue(ViewState.Success)
             } catch (ex: Exception) {
@@ -466,9 +483,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
         .map {
             ReminderItemViewModel(ReminderViewData(it.id, it.text)) {
-                postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog {
-                    deleteReminderById(it)
-                })
+                postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog(it))
             }
         }
 
@@ -600,5 +615,9 @@ class AssignmentDetailsViewModel @Inject constructor(
         if (assignment?.allowedExtensions?.isEmpty() == true) return true
 
         return assignment?.allowedExtensions?.any { isAudioVisualExtension(it) } ?: true
+    }
+
+    fun updateReminderColor(@ColorInt color: Int) {
+        _reminderViewState.update { it.copy(themeColor = Color(color)) }
     }
 }

@@ -126,6 +126,30 @@ class ReminderManager(
         awaitClose()
     }
 
+    suspend fun showDeleteReminderDialog(context: Context, reminderId: Long, @ColorInt color: Int) {
+        showDeleteReminderDialog(context, color).collect { result ->
+            if (result) { deleteReminder(reminderId) }
+        }
+    }
+
+    private fun showDeleteReminderDialog(context: Context, @ColorInt color: Int) = callbackFlow<Boolean> {
+        AlertDialog.Builder(context)
+            .setTitle(R.string.deleteReminderTitle)
+            .setMessage(R.string.deleteReminderMessage)
+            .setNegativeButton(R.string.no) { _, _ -> close() }
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                trySend(true)
+                dialog.dismiss()
+            }
+            .showThemed(color)
+
+        awaitClose()
+    }
+
+    suspend fun deleteReminder(reminderId: Long) {
+        reminderRepository.deleteReminder(reminderId)
+    }
+
     private suspend fun createReminder(
         context: Context,
         calendar: Calendar,

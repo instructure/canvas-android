@@ -30,7 +30,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -52,6 +53,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.reminder.ReminderManager
+import com.instructure.pandautils.features.reminder.composables.ReminderView
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
@@ -62,7 +64,6 @@ import com.instructure.pandautils.utils.needsPermissions
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
-import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
@@ -143,6 +144,19 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         binding = FragmentAssignmentDetailsBinding.inflate(inflater, container, false)
         binding?.lifecycleOwner = this
         binding?.viewModel = viewModel
+        viewModel.course.value?.let {
+            viewModel.updateReminderColor(assignmentDetailsBehaviour.getThemeColor(it))
+        }
+        binding?.reminderComposeView?.setContent {
+            val state by viewModel.reminderViewState.collectAsState()
+            ReminderView(
+                viewState = state,
+                onAddClick = { checkAlarmPermission() },
+                onRemoveClick = { reminder ->
+                    showDeleteReminderConfirmationDialog(requireContext(), reminder.id)
+                }
+            )
+        }
         return binding?.root
     }
 
@@ -263,7 +277,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 checkAlarmPermission()
             }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
-                showDeleteReminderConfirmationDialog(requireContext(), onConfirmed = action.onConfirmed)
+                showDeleteReminderConfirmationDialog(requireContext(), action.reminderId)
             }
             is AssignmentDetailAction.NavigateToSendMessage -> {
                 assignmentDetailsRouter.navigateToSendMessage(requireActivity(), action.options)
@@ -368,16 +382,8 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         }
     }
 
-    private fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {
-        AlertDialog.Builder(context)
-            .setTitle(R.string.deleteReminderTitle)
-            .setMessage(R.string.deleteReminderMessage)
-            .setNegativeButton(R.string.no, null)
-            .setPositiveButton(R.string.yes) { dialog, _ ->
-                onConfirmed()
-                dialog.dismiss()
-            }
-            .showThemed(assignmentDetailsBehaviour.dialogColor)
+    private fun showDeleteReminderConfirmationDialog(context: Context, reminderId: Long) {
+        lifecycleScope.launch { reminderManager.showDeleteReminderDialog(context, reminderId, assignmentDetailsBehaviour.dialogColor) }
     }
 
     private fun showCreateReminderDialog(context: Context) {

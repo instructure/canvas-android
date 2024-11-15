@@ -1,6 +1,5 @@
 package com.instructure.pandautils.features.assignments.details
 
-import android.content.res.Resources
 import android.text.Spanned
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -11,7 +10,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
-import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
@@ -92,5 +90,5 @@ sealed class AssignmentDetailAction {
     data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()
     data class OnDiscussionHeaderAttachmentClicked(val attachments: List<RemoteFile>) : AssignmentDetailAction()
     data object ShowReminderDialog : AssignmentDetailAction()
-    data class ShowDeleteReminderConfirmationDialog(val onConfirmed: () -> Unit) : AssignmentDetailAction()
+    data class ShowDeleteReminderConfirmationDialog(val reminderId: Long) : AssignmentDetailAction()
 }

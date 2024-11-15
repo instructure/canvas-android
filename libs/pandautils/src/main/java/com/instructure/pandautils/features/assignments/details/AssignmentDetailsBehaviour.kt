@@ -51,4 +51,6 @@ abstract class AssignmentDetailsBehaviour {
     ) = Unit
 
     open fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
+
+    abstract fun getThemeColor(course: Course): Int
 }

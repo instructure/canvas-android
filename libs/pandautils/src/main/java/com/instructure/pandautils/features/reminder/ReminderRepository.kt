@@ -55,6 +55,11 @@ class ReminderRepository(
         return getExistingReminders(userId, contentId).any { it.time == alarmTimeInMillis }
     }
 
+    suspend fun deleteReminder(reminderId: Long) {
+        reminderDao.deleteById(reminderId)
+        alarmScheduler.cancelAlarm(reminderId)
+    }
+
     private suspend fun getExistingReminders(userId: Long, contentId: Long): List<ReminderEntity> {
         return reminderDao.findByAssignmentId(userId, contentId)
     }
