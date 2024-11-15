@@ -101,7 +101,6 @@ class FrontPageViewModel @Inject constructor(
     fun handleAction(action: FrontPageAction) {
         when (action) {
             is FrontPageAction.Refresh -> {
-                _uiState.update { it.copy(isRefreshing = true) }
                 loadFrontPage(true)
             }
         }

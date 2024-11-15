@@ -141,7 +141,7 @@ class CourseDetailsViewModel @Inject constructor(
 
     fun handleAction(action: CourseDetailsAction) {
         when (action) {
-            is CourseDetailsAction.Refresh -> loadData(forceRefresh = true)
+            is CourseDetailsAction.Refresh -> loadData(true)
 
             is CourseDetailsAction.RefreshCourse -> refreshCourse()
 
@@ -178,7 +178,9 @@ class CourseDetailsViewModel @Inject constructor(
             }
 
             is CourseDetailsAction.SnackbarDismissed -> {
-                _uiState.update { it.copy(snackbarMessage = null) }
+                _uiState.update {
+                    it.copy(snackbarMessage = null)
+                }
             }
         }
     }
