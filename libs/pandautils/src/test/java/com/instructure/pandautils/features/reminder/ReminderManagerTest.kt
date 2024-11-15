@@ -17,10 +17,11 @@
 package com.instructure.pandautils.features.reminder
 
 import android.content.Context
-import com.instructure.pandautils.utils.toFormattedString
+import com.instructure.pandautils.R
 import io.mockk.Called
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.test.runTest
@@ -34,10 +35,10 @@ class ReminderManagerTest {
     private val reminderManager = ReminderManager(dateTimePicker, reminderRepository)
 
     @Test
-    fun `Test set reminder not creates reminder if no values was selected`() = runTest {
+    fun `Test set custom reminder not creates reminder if no values was selected`() = runTest {
         coEvery { dateTimePicker.show(any()) } returns callbackFlow { close() }
 
-        reminderManager.showCustomReminder(mockk(), 1, 1, "Assignment 1", "path1")
+        reminderManager.showCustomReminderDialog(mockk(), 1, 1, "Assignment 1", "path1", null)
 
         coVerify { reminderRepository wasNot Called }
     }
@@ -56,9 +57,13 @@ class ReminderManagerTest {
             trySend(calendar)
             close()
         }
+        val title = "Reminder for $contentName"
+        val message = "Reminder for $contentName with no due date"
+        every { context.getString(R.string.reminderNotificationTitleFor, contentName) } returns title
+        every { context.getString(R.string.reminderNotificationMessageWithoutDueDate, contentName) } returns message
 
-        reminderManager.showCustomReminder(context, userId, contentId, contentName, contentHtmlUrl)
+        reminderManager.showCustomReminderDialog(context, userId, contentId, contentName, contentHtmlUrl, null)
 
-        coVerify { reminderRepository.createReminder(userId, contentId, contentName, contentHtmlUrl, calendar.time.toFormattedString(), calendar.timeInMillis) }
+        coVerify { reminderRepository.createReminder(userId, contentId, contentHtmlUrl, title, message, calendar.timeInMillis) }
     }
 }
