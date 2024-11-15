@@ -105,6 +105,7 @@ class InterwebsToApplication : AppCompatActivity() {
         loadingJob = tryWeave {
             val host = data.host.orEmpty() // example: "mobiledev.instructure.com"
 
+            RouteMatcher.enabledTabs = enabledTabs
             enabledTabs.initTabs()
 
             // Do some logging
@@ -206,6 +207,7 @@ class InterwebsToApplication : AppCompatActivity() {
                 // Allow the UI to show
                 delay(700)
                 RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
+                finish()
             }
 
         } catch {
