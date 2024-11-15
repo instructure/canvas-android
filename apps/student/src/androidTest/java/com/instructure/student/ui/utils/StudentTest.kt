@@ -90,7 +90,6 @@ import com.instructure.student.ui.pages.QuizTakingPage
 import com.instructure.student.ui.pages.RemoteConfigSettingsPage
 import com.instructure.student.ui.pages.ResourcesPage
 import com.instructure.student.ui.pages.SchedulePage
-import com.instructure.student.ui.pages.SettingsPage
 import com.instructure.student.ui.pages.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.ShareExtensionTargetPage
 import com.instructure.student.ui.pages.StudentAssignmentDetailsPage
@@ -165,7 +164,6 @@ abstract class StudentTest : CanvasTest() {
     val quizTakingPage = QuizTakingPage()
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
-    val settingsPage = SettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
@@ -187,7 +185,7 @@ abstract class StudentTest : CanvasTest() {
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
-        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight();
+        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight()
     }
 
     // Get the number of files/avatars in our panda avatars folder

@@ -268,7 +268,7 @@ private fun ActionsSegment(
         )
     }
 
-    val saveEnabled = uiState.title.isNotEmpty()
+    val saveEnabled = uiState.title.isNotBlank()
     val focusManager = LocalFocusManager.current
     TextButton(
         onClick = {

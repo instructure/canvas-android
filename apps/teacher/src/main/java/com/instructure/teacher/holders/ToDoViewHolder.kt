@@ -27,12 +27,12 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterTodoBinding
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
-import com.instructure.teacher.utils.getAssignmentIcon
 import java.util.Date
 
 class ToDoViewHolder(private val binding: AdapterTodoBinding) : RecyclerView.ViewHolder(binding.root) {

@@ -24,18 +24,6 @@ abstract class SettingsInteractionTest : CanvasComposeTest() {
     private val settingsPage = SettingsPage(composeTestRule)
 
     @Test
-    fun openAppThemeSelector() {
-        val data = initData()
-        goToSettings(data)
-
-        composeTestRule.waitForIdle()
-
-        settingsPage.assertSettingsItemDisplayed("App Theme")
-        settingsPage.clickOnSettingsItem("App Theme")
-        settingsPage.assertThemeSelectorOpened()
-    }
-
-    @Test
     fun openAboutScreen() {
         val data = initData()
         goToSettings(data)

@@ -1,0 +1,252 @@
+/*
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.pandautils.features.lti
+
+import android.net.Uri
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.webkit.WebView
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
+import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.interactions.router.Route
+import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.databinding.FragmentLtiLaunchBinding
+import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
+import com.instructure.pandautils.views.CanvasWebView
+import dagger.hilt.android.AndroidEntryPoint
+import java.net.URLDecoder
+import javax.inject.Inject
+
+@AndroidEntryPoint
+@ScreenView(SCREEN_VIEW_LTI_LAUNCH)
+@PageView
+class LtiLaunchFragment : Fragment(), NavigationCallbacks {
+
+    private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
+
+    private val viewModel: LtiLaunchViewModel by viewModels()
+
+    private var title: String? by NullableStringArg(key = LTI_TITLE)
+    private var ltiTab: Tab? by NullableParcelableArg(key = LTI_TAB)
+    private var ltiUrl: String? by NullableStringArg(key = LTI_URL)
+    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
+
+    @Inject
+    lateinit var ltiLaunchFragmentBehavior: LtiLaunchFragmentBehavior
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() = ltiTab?.externalUrl ?: (ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools")
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_lti_launch, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
+        binding.toolName.setTextForVisibility(title.validOrNull())
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textDarkest))
+        binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.title = title
+
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+    }
+
+    private fun handleAction(action: LtiLaunchAction) {
+        when (action) {
+            is LtiLaunchAction.LaunchCustomTab -> launchCustomTab(action.url)
+            is LtiLaunchAction.ShowError -> {
+                toast(R.string.errorOccurred)
+                if (activity != null) {
+                    requireActivity().onBackPressed()
+                }
+            }
+
+            is LtiLaunchAction.LoadLtiWebView -> loadLtiToolIntoWebView(action.url)
+        }
+    }
+
+    private fun launchCustomTab(url: String) {
+        val uri = Uri.parse(url)
+            .buildUpon()
+            .appendQueryParameter("display", "borderless")
+            .appendQueryParameter("platform", "android")
+            .build()
+
+        val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(ltiLaunchFragmentBehavior.toolbarColor)
+            .build()
+
+        var intent = CustomTabsIntent.Builder()
+            .setDefaultColorSchemeParams(colorSchemeParams)
+            .setShowTitle(true)
+            .build()
+            .intent
+
+        intent.data = uri
+
+        // Exclude Instructure apps from chooser options
+        intent = intent.asChooserExcludingInstructure()
+
+        requireContext().startActivity(intent)
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (activity == null) return@postDelayed
+            requireActivity().onBackPressed()
+        }, 500)
+    }
+
+    private fun loadLtiToolIntoWebView(url: String) {
+        binding.webView.enableAlgorithmicDarkening()
+        binding.webView.setZoomSettings(false)
+        binding.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
+
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                if (isAdded) binding.webViewProgress.setVisible()
+            }
+
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                if (isAdded) binding.webViewProgress.setGone()
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                // Handle return button in external tools. Links to course homepage should close the tool.
+                return url == contextLink() || canRouteInternally(url)
+            }
+
+            private fun canRouteInternally(url: String) =
+                webViewRouter.canRouteInternally(url) && ltiUrl?.substringBefore("?") != url.substringBefore("?")
+
+            override fun routeInternallyCallback(url: String) {
+                // Handle return button in external tools. Links to course homepage should close the tool.
+                if (url == contextLink()) {
+                    requireActivity().onBackPressed()
+                } else {
+                    webViewRouter.routeInternally(url)
+                }
+            }
+        }
+        binding.loadingLayout.setGone()
+        binding.webView.setVisible()
+        binding.webView.loadUrl(url)
+    }
+
+    fun contextLink() = "${ApiPrefs.fullDomain}${canvasContext.toAPIString()}"
+
+    companion object {
+        const val LTI_URL = "lti_url"
+        const val LTI_TITLE = "lti_title"
+        const val LTI_TAB = "lti_tab"
+        const val LTI_TOOL = "lti_tool"
+        const val SESSION_LESS_LAUNCH = "session_less_launch"
+        const val IS_ASSIGNMENT_LTI = "is_assignment_lti"
+        const val OPEN_INTERNALLY = "open_internally"
+
+        fun makeRoute(canvasContext: CanvasContext, ltiTab: Tab): Route {
+            val bundle = Bundle().apply { putParcelable(LTI_TAB, ltiTab) }
+            return Route(LtiLaunchFragment::class.java, canvasContext, bundle)
+        }
+
+        /**
+         * The ltiTool param is used specifically for launching assignment based lti tools, where its possible to have
+         * a tool "collision". As such, we need to pre-fetch the correct tool to use here.
+         */
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String,
+            title: String? = null,
+            sessionLessLaunch: Boolean = false,
+            assignmentLti: Boolean = false,
+            ltiTool: LTITool? = null,
+            openInternally: Boolean = false
+        ): Route {
+            val bundle = Bundle().apply {
+                putString(LTI_URL, url)
+                putBoolean(SESSION_LESS_LAUNCH, sessionLessLaunch)
+                putBoolean(IS_ASSIGNMENT_LTI, assignmentLti)
+                putString(LTI_TITLE, title) // For 'title' property in InternalWebViewFragment
+                putParcelable(LTI_TOOL, ltiTool)
+                putBoolean(OPEN_INTERNALLY, openInternally)
+            }
+            return Route(LtiLaunchFragment::class.java, canvasContext, bundle)
+        }
+
+        private fun validateRoute(route: Route): Boolean {
+            route.canvasContext ?: return false
+            return route.arguments.getParcelable<Tab>(LTI_TAB) != null || route.arguments.getString(LTI_URL).isValid()
+        }
+
+        fun newInstance(route: Route): LtiLaunchFragment? {
+            if (!validateRoute(route)) return null
+            return LtiLaunchFragment().withArgs(route.argsWithContext)
+        }
+
+        fun makeSessionlessLtiUrlRoute(activity: FragmentActivity, canvasContext: CanvasContext?, ltiUrl: String): Route {
+            val decodedUrl = URLDecoder.decode(ltiUrl, "utf-8")
+            val title = activity.getString(R.string.utils_externalToolTitle)
+            val args = Bundle()
+            args.putString(LTI_URL, decodedUrl)
+            args.putBoolean(SESSION_LESS_LAUNCH, true)
+            args.putString(LTI_TITLE, title)
+
+            return Route(LtiLaunchFragment::class.java, canvasContext, args)
+        }
+    }
+
+    override fun onHandleBackPressed(): Boolean {
+        return binding.webView.handleGoBack()
+    }
+}

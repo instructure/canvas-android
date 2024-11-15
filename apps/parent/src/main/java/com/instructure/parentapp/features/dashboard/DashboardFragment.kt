@@ -201,7 +201,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 }
             }
             is DashboardViewModelAction.OpenLtiTool -> {
-                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name))
+                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name, sessionlessLaunch = true))
             }
         }
     }

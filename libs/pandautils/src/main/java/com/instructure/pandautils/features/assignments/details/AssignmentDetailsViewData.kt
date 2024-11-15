@@ -84,7 +84,7 @@ sealed class AssignmentDetailAction {
     ) : AssignmentDetailAction()
 
     data class NavigateToAnnotationSubmissionScreen(val assignment: Assignment) : AssignmentDetailAction()
-    data class NavigateToLtiLaunchScreen(val title: String, val ltiTool: LTITool?) : AssignmentDetailAction()
+    data class NavigateToLtiLaunchScreen(val title: String, val ltiTool: LTITool?, val openInternally: Boolean) : AssignmentDetailAction()
     data class ShowMediaDialog(val assignment: Assignment) : AssignmentDetailAction()
     data class ShowSubmitDialog(val assignment: Assignment, val studioLTITool: LTITool?) : AssignmentDetailAction()
     data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()

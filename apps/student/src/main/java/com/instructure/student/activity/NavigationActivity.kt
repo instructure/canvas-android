@@ -85,8 +85,10 @@ import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
@@ -136,7 +138,6 @@ import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.fragment.InboxRecipientsFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -281,7 +282,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
-                R.id.navigationDrawerSettings -> startActivity(SettingsActivity.createIntent(applicationContext, featureFlagProvider.offlineEnabled()))
+                R.id.navigationDrawerSettings -> {
+                    val route = SettingsFragment.makeRoute(featureFlagProvider.offlineEnabled())
+                    val fragment = SettingsFragment.newInstance(route)
+                    addFragment(fragment, route)
+                }
             }
         }
     }

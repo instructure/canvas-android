@@ -1332,6 +1332,7 @@
     <string name="appThemeLight">Light</string>
     <string name="appThemeDark">Dark</string>
     <string name="appThemeSystem">Same as device</string>
+    <string name="appThemeAuto">System</string>
 
     <string name="themeSelectorTitle">Canvas is now available in dark theme</string>
     <string name="themeSelectorDescription">Choose app theme</string>
@@ -1894,4 +1895,8 @@
     <string name="errorLoadingAnnouncement">There was an error loading this announcement</string>
     <string name="announcementPageTitle">Announcement</string>
     <string name="globalAnnouncementPageTitle">Global Announcement</string>
+    <string name="openTheQuizButton">Open the Quiz</string>
+    <string name="newQuizSubmissionTitle">Quiz Submission</string>
+    <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
+    <string name="a11y_refresh">Refresh</string>
 </resources>

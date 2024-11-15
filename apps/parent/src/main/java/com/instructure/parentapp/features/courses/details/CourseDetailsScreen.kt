@@ -17,7 +17,6 @@
 
 package com.instructure.parentapp.features.courses.details
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,6 +24,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
@@ -52,6 +52,10 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.parentapp.features.courses.details.frontpage.FrontPageScreen
+import com.instructure.parentapp.features.courses.details.grades.ParentGradesScreen
+import com.instructure.parentapp.features.courses.details.summary.SummaryScreen
 import kotlinx.coroutines.launch
 
 
@@ -59,6 +63,7 @@ import kotlinx.coroutines.launch
 internal fun CourseDetailsScreen(
     uiState: CourseDetailsUiState,
     actionHandler: (CourseDetailsAction) -> Unit,
+    applyOnWebView: (CanvasWebView.() -> Unit),
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
@@ -90,6 +95,7 @@ internal fun CourseDetailsScreen(
                         uiState = uiState,
                         actionHandler = actionHandler,
                         navigationActionClick = navigationActionClick,
+                        applyOnWebView = applyOnWebView,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -98,12 +104,12 @@ internal fun CourseDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CourseDetailsScreenContent(
     uiState: CourseDetailsUiState,
     actionHandler: (CourseDetailsAction) -> Unit,
     navigationActionClick: () -> Unit,
+    applyOnWebView: (CanvasWebView.() -> Unit),
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState { uiState.tabs.size }
@@ -118,15 +124,34 @@ private fun CourseDetailsScreenContent(
     val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
         when (it) {
             TabType.GRADES -> {
-                { ParentGradesScreen(actionHandler) }
+                {
+                    ParentGradesScreen(
+                        actionHandler,
+                        uiState.forceRefreshGrades
+                    )
+                }
             }
 
             TabType.FRONT_PAGE -> {
-                { FrontPageScreen() }
+                {
+                    FrontPageScreen(
+                        uiState.forceRefreshGrades,
+                        applyOnWebView
+                    ) { ltiUrl ->
+                        actionHandler(CourseDetailsAction.OnLtiClicked(ltiUrl))
+                    }
+                }
             }
 
             TabType.SYLLABUS -> {
-                { SyllabusScreen() }
+                {
+                    CourseDetailsWebViewScreen(
+                        uiState.syllabus,
+                        applyOnWebView
+                    ) { ltiUrl ->
+                        actionHandler(CourseDetailsAction.OnLtiClicked(ltiUrl))
+                    }
+                }
             }
 
             TabType.SUMMARY -> {
@@ -144,7 +169,24 @@ private fun CourseDetailsScreenContent(
                     navigationActionClick()
                 },
                 backgroundColor = Color(uiState.studentColor),
-                contentColor = colorResource(id = R.color.textLightest)
+                contentColor = colorResource(id = R.color.textLightest),
+                actions = {
+                    if (uiState.tabs.size > 1) {
+                        IconButton(
+                            onClick = {
+                                actionHandler(CourseDetailsAction.Refresh)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_refresh),
+                                tint = colorResource(id = R.color.textLightest),
+                                contentDescription = stringResource(
+                                    id = R.string.a11y_refresh
+                                )
+                            )
+                        }
+                    }
+                }
             )
         },
         content = { padding ->
@@ -219,6 +261,7 @@ private fun CourseDetailsScreenPreview() {
             )
         ),
         actionHandler = {},
+        applyOnWebView = {},
         navigationActionClick = {}
     )
 }
@@ -233,6 +276,7 @@ private fun CourseDetailsScreenErrorPreview() {
             isError = true,
         ),
         actionHandler = {},
+        applyOnWebView = {},
         navigationActionClick = {}
     )
 }

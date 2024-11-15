@@ -74,6 +74,7 @@ import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
@@ -99,6 +100,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityInitBinding
 import com.instructure.teacher.databinding.NavigationDrawerBinding
 import com.instructure.pandautils.dialogs.ColorPickerDialog
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory
@@ -106,8 +108,6 @@ import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.fragments.FileListFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
-import com.instructure.teacher.fragments.SettingsFragment
 import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -398,13 +398,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val user = ApiPrefs.user ?: return
         val canvasContext = CanvasContext.currentUserContext(user)
         val title = launchDefinition.name.orEmpty()
-        val route = LtiLaunchFragment.makeBundle(
+        val route = LtiLaunchFragment.makeRoute(
             canvasContext = canvasContext,
             url = launchDefinition.placements?.globalNavigation?.url.orEmpty(),
             title = title,
             sessionLessLaunch = true
         )
-        RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
+        RouteMatcher.route(this@InitActivity, route)
     }
 
     fun attachToolbar(toolbar: Toolbar) {
