@@ -40,6 +40,7 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
+import com.instructure.canvasapi2.utils.convertPercentToPointBased
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
@@ -386,8 +387,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
             recyclerAdapter?.whatIfGrade = result
             val resultStr = if (course.pointsBasedGradingScheme) {
-                "${NumberHelper.formatDecimal(course.scalingFactor.orDefault() * (result.orDefault() / 100.0), 2, true)} / " +
-                        NumberHelper.formatDecimal(course.scalingFactor.orDefault(), 2, true)
+                convertPercentToPointBased(result.orDefault(), course.scalingFactor)
             } else {
                 NumberHelper.doubleToPercentage(result)
             }
