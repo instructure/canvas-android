@@ -49,7 +49,7 @@ class HelpDialogFragment : BaseCanvasDialogFragment() {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "help.instructure.com"
+    fun makePageViewUrl() = "help.instructure.com"
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

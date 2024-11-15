@@ -37,6 +37,7 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 abstract class SubmissionDetailsFragment : MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent,
         SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState, FragmentSubmissionDetailsBinding>() {
 
+    @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
     @get:PageViewUrlParam(name = "assignmentId")

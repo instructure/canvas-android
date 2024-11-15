@@ -19,6 +19,7 @@ package com.instructure.student.mobius.conferences.conference_list.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.databinding.FragmentConferenceListBinding
@@ -34,6 +35,7 @@ import com.instructure.student.mobius.conferences.conference_list.ConferenceList
 abstract class ConferenceListFragment : MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect,
         ConferenceListView, ConferenceListViewState, FragmentConferenceListBinding>() {
 
+    @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     override fun makeUpdate() = ConferenceListUpdate()

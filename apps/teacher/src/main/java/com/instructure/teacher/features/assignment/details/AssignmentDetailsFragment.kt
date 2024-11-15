@@ -97,7 +97,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
 
     override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentAssignmentDetailsBinding = FragmentAssignmentDetailsBinding::inflate
 

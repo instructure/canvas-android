@@ -40,6 +40,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -84,7 +85,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(FragmentCourseGradesBinding::bind)
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private var computeGradesJob: WeaveJob? = null
 

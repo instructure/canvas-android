@@ -85,7 +85,7 @@ class LtiLaunchFragment : ParentFragment() {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() =
+    fun makePageViewUrl() =
         ltiTab?.externalUrl ?: ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools"
 
     override fun title(): String = title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull() ?: ""

@@ -80,7 +80,7 @@ class LtiLaunchFragment : BaseFragment() {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() =
+    fun makePageViewUrl() =
         ltiTab?.externalUrl ?: ApiPrefs.fullDomain + canvasContext?.toAPIString() + "/external_tools"
 
     override fun layoutResId(): Int = R.layout.fragment_lti_launch

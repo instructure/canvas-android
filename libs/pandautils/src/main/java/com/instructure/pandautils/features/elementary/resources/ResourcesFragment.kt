@@ -133,7 +133,7 @@ class ResourcesFragment : BaseCanvasFragment() {
     }
 
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#resources"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}#resources"
 
     companion object {
         fun newInstance(): ResourcesFragment {

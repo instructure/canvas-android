@@ -28,6 +28,7 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
 import com.instructure.pandautils.analytics.ScreenView
@@ -44,7 +45,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ElementaryCourseFragment : BaseCanvasFragment() {
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var tabId: String by StringArg(key = TAB_ID)
 
     private val viewModel: ElementaryCourseViewModel by viewModels()

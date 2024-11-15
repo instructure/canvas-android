@@ -51,7 +51,8 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     @Inject
     lateinit var webViewRouter: WebViewRouter
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
 
@@ -60,7 +61,7 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     private lateinit var binding: FragmentDiscussionDetailsWebViewBinding
 
     @PageViewUrlParam("topicId")
-    private fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
+    fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {

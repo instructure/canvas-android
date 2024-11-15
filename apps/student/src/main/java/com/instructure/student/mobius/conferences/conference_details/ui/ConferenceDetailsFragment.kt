@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.databinding.FragmentConferenceDetailsBinding
@@ -35,6 +36,7 @@ import com.instructure.student.mobius.conferences.conference_details.ConferenceD
 abstract class ConferenceDetailsFragment : MobiusFragment<ConferenceDetailsModel, ConferenceDetailsEvent,
         ConferenceDetailsEffect, ConferenceDetailsView, ConferenceDetailsViewState, FragmentConferenceDetailsBinding>() {
 
+    @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     val conference by ParcelableArg<Conference>(key = Const.CONFERENCE)

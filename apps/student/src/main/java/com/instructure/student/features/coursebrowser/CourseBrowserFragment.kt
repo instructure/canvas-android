@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -80,7 +81,8 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions, AppBar
 
     private var apiCalls: Job? = null
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     override val navigation: Navigation?
         get() = if (activity is Navigation) activity as Navigation else null

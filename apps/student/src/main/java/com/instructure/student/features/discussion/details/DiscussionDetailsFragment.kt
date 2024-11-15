@@ -50,7 +50,6 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.mapToAttachment
-import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
@@ -131,7 +130,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     lateinit var repository: DiscussionDetailsRepository
 
     // Bundle args
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopic: DiscussionTopic? by NullableParcelableArg(key = DISCUSSION_TOPIC)
     private var discussionTopicHeader: DiscussionTopicHeader by ParcelableArg(default = DiscussionTopicHeader(), key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
@@ -150,11 +150,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Analytics
     @Suppress("unused")
     @PageViewUrlParam("topicId")
-    private fun getTopicId() = discussionTopicHeader.id
+    fun getTopicId() = discussionTopicHeader.id
 
     @Suppress("unused")
     @PageViewUrlQuery("module_item_id")
-    private fun pageViewModuleItemId() = getModuleItemId()
+    fun pageViewModuleItemId() = getModuleItemId()
     //endregion
 
     //region Fragment Lifecycle Overrides
@@ -750,7 +750,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    @BeforePageView
+    override fun beforePageViewPrerequisites(): List<String> {
+        return listOf("discussion_loaded")
+    }
+
     private fun loadDiscussionTopicHeaderViews(discussionTopicHeader: DiscussionTopicHeader) = with(binding) {
         if (discussionTopicHeader.assignment != null) {
             setupAssignmentDetails(discussionTopicHeader.assignment!!)
@@ -787,6 +790,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         attachmentIcon.onClick {
             viewAttachments(discussionTopicHeader.attachments)
         }
+
+        completePageViewPrerequisite("discussion_loaded")
     }
 
     private fun loadHTMLTopic(html: String, contentDescription: String?) {

@@ -173,7 +173,7 @@ class HomeroomFragment : BaseCanvasFragment() {
     }
 
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#homeroom"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}#homeroom"
 
     companion object {
         fun newInstance(): HomeroomFragment {

@@ -18,10 +18,13 @@ package com.instructure.pandautils.blueprint
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.utils.PageViewAnnotationProcessor
 import com.instructure.pandautils.utils.ScreenViewAnnotationProcessor
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
 open class BaseCanvasActivity : AppCompatActivity() {
+
+    private val pageViewAnnotationProcessor = PageViewAnnotationProcessor(this::class.java, this)
 
     override fun attachBaseContext(base: Context?) {
         val newBase = if (base != null) LocaleUtils.wrapContext(base) else base
@@ -34,7 +37,14 @@ open class BaseCanvasActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        super.onResume()
+        pageViewAnnotationProcessor.startEvent()
         ScreenViewAnnotationProcessor.processScreenView(this::class.java)
+
+        super.onResume()
+    }
+
+    override fun onPause() {
+        pageViewAnnotationProcessor.stopEvent()
+        super.onPause()
     }
 }

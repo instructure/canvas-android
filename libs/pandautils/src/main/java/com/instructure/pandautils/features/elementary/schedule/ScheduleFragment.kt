@@ -147,7 +147,7 @@ class ScheduleFragment : BaseCanvasFragment() {
     }
 
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#schedule"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}#schedule"
 
     companion object {
 

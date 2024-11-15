@@ -87,7 +87,7 @@ class GradesFragment : BaseCanvasFragment() {
     }
 
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#grades"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}#grades"
 
     companion object {
         fun newInstance(): GradesFragment {

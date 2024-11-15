@@ -43,7 +43,7 @@ class CourseSettingsFragment : ParentFragment() {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "courses/${course.id}/settings"
+    fun makePageViewUrl() = "courses/${course.id}/settings"
 
     override fun title(): String = getString(R.string.settings)
 

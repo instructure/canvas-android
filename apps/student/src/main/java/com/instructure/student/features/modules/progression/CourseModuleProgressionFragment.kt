@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -103,7 +104,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var markAsReadJob: WeaveJob? = null
 
     // Bundle Args
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var groupPos: Int by IntArg(key = GROUP_POSITION)
     private var childPos: Int by IntArg(key = CHILD_POSITION)
     private var modules: ArrayList<ModuleObject> by ParcelableArrayListArg(key = MODULE_OBJECTS)

@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -58,7 +59,8 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     private val binding by viewBinding(QuizListLayoutBinding::bind)
     private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
 
-    private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private var recyclerAdapter: QuizListRecyclerAdapter? = null
 

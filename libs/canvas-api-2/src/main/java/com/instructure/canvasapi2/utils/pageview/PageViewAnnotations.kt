@@ -17,21 +17,17 @@
 package com.instructure.canvasapi2.utils.pageview
 
 @Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class PageView(val url: String = "", val name: String = "")
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD, AnnotationTarget.PROPERTY_GETTER)
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class PageViewUrlParam(val name: String)
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class PageViewUrlQuery(val name: String)
 
 @Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class PageViewUrl
-
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.BINARY)
-annotation class BeforePageView
