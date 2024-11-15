@@ -18,6 +18,8 @@ package com.instructure.pandautils.features.reminder
 
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
+import com.instructure.pandautils.utils.toFormattedString
+import java.util.Date
 
 class ReminderRepository(
     private val reminderDao: ReminderDao,
@@ -26,17 +28,17 @@ class ReminderRepository(
     suspend fun createReminder(
         userId: Long,
         contentId: Long,
-        contentName: String,
         contentHtmlUrl: String,
+        title: String,
         alarmText: String,
         alarmTimeInMillis: Long
     ) {
         val reminder = ReminderEntity(
             userId = userId,
             assignmentId = contentId,
-            name = contentName,
+            name = title,
             htmlUrl = contentHtmlUrl,
-            text = alarmText,
+            text = Date(alarmTimeInMillis).toFormattedString(),
             time = alarmTimeInMillis
         )
         val reminderId = reminderDao.insert(reminder)
@@ -44,7 +46,7 @@ class ReminderRepository(
         alarmScheduler.scheduleAlarm(
             contentId,
             contentHtmlUrl,
-            contentName,
+            title,
             alarmText,
             alarmTimeInMillis,
             reminderId

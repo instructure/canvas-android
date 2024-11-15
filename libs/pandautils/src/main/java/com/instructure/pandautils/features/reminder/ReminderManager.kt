@@ -47,7 +47,7 @@ class ReminderManager(
         @ColorInt color: Int
     ) {
         showBeforeDueDateReminderDialog(context, dueDate, color).collect { calendar ->
-            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl)
+            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate)
         }
     }
 
@@ -105,10 +105,11 @@ class ReminderManager(
         userId: Long,
         contentId: Long,
         contentName: String,
-        contentHtmlUrl: String
+        contentHtmlUrl: String,
+        dueDate: Date?
     ) {
         showCustomReminderDialog(context).collect { calendar ->
-            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl)
+            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate)
         }
     }
 
@@ -156,7 +157,8 @@ class ReminderManager(
         userId: Long,
         contentId: Long,
         contentName: String,
-        contentHtmlUrl: String
+        contentHtmlUrl: String,
+        dueDate: Date?
     ) {
         val alarmTimeInMillis = calendar.timeInMillis
         if (reminderRepository.isReminderAlreadySetForTime(userId, contentId, calendar.timeInMillis)) {
@@ -169,14 +171,23 @@ class ReminderManager(
             return
         }
 
-        val dateTimeString = calendar.time.toFormattedString()
+        val reminderTitle = context.getString(R.string.reminderNotificationTitleFor, contentName)
+        val reminderMessage = if (dueDate != null) {
+            context.getString(
+                R.string.reminderNotificationMessageWithDueDate,
+                contentName,
+                dueDate.toFormattedString()
+            )
+        } else {
+            context.getString(R.string.reminderNotificationMessageWithoutDueDate, contentName)
+        }
 
         reminderRepository.createReminder(
             userId,
             contentId,
-            contentName,
             contentHtmlUrl,
-            dateTimeString,
+            reminderTitle,
+            reminderMessage,
             alarmTimeInMillis
         )
     }

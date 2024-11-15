@@ -152,8 +152,8 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             ReminderView(
                 viewState = state,
                 onAddClick = { checkAlarmPermission() },
-                onRemoveClick = { reminder ->
-                    showDeleteReminderConfirmationDialog(requireContext(), reminder.id)
+                onRemoveClick = { reminderId ->
+                    showDeleteReminderConfirmationDialog(requireContext(), reminderId)
                 }
             )
         }
@@ -403,14 +403,16 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                         ApiPrefs.user?.id.orDefault(),
                         assignment.id,
                         assignment.name.orEmpty(),
-                        assignment.htmlUrl.orEmpty()
+                        assignment.htmlUrl.orEmpty(),
+                        assignment.dueDate
                     )
                     assignment.dueDate?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
                         context,
                         ApiPrefs.user?.id.orDefault(),
                         assignment.id,
                         assignment.name.orEmpty(),
-                        assignment.htmlUrl.orEmpty()
+                        assignment.htmlUrl.orEmpty(),
+                        assignment.dueDate
                     )
                     else -> reminderManager.showBeforeDueDateReminderDialog(
                         context,

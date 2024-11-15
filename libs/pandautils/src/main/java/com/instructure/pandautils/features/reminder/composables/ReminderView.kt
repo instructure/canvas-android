@@ -18,16 +18,12 @@ package com.instructure.pandautils.features.reminder.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +36,8 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CardListItem
+import com.instructure.pandautils.compose.composables.CardListView
 import com.instructure.pandautils.features.reminder.ReminderItem
 import com.instructure.pandautils.features.reminder.ReminderViewState
 import com.instructure.pandautils.utils.toFormattedString
@@ -49,7 +46,7 @@ import com.instructure.pandautils.utils.toFormattedString
 fun ReminderView(
     viewState: ReminderViewState,
     onAddClick: () -> Unit,
-    onRemoveClick: (ReminderItem) -> Unit,
+    onRemoveClick: (Long) -> Unit,
 ) {
     CanvasTheme {
         Column(
@@ -83,7 +80,7 @@ fun ReminderView(
             if (viewState.dueDate == null) {
                 RemindersGroupView(
                     title = null,
-                    reminders = viewState.reminders,
+                    reminders = viewState.reminders.sortedBy { it.date },
                     themeColor = viewState.themeColor,
                     onRemoveClick = onRemoveClick
                 )
@@ -95,14 +92,17 @@ fun ReminderView(
 
                 RemindersGroupView(
                     title = null,
-                    reminders = remindersBeforeDueDate,
+                    reminders = remindersBeforeDueDate.sortedBy { it.date },
                     themeColor = viewState.themeColor,
                     onRemoveClick = onRemoveClick
                 )
 
                 RemindersGroupView(
-                    title = "After Due Date (${viewState.dueDate?.toFormattedString()})",
-                    reminders = remindersAfterDueDate,
+                    title = stringResource(
+                        com.instructure.pandautils.R.string.reminderTitleAfterDueDate,
+                        viewState.dueDate.toFormattedString()
+                    ),
+                    reminders = remindersAfterDueDate.sortedBy { it.date },
                     themeColor = viewState.themeColor,
                     onRemoveClick = onRemoveClick
                 )
@@ -112,7 +112,7 @@ fun ReminderView(
 }
 
 @Composable
-private fun RemindersGroupView(title: String?, reminders: List<ReminderItem>, themeColor: Color, onRemoveClick: (ReminderItem) -> Unit) {
+private fun RemindersGroupView(title: String?, reminders: List<ReminderItem>, themeColor: Color, onRemoveClick: (Long) -> Unit) {
     if (reminders.isEmpty()) return
 
     title?.let {
@@ -124,57 +124,20 @@ private fun RemindersGroupView(title: String?, reminders: List<ReminderItem>, th
         )
     }
 
-    Card(
-        backgroundColor = colorResource(id = R.color.backgroundLight),
-        elevation = 8.dp,
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column {
-            reminders.forEach { reminder ->
-                ReminderItemView(reminder, themeColor, onRemoveClick)
-
-                if (reminder != reminders.last()) {
-                    CanvasDivider(modifier = Modifier.padding(horizontal = 24.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ReminderItemView(reminderItem: ReminderItem, themeColor: Color, onRemoveClick: (ReminderItem) -> Unit) {
-    Row(
-        modifier = Modifier.padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-            painter = painterResource(id = R.drawable.ic_notifications_lined),
-            contentDescription = null,
-            tint = themeColor
+    val listItems = reminders.map { reminder ->
+        CardListItem(
+            id = reminder.id,
+            title = reminder.title,
+            subtitle = null,
+            icon = R.drawable.ic_notifications_lined,
+            themeColor = themeColor
         )
-
-        Text(
-            text = reminderItem.title,
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.textDarkest),
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        IconButton(
-            onClick = { onRemoveClick(reminderItem) },
-            modifier = Modifier.padding(horizontal = 8.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_close_lined),
-                contentDescription = stringResource(id = R.string.a11y_removeReminder),
-                tint = colorResource(id = R.color.textDarkest)
-            )
-        }
     }
 
+    CardListView(items = listItems, onSelect = null, onRemove = { onRemoveClick(it.id) })
 }
+
+
 
 @Composable
 @Preview
