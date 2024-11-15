@@ -370,7 +370,6 @@ private fun GradesCard(
                         fontSize = 14.sp,
                         color = colorResource(id = R.color.textDark),
                         modifier = Modifier
-                            .fillMaxWidth(0.5f)
                             .testTag("gradesCardText")
                     )
                 }
