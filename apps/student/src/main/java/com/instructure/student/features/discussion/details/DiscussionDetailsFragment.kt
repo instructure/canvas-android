@@ -259,7 +259,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         // Show attachment
         val attachment = remoteFile.mapToAttachment()
-        openMedia(attachment.contentType, attachment.url, attachment.filename, canvasContext, localFile = attachment.isLocalFile)
+        openMedia(attachment.contentType, attachment.url, attachment.filename, attachment.id.toString(), canvasContext, localFile = attachment.isLocalFile)
     }
 
     private fun showReplyView(discussionEntryId: Long) {
@@ -435,7 +435,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             override fun canRouteInternallyDelegate(url: String): Boolean = true
 
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                openMedia(canvasContext, url, filename)
+                openMedia(canvasContext, url, filename, null)
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) = Unit

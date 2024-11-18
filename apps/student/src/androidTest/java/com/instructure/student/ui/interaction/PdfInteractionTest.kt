@@ -106,6 +106,7 @@ class PdfInteractionTest : StudentTest() {
         // Annotation toolbar icon needs to be present
         val data = getToCourse()
         val course = data.courses.values.first()
+        val student = data.students[0]
 
         data.addFileToCourse(
                 courseId = course.id,
@@ -114,7 +115,7 @@ class PdfInteractionTest : StudentTest() {
 
         val uniqueFileName = OpenMediaAsyncTaskLoader.makeFilenameUnique(pdfFileName, data.folderFiles.values.first().first().url!!)
 
-        cacheFile(uniqueFileName)
+        cacheFile(student.id.toString(), uniqueFileName)
 
         courseBrowserPage.selectFiles()
         fileListPage.selectItem(pdfFileName)
@@ -148,9 +149,9 @@ class PdfInteractionTest : StudentTest() {
             url = url
         )
 
-        val uniqueFileName = OpenMediaAsyncTaskLoader.makeFilenameUnique(pdfFileName, url)
+        val uniqueFileName = OpenMediaAsyncTaskLoader.makeFilenameUnique(pdfFileName, url, fileId.toString())
 
-        cacheFile(uniqueFileName)
+        cacheFile(student.id.toString(), uniqueFileName)
 
         val pdfUrlElementId = "testLinkElement"
         val assignmentDescriptionHtml = """<a id="$pdfUrlElementId" href="$url">pdf baby!!!</a>"""
@@ -252,7 +253,7 @@ class PdfInteractionTest : StudentTest() {
         FileCache.putInputStream("https://mock-data.instructure.com$pdfUrl", inputStream)
     }
 
-    private fun cacheFile(fileName: String) {
+    private fun cacheFile(userid: String, fileName: String) {
         // We need to copy the file from our assets directory to the cache dirctory, so OpenMediaAsyncTaskLoader
         // will find it and assume it was downloaded previously
         var inputStream : InputStream? = null
@@ -260,7 +261,7 @@ class PdfInteractionTest : StudentTest() {
 
         try {
             inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(pdfFileName)
-            val dir = File(InstrumentationRegistry.getInstrumentation().getTargetContext().externalCacheDir, "attachments")
+            val dir = File(InstrumentationRegistry.getInstrumentation().getTargetContext().filesDir, "pdfs-$userid")
             dir.mkdirs()
             val file = File(dir, fileName)
             outputStream = FileOutputStream(file)
