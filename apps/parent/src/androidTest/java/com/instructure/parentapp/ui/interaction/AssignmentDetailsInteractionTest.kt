@@ -53,7 +53,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
-    private val reminderPage = ReminderPage()
+    private val reminderPage = ReminderPage(composeTestRule)
 
     @Test
     fun testSubmissionStatus_Missing() {
@@ -258,7 +258,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionNotDisplayed()
     }
 
     @Test
@@ -269,7 +269,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         val assignment = data.addAssignment(course.id, name = "Test Assignment")
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.assertReminderSectionDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -282,7 +282,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.assertReminderSectionDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -298,11 +298,11 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -318,16 +318,16 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
 
-        assignmentDetailsPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
 
-        assignmentDetailsPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
 
-        assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -343,7 +343,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
@@ -363,11 +363,11 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 

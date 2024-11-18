@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.reminder
 
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
+import com.instructure.pandautils.utils.toFormattedString
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -25,6 +26,7 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import java.util.Date
 
 class ReminderRepositoryTest {
     private val reminderDao: ReminderDao = mockk(relaxed = true)
@@ -61,13 +63,13 @@ class ReminderRepositoryTest {
 
     @Test
     fun `Test createReminder inserts reminder and schedules alarm`() = runTest {
-        val reminder = ReminderEntity(0, 1, 1, "path1", "Assignment 1", "123", 123)
+        val reminder = ReminderEntity(0, 1, 1, "path1", "Assignment 1", Date(123).toFormattedString(), 123)
         coEvery { reminderDao.insert(reminder) } returns 1
         coEvery { alarmScheduler.scheduleAlarm(any(), any(), any(), any(), any(), any()) } returns Unit
 
-        reminderRepository.createReminder(1, 1, "Assignment 1", "path1", "123", 123)
+        reminderRepository.createReminder(1, 1, "path1", "Assignment 1", "details", 123)
 
         coVerify { reminderDao.insert(reminder) }
-        coVerify { alarmScheduler.scheduleAlarm(1, "path1", "Assignment 1", "123", 123, 1) }
+        coVerify { alarmScheduler.scheduleAlarm(1, "path1", "Assignment 1", "details", 123, 1) }
     }
 }
