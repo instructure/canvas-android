@@ -1899,5 +1899,6 @@
     <string name="newQuizSubmissionTitle">Quiz Submission</string>
     <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
     <string name="route_not_available">That page has been disabled for this course</string>
-    <string name="a11y_refresh">Refresh</string>
+    <string name="courseRefreshFailed">Failed to refresh course</string>
+    <string name="frontPageRefreshFailed">Failed to refresh front page</string>
 </resources>
