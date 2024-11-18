@@ -33,7 +33,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.InboxPage
-import com.instructure.canvas.espresso.common.pages.ReminderPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -181,7 +180,6 @@ abstract class StudentTest : CanvasTest() {
     val offlineSyncSettingsPage = OfflineSyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
-    val reminderPage = ReminderPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

@@ -27,7 +27,6 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -229,40 +228,6 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
         onView(withText(submissionType) + withAncestor(R.id.customPanel)).assertDisplayed()
-    }
-
-    fun assertReminderSectionNotDisplayed() {
-        onView(withId(R.id.reminderTitle)).assertNotDisplayed()
-        onView(withId(R.id.reminderDescription)).assertNotDisplayed()
-        onView(withId(R.id.reminderAdd)).assertNotDisplayed()
-    }
-
-    fun assertReminderSectionDisplayed() {
-        onView(withId(R.id.reminderTitle)).scrollTo().assertDisplayed()
-        onView(withId(R.id.reminderDescription)).scrollTo().assertDisplayed()
-        onView(withId(R.id.reminderAdd)).scrollTo().assertDisplayed()
-    }
-
-    fun clickAddReminder() {
-        onView(withId(R.id.reminderAdd)).scrollTo().click()
-    }
-
-    fun assertReminderDisplayedWithText(text: String) {
-        onView(withText(text)).scrollTo().assertDisplayed()
-    }
-
-    fun removeReminderWithText(text: String) {
-        onView(
-            allOf(
-                withId(R.id.remove),
-                hasSibling(withText(text))
-            )
-        ).click()
-        onView(withText(R.string.yes)).scrollTo().click()
-    }
-
-    fun assertReminderNotDisplayedWithText(text: String) {
-        onView(withText(text)).check(doesNotExist())
     }
 
     fun clickCustom() {

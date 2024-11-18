@@ -15,6 +15,10 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.compose.ui.platform.ComposeView
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -32,16 +36,17 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.Calendar
 
 @HiltAndroidTest
-class AssignmentDetailsInteractionTest : StudentTest() {
+class AssignmentDetailsInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
@@ -400,7 +405,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionNotDisplayed()
     }
 
     @Test
@@ -413,7 +418,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertReminderSectionDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -428,7 +433,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertReminderSectionDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -445,11 +450,12 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -466,16 +472,17 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
 
-        assignmentDetailsPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
 
-        assignmentDetailsPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
 
-        assignmentDetailsPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
+        reminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -492,7 +499,8 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
@@ -514,11 +522,13 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.clickAddReminder()
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
@@ -587,5 +597,22 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         data.addSubmissionForAssignment(assignment.id, student.id, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString, grade = grade, score = score, excused = excused)
 
         return assignment
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheck(
+                SpeakableTextPresentCheck::class.java
+            ),
+            AccessibilityCheckResultUtils.matchesViews(
+                ViewMatchers.withParent(
+                    ViewMatchers.withClassName(
+                        Matchers.equalTo(ComposeView::class.java.name)
+                    )
+                )
+            )
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
     }
 }

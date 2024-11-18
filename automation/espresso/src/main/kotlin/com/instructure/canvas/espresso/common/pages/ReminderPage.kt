@@ -18,17 +18,75 @@ package com.instructure.canvas.espresso.common.pages
 
 import android.widget.DatePicker
 import android.widget.TimePicker
+import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.isNotDisplayed
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import com.instructure.espresso.page.BasePage
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.espresso.click
+import com.instructure.espresso.scrollTo
+import com.instructure.pandautils.R
 import org.hamcrest.Matchers
 import java.util.Calendar
 
 
-class ReminderPage: BasePage() {
+class ReminderPage(private val composeTestRule: ComposeTestRule) {
+    private val reminderTitle = "Reminder"
+    private val reminderDescription = "Add due date reminder notifications about this assignment on this device."
+    private val reminderAdd = "Add reminder"
+
+    fun assertReminderSectionNotDisplayed() {
+        composeTestRule.onNodeWithText(reminderTitle).isNotDisplayed()
+        composeTestRule.onNodeWithText(reminderDescription).isNotDisplayed()
+        composeTestRule.onNodeWithContentDescription(reminderAdd).isNotDisplayed()
+    }
+
+    fun assertReminderSectionDisplayed() {
+        composeTestRule.onNodeWithText(reminderTitle).isDisplayed()
+        composeTestRule.onNodeWithText(reminderDescription).isDisplayed()
+        composeTestRule.onNodeWithContentDescription(reminderAdd).isDisplayed()
+    }
+
+    fun clickBeforeReminderOption(text: String) {
+        onView(withText(text)).click()
+    }
+
+    fun clickCustomReminderOption() {
+        onView(withText("Custom")).click()
+    }
+
+    fun clickAddReminder() {
+        composeTestRule.onNodeWithContentDescription(reminderAdd).performClick()
+    }
+
+    fun assertReminderDisplayedWithText(text: String) {
+        composeTestRule.onNodeWithText(text).isDisplayed()
+    }
+
+    fun removeReminderWithText(text: String) {
+        composeTestRule.onNode(
+                hasContentDescription("Remove").and(
+                    hasAnySibling(hasText(text))
+                )
+        ).performClick()
+        onView(withText(R.string.yes)).scrollTo().click()
+    }
+
+    fun assertReminderNotDisplayedWithText(text: String) {
+        onView(withText(text)).check(doesNotExist())
+    }
+
     fun selectDate(year: Int, monthOfYear: Int, dayOfMonth: Int) {
         onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
             .perform(PickerActions.setDate(year, monthOfYear, dayOfMonth))
