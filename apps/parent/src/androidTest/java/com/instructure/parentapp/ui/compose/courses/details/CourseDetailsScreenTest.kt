@@ -20,9 +20,11 @@ package com.instructure.parentapp.ui.compose.courses.details
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -117,7 +119,7 @@ class CourseDetailsScreenTest {
     }
 
     @Test
-    fun assertCourseDetailsContentWithJustOnTab() {
+    fun assertCourseDetailsContentWithJustOneTab() {
         composeTestRule.setContent {
             CourseDetailsScreen(
                 uiState = CourseDetailsUiState(
@@ -141,5 +143,26 @@ class CourseDetailsScreenTest {
         composeTestRule.onNodeWithContentDescription("Send a message about this course")
             .assertIsDisplayed()
             .assertHasClickAction()
+    }
+
+    @Test
+    fun assertSnackbarText() {
+        composeTestRule.setContent {
+            CourseDetailsScreen(
+                uiState = CourseDetailsUiState(
+                    isLoading = false,
+                    isError = false,
+                    courseName = "Course 1",
+                    tabs = listOf(TabType.SYLLABUS),
+                    snackbarMessage = "Snackbar message"
+                ),
+                actionHandler = {},
+                applyOnWebView = {},
+                navigationActionClick = {}
+            )
+        }
+
+        val snackbarText = composeTestRule.onNode(hasText("Snackbar message").and(hasAnyAncestor(hasTestTag("snackbarHost"))))
+        snackbarText.assertIsDisplayed()
     }
 }

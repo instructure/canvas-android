@@ -17,26 +17,44 @@
 
 package com.instructure.parentapp.features.courses.details
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshDefaults
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.views.CanvasWebView
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun CourseDetailsWebViewScreen(
     html: String,
+    isRefreshing: Boolean,
+    studentColor: Int,
+    onRefresh: () -> Unit,
     applyOnWebView: (CanvasWebView) -> Unit,
     onLtiButtonPressed: (String) -> Unit
 ) {
-    Column(
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = onRefresh,
+        refreshThreshold = PullRefreshDefaults.RefreshingOffset
+    )
+
+    Box(
         modifier = Modifier
+            .pullRefresh(pullRefreshState)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .testTag("CourseDetailsWebViewScreen")
@@ -46,6 +64,14 @@ internal fun CourseDetailsWebViewScreen(
             onLtiButtonPressed = onLtiButtonPressed,
             applyOnWebView = applyOnWebView
         )
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .testTag("pullRefreshIndicator"),
+            contentColor = Color(studentColor)
+        )
     }
 }
 
@@ -53,7 +79,10 @@ internal fun CourseDetailsWebViewScreen(
 @Composable
 private fun CourseDetailsWebViewScreenPreview() {
     CourseDetailsWebViewScreen(
-        html = "Html content",
+        html = "WebView content",
+        isRefreshing = false,
+        studentColor = android.graphics.Color.BLACK,
+        onRefresh = {},
         applyOnWebView = {},
         onLtiButtonPressed = {}
     )
