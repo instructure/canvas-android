@@ -24,7 +24,7 @@ annotation class PageView(val url: String = "", val name: String = "")
 @Retention(AnnotationRetention.RUNTIME)
 annotation class PageViewUrlParam(val name: String)
 
-@Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
+@Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class PageViewUrlQuery(val name: String)
 

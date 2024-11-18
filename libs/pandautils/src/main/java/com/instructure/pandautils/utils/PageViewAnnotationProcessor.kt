@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewEvent
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 
 class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, private val enclosingObject: Any) {
@@ -56,7 +57,7 @@ class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, private 
 
     private fun getPageViewUrl(): String {
         enclosingClass.declaredMethods.find { it.isAnnotationPresent(PageViewUrl::class.java) }?.let {
-            return it.invoke(enclosingObject, null) as String
+            return it.invoke(enclosingObject) as String
         }
 
         var rawUrl = enclosingClass.getAnnotation(PageView::class.java)?.url.orEmpty()
@@ -89,6 +90,18 @@ class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, private 
         urlParams.forEach { param ->
             val value = params[param]
             rawUrl = rawUrl.replace("{$param}", value.orEmpty())
+        }
+
+        val queryParams = enclosingClass.methods.filter { it.isAnnotationPresent(PageViewUrlQuery::class.java) }
+            .map {
+                val key = it.getAnnotation(PageViewUrlQuery::class.java).name
+                val value = it.invoke(enclosingObject).toString()
+                key to value
+            }
+
+        queryParams.forEachIndexed { index, (key, value) ->
+            rawUrl += if (index == 0) "?" else "&"
+            rawUrl += "$key=$value"
         }
 
         return "${ApiPrefs.fullDomain}/$rawUrl"
