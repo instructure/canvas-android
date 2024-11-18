@@ -136,6 +136,10 @@
             android:label="@string/canvas"
             android:launchMode="singleTask"
             android:theme="@style/CanvasMaterialTheme_Default" />
+
+        <activity
+            android:name=".features.webview.HtmlContentActivity"
+            android:theme="@style/CanvasMaterialTheme_Default" />
         <!-- End of Activities -->
 
         <!-- Services -->

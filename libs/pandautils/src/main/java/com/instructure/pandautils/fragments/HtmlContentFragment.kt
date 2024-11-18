@@ -22,9 +22,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.databinding.FragmentHtmlContentBinding
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -36,16 +37,16 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HtmlContentFragment : Fragment() {
 
-    var html: String by StringArg()
-    var title: String by StringArg()
+    private var html: String by StringArg()
+    private var title: String by StringArg()
+    private var darkToolbar: Boolean by BooleanArg()
 
     @Inject
     lateinit var webViewRouter: WebViewRouter
 
     private lateinit var binding: FragmentHtmlContentBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentHtmlContentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -59,9 +60,13 @@ class HtmlContentFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        binding.toolbar.setTitle(title)
+        binding.toolbar.title = title
         binding.toolbar.setupAsCloseButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        if (darkToolbar) {
+            ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        } else {
+            ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
+        }
     }
 
     private fun setupWebView(canvasWebView: CanvasWebView) {
@@ -89,18 +94,19 @@ class HtmlContentFragment : Fragment() {
     }
 
     companion object {
-        const val TITLE = "title"
-        const val HTML = "html"
+        const val DARK_TOOLBAR = "darkToolbar"
 
         fun newInstance(args: Bundle) = HtmlContentFragment().apply {
-            title = args.getString(TITLE) ?: ""
-            html = args.getString(HTML) ?: ""
+            title = args.getString(Const.TITLE).orEmpty()
+            html = args.getString(Const.HTML).orEmpty()
+            darkToolbar = args.getBoolean(DARK_TOOLBAR)
         }
 
-        fun makeBundle(title: String, html: String): Bundle {
+        fun makeBundle(title: String, html: String, darkToolbar: Boolean): Bundle {
             val args = Bundle()
-            args.putString(TITLE, title)
-            args.putString(HTML, html)
+            args.putString(Const.TITLE, title)
+            args.putString(Const.HTML, html)
+            args.putBoolean(DARK_TOOLBAR, darkToolbar)
             return args
         }
     }
