@@ -405,7 +405,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test

@@ -258,7 +258,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        reminderPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -299,6 +299,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         gotoAssignment(data, assignment)
 
         reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
@@ -319,6 +320,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         gotoAssignment(data, assignment)
 
         reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
@@ -344,6 +346,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         gotoAssignment(data, assignment)
 
         reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
@@ -364,10 +367,12 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         gotoAssignment(data, assignment)
 
         reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 
         reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderCalendar)
         reminderPage.selectTime(reminderCalendar)
 

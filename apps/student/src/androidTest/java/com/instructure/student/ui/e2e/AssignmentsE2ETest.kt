@@ -168,7 +168,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.clickAssignment(alreadyPastAssignment)
 
         Log.d(STEP_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
-        reminderPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @E2E
@@ -262,7 +262,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.clickAssignment(alreadyPastAssignment)
 
         Log.d(STEP_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
-        reminderPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @E2E

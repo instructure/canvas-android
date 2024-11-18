@@ -468,7 +468,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
             hasDraft = hasDraft,
-            showReminders = assignment.dueDate?.after(Date()).orDefault(true),
+            showReminders = true,
             reminders = mapReminders(remindersLiveData.value.orEmpty())
         )
     }
