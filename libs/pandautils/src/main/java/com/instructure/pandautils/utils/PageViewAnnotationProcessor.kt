@@ -15,7 +15,7 @@
  */
 package com.instructure.pandautils.utils
 
-import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -24,13 +24,23 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
+import java.lang.ref.WeakReference
 
-class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, private val enclosingObject: Any) {
+class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, enclosingObject: Any) {
+
+    private val enclosingObjectRef = WeakReference(enclosingObject)
+
+    private val enclosingObject: Any
+        get() = enclosingObjectRef.get() ?: throw IllegalStateException("Enclosing object has been garbage collected")
 
     fun startEvent() {
         if (pageViewEvent == null && hasPageViewAnnotation) {
-            pageViewEvent = PageViewUtils.startEvent(pageViewEventName, getPageViewUrl())
-            Log.d("asdasd", "startEvent: $pageViewEventName ${getPageViewUrl()}")
+            try {
+                pageViewEvent = PageViewUtils.startEvent(pageViewEventName, getPageViewUrl())
+            } catch (e: Exception) {
+                val pageViewException = PageViewException("Failed to start page view event for: $pageViewEventName", e)
+                FirebaseCrashlytics.getInstance().recordException(pageViewException)
+            }
         }
     }
 
@@ -38,7 +48,6 @@ class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, private 
         if (hasPageViewAnnotation) {
             PageViewUtils.stopEvent(pageViewEvent)
             pageViewEvent = null
-            Log.d("asdasd", "stopEvent: $pageViewEventName ${getPageViewUrl()}")
         }
     }
 
@@ -107,3 +116,8 @@ class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, private 
         return "${ApiPrefs.fullDomain}/$rawUrl"
     }
 }
+
+class PageViewException(
+    message: String,
+    cause: Throwable
+) : Exception(message, cause)
