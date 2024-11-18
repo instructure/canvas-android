@@ -180,7 +180,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
             canvasContext,
             attachment.contentType.orEmpty(),
             attachment.url.orEmpty(),
-            attachment.fileName.orEmpty()
+            attachment.fileName.orEmpty(),
+            attachment.id.toString()
         )
     }
 
