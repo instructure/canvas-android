@@ -35,10 +35,6 @@ object LocaleUtils {
     const val LANGUAGES_PENDING_INTENT_KEY = "languagesPendingIntentKey"
     const val LANGUAGES_PENDING_INTENT_ID = 654321
 
-    fun getSupportedLanguageTags() : Array<String> {
-        return emptyArray() // Populated by LocaleTransformer at build time
-    }
-
     @Suppress("DEPRECATION", "UNUSED")
     fun wrapContext(base: Context): Context {
         var localeString = ApiPrefs.effectiveLocale

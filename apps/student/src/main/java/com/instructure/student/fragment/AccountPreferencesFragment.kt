@@ -50,10 +50,11 @@ class AccountPreferencesFragment : ParentFragment() {
     private val binding by viewBinding(FragmentAccountPreferencesBinding::bind)
 
     private val languages: List<Pair<String, String>> by lazy {
+        val translationArray = BuildConfig.TRANSLATION_TAGS.split(";")
         listOf(
             ApiPrefs.ACCOUNT_LOCALE to "Account Locale",
             ApiPrefs.DEVICE_LOCALE to "Device Locale"
-        ) + LocaleUtils.getSupportedLanguageTags()
+        ) + translationArray
             .map { it to Locale.Builder().setLanguageTag(it).build().cleanDisplayName }
     }
 

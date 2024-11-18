@@ -21,78 +21,18 @@ package com.instructure.android.buildtools.transform
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
-import javassist.ClassPool
-import javassist.CtClass
-import javassist.CtField
-import javassist.CtNewMethod
-import javassist.expr.ExprEditor
-import javassist.expr.MethodCall
 import org.gradle.api.Project
 import java.io.File
 import java.io.IOException
 import kotlin.system.exitProcess
 
-class LocaleTransformer(private val project: Project) : ClassTransformer() {
-
-    override val transformName = "LocaleTransformer"
-
-    private val localeUtilsClassName = "com.instructure.canvasapi2.utils.LocaleUtils"
-
-    private lateinit var activityClass: CtClass
-
-    override fun onClassPoolReady(classPool: ClassPool) {
-        activityClass = classPool["android.app.Activity"]
-        classPool.importPackage("android.content.Context")
-        classPool.importPackage(localeUtilsClassName)
-    }
-
-    override fun createFilter() = NameEquals(localeUtilsClassName) or (NameContains("instructure") + SubclassesAny(activityClass))
-
-    override fun transform(cc: CtClass, classPool: ClassPool): Boolean {
-        when {
-            cc.subclassOf(activityClass) -> return cc.transformActivity()
-            cc.name == localeUtilsClassName -> cc.transformLocaleUtils()
-            else -> throw UnsupportedOperationException("Transforming classes of type ${cc.superclass.name} is unsupported.")
-        }
-        return true
-    }
+object LocaleTransformer {
 
     /**
-     * Transforms this class to override attachBaseContext in order to set the locale.
-     * This only works for subclasses of android.app.Activity.
+     * Scans for available translations and returns supported language tags
      */
-    private fun CtClass.transformActivity(): Boolean {
-        // Skip if this Activity inherits from another Activity that we own
-        if (filter.matches(superclass)) return false
-
-        val method = declaredMethods.find { it.name == "attachBaseContext" }
-        if (method != null) {
-            // If method is overridden, ensure that the context is being wrapped
-            var callsWrap = false
-            method.instrument(object : ExprEditor() {
-                val expectedCall = "com.instructure.canvasapi2.utils.LocaleUtils.INSTANCE.wrapContext(android.content.Context)"
-                override fun edit(m: MethodCall) {
-                    if (m.method.longName == expectedCall) callsWrap = true
-                }
-            })
-            if (!callsWrap) throw IllegalStateException("$simpleName overrides attachBaseContext but does not call LocaleUtils.wrapContext()")
-        } else {
-            val newMethod = CtNewMethod.make(
-                    """
-                protected void attachBaseContext(android.content.Context base) {
-                    android.content.Context newBase = com.instructure.canvasapi2.utils.LocaleUtils.INSTANCE.wrapContext(base);
-                    super.attachBaseContext(newBase);
-                }
-                """.trimIndent(), this)
-            addMethod(newMethod)
-        }
-        return true
-    }
-
-    /**
-     * Scans for available translations and adds supported language tags to LocaleUtils
-     */
-    private fun CtClass.transformLocaleUtils() {
+    @JvmStatic
+    fun getAvailableLanguageTags(project: Project): String {
         val translationsFile = try {
             File(project.projectDir, "../../translations/projects.json").canonicalFile
         } catch (e: IOException) {
@@ -121,12 +61,7 @@ class LocaleTransformer(private val project: Project) : ClassTransformer() {
             .sorted()
             .toList()
         println("    :LocaleTransformer found ${resNames.size} translations")
-
-        val fieldName = "__languageTags"
-        val fieldBody = "private static final String[] $fieldName = new String[]{${resNames.joinToString { "\"$it\"" }}};"
-        addField(CtField.make(fieldBody, this))
-
-        declaredMethods.single { it.name == "getSupportedLanguageTags" }.setBody("{ return $fieldName; }")
+        return resNames.toTypedArray().joinToString(";")
     }
 
 }
