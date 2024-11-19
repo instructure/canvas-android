@@ -63,7 +63,7 @@ class PageViewFragmentDelegate<T>(
 
     @Deprecated("See description in superclass")
     fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if (visibilityTracker.trackHidden(isVisibleToUser, fragment)) {
+        if (visibilityTracker.trackUserHint(isVisibleToUser, fragment)) {
             pageViewAnnotationProcessor.startEvent()
         } else {
             pageViewAnnotationProcessor.stopEvent()
