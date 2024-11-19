@@ -16,15 +16,13 @@
  */
 package com.instructure.pandautils.features.reminder
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.text.format.DateFormat
-import android.widget.DatePicker
-import android.widget.TimePicker
+import com.instructure.pandautils.compose.getDatePickerDialog
+import com.instructure.pandautils.compose.getTimePickerDialog
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
 import java.util.Calendar
 
 class DateTimePicker {
@@ -65,27 +63,23 @@ class DateTimePicker {
     }
 
     private fun showDatePicker(context: Context, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
-        DatePickerDialog(
+        getDatePickerDialog(
             context,
-            { _: DatePicker, year: Int, month: Int, day: Int -> onDateSet(context, year, month, day, onDateSelected, onCancel) },
-            year,
-            month,
-            day
-        )
-            .apply { setButton(DialogInterface.BUTTON_NEGATIVE, context.getText(android.R.string.cancel)) { _, _ -> onCancel() } }
-            .show()
+            LocalDate.of(year, month, day),
+            { onDateSet(context, it.year, it.monthValue + 1, it.dayOfMonth, onDateSelected, onCancel) },
+            onCancel,
+            {}
+        ).show()
     }
 
     private fun showTimePicker(context: Context, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {
-        TimePickerDialog(
+        getTimePickerDialog(
             context,
-            { _: TimePicker, hour: Int, minute: Int -> onTimeSet(hour, minute, onDateSelected) },
-            hour,
-            minute,
-            DateFormat.is24HourFormat(context)
-        )
-            .apply { setButton(DialogInterface.BUTTON_NEGATIVE, context.getText(android.R.string.cancel)) { _, _ -> onCancel() } }
-            .show()
+            LocalTime.of(hour, minute),
+            { onTimeSet(it.hour, it.minute, onDateSelected) },
+            onCancel,
+            {}
+        ).show()
     }
 
     private fun onDateSet(context: Context, year: Int, month: Int, day: Int, onDateSelected: (Calendar) -> Unit, onCancel: () -> Unit) {

@@ -121,7 +121,9 @@ class ReminderManager(
                 trySend(selectedDateTime)
                 close()
             }
-            .onCompletion { close() }
+            .onCompletion {
+                close()
+            }
             .collect()
 
         awaitClose()
