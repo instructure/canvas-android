@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.Analytics.logEvent
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.loginapi.login.R
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 
 class AuthenticationDialog : BaseCanvasDialogFragment() {
     interface OnAuthenticationSet {

@@ -18,7 +18,7 @@ package com.instructure.pandautils.activities
 
 import android.content.res.Configuration
 import android.os.Bundle
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.KeyEvent
 import android.view.MenuItem

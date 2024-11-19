@@ -27,7 +27,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat

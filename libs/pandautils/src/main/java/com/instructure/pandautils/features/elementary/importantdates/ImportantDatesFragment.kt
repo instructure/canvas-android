@@ -21,12 +21,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.instructure.pandautils.blueprint.BaseCanvasFragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_IMPORTANT_DATES
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentImportantDatesBinding
-import com.instructure.pandautils.features.elementary.schedule.ScheduleAction
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

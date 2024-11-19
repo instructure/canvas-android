@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding

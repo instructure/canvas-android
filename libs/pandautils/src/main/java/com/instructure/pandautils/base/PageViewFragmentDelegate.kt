@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.blueprint
+package com.instructure.pandautils.base
 
 import android.content.Context
 import android.os.Bundle
@@ -22,9 +22,8 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.pageview.PageViewVisibilityTracker
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocusListener
-import com.instructure.pandautils.utils.AppConfigProvider
-import com.instructure.pandautils.utils.PageViewAnnotationProcessor
-import com.instructure.pandautils.utils.ScreenViewAnnotationProcessor
+import com.instructure.pandautils.analytics.PageViewAnnotationProcessor
+import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
 
 class PageViewFragmentDelegate<T>(
     private val fragment: T

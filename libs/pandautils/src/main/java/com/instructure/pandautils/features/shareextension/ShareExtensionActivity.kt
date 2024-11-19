@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.activity.viewModels
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData

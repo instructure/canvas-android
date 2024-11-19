@@ -18,7 +18,7 @@ package com.instructure.pandautils.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_UNSAVED_CHANGES_CONTINUE

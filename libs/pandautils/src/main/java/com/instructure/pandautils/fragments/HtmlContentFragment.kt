@@ -21,8 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import com.instructure.pandautils.blueprint.BaseCanvasFragment
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentHtmlContentBinding
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.StringArg

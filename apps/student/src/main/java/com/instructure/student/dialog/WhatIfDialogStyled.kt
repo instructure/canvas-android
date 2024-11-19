@@ -24,7 +24,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_WHAT_IF

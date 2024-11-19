@@ -22,13 +22,12 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialog
-import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_RUBRIC_COMMENT
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ViewEditGradeCommentBinding

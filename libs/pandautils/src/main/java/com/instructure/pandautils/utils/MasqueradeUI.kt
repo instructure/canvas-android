@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.AppConfigProvider
 import com.instructure.pandautils.databinding.LayoutMasqueradeNotificationBinding
 
 /**

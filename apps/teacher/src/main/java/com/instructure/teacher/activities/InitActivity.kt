@@ -67,7 +67,7 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.blueprint.LocaleUtils
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.pandautils.dialogs.RatingDialog

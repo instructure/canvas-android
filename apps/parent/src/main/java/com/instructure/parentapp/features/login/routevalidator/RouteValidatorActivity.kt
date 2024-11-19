@@ -23,7 +23,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.pandautils.binding.viewBinding

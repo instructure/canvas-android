@@ -23,7 +23,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.DialogCustomReminderBinding

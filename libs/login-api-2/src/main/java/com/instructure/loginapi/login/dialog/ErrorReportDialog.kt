@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.util.PatternsCompat
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.managers.ErrorReportManager
 import com.instructure.canvasapi2.managers.UserManager

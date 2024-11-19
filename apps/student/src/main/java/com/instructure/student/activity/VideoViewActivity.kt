@@ -22,7 +22,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.annotation.OptIn
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi

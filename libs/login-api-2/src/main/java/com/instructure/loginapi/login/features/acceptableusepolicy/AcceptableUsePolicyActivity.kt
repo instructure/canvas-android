@@ -21,7 +21,7 @@ import androidx.activity.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.databinding.ActivityAcceptableUsePolicyBinding
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.utils.ToolbarColorizeHelper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setMenu

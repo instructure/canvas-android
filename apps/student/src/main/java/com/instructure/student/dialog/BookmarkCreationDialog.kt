@@ -37,7 +37,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_CREATION
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color

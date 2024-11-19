@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.pandautils.blueprint.BaseCanvasFragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COMMENT_LIBRARY
 import com.instructure.pandautils.analytics.ScreenView

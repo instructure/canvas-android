@@ -35,7 +35,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.databinding.DialogMasqueradingBinding
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler

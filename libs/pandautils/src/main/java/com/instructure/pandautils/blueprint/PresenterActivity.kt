@@ -19,6 +19,7 @@ package com.instructure.pandautils.blueprint
 import android.os.Bundle
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
+import com.instructure.pandautils.base.BaseCanvasActivity
 
 /**
  * The Presenter will decide what to do for every incoming event,

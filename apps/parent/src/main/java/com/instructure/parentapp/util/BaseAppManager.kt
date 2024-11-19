@@ -26,8 +26,8 @@ import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
-import com.instructure.pandautils.utils.AppConfig
-import com.instructure.pandautils.utils.AppConfigProvider
+import com.instructure.pandautils.base.AppConfig
+import com.instructure.pandautils.base.AppConfigProvider
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs

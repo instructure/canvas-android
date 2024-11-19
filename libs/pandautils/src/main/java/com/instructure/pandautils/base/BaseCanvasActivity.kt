@@ -13,13 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.blueprint
+package com.instructure.pandautils.base
 
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.instructure.pandautils.utils.PageViewAnnotationProcessor
-import com.instructure.pandautils.utils.ScreenViewAnnotationProcessor
+import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.analytics.PageViewAnnotationProcessor
+import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
 open class BaseCanvasActivity : AppCompatActivity() {

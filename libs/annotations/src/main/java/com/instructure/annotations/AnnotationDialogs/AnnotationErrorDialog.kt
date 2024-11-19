@@ -19,7 +19,7 @@ package com.instructure.annotations.AnnotationDialogs
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.R
 import com.instructure.pandautils.utils.ThemePrefs

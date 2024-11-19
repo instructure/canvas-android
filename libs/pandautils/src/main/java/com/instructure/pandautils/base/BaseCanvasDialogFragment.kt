@@ -13,16 +13,16 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.blueprint
+package com.instructure.pandautils.base
 
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
-open class BaseCanvasAppCompatDialogFragment : AppCompatDialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
+open class BaseCanvasDialogFragment : DialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
 
     override fun onStart() {
         super.onStart()

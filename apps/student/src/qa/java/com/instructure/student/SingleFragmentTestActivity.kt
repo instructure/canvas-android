@@ -23,7 +23,7 @@ import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.student.databinding.ActivitySingleFragmentTestBinding
 import dagger.hilt.android.AndroidEntryPoint
 

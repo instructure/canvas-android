@@ -19,7 +19,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.blueprint.BaseCanvasAppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 
 import com.instructure.loginapi.login.R

@@ -52,7 +52,7 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.pandarecycler.BaseRecyclerAdapter
 import com.instructure.pandarecycler.PandaRecyclerView
 import com.instructure.pandarecycler.interfaces.EmptyViewInterface
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const

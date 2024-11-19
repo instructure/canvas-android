@@ -29,7 +29,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
-import com.instructure.pandautils.blueprint.BaseCanvasDialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.CourseManager.getAllFavoriteCourses
 import com.instructure.canvasapi2.managers.InboxManager.createConversation

@@ -31,11 +31,11 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.instructure.pandautils.blueprint.BaseCanvasFragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.instructure.pandautils.blueprint.LocaleUtils
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.loginapi.login.view.CanvasLoadingView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.collectOneOffEvents

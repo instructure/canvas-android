@@ -16,7 +16,7 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
-import com.instructure.pandautils.blueprint.BaseCanvasActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper

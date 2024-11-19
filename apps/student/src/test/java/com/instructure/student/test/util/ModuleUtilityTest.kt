@@ -19,7 +19,6 @@ package com.instructure.student.test.util
 
 import android.content.Context
 import android.os.Bundle
-import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem

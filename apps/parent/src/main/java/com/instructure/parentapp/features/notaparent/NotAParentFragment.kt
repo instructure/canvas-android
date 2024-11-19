@@ -25,7 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import com.instructure.pandautils.blueprint.BaseCanvasFragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.parentapp.util.ParentLogoutTask
 import dagger.hilt.android.AndroidEntryPoint

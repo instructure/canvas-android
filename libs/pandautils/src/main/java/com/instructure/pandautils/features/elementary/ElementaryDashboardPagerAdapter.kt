@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.elementary
 
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.blueprint.BaseCanvasFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment

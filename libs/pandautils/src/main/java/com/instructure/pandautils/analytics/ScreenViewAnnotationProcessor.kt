@@ -1,7 +1,7 @@
-package com.instructure.pandautils.utils
+package com.instructure.pandautils.analytics
 
 import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.AppConfigProvider
 
 object ScreenViewAnnotationProcessor {
 
