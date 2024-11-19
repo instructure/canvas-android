@@ -66,7 +66,7 @@ class DateTimePicker {
         getDatePickerDialog(
             context,
             LocalDate.of(year, month, day),
-            { onDateSet(context, it.year, it.monthValue + 1, it.dayOfMonth, onDateSelected, onCancel) },
+            { onDateSet(context, it.year, it.monthValue, it.dayOfMonth, onDateSelected, onCancel) },
             onCancel,
             {}
         ).show()

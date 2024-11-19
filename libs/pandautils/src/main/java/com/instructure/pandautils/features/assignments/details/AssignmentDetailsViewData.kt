@@ -41,7 +41,6 @@ data class AssignmentDetailsViewData(
     val quizDetails: QuizViewViewData? = null,
     val attemptsViewData: AttemptsViewData? = null,
     @Bindable var hasDraft: Boolean = false,
-    val showReminders: Boolean = false,
     @Bindable var reminders: List<ReminderItemViewModel> = emptyList()
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()

@@ -30,12 +30,7 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
-import com.instructure.pandautils.features.reminder.AlarmScheduler
-import com.instructure.pandautils.features.reminder.DateTimePicker
-import com.instructure.pandautils.features.reminder.ReminderManager
-import com.instructure.pandautils.features.reminder.ReminderRepository
 import com.instructure.pandautils.features.offline.sync.HtmlParser
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
@@ -164,26 +159,5 @@ class ApplicationModule {
         featureFlagProvider: FeatureFlagProvider
     ): OfflineAnalyticsManager {
         return OfflineAnalyticsManager(context, analytics, pageViewUtils, apiPrefs, dateTimeProvider, featureFlagProvider)
-    }
-
-    @Provides
-    fun provideDateTimePicker(): DateTimePicker {
-        return DateTimePicker()
-    }
-
-    @Provides
-    fun provideReminderRepository(
-        reminderDao: ReminderDao,
-        alarmScheduler: AlarmScheduler,
-    ): ReminderRepository {
-        return ReminderRepository(reminderDao, alarmScheduler)
-    }
-
-    @Provides
-    fun provideReminderManager(
-        dateTimePicker: DateTimePicker,
-        reminderRepository: ReminderRepository
-    ): ReminderManager {
-        return ReminderManager(dateTimePicker, reminderRepository)
     }
 }

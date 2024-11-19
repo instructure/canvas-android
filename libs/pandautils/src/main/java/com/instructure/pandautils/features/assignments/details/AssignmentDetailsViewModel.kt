@@ -58,6 +58,7 @@ import com.instructure.pandautils.features.assignments.details.gradecellview.Gra
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.reminder.ReminderItem
+import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.ReminderViewState
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
@@ -89,7 +90,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val submissionHandler: AssignmentDetailsSubmissionHandler,
     private val alarmScheduler: AlarmScheduler,
-    private val assignmentDetailsColorProvider: AssignmentDetailsColorProvider
+    private val assignmentDetailsColorProvider: AssignmentDetailsColorProvider,
+    private val reminderManager: ReminderManager,
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -468,7 +470,6 @@ class AssignmentDetailsViewModel @Inject constructor(
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
             hasDraft = hasDraft,
-            showReminders = true,
             reminders = mapReminders(remindersLiveData.value.orEmpty())
         )
     }
@@ -619,5 +620,43 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     fun updateReminderColor(@ColorInt color: Int) {
         _reminderViewState.update { it.copy(themeColor = Color(color)) }
+    }
+
+    fun showCreateReminderDialog(context: Context, @ColorInt color: Int) {
+        assignment?.let { assignment ->
+            viewModelScope.launch {
+                when {
+                    assignment.dueDate == null -> reminderManager.showCustomReminderDialog(
+                        context,
+                        ApiPrefs.user?.id.orDefault(),
+                        assignment.id,
+                        assignment.name.orEmpty(),
+                        assignment.htmlUrl.orEmpty(),
+                        assignment.dueDate
+                    )
+                    assignment.dueDate?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
+                        context,
+                        ApiPrefs.user?.id.orDefault(),
+                        assignment.id,
+                        assignment.name.orEmpty(),
+                        assignment.htmlUrl.orEmpty(),
+                        assignment.dueDate
+                    )
+                    else -> reminderManager.showBeforeDueDateReminderDialog(
+                        context,
+                        ApiPrefs.user?.id.orDefault(),
+                        assignment.id,
+                        assignment.name.orEmpty(),
+                        assignment.htmlUrl.orEmpty(),
+                        assignment.dueDate ?: Date(),
+                        color
+                    )
+                }
+            }
+        }
+    }
+
+    fun showDeleteReminderConfirmationDialog(context: Context, reminderId: Long, @ColorInt color: Int) {
+        viewModelScope.launch { reminderManager.showDeleteReminderDialog(context, reminderId, color) }
     }
 }

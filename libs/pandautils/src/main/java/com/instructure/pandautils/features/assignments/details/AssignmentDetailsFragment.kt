@@ -34,12 +34,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.FragmentInteractions
@@ -52,7 +50,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.composables.ReminderView
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
@@ -69,8 +66,6 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
@@ -86,9 +81,6 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     @Inject
     lateinit var assignmentDetailsBehaviour: AssignmentDetailsBehaviour
-
-    @Inject
-    lateinit var reminderManager: ReminderManager
 
     override val navigation: Navigation? = null
 
@@ -153,7 +145,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 viewState = state,
                 onAddClick = { checkAlarmPermission() },
                 onRemoveClick = { reminderId ->
-                    showDeleteReminderConfirmationDialog(requireContext(), reminderId)
+                    viewModel.showDeleteReminderConfirmationDialog(requireContext(), reminderId, assignmentDetailsBehaviour.dialogColor)
                 }
             )
         }
@@ -285,7 +277,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 checkAlarmPermission()
             }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
-                showDeleteReminderConfirmationDialog(requireContext(), action.reminderId)
+                viewModel.showDeleteReminderConfirmationDialog(requireContext(), action.reminderId, assignmentDetailsBehaviour.dialogColor)
             }
             is AssignmentDetailAction.NavigateToSendMessage -> {
                 assignmentDetailsRouter.navigateToSendMessage(requireActivity(), action.options)
@@ -364,7 +356,7 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                showCreateReminderDialog(requireActivity())
+                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
             } else {
                 viewModel.checkingReminderPermission = true
                 startActivity(
@@ -375,56 +367,18 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 )
             }
         } else {
-            showCreateReminderDialog(requireActivity())
+            viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
         }
     }
 
     private fun checkAlarmPermissionResult() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
             if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
-                showCreateReminderDialog(requireActivity())
+                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }
             viewModel.checkingReminderPermission = false
-        }
-    }
-
-    private fun showDeleteReminderConfirmationDialog(context: Context, reminderId: Long) {
-        lifecycleScope.launch { reminderManager.showDeleteReminderDialog(context, reminderId, assignmentDetailsBehaviour.dialogColor) }
-    }
-
-    private fun showCreateReminderDialog(context: Context) {
-        viewModel.assignment?.let { assignment ->
-            lifecycleScope.launch {
-                when {
-                    assignment.dueDate == null -> reminderManager.showCustomReminderDialog(
-                        context,
-                        ApiPrefs.user?.id.orDefault(),
-                        assignment.id,
-                        assignment.name.orEmpty(),
-                        assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate
-                    )
-                    assignment.dueDate?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
-                        context,
-                        ApiPrefs.user?.id.orDefault(),
-                        assignment.id,
-                        assignment.name.orEmpty(),
-                        assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate
-                    )
-                    else -> reminderManager.showBeforeDueDateReminderDialog(
-                        context,
-                        ApiPrefs.user?.id.orDefault(),
-                        assignment.id,
-                        assignment.name.orEmpty(),
-                        assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate ?: Date(),
-                        assignmentDetailsBehaviour.dialogColor
-                    )
-                }
-            }
         }
     }
 
