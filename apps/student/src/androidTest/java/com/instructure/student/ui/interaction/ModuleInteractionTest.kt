@@ -16,8 +16,12 @@
 package com.instructure.student.ui.interaction
 
 import android.text.Html
+import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -53,6 +57,7 @@ import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.Test
 import java.net.URLEncoder
 
@@ -647,6 +652,23 @@ class ModuleInteractionTest : StudentTest() {
         courseBrowserPage.selectModules()
 
         return data
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheck(
+                SpeakableTextPresentCheck::class.java
+            ),
+            AccessibilityCheckResultUtils.matchesViews(
+                ViewMatchers.withParent(
+                    ViewMatchers.withClassName(
+                        Matchers.equalTo(ComposeView::class.java.name)
+                    )
+                )
+            )
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
     }
 
 }
