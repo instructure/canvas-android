@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.courses.details.frontpage
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -26,6 +27,7 @@ import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import io.mockk.coEvery
@@ -35,6 +37,8 @@ import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -56,6 +60,7 @@ class FrontPageViewModelTest {
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
     private val testDispatcher = UnconfinedTestDispatcher()
 
+    private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: FrontPageRepository = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
@@ -70,6 +75,7 @@ class FrontPageViewModelTest {
         every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         coEvery { savedStateHandle.get<Long>(Navigation.COURSE_ID) } returns 1
         every { parentPrefs.currentStudent } returns User(shortName = "User 1")
+        every { context.getString(R.string.frontPageRefreshFailed) } returns "Failed to refresh front page"
     }
 
     @After
@@ -133,7 +139,51 @@ class FrontPageViewModelTest {
         Assert.assertEquals(expectedAfterRefresh, viewModel.uiState.value)
     }
 
+    @Test
+    fun `Show snackbar when error refreshing and content is not empty`() = runTest {
+        coEvery { repository.loadFrontPage(1, any()) } returns Page(id = 1L, body = "Front Page")
+
+        createViewModel()
+
+        coEvery { repository.loadFrontPage(1, any()) } throws Exception()
+        viewModel.handleAction(FrontPageAction.Refresh)
+
+        val events = mutableListOf<FrontPageViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val expectedEvent = FrontPageViewModelAction.ShowSnackbar("Failed to refresh front page")
+        Assert.assertEquals(expectedEvent, events.last())
+        val expectedUiState = FrontPageUiState(
+            studentColor = 1,
+            isLoading = false,
+            isError = false,
+            isRefreshing = false,
+            htmlContent = "Front Page"
+        )
+        Assert.assertEquals(expectedUiState, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Show error when error refreshing and content is not empty`() = runTest {
+        coEvery { repository.loadFrontPage(1, any()) } returns Page(id = 1L, body = "")
+
+        createViewModel()
+
+        coEvery { repository.loadFrontPage(1, any()) } throws Exception()
+        viewModel.handleAction(FrontPageAction.Refresh)
+
+        val expectedUiState = FrontPageUiState(
+            studentColor = 1,
+            isLoading = false,
+            isError = true,
+            isRefreshing = false
+        )
+        Assert.assertEquals(expectedUiState, viewModel.uiState.value)
+    }
+
     private fun createViewModel() {
-        viewModel = FrontPageViewModel(savedStateHandle, repository, parentPrefs)
+        viewModel = FrontPageViewModel(context, savedStateHandle, repository, parentPrefs)
     }
 }

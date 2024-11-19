@@ -1905,4 +1905,6 @@
     <string name="reminderNotificationTitleFor">Reminder for %1$s</string>
     <string name="reminderNotificationMessageWithDueDate">Reminder for %1$s due at %2$s</string>
     <string name="reminderNotificationMessageWithoutDueDate">Reminder for %1$s with no due date</string>
+    <string name="courseRefreshFailed">Failed to refresh course</string>
+    <string name="frontPageRefreshFailed">Failed to refresh front page</string>
 </resources>

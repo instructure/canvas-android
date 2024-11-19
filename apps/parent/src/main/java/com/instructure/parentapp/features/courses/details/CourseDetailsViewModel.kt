@@ -96,16 +96,44 @@ class CourseDetailsViewModel @Inject constructor(
                 it.copy(
                     courseName = course.name,
                     isLoading = false,
+                    isRefreshing = false,
+                    isError = false,
                     tabs = tabTypes,
-                    syllabus = course.syllabusBody.orEmpty(),
-                    forceRefreshGrades = forceRefresh
+                    syllabus = course.syllabusBody.orEmpty()
                 )
             }
         } catch {
             _uiState.update {
                 it.copy(
                     isLoading = false,
+                    isRefreshing = false,
                     isError = true
+                )
+            }
+        }
+    }
+
+    private fun refreshCourse() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(isRefreshing = true)
+            }
+
+            val course = repository.getCourse(courseId, true)
+
+            _uiState.update {
+                it.copy(
+                    isRefreshing = false,
+                    courseName = course.name,
+                    syllabus = course.syllabusBody.orEmpty(),
+                )
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    snackbarMessage = context.getString(R.string.courseRefreshFailed)
                 )
             }
         }
@@ -113,7 +141,9 @@ class CourseDetailsViewModel @Inject constructor(
 
     fun handleAction(action: CourseDetailsAction) {
         when (action) {
-            is CourseDetailsAction.Refresh -> loadData(forceRefresh = true)
+            is CourseDetailsAction.Refresh -> loadData(true)
+
+            is CourseDetailsAction.RefreshCourse -> refreshCourse()
 
             is CourseDetailsAction.SendAMessage -> {
                 viewModelScope.launch {
@@ -141,8 +171,16 @@ class CourseDetailsViewModel @Inject constructor(
                 }
             }
 
-            is CourseDetailsAction.GradesRefreshed -> {
-                _uiState.update { it.copy(forceRefreshGrades = false) }
+            is CourseDetailsAction.ShowSnackbar -> {
+                _uiState.update {
+                    it.copy(snackbarMessage = action.message)
+                }
+            }
+
+            is CourseDetailsAction.SnackbarDismissed -> {
+                _uiState.update {
+                    it.copy(snackbarMessage = null)
+                }
             }
         }
     }

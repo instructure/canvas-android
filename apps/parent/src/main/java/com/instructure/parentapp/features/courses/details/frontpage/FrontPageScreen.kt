@@ -19,6 +19,7 @@ package com.instructure.parentapp.features.courses.details.frontpage
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,18 +40,24 @@ import com.instructure.parentapp.features.courses.details.CourseDetailsWebViewSc
 
 @Composable
 internal fun FrontPageScreen(
-    forceRefresh: Boolean,
     applyOnWebView: (CanvasWebView) -> Unit,
-    onLtiButtonPressed: (String) -> Unit
+    onLtiButtonPressed: (String) -> Unit,
+    showSnackbar: (String) -> Unit
 ) {
     val viewModel: FrontPageViewModel = viewModel()
     val uiState by remember { viewModel.uiState }.collectAsState()
-
-    if (forceRefresh) {
-        viewModel.handleAction(FrontPageAction.Refresh)
-    } else {
-        FrontPageContent(uiState, viewModel::handleAction, applyOnWebView, onLtiButtonPressed)
+    val events = viewModel.events
+    LaunchedEffect(events) {
+        events.collect { action ->
+            when (action) {
+                is FrontPageViewModelAction.ShowSnackbar -> {
+                    showSnackbar(action.message)
+                }
+            }
+        }
     }
+
+    FrontPageContent(uiState, viewModel::handleAction, applyOnWebView, onLtiButtonPressed)
 }
 
 @Composable
@@ -83,6 +90,9 @@ internal fun FrontPageContent(
         else -> {
             CourseDetailsWebViewScreen(
                 html = uiState.htmlContent,
+                isRefreshing = uiState.isRefreshing,
+                studentColor = uiState.studentColor,
+                onRefresh = { actionHandler(FrontPageAction.Refresh) },
                 applyOnWebView = applyOnWebView,
                 onLtiButtonPressed = onLtiButtonPressed
             )
