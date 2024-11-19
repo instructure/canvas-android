@@ -75,6 +75,7 @@ import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks

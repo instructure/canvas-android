@@ -21,12 +21,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import com.instructure.pandautils.base.BaseCanvasFragment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
