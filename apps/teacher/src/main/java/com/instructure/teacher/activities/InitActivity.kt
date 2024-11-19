@@ -107,7 +107,6 @@ import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.fragments.FileListFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -398,13 +397,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val user = ApiPrefs.user ?: return
         val canvasContext = CanvasContext.currentUserContext(user)
         val title = launchDefinition.name.orEmpty()
-        val route = LtiLaunchFragment.makeBundle(
+        val route = LtiLaunchFragment.makeRoute(
             canvasContext = canvasContext,
             url = launchDefinition.placements?.globalNavigation?.url.orEmpty(),
             title = title,
             sessionLessLaunch = true
         )
-        RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
+        RouteMatcher.route(this@InitActivity, route)
     }
 
     fun attachToolbar(toolbar: Toolbar) {

@@ -34,6 +34,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
@@ -202,7 +203,7 @@ class PageDetailsFragment : BasePresenterFragment<
         loadHtmlJob = binding.canvasWebViewWraper.webView.loadHtmlWithIframes(requireContext(), page.body, {
             if (view != null) binding.canvasWebViewWraper.loadHtml(it, page.title, baseUrl = this.page.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
+            RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
         }
         setupToolbar()
     }

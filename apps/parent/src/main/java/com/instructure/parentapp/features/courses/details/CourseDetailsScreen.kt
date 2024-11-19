@@ -24,14 +24,17 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -53,6 +56,9 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.parentapp.features.courses.details.frontpage.FrontPageScreen
+import com.instructure.parentapp.features.courses.details.grades.ParentGradesScreen
+import com.instructure.parentapp.features.courses.details.summary.SummaryScreen
 import kotlinx.coroutines.launch
 
 
@@ -109,6 +115,18 @@ private fun CourseDetailsScreenContent(
     applyOnWebView: (CanvasWebView.() -> Unit),
     modifier: Modifier = Modifier
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val localCoroutineScope = rememberCoroutineScope()
+    uiState.snackbarMessage?.let {
+        LaunchedEffect(Unit) {
+            localCoroutineScope.launch {
+                val result = snackbarHostState.showSnackbar(it)
+                if (result == SnackbarResult.Dismissed) {
+                    actionHandler(CourseDetailsAction.SnackbarDismissed)
+                }
+            }
+        }
+    }
     val pagerState = rememberPagerState { uiState.tabs.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -118,24 +136,46 @@ private fun CourseDetailsScreenContent(
         }
     }
 
-    val tabContents: List<@Composable () -> Unit> = uiState.tabs.map {
-        when (it) {
+    val tabContents: List<@Composable () -> Unit> = uiState.tabs.map { tabType ->
+        when (tabType) {
             TabType.GRADES -> {
-                { ParentGradesScreen(actionHandler, uiState.forceRefreshGrades) }
+                {
+                    ParentGradesScreen(
+                        navigateToAssignmentDetails = { courseId, assignmentId ->
+                            actionHandler(CourseDetailsAction.NavigateToAssignmentDetails(courseId, assignmentId))
+                        }
+                    )
+                }
             }
 
             TabType.FRONT_PAGE -> {
-                { FrontPageScreen() }
+                {
+                    FrontPageScreen(
+                        applyOnWebView = applyOnWebView,
+                        onLtiButtonPressed = {
+                            actionHandler(CourseDetailsAction.OnLtiClicked(it))
+                        },
+                        showSnackbar = {
+                            actionHandler(CourseDetailsAction.ShowSnackbar(it))
+                        }
+                    )
+                }
             }
 
             TabType.SYLLABUS -> {
                 {
-                    SyllabusScreen(
-                        uiState.syllabus,
-                        applyOnWebView
-                    ) { ltiUrl ->
-                        actionHandler(CourseDetailsAction.OnLtiClicked(ltiUrl))
-                    }
+                    CourseDetailsWebViewScreen(
+                        html = uiState.syllabus,
+                        isRefreshing = uiState.isRefreshing,
+                        studentColor = uiState.studentColor,
+                        onRefresh = {
+                            actionHandler(CourseDetailsAction.RefreshCourse)
+                        },
+                        applyOnWebView = applyOnWebView,
+                        onLtiButtonPressed = {
+                            actionHandler(CourseDetailsAction.OnLtiClicked(it))
+                        }
+                    )
                 }
             }
 
@@ -147,6 +187,12 @@ private fun CourseDetailsScreenContent(
 
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.testTag("snackbarHost")
+            )
+        },
         topBar = {
             CanvasThemedAppBar(
                 title = uiState.courseName,
@@ -154,24 +200,7 @@ private fun CourseDetailsScreenContent(
                     navigationActionClick()
                 },
                 backgroundColor = Color(uiState.studentColor),
-                contentColor = colorResource(id = R.color.textLightest),
-                actions = {
-                    if (uiState.tabs.size > 1) {
-                        IconButton(
-                            onClick = {
-                                actionHandler(CourseDetailsAction.Refresh)
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_refresh),
-                                tint = colorResource(id = R.color.textLightest),
-                                contentDescription = stringResource(
-                                    id = R.string.a11y_refresh
-                                )
-                            )
-                        }
-                    }
-                }
+                contentColor = colorResource(id = R.color.textLightest)
             )
         },
         content = { padding ->

@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
 import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
-import com.instructure.loginapi.login.view.CanvasLoadingView
+import com.instructure.pandautils.views.CanvasLoadingView
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.utils.Utils
 import javax.inject.Inject

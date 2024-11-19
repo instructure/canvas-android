@@ -14,9 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.lti
+package com.instructure.pandautils.features.lti
 
 sealed class LtiLaunchAction {
     data class LaunchCustomTab(val url: String) : LtiLaunchAction()
+    data class LoadLtiWebView(val url: String) : LtiLaunchAction()
     data object ShowError : LtiLaunchAction()
 }

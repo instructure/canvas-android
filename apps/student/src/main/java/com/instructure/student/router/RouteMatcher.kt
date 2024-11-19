@@ -18,6 +18,7 @@ package com.instructure.student.router
 
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -53,6 +54,8 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.InterwebsToApplication
@@ -102,6 +105,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     var offlineDb: OfflineDatabase? = null
     var networkStateProvider: NetworkStateProvider? = null
+    var enabledTabs: EnabledTabs? = null
 
     init {
         initRoutes()
@@ -509,6 +513,14 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     fun route(activity: FragmentActivity, route: Route?) {
+        if (enabledTabs?.isPathTabNotEnabled(route).orDefault()) {
+            if (activity is InterwebsToApplication) {
+                val intent = Intent(activity, NavigationActivity.startActivityClass)
+                activity.startActivity(intent)
+            }
+            activity.toast(R.string.route_not_available)
+            return
+        }
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
                 // No route, no problem
@@ -710,7 +722,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 if (networkStateProvider?.isOnline() == true) {
                     openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
                 } else {
-                    openLocalMedia(activity, fileFolder.contentType, fileFolder.url, fileFolder.displayName, route.canvasContext!!)
+                    openLocalMedia(activity, fileFolder.contentType, fileFolder.url, fileFolder.displayName, fileID, route.canvasContext!!)
                 }
             }
         } catch {
@@ -741,7 +753,7 @@ object RouteMatcher : BaseRouteMatcher() {
             }
         } else {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename, route.arguments)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename, fileId, route.arguments)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
                 LoaderManager.getInstance(
                     activity
@@ -750,11 +762,11 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    private fun openLocalMedia(activity: FragmentActivity?, mime: String?, path: String?, filename: String?, canvasContext: CanvasContext) {
+    private fun openLocalMedia(activity: FragmentActivity?, mime: String?, path: String?, filename: String?, fileId: String?, canvasContext: CanvasContext) {
         val owner = activity ?: return
         onMainThread {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, path, filename, false)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, path, filename, fileId, false)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
                 LoaderManager.getInstance(owner),
                 openMediaBundle,

@@ -34,6 +34,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -112,7 +113,7 @@ class CourseDetailsFragment : BaseCanvasFragment() {
             }
 
             is CourseDetailsViewModelAction.OpenLtiScreen -> {
-                navigation.navigate(activity, navigation.ltiLaunchRoute(action.url, ""))
+                navigation.navigate(activity, navigation.ltiLaunchRoute(action.url, getString(R.string.utils_externalToolTitle), sessionlessLaunch = true))
             }
         }
     }

@@ -26,7 +26,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.InboxManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
@@ -39,7 +43,20 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_CONVERSATION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ConversationUpdatedEvent
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ToolbarColorizeHelper
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.adapter.InboxConversationAdapter
 import com.instructure.student.databinding.FragmentInboxConversationBinding
@@ -113,7 +130,7 @@ class InboxConversationFragment : ParentFragment() {
             when (action) {
                 AttachmentView.AttachmentAction.REMOVE -> Unit // Do nothing
 
-                AttachmentView.AttachmentAction.PREVIEW -> openMedia(attachment.contentType, attachment.url, attachment.filename, ApiPrefs.user!!)
+                AttachmentView.AttachmentAction.PREVIEW -> openMedia(attachment.contentType, attachment.url, attachment.filename, attachment.id.toString(), ApiPrefs.user!!)
 
                 AttachmentView.AttachmentAction.DOWNLOAD -> {
                     if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {

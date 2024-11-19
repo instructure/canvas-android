@@ -147,7 +147,7 @@ open class InternalWebviewFragment : ParentFragment() {
         canvasWebViewWrapper.webView.canvasWebViewClientCallback =
             object : CanvasWebView.CanvasWebViewClientCallback {
                 override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                    openMedia(canvasContext, url, filename)
+                    openMedia(canvasContext, url, filename, null)
                 }
 
                 override fun onPageFinishedCallback(webView: WebView, url: String) {

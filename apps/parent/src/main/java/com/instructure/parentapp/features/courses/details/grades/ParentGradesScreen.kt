@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.features.courses.details
+package com.instructure.parentapp.features.courses.details.grades
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +23,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.instructure.pandautils.features.grades.GradesAction
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
 import com.instructure.pandautils.features.grades.GradesViewModelAction
@@ -31,8 +30,7 @@ import com.instructure.pandautils.features.grades.GradesViewModelAction
 
 @Composable
 internal fun ParentGradesScreen(
-    actionHandler: (CourseDetailsAction) -> Unit,
-    forceRefresh: Boolean
+    navigateToAssignmentDetails: (Long, Long) -> Unit
 ) {
     val gradesViewModel: GradesViewModel = viewModel()
     val gradeUiState by remember { gradesViewModel.uiState }.collectAsState()
@@ -41,16 +39,11 @@ internal fun ParentGradesScreen(
         events.collect { action ->
             when (action) {
                 is GradesViewModelAction.NavigateToAssignmentDetails -> {
-                    actionHandler(CourseDetailsAction.NavigateToAssignmentDetails(action.courseId, action.assignmentId))
+                    navigateToAssignmentDetails(action.courseId, action.assignmentId)
                 }
             }
         }
     }
 
-    if (forceRefresh) {
-        gradesViewModel.handleAction(GradesAction.Refresh(true))
-        actionHandler(CourseDetailsAction.GradesRefreshed)
-    } else {
-        GradesScreen(gradeUiState, gradesViewModel::handleAction)
-    }
+    GradesScreen(gradeUiState, gradesViewModel::handleAction)
 }

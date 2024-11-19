@@ -66,6 +66,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.DiscussionEntryEvent
 import com.instructure.pandautils.utils.LongArg
@@ -102,7 +103,6 @@ import com.instructure.student.features.modules.progression.CourseModuleProgress
 import com.instructure.student.fragment.DiscussionsReplyFragment
 import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.InternalWebviewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
@@ -259,7 +259,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         // Show attachment
         val attachment = remoteFile.mapToAttachment()
-        openMedia(attachment.contentType, attachment.url, attachment.filename, canvasContext, localFile = attachment.isLocalFile)
+        openMedia(attachment.contentType, attachment.url, attachment.filename, attachment.id.toString(), canvasContext, localFile = attachment.isLocalFile)
     }
 
     private fun showReplyView(discussionEntryId: Long) {
@@ -435,7 +435,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             override fun canRouteInternallyDelegate(url: String): Boolean = true
 
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                openMedia(canvasContext, url, filename)
+                openMedia(canvasContext, url, filename, null)
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) = Unit
@@ -784,7 +784,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
             if (view != null) loadHTMLTopic(it, discussionTopicHeader.title)
-        }, onLtiButtonPressed = { LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it) })
+        }, onLtiButtonPressed = {
+            RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
+        })
 
         attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())
         attachmentIcon.onClick {
@@ -807,7 +809,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, { formattedHtml ->
             discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), formattedHtml, "text/html", "UTF-8", null)
-        }, onLtiButtonPressed = { LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it) })
+        }, onLtiButtonPressed = { RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it)) })
 
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)

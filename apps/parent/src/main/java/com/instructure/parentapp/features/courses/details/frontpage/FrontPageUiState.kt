@@ -15,13 +15,24 @@
  *
  */
 
-package com.instructure.parentapp.features.courses.details
+package com.instructure.parentapp.features.courses.details.frontpage
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import android.graphics.Color
+import androidx.annotation.ColorInt
 
 
-@Composable
-internal fun FrontPageScreen() {
-    Text(text = "Front Page")
+data class FrontPageUiState(
+    @ColorInt val studentColor: Int = Color.BLACK,
+    val isLoading: Boolean = true,
+    val isError: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val htmlContent: String = ""
+)
+
+sealed class FrontPageAction {
+    data object Refresh : FrontPageAction()
+}
+
+sealed class FrontPageViewModelAction {
+    data class ShowSnackbar(val message: String) : FrontPageViewModelAction()
 }

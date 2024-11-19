@@ -40,6 +40,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -47,7 +48,7 @@ import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
+import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
@@ -70,6 +71,9 @@ class InterwebsToApplication : BaseCanvasActivity() {
 
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
+    lateinit var enabledTabs: EnabledTabs
 
     private var loadingJob: Job? = null
 
@@ -100,6 +104,9 @@ class InterwebsToApplication : BaseCanvasActivity() {
     private fun loadRoute(data: Uri, url: String) {
         loadingJob = tryWeave {
             val host = data.host.orEmpty() // example: "mobiledev.instructure.com"
+
+            RouteMatcher.enabledTabs = enabledTabs
+            enabledTabs.initTabs()
 
             // Do some logging
             LoggingUtility.log(Log.WARN, data.toString())
@@ -200,6 +207,7 @@ class InterwebsToApplication : BaseCanvasActivity() {
                 // Allow the UI to show
                 delay(700)
                 RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
+                finish()
             }
 
         } catch {

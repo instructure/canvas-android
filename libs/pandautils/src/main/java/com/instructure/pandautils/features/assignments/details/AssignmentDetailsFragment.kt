@@ -218,7 +218,15 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                 }
             }
             is AssignmentDetailAction.NavigateToLtiLaunchScreen -> {
-                assignmentDetailsRouter.navigateToLtiLaunchScreen(requireActivity(), canvasContext,  action.ltiTool?.url.orEmpty(), action.title, isAssignmentLTI = true, ltiTool = action.ltiTool)
+                assignmentDetailsRouter.navigateToLtiLaunchScreen(
+                    requireActivity(),
+                    canvasContext,
+                    action.ltiTool?.url.orEmpty(),
+                    action.title,
+                    isAssignmentLTI = true,
+                    ltiTool = action.ltiTool,
+                    openInternally = action.openInternally
+                )
             }
             is AssignmentDetailAction.ShowMediaDialog -> {
                 assignmentDetailsBehaviour.showMediaDialog(
