@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocusListener
 import com.instructure.pandautils.analytics.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
+import com.instructure.pandautils.utils.AppType
 
 class PageViewFragmentDelegate<T>(
     private val fragment: T
@@ -40,13 +41,13 @@ class PageViewFragmentDelegate<T>(
 
     fun onAttach(context: Context) {
         visibilityTracker.addCustomConditions(fragment.beforePageViewPrerequisites())
-        if (AppConfigProvider.appConfig?.appName == "teacher") {
+        if (AppConfigProvider.appConfig?.appType == AppType.TEACHER) {
             ScreenViewAnnotationProcessor.processScreenView(fragment::class.java)
         }
     }
 
     fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (AppConfigProvider.appConfig?.appName == "student" && fragment.isAdded && fragment.isVisible && fragment.userVisibleHint) {
+        if (AppConfigProvider.appConfig?.appType == AppType.STUDENT && fragment.isAdded && fragment.isVisible && fragment.userVisibleHint) {
             ScreenViewAnnotationProcessor.processScreenView(fragment::class.java)
         }
 

@@ -36,7 +36,7 @@ abstract class SyncPresenter<
     var viewCallback: VIEW? = null
         private set
 
-    override fun onViewAttached(view: VIEW): com.instructure.pandautils.blueprint.Presenter<VIEW> {
+    override fun onViewAttached(view: VIEW): Presenter<VIEW> {
         viewCallback = view
         return this
     }

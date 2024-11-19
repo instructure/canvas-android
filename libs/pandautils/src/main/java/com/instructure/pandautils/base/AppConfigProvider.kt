@@ -16,9 +16,10 @@
 package com.instructure.pandautils.base
 
 import android.app.Activity
+import com.instructure.pandautils.utils.AppType
 
 data class AppConfig(
-    val appName: String,
+    val appType: AppType,
     val startingActivityClass: Class<out Activity>
 )
 

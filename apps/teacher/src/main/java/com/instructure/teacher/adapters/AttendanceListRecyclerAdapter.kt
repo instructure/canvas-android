@@ -30,7 +30,7 @@ import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class AttendanceListRecyclerAdapter(
     mContext: Context,
-    presenter: com.instructure.pandautils.blueprint.SyncPresenter<Attendance, AttendanceListView>,
+    presenter: SyncPresenter<Attendance, AttendanceListView>,
     private val mCallback: AttendanceToFragmentCallback<Attendance>
 ) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder, AttendanceListView>(mContext, presenter) {
 

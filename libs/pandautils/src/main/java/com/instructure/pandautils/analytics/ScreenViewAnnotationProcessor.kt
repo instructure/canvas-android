@@ -7,7 +7,7 @@ object ScreenViewAnnotationProcessor {
 
     fun processScreenView(javaClass: Class<*>) {
         javaClass.getAnnotation(ScreenView::class.java)?.let { annotation ->
-            val fullEvent = "${AppConfigProvider.appConfig?.appName}_screen_view_${annotation.screenName}"
+            val fullEvent = "${AppConfigProvider.appConfig?.appType?.analyticsName}_screen_view_${annotation.screenName}"
             Analytics.logEvent(fullEvent)
         }
     }

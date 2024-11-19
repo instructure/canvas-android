@@ -34,6 +34,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.base.AppConfig
 import com.instructure.pandautils.base.AppConfigProvider
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -51,7 +52,7 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
 
     override fun onCreate() {
         super.onCreate()
-        AppConfigProvider.appConfig = AppConfig("teacher", InitActivity::class.java)
+        AppConfigProvider.appConfig = AppConfig(AppType.TEACHER, InitActivity::class.java)
 
         FileCache.versionCode = BuildConfig.VERSION_CODE
 

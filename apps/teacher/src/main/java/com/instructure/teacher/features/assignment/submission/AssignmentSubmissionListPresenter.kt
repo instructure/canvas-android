@@ -39,7 +39,7 @@ class AssignmentSubmissionListPresenter(
     val assignment: Assignment,
     private var filter: SubmissionListFilter,
     private val assignmentSubmissionRepository: AssignmentSubmissionRepository
-) : com.instructure.pandautils.blueprint.SyncPresenter<GradeableStudentSubmission, AssignmentSubmissionListView>(GradeableStudentSubmission::class.java) {
+) : SyncPresenter<GradeableStudentSubmission, AssignmentSubmissionListView>(GradeableStudentSubmission::class.java) {
 
     private var apiCalls: Job? = null
 

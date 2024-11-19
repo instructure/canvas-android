@@ -34,7 +34,7 @@ import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 abstract class BaseSyncFragment<
         MODEL : CanvasComparable<*>,
-        PRESENTER : com.instructure.pandautils.blueprint.SyncPresenter<MODEL, VIEW>,
+        PRESENTER : SyncPresenter<MODEL, VIEW>,
         VIEW : SyncManager<MODEL>,
         HOLDER : RecyclerView.ViewHolder,
         ADAPTER : SyncRecyclerAdapter<MODEL, HOLDER, VIEW>>

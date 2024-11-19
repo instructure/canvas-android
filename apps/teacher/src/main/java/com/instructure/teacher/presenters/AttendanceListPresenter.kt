@@ -39,7 +39,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class AttendanceListPresenter(private val mCanvasContext: CanvasContext, private val mTab: Tab) :
-        com.instructure.pandautils.blueprint.SyncPresenter<Attendance, AttendanceListView>(Attendance::class.java) {
+        SyncPresenter<Attendance, AttendanceListView>(Attendance::class.java) {
 
     private var mToken: String? = null
     private var mCookie: String? = null

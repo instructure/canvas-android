@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.base.AppConfig
 import com.instructure.pandautils.base.AppConfigProvider
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.BuildConfig
@@ -39,7 +40,7 @@ abstract class BaseAppManager : AppManager() {
 
     override fun onCreate() {
         super.onCreate()
-        AppConfigProvider.appConfig = AppConfig("parent", MainActivity::class.java)
+        AppConfigProvider.appConfig = AppConfig(AppType.PARENT, MainActivity::class.java)
 
         val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)

@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.pandautils.base.AppConfig
 import com.instructure.pandautils.base.AppConfigProvider
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.BuildConfig
@@ -48,7 +49,7 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
 
     override fun onCreate() {
         super.onCreate()
-        AppConfigProvider.appConfig = AppConfig("student", NavigationActivity::class.java)
+        AppConfigProvider.appConfig = AppConfig(AppType.STUDENT, NavigationActivity::class.java)
 
         FileCache.versionCode = BuildConfig.VERSION_CODE
 
