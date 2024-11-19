@@ -41,6 +41,7 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
@@ -88,6 +89,7 @@ class AssignmentDetailsViewModelTest {
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
     private val colorProvider: AssignmentDetailsColorProvider = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val reminderManager: ReminderManager = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -124,7 +126,8 @@ class AssignmentDetailsViewModelTest {
         apiPrefs,
         submissionHandler,
         alarmScheduler,
-        colorProvider
+        colorProvider,
+        reminderManager
     )
 
     @Test
@@ -722,36 +725,6 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
 
         assertFalse(viewModel.data.value?.submitVisible!!)
-    }
-
-    @Test
-    fun `Reminder section is visible if there's no future deadline`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-
-        val assignment = Assignment(name = "Test", submissionTypesRaw = listOf("online_text_entry"))
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-
-        val viewModel = getViewModel()
-
-        assertTrue(viewModel.data.value?.showReminders!!)
-    }
-
-    @Test
-    fun `Reminder section visible if there's a future deadline`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-
-        val assignment = Assignment(
-            name = "Test",
-            submissionTypesRaw = listOf("online_text_entry"),
-            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
-        )
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-
-        val viewModel = getViewModel()
-
-        assertTrue(viewModel.data.value?.showReminders!!)
     }
 
     @Test
