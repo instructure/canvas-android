@@ -49,6 +49,7 @@ class SummaryViewModel @Inject constructor(
     }
 
     private fun loadSummary(forceRefresh: Boolean) {
+        _uiState.update { it.copy(state = ScreenState.Loading) }
         viewModelScope.tryLaunch {
             val course = repository.getCourse(courseId)
             val summary = repository.getCalendarEvents(course.contextId, forceRefresh)
