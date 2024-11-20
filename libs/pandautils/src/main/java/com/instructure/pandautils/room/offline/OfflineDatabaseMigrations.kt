@@ -104,5 +104,9 @@ val offlineDatabaseMigrations = arrayOf(
                     "`fileSize` INTEGER NOT NULL," +
                     "`progressState` TEXT NOT NULL)"
         )
+    },
+    createMigration(3, 4) { database ->
+        database.execSQL("ALTER TABLE CourseEntity ADD COLUMN pointsBasedGradingScheme INTEGER NOT NULL DEFAULT 0")
+        database.execSQL("ALTER TABLE CourseEntity ADD COLUMN scalingFactor REAL NOT NULL DEFAULT 1.0")
     }
 )
