@@ -17,11 +17,120 @@
 
 package com.instructure.parentapp.features.courses.details.summary
 
+import androidx.annotation.ColorInt
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.compose.composables.EmptyContent
+import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.utils.getDisplayDate
+import com.instructure.pandautils.utils.iconRes
+import com.instructure.parentapp.R
 
 @Composable
 internal fun SummaryScreen() {
-    Text(text = "Summary")
+    val summaryViewModel: SummaryViewModel = viewModel()
+    val uiState by summaryViewModel.uiState.collectAsState()
+
+    when(uiState.state) {
+        is ScreenState.Loading -> {
+            SummaryLoadingScreen()
+        }
+        is ScreenState.Error -> {
+            SummaryErrorScreen()
+        }
+        is ScreenState.Empty -> {
+            SummaryEmptyScreen()
+        }
+        is ScreenState.Content -> {
+            SummaryContentScreen(uiState.items, uiState.courseColor)
+        }
+    }
+}
+
+@Composable
+private fun SummaryLoadingScreen() {
+    Loading()
+}
+
+@Composable
+private fun SummaryErrorScreen() {
+    ErrorContent(errorMessage = stringResource(R.string.failed_to_load_summary))
+}
+
+@Composable
+private fun SummaryEmptyScreen() {
+    EmptyContent(
+        imageRes = R.drawable.ic_panda_nosyllabus,
+        emptyMessage = stringResource(R.string.no_summary_items_to_display)
+    )
+}
+
+@Composable
+private fun SummaryContentScreen(items: List<ScheduleItem>, @ColorInt courseColor: Int) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        items.forEach {
+            ScheduleItemRow(it, courseColor)
+        }
+    }
+}
+
+@Composable
+private fun ScheduleItemRow(scheduleItem: ScheduleItem, @ColorInt courseColor: Int) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Icon(
+            painter = painterResource(id = scheduleItem.iconRes),
+            contentDescription = "Summary Item Icon",
+            tint = Color(courseColor),
+            modifier = Modifier
+                .padding(8.dp)
+                .size(24.dp)
+        )
+
+        Column {
+            Text(
+                text = scheduleItem.title.orEmpty(),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest),
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+            )
+
+            Text(
+                text = scheduleItem.getDisplayDate(context = LocalContext.current),
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.textDark),
+                modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+            )
+        }
+    }
 }

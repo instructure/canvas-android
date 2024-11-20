@@ -125,6 +125,7 @@ class CourseDetailsViewModel @Inject constructor(
                 it.copy(
                     isRefreshing = false,
                     courseName = course.name,
+                    courseContextId = course.contextId,
                     syllabus = course.syllabusBody.orEmpty(),
                 )
             }

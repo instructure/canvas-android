@@ -26,6 +26,7 @@ import com.instructure.parentapp.R
 
 data class CourseDetailsUiState(
     val courseName: String = "",
+    val courseContextId: String = "",
     @ColorInt val studentColor: Int = Color.BLACK,
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
