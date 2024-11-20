@@ -31,6 +31,7 @@ class SummaryRepository(
     suspend fun getCourse(id: Long): Course {
         return courseApi.getCourse(id, RestParams()).dataOrThrow
     }
+
     suspend fun getCalendarEvents(contextId: String, forceRefresh: Boolean = false): List<ScheduleItem> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         val assignmentEvents = calendarEventApi.getCalendarEvents(
