@@ -22,7 +22,6 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.features.grades.COURSE_ID_KEY
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +52,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val course = repository.getCourse(courseId)
             val summary = repository.getCalendarEvents(course.contextId, forceRefresh)
-            _uiState.update { it.copy(state = ScreenState.Content, items = summary, courseColor = course.color) }
+            _uiState.update { it.copy(state = ScreenState.Content, items = summary, course = course) }
         }.catch {
             _uiState.update { it.copy(state = ScreenState.Error) }
         }

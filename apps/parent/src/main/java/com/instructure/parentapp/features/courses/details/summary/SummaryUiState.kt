@@ -16,12 +16,12 @@
  */
 package com.instructure.parentapp.features.courses.details.summary
 
-import androidx.annotation.ColorInt
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 
 data class SummaryUiState (
     val state: ScreenState = ScreenState.Loading,
-    @ColorInt val courseColor: Int = 0,
+    val course: Course = Course(),
     val items: List<ScheduleItem> = emptyList()
 )
 

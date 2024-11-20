@@ -17,9 +17,12 @@
 
 package com.instructure.parentapp.features.courses.details.summary
 
-import androidx.annotation.ColorInt
+import android.net.Uri
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,38 +43,56 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.parentapp.R
 
 @Composable
-internal fun SummaryScreen() {
+internal fun SummaryScreen(
+    navigateToAssignmentDetails: (Long, Long) -> Unit,
+    navigateToCalendarEvent: (String, Long, Long) -> Unit,
+) {
     val summaryViewModel: SummaryViewModel = viewModel()
     val uiState by summaryViewModel.uiState.collectAsState()
 
-    when(uiState.state) {
-        is ScreenState.Loading -> {
-            SummaryLoadingScreen()
-        }
-        is ScreenState.Error -> {
-            SummaryErrorScreen()
-        }
-        is ScreenState.Empty -> {
-            SummaryEmptyScreen()
-        }
-        is ScreenState.Content -> {
-            SummaryContentScreen(uiState.items, uiState.courseColor)
+    CanvasTheme {
+        when (uiState.state) {
+            is ScreenState.Loading -> {
+                SummaryLoadingScreen()
+            }
+
+            is ScreenState.Error -> {
+                SummaryErrorScreen()
+            }
+
+            is ScreenState.Empty -> {
+                SummaryEmptyScreen()
+            }
+
+            is ScreenState.Content -> {
+                SummaryContentScreen(uiState.items, uiState.course, navigateToAssignmentDetails, navigateToCalendarEvent)
+            }
         }
     }
 }
 
 @Composable
 private fun SummaryLoadingScreen() {
-    Loading()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Loading()
+    }
 }
 
 @Composable
@@ -88,30 +109,50 @@ private fun SummaryEmptyScreen() {
 }
 
 @Composable
-private fun SummaryContentScreen(items: List<ScheduleItem>, @ColorInt courseColor: Int) {
+private fun SummaryContentScreen(
+    items: List<ScheduleItem>,
+    course: Course,
+    navigateToAssignmentDetails: (Long, Long) -> Unit,
+    navigateToCalendarEvent: (String, Long, Long) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
         items.forEach {
-            ScheduleItemRow(it, courseColor)
+            ScheduleItemRow(it, course, navigateToAssignmentDetails, navigateToCalendarEvent)
         }
     }
 }
 
 @Composable
-private fun ScheduleItemRow(scheduleItem: ScheduleItem, @ColorInt courseColor: Int) {
+private fun ScheduleItemRow(
+    scheduleItem: ScheduleItem,
+    course: Course,
+    navigateToAssignmentDetails: (Long, Long) -> Unit,
+    navigateToCalendarEvent: (String, Long, Long) -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable {
+                if (scheduleItem.type == "event") {
+                    val uri = Uri.parse(scheduleItem.htmlUrl)
+                    val eventId = uri.getQueryParameter("event_id")?.toLongOrNull() ?: 0
+                    navigateToCalendarEvent(course.type.apiString, course.id, eventId)
+                } else if (scheduleItem.assignment != null) {
+                    navigateToAssignmentDetails(scheduleItem.courseId, scheduleItem.assignment?.id ?: 0)
+
+                }
+            }
     ) {
         Icon(
             painter = painterResource(id = scheduleItem.iconRes),
             contentDescription = "Summary Item Icon",
-            tint = Color(courseColor),
+            tint = Color(course.color),
             modifier = Modifier
                 .padding(8.dp)
                 .size(24.dp)
