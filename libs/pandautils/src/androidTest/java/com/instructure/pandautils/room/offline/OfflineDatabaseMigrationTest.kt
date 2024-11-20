@@ -30,7 +30,7 @@ private const val TEST_DB = "migration-test"
 private val ALL_MIGRATIONS = offlineDatabaseMigrations.takeLast(appDatabaseMigrations.size).toTypedArray()
 
 @RunWith(AndroidJUnit4::class)
-class AppDatabaseMigrationTest {
+class OfflineDatabaseMigrationTest {
 
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(

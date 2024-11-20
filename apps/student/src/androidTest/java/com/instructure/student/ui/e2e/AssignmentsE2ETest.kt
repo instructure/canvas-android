@@ -988,9 +988,9 @@ class AssignmentsE2ETest: StudentTest() {
         courseGradesPage.assertTotalGrade(ViewMatchers.withText("49.47%"))
         courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "12/15")
         courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "66.67%")
-        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "11.4/15 (C)")
+        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "11.4/15 C")
         courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
         courseGradesPage.swipeUp()
-        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "3.7/15 (F)")
+        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "3.7/15 F")
     }
 }
