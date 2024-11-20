@@ -25,7 +25,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
@@ -51,6 +50,8 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_GRADES_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.grades.GradeFormatter
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
@@ -67,13 +68,10 @@ import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.databinding.FragmentCourseGradesBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
-import com.instructure.pandautils.features.grades.GradeFormatter
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
@@ -118,48 +116,61 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         allTermsGradingPeriod.title = getString(R.string.allGradingPeriods)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_course_grades, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_course_grades, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lifecycleScope.launch {
-            course = repository.getCourseWithGrade(canvasContext.id, false)
-            recyclerAdapter = GradesListRecyclerAdapter(
-                requireContext(),
-                course,
-                adapterToFragmentCallback,
-                repository,
-                ::onGradingPeriodResponse,
-                adapterToGradesCallback,
-                object : WhatIfDialogStyled.WhatIfDialogCallback {
-                    override fun onClick(assignment: Assignment, position: Int) {
-                        WhatIfDialogStyled.show(parentFragmentManager, assignment, course.color) { whatIf, _ ->
-                            //Create dummy submission for what if grade
-                            //check to see if grade is empty for reset
-                            if (whatIf == null) {
-                                assignment.submission = null
-                                recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission = null
-                            } else {
-                                recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission = Submission(
+        course = canvasContext as Course
+        recyclerAdapter = GradesListRecyclerAdapter(
+            requireContext(),
+            course,
+            adapterToFragmentCallback,
+            repository,
+            ::onGradingPeriodResponse,
+            adapterToGradesCallback,
+            object : WhatIfDialogStyled.WhatIfDialogCallback {
+                override fun onClick(assignment: Assignment, position: Int) {
+                    WhatIfDialogStyled.show(
+                        parentFragmentManager,
+                        assignment,
+                        course.color
+                    ) { whatIf, _ ->
+                        //Create dummy submission for what if grade
+                        //check to see if grade is empty for reset
+                        if (whatIf == null) {
+                            assignment.submission = null
+                            recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission = null
+                        } else {
+                            recyclerAdapter?.assignmentsHash?.get(assignment.id)?.submission =
+                                Submission(
                                     score = whatIf,
                                     grade = whatIf.toString()
                                 )
-                            }
-
-                            //Compute new overall grade
-                            computeGrades(binding.showTotalCheckBox.isChecked, position)
                         }
+
+                        //Compute new overall grade
+                        computeGrades(binding.showTotalCheckBox.isChecked, position)
                     }
                 }
-            )
-            view.let {
-                configureViews(it)
-                recyclerAdapter?.let {recyclerAdapter ->
-                    configureRecyclerView(it, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.gradesEmptyView, R.id.listView)
-                }
-
             }
-        }
+        )
+        view.let {
+            configureViews(it)
+            recyclerAdapter?.let { recyclerAdapter ->
+                configureRecyclerView(
+                    it,
+                    requireContext(),
+                    recyclerAdapter,
+                    R.id.swipeRefreshLayout,
+                    R.id.gradesEmptyView,
+                    R.id.listView
+                )
+            }
 
+        }
     }
 
     override fun onDestroyView() {
@@ -181,14 +192,26 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         super.onConfigurationChanged(newConfig)
         view?.let {
             recyclerAdapter?.let { recyclerAdapter ->
-                configureRecyclerView(it, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.gradesEmptyView, R.id.listView) }
+                configureRecyclerView(
+                    it,
+                    requireContext(),
+                    recyclerAdapter,
+                    R.id.swipeRefreshLayout,
+                    R.id.gradesEmptyView,
+                    R.id.listView
+                )
             }
+        }
     }
 
     private fun configureViews(rootView: View) {
         val appBarLayout = rootView.findViewById<AppBarLayout>(R.id.appbar)
 
-        val lockDrawable = ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_lock, ContextCompat.getColor(requireContext(), R.color.textDarkest))
+        val lockDrawable = ColorKeeper.getColoredDrawable(
+            requireContext(),
+            R.drawable.ic_lock,
+            ContextCompat.getColor(requireContext(), R.color.textDarkest)
+        )
         binding.lockedGradeImage.setImageDrawable(lockDrawable)
 
         setupListeners()
@@ -213,7 +236,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                     !isChecked
                 )
                 txtOverallGrade.text = gradeString
-                txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
+                txtOverallGrade.contentDescription =
+                    getContentDescriptionForMinusGradeString(gradeString, requireContext())
             }
 
             lockGrade(course.hideFinalGrades)
@@ -254,41 +278,56 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         return bd.toDouble()
     }
 
-    private val adapterToGradesCallback = object : GradesListRecyclerAdapter.AdapterToGradesCallback {
-        override fun setTermSpinnerState(isEnabled: Boolean) {
-            if (!isAdded) return
-            binding.termSpinner.isEnabled = isEnabled
-            termAdapter?.let {
-                it.isLoading = !isEnabled
-                it.notifyDataSetChanged()
+    private val adapterToGradesCallback =
+        object : GradesListRecyclerAdapter.AdapterToGradesCallback {
+            override fun setTermSpinnerState(isEnabled: Boolean) {
+                if (!isAdded) return
+                binding.termSpinner.isEnabled = isEnabled
+                termAdapter?.let {
+                    it.isLoading = !isEnabled
+                    it.notifyDataSetChanged()
+                }
+            }
+
+            override fun notifyGradeChanged(
+                course: Course?,
+                courseGrade: CourseGrade?,
+                restrictQuantitativeData: Boolean,
+                gradingScheme: List<GradingSchemeRow>
+            ) {
+                Logger.d("Logging for Grades E2E, current total grade is: ${binding.txtOverallGrade.text}")
+                if (!isAdded) return
+                this@GradesListFragment.restrictQuantitativeData = restrictQuantitativeData
+                this@GradesListFragment.gradingScheme = gradingScheme
+                this@GradesListFragment.courseGrade = courseGrade
+                this@GradesListFragment.course = course ?: canvasContext as Course
+                val gradeString = gradeFormatter.getGradeString(
+                    course,
+                    courseGrade,
+                    !binding.showTotalCheckBox.isChecked
+                )
+                Logger.d("Logging for Grades E2E, new total grade is: $gradeString")
+                binding.txtOverallGrade.text = gradeString
+                binding.txtOverallGrade.contentDescription =
+                    getContentDescriptionForMinusGradeString(gradeString, requireContext())
+                lockGrade(course?.hideFinalGrades == true || courseGrade?.isLocked == true)
+            }
+
+            // showWhatIfCheckBox is accessed a little too early when this fragment is loaded, so we add an elvis operator here
+            override val isEdit: Boolean get() = binding.showWhatIfCheckBox.isChecked
+
+            override fun setIsWhatIfGrading(isWhatIfGrading: Boolean) {
+                binding.whatIfView.setVisible(isWhatIfGrading)
+                this@GradesListFragment.isWhatIfGrading = isWhatIfGrading
             }
         }
 
-        override fun notifyGradeChanged(courseGrade: CourseGrade?, restrictQuantitativeData: Boolean, gradingScheme: List<GradingSchemeRow>) {
-            Logger.d("Logging for Grades E2E, current total grade is: ${binding.txtOverallGrade.text}")
-            if (!isAdded) return
-            this@GradesListFragment.restrictQuantitativeData = restrictQuantitativeData
-            this@GradesListFragment.gradingScheme = gradingScheme
-            this@GradesListFragment.courseGrade = courseGrade
-            val gradeString = gradeFormatter.getGradeString(course, courseGrade, !binding.showTotalCheckBox.isChecked)
-            Logger.d("Logging for Grades E2E, new total grade is: $gradeString")
-            binding.txtOverallGrade.text = gradeString
-            binding.txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
-            lockGrade(course.hideFinalGrades || courseGrade?.isLocked == true)
-        }
-
-        // showWhatIfCheckBox is accessed a little too early when this fragment is loaded, so we add an elvis operator here
-        override val isEdit: Boolean get() = binding.showWhatIfCheckBox.isChecked
-
-        override fun setIsWhatIfGrading(isWhatIfGrading: Boolean) {
-            binding.whatIfView.setVisible(isWhatIfGrading)
-            this@GradesListFragment.isWhatIfGrading = isWhatIfGrading
-        }
-    }
-
     private val adapterToFragmentCallback = object : AdapterToFragmentCallback<Assignment> {
         override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
-            RouteMatcher.route(requireActivity(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+            RouteMatcher.route(
+                requireActivity(),
+                AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id)
+            )
         }
 
         override fun onRefreshFinished() {
@@ -311,7 +350,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             termSpinner.adapter = termAdapter
             termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     // The current item must always be set first
                     recyclerAdapter?.currentGradingPeriod = termAdapter?.getItem(position)
                     if (termAdapter?.getItem(position)?.title == getString(R.string.allGradingPeriods)) {
@@ -393,12 +437,17 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             }
 
             binding.txtOverallGrade.text = if (courseGrade?.hasFinalGradeString() == true) {
-                "$resultStr (${convertPercentScoreToLetterGrade(result.orDefault() / 100.0, course.gradingScheme)})"
+                "$resultStr (${
+                    convertPercentScoreToLetterGrade(
+                        result.orDefault() / 100.0,
+                        course.gradingScheme
+                    )
+                })"
             } else {
                 resultStr
             }
 
-            if(lastPositionChanged >= 0) recyclerAdapter?.notifyItemChanged(lastPositionChanged)
+            if (lastPositionChanged >= 0) recyclerAdapter?.notifyItemChanged(lastPositionChanged)
         }
     }
 
@@ -421,7 +470,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             var totalPoints = 0.0
             val weight = g.groupWeight
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id).takeIf { !it?.omitFromFinalGrade.orDefault() }
+                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id)
+                    .takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
                     earnedPoints += tempSub.score
@@ -456,7 +506,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             val weight = g.groupWeight
             var assignCount = 0
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id).takeIf { !it?.omitFromFinalGrade.orDefault() }
+                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id)
+                    .takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
                     assignCount++ // Determines if a group contains assignments
@@ -505,7 +556,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         var totalPoints = 0.0
         for (g in groups) {
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id).takeIf { !it?.omitFromFinalGrade.orDefault() }
+                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id)
+                    .takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
                     earnedPoints += tempSub.score
@@ -539,7 +591,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         var earnedPoints = 0.0
         for (g in groups) {
             for (a in g.assignments) {
-                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id).takeIf { !it?.omitFromFinalGrade.orDefault() }
+                val tempAssignment = recyclerAdapter?.assignmentsHash?.get(a.id)
+                    .takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
                     totalPoints += tempAssignment.pointsPossible
@@ -561,8 +614,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     companion object {
 
-        fun newInstance(route: Route) : GradesListFragment? {
-            return if(validRoute(route)) GradesListFragment().apply {
+        fun newInstance(route: Route): GradesListFragment? {
+            return if (validRoute(route)) GradesListFragment().apply {
                 arguments = route.arguments
                 canvasContext = route.canvasContext!!
             } else null
@@ -573,7 +626,12 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
 
         fun makeRoute(canvasContext: CanvasContext): Route {
-            return Route(null, GradesListFragment::class.java, canvasContext, canvasContext.makeBundle())
+            return Route(
+                null,
+                GradesListFragment::class.java,
+                canvasContext,
+                canvasContext.makeBundle()
+            )
         }
     }
 }
