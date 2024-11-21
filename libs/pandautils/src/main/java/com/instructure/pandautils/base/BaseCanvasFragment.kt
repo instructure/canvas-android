@@ -21,6 +21,10 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 
+/**
+ * Base class for all Canvas Fragments that contains cross-cutting concerns like analytics.
+ * All classes should extend this that would normally extend [Fragment] to ensure that these concerns are handled consistently across the app.
+ */
 open class BaseCanvasFragment : Fragment(), PageViewWindowFocus, PageViewPrerequisites {
 
     private val delegate by lazy { PageViewFragmentDelegate(this) }

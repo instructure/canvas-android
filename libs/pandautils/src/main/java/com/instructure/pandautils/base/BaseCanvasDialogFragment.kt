@@ -22,6 +22,10 @@ import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
+/**
+ * Base class for all Canvas DialogFragments that contains cross-cutting concerns like analytics, locale and masquerading.
+ * All classes should extend this that would normally extend [DialogFragment] to ensure that these concerns are handled consistently across the app.
+ */
 open class BaseCanvasDialogFragment : DialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
 
     override fun onStart() {

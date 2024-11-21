@@ -23,6 +23,10 @@ import com.instructure.pandautils.analytics.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
+/**
+ * Base activity for all Canvas activities that contains cross-cutting concerns like analytics, locale and masquerading.
+ * All activities should extend this class to ensure that these concerns are handled consistently across the app.
+ */
 open class BaseCanvasActivity : AppCompatActivity() {
 
     private val pageViewAnnotationProcessor = PageViewAnnotationProcessor(this::class.java, this)
