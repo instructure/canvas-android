@@ -37,7 +37,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,20 +67,23 @@ fun SearchBar(
         val keyboardController = LocalSoftwareKeyboardController.current
 
         if (expanded) {
-            IconButton(onClick = {
-                expanded = false
-                onExpand(false)
-            }) {
+            IconButton(
+                modifier = Modifier.testTag("closeButton"),
+                onClick = {
+                    expanded = false
+                    onExpand(false)
+                }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
-                    contentDescription = "Close",
+                    contentDescription = stringResource(R.string.a11y_searchBarCloseButton),
                     tint = tintColor
                 )
             }
 
             TextField(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("searchField"),
                 placeholder = { Text(placeholder) },
                 value = query,
                 onValueChange = { query = it },
@@ -114,16 +119,18 @@ fun SearchBar(
                     Icon(
                         modifier = Modifier.height(20.dp),
                         painter = painterResource(hintIcon ?: icon),
-                        contentDescription = "Search"
+                        contentDescription = null
                     )
                 },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
-                        IconButton(onClick = { query = "" }) {
+                        IconButton(
+                            modifier = Modifier.testTag("clearButton"),
+                            onClick = { query = "" }) {
                             Icon(
                                 modifier = Modifier.size(18.dp),
                                 painter = painterResource(R.drawable.ic_close),
-                                contentDescription = "Clear"
+                                contentDescription = stringResource(R.string.a11y_searchBarClearButton)
                             )
                         }
                     }
@@ -131,13 +138,14 @@ fun SearchBar(
             )
         } else {
             IconButton(
+                modifier = Modifier.testTag("searchButton"),
                 onClick = {
                     expanded = true
                     onExpand(true)
                 }) {
                 Icon(
                     painter = painterResource(icon),
-                    contentDescription = "Search",
+                    contentDescription = stringResource(R.string.a11y_searchBarSearchButton),
                     tint = tintColor
                 )
             }

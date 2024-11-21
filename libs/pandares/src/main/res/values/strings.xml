@@ -1902,4 +1902,7 @@
     <string name="courseRefreshFailed">Failed to refresh course</string>
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
     <string name="smartSearchPlaceholder">Search in this course</string>
+    <string name="a11y_searchBarCloseButton">Close search bar</string>
+    <string name="a11y_searchBarClearButton">Clear query</string>
+    <string name="a11y_searchBarSearchButton">Search</string>
 </resources>
