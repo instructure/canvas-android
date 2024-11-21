@@ -27,6 +27,7 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
@@ -59,15 +60,15 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickBeforeReminderOption(text: String) {
-        onView(withText(text)).click()
+        onView(withText(text)).scrollTo().click()
     }
 
     fun clickCustomReminderOption() {
-        onView(withText("Custom")).click()
+        onView(withText("Custom")).scrollTo().click()
     }
 
     fun clickAddReminder() {
-        composeTestRule.onNodeWithContentDescription(reminderAdd).performClick()
+        composeTestRule.onNodeWithContentDescription(reminderAdd).performScrollTo().performClick()
     }
 
     fun assertReminderDisplayedWithText(text: String) {
