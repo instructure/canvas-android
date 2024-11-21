@@ -61,7 +61,6 @@ import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.parentapp.R
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun SummaryScreen(
     navigateToAssignmentDetails: (Long, Long) -> Unit,
@@ -69,60 +68,81 @@ internal fun SummaryScreen(
 ) {
     val summaryViewModel: SummaryViewModel = viewModel()
     val uiState by summaryViewModel.uiState.collectAsState()
-    val pullToRefreshState = rememberPullRefreshState(refreshing = (uiState.state == ScreenState.Loading), onRefresh = {
-        summaryViewModel.refresh()
-    })
 
     CanvasTheme {
-        Box(
+        SummaryContent(
+            uiState = uiState,
+            onRefresh = { summaryViewModel.refresh() },
+            navigateToAssignmentDetails = navigateToAssignmentDetails,
+            navigateToCalendarEvent = navigateToCalendarEvent)
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+internal fun SummaryContent(
+    uiState: SummaryUiState,
+    onRefresh: () -> Unit,
+    navigateToAssignmentDetails: (Long, Long) -> Unit,
+    navigateToCalendarEvent: (String, Long, Long) -> Unit,
+) {
+    val pullToRefreshState = rememberPullRefreshState(refreshing = (uiState.state == ScreenState.Loading), onRefresh = {
+        onRefresh()
+    })
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullToRefreshState)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .pullRefresh(pullToRefreshState)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                when (uiState.state) {
-                    is ScreenState.Loading -> {
-                        SummaryLoadingScreen()
-                    }
+            when (uiState.state) {
+                is ScreenState.Loading -> {
+                    SummaryLoadingScreen()
+                }
 
-                    is ScreenState.Error -> {
-                        SummaryErrorScreen()
-                    }
+                is ScreenState.Error -> {
+                    SummaryErrorScreen(onRefresh)
+                }
 
-                    is ScreenState.Empty -> {
-                        SummaryEmptyScreen()
-                    }
+                is ScreenState.Empty -> {
+                    SummaryEmptyScreen()
+                }
 
-                    is ScreenState.Content -> {
-                        SummaryContentScreen(uiState.items, uiState.course, navigateToAssignmentDetails, navigateToCalendarEvent)
-                    }
+                is ScreenState.Content -> {
+                    SummaryContentScreen(uiState.items, uiState.course, navigateToAssignmentDetails, navigateToCalendarEvent)
                 }
             }
-
-            PullRefreshIndicator(
-                refreshing = (uiState.state == ScreenState.Loading),
-                state = pullToRefreshState,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .testTag("pullRefreshIndicator"),
-            )
         }
+
+        PullRefreshIndicator(
+            refreshing = (uiState.state == ScreenState.Loading),
+            state = pullToRefreshState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .testTag("pullRefreshIndicator"),
+        )
     }
 }
 
 @Composable
 private fun SummaryLoadingScreen() {
-    Loading()
+    Loading(modifier = Modifier.testTag("Loading"))
 }
 
 @Composable
-private fun SummaryErrorScreen() {
-    ErrorContent(errorMessage = stringResource(R.string.failed_to_load_summary))
+private fun SummaryErrorScreen(
+    onRefresh: () -> Unit
+) {
+    ErrorContent(
+        errorMessage = stringResource(R.string.failed_to_load_summary),
+        retryClick = onRefresh,
+        )
 }
 
 @Composable
@@ -142,6 +162,7 @@ private fun SummaryContentScreen(
 ) {
     LazyColumn(
         contentPadding = PaddingValues(bottom = 64.dp),
+        modifier = Modifier.fillMaxSize()
     ) {
         items(items) {
             ScheduleItemRow(it, course, navigateToAssignmentDetails, navigateToCalendarEvent)
@@ -162,13 +183,17 @@ private fun ScheduleItemRow(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                if (scheduleItem.type == "event") {
+                if (scheduleItem.assignment != null) {
+                    navigateToAssignmentDetails(
+                        scheduleItem.courseId,
+                        scheduleItem.assignment?.id ?: 0
+                    )
+                } else {
                     val uri = Uri.parse(scheduleItem.htmlUrl)
-                    val eventId = uri.getQueryParameter("event_id")?.toLongOrNull() ?: 0
-                    navigateToCalendarEvent(course.type.apiString, course.id, eventId)
-                } else if (scheduleItem.assignment != null) {
-                    navigateToAssignmentDetails(scheduleItem.courseId, scheduleItem.assignment?.id ?: 0)
-
+                    val eventId = uri
+                        .getQueryParameter("event_id")
+                        ?.toLongOrNull() ?: 0
+                    navigateToCalendarEvent (course.type.apiString, course.id, eventId)
                 }
             }
     ) {

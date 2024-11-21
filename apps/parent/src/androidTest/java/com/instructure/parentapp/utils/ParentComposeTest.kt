@@ -29,6 +29,7 @@ import com.instructure.parentapp.ui.pages.ManageStudentsPage
 import com.instructure.parentapp.ui.pages.NotAParentPage
 import com.instructure.parentapp.ui.pages.PairingCodePage
 import com.instructure.parentapp.ui.pages.QrPairingPage
+import com.instructure.parentapp.ui.pages.SummaryPage
 import org.junit.Rule
 
 
@@ -46,6 +47,7 @@ abstract class ParentComposeTest : ParentTest() {
     protected val coursesPage = CoursesPage(composeTestRule)
     protected val notAParentPage = NotAParentPage(composeTestRule)
     protected val courseDetailsPage = CourseDetailsPage(composeTestRule)
+    protected val summaryPage = SummaryPage(composeTestRule)
     protected val announcementDetailsPage = AnnouncementDetailsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
