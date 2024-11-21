@@ -628,7 +628,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 when {
                     assignment.dueDate == null -> reminderManager.showCustomReminderDialog(
                         context,
-                        ApiPrefs.user?.id.orDefault(),
+                        apiPrefs.user?.id.orDefault(),
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
@@ -636,7 +636,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     )
                     assignment.dueDate?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
                         context,
-                        ApiPrefs.user?.id.orDefault(),
+                        apiPrefs.user?.id.orDefault(),
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
@@ -644,7 +644,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     )
                     else -> reminderManager.showBeforeDueDateReminderDialog(
                         context,
-                        ApiPrefs.user?.id.orDefault(),
+                        apiPrefs.user?.id.orDefault(),
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),

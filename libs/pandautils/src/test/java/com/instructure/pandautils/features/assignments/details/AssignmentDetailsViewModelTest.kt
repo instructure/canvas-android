@@ -18,6 +18,7 @@
 package com.instructure.pandautils.features.assignments.details
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import android.util.Log
 import android.webkit.MimeTypeMap
@@ -49,6 +50,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -885,4 +887,76 @@ class AssignmentDetailsViewModelTest {
         assert(result)
     }
 
+    @Test
+    fun `Custom DatePicker opens to set reminder if Due Date is null`() {
+        val context: Context = mockk(relaxed = true)
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(id = 1, name = "Assignment 1", htmlUrl = "url1", dueAt = null)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+        viewModel.showCreateReminderDialog(context, 0)
+
+        coVerify(exactly = 1) {
+            reminderManager.showCustomReminderDialog(
+                context,
+                1,
+                assignment.id,
+                assignment.name!!,
+                assignment.htmlUrl!!,
+                assignment.dueDate,
+            )
+        }
+    }
+
+    @Test
+    fun `Custom DatePicker opens to set reminder if Due Date is in past`() {
+        val context: Context = mockk(relaxed = true)
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(id = 1, name = "Assignment 1", htmlUrl = "url1", dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -2) }.time.toApiString())
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+        viewModel.showCreateReminderDialog(context, 0)
+
+        coVerify(exactly = 1) {
+            reminderManager.showCustomReminderDialog(
+                context,
+                1,
+                assignment.id,
+                assignment.name!!,
+                assignment.htmlUrl!!,
+                assignment.dueDate,
+            )
+        }
+    }
+
+    @Test
+    fun `Before due date dialog opens to set reminder if Due Date is in the future`() {
+        val context: Context = mockk(relaxed = true)
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(id = 1, name = "Assignment 1", htmlUrl = "url1", dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString())
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+        viewModel.showCreateReminderDialog(context, 0)
+
+        coVerify(exactly = 1) {
+            reminderManager.showBeforeDueDateReminderDialog(
+                context,
+                1,
+                assignment.id,
+                assignment.name!!,
+                assignment.htmlUrl!!,
+                assignment.dueDate!!,
+                0
+            )
+        }
+    }
 }
