@@ -80,12 +80,12 @@
                             android:ellipsize="end"
                             android:gravity="center"
                             android:maxLines="3"
-                            android:textColor="@color/textLightest"
-                            android:textSize="24sp"
                             android:shadowColor="@color/shadowColor"
                             android:shadowDx="1"
                             android:shadowDy="1"
                             android:shadowRadius="4"
+                            android:textColor="@color/textLightest"
+                            android:textSize="24sp"
                             tools:text="Title of Course" />
 
                         <!-- Subtitle -->
@@ -99,12 +99,12 @@
                             android:gravity="center"
                             android:lines="1"
                             android:maxLines="1"
-                            android:textColor="@color/textLightest"
-                            android:textSize="16sp"
                             android:shadowColor="@color/shadowColor"
                             android:shadowDx="1"
                             android:shadowDy="1"
                             android:shadowRadius="4"
+                            android:textColor="@color/textLightest"
+                            android:textSize="16sp"
                             tools:text="Subtitle" />
 
                     </LinearLayout>
@@ -124,7 +124,8 @@
                         android:id="@+id/searchBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"/>
+                        android:layout_gravity="end"
+                        android:visibility="gone" />
 
                     <include
                         android:id="@+id/courseBrowserHeader"
