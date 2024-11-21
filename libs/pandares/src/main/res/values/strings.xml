@@ -272,7 +272,7 @@
     <string name="discussionUploadDialog">Discussion Upload</string>
     <string name="totalScore">Total:</string>
     <string name="noGradeText">N/A</string>
-    <string name="checkBoxFinalGradeOption">Base on graded assignments</string>
+    <string name="checkBoxFinalGradeOption">Based on graded assignments</string>
     <string name="checkBoxWhatIfGradeOption">Show What-If Score</string>
     <string name="whatIfDialogText">What-If Score</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
