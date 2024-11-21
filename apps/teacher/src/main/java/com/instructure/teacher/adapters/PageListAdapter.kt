@@ -26,7 +26,7 @@ import com.instructure.teacher.databinding.AdapterPageBinding
 import com.instructure.teacher.holders.PageViewHolder
 import com.instructure.teacher.presenters.PageListPresenter
 import com.instructure.teacher.viewinterface.PageListView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class PageListAdapter(
     context: Context,

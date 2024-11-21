@@ -104,7 +104,7 @@ class CreateOrEditPageDetailsFragment : BasePresenterFragment<
 
     @PageViewUrl
     @Suppress("unused")
-    private fun makePageViewUrl(): String {
+    fun makePageViewUrl(): String {
         val url = StringBuilder(ApiPrefs.fullDomain)
         page.let {
             url.append(canvasContext.toAPIString())

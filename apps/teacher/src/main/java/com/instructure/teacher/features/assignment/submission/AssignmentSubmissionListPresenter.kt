@@ -30,7 +30,7 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import kotlinx.coroutines.Job
 import java.util.Locale
 import java.util.Random

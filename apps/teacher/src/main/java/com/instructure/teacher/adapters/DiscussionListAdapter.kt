@@ -31,7 +31,7 @@ import com.instructure.teacher.holders.DiscussionListHolder
 import com.instructure.teacher.holders.EmptyViewHolder
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.viewinterface.DiscussionListView
-import instructure.androidblueprint.SyncExpandableRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncExpandableRecyclerAdapter
 
 class DiscussionListAdapter(
     context: Context,

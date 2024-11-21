@@ -35,7 +35,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -53,6 +52,7 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.pandarecycler.BaseRecyclerAdapter
 import com.instructure.pandarecycler.PandaRecyclerView
 import com.instructure.pandarecycler.interfaces.EmptyViewInterface
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -70,7 +70,7 @@ import com.instructure.student.util.onMainThread
 import java.io.File
 import java.io.FileOutputStream
 
-abstract class ParentFragment : DialogFragment(), FragmentInteractions, NavigationCallbacks {
+abstract class ParentFragment : BaseCanvasDialogFragment(), FragmentInteractions, NavigationCallbacks {
 
     private var openMediaBundle: Bundle? = null
     private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? = null

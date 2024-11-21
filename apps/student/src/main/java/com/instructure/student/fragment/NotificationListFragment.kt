@@ -110,6 +110,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
             = layoutInflater.inflate(R.layout.fragment_list_notification, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         recyclerAdapter?.let {

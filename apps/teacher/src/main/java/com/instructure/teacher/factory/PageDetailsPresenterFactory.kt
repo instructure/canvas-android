@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.teacher.presenters.PageDetailsPresenter
 import com.instructure.teacher.viewinterface.PageDetailsView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class PageDetailsPresenterFactory(val mCanvasContext: CanvasContext, val mPage: Page) : PresenterFactory<PageDetailsView, PageDetailsPresenter> {
     override fun create(): PageDetailsPresenter = PageDetailsPresenter(mCanvasContext, mPage)

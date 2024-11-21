@@ -29,7 +29,7 @@ import com.instructure.teacher.holders.QuizExpandableViewHolder
 import com.instructure.teacher.holders.QuizViewHolder
 import com.instructure.teacher.presenters.QuizListPresenter
 import com.instructure.teacher.viewinterface.QuizListView
-import instructure.androidblueprint.SyncExpandableRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncExpandableRecyclerAdapter
 
 class QuizListAdapter(
     context: Context,

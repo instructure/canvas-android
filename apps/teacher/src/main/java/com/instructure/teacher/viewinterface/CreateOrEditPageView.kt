@@ -18,7 +18,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.teacher.interfaces.RceMediaUploadView
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface CreateOrEditPageView : FragmentViewInterface, RceMediaUploadView {
     fun onSaveStarted()

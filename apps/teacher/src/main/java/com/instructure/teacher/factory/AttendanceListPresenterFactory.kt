@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.presenters.AttendanceListPresenter
 import com.instructure.teacher.viewinterface.AttendanceListView
 
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class AttendanceListPresenterFactory(private val mCanvasContext: CanvasContext, private val mTab: Tab) : PresenterFactory<AttendanceListView, AttendanceListPresenter> {
 

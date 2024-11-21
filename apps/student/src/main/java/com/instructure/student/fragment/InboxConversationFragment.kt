@@ -191,6 +191,7 @@ class InboxConversationFragment : ParentFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         when {
         // Setup from conversation ID

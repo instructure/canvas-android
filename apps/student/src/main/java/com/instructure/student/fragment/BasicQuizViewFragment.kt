@@ -57,7 +57,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     private var apiURL: String? by NullableStringArg()
     private var quiz: Quiz? by NullableParcelableArg()
     @get:PageViewUrlParam("quizId")
-    private var quizId: Long by LongArg()
+    var quizId: Long by LongArg()
 
     override fun title(): String = getString(R.string.quizzes)
 

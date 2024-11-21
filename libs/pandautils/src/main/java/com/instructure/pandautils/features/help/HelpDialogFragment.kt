@@ -23,7 +23,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -40,7 +40,7 @@ import javax.inject.Inject
 @PageView(url = "help")
 @ScreenView(SCREEN_VIEW_HELP)
 @AndroidEntryPoint
-class HelpDialogFragment : DialogFragment() {
+class HelpDialogFragment : BaseCanvasDialogFragment() {
 
     private val viewModel: HelpDialogViewModel by viewModels()
 
@@ -49,7 +49,7 @@ class HelpDialogFragment : DialogFragment() {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "help.instructure.com"
+    fun makePageViewUrl() = "help.instructure.com"
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -51,7 +51,6 @@ import com.instructure.canvasapi2.models.CourseNickname
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
@@ -68,12 +67,15 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -99,8 +101,6 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityInitBinding
 import com.instructure.teacher.databinding.NavigationDrawerBinding
-import com.instructure.pandautils.dialogs.ColorPickerDialog
-import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory

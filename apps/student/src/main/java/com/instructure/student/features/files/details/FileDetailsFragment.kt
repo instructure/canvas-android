@@ -33,7 +33,6 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
@@ -80,7 +79,8 @@ class FileDetailsFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
 
-    private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private var moduleObject by ParcelableArg<ModuleObject>(key = Const.MODULE_OBJECT)
     private var itemId: Long by LongArg(key = Const.ITEM_ID)
@@ -93,14 +93,19 @@ class FileDetailsFragment : ParentFragment() {
         get() = this.getModuleItemId()
 
     @PageViewUrlParam(name = "fileId")
-    private fun getFileIdValue(): Long = fileId
+    fun getFileIdValue(): Long = fileId
 
     @Suppress("unused") // For page view stats
     @PageViewUrlQuery(name = "module_item_id")
-    private fun getModuleIdValue(): Long? = moduleItemId
+    fun getModuleIdValue(): Long? = moduleItemId
 
-    @BeforePageView
-    private fun setPageViewReady() {}
+    private fun setPageViewReady() {
+        completePageViewPrerequisite("pageViewReady")
+    }
+
+    override fun beforePageViewPrerequisites(): List<String> {
+        return listOf("pageViewReady")
+    }
 
     override fun title(): String {
         return if (file != null && file!!.lockInfo == null) file!!.displayName ?: getString(R.string.file) else getString(R.string.file)

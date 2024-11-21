@@ -24,7 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.databinding.FragmentShareExtensionStatusDialogBinding
@@ -35,7 +35,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ShareExtensionStatusDialogFragment : DialogFragment() {
+class ShareExtensionStatusDialogFragment : BaseCanvasDialogFragment() {
 
     private var state: ShareExtensionStatus by SerializableArg(ShareExtensionStatus.SUCCEEDED, KEY_STATUS)
     private var fileUploadType: FileUploadType by SerializableArg(FileUploadType.USER, KEY_FILE_UPLOAD_TYPE)
