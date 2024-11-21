@@ -25,8 +25,8 @@ import android.widget.BaseAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
-import com.instructure.canvasapi2.utils.cleanDisplayName
+import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.utils.cleanDisplayName
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ACCOUNT_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
@@ -50,10 +50,11 @@ class AccountPreferencesFragment : ParentFragment() {
     private val binding by viewBinding(FragmentAccountPreferencesBinding::bind)
 
     private val languages: List<Pair<String, String>> by lazy {
+        val translationArray = BuildConfig.TRANSLATION_TAGS.split(";")
         listOf(
             ApiPrefs.ACCOUNT_LOCALE to "Account Locale",
             ApiPrefs.DEVICE_LOCALE to "Device Locale"
-        ) + LocaleUtils.getSupportedLanguageTags()
+        ) + translationArray
             .map { it to Locale.Builder().setLanguageTag(it).build().cleanDisplayName }
     }
 

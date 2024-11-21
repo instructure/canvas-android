@@ -19,7 +19,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.presenters.QuizListPresenter
 import com.instructure.teacher.viewinterface.QuizListView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class QuizListPresenterFactory(private var mCanvasContext: CanvasContext) : PresenterFactory<QuizListView, QuizListPresenter> {
     override fun create(): QuizListPresenter = QuizListPresenter(mCanvasContext)

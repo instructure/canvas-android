@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.LtiType
@@ -37,7 +37,7 @@ import com.instructure.student.databinding.FragmentLtiSubmissionViewBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType.ExternalToolContent
 import com.instructure.student.router.RouteMatcher
 
-class LtiSubmissionViewFragment : Fragment() {
+class LtiSubmissionViewFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentLtiSubmissionViewBinding::bind)
     private var canvasContext: CanvasContext by ParcelableArg()

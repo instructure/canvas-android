@@ -17,7 +17,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Quiz
-import instructure.androidblueprint.SyncExpandableManager
+import com.instructure.pandautils.blueprint.SyncExpandableManager
 
 interface QuizListView : SyncExpandableManager<String, Quiz> {
     fun displayLoadingError()

@@ -26,7 +26,7 @@ import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.DashboardPresenter
 import com.instructure.teacher.viewinterface.CoursesView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class CoursesAdapter(
     context: Context,

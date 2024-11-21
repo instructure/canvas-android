@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -92,7 +91,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @PageViewUrl
     @Suppress("unused")
-    private fun makePageViewUrl(): String {
+    fun makePageViewUrl(): String {
         val url = StringBuilder(ApiPrefs.fullDomain)
         page.let {
             url.append(canvasContext.toAPIString())
@@ -330,9 +329,13 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         }
     }
 
-    @BeforePageView
     private fun setPageObject(page: Page) {
         this.page = page
+        completePageViewPrerequisite("pageSet")
+    }
+
+    override fun beforePageViewPrerequisites(): List<String> {
+        return listOf("pageSet")
     }
 
     @Suppress("unused")

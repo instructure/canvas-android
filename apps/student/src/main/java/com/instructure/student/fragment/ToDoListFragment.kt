@@ -92,6 +92,7 @@ class ToDoListFragment : ParentFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerViewBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         with (binding.toolbar) {
             inflateMenu(R.menu.fragment_list_todo)

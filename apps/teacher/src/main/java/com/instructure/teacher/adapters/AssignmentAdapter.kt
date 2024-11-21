@@ -31,7 +31,7 @@ import com.instructure.teacher.holders.AssignmentGroupHeaderViewHolder
 import com.instructure.teacher.holders.AssignmentViewHolder
 import com.instructure.teacher.features.assignment.list.AssignmentListPresenter
 import com.instructure.teacher.viewinterface.AssignmentListView
-import instructure.androidblueprint.SyncExpandableRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncExpandableRecyclerAdapter
 
 class AssignmentAdapter(
     context: Context,

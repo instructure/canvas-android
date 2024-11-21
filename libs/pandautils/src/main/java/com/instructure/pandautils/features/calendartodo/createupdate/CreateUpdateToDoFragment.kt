@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.PlannerItem
@@ -45,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class CreateUpdateToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CreateUpdateToDoViewModel by viewModels()
 

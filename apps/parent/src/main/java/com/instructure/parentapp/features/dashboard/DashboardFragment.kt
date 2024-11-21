@@ -28,7 +28,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -74,7 +74,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(), NavigationCallbacks {
+class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private lateinit var binding: FragmentDashboardBinding
 

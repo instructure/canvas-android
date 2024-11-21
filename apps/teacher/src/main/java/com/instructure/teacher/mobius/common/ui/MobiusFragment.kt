@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.viewbinding.ViewBinding
 import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.teacher.mobius.common.ConsumerQueueWrapper
@@ -44,7 +44,7 @@ import com.spotify.mobius.android.runners.MainThreadWorkRunner
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.extensions.LayoutContainer
 
-abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT, BINDING>, VIEW_STATE, BINDING: ViewBinding> : Fragment() {
+abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT, BINDING>, VIEW_STATE, BINDING: ViewBinding> : BaseCanvasFragment() {
     var overrideInitModel: MODEL? = null
 
     var overrideInitViewState: VIEW_STATE? = null

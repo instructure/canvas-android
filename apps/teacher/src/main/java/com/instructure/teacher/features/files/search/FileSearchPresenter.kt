@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.utils.isNotUser
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import kotlinx.coroutines.Job
 
 class FileSearchPresenter(val canvasContext: CanvasContext) :
