@@ -26,9 +26,9 @@ import com.instructure.parentapp.ui.pages.AnnouncementDetailsPage
 import com.instructure.parentapp.ui.pages.CourseDetailsPage
 import com.instructure.parentapp.ui.pages.CoursesPage
 import com.instructure.parentapp.ui.pages.ManageStudentsPage
-import com.instructure.parentapp.ui.pages.NotAParentPage
 import com.instructure.parentapp.ui.pages.PairingCodePage
 import com.instructure.parentapp.ui.pages.QrPairingPage
+import com.instructure.parentapp.ui.pages.compose.NotAParentPage
 import org.junit.Rule
 
 
