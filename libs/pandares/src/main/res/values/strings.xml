@@ -1901,4 +1901,5 @@
     <string name="route_not_available">That page has been disabled for this course</string>
     <string name="courseRefreshFailed">Failed to refresh course</string>
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
+    <string name="smartSearchPlaceholder">Search in this course</string>
 </resources>

@@ -120,6 +120,12 @@
                     app:popupTheme="@style/ToolBarPopupStyle"
                     app:theme="@style/ToolBarStyle">
 
+                    <androidx.compose.ui.platform.ComposeView
+                        android:id="@+id/searchBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"/>
+
                     <include
                         android:id="@+id/courseBrowserHeader"
                         layout="@layout/view_course_browser_header"
