@@ -24,7 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
@@ -35,7 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class ShareExtensionProgressDialogFragment : DialogFragment() {
+class ShareExtensionProgressDialogFragment : BaseCanvasDialogFragment() {
 
     private val viewModel: ShareExtensionProgressDialogViewModel by viewModels()
 

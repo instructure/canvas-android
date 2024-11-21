@@ -21,7 +21,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
@@ -31,7 +31,7 @@ import com.instructure.student.databinding.DialogEditTextBinding
 import java.util.*
 import kotlin.properties.Delegates
 
-class EditTextDialog : AppCompatDialogFragment() {
+class EditTextDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var mEditTextCallback: (String) -> Unit by Delegates.notNull()
     private var mDefaultText by StringArg()

@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.ToDo
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface ToDoView : SyncManager<ToDo> {
     fun onRouteSuccessfully(course: Course, assignment: Assignment, submissions: List<GradeableStudentSubmission>)

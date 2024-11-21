@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -49,7 +49,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.router.RouteMatcher
 
 @OptIn(UnstableApi::class)
-class MediaSubmissionViewFragment : Fragment() {
+class MediaSubmissionViewFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentMediaSubmissionViewBinding::bind)
 

@@ -17,7 +17,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Course
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface CourseSettingsFragmentView : FragmentViewInterface {
     fun showEditCourseNameDialog()

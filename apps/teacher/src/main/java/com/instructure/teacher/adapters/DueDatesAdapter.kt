@@ -25,7 +25,7 @@ import com.instructure.teacher.holders.DueDateViewHolder
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.presenters.DueDatesPresenter
 import com.instructure.teacher.viewinterface.DueDatesView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class DueDatesAdapter(context: Context, val presenter: DueDatesPresenter) :
     SyncRecyclerAdapter<DueDateGroup, DueDateViewHolder, DueDatesView>(context, presenter) {

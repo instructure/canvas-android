@@ -19,7 +19,7 @@ package com.instructure.student.activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_SHORTCUT
@@ -34,7 +34,7 @@ import com.instructure.student.util.Analytics
 import com.instructure.student.util.ShortcutUtils
 
 @ScreenView(SCREEN_VIEW_BOOKMARK_SHORTCUT)
-class BookmarkShortcutActivity : AppCompatActivity() {
+class BookmarkShortcutActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

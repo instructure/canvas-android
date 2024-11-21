@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.webkit.WebView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -50,7 +50,7 @@ import javax.inject.Inject
 @PageView
 @ScreenView(SCREEN_VIEW_K5_HOMEROOM)
 @AndroidEntryPoint
-class HomeroomFragment : Fragment() {
+class HomeroomFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var homeroomRouter: HomeroomRouter
@@ -173,7 +173,7 @@ class HomeroomFragment : Fragment() {
     }
 
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#homeroom"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}#homeroom"
 
     companion object {
         fun newInstance(): HomeroomFragment {

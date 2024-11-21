@@ -20,7 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.managers.CourseManager
@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -49,7 +49,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivitySplashBinding::inflate)
 

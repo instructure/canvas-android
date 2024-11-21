@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
@@ -41,7 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AnnotationSubmissionUploadFragment : Fragment() {
+class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var submissionHelper: SubmissionHelper

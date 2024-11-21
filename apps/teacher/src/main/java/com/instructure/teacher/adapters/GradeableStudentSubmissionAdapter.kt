@@ -26,7 +26,7 @@ import com.instructure.teacher.databinding.AdapterGradeableStudentSubmissionBind
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class GradeableStudentSubmissionAdapter(
     private val mAssignment: Assignment,

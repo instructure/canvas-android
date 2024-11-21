@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -56,7 +56,7 @@ import javax.inject.Inject
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN)
 @AndroidEntryPoint
-class DiscussionDetailsWebViewFragment : Fragment() {
+class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var webViewRouter: WebViewRouter
@@ -64,7 +64,8 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     @Inject
     lateinit var discussionDetailsWebViewFragmentBehavior: DiscussionDetailsWebViewFragmentBehavior
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
 
@@ -73,7 +74,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     private lateinit var binding: FragmentDiscussionDetailsWebViewBinding
 
     @PageViewUrlParam("topicId")
-    private fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
+    fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {

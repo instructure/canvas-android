@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.teacher.utils.asMediaSubmissionPlaceholder
 import com.instructure.teacher.viewinterface.SpeedGraderFilesView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 
 class SpeedGraderFilesPresenter(private var mSubmission: Submission?) : SyncPresenter<Attachment, SpeedGraderFilesView>(Attachment::class.java) {
 
