@@ -55,6 +55,7 @@ import com.instructure.pandautils.utils.setCourseImage
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
+import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
@@ -257,8 +258,11 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions,
 
             val tabs = repository.getTabs(canvasContext, isRefresh)
 
+            //TODO: Remove the debug flag when the search tab is ready
+            binding.searchBar.setVisible(BuildConfig.IS_DEBUG && tabs.find { it.tabId == Tab.SEARCH_ID } != null)
+
             // Finds the home tab so we can reorder them if necessary
-            val sortedTabs = tabs.toMutableList()
+            val sortedTabs = tabs.filter { it.tabId != Tab.SEARCH_ID }.toMutableList()
             sortedTabs.sortBy { if (TabHelper.isHomeTab(it)) -1 else 1 }
 
             courseBrowserRecyclerView.adapter =
