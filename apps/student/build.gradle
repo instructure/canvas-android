@@ -50,6 +50,7 @@ android {
 
         /* Add private data */
         PrivateData.merge(project, "student")
+        buildConfigField "String", "TRANSLATION_TAGS", "\"${LocaleScanner.getAvailableLanguageTags(project)}\""
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
 
         testBuildType = "debug"
@@ -209,15 +210,7 @@ android {
         javaMaxHeapSize '4g'
     }
 
-    registerTransform(
-            new ProjectTransformer(
-                    android,
-                    new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
-                    new PageViewTransformer(),
-                    new ScreenViewTransformer("student"),
-                    new LocaleTransformer(project)
-            )
-    )
+
 
     compileOptions {
         sourceCompatibility 1.8

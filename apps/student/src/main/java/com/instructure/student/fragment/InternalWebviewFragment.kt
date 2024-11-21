@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -75,6 +76,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     val binding by viewBinding(FragmentWebviewBinding::bind)
 
+    @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(
         default = CanvasContext.emptyUserContext(),
         key = Const.CANVAS_CONTEXT

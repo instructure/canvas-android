@@ -21,7 +21,7 @@ import com.instructure.teacher.features.assignment.submission.AssignmentSubmissi
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class AssignmentSubmissionListPresenterFactory(
     private var assignment: Assignment,

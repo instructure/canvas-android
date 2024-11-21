@@ -35,6 +35,7 @@ import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.composables.CalendarScreen
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterFragment
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
@@ -48,7 +49,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR)
 @PageView(url = "calendar")
-open class BaseCalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+open class BaseCalendarFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CalendarViewModel by viewModels()
 

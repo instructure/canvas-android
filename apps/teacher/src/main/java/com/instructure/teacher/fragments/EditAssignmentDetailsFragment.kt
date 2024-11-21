@@ -50,6 +50,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
@@ -86,7 +87,8 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
     private val binding by viewBinding(FragmentEditAssignmentDetailsBinding::bind)
 
-    private var course: Course by ParcelableArg(Course())
+    @get:PageViewUrlParam("canvasContext")
+    var course: Course by ParcelableArg(Course())
     private var assignment: Assignment by ParcelableArg(key = ASSIGNMENT)
     private var isPublished: Boolean = true
     private var scrollToDates: Boolean by BooleanArg(key = SHOULD_SCROLL_TO_DATES)
@@ -141,7 +143,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

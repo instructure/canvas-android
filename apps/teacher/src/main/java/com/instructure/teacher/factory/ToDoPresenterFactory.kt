@@ -19,7 +19,7 @@ package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.ToDoPresenter
 import com.instructure.teacher.viewinterface.ToDoView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 
 class ToDoPresenterFactory : PresenterFactory<ToDoView, ToDoPresenter> {

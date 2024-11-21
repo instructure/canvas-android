@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TIME_PICKER
 import com.instructure.pandautils.analytics.ScreenView
@@ -33,7 +33,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_TIME_PICKER)
-class TimePickerDialogFragment : AppCompatDialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TimePickerDialogFragment : BaseCanvasAppCompatDialogFragment(), TimePickerDialog.OnTimeSetListener {
 
     var mCallback: (hourOfDay: Int, minute: Int) -> Unit by Delegates.notNull()
     var mDefaultDate by SerializableArg(Date())

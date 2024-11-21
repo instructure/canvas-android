@@ -30,7 +30,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.teacher.viewinterface.DiscussionListView
-import instructure.androidblueprint.SyncExpandablePresenter
+import com.instructure.pandautils.blueprint.SyncExpandablePresenter
 import kotlinx.coroutines.Job
 import retrofit2.Response
 import java.util.*

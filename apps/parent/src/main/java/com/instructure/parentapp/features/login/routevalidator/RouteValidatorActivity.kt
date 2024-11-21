@@ -23,7 +23,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.pandautils.binding.viewBinding
@@ -36,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class RouteValidatorActivity : AppCompatActivity() {
+class RouteValidatorActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityRouteValidatorBinding::inflate)
 

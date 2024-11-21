@@ -22,7 +22,7 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.teacher.databinding.AdapterAnnotationCommentBinding
-import instructure.androidblueprint.ListRecyclerAdapter
+import com.instructure.pandautils.blueprint.ListRecyclerAdapter
 
 class AnnotationCommentListAdapter(
         context: Context,
