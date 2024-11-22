@@ -54,6 +54,8 @@ fun SearchBar(
     onExpand: (Boolean) -> Unit,
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier,
+    searchQuery: String = "",
+    collapsable: Boolean = true,
     @DrawableRes hintIcon: Int? = null
 ) {
     Row(
@@ -61,22 +63,24 @@ fun SearchBar(
             .height(56.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var expanded by remember { mutableStateOf(false) }
-        var query by remember { mutableStateOf("") }
+        var expanded by remember { mutableStateOf(!collapsable) }
+        var query by remember { mutableStateOf(searchQuery) }
         val keyboardController = LocalSoftwareKeyboardController.current
 
         if (expanded) {
-            IconButton(
-                modifier = Modifier.testTag("closeButton"),
-                onClick = {
-                    expanded = false
-                    onExpand(false)
-                }) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_close),
-                    contentDescription = stringResource(R.string.a11y_searchBarCloseButton),
-                    tint = tintColor
-                )
+            if (collapsable) {
+                IconButton(
+                    modifier = Modifier.testTag("closeButton"),
+                    onClick = {
+                        expanded = false
+                        onExpand(false)
+                    }) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.a11y_searchBarCloseButton),
+                        tint = tintColor
+                    )
+                }
             }
 
             TextField(
