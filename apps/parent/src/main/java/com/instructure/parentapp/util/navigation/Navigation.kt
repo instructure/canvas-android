@@ -52,7 +52,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val courseAnnouncementDetails = "$baseUrl/courses/{$COURSE_ID}/discussion_topics/{$announcementId}"
     private val globalAnnouncementDetails = "$baseUrl/account_notifications/{$announcementId}"
 
-    val splash = "$baseUrl/splash"
+    val splash = "$baseUrl/splash/{${Const.QR_CODE_MASQUERADE_ID}}"
+    
     val notAParent = "$baseUrl/not-a-parent"
     val courses = "$baseUrl/courses"
     val calendar = "$baseUrl/calendar"
@@ -83,6 +84,7 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}/{${LtiLaunchFragment.SESSION_LESS_LAUNCH}}"
 
+    private fun splashRoute(qrCodeMasqueradeId: Long) = "$baseUrl/splash/$qrCodeMasqueradeId"
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
 
     fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
@@ -99,11 +101,16 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     fun ltiLaunchRoute(url: String, title: String, sessionlessLaunch: Boolean) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}/$sessionlessLaunch"
 
-    fun crateMainNavGraph(navController: NavController): NavGraph {
+    fun crateMainNavGraph(navController: NavController, qrCodeMasqueradeId: Long): NavGraph {
         return navController.createGraph(
-            splash
+            splashRoute(qrCodeMasqueradeId)
         ) {
-            fragment<SplashFragment>(splash)
+            fragment<SplashFragment>(splash) {
+                argument(Const.QR_CODE_MASQUERADE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+            }
             fragment<NotAParentFragment>(notAParent)
             fragment<DashboardFragment>(courses) {
                 deepLink {

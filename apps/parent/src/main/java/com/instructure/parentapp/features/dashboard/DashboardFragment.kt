@@ -41,6 +41,9 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
@@ -51,6 +54,7 @@ import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -63,6 +67,7 @@ import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
 import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
+import com.instructure.parentapp.features.main.MainActivity
 import com.instructure.parentapp.util.ParentLogoutTask
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -286,9 +291,17 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
                 R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
                 R.id.switch_users -> menuItemSelected { onSwitchUsers() }
+                R.id.act_as_user -> menuItemSelected { MasqueradingDialog.show(requireActivity().supportFragmentManager, ApiPrefs.domain, null, !isTablet) }
+                R.id.stop_act_as_user -> menuItemSelected { MasqueradeHelper.stopMasquerading(MainActivity::class.java) }
                 else -> false
             }
         }
+
+        val actAsUserItem = binding.navView.menu.findItem(R.id.act_as_user)
+        actAsUserItem.isVisible = !ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true
+
+        val stopActAsUserItem = binding.navView.menu.findItem(R.id.stop_act_as_user)
+        stopActAsUserItem.isVisible = ApiPrefs.isMasquerading
     }
 
     private fun menuItemSelected(action: () -> Unit): Boolean {

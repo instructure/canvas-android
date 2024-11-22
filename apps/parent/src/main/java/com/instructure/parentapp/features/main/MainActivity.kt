@@ -27,6 +27,9 @@ import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -44,7 +47,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated {
+class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, MasqueradingDialog.OnMasqueradingSet {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
@@ -61,6 +64,15 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated {
         setContentView(binding.root)
         setupTheme()
         setupNavigation()
+        handleQrMasquerading()
+    }
+
+    private fun handleQrMasquerading() {
+        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        if (masqueradingUserId != 0L) {
+            MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, MainActivity::class.java)
+            finish()
+        }
     }
 
     private fun setupTheme() {
@@ -80,7 +92,8 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        navController.graph = navigation.crateMainNavGraph(navController)
+        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        navController.graph = navigation.crateMainNavGraph(navController, masqueradingUserId)
 
         navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(SplashFragment.INITIAL_DATA_LOADED_KEY)?.observe(this) {
             // If the initial data has been loaded, we can navigate to courses, remove splash from backstack
@@ -114,6 +127,14 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated {
         lifecycleScope.launch {
             inboxCountUpdater.updateShouldRefreshInboxCount(true)
         }
+    }
+
+    override fun onStartMasquerading(domain: String, userId: Long) {
+        MasqueradeHelper.startMasquerading(userId, domain, MainActivity::class.java)
+    }
+
+    override fun onStopMasquerading() {
+        MasqueradeHelper.stopMasquerading(MainActivity::class.java)
     }
 
     companion object {

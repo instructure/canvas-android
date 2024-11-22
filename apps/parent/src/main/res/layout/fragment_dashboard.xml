@@ -210,6 +210,13 @@
 
             </LinearLayout>
 
+            <com.instructure.pandautils.views.EmptyView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/backgroundLightest"
+                app:emptyViewState="@{viewModel.state}" />
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
@@ -228,13 +235,6 @@
                 app:menu="@menu/bottom_nav" />
 
         </LinearLayout>
-
-        <com.instructure.pandautils.views.EmptyView
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/backgroundLightest"
-            app:emptyViewState="@{viewModel.state}" />
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
