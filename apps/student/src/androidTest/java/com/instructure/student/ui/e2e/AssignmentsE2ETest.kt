@@ -234,7 +234,9 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val reminderDateOneWeek = futureDueDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
         reminderPage.clickBeforeReminderOption("1 Week Before")
         reminderPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
+        composeTestRule.waitForIdle()
         checkToastText(R.string.reminderInPast, activityRule.activity)
+        composeTestRule.waitForIdle()
         futureDueDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -251,7 +253,9 @@ class AssignmentsE2ETest: StudentComposeTest() {
         reminderPage.clickBeforeReminderOption("1 Day Before")
 
         Log.d(STEP_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        composeTestRule.waitForIdle()
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+        composeTestRule.waitForIdle()
 
         futureDueDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
 
