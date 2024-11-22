@@ -79,8 +79,8 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.utils.LocaleUtils
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
