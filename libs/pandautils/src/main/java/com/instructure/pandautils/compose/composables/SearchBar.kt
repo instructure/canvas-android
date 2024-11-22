@@ -41,13 +41,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.CanvasTheme
 
 @Composable
 fun SearchBar(
@@ -59,97 +56,95 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     @DrawableRes hintIcon: Int? = null
 ) {
-    CanvasTheme {
-        Row(
-            modifier = modifier
-                .height(56.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            var expanded by remember { mutableStateOf(false) }
-            var query by remember { mutableStateOf("") }
-            val keyboardController = LocalSoftwareKeyboardController.current
+    Row(
+        modifier = modifier
+            .height(56.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        var expanded by remember { mutableStateOf(false) }
+        var query by remember { mutableStateOf("") }
+        val keyboardController = LocalSoftwareKeyboardController.current
 
-            if (expanded) {
-                IconButton(
-                    modifier = Modifier.testTag("closeButton"),
-                    onClick = {
-                        expanded = false
-                        onExpand(false)
-                    }) {
+        if (expanded) {
+            IconButton(
+                modifier = Modifier.testTag("closeButton"),
+                onClick = {
+                    expanded = false
+                    onExpand(false)
+                }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_close),
+                    contentDescription = stringResource(R.string.a11y_searchBarCloseButton),
+                    tint = tintColor
+                )
+            }
+
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("searchField"),
+                placeholder = { Text(placeholder) },
+                value = query,
+                onValueChange = { query = it },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboardController?.hide()
+                        onSearch(query)
+                    }
+                ),
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = tintColor,
+                    cursorColor = tintColor,
+                    focusedLabelColor = tintColor,
+                    leadingIconColor = tintColor,
+                    trailingIconColor = tintColor,
+                    textColor = tintColor,
+                    disabledTextColor = tintColor.copy(alpha = 0.5f),
+                    unfocusedLabelColor = tintColor.copy(alpha = 0.5f),
+                    unfocusedIndicatorColor = tintColor.copy(alpha = 0.5f),
+                    disabledLeadingIconColor = tintColor.copy(alpha = 0.5f),
+                    disabledTrailingIconColor = tintColor.copy(alpha = 0.5f),
+                    placeholderColor = tintColor.copy(alpha = 0.5f),
+                ),
+                leadingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_close),
-                        contentDescription = stringResource(R.string.a11y_searchBarCloseButton),
-                        tint = tintColor
+                        modifier = Modifier.height(20.dp),
+                        painter = painterResource(hintIcon ?: icon),
+                        contentDescription = null
                     )
-                }
-
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("searchField"),
-                    placeholder = { Text(placeholder) },
-                    value = query,
-                    onValueChange = { query = it },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Search
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            keyboardController?.hide()
-                            onSearch(query)
-                        }
-                    ),
-                    textStyle = MaterialTheme.typography.body1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent,
-                        focusedIndicatorColor = tintColor,
-                        cursorColor = tintColor,
-                        focusedLabelColor = tintColor,
-                        leadingIconColor = tintColor,
-                        trailingIconColor = tintColor,
-                        textColor = tintColor,
-                        disabledTextColor = tintColor.copy(alpha = 0.5f),
-                        unfocusedLabelColor = tintColor.copy(alpha = 0.5f),
-                        unfocusedIndicatorColor = tintColor.copy(alpha = 0.5f),
-                        disabledLeadingIconColor = tintColor.copy(alpha = 0.5f),
-                        disabledTrailingIconColor = tintColor.copy(alpha = 0.5f),
-                        placeholderColor = tintColor.copy(alpha = 0.5f),
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            modifier = Modifier.height(20.dp),
-                            painter = painterResource(hintIcon ?: icon),
-                            contentDescription = null
-                        )
-                    },
-                    trailingIcon = {
-                        if (query.isNotEmpty()) {
-                            IconButton(
-                                modifier = Modifier.testTag("clearButton"),
-                                onClick = { query = "" }) {
-                                Icon(
-                                    modifier = Modifier.size(18.dp),
-                                    painter = painterResource(R.drawable.ic_close),
-                                    contentDescription = stringResource(R.string.a11y_searchBarClearButton)
-                                )
-                            }
+                },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(
+                            modifier = Modifier.testTag("clearButton"),
+                            onClick = { query = "" }) {
+                            Icon(
+                                modifier = Modifier.size(18.dp),
+                                painter = painterResource(R.drawable.ic_close),
+                                contentDescription = stringResource(R.string.a11y_searchBarClearButton)
+                            )
                         }
                     }
-                )
-            } else {
-                IconButton(
-                    modifier = Modifier.testTag("searchButton"),
-                    onClick = {
-                        expanded = true
-                        onExpand(true)
-                    }) {
-                    Icon(
-                        painter = painterResource(icon),
-                        contentDescription = stringResource(R.string.a11y_searchBarSearchButton),
-                        tint = tintColor
-                    )
                 }
+            )
+        } else {
+            IconButton(
+                modifier = Modifier.testTag("searchButton"),
+                onClick = {
+                    expanded = true
+                    onExpand(true)
+                }) {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = stringResource(R.string.a11y_searchBarSearchButton),
+                    tint = tintColor
+                )
             }
         }
     }

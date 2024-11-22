@@ -47,6 +47,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.base.BaseCanvasFragment
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
@@ -106,30 +107,32 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
         searchBar.apply {
             setContent {
-                SearchBar(
-                    icon = R.drawable.ic_smart_search,
-                    tintColor = colorResource(R.color.textLightest),
-                    placeholder = stringResource(R.string.smartSearchPlaceholder),
-                    onExpand = { expanded ->
-                        overlayToolbar.background =
-                            if (expanded) ColorDrawable(canvasContext.color) else null
-                        overlayToolbar.navigationIcon =
-                            if (expanded) {
-                                null
-                            } else {
-                                ContextCompat.getDrawable(
-                                    requireContext(),
-                                    R.drawable.ic_back_arrow
-                                )
-                            }
-                        ViewStyler.colorToolbarIconsAndText(
-                            requireActivity(),
-                            overlayToolbar,
-                            requireContext().getColor(R.color.textLightest)
-                        )
-                    },
-                    onSearch = { query -> }
-                )
+                CanvasTheme {
+                    SearchBar(
+                        icon = R.drawable.ic_smart_search,
+                        tintColor = colorResource(R.color.textLightest),
+                        placeholder = stringResource(R.string.smartSearchPlaceholder),
+                        onExpand = { expanded ->
+                            overlayToolbar.background =
+                                if (expanded) ColorDrawable(canvasContext.color) else null
+                            overlayToolbar.navigationIcon =
+                                if (expanded) {
+                                    null
+                                } else {
+                                    ContextCompat.getDrawable(
+                                        requireContext(),
+                                        R.drawable.ic_back_arrow
+                                    )
+                                }
+                            ViewStyler.colorToolbarIconsAndText(
+                                requireActivity(),
+                                overlayToolbar,
+                                requireContext().getColor(R.color.textLightest)
+                            )
+                        },
+                        onSearch = { query -> }
+                    )
+                }
             }
         }
 
