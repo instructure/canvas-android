@@ -27,7 +27,7 @@ val ScheduleItem.iconRes: Int
     get() {
         return when {
             this.type == "event" -> R.drawable.ic_calendar
-            this.assignment?.isLocked.orDefault() -> R.drawable.ic_lock
+            this.assignment?.lockedForUser.orDefault() -> R.drawable.ic_lock
             this.assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_QUIZ).orDefault() -> R.drawable.ic_quiz
             this.assignment?.getSubmissionTypes()?.contains(SubmissionType.DISCUSSION_TOPIC).orDefault() -> R.drawable.ic_discussion
             else -> R.drawable.ic_assignment
