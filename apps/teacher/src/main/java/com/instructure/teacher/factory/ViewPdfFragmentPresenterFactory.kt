@@ -18,7 +18,7 @@ package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
 import com.instructure.teacher.viewinterface.ViewPdfFragmentView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class ViewPdfFragmentPresenterFactory(val pdfUrl : String) : PresenterFactory<ViewPdfFragmentView, ViewPdfFragmentPresenter> {
     override fun create() = ViewPdfFragmentPresenter(pdfUrl)

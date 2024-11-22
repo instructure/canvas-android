@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -45,6 +46,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.compose.composables.SearchBar
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
@@ -75,7 +77,7 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_COURSE_BROWSER)
 @PageView(url = "{canvasContext}")
 @AndroidEntryPoint
-class CourseBrowserFragment : Fragment(), FragmentInteractions,
+class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     AppBarLayout.OnOffsetChangedListener {
 
     @Inject
@@ -85,7 +87,8 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions,
 
     private var apiCalls: Job? = null
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     override val navigation: Navigation?
         get() = if (activity is Navigation) activity as Navigation else null

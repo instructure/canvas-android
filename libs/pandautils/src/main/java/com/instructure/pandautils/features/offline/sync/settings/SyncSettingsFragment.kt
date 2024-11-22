@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -37,7 +38,7 @@ import com.instructure.pandautils.utils.showThemed
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SyncSettingsFragment : Fragment(), FragmentInteractions {
+class SyncSettingsFragment : BaseCanvasFragment(), FragmentInteractions {
 
     private val binding by viewBinding(FragmentSyncSettingsBinding::bind)
 

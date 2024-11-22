@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.teacher.presenters.EditQuizDetailsPresenter
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class EditQuizDetailsPresenterFactory(val quiz: Quiz, val assignment: Assignment, val canvasContext: CanvasContext) : PresenterFactory<EditQuizDetailsView, EditQuizDetailsPresenter> {
     override fun create(): EditQuizDetailsPresenter = EditQuizDetailsPresenter(quiz, assignment, canvasContext)

@@ -16,7 +16,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.StudentContextCardQuery.*
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 
 interface StudentContextView : FragmentViewInterface {

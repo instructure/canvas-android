@@ -19,7 +19,7 @@ package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.DashboardPresenter
 import com.instructure.teacher.viewinterface.CoursesView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class DashboardPresenterFactory : PresenterFactory<CoursesView, DashboardPresenter> {
     override fun create() = DashboardPresenter()

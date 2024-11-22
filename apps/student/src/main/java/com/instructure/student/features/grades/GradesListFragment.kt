@@ -41,6 +41,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
 import com.instructure.canvasapi2.utils.convertPercentToPointBased
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -89,7 +90,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(FragmentCourseGradesBinding::bind)
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private var computeGradesJob: WeaveJob? = null
 
@@ -123,6 +125,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     ): View? = inflater.inflate(R.layout.fragment_course_grades, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         course = canvasContext as Course
         recyclerAdapter = GradesListRecyclerAdapter(
             requireContext(),

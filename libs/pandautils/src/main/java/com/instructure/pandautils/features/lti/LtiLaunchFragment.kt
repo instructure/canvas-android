@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -42,6 +41,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentLtiLaunchBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -69,7 +69,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 @PageView
-class LtiLaunchFragment : Fragment(), NavigationCallbacks {
+class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
 
@@ -88,7 +88,7 @@ class LtiLaunchFragment : Fragment(), NavigationCallbacks {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = ltiTab?.externalUrl ?: (ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools")
+    fun makePageViewUrl() = ltiTab?.externalUrl ?: (ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_lti_launch, container, false)

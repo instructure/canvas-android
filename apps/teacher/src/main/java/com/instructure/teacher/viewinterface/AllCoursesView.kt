@@ -18,6 +18,6 @@ package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Course
 
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface AllCoursesView : SyncManager<Course>

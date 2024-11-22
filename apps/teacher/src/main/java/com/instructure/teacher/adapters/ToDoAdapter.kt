@@ -27,7 +27,7 @@ import com.instructure.teacher.holders.ToDoViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.ToDoPresenter
 import com.instructure.teacher.viewinterface.ToDoView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class ToDoAdapter(
     context: Context,
