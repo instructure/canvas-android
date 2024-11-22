@@ -18,12 +18,9 @@ package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
 import android.util.Log
-import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
-import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -52,7 +49,6 @@ import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.hamcrest.Matchers
 import org.junit.Rule
 import org.junit.Test
 import java.util.Calendar
@@ -62,22 +58,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        extraAccessibilitySupressions = Matchers.allOf(
-            AccessibilityCheckResultUtils.matchesCheck(
-                SpeakableTextPresentCheck::class.java
-            ),
-            AccessibilityCheckResultUtils.matchesViews(
-                ViewMatchers.withParent(
-                    ViewMatchers.withClassName(
-                        Matchers.equalTo(ComposeView::class.java.name)
-                    )
-                )
-            )
-        )
-
-        super.enableAndConfigureAccessibilityChecks()
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @Rule
     @JvmField
