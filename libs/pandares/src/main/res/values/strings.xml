@@ -1905,4 +1905,8 @@
     <string name="masqueradingAs">You are acting as %s</string>
     <string name="stopActingAsTitle">Stop acting as…</string>
     <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>
+    <string name="smartSearchPlaceholder">Search in this course</string>
+    <string name="a11y_searchBarCloseButton">Close search bar</string>
+    <string name="a11y_searchBarClearButton">Clear query</string>
+    <string name="a11y_searchBarSearchButton">Search</string>
 </resources>
