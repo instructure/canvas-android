@@ -27,11 +27,12 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.contrib.PickerActions
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -39,6 +40,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.anything
 import java.util.Calendar
 
 
@@ -64,11 +66,11 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickCustomReminderOption() {
-        onView(withText("Custom")).scrollTo().click()
+        onData(anything()).inRoot(isDialog()).atPosition(6).perform(click())
     }
 
     fun clickAddReminder() {
-        composeTestRule.onNodeWithContentDescription(reminderAdd).performScrollTo().performClick()
+        composeTestRule.onNodeWithContentDescription(reminderAdd).performClick()
     }
 
     fun assertReminderDisplayedWithText(text: String) {
