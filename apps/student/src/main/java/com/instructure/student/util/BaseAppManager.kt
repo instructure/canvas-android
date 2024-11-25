@@ -21,8 +21,6 @@ import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.heapanalytics.android.Heap
-import com.heapanalytics.android.config.Options
 import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -86,10 +84,6 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
         }
 
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)
-
-        val options = Options()
-        options.disableTracking()
-        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
