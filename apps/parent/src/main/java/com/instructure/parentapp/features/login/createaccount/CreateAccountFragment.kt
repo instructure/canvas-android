@@ -22,15 +22,15 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.features.login.SignInActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CreateAccountFragment : Fragment() {
+class CreateAccountFragment : BaseCanvasFragment() {
 
     private val viewModel: CreateAccountViewModel by viewModels()
 

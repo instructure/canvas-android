@@ -18,9 +18,9 @@ package com.instructure.parentapp.features.login.createaccount
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
@@ -32,7 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CreateAccountActivity : AppCompatActivity() {
+class CreateAccountActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityCreateAccountBinding::inflate)
 
