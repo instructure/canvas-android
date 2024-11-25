@@ -18,6 +18,8 @@ package com.instructure.canvas.espresso.common.pages.compose
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -108,5 +110,13 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
 
     fun clickClose() {
         composeTestRule.onNodeWithContentDescription("Close").performClick()
+    }
+
+    fun assertSaveDisabled() {
+        composeTestRule.onNodeWithText("Save").assertIsDisplayed().assertIsNotEnabled()
+    }
+
+    fun assertSaveEnabled() {
+        composeTestRule.onNodeWithText("Save").assertIsDisplayed().assertIsEnabled()
     }
 }

@@ -25,7 +25,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.loginapi.login.R
@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class QrPairingFragment : Fragment() {
+class QrPairingFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var navigation: Navigation

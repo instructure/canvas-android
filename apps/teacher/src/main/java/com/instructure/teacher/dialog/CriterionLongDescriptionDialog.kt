@@ -23,7 +23,7 @@ import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CRITERION_LONG_DESCRIPTION
@@ -38,7 +38,7 @@ import com.instructure.teacher.router.RouteMatcher
 import java.util.*
 
 @ScreenView(SCREEN_VIEW_CRITERION_LONG_DESCRIPTION)
-class CriterionLongDescriptionDialog : DialogFragment() {
+class CriterionLongDescriptionDialog : BaseCanvasDialogFragment() {
 
     var mDescription by StringArg()
     var mLongDescription by StringArg()

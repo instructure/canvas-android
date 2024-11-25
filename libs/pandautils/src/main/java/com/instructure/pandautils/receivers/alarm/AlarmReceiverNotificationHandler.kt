@@ -18,7 +18,7 @@ package com.instructure.pandautils.receivers.alarm
 import android.content.Context
 
 interface AlarmReceiverNotificationHandler {
-    fun showNotification(context: Context, assignmentId: Long, assignmentPath: String, assignmentName: String, dueIn: String)
+    fun showNotification(context: Context, contentId: Long, htmlPath: String, title: String, message: String)
 
     fun createNotificationChannel(context: Context)
 }

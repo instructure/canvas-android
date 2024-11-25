@@ -384,7 +384,6 @@ class SubmissionContentView(
 
             // LTI submission
                 SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
-                        mCourse,
                         submission.previewUrl.validOrNull() ?: mAssignment.url.validOrNull()
                         ?: mAssignment.htmlUrl ?: ""
                 )
@@ -1043,7 +1042,7 @@ class UploadMediaCommentEvent(val file: File, val assignmentId: Long, val course
 sealed class GradeableContent
 object NoSubmissionContent : GradeableContent()
 object NoneContent : GradeableContent()
-class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : GradeableContent()
+class ExternalToolContent(val url: String) : GradeableContent()
 object OnPaperContent : GradeableContent()
 object UnsupportedContent : GradeableContent()
 class OtherAttachmentContent(val attachment: Attachment) : GradeableContent()

@@ -25,7 +25,7 @@ import com.instructure.teacher.databinding.AdapterAttachmentBinding
 import com.instructure.teacher.holders.AttachmentViewHolder
 import com.instructure.teacher.presenters.SpeedGraderFilesPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderFilesView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class AttachmentAdapter(
         private val mContext: Context,

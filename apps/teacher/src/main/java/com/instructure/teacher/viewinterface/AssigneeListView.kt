@@ -18,7 +18,7 @@ package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.teacher.models.AssigneeCategory
-import instructure.androidblueprint.SyncExpandableManager
+import com.instructure.pandautils.blueprint.SyncExpandableManager
 import java.util.ArrayList
 
 interface AssigneeListView : SyncExpandableManager<AssigneeCategory, CanvasComparable<*>> {

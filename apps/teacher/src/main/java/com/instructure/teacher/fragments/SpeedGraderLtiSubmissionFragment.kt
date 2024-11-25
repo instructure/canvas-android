@@ -20,28 +20,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.interactions.router.Route
+import android.webkit.WebView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderLtiSubmissionBinding
-import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.ExternalToolContent
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION)
-class SpeedGraderLtiSubmissionFragment : Fragment() {
+class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentSpeedGraderLtiSubmissionBinding::bind)
 
-    private var mUrl by StringArg()
-    private var mCanvasContext by ParcelableArg<CanvasContext>()
+    private var url by StringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_speed_grader_lti_submission, container, false)
@@ -53,19 +51,30 @@ class SpeedGraderLtiSubmissionFragment : Fragment() {
     }
 
     private fun setupViews() {
-        ViewStyler.themeButton(binding.viewLtiButton)
-        binding.viewLtiButton.onClick {
-            val args = InternalWebViewFragment.makeBundle(mUrl, getString(R.string.canvasAPI_externalTool), shouldAuthenticate = true, shouldRouteInternally = false)
-            RouteMatcher.route(requireActivity(), Route(InternalWebViewFragment::class.java, mCanvasContext, args))
+        binding.webView.enableAlgorithmicDarkening()
+        binding.webView.setZoomSettings(false)
+        binding.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
+
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                if (isAdded) binding.webViewProgress.setVisible()
+            }
+
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                if (isAdded) binding.webViewProgress.setGone()
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean = false
+
+            override fun routeInternallyCallback(url: String) = Unit
         }
+        binding.webView.loadUrl(url)
     }
 
     companion object {
         fun newInstance(content: ExternalToolContent) = SpeedGraderLtiSubmissionFragment().apply {
-            mCanvasContext = content.canvasContext
-            mUrl = content.url
+            url = content.url
         }
     }
-
 }
 

@@ -511,7 +511,7 @@ class GradesViewModelTest {
     fun `Refresh reloads grades`() {
         createViewModel()
 
-        viewModel.handleAction(GradesAction.Refresh)
+        viewModel.handleAction(GradesAction.Refresh())
 
         coVerify { gradesRepository.loadCourse(1, true) }
         coVerify { gradesRepository.loadGradingPeriods(1, true) }
@@ -684,7 +684,7 @@ class GradesViewModelTest {
         )
 
         coEvery { gradesRepository.loadCourse(1, any()) } throws Exception()
-        viewModel.handleAction(GradesAction.Refresh)
+        viewModel.handleAction(GradesAction.Refresh())
 
         val expectedWithSnackbar = loaded.copy(snackbarMessage = "Grade refresh failed")
         Assert.assertEquals(expectedWithSnackbar, viewModel.uiState.value)

@@ -38,6 +38,7 @@ import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
 import com.instructure.parentapp.features.login.createaccount.CreateAccountFragment
 import com.instructure.parentapp.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
 import com.instructure.parentapp.features.splash.SplashFragment
@@ -88,7 +89,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
     private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
 
-    private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}"
+    private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}/{${LtiLaunchFragment.SESSION_LESS_LAUNCH}}"
 
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
 
@@ -104,7 +105,7 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     fun globalAnnouncementRoute(alertId: Long) = "$baseUrl/account_notifications/$alertId"
 
-    fun ltiLaunchRoute(url: String, title: String) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}"
+    fun ltiLaunchRoute(url: String, title: String, sessionlessLaunch: Boolean) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}/$sessionlessLaunch"
 
     fun crateMainNavGraph(navController: NavController): NavGraph {
         return navController.createGraph(
@@ -245,6 +246,11 @@ class Navigation(apiPrefs: ApiPrefs) {
                 argument(LtiLaunchFragment.LTI_TITLE) {
                     type = NavType.StringType
                     nullable = false
+                }
+                argument(LtiLaunchFragment.SESSION_LESS_LAUNCH) {
+                    type = NavType.BoolType
+                    nullable = false
+                    defaultValue = false
                 }
             }
         }

@@ -60,7 +60,6 @@ import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
@@ -80,11 +79,13 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.settings.SettingsFragment
@@ -137,7 +138,6 @@ import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.fragment.InboxRecipientsFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -146,6 +146,7 @@ import com.instructure.student.navigation.AccountMenuItem
 import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.NavigationMenuItem
 import com.instructure.student.navigation.OptionsMenuItem
+import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -215,6 +216,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var offlineAnalyticsManager: OfflineAnalyticsManager
+
+    @Inject
+    lateinit var enabledCourseTabs: EnabledTabs
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -348,6 +352,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         super.onCreate(savedInstanceState)
         RouteMatcher.offlineDb = offlineDatabase
         RouteMatcher.networkStateProvider = networkStateProvider
+        RouteMatcher.enabledTabs = enabledCourseTabs
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)
@@ -917,7 +922,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     when {
                         RouteContext.FILE == route.routeContext && route.secondaryClass != CourseModuleProgressionFragment::class.java -> {
                             if (route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD)) {
-                                if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString())
+                                if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString(), null)
                             }
                             route.paramsHash[RouterParams.FILE_ID]?.let { handleSpecificFile(contextId, it) }
 

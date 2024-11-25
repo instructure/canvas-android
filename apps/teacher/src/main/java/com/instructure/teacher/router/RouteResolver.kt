@@ -13,6 +13,7 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
@@ -53,7 +54,6 @@ import com.instructure.teacher.fragments.FeatureFlagsFragment
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.fragments.MessageThreadFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.PageListFragment
@@ -201,7 +201,7 @@ object RouteResolver {
         } else if (RemoteConfigParamsFragment::class.java.isAssignableFrom(cls)) {
             fragment = RemoteConfigParamsFragment()
         } else if (LtiLaunchFragment::class.java.isAssignableFrom(cls)) {
-            fragment = LtiLaunchFragment.newInstance(route.arguments)
+            fragment = LtiLaunchFragment.newInstance(route)
         } else if (PeopleListFragment::class.java.isAssignableFrom(cls)) {
             fragment = PeopleListFragment.newInstance(canvasContext!!)
         } else if (StudentContextFragment::class.java.isAssignableFrom(cls)) {

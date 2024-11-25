@@ -23,7 +23,7 @@ import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.teacher.databinding.AdapterFileFolderBinding
 import com.instructure.teacher.holders.FileFolderViewHolder
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class FileSearchAdapter(
     context: Context,

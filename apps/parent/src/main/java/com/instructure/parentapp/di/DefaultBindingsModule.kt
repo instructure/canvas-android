@@ -20,6 +20,7 @@ package com.instructure.parentapp.di
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.pandautils.features.elementary.grades.GradesRouter
@@ -102,6 +103,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideSyncRouter(): SyncRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideDiscussionDetailsWebViewFragmentBehavior(): DiscussionDetailsWebViewFragmentBehavior {
         throw NotImplementedError()
     }
 }

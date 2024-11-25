@@ -18,7 +18,7 @@ package com.instructure.pandautils.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_UNSAVED_CHANGES_EXIT
@@ -28,7 +28,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.dismissExisting
 
 @ScreenView(SCREEN_VIEW_UNSAVED_CHANGES_EXIT)
-class UnsavedChangesExitDialog : AppCompatDialogFragment() {
+class UnsavedChangesExitDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var mListener: (() -> Unit)? by BlindSerializableArg()
 

@@ -17,7 +17,7 @@ package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.viewinterface.InitActivityView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class InitActivityPresenterFactory : PresenterFactory<InitActivityView, InitActivityPresenter> {
     override fun create() = InitActivityPresenter()

@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
@@ -33,7 +33,7 @@ import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.FragmentSubmissionRubricDescriptionBinding
 import com.instructure.student.router.RouteMatcher
 
-class SubmissionRubricDescriptionFragment : DialogFragment() {
+class SubmissionRubricDescriptionFragment : BaseCanvasDialogFragment() {
 
     private val binding by viewBinding(FragmentSubmissionRubricDescriptionBinding::bind)
 
@@ -49,6 +49,7 @@ class SubmissionRubricDescriptionFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         with (binding) {
             toolbar.title = title
             toolbar.setupAsBackButton(this@SubmissionRubricDescriptionFragment)

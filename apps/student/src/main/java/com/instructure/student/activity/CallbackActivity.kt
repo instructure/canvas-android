@@ -40,7 +40,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
@@ -59,6 +59,7 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.router.EnabledTabs
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,6 +73,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
+
+    @Inject
+    lateinit var enabledTabs: EnabledTabs
 
     private var loadInitialDataJob: Job? = null
 
@@ -89,6 +93,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
             setupHeapTracking()
+
+            // Get enabled tabs
+            enabledTabs.initTabs()
 
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {

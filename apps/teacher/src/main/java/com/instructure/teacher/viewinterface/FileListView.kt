@@ -17,7 +17,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.FileFolder
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface FileListView : SyncManager<FileFolder> {
     fun folderCreationError()
