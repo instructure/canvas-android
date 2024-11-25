@@ -36,6 +36,7 @@ import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
+import com.instructure.parentapp.features.login.createaccount.CreateAccountFragment
 import com.instructure.parentapp.features.lti.LtiLaunchFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
@@ -70,6 +71,12 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
     fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
+
+    private val createAccount =
+        "$baseUrl/account_creation?pairing_code={${CreateAccountFragment.PAIRING_CODE}}&domain={${CreateAccountFragment.DOMAIN}}&accountId={${CreateAccountFragment.ACCOUNT_ID}}"
+
+    fun createAccount(domain: String, accountId: String, pairingCode: String) =
+        "$baseUrl/account_creation?pairing_code=$pairingCode&domain=$domain&accountId=$accountId"
 
     private val calendarEvent =
         "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
@@ -260,6 +267,28 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<AlertsFragment>(alerts) {
                 deepLink {
                     uriPattern = alerts
+                }
+            }
+        }
+    }
+
+    fun createAccountCreationNavGraph(navController: NavController): NavGraph {
+        return navController.createGraph(
+            qrPairing
+        ) {
+            fragment<QrPairingFragment>(qrPairing)
+            fragment<CreateAccountFragment>(createAccount) {
+                argument(CreateAccountFragment.PAIRING_CODE) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(CreateAccountFragment.DOMAIN) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(CreateAccountFragment.ACCOUNT_ID) {
+                    type = NavType.StringType
+                    nullable = false
                 }
             }
         }

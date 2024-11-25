@@ -1898,4 +1898,25 @@
     <string name="openTheQuizButton">Open the Quiz</string>
     <string name="newQuizSubmissionTitle">Quiz Submission</string>
     <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
+    <string name="haveCanvasAccount">I have a Canvas account</string>
+    <string name="notHaveCanvasAccount">I don\'t have a Canvas account</string>
+    <string name="createAccFullName">Full Name</string>
+    <string name="createAccEmail">Email Address</string>
+    <string name="createAccPassword">Password</string>
+    <string name="createAccAgreeTos">By tapping \'Create Account\', you agree to the</string>
+    <string name="createAccTos">Terms of Service</string>
+    <string name="createAccAndAcknowledgePrivacy">and acknowledge the</string>
+    <string name="createAccViewPrivacy">View the</string>
+    <string name="createAccPrivacy">Privacy Policy</string>
+    <string name="createAccButton">Create Account</string>
+    <string name="createAccAlreadyHaveAccount">Already have an account?</string>
+    <string name="createAccSignIn">Sign in</string>
+    <string name="createAccShowPassword">Show password</string>
+    <string name="createAccHidePassword">Hide password</string>
+    <string name="createAccEnterFullName">Please enter full name</string>
+    <string name="createAccEnterEmail">Please enter an email address</string>
+    <string name="createAccEnterValidEmail">Please enter a valid email address</string>
+    <string name="createAccEnterPassword">Password is required</string>
+    <string name="createAccPasswordTooShort">Password must contain at least 8 characters</string>
+    <string name="createAccErrorCreatingAccount">An error occurred creating your account. Please check your internet connection and try again.</string>
 </resources>
