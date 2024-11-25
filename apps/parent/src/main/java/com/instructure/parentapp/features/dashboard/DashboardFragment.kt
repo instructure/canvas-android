@@ -49,6 +49,7 @@ import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
@@ -275,7 +276,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         inboxBadge?.height = 24.toPx
         inboxBadge?.gravity = Gravity.CENTER
         inboxBadge?.textSize = 10f
-        inboxBadge?.setTextColor(requireContext().getColor(R.color.white))
+        inboxBadge?.setTextColor(requireContext().getColor(R.color.textLightest))
         inboxBadge?.setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
         inboxBadge?.visibility = View.GONE
 
@@ -332,10 +333,13 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         binding.bottomNav.applyTheme(color, requireActivity().getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(requireActivity(), color)
 
+        val toolbarIconsColor = if (student != null) requireContext().getColor(R.color.textLightest) else ThemePrefs.primaryTextColor
         val gradientDrawable = requireContext().getDrawableCompat(R.drawable.bg_button_full_rounded_filled_with_border) as? GradientDrawable
         gradientDrawable?.setStroke(2.toPx, color)
+        gradientDrawable?.setColor(toolbarIconsColor)
         binding.unreadCountBadge.background = gradientDrawable
         binding.unreadCountBadge.setTextColor(color)
+        binding.navigationButton.setColorFilter(toolbarIconsColor)
 
         binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
         viewModel.updateColor(color)
