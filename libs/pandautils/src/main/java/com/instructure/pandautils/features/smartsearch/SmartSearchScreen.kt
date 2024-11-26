@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -56,7 +57,9 @@ import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.utils.color
 
@@ -95,7 +98,12 @@ fun SmartSearchScreen(
         ) { padding ->
             when {
                 uiState.loading -> {
-                    Loading()
+                    Loading(
+                        modifier = Modifier.fillMaxSize().background(colorResource(R.color.backgroundLight)),
+                        title = stringResource(R.string.smartSearchLoadingTitle),
+                        message = stringResource(R.string.smartSearchLoadingSubtitle),
+                        icon = R.drawable.ic_smart_search_loading
+                    )
                 }
 
                 uiState.error -> {
@@ -124,51 +132,27 @@ fun SmartSearchScreen(
                         item {
                             CourseHeader(uiState.canvasContext.name.orEmpty())
                         }
-
-                        items(uiState.results) {
-                            ResultItem(
-                                it,
-                                Color(uiState.canvasContext.color),
-                                uiState.actionHandler
-                            )
+                        if (uiState.results.isNotEmpty()) {
+                            items(uiState.results) {
+                                ResultItem(
+                                    it,
+                                    Color(uiState.canvasContext.color),
+                                    uiState.actionHandler
+                                )
+                            }
+                        } else {
+                            item {
+                                EmptyContent(
+                                    modifier = Modifier.fillMaxHeight(),
+                                    emptyTitle = stringResource(R.string.smartSearchEmptyTitle),
+                                    emptyMessage = stringResource(R.string.smartSearchEmptyMessage),
+                                    imageRes = R.drawable.ic_smart_search_empty
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun Loading() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(R.color.backgroundLight)),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_smart_search_loading),
-                contentDescription = null
-            )
-            Text(
-                modifier = Modifier.padding(top = 12.dp),
-                text = stringResource(R.string.smartSearchLoadingTitle),
-                style = MaterialTheme.typography.h5,
-                color = colorResource(R.color.textDarkest),
-                textAlign = TextAlign.Center
-            )
-            Text(
-                modifier = Modifier.padding(top = 12.dp),
-                text = stringResource(R.string.smartSearchLoadingSubtitle),
-                style = MaterialTheme.typography.body1,
-                color = colorResource(R.color.textDarkest),
-                textAlign = TextAlign.Center
-            )
         }
     }
 }
@@ -410,5 +394,31 @@ fun SmartSearchErrorDarkPreview() {
             canvasContext = Course(name = "Test course"),
             results = emptyList(),
             error = true
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun SmartSearchEmptyPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = emptyList()
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SmartSearchEmptyDarkPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = emptyList()
         ) {}) {}
 }
