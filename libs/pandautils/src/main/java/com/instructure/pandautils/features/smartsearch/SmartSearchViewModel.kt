@@ -46,16 +46,21 @@ class SmartSearchViewModel @Inject constructor(
     }
 
     private suspend fun search(courseId: Long, query: String) {
-        val results = smartSearchRepository.smartSearch(courseId, query)
-            .map { result ->
-                SmartSearchResultUiState(
-                    title = result.title,
-                    body = result.body,
-                    relevance = result.relevance,
-                    type = result.contentType
-                )
-            }
-        _uiState.value = _uiState.value.copy(results = results, loading = false)
+        _uiState.value = _uiState.value.copy(loading = true)
+        try {
+            val results = smartSearchRepository.smartSearch(courseId, query)
+                .map { result ->
+                    SmartSearchResultUiState(
+                        title = result.title,
+                        body = result.body,
+                        relevance = result.relevance,
+                        type = result.contentType
+                    )
+                }
+            _uiState.value = _uiState.value.copy(results = results, loading = false)
+        } catch (e: Exception) {
+            _uiState.value = _uiState.value.copy(error = true, loading = false)
+        }
     }
 
     private fun handleAction(action: SmartSearchViewModelAction) {

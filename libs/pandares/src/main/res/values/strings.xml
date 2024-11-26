@@ -1914,4 +1914,6 @@
     <string name="smartSearchDiscussionTitle">Discussion</string>
     <string name="smartSearchAssignmentTitle">Assignment</string>
     <string name="smartSearchPageTitle">Page</string>
+    <string name="smartSearchLoadingTitle">Hang Tight, We\'re Fetching Your Results!</string>
+    <string name="smartSearchLoadingSubtitle">We’re working hard to find the best matches for your search. This won\'t take long! Thank you for your patience.</string>
 </resources>

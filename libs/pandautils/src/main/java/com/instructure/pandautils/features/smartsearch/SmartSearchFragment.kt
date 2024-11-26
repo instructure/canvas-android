@@ -65,14 +65,11 @@ class SmartSearchFragment : BaseCanvasFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                SmartSearchScreen(uiState)
+                SmartSearchScreen(uiState) {
+                    requireActivity().onBackPressed()
+                }
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     companion object {

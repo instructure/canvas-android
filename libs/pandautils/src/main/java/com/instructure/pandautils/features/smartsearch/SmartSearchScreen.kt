@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.smartsearch
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,6 +47,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.Course
@@ -53,18 +55,22 @@ import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.utils.color
 
 @Composable
-fun SmartSearchScreen(uiState: SmartSearchUiState) {
+fun SmartSearchScreen(
+    uiState: SmartSearchUiState,
+    navigationItemClick: () -> Unit
+) {
     CanvasTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
                     backgroundColor = Color(uiState.canvasContext.color),
                     navigationIcon = {
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { navigationItemClick() }) {
                             Icon(
                                 painterResource(id = R.drawable.ic_back_arrow),
                                 contentDescription = stringResource(R.string.contentDescription_back),
@@ -77,8 +83,8 @@ fun SmartSearchScreen(uiState: SmartSearchUiState) {
                             icon = R.drawable.ic_smart_search,
                             tintColor = colorResource(R.color.textLightest),
                             onExpand = {},
-                            onSearch = {},
-                            placeholder = "Search in this course",
+                            onSearch = { uiState.actionHandler(SmartSearchViewModelAction.Search(it)) },
+                            placeholder = stringResource(R.string.smartSearchPlaceholder),
                             collapsable = false,
                             searchQuery = uiState.query
                         )
@@ -86,20 +92,78 @@ fun SmartSearchScreen(uiState: SmartSearchUiState) {
                 )
             }
         ) { padding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .background(colorResource(R.color.backgroundLight))
-            ) {
-                item {
-                    CourseHeader(uiState.canvasContext.name.orEmpty())
+            when {
+                uiState.loading -> {
+                    Loading()
                 }
 
-                items(uiState.results) {
-                    ResultItem(it, Color(uiState.canvasContext.color))
+                uiState.error -> {
+                    ErrorContent(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(R.color.backgroundLight)),
+                        errorMessage = stringResource(R.string.errorOccurred),
+                        retryClick = {
+                            uiState.actionHandler(
+                                SmartSearchViewModelAction.Search(
+                                    uiState.query
+                                )
+                            )
+                        }
+                    )
+                }
+
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                            .background(colorResource(R.color.backgroundLight))
+                    ) {
+                        item {
+                            CourseHeader(uiState.canvasContext.name.orEmpty())
+                        }
+
+                        items(uiState.results) {
+                            ResultItem(it, Color(uiState.canvasContext.color))
+                        }
+                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun Loading() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(R.color.backgroundLight)),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_smart_search_loading),
+                contentDescription = null
+            )
+            Text(
+                modifier = Modifier.padding(top = 12.dp),
+                text = stringResource(R.string.smartSearchLoadingTitle),
+                style = MaterialTheme.typography.h5,
+                color = colorResource(R.color.textDarkest),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                modifier = Modifier.padding(top = 12.dp),
+                text = stringResource(R.string.smartSearchLoadingSubtitle),
+                style = MaterialTheme.typography.body1,
+                color = colorResource(R.color.textDarkest),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -235,9 +299,10 @@ fun SmartSearchPreview() {
     ContextKeeper.appContext = LocalContext.current
     SmartSearchScreen(
         SmartSearchUiState(
-            "query",
-            Course(name = "Test course"),
-            listOf(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
                 SmartSearchResultUiState(
                     "Title",
                     "Body",
@@ -251,7 +316,7 @@ fun SmartSearchPreview() {
                     SmartSearchContentType.WIKI_PAGE
                 )
             )
-        ) {})
+        ) {}) {}
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -260,9 +325,10 @@ fun SmartSearchDarkPreview() {
     ContextKeeper.appContext = LocalContext.current
     SmartSearchScreen(
         SmartSearchUiState(
-            "query",
-            Course(name = "Test course"),
-            listOf(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
                 SmartSearchResultUiState(
                     "Title",
                     "Body",
@@ -276,5 +342,59 @@ fun SmartSearchDarkPreview() {
                     SmartSearchContentType.DISCUSSION_TOPIC
                 )
             )
-        ) {})
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun SmartSearchLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = true,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = emptyList()
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SmartSearchLoadingDarkPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = true,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = emptyList()
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun SmartSearchErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = emptyList(),
+            error = true
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SmartSearchErrorDarkPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = emptyList(),
+            error = true
+        ) {}) {}
 }
