@@ -38,26 +38,27 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null && intent != null) {
-            val assignmentId = intent.getLongExtra(ASSIGNMENT_ID, 0L)
-            val assignmentPath = intent.getStringExtra(ASSIGNMENT_PATH) ?: return
-            val assignmentName = intent.getStringExtra(ASSIGNMENT_NAME) ?: return
-            val dueIn = intent.getStringExtra(DUE_IN) ?: return
+            val contentId = intent.getLongExtra(CONTENT_ID, 0L)
+            val htmlPath = intent.getStringExtra(HTML_PATH) ?: return
+            val title = intent.getStringExtra(TITLE) ?: return
+            val message = intent.getStringExtra(MESSAGE) ?: return
 
             notificationHandler.createNotificationChannel(context)
-            notificationHandler.showNotification(context, assignmentId, assignmentPath, assignmentName, dueIn)
-            goAsync()
+            notificationHandler.showNotification(context, contentId, htmlPath, title, message)
+            val pendingTask = goAsync()
 
             CoroutineScope(Dispatchers.IO).launch {
                 reminderDao.deletePastReminders(System.currentTimeMillis())
+                pendingTask.finish()
             }
         }
     }
 
     companion object {
         const val CHANNEL_ID = "REMINDERS_CHANNEL_ID"
-        const val ASSIGNMENT_ID = "ASSIGNMENT_ID"
-        const val ASSIGNMENT_PATH = "ASSIGNMENT_PATH"
-        const val ASSIGNMENT_NAME = "ASSIGNMENT_NAME"
-        const val DUE_IN = "DUE_IN"
+        const val CONTENT_ID = "CONTENT_ID"
+        const val HTML_PATH = "HTML_PATH"
+        const val TITLE = "TITLE"
+        const val MESSAGE = "MESSAGE"
     }
 }

@@ -72,6 +72,7 @@
     <string name="reminderDescription">Add due date reminder notifications about this assignment on this device.</string>
     <string name="a11y_addReminder">Add reminder</string>
     <string name="a11y_removeReminder">Remove reminder</string>
+    <string name="a11y_remove">Remove</string>
     <string name="reminderBefore">%s Before</string>
     <plurals name="reminderMinute">
         <item quantity="one">1 Minute</item>
@@ -99,7 +100,7 @@
     <string name="reminderNotificationChannelName">Reminder Notifications</string>
     <string name="reminderNotificationChannelDescription">Canvas Notifications for assignment reminders.</string>
     <string name="reminderNotificationTitle">Due Date Reminder</string>
-    <string name="reminderNotificationDescription">This assignment is due in %s: %s</string>
+    <string name="reminderNotificationDueAtDescription">This assignment is due at %s: %s</string>
     <string name="reminderInPast">Please choose a future time for your reminder!</string>
     <string name="reminderAlreadySet">You have already set a reminder for this time</string>
     <string name="deleteReminderTitle">Delete Reminder</string>
@@ -1899,10 +1900,18 @@
     <string name="newQuizSubmissionTitle">Quiz Submission</string>
     <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
     <string name="route_not_available">That page has been disabled for this course</string>
+    <string name="a11y_refresh">Refresh</string>
+    <string name="reminderTitleAfterDueDate">After Due Date (%1$s)</string>
+    <string name="reminderNotificationTitleFor">Reminder for %1$s</string>
+    <string name="reminderNotificationMessageWithDueDate">Reminder for %1$s due at %2$s</string>
+    <string name="reminderNotificationMessageWithoutDueDate">Reminder for %1$s with no due date</string>
     <string name="courseRefreshFailed">Failed to refresh course</string>
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
-    <string name="a11y_refresh">Refresh</string>
     <string name="masqueradingAs">You are acting as %s</string>
     <string name="stopActingAsTitle">Stop acting as…</string>
     <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>
+    <string name="smartSearchPlaceholder">Search in this course</string>
+    <string name="a11y_searchBarCloseButton">Close search bar</string>
+    <string name="a11y_searchBarClearButton">Clear query</string>
+    <string name="a11y_searchBarSearchButton">Search</string>
 </resources>
