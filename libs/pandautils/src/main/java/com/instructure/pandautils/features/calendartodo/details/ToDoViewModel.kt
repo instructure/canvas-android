@@ -71,6 +71,11 @@ class ToDoViewModel @Inject constructor(
         loadData()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        reminderManager.removeLiveDataObserver()
+    }
+
     private fun loadData() {
         plannerItem?.let { plannerItem ->
             val dateText = plannerItem.plannable.todoDate.toDate()?.let {

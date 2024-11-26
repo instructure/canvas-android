@@ -26,7 +26,6 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -41,7 +40,6 @@ import com.instructure.student.features.assignments.details.StudentAssignmentDet
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsSubmissionHandler
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
-import com.instructure.student.features.assignments.details.receiver.StudentAlarmReceiverNotificationHandler
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import dagger.Module
@@ -49,7 +47,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -106,14 +103,5 @@ class AssignmentDetailsModule {
     @Provides
     fun provideAssignmentDetailsColorProvider(colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
         return StudentAssignmentDetailsColorProvider(colorKeeper)
-    }
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-class AssignmentDetailsSingletonModule {
-    @Provides
-    fun provideAssignmentDetailsNotificationHandler(): AlarmReceiverNotificationHandler {
-        return StudentAlarmReceiverNotificationHandler()
     }
 }

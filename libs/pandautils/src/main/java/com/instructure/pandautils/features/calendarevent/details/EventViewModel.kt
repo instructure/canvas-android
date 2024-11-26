@@ -85,6 +85,11 @@ class EventViewModel @Inject constructor(
         loadData()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        reminderManager.removeLiveDataObserver()
+    }
+
     private fun loadData() {
         setToolbarColor()
         viewModelScope.tryLaunch {

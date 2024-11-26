@@ -13,27 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.assignments.details.receiver
+package com.instructure.parentapp.features.reminder
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
+import android.net.Uri
 import androidx.core.app.NotificationCompat
-import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.alarm.AlarmReceiver
 import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
-import com.instructure.pandautils.utils.Const
-import com.instructure.student.R
-import com.instructure.student.activity.NavigationActivity
+import com.instructure.parentapp.R
+import com.instructure.parentapp.features.main.MainActivity
 
-class StudentAlarmReceiverNotificationHandler: AlarmReceiverNotificationHandler {
+class ParentAlarmReceiverNotificationHandler: AlarmReceiverNotificationHandler {
     override fun showNotification(context: Context, contentId: Long, htmlPath: String, title: String, message: String) {
-        val intent = Intent(context, NavigationActivity.startActivityClass).apply {
-            putExtra(Const.LOCAL_NOTIFICATION, true)
-            putExtra(PushNotification.HTML_URL, htmlPath)
-        }
+        val intent = MainActivity.createIntent(context, Uri.parse(htmlPath))
 
         val pendingIntent = PendingIntent.getActivity(
             context, 0, intent,

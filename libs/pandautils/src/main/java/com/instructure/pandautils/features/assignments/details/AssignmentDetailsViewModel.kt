@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -129,23 +128,8 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var selectedSubmission: Submission? = null
 
-    private val remindersObserver = Observer<List<ReminderEntity>> { reminderEntities ->
-        _data.value?.reminders = mapReminders(reminderEntities)
-        _reminderViewState.update { it.copy(
-            reminders = reminderEntities.map { ReminderItem(it.id, it.text, Date(it.time)) },
-            dueDate = assignment?.dueDate
-        ) }
-        _data.value?.notifyPropertyChanged(BR.reminders)
-    }
-
     private val _reminderViewState = MutableStateFlow(ReminderViewState())
     val reminderViewState = _reminderViewState.asStateFlow()
-
-    private val remindersLiveData = assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(
-        apiPrefs.user?.id.orDefault(), assignmentId
-    ).apply {
-        observeForever(remindersObserver)
-    }
 
     var checkingReminderPermission = false
 
@@ -160,13 +144,22 @@ class AssignmentDetailsViewModel @Inject constructor(
         )
         _state.postValue(ViewState.Loading)
         loadData()
+
+        reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), assignmentId) { reminderEntities ->
+            _data.value?.reminders = mapReminders(reminderEntities)
+            _reminderViewState.update { it.copy(
+                reminders = reminderEntities.map { ReminderItem(it.id, it.text, Date(it.time)) },
+                dueDate = assignment?.dueDate
+            ) }
+            _data.value?.notifyPropertyChanged(BR.reminders)
+        }
     }
 
     fun getVideoUri(fragment: FragmentActivity): Uri? = submissionHandler.getVideoUri(fragment)
 
     override fun onCleared() {
         super.onCleared()
-        remindersLiveData.removeObserver(remindersObserver)
+        reminderManager.removeLiveDataObserver()
         submissionHandler.removeAssignmentSubmissionObserver()
     }
 
@@ -470,7 +463,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
             hasDraft = hasDraft,
-            reminders = mapReminders(remindersLiveData.value.orEmpty())
+            reminders = _data.value?.reminders.orEmpty(),
         )
     }
 
@@ -487,13 +480,6 @@ class AssignmentDetailsViewModel @Inject constructor(
                 postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog(it))
             }
         }
-
-    private fun deleteReminderById(id: Long) {
-        alarmScheduler.cancelAlarm(id)
-        viewModelScope.launch {
-            assignmentDetailsRepository.deleteReminderById(id)
-        }
-    }
 
     fun refresh() {
         _state.postValue(ViewState.Refresh)

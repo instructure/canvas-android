@@ -20,14 +20,11 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
-import com.instructure.teacher.features.reminder.TeacherAlarmReceiverNotificationHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -59,14 +56,5 @@ class AssignmentDetailsModule {
     @Provides
     fun provideAssignmentDetailsColorProvider(): AssignmentDetailsColorProvider {
         throw NotImplementedError()
-    }
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-class AssignmentDetailsSingletonModule {
-    @Provides
-    fun provideAssignmentDetailsNotificationHandler(): AlarmReceiverNotificationHandler {
-        return TeacherAlarmReceiverNotificationHandler()
     }
 }

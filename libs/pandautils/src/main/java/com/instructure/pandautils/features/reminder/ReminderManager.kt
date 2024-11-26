@@ -20,6 +20,8 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.showThemed
@@ -38,6 +40,9 @@ class ReminderManager(
     private val dateTimePicker: DateTimePicker,
     private val reminderRepository: ReminderRepository
 ) {
+    private var reminderLiveData: LiveData<List<ReminderEntity>>? = null
+    private var reminderObserver: Observer<List<ReminderEntity>>? = null
+
     suspend fun showBeforeDueDateReminderDialog(
         context: Context,
         userId: Long,
@@ -151,8 +156,18 @@ class ReminderManager(
     }
 
     fun observeRemindersLiveData(userId: Long, contentId: Long, onUpdate: (List<ReminderEntity>) -> Unit) {
-        return reminderRepository.findByAssignmentIdLiveData(userId, contentId).observeForever {
+        val liveData = reminderRepository.findByAssignmentIdLiveData(userId, contentId)
+        val observer: Observer<List<ReminderEntity>> = Observer {
             onUpdate(it)
+        }
+        liveData.observeForever(observer)
+        reminderLiveData = liveData
+        reminderObserver = observer
+    }
+
+    fun removeLiveDataObserver() {
+        if (reminderObserver != null && reminderLiveData != null) {
+            reminderLiveData?.removeObserver(reminderObserver!!)
         }
     }
 
