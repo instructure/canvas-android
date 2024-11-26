@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.AttendanceListView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import retrofit2.Call

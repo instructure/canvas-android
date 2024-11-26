@@ -216,6 +216,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         );
         final lastAccount = new SchoolDomain((builder) =>
         builder
+          ..authenticationProvider = widget.authenticationProvider
           ..domain = widget.domain
           ..name = widget.accountName);
         ApiPrefs.setLastAccount(lastAccount, widget.loginFlow);

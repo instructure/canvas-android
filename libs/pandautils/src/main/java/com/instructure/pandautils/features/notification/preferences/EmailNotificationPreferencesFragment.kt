@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
@@ -38,7 +38,7 @@ import javax.inject.Inject
 @PageView(url = "profile/communication")
 @ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @AndroidEntryPoint
-class EmailNotificationPreferencesFragment : Fragment() {
+class EmailNotificationPreferencesFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var toolbarSetupBehavior: ToolbarSetupBehavior

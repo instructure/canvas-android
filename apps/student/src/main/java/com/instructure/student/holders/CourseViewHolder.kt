@@ -27,11 +27,13 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertPercentToPointBased
 import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setCourseImage
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -113,7 +115,15 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             } else {
                 gradeTextView.setVisible()
                 lockedGradeImage.setGone()
-                setGradeView(gradeTextView, courseGrade, course.color, root.context, course.settings?.restrictQuantitativeData ?: false)
+                setGradeView(
+                    gradeTextView,
+                    courseGrade,
+                    course.color,
+                    root.context,
+                    course.settings?.restrictQuantitativeData ?: false,
+                    course.pointsBasedGradingScheme,
+                    course.scalingFactor
+                )
             }
         } else {
             gradeLayout.setGone()
@@ -125,7 +135,9 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         courseGrade: CourseGrade,
         color: Int,
         context: Context,
-        restrictQuantitativeData: Boolean
+        restrictQuantitativeData: Boolean,
+        pointBased: Boolean,
+        scalingFactor: Double
     ) {
         if(courseGrade.noCurrentGrade) {
             textView.text = context.getString(R.string.noGradeText)
@@ -135,12 +147,23 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     textView.text = context.getString(R.string.noGradeText)
                 } else {
                     textView.text = "${courseGrade.currentGrade.orEmpty()}"
-                    textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade.orEmpty(), context)
+                    textView.contentDescription = getContentDescriptionForMinusGradeString(
+                        courseGrade.currentGrade.orEmpty(),
+                        context
+                    )
                 }
             } else {
-                val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
-                textView.text = if(courseGrade.hasCurrentGradeString()) "${courseGrade.currentGrade} $scoreString" else scoreString
-                textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade ?: "", context)
+                val scoreString = if (pointBased) {
+                    convertPercentToPointBased(courseGrade.currentScore.orDefault(), scalingFactor)
+                } else {
+                    NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
+                }
+                textView.text =
+                    if (courseGrade.hasCurrentGradeString()) "${courseGrade.currentGrade} $scoreString" else scoreString
+                textView.contentDescription = getContentDescriptionForMinusGradeString(
+                    courseGrade.currentGrade ?: "",
+                    context
+                )
             }
         }
         textView.setTextColor(color)

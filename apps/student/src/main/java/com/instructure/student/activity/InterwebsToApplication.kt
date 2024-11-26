@@ -26,7 +26,7 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
@@ -40,7 +40,6 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -48,6 +47,7 @@ import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
@@ -58,7 +58,7 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class InterwebsToApplication : AppCompatActivity() {
+class InterwebsToApplication : BaseCanvasActivity() {
 
     private val binding by viewBinding(InterwebsToApplicationBinding::inflate)
     private lateinit var loadingBinding: LoadingCanvasViewBinding

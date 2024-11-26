@@ -19,14 +19,12 @@ package com.instructure.pandautils.features.assignments.details
 import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.assignments.details.reminder.CustomReminderDialog
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import java.io.File
 
@@ -37,10 +35,6 @@ abstract class AssignmentDetailsBehaviour {
     open fun showMediaDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit) = Unit
 
     open fun showSubmitDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit, assignment: Assignment, course: Course, isStudioEnabled: Boolean, studioLTITool: LTITool?) = Unit
-
-    open fun showCustomReminderDialog(fragment: Fragment) {
-        CustomReminderDialog.newInstance().show(fragment.childFragmentManager, null)
-    }
 
     open fun applyTheme(activity: FragmentActivity,
                         binding: FragmentAssignmentDetailsBinding?,
@@ -57,4 +51,6 @@ abstract class AssignmentDetailsBehaviour {
     ) = Unit
 
     open fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
+
+    abstract fun getThemeColor(course: Course): Int
 }

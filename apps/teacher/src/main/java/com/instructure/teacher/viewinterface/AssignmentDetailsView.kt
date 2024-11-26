@@ -18,7 +18,7 @@ package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Assignment
 
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface AssignmentDetailsView : FragmentViewInterface {
     fun populateAssignmentDetails(assignment: Assignment)

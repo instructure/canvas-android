@@ -31,7 +31,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -51,7 +51,7 @@ import javax.inject.Inject
 const val OFFLINE_ENABLED = "offlineEnabled"
 
 @AndroidEntryPoint
-class SettingsFragment : Fragment() {
+class SettingsFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var settingsRouter: SettingsRouter
