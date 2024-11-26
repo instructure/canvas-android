@@ -51,7 +51,7 @@ class SmartSearchViewModel @Inject constructor(
     }
 
     private suspend fun search(courseId: Long, query: String) {
-        _uiState.value = _uiState.value.copy(loading = true)
+        _uiState.value = _uiState.value.copy(loading = true, query = query)
         try {
             val results = smartSearchRepository.smartSearch(courseId, query)
                 .map { result ->
