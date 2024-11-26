@@ -214,11 +214,17 @@ object CourseEndpoint : Endpoint(
 /**
  * Endpoint for course features
  */
-object CourseEnabledFeaturesEndpoint : Endpoint( response = {
-    GET {
-        request.successResponse(listOf("assignments_2_student"))
+object CourseEnabledFeaturesEndpoint : Endpoint(
+    response = {
+        GET {
+            val features = mutableListOf<String>()
+            if (data.assignmentEnhancementsEnabled) {
+                features.add("assignments_2_student")
+            }
+            request.successResponse(features)
+        }
     }
-})
+)
 
 /**
  * Endpoint for sections

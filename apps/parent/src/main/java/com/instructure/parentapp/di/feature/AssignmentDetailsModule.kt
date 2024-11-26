@@ -68,9 +68,10 @@ class AssignmentDetailsModule {
         quizApi: QuizAPI.QuizInterface,
         submissionApi: SubmissionAPI.SubmissionInterface,
         reminderDao: ReminderDao,
-        featuresApi: FeaturesAPI.FeaturesInterface
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        parentPrefs: ParentPrefs
     ): AssignmentDetailsRepository {
-        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi, reminderDao, featuresApi)
+        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi, reminderDao, featuresApi, parentPrefs)
     }
 
     @Provides

@@ -38,7 +38,8 @@ class ParentAssignmentDetailsRepository(
     private val quizApi: QuizAPI.QuizInterface,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
     private val reminderDao: ReminderDao,
-    private val featuresApi: FeaturesAPI.FeaturesInterface
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
+    private val parentPrefs: ParentPrefs
 ) : AssignmentDetailsRepository {
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -56,7 +57,7 @@ class ParentAssignmentDetailsRepository(
             courseId,
             assignmentId,
             params
-        ).dataOrThrow.toAssignment(ParentPrefs.currentStudent?.id.orDefault())
+        ).dataOrThrow.toAssignment(parentPrefs.currentStudent?.id.orDefault())
     }
 
     override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
