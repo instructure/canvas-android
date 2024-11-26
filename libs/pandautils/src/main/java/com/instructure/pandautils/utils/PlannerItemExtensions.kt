@@ -14,27 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.pandautils.utils
 
-package com.instructure.pandautils.features.calendartodo.details
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.Plannable
-
-
-class ToDoRepository(private val plannerApi: PlannerAPI.PlannerInterface) {
-
-    suspend fun deletePlannerNote(noteId: Long) {
-        plannerApi.deletePlannerNote(
-            noteId,
-            RestParams()
-        ).dataOrThrow
+val PlannerItem.todoHtmlUrl: String
+    get() {
+        return "${ApiPrefs.fullDomain}/todos/${this.plannable.id}"
     }
-
-    suspend fun getPlannerNote(noteId: Long): Plannable {
-        return plannerApi.getPlannerNote(
-            noteId,
-            RestParams()
-        ).dataOrThrow
-    }
-}

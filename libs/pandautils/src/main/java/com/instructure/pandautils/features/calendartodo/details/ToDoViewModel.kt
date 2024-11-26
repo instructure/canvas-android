@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.calendartodo.details
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNABLE_ID
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNER_ITEM
 import com.instructure.pandautils.features.reminder.ReminderItem
 import com.instructure.pandautils.features.reminder.ReminderManager
@@ -35,6 +37,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
+import com.instructure.pandautils.utils.todoHtmlUrl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -63,7 +66,8 @@ class ToDoViewModel @Inject constructor(
     private val _events = Channel<ToDoViewModelAction>()
     val events = _events.receiveAsFlow()
 
-    private val plannerItem: PlannerItem? = savedStateHandle.get<PlannerItem>(PLANNER_ITEM)
+    private val plannableId: Long? = savedStateHandle.get<Long>(PLANNABLE_ID)
+    private var plannerItem: PlannerItem? = savedStateHandle.get<PlannerItem>(PLANNER_ITEM)
 
     var checkingReminderPermission = false
 
@@ -77,6 +81,34 @@ class ToDoViewModel @Inject constructor(
     }
 
     private fun loadData() {
+        plannableId?.let { plannableId ->
+            Log.d("ToDoViewModel", "Loading data for plannableId: $plannableId")
+            viewModelScope.launch {
+                val plannable = toDoRepository.getPlannerNote(plannableId)
+                Log.d("ToDoViewModel", "Loading data for title: ${plannable.title}")
+                plannerItem = plannable.toPlannableItem()
+
+
+                plannerItem?.let { plannerItem ->
+                    val dateText = plannerItem.plannable.todoDate.toDate()?.let {
+                        val dateText = DateHelper.dayMonthDateFormat.format(it)
+                        val timeText = DateHelper.getFormattedTime(context, it)
+                        context.getString(R.string.calendarAtDateTime, dateText, timeText)
+                    }
+
+                    _uiState.update {
+                        it.copy(
+                            title = plannerItem.plannable.title,
+                            contextName = plannerItem.contextName,
+                            contextColor = plannerItem.canvasContext.color,
+                            date = dateText.orEmpty(),
+                            description = plannerItem.plannable.details.orEmpty()
+                        )
+                    }
+                }
+            }
+        }
+
         plannerItem?.let { plannerItem ->
             val dateText = plannerItem.plannable.todoDate.toDate()?.let {
                 val dateText = DateHelper.dayMonthDateFormat.format(it)
@@ -93,9 +125,9 @@ class ToDoViewModel @Inject constructor(
                     description = plannerItem.plannable.details.orEmpty()
                 )
             }
-
-            observeReminders()
         }
+
+        observeReminders()
     }
 
     private fun deleteToDo() {
@@ -147,7 +179,7 @@ class ToDoViewModel @Inject constructor(
                         apiPrefs.user?.id.orDefault(),
                         plannerItem.plannable.id,
                         plannerItem.plannable.title,
-                        plannerItem.htmlUrl.orEmpty(),
+                        plannerItem.todoHtmlUrl,
                         plannerItem.plannableDate,
                     )
                     else -> reminderManager.showBeforeDueDateReminderDialog(
@@ -155,7 +187,7 @@ class ToDoViewModel @Inject constructor(
                         apiPrefs.user?.id.orDefault(),
                         plannerItem.plannable.id,
                         plannerItem.plannable.title,
-                        plannerItem.htmlUrl.orEmpty(),
+                        plannerItem.todoHtmlUrl,
                         plannerItem.plannableDate,
                         color
                     )

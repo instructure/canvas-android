@@ -23,6 +23,7 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
@@ -36,7 +37,6 @@ import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
-import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
 import com.instructure.parentapp.features.splash.SplashFragment
@@ -77,6 +77,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val updateEvent = "$baseUrl/update-event/{${CreateUpdateEventFragment.SCHEDULE_ITEM}}"
 
     private val todo = "$baseUrl/todos/{${ToDoFragment.PLANNER_ITEM}}"
+    private val todoById = "$baseUrl/todos/{${ToDoFragment.PLANNABLE_ID}}"
     private val createToDo = "$baseUrl/create-todo/{${CreateUpdateToDoFragment.INITIAL_DATE}}"
     private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
     private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
@@ -179,6 +180,15 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
                 deepLink {
                     uriPattern = calendarEvent
+                }
+            }
+            fragment<ToDoFragment>(todoById) {
+                argument(ToDoFragment.PLANNABLE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = todoById
                 }
             }
             fragment<ToDoFragment>(todo) {

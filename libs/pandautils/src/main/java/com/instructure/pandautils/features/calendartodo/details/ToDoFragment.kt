@@ -165,7 +165,16 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
 
     companion object {
         const val PLANNER_ITEM = "PLANNER_ITEM"
-        fun newInstance(route: Route) = ToDoFragment().withArgs(route.arguments)
+        const val PLANNABLE_ID = "PLANNABLE_ID"
+        fun newInstance(route: Route): ToDoFragment {
+            return ToDoFragment().withArgs(
+                route.arguments.apply {
+                    if (route.paramsHash.containsKey(PLANNABLE_ID)) {
+                        putLong(PLANNABLE_ID, route.paramsHash[PLANNABLE_ID]?.toLongOrNull() ?: 0)
+                    }
+                }
+            )
+        }
 
         fun makeRoute(plannerItem: PlannerItem): Route {
             val bundle = bundleOf(PLANNER_ITEM to plannerItem)

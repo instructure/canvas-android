@@ -244,6 +244,9 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Calendar
         routes.add(Route("/:${EventFragment.CONTEXT_TYPE}/:${EventFragment.CONTEXT_ID}/calendar_events/:${EventFragment.SCHEDULE_ITEM_ID}", EventFragment::class.java))
+
+        // To Do
+        routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
     }
 
     private fun initClassMap() {

@@ -5,20 +5,15 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import androidx.core.os.bundleOf
-import com.instructure.pandautils.models.PushNotification
+import androidx.core.net.toUri
 import com.instructure.pandautils.receivers.alarm.AlarmReceiver
 import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
-import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.InitActivity
+import com.instructure.teacher.activities.RouteValidatorActivity
 
 class TeacherAlarmReceiverNotificationHandler: AlarmReceiverNotificationHandler {
     override fun showNotification(context: Context, contentId: Long, htmlPath: String, title: String, message: String) {
-        val intent = InitActivity.createIntent(context, bundleOf(
-            Const.LOCAL_NOTIFICATION to true,
-            PushNotification.HTML_URL to htmlPath
-        ))
+        val intent = RouteValidatorActivity.createIntent(context, htmlPath.toUri())
 
         val pendingIntent = PendingIntent.getActivity(
             context, 0, intent,
