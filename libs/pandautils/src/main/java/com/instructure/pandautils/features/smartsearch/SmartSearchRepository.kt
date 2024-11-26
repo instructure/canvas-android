@@ -16,8 +16,17 @@
 package com.instructure.pandautils.features.smartsearch
 
 import com.instructure.canvasapi2.apis.SmartSearchApi
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.SmartSearchResult
 
 class SmartSearchRepository(private val smartSearchApi: SmartSearchApi) {
 
-    suspend fun smartSearch(courseId: Long, query: String) = smartSearchApi.smartSearch(courseId, query)
+    suspend fun smartSearch(courseId: Long, query: String): List<SmartSearchResult> {
+        return smartSearchApi.smartSearch(
+            courseId,
+            query,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrThrow
+            .results
+    }
 }

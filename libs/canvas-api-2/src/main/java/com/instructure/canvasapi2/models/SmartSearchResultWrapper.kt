@@ -12,8 +12,9 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.canvasapi2.models
+ */
+package com.instructure.canvasapi2.models
 
 data class SmartSearchResultWrapper(
-    val result: List<SmartSearchResult>
+    val results: List<SmartSearchResult>
 )

@@ -15,14 +15,20 @@
  */
 package com.instructure.canvasapi2.apis
 
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.SmartSearchResultWrapper
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Tag
 
 interface SmartSearchApi {
 
     @GET("courses/{courseId}/smartsearch")
-    suspend fun smartSearch(@Path("courseId") courseId: Long, @Query("q") query: String): DataResult<SmartSearchResultWrapper>
+    suspend fun smartSearch(
+        @Path("courseId") courseId: Long,
+        @Query("q") query: String,
+        @Tag restParams: RestParams
+    ): DataResult<SmartSearchResultWrapper>
 }

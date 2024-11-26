@@ -16,6 +16,8 @@
 package com.instructure.pandautils.features.smartsearch
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
@@ -24,12 +26,16 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.SearchBar
+import com.instructure.pandautils.utils.color
 
 @Composable
 fun SmartSearchScreen(uiState: SmartSearchUiState) {
@@ -37,9 +43,14 @@ fun SmartSearchScreen(uiState: SmartSearchUiState) {
         Scaffold(
             topBar = {
                 TopAppBar(
+                    backgroundColor = Color(uiState.canvasContext.color),
                     navigationIcon = {
-                        IconButton(onClick = {  }) {
-                            Icon(painterResource(id = R.drawable.ic_back_arrow), contentDescription = "")
+                        IconButton(onClick = { }) {
+                            Icon(
+                                painterResource(id = R.drawable.ic_back_arrow),
+                                contentDescription = stringResource(R.string.contentDescription_back),
+                                tint = colorResource(R.color.textLightest)
+                            )
                         }
                     },
                     title = {
@@ -56,7 +67,12 @@ fun SmartSearchScreen(uiState: SmartSearchUiState) {
                 )
             }
         ) { padding ->
-            LazyColumn(modifier = Modifier.padding(padding)) { }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .background(colorResource(R.color.backgroundLightest))
+            ) { }
         }
     }
 }
@@ -64,11 +80,21 @@ fun SmartSearchScreen(uiState: SmartSearchUiState) {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun SmartSearchPreview() {
-    SmartSearchScreen(SmartSearchUiState("query", emptyList()))
+    SmartSearchScreen(
+        SmartSearchUiState(
+            "query",
+            CanvasContext.defaultCanvasContext(),
+            emptyList()
+        ) {})
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SmartSearchDarkPreview() {
-    SmartSearchScreen(SmartSearchUiState("query", emptyList()))
+    SmartSearchScreen(
+        SmartSearchUiState(
+            "query",
+            CanvasContext.defaultCanvasContext(),
+            emptyList()
+        ) {})
 }

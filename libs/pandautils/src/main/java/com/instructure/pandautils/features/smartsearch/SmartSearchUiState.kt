@@ -15,9 +15,24 @@
  */
 package com.instructure.pandautils.features.smartsearch
 
-import com.instructure.canvasapi2.models.SmartSearchResult
+import com.instructure.canvasapi2.models.CanvasContext
 
 data class SmartSearchUiState(
     val query: String,
-    val results: List<SmartSearchResult>
+    val canvasContext: CanvasContext,
+    val results: List<SmartSearchResultUiState>,
+    val loading: Boolean = true,
+    val error: Boolean = false,
+    val actionHandler: (SmartSearchViewModelAction) -> Unit
 )
+
+data class SmartSearchResultUiState(
+    val title: String,
+    val body: String,
+    val relevance: Int,
+    val type: String
+)
+
+sealed class SmartSearchViewModelAction {
+    data class Search(val query: String) : SmartSearchViewModelAction()
+}

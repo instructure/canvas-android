@@ -36,12 +36,35 @@ class SmartSearchViewModel @Inject constructor(
     private val query: String = savedStateHandle.get<String>(QUERY).orEmpty()
     private val canvasContext: CanvasContext = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) ?: throw IllegalArgumentException("CanvasContext is required")
 
-    private val _uiState = MutableStateFlow(SmartSearchUiState(query, emptyList()))
+    private val _uiState = MutableStateFlow(SmartSearchUiState(query, canvasContext, emptyList(), actionHandler = this::handleAction))
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            smartSearchRepository.smartSearch(canvasContext.id, query)
+            search(canvasContext.id, query)
+        }
+    }
+
+    private suspend fun search(courseId: Long, query: String) {
+        val results = smartSearchRepository.smartSearch(courseId, query)
+            .map { result ->
+                SmartSearchResultUiState(
+                    title = result.title,
+                    body = result.body,
+                    relevance = result.relevance,
+                    type = result.contentType
+                )
+            }
+        _uiState.value = _uiState.value.copy(results = results, loading = false)
+    }
+
+    private fun handleAction(action: SmartSearchViewModelAction) {
+        when (action) {
+            is SmartSearchViewModelAction.Search -> {
+                viewModelScope.launch {
+                    search(canvasContext.id, action.query)
+                }
+            }
         }
     }
 }

@@ -33,6 +33,9 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,6 +51,12 @@ class SmartSearchFragment : BaseCanvasFragment() {
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        ThemePrefs.reapplyCanvasTheme(requireActivity())
+        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,6 +68,11 @@ class SmartSearchFragment : BaseCanvasFragment() {
                 SmartSearchScreen(uiState)
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
     companion object {
