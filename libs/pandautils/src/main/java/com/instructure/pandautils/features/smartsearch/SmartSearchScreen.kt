@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.smartsearch
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,7 +84,7 @@ fun SmartSearchScreen(
                             icon = R.drawable.ic_smart_search,
                             tintColor = colorResource(R.color.textLightest),
                             onExpand = {},
-                            onSearch = { uiState.actionHandler(SmartSearchViewModelAction.Search(it)) },
+                            onSearch = { uiState.actionHandler(SmartSearchAction.Search(it)) },
                             placeholder = stringResource(R.string.smartSearchPlaceholder),
                             collapsable = false,
                             searchQuery = uiState.query
@@ -105,7 +106,7 @@ fun SmartSearchScreen(
                         errorMessage = stringResource(R.string.errorOccurred),
                         retryClick = {
                             uiState.actionHandler(
-                                SmartSearchViewModelAction.Search(
+                                SmartSearchAction.Search(
                                     uiState.query
                                 )
                             )
@@ -125,7 +126,11 @@ fun SmartSearchScreen(
                         }
 
                         items(uiState.results) {
-                            ResultItem(it, Color(uiState.canvasContext.color))
+                            ResultItem(
+                                it,
+                                Color(uiState.canvasContext.color),
+                                uiState.actionHandler
+                            )
                         }
                     }
                 }
@@ -202,7 +207,11 @@ private fun CourseHeader(title: String) {
 }
 
 @Composable
-private fun ResultItem(result: SmartSearchResultUiState, color: Color) {
+private fun ResultItem(
+    result: SmartSearchResultUiState,
+    color: Color,
+    actionHandler: (SmartSearchAction) -> Unit
+) {
     fun getContentTypeTitle(type: SmartSearchContentType): Int {
         return when (type) {
             SmartSearchContentType.ANNOUNCEMENT -> R.string.smartSearchAnnouncementTitle
@@ -223,7 +232,8 @@ private fun ResultItem(result: SmartSearchResultUiState, color: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(colorResource(R.color.backgroundLightest)),
+            .background(colorResource(R.color.backgroundLightest))
+            .clickable { actionHandler(SmartSearchAction.Route(result.url)) },
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -304,16 +314,18 @@ fun SmartSearchPreview() {
             canvasContext = Course(name = "Test course"),
             results = listOf(
                 SmartSearchResultUiState(
-                    "Title",
-                    "Body",
-                    23,
-                    SmartSearchContentType.ASSIGNMENT
+                    title = "Title",
+                    body = "Body",
+                    relevance = 23,
+                    type = SmartSearchContentType.ASSIGNMENT,
+                    url = "url"
                 ),
                 SmartSearchResultUiState(
-                    "Not to lay peacefully between its four familiar walls.",
-                    "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
-                    75,
-                    SmartSearchContentType.WIKI_PAGE
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 75,
+                    type = SmartSearchContentType.WIKI_PAGE,
+                    url = "url"
                 )
             )
         ) {}) {}
@@ -330,16 +342,18 @@ fun SmartSearchDarkPreview() {
             canvasContext = Course(name = "Test course"),
             results = listOf(
                 SmartSearchResultUiState(
-                    "Title",
-                    "Body",
-                    75,
-                    SmartSearchContentType.ANNOUNCEMENT
+                    title = "Title",
+                    body = "Body",
+                    relevance = 75,
+                    type = SmartSearchContentType.ANNOUNCEMENT,
+                    url = "url"
                 ),
                 SmartSearchResultUiState(
-                    "Not to lay peacefully between its four familiar walls.",
-                    "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
-                    50,
-                    SmartSearchContentType.DISCUSSION_TOPIC
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 50,
+                    type = SmartSearchContentType.DISCUSSION_TOPIC,
+                    url = "url"
                 )
             )
         ) {}) {}

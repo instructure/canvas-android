@@ -21,8 +21,10 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,6 +41,9 @@ class SmartSearchViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SmartSearchUiState(query, canvasContext, emptyList(), actionHandler = this::handleAction))
     val uiState = _uiState.asStateFlow()
 
+    private val _events = Channel<SmartSearchViewModelAction>()
+    val events = _events.receiveAsFlow()
+
     init {
         viewModelScope.launch {
             search(canvasContext.id, query)
@@ -54,6 +59,7 @@ class SmartSearchViewModel @Inject constructor(
                         title = result.title,
                         body = result.body,
                         relevance = result.relevance,
+                        url = result.htmlUrl,
                         type = result.contentType
                     )
                 }
@@ -63,11 +69,16 @@ class SmartSearchViewModel @Inject constructor(
         }
     }
 
-    private fun handleAction(action: SmartSearchViewModelAction) {
+    private fun handleAction(action: SmartSearchAction) {
         when (action) {
-            is SmartSearchViewModelAction.Search -> {
+            is SmartSearchAction.Search -> {
                 viewModelScope.launch {
                     search(canvasContext.id, action.query)
+                }
+            }
+            is SmartSearchAction.Route -> {
+                viewModelScope.launch {
+                    _events.send(SmartSearchViewModelAction.Route(action.url))
                 }
             }
         }

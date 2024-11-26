@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
@@ -35,9 +36,11 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 val QUERY = "query"
 
@@ -45,6 +48,9 @@ val QUERY = "query"
 @ScreenView(SCREEN_VIEW_SMART_SEARCH)
 @AndroidEntryPoint
 class SmartSearchFragment : BaseCanvasFragment() {
+
+    @Inject
+    lateinit var router: SmartSearchRouter
 
     private val viewModel: SmartSearchViewModel by viewModels()
 
@@ -68,6 +74,19 @@ class SmartSearchFragment : BaseCanvasFragment() {
                 SmartSearchScreen(uiState) {
                     requireActivity().onBackPressed()
                 }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleActions)
+    }
+
+    private fun handleActions(action: SmartSearchViewModelAction) {
+        when (action) {
+            is SmartSearchViewModelAction.Route -> {
+                router.route(action.url)
             }
         }
     }

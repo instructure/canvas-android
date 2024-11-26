@@ -24,16 +24,22 @@ data class SmartSearchUiState(
     val results: List<SmartSearchResultUiState>,
     val loading: Boolean = true,
     val error: Boolean = false,
-    val actionHandler: (SmartSearchViewModelAction) -> Unit
+    val actionHandler: (SmartSearchAction) -> Unit
 )
 
 data class SmartSearchResultUiState(
     val title: String,
     val body: String,
     val relevance: Int,
+    val url: String,
     val type: SmartSearchContentType
 )
 
+sealed class SmartSearchAction {
+    data class Search(val query: String) : SmartSearchAction()
+    data class Route(val url: String) : SmartSearchAction()
+}
+
 sealed class SmartSearchViewModelAction {
-    data class Search(val query: String) : SmartSearchViewModelAction()
+    data class Route(val url: String) : SmartSearchViewModelAction()
 }
