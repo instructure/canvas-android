@@ -54,6 +54,7 @@ import com.instructure.teacher.ui.pages.EditPageDetailsPage
 import com.instructure.teacher.ui.pages.EditProfileSettingsPage
 import com.instructure.teacher.ui.pages.EditQuizDetailsPage
 import com.instructure.teacher.ui.pages.EditSyllabusPage
+import com.instructure.teacher.ui.pages.EmailNotificationsPage
 import com.instructure.teacher.ui.pages.FileListPage
 import com.instructure.teacher.ui.pages.HelpPage
 import com.instructure.teacher.ui.pages.InboxMessagePage
@@ -116,6 +117,7 @@ abstract class TeacherTest : CanvasTest() {
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val editDashboardPage = EditDashboardPage()
     val pushNotificationsPage = PushNotificationsPage()
+    val emailNotificationsPage = EmailNotificationsPage()
     val legalPage = LegalPage()
     val helpPage = HelpPage()
     val aboutPage = AboutPage()

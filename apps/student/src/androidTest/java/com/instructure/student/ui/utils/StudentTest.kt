@@ -56,6 +56,7 @@ import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionListPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
+import com.instructure.student.ui.pages.EmailNotificationsPage
 import com.instructure.student.ui.pages.FileChooserPage
 import com.instructure.student.ui.pages.FileListPage
 import com.instructure.student.ui.pages.GoToQuizPage
@@ -164,6 +165,7 @@ abstract class StudentTest : CanvasTest() {
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
+    val emailNotificationsPage = EmailNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()
