@@ -17,21 +17,40 @@ package com.instructure.pandautils.features.smartsearch
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.instructure.canvasapi2.models.CanvasContext
+import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.SmartSearchContentType
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.SearchBar
@@ -71,8 +90,141 @@ fun SmartSearchScreen(uiState: SmartSearchUiState) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .background(colorResource(R.color.backgroundLightest))
-            ) { }
+                    .background(colorResource(R.color.backgroundLight))
+            ) {
+                item {
+                    CourseHeader(uiState.canvasContext.name.orEmpty())
+                }
+
+                items(uiState.results) {
+                    ResultItem(it, Color(uiState.canvasContext.color))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CourseHeader(title: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        backgroundColor = colorResource(R.color.backgroundLightestElevated)
+    ) {
+        Column(
+            modifier = Modifier.padding(
+                top = 8.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            )
+        ) {
+            Text(
+                stringResource(R.string.smartSearchCourseHeaderTitle),
+                color = colorResource(R.color.textDark),
+                style = MaterialTheme.typography.body1
+            )
+            Text(
+                title,
+                color = colorResource(R.color.textDarkest),
+                style = MaterialTheme.typography.subtitle1.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
+                maxLines = 2
+            )
+        }
+    }
+}
+
+@Composable
+private fun ResultItem(result: SmartSearchResultUiState, color: Color) {
+    fun getContentTypeTitle(type: SmartSearchContentType): Int {
+        return when (type) {
+            SmartSearchContentType.ANNOUNCEMENT -> R.string.smartSearchAnnouncementTitle
+            SmartSearchContentType.DISCUSSION_TOPIC -> R.string.smartSearchDiscussionTitle
+            SmartSearchContentType.ASSIGNMENT -> R.string.smartSearchAssignmentTitle
+            SmartSearchContentType.WIKI_PAGE -> R.string.smartSearchPageTitle
+        }
+    }
+
+    fun getContentTypeIcon(type: SmartSearchContentType): Int {
+        return when (type) {
+            SmartSearchContentType.ANNOUNCEMENT -> R.drawable.ic_announcement
+            SmartSearchContentType.DISCUSSION_TOPIC -> R.drawable.ic_discussion
+            SmartSearchContentType.ASSIGNMENT -> R.drawable.ic_assignment
+            SmartSearchContentType.WIKI_PAGE -> R.drawable.ic_pages
+        }
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(R.color.backgroundLightest)),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier
+                .padding(start = 24.dp, top = 14.dp)
+                .size(20.dp)
+                .align(Alignment.Top),
+            painter = painterResource(getContentTypeIcon(result.type)),
+            contentDescription = null,
+            tint = color
+        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 18.dp, top = 12.dp, bottom = 14.dp)
+        ) {
+            Text(
+                result.title,
+                maxLines = 2,
+                style = MaterialTheme.typography.body1.copy(
+                    fontWeight = FontWeight.SemiBold,
+                ),
+                color = colorResource(R.color.textDarkest)
+            )
+            Text(
+                text = stringResource(getContentTypeTitle(result.type)),
+                maxLines = 1,
+                style = MaterialTheme.typography.body1.copy(
+                    fontWeight = FontWeight.Normal,
+                ),
+                color = color
+            )
+            if (result.body.isNotEmpty()) {
+                Text(
+                    result.body,
+                    maxLines = 3,
+                    style = MaterialTheme.typography.body1,
+                    color = colorResource(R.color.textDark)
+                )
+            }
+        }
+        Relevance(result.relevance)
+    }
+}
+
+@Composable
+private fun Relevance(relevance: Int) {
+    val color = when {
+        relevance >= 50 -> colorResource(R.color.borderSuccess)
+        relevance in 25..49 -> colorResource(R.color.borderWarning)
+        else -> colorResource(R.color.borderDanger)
+    }
+
+    val count = (relevance / 25) + 1
+
+    Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+        for (i in 0 until 4) {
+            Box(
+                modifier = Modifier
+                    .size(4.dp)
+                    .clip(RoundedCornerShape(1.dp))
+                    .background(if (i < count) color else colorResource(R.color.borderMedium))
+            )
+            Spacer(modifier = Modifier.size(2.dp))
         }
     }
 }
@@ -80,21 +232,49 @@ fun SmartSearchScreen(uiState: SmartSearchUiState) {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun SmartSearchPreview() {
+    ContextKeeper.appContext = LocalContext.current
     SmartSearchScreen(
         SmartSearchUiState(
             "query",
-            CanvasContext.defaultCanvasContext(),
-            emptyList()
+            Course(name = "Test course"),
+            listOf(
+                SmartSearchResultUiState(
+                    "Title",
+                    "Body",
+                    23,
+                    SmartSearchContentType.ASSIGNMENT
+                ),
+                SmartSearchResultUiState(
+                    "Not to lay peacefully between its four familiar walls.",
+                    "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    75,
+                    SmartSearchContentType.WIKI_PAGE
+                )
+            )
         ) {})
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SmartSearchDarkPreview() {
+    ContextKeeper.appContext = LocalContext.current
     SmartSearchScreen(
         SmartSearchUiState(
             "query",
-            CanvasContext.defaultCanvasContext(),
-            emptyList()
+            Course(name = "Test course"),
+            listOf(
+                SmartSearchResultUiState(
+                    "Title",
+                    "Body",
+                    75,
+                    SmartSearchContentType.ANNOUNCEMENT
+                ),
+                SmartSearchResultUiState(
+                    "Not to lay peacefully between its four familiar walls.",
+                    "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    50,
+                    SmartSearchContentType.DISCUSSION_TOPIC
+                )
+            )
         ) {})
 }

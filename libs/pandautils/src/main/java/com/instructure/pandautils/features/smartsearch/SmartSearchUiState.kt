@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.smartsearch
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.SmartSearchContentType
 
 data class SmartSearchUiState(
     val query: String,
@@ -30,7 +31,7 @@ data class SmartSearchResultUiState(
     val title: String,
     val body: String,
     val relevance: Int,
-    val type: String
+    val type: SmartSearchContentType
 )
 
 sealed class SmartSearchViewModelAction {

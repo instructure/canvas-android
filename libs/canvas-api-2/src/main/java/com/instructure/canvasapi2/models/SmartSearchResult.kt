@@ -21,7 +21,7 @@ data class SmartSearchResult(
     @SerializedName("content_id")
     val contentId: Long,
     @SerializedName("content_type")
-    val contentType: String,
+    val contentType: SmartSearchContentType,
     val title: String,
     val body: String,
     @SerializedName("html_url")
@@ -29,3 +29,14 @@ data class SmartSearchResult(
     val distance: Double,
     val relevance: Int
 )
+
+enum class SmartSearchContentType {
+    @SerializedName("Announcement")
+    ANNOUNCEMENT,
+    @SerializedName("DiscussionTopic")
+    DISCUSSION_TOPIC,
+    @SerializedName("Assignment")
+    ASSIGNMENT,
+    @SerializedName("WikiPage")
+    WIKI_PAGE,
+}

@@ -1909,4 +1909,9 @@
     <string name="a11y_searchBarCloseButton">Close search bar</string>
     <string name="a11y_searchBarClearButton">Clear query</string>
     <string name="a11y_searchBarSearchButton">Search</string>
+    <string name="smartSearchCourseHeaderTitle">Results in course</string>
+    <string name="smartSearchAnnouncementTitle">Announcement</string>
+    <string name="smartSearchDiscussionTitle">Discussion</string>
+    <string name="smartSearchAssignmentTitle">Assignment</string>
+    <string name="smartSearchPageTitle">Page</string>
 </resources>
