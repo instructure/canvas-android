@@ -54,6 +54,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
@@ -205,7 +206,21 @@ class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         const val CONTEXT_TYPE = "context_type"
         const val CONTEXT_ID = "context_id"
 
-        fun newInstance(route: Route) = EventFragment().withArgs(route.arguments)
+        fun newInstance(route: Route): EventFragment {
+            return EventFragment().withArgs(
+                route.arguments.apply { // Handle external navigation, like notifications
+                    if (route.paramsHash.containsKey(CONTEXT_TYPE)) {
+                        putString(CONTEXT_TYPE, route.paramsHash[CONTEXT_TYPE])
+                    }
+                    if (route.paramsHash.containsKey(CONTEXT_ID)) {
+                        putLong(CONTEXT_ID, route.paramsHash[CONTEXT_ID]?.toLongOrNull().orDefault())
+                    }
+                    if (route.paramsHash.containsKey(SCHEDULE_ITEM_ID)) {
+                        putLong(SCHEDULE_ITEM_ID, route.paramsHash[SCHEDULE_ITEM_ID]?.toLongOrNull().orDefault())
+                    }
+                }
+            )
+        }
 
         fun makeRoute(canvasContext: CanvasContext, scheduleItem: ScheduleItem) = Route(
             EventFragment::class.java, canvasContext, canvasContext.makeBundle {
