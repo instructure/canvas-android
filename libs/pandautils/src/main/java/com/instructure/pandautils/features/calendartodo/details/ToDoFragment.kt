@@ -15,7 +15,13 @@
  */
 package com.instructure.pandautils.features.calendartodo.details
 
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,9 +31,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -35,6 +41,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_TODO
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendartodo.details.composables.ToDoScreen
@@ -86,6 +93,10 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
             is ToDoViewModelAction.OpenEditToDo -> {
                 toDoRouter.openEditToDo(action.plannerItem)
             }
+
+            is ToDoViewModelAction.OnReminderAddClicked -> {
+                checkAlarmPermission()
+            }
         }
     }
 
@@ -94,6 +105,41 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
             is SharedCalendarAction.CloseToDoScreen -> activity?.onBackPressed()
             else -> {}
         }
+    }
+
+    private fun checkAlarmPermission() {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.primaryTextColor)
+            } else {
+                viewModel.checkingReminderPermission = true
+                startActivity(
+                    Intent(
+                        Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                        Uri.parse("package:" + requireContext().packageName)
+                    )
+                )
+            }
+        } else {
+            viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.primaryTextColor)
+        }
+    }
+
+    private fun checkAlarmPermissionResult() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
+            if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
+                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.primaryTextColor)
+            } else {
+                Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
+            }
+            viewModel.checkingReminderPermission = false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkAlarmPermissionResult()
     }
 
     override val navigation: Navigation?

@@ -17,17 +17,23 @@ package com.instructure.pandautils.features.calendartodo.details
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.annotation.ColorInt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNER_ITEM
+import com.instructure.pandautils.features.reminder.ReminderItem
+import com.instructure.pandautils.features.reminder.ReminderManager
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,6 +43,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +51,10 @@ import javax.inject.Inject
 class ToDoViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
-    private val toDoRepository: ToDoRepository
+    private val toDoRepository: ToDoRepository,
+    private val apiPrefs: ApiPrefs,
+    private val themePrefs: ThemePrefs,
+    private val reminderManager: ReminderManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ToDoUiState())
@@ -54,6 +64,8 @@ class ToDoViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val plannerItem: PlannerItem? = savedStateHandle.get<PlannerItem>(PLANNER_ITEM)
+
+    var checkingReminderPermission = false
 
     init {
         loadData()
@@ -76,6 +88,8 @@ class ToDoViewModel @Inject constructor(
                     description = plannerItem.plannable.details.orEmpty()
                 )
             }
+
+            observeReminders()
         }
     }
 
@@ -106,6 +120,60 @@ class ToDoViewModel @Inject constructor(
             is ToDoAction.EditToDo -> plannerItem?.let {
                 viewModelScope.launch {
                     _events.send(ToDoViewModelAction.OpenEditToDo(it))
+                }
+            }
+            is ToDoAction.OnReminderAddClicked -> plannerItem?.let {
+                viewModelScope.launch {
+                    _events.send(ToDoViewModelAction.OnReminderAddClicked)
+                }
+            }
+            is ToDoAction.OnReminderDeleteClicked -> {
+                showDeleteReminderConfirmationDialog(action.context, action.reminderId, themePrefs.textButtonColor)
+            }
+        }
+    }
+
+    fun showCreateReminderDialog(context: Context, @ColorInt color: Int) {
+        plannerItem?.let { plannerItem ->
+            viewModelScope.launch {
+                when {
+                    plannerItem.plannableDate.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
+                        context,
+                        apiPrefs.user?.id.orDefault(),
+                        plannerItem.plannable.id,
+                        plannerItem.plannable.title,
+                        plannerItem.htmlUrl.orEmpty(),
+                        plannerItem.plannableDate,
+                    )
+                    else -> reminderManager.showBeforeDueDateReminderDialog(
+                        context,
+                        apiPrefs.user?.id.orDefault(),
+                        plannerItem.plannable.id,
+                        plannerItem.plannable.title,
+                        plannerItem.htmlUrl.orEmpty(),
+                        plannerItem.plannableDate,
+                        color
+                    )
+                }
+            }
+        }
+    }
+
+    private fun showDeleteReminderConfirmationDialog(context: Context, reminderId: Long, @ColorInt color: Int) {
+        viewModelScope.launch { reminderManager.showDeleteReminderDialog(context, reminderId, color) }
+    }
+
+    private fun observeReminders() {
+        plannerItem?.let { plannerItem ->
+            viewModelScope.launch {
+                reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), plannerItem.plannable.id) { reminders ->
+                    _uiState.update {
+                        it.copy(
+                            reminderUiState = it.reminderUiState.copy(
+                                reminders = reminders.map { ReminderItem(it.id, it.text, Date(it.time)) }
+                            )
+                        )
+                    }
                 }
             }
         }

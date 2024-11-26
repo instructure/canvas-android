@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.calendarevent.details
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.annotation.ColorInt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,9 +31,14 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.reminder.ReminderItem
+import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.dueAt
+import com.instructure.pandautils.utils.eventHtmlUrl
 import com.instructure.pandautils.utils.isUser
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
@@ -54,7 +60,9 @@ class EventViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val eventRepository: EventRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val themePrefs: ThemePrefs,
+    private val reminderManager: ReminderManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EventUiState())
@@ -70,6 +78,8 @@ class EventViewModel @Inject constructor(
     private val scheduleItemId: Long? = savedStateHandle.get<Long>(EventFragment.SCHEDULE_ITEM_ID)
 
     private var scheduleItem: ScheduleItem? = null
+
+    var checkingReminderPermission = false
 
     init {
         loadData()
@@ -102,6 +112,7 @@ class EventViewModel @Inject constructor(
                 canManageCalendar && scheduleItem?.workflowState == "active",
                 canManageCalendar
             )
+            observeReminders()
         } catch {
             _uiState.update {
                 it.copy(
@@ -196,6 +207,16 @@ class EventViewModel @Inject constructor(
                     _events.send(EventViewModelAction.OpenEditEvent(it))
                 }
             }
+
+            is EventAction.OnReminderAddClicked -> viewModelScope.launch {
+                scheduleItem?.let {
+                    _events.send(EventViewModelAction.OnReminderAddClicked)
+                }
+            }
+
+            is EventAction.OnReminderDeleteClicked -> viewModelScope.launch {
+                showDeleteReminderConfirmationDialog(action.context, action.reminderId, themePrefs.textButtonColor)
+            }
         }
     }
 
@@ -209,6 +230,60 @@ class EventViewModel @Inject constructor(
                 )
             }
             else -> null
+        }
+    }
+
+    fun showCreateReminderDialog(context: Context, @ColorInt color: Int) {
+        scheduleItem?.let { scheduleItem ->
+            viewModelScope.launch {
+                when {
+                    scheduleItem.dueAt == null -> reminderManager.showCustomReminderDialog(
+                        context,
+                        apiPrefs.user?.id.orDefault(),
+                        scheduleItem.id,
+                        scheduleItem.title.orEmpty(),
+                        scheduleItem.eventHtmlUrl.orEmpty(),
+                        scheduleItem.dueAt
+                    )
+                    scheduleItem.dueAt?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
+                        context,
+                        apiPrefs.user?.id.orDefault(),
+                        scheduleItem.id,
+                        scheduleItem.title.orEmpty(),
+                        scheduleItem.eventHtmlUrl.orEmpty(),
+                        scheduleItem.dueAt
+                    )
+                    else -> reminderManager.showBeforeDueDateReminderDialog(
+                        context,
+                        apiPrefs.user?.id.orDefault(),
+                        scheduleItem.id,
+                        scheduleItem.title.orEmpty(),
+                        scheduleItem.eventHtmlUrl.orEmpty(),
+                        scheduleItem.dueAt ?: Date(),
+                        color
+                    )
+                }
+            }
+        }
+    }
+
+    private fun showDeleteReminderConfirmationDialog(context: Context, reminderId: Long, @ColorInt color: Int) {
+        viewModelScope.launch { reminderManager.showDeleteReminderDialog(context, reminderId, color) }
+    }
+
+    private fun observeReminders() {
+        scheduleItem?.let { scheduleItem ->
+            viewModelScope.launch {
+                reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), scheduleItem.id) { reminders ->
+                        _uiState.update {
+                            it.copy(
+                                reminderUiState = it.reminderUiState.copy(
+                                    reminders = reminders.map { ReminderItem(it.id, it.text, Date(it.time)) }
+                                )
+                            )
+                        }
+                    }
+            }
         }
     }
 }

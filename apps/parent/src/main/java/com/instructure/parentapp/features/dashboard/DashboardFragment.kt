@@ -28,7 +28,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -42,9 +41,11 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
@@ -88,6 +89,9 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     @Inject
     lateinit var firebaseCrashlytics: FirebaseCrashlytics
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
@@ -344,14 +348,20 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.logout_warning)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                ParentLogoutTask(
+                    LogoutTask.Type.LOGOUT,
+                    alarmScheduler = alarmScheduler
+                ).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .showThemed(ParentPrefs.currentStudent.studentColor)
     }
 
     private fun onSwitchUsers() {
-        ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+        ParentLogoutTask(
+            LogoutTask.Type.SWITCH_USERS,
+            alarmScheduler = alarmScheduler
+        ).execute()
     }
 
     private fun setupLaunchDefinitions(launchDefinitionViewData: List<LaunchDefinitionViewData>) {

@@ -59,6 +59,7 @@ import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.calendartodo.details.ToDoAction
 import com.instructure.pandautils.features.calendartodo.details.ToDoUiState
+import com.instructure.pandautils.features.reminder.composables.ReminderView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
@@ -109,6 +110,7 @@ internal fun ToDoScreen(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
                 ToDoContent(
+                    actionHandler = actionHandler,
                     toDoUiState = toDoUiState,
                     modifier = Modifier
                         .padding(padding)
@@ -177,6 +179,7 @@ private fun OverFlowMenuSegment(
 
 @Composable
 private fun ToDoContent(
+    actionHandler: (ToDoAction) -> Unit,
     toDoUiState: ToDoUiState,
     modifier: Modifier = Modifier
 ) {
@@ -220,6 +223,14 @@ private fun ToDoContent(
                     .testTag("date"),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp
+            )
+            val context = LocalContext.current
+            Spacer(modifier = Modifier.height(28.dp))
+            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+            ReminderView(
+                viewState = toDoUiState.reminderUiState,
+                onAddClick = { actionHandler(ToDoAction.OnReminderAddClicked) },
+                onRemoveClick = { actionHandler(ToDoAction.OnReminderDeleteClicked(context, it)) },
             )
             if (toDoUiState.description.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(28.dp))

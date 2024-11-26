@@ -20,11 +20,13 @@ import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.features.main.MainActivity
 import com.instructure.parentapp.util.ParentLogoutTask
 
 class ParentAcceptableUsePolicyRouter(
-    private val activity: FragmentActivity
+    private val activity: FragmentActivity,
+    private val alarmScheduler: AlarmScheduler,
 ) : AcceptableUsePolicyRouter {
     override fun openPolicy(content: String) {
         TODO("Not yet implemented")
@@ -39,6 +41,9 @@ class ParentAcceptableUsePolicyRouter(
     }
 
     override fun logout() {
-        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+        ParentLogoutTask(
+            LogoutTask.Type.LOGOUT,
+            alarmScheduler = alarmScheduler
+            ).execute()
     }
 }

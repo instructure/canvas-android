@@ -21,6 +21,7 @@ import android.content.res.Resources
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import com.instructure.pandautils.R
+import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.pandautils.utils.toast
@@ -147,6 +148,12 @@ class ReminderManager(
             .showThemed(color)
 
         awaitClose()
+    }
+
+    fun observeRemindersLiveData(userId: Long, contentId: Long, onUpdate: (List<ReminderEntity>) -> Unit) {
+        return reminderRepository.findByAssignmentIdLiveData(userId, contentId).observeForever {
+            onUpdate(it)
+        }
     }
 
     suspend fun deleteReminder(reminderId: Long) {
