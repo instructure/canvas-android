@@ -19,7 +19,6 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
@@ -38,7 +37,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val repository: CreateAccountRepository
 ) : ViewModel() {
 
     private val domain: String = savedStateHandle.get<String>(CreateAccountFragment.DOMAIN) ?: ""
@@ -143,7 +143,8 @@ class CreateAccountViewModel @Inject constructor(
     private fun createAccount() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
-            val response = UserAPI.createObserverUser(
+
+            repository.createObserverUser(
                 domain,
                 accountId,
                 pairingCode,
@@ -152,23 +153,14 @@ class CreateAccountViewModel @Inject constructor(
                 uiState.value.password
             )
 
-            if (response.isSuccess) {
-                _uiState.update { it.copy(isLoading = false) }
-                ApiPrefs.domain = domain
-                _events.send(
-                    CreateAccountViewModelAction.NavigateToSignIn(
-                        AccountDomain(domain = domain),
-                        true
-                    )
+            _uiState.update { it.copy(isLoading = false) }
+            ApiPrefs.domain = domain
+            _events.send(
+                CreateAccountViewModelAction.NavigateToSignIn(
+                    AccountDomain(domain = domain),
+                    true
                 )
-            } else if (response.isFail) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        showErrorSnack = true
-                    )
-                }
-            }
+            )
         } catch {
             _uiState.update {
                 it.copy(
@@ -182,24 +174,16 @@ class CreateAccountViewModel @Inject constructor(
     private fun fetchTermsOfService() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
-            val response = UserAPI.getTermsOfService(
+            val response = repository.getTermsOfService(
                 domain,
                 accountId
             )
-            if (response.isSuccess) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        termsOfService = response.dataOrNull
-                    )
-                }
 
-            } else if (response.isFail) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                    )
-                }
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    termsOfService = response
+                )
             }
         } catch {
             _uiState.update {

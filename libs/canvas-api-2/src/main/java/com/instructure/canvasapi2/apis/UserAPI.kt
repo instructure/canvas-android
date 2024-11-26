@@ -22,8 +22,6 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CreateObserverPostBody
-import com.instructure.canvasapi2.models.postmodels.Observer
-import com.instructure.canvasapi2.models.postmodels.Pseudonym
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
@@ -68,8 +66,8 @@ object UserAPI {
         @GET("accounts/self/terms_of_service")
         fun getTermsOfService(): Call<TermsOfService>
 
-        @GET("accounts/{accountId}/terms_of_service")
-        suspend fun getTermsOfService(@Path("accountId") accountId: String): DataResult<TermsOfService>
+        @GET
+        suspend fun getTermsOfService(@Url url: String): DataResult<TermsOfService>
 
         @GET("accounts/self")
         fun getAccount(): Call<Account>
@@ -145,8 +143,8 @@ object UserAPI {
         @PUT("users/self/dashboard_positions")
         suspend fun updateDashboardPositions(@Body positions: DashboardPositions, @Tag restParams: RestParams): DataResult<DashboardPositions>
 
-        @POST("accounts/{accountId}/users")
-        suspend fun createObserverAccount(@Path("accountId") accountId: String, @Body data: CreateObserverPostBody): DataResult<User>
+        @POST
+        suspend fun createObserverAccount(@Url url: String, @Body data: CreateObserverPostBody): DataResult<User>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {
@@ -301,41 +299,5 @@ object UserAPI {
         } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
             callback.addCall(adapter.build(UsersInterface::class.java, params).next(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)
         }
-    }
-
-    suspend fun createObserverUser(
-        domain: String,
-        accountId: String,
-        pairingCode: String,
-        fullName: String,
-        email: String,
-        password: String
-    ): DataResult<User> {
-        val domainUrl = if (!domain.startsWith("https://")) {
-            "https://$domain"
-        } else {
-            domain
-        }
-        val userInterface = RestBuilder().buildAdapter(RestParams(domain = domainUrl)).create(UsersInterface::class.java)
-
-        val createObserver = CreateObserverPostBody(
-            Observer(fullName),
-            Pseudonym(email, password),
-            PairingCode(pairingCode)
-        )
-        return userInterface.createObserverAccount(accountId, createObserver)
-    }
-
-    suspend fun getTermsOfService(
-        domain: String,
-        accountId: String,
-    ): DataResult<TermsOfService> {
-        val domainUrl = if (!domain.startsWith("https://")) {
-            "https://$domain"
-        } else {
-            domain
-        }
-        val userInterface = RestBuilder().buildAdapter(RestParams(domain = domainUrl)).create(UsersInterface::class.java)
-        return userInterface.getTermsOfService(accountId)
     }
 }
