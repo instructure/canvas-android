@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.webview
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,11 +25,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.mvvm.ViewState
@@ -54,7 +55,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SimpleWebViewFragment : Fragment(), NavigationCallbacks {
+class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     @Inject
     lateinit var parentPrefs: ParentPrefs
@@ -123,6 +124,7 @@ class SimpleWebViewFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun loadWebView(mainUrl: String, limitWebAccess: Boolean) = with(binding) {
+        webViewProgress.indeterminateTintList = ColorStateList.valueOf(parentPrefs.currentStudent.studentColor)
         webView.enableAlgorithmicDarkening()
         webView.setInitialScale(100)
         webView.addVideoClient(requireActivity())

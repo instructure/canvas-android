@@ -20,7 +20,7 @@ package com.instructure.parentapp.features.webview
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment.Companion.DARK_TOOLBAR
 import com.instructure.pandautils.utils.Const
@@ -29,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class HtmlContentActivity : AppCompatActivity() {
+class HtmlContentActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
