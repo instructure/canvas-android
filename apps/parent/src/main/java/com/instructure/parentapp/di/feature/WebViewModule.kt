@@ -15,26 +15,25 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.navigation.WebViewRouter
-import com.instructure.parentapp.util.navigation.Navigation
-import com.instructure.parentapp.util.navigation.ParentWebViewRouter
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.parentapp.features.webview.SimpleWebViewRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
-/**
- * Module for various common Fragment scope dependencies that are used in different Fragments.
- */
 @Module
-@InstallIn(FragmentComponent::class)
-class FragmentModule {
+@InstallIn(ViewModelComponent::class)
+class WebViewModule {
 
     @Provides
-    fun provideWebViewRouter(activity: FragmentActivity, navigation: Navigation): WebViewRouter {
-        return ParentWebViewRouter(activity, navigation)
+    fun provideSimpleWebViewRepository(
+        oAuthApi: OAuthAPI.OAuthInterface,
+        apiPrefs: ApiPrefs
+    ): SimpleWebViewRepository {
+        return SimpleWebViewRepository(oAuthApi, apiPrefs)
     }
 }

@@ -98,6 +98,7 @@ data class User(
     // User Permissions - defaults to false, returned with UserAPI.getSelfWithPermissions()
     fun canUpdateAvatar(): Boolean = permissions != null && permissions!!.canUpdateAvatar
     fun canUpdateName(): Boolean = permissions != null && permissions!!.canUpdateName
+    fun limitParentAppWebAccess(): Boolean = permissions?.limitParentAppWebAccess ?: false
 }
 
 @Parcelize

@@ -53,6 +53,9 @@ object OAuthAPI {
         @GET("/api/v1/login/session_token")
         fun getAuthenticatedSessionMasquerading(@Query("return_to") targetUrl: String, @Query("as_user_id") userId: Long): Call<AuthenticatedSession>
 
+        @GET("/api/v1/login/session_token")
+        suspend fun getAuthenticatedSessionMasquerading(@Query("return_to") targetUrl: String, @Query("as_user_id") userId: Long, @Tag params: RestParams): DataResult<AuthenticatedSession>
+
         @FormUrlEncoded
         @POST("/login/oauth2/token")
         fun refreshAccessToken(

@@ -93,7 +93,12 @@ sealed class AssignmentDetailAction {
     data class ShowToast(val message: String) : AssignmentDetailAction()
     data class NavigateToSendMessage(val options: InboxComposeOptions) : AssignmentDetailAction()
     data class NavigateToLtiScreen(val url: String) : AssignmentDetailAction()
-    data class NavigateToSubmissionScreen(val isObserver: Boolean, val selectedSubmissionAttempt: Long?) : AssignmentDetailAction()
+    data class NavigateToSubmissionScreen(
+        val isObserver: Boolean,
+        val selectedSubmissionAttempt: Long?,
+        val assignmentUrl: String?,
+        val isAssignmentEnhancementEnabled: Boolean
+    ) : AssignmentDetailAction()
     data class NavigateToQuizScreen(val quiz: Quiz) : AssignmentDetailAction()
     data class NavigateToDiscussionScreen(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailAction()
     data class NavigateToUploadScreen(val assignment: Assignment) : AssignmentDetailAction()

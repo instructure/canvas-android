@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -87,6 +88,7 @@ class LtiLaunchViewModelTest {
         }
 
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
+        assertEquals(ViewState.Success, viewModel.state.value)
     }
 
     @Test
@@ -106,6 +108,7 @@ class LtiLaunchViewModelTest {
         }
 
         assertEquals(LtiLaunchAction.LoadLtiWebView("url"), events[0])
+        assertEquals(ViewState.Success, viewModel.state.value)
     }
 
     @Test
@@ -196,7 +199,7 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl("url", any())}
+        coVerify { repository.getLtiFromAuthenticationUrl("url", any()) }
         assertEquals(LtiLaunchAction.LoadLtiWebView("url"), events[0])
     }
 
@@ -212,7 +215,7 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify(exactly = 0) { repository.getLtiFromAuthenticationUrl(any(), any())}
+        coVerify(exactly = 0) { repository.getLtiFromAuthenticationUrl(any(), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 
@@ -250,7 +253,12 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?url=https://url"), any())}
+        coVerify {
+            repository.getLtiFromAuthenticationUrl(
+                eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?url=https://url"),
+                any()
+            )
+        }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 
@@ -275,7 +283,12 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?url=https://url"), any())}
+        coVerify {
+            repository.getLtiFromAuthenticationUrl(
+                eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?url=https://url"),
+                any()
+            )
+        }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 
@@ -301,7 +314,7 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/courses/1/external_tools/sessionless_launch?url=url"), any())}
+        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/courses/1/external_tools/sessionless_launch?url=url"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 
@@ -327,7 +340,7 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/groups/1/external_tools/sessionless_launch?url=url"), any())}
+        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/groups/1/external_tools/sessionless_launch?url=url"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 
@@ -353,7 +366,7 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/courses/1/external_tools/sessionless_launch?id=55"), any())}
+        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/courses/1/external_tools/sessionless_launch?id=55"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 
@@ -379,7 +392,7 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/groups/1/external_tools/sessionless_launch?id=55"), any())}
+        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/groups/1/external_tools/sessionless_launch?id=55"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 
@@ -405,7 +418,7 @@ class LtiLaunchViewModelTest {
             viewModel.events.toList(events)
         }
 
-        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?id=55"), any())}
+        coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?id=55"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
 }

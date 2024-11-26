@@ -20,6 +20,7 @@ package com.instructure.parentapp.di.feature
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.AlertCountUpdaterImpl
 import com.instructure.parentapp.features.dashboard.DashboardRepository
@@ -27,6 +28,7 @@ import com.instructure.parentapp.features.dashboard.InboxCountUpdater
 import com.instructure.parentapp.features.dashboard.InboxCountUpdaterImpl
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolderImpl
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +53,11 @@ class DashboardModule {
 @Module
 @InstallIn(SingletonComponent::class)
 class SelectedStudentHolderModule {
+
+    @Provides
+    fun provideNavigation(apiPrefs: ApiPrefs): Navigation {
+        return Navigation(apiPrefs)
+    }
 
     @Provides
     @Singleton

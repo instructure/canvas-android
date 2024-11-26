@@ -100,7 +100,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val courseId = savedStateHandle.get<Long>(Const.COURSE_ID).orDefault()
     val course: LiveData<Course>
         get() = _course
-    private val _course = MutableLiveData<Course>(Course(id = courseId))
+    private val _course = MutableLiveData(Course(id = courseId))
 
     private val assignmentId = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID).orDefault()
 
@@ -114,6 +114,8 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var restrictQuantitativeData = false
     private var gradingScheme = emptyList<GradingSchemeRow>()
+
+    private var isAssignmentEnhancementEnabled = false
 
     var assignment: Assignment? = null
         private set
@@ -202,6 +204,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
                 val hasDraft = submissionHandler.lastSubmissionIsDraft
+
+                isAssignmentEnhancementEnabled = assignmentDetailsRepository.isAssignmentEnhancementEnabled(courseId.orDefault(), forceNetwork)
 
                 assignment = assignmentResult
                 _data.postValue(getViewData(assignmentResult, hasDraft))
@@ -520,7 +524,14 @@ class AssignmentDetailsViewModel @Inject constructor(
             }
         } else {
             Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
-            postAction(AssignmentDetailAction.NavigateToSubmissionScreen(isObserver, selectedSubmission?.attempt))
+            postAction(
+                AssignmentDetailAction.NavigateToSubmissionScreen(
+                    isObserver,
+                    selectedSubmission?.attempt,
+                    assignment?.htmlUrl,
+                    isAssignmentEnhancementEnabled
+                )
+            )
         }
     }
 
