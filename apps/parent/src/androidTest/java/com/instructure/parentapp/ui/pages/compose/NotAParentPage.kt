@@ -53,7 +53,6 @@ class NotAParentPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertNotAParentPageDetails() {
         ParentComposeWaitMatchers.waitForNodeWithText(composeTestRule, "Not a parent?")
-       // composeTestRule.onNodeWithText("Not a parent?").assertIsDisplayed()
         composeTestRule.onNodeWithText("We couldn't find any students associated with your account").assertIsDisplayed()
         composeTestRule.onNodeWithText("Return to login")
             .assertIsDisplayed()

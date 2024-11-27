@@ -18,13 +18,13 @@
 package com.instructure.parentapp.utils
 
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.espresso.pages.common.LoginFindSchoolPage
+import com.instructure.espresso.pages.common.LoginLandingPage
+import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
 import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
-import com.instructure.parentapp.ui.pages.LoginFindSchoolPage
-import com.instructure.parentapp.ui.pages.LoginLandingPage
-import com.instructure.parentapp.ui.pages.LoginSignInPage
 
 
 abstract class ParentTest : CanvasTest() {
@@ -35,6 +35,8 @@ abstract class ParentTest : CanvasTest() {
 
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
+
+    //Common pages
     val loginLandingPage = LoginLandingPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginSignInPage = LoginSignInPage()

@@ -50,7 +50,8 @@ class LoginE2ETest : ParentComposeTest() {
         loginWithUser(parent)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        assertDashboardPageDisplayed()
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
 
         Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
@@ -89,7 +90,8 @@ class LoginE2ETest : ParentComposeTest() {
         loginWithUser(parent, true)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        assertDashboardPageDisplayed()
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
 
         Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
@@ -107,7 +109,8 @@ class LoginE2ETest : ParentComposeTest() {
         loginWithUser(parent2, true)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        assertDashboardPageDisplayed()
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
 
         Log.d(ASSERTION_TAG, "Assert that the '${parent2.name}' parent user has logged in.")
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent2)
@@ -130,7 +133,8 @@ class LoginE2ETest : ParentComposeTest() {
         loginLandingPage.loginWithPreviousUser(parent2)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        assertDashboardPageDisplayed()
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu (to be able to log out).")
         dashboardPage.openNavigationDrawer()
@@ -166,7 +170,8 @@ class LoginE2ETest : ParentComposeTest() {
         loginWithUser(parent)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        assertDashboardPageDisplayed()
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
 
         Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
@@ -181,7 +186,8 @@ class LoginE2ETest : ParentComposeTest() {
         loginWithLastSavedSchool(parent)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
-        assertDashboardPageDisplayed()
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
 
         Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
@@ -201,7 +207,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG,"Enter domain: $DOMAIN.instructure.com.")
+        Log.d(STEP_TAG,"Enter domain: '$DOMAIN.instructure.com.'")
         loginFindSchoolPage.enterDomain(DOMAIN)
 
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
@@ -227,6 +233,7 @@ class LoginE2ETest : ParentComposeTest() {
         loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
     }
+
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
 
         Thread.sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
@@ -254,11 +261,6 @@ class LoginE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Login with '${user.name}' user.")
         loginSignInPage.loginAs(user)
-    }
-
-    private fun assertDashboardPageDisplayed() {
-        dashboardPage.waitForRender()
-        dashboardPage.assertPageObjects()
     }
 
 }

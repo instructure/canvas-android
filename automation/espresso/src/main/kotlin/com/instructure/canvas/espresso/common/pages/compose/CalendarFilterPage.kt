@@ -20,7 +20,7 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 
 class CalendarFilterPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 

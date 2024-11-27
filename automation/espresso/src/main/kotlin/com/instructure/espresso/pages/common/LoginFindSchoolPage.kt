@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2018 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -14,18 +14,26 @@
  *     limitations under the License.
  *
  */
-package com.instructure.parentapp.ui.pages
+package com.instructure.espresso.pages.common
 
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 import com.instructure.espresso.replaceText
-import com.instructure.parentapp.R
+import com.instructure.loginapi.login.R
 
+/**
+ * Represents the Login Find School Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the login
+ * find school page. It contains various view elements such as toolbar, "What's your school name"
+ * text view, dividers, domain input edit text, find school recycler view, and toolbar next menu button.
+ */
 @Suppress("unused")
 class LoginFindSchoolPage: BasePage() {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
+
     private val whatsYourSchoolNameTextView by OnViewWithId(R.id.whatsYourSchoolName)
     private val topDivider by OnViewWithId(R.id.topDivider)
     private val bottomDivider by OnViewWithId(R.id.bottomDivider)
@@ -33,11 +41,20 @@ class LoginFindSchoolPage: BasePage() {
     private val findSchoolRecyclerView by OnViewWithId(R.id.findSchoolRecyclerView)
     private val toolbarNextMenuButton by OnViewWithId(R.id.next)
 
+    /**
+     * Clicks the toolbar next menu item.
+     */
     fun clickToolbarNextMenuItem() {
         toolbarNextMenuButton.click()
     }
 
+    /**
+     * Enters the domain into the domain input edit text.
+     *
+     * @param domain The domain to enter.
+     */
     fun enterDomain(domain: String) {
         domainInputEditText.replaceText(domain)
     }
 }
+

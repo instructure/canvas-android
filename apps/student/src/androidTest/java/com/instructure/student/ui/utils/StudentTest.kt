@@ -36,6 +36,9 @@ import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
+import com.instructure.espresso.pages.common.LoginFindSchoolPage
+import com.instructure.espresso.pages.common.LoginLandingPage
+import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
@@ -67,9 +70,6 @@ import com.instructure.student.ui.pages.ImportantDatesPage
 import com.instructure.student.ui.pages.InboxConversationPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
-import com.instructure.student.ui.pages.LoginFindSchoolPage
-import com.instructure.student.ui.pages.LoginLandingPage
-import com.instructure.student.ui.pages.LoginSignInPage
 import com.instructure.student.ui.pages.ModuleProgressionPage
 import com.instructure.student.ui.pages.ModulesPage
 import com.instructure.student.ui.pages.NewMessagePage
