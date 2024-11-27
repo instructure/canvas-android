@@ -39,6 +39,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -185,7 +186,6 @@ class ToDoViewModelTest {
     @Test
     fun `Custom DatePicker opens to set reminder if Due Date is in past`() {
         val plannerItem = plannerItem.copy(plannableDate = LocalDate.now().minusDays(1).toApiString().toDate() ?: Date())
-        val context: Context = mockk(relaxed = true)
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
         every { apiPrefs.user } returns User(1)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
@@ -208,7 +208,6 @@ class ToDoViewModelTest {
     @Test
     fun `Before due date dialog opens to set reminder if Due Date is in the future`() {
         val plannerItem = plannerItem.copy(plannableDate = LocalDate.now().plusDays(1).toString().toSimpleDate() ?: Date())
-        val context: Context = mockk(relaxed = true)
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
         every { apiPrefs.user } returns User(1)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
@@ -227,5 +226,30 @@ class ToDoViewModelTest {
                 any()
             )
         }
+    }
+
+    @Test
+    fun `Planner item gets initialised when opened with id only`() {
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
+        every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coEvery { toDoRepository.getPlannerNote(1) } returns plannerItem.plannable
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+
+        val state = viewModel.uiState.value
+
+        val expectedState = ToDoUiState(
+            title = "Title",
+            contextName = null,
+            contextColor = ThemedColor(0).light,
+            date = "Feb 12 at 12:00 PM",
+            description = "Description"
+        )
+
+        assertEquals(expectedState, state)
     }
 }

@@ -18,6 +18,7 @@
 package com.instructure.pandautils.features.calendartodo.details
 
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -30,6 +31,23 @@ class ToDoRepositoryTest {
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
 
     private val toDoRepository = ToDoRepository(plannerApi)
+
+    @Test(expected = IllegalStateException::class)
+    fun `Throw exception when get fails`() = runTest {
+        coEvery { plannerApi.getPlannerNote(any(), any()) } returns DataResult.Fail()
+
+        toDoRepository.getPlannerNote(1)
+    }
+
+    @Test
+    fun `Get planner note successful`() = runTest {
+        val note: Plannable = mockk(relaxed = true)
+        coEvery { plannerApi.getPlannerNote(any(), any()) } returns DataResult.Success(note)
+
+        val result = toDoRepository.getPlannerNote(1)
+
+        Assert.assertEquals(note, result)
+    }
 
     @Test(expected = IllegalStateException::class)
     fun `Throw exception when deleting fails`() = runTest {

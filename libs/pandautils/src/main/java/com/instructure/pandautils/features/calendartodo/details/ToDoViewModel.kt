@@ -17,7 +17,6 @@ package com.instructure.pandautils.features.calendartodo.details
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -82,10 +81,8 @@ class ToDoViewModel @Inject constructor(
 
     private fun loadData() {
         plannableId?.let { plannableId ->
-            Log.d("ToDoViewModel", "Loading data for plannableId: $plannableId")
             viewModelScope.launch {
                 val plannable = toDoRepository.getPlannerNote(plannableId)
-                Log.d("ToDoViewModel", "Loading data for title: ${plannable.title}")
                 plannerItem = plannable.toPlannableItem()
 
 
