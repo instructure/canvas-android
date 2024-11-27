@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.parentapp.ui.pages
+package com.instructure.espresso.pages.common
 
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
@@ -28,8 +28,8 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.page.BasePage
-import com.instructure.parentapp.R
+import com.instructure.espresso.pages.BasePage
+import com.instructure.loginapi.login.R
 import org.hamcrest.CoreMatchers.containsString
 
 @Suppress("unused")
@@ -119,7 +119,6 @@ class LoginSignInPage: BasePage() {
         enterEmail(loginId)
         enterPassword(password)
         clickLoginButton()
-        // authorizeButton().perform(webClick()) // Not needed on mobileqa.beta.instructure.com (???)
     }
 
     //endregion
