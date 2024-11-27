@@ -16,12 +16,11 @@
  */
 package com.instructure.parentapp.features.courses.details.summary
 
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 
 data class SummaryUiState (
     val state: ScreenState = ScreenState.Loading,
-    val course: Course = Course(),
+    val courseId: Long = 0,
     val items: List<ScheduleItem> = emptyList()
 )
 

@@ -16,15 +16,12 @@
  */
 package com.instructure.parentapp.ui.compose.courses.details.summary
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toSimpleDate
@@ -97,13 +94,13 @@ class SummaryScreenTest {
     }
 
     @Test
-    fun assertContentContent() {
+    fun assertSuccessContent() {
         val assignmentDueDate = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }
         composeTestRule.setContent {
             SummaryContent(
                 uiState = SummaryUiState(
                     state = ScreenState.Content,
-                    course = Course(id = 1, name = "Course 1", courseColor = Integer.toHexString(Color.Red.toArgb())),
+                    courseId = 1,
                     items = listOf(
                         ScheduleItem(
                             title = "Assignment 1",

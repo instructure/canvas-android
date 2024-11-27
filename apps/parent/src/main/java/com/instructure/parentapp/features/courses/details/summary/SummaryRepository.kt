@@ -33,7 +33,7 @@ class SummaryRepository(
     }
 
     suspend fun getCalendarEvents(contextId: String, forceRefresh: Boolean = false): List<ScheduleItem> {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
         val assignmentEvents = calendarEventApi.getCalendarEvents(
             allEvents = true,
             type = CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,

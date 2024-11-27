@@ -50,7 +50,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
@@ -115,7 +115,7 @@ internal fun SummaryContent(
                 }
 
                 is ScreenState.Content -> {
-                    SummaryContentScreen(uiState.items, uiState.course, navigateToAssignmentDetails, navigateToCalendarEvent)
+                    SummaryContentScreen(uiState.items, uiState.courseId, navigateToAssignmentDetails, navigateToCalendarEvent)
                 }
             }
         }
@@ -156,7 +156,7 @@ private fun SummaryEmptyScreen() {
 @Composable
 private fun SummaryContentScreen(
     items: List<ScheduleItem>,
-    course: Course,
+    courseId: Long,
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit
 ) {
@@ -165,7 +165,7 @@ private fun SummaryContentScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         items(items) {
-            ScheduleItemRow(it, course, navigateToAssignmentDetails, navigateToCalendarEvent)
+            ScheduleItemRow(it, courseId, navigateToAssignmentDetails, navigateToCalendarEvent)
         }
     }
 }
@@ -173,7 +173,7 @@ private fun SummaryContentScreen(
 @Composable
 private fun ScheduleItemRow(
     scheduleItem: ScheduleItem,
-    course: Course,
+    courseId: Long,
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit
 ) {
@@ -193,14 +193,14 @@ private fun ScheduleItemRow(
                     val eventId = uri
                         .getQueryParameter("event_id")
                         ?.toLongOrNull() ?: 0
-                    navigateToCalendarEvent (course.type.apiString, course.id, eventId)
+                    navigateToCalendarEvent (CanvasContext.Type.COURSE.apiString, courseId, eventId)
                 }
             }
     ) {
         Icon(
             painter = painterResource(id = scheduleItem.iconRes),
             contentDescription = "Summary Item Icon",
-            tint = Color(course.color),
+            tint = Color(CanvasContext.emptyCourseContext(courseId).color),
             modifier = Modifier
                 .padding(8.dp)
                 .size(24.dp)

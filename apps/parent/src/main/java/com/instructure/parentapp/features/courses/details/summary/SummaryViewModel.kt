@@ -54,9 +54,9 @@ class SummaryViewModel @Inject constructor(
             val course = repository.getCourse(courseId)
             val summary = repository.getCalendarEvents(course.contextId, forceRefresh)
             if (summary.isEmpty()) {
-                _uiState.update { it.copy(state = ScreenState.Empty, items = summary, course = course) }
+                _uiState.update { it.copy(state = ScreenState.Empty, items = summary, courseId = course.id) }
             } else {
-                _uiState.update { it.copy(state = ScreenState.Content, items = summary, course = course) }
+                _uiState.update { it.copy(state = ScreenState.Content, items = summary, courseId = course.id) }
             }
         }.catch {
             _uiState.update { it.copy(state = ScreenState.Error) }
