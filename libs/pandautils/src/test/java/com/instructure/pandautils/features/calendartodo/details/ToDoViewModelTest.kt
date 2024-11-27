@@ -21,10 +21,17 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
+import com.instructure.canvasapi2.utils.toSimpleDate
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNABLE_ID
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNER_ITEM
+import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -55,6 +62,9 @@ class ToDoViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val toDoRepository: ToDoRepository = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val reminderManager: ReminderManager = mockk(relaxed = true)
 
     private val plannerItem = PlannerItem(
         courseId = null,
@@ -92,6 +102,7 @@ class ToDoViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
+        every { savedStateHandle.get<PlannerItem>(PLANNABLE_ID) } returns null
 
         every { context.getString(eq(R.string.calendarAtDateTime), any(), any()) } answers {
             val args = secondArg<Array<Any>>()
@@ -101,7 +112,10 @@ class ToDoViewModelTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository)
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.fullDomain } returns "https://canvas.instructure.com"
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
     }
 
     @After
@@ -166,5 +180,52 @@ class ToDoViewModelTest {
 
         val expectedEvent = ToDoViewModelAction.OpenEditToDo(plannerItem)
         Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Custom DatePicker opens to set reminder if Due Date is in past`() {
+        val plannerItem = plannerItem.copy(plannableDate = LocalDate.now().minusDays(1).toApiString().toDate() ?: Date())
+        val context: Context = mockk(relaxed = true)
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
+        every { apiPrefs.user } returns User(1)
+        every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coVerify(exactly = 1) {
+            reminderManager.showCustomReminderDialog(
+                context,
+                1,
+                1,
+                "Title",
+                "https://canvas.instructure.com/todos/1",
+                plannerItem.plannableDate,
+            )
+        }
+    }
+
+    @Test
+    fun `Before due date dialog opens to set reminder if Due Date is in the future`() {
+        val plannerItem = plannerItem.copy(plannableDate = LocalDate.now().plusDays(1).toString().toSimpleDate() ?: Date())
+        val context: Context = mockk(relaxed = true)
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
+        every { apiPrefs.user } returns User(1)
+        every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coVerify(exactly = 1) {
+            reminderManager.showBeforeDueDateReminderDialog(
+                context,
+                1,
+                1,
+                "Title",
+                "https://canvas.instructure.com/todos/1",
+                plannerItem.plannableDate,
+                any()
+            )
+        }
     }
 }
