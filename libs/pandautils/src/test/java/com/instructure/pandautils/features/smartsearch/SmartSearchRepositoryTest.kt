@@ -82,4 +82,62 @@ class SmartSearchRepositoryTest {
     private fun createRepository(): SmartSearchRepository {
         return SmartSearchRepository(smartSearchApi)
     }
+
+    @Test
+    fun `Filter result with less than 50 relevance`() = runTest {
+        val result = SmartSearchResultWrapper(
+            listOf(
+                SmartSearchResult(
+                    contentId = 1L,
+                    contentType = SmartSearchContentType.ASSIGNMENT,
+                    title = "Assignment 1",
+                    htmlUrl = "https://www.instructure.com",
+                    relevance = 85,
+                    distance = 0.256,
+                    body = "This is the body of the assignment"
+                ),
+                SmartSearchResult(
+                    contentId = 2L,
+                    contentType = SmartSearchContentType.DISCUSSION_TOPIC,
+                    title = "Discussion 1",
+                    htmlUrl = "https://www.instructure.com",
+                    relevance = 75,
+                    distance = 0.256,
+                    body = "This is the body of the discussion"
+                ),
+                SmartSearchResult(
+                    contentId = 3L,
+                    contentType = SmartSearchContentType.DISCUSSION_TOPIC,
+                    title = "Discussion 2",
+                    htmlUrl = "https://www.instructure.com",
+                    relevance = 49,
+                    distance = 0.256,
+                    body = "This is the body of the discussion"
+                ),
+                SmartSearchResult(
+                    contentId = 4L,
+                    contentType = SmartSearchContentType.DISCUSSION_TOPIC,
+                    title = "Discussion 3",
+                    htmlUrl = "https://www.instructure.com",
+                    relevance = 50,
+                    distance = 0.256,
+                    body = "This is the body of the discussion"
+                )
+            )
+        )
+        coEvery { smartSearchApi.smartSearch(any(), any(), any()) } returns DataResult.Success(
+            result
+        )
+
+        val repository = createRepository()
+        val response = repository.smartSearch(1L, "query")
+
+        val expected = listOf(result.results[0], result.results[1], result.results[3])
+
+        coVerify {
+            smartSearchApi.smartSearch(1L, "query", RestParams(isForceReadFromNetwork = true))
+        }
+
+        assertEquals(expected, response)
+    }
 }

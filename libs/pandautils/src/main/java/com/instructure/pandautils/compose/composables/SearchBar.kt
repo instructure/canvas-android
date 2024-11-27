@@ -59,7 +59,8 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     searchQuery: String = "",
     collapsable: Boolean = true,
-    @DrawableRes hintIcon: Int? = null
+    @DrawableRes hintIcon: Int? = null,
+    collapseOnSearch: Boolean = false
 ) {
     Row(
         modifier = modifier
@@ -110,6 +111,10 @@ fun SearchBar(
                     onSearch = {
                         keyboardController?.hide()
                         onSearch(query)
+                        if (collapseOnSearch) {
+                            expanded = false
+                            onExpand(false)
+                        }
                     }
                 ),
                 textStyle = MaterialTheme.typography.body1,

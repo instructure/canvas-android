@@ -38,5 +38,5 @@ enum class SmartSearchContentType {
     @SerializedName("Assignment")
     ASSIGNMENT,
     @SerializedName("WikiPage")
-    WIKI_PAGE,
+    WIKI_PAGE
 }

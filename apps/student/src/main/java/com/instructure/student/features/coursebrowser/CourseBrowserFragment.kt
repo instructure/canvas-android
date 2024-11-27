@@ -133,7 +133,8 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
                         },
                         onSearch = { query ->
                             RouteMatcher.route(requireActivity(), SmartSearchFragment.makeRoute(canvasContext, query))
-                        }
+                        },
+                        collapseOnSearch = true
                     )
                 }
             }

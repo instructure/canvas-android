@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -82,6 +83,7 @@ fun SmartSearchScreen(
                     },
                     title = {
                         SearchBar(
+                            modifier = Modifier.testTag("searchBar"),
                             icon = R.drawable.ic_smart_search,
                             tintColor = colorResource(R.color.textLightest),
                             onExpand = {},
@@ -97,7 +99,10 @@ fun SmartSearchScreen(
             when {
                 uiState.loading -> {
                     Loading(
-                        modifier = Modifier.fillMaxSize().background(colorResource(R.color.backgroundLight)),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(R.color.backgroundLight))
+                            .testTag("loading"),
                         title = stringResource(R.string.smartSearchLoadingTitle),
                         message = stringResource(R.string.smartSearchLoadingSubtitle),
                         icon = R.drawable.ic_smart_search_loading
@@ -108,7 +113,8 @@ fun SmartSearchScreen(
                     ErrorContent(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(colorResource(R.color.backgroundLight)),
+                            .background(colorResource(R.color.backgroundLight))
+                            .testTag("error"),
                         errorMessage = stringResource(R.string.errorOccurred),
                         retryClick = {
                             uiState.actionHandler(
@@ -141,7 +147,7 @@ fun SmartSearchScreen(
                         } else {
                             item {
                                 EmptyContent(
-                                    modifier = Modifier.fillMaxHeight(),
+                                    modifier = Modifier.fillMaxHeight().testTag("empty"),
                                     emptyTitle = stringResource(R.string.smartSearchEmptyTitle),
                                     emptyMessage = stringResource(R.string.smartSearchEmptyMessage),
                                     imageRes = R.drawable.ic_smart_search_empty
@@ -177,7 +183,8 @@ private fun CourseHeader(title: String) {
                 style = MaterialTheme.typography.body1
             )
             Text(
-                title,
+                modifier = Modifier.testTag("courseTitle"),
+                text = title,
                 color = colorResource(R.color.textDarkest),
                 style = MaterialTheme.typography.subtitle1.copy(
                     fontWeight = FontWeight.SemiBold
@@ -215,7 +222,8 @@ private fun ResultItem(
         modifier = Modifier
             .fillMaxWidth()
             .background(colorResource(R.color.backgroundLightest))
-            .clickable { actionHandler(SmartSearchAction.Route(result.url)) },
+            .clickable { actionHandler(SmartSearchAction.Route(result.url)) }
+            .testTag("resultItem"),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -234,7 +242,8 @@ private fun ResultItem(
                 .padding(start = 18.dp, top = 12.dp, bottom = 14.dp)
         ) {
             Text(
-                result.title,
+                modifier = Modifier.testTag("resultTitle"),
+                text = result.title,
                 maxLines = 2,
                 style = MaterialTheme.typography.body1.copy(
                     fontWeight = FontWeight.SemiBold,
@@ -242,6 +251,7 @@ private fun ResultItem(
                 color = colorResource(R.color.textDarkest)
             )
             Text(
+                modifier = Modifier.testTag("resultType"),
                 text = stringResource(getContentTypeTitle(result.type)),
                 maxLines = 1,
                 style = MaterialTheme.typography.body1.copy(
@@ -251,7 +261,8 @@ private fun ResultItem(
             )
             if (result.body.isNotEmpty()) {
                 Text(
-                    result.body,
+                    modifier = Modifier.testTag("resultBody"),
+                    text = result.body,
                     maxLines = 3,
                     style = MaterialTheme.typography.body1,
                     color = colorResource(R.color.textDark)
@@ -276,6 +287,7 @@ private fun Relevance(relevance: Int) {
         for (i in 0 until 4) {
             Box(
                 modifier = Modifier
+                    .testTag("relevanceDot ${if (i < count) "filled" else "empty"}")
                     .size(4.dp)
                     .clip(RoundedCornerShape(1.dp))
                     .background(if (i < count) color else colorResource(R.color.borderMedium))
