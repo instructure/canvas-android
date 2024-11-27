@@ -133,4 +133,8 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
     private fun getContextURL(courseId: Long, assignmentId: Long): String {
         return "${apiPrefs.fullDomain}/courses/$courseId/assignments/$assignmentId"
     }
+
+    override fun getThemeColor(course: Course): Int {
+        return parentPrefs.currentStudent.studentColor
+    }
 }
