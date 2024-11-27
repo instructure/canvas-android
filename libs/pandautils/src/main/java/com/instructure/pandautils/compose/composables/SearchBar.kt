@@ -30,12 +30,15 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
@@ -66,6 +69,14 @@ fun SearchBar(
         var expanded by remember { mutableStateOf(!collapsable) }
         var query by remember { mutableStateOf(searchQuery) }
         val keyboardController = LocalSoftwareKeyboardController.current
+        val focusRequester = remember { FocusRequester() }
+
+        LaunchedEffect(expanded) {
+            if (expanded && collapsable) {
+                focusRequester.requestFocus()
+                keyboardController?.show()
+            }
+        }
 
         if (expanded) {
             if (collapsable) {
@@ -86,7 +97,8 @@ fun SearchBar(
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag("searchField"),
+                    .testTag("searchField")
+                    .focusRequester(focusRequester),
                 placeholder = { Text(placeholder) },
                 value = query,
                 onValueChange = { query = it },

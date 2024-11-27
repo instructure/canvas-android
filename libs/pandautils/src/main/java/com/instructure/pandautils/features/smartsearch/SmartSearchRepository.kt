@@ -28,5 +28,6 @@ class SmartSearchRepository(private val smartSearchApi: SmartSearchApi) {
             RestParams(isForceReadFromNetwork = true)
         ).dataOrThrow
             .results
+            .filter { it.relevance >= 50 }
     }
 }
