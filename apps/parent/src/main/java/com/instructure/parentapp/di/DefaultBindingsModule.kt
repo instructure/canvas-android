@@ -30,6 +30,7 @@ import com.instructure.pandautils.features.elementary.resources.itemviewmodels.R
 import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
 import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
+import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
 import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.Module
 import dagger.Provides
@@ -108,6 +109,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideDiscussionDetailsWebViewFragmentBehavior(): DiscussionDetailsWebViewFragmentBehavior {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideSmartSearchRouter(): SmartSearchRouter {
         throw NotImplementedError()
     }
 }
