@@ -48,12 +48,8 @@ import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import com.pspdfkit.initialization.InitializationOptions
-import javax.inject.Inject
 
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
-
-    @Inject
-    lateinit var alarmScheduler: AlarmScheduler
 
     override fun onCreate() {
         super.onCreate()
@@ -94,7 +90,7 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
         MasqueradeHelper.masqueradeLogoutTask = Runnable {
             TeacherLogoutTask(
                 LogoutTask.Type.LOGOUT,
-                alarmScheduler = alarmScheduler
+                alarmScheduler = getScheduler()
             ).execute()
         }
 
@@ -115,9 +111,11 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
     override fun performLogoutOnAuthError() {
         TeacherLogoutTask(
             LogoutTask.Type.LOGOUT,
-            alarmScheduler = alarmScheduler
+            alarmScheduler = getScheduler()
         ).execute()
     }
+
+    abstract fun getScheduler(): AlarmScheduler?
 
     companion object {
         val PREF_FILE_NAME = "teacherSP"

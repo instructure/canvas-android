@@ -30,7 +30,7 @@ import com.instructure.teacher.utils.TeacherPrefs
 class TeacherLogoutTask(
     type: Type,
     uri: Uri? = null,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler?
 ) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
@@ -59,6 +59,6 @@ class TeacherLogoutTask(
     override fun removeOfflineData(userId: Long?) {}
 
     override suspend fun cancelAlarms() {
-        alarmScheduler.cancelAllAlarmsForCurrentUser()
+        alarmScheduler?.cancelAllAlarmsForCurrentUser()
     }
 }
