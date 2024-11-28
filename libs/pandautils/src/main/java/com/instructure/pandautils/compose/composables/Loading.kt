@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -98,7 +98,7 @@ fun Loading(
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = title,
-                    style = MaterialTheme.typography.h5,
+                    fontSize = 24.sp,
                     color = colorResource(R.color.textDarkest),
                     textAlign = TextAlign.Center
                 )
@@ -108,7 +108,7 @@ fun Loading(
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = message,
-                    style = MaterialTheme.typography.body1,
+                    fontSize = 16.sp,
                     color = colorResource(R.color.textDarkest),
                     textAlign = TextAlign.Center
                 )

@@ -34,7 +34,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -51,6 +50,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -180,15 +180,14 @@ private fun CourseHeader(title: String) {
             Text(
                 stringResource(R.string.smartSearchCourseHeaderTitle),
                 color = colorResource(R.color.textDark),
-                style = MaterialTheme.typography.body1
+                fontSize = 16.sp,
             )
             Text(
                 modifier = Modifier.testTag("courseTitle"),
                 text = title,
                 color = colorResource(R.color.textDarkest),
-                style = MaterialTheme.typography.subtitle1.copy(
-                    fontWeight = FontWeight.SemiBold
-                ),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
                 maxLines = 2
             )
         }
@@ -245,18 +244,15 @@ private fun ResultItem(
                 modifier = Modifier.testTag("resultTitle"),
                 text = result.title,
                 maxLines = 2,
-                style = MaterialTheme.typography.body1.copy(
-                    fontWeight = FontWeight.SemiBold,
-                ),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
                 color = colorResource(R.color.textDarkest)
             )
             Text(
                 modifier = Modifier.testTag("resultType"),
                 text = stringResource(getContentTypeTitle(result.type)),
                 maxLines = 1,
-                style = MaterialTheme.typography.body1.copy(
-                    fontWeight = FontWeight.Normal,
-                ),
+                fontSize = 16.sp,
                 color = color
             )
             if (result.body.isNotEmpty()) {
@@ -264,7 +260,7 @@ private fun ResultItem(
                     modifier = Modifier.testTag("resultBody"),
                     text = result.body,
                     maxLines = 3,
-                    style = MaterialTheme.typography.body1,
+                    fontSize = 16.sp,
                     color = colorResource(R.color.textDark)
                 )
             }
