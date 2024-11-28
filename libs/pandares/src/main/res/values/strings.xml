@@ -1900,13 +1900,16 @@
     <string name="newQuizSubmissionTitle">Quiz Submission</string>
     <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
     <string name="route_not_available">That page has been disabled for this course</string>
-    <string name="a11y_refresh">Refresh</string>
     <string name="reminderTitleAfterDueDate">After Due Date (%1$s)</string>
     <string name="reminderNotificationTitleFor">Reminder for %1$s</string>
     <string name="reminderNotificationMessageWithDueDate">Reminder for %1$s due at %2$s</string>
     <string name="reminderNotificationMessageWithoutDueDate">Reminder for %1$s with no due date</string>
     <string name="courseRefreshFailed">Failed to refresh course</string>
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
+    <string name="failed_to_load_summary">Failed to load summary</string>
+    <string name="no_summary_items_to_display">No summary items to display</string>
+    <string name="scheduleItemNoDueDate">No Due Date</string>
+    <string name="a11y_refresh">Refresh</string>
     <string name="masqueradingAs">You are acting as %s</string>
     <string name="stopActingAsTitle">Stop acting as…</string>
     <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>
