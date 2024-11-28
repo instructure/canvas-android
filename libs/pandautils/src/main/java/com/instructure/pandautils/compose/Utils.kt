@@ -39,13 +39,13 @@ fun getDatePickerDialog(
             onDateSelected(
                 LocalDate.of(
                     year,
-                    month,
+                    month + 1,
                     dayOfMonth
                 )
             )
         },
         date.year,
-        date.monthValue,
+        date.monthValue - 1,
         date.dayOfMonth
     ).apply {
         setOnShowListener {
