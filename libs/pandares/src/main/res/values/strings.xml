@@ -1675,6 +1675,7 @@
     <string name="eventAddressLabel">Address</string>
     <string name="eventDetailsLabel">Details</string>
     <string name="errorLoadingEvent">There was a problem loading this event. Please check your connection and try again.</string>
+    <string name="errorLoadingTodo">There was a problem loading this todo. Please check your connection and try again.</string>
     <string name="eventDeleteConfirmationTitle">Delete Event?</string>
     <string name="eventDeleteConfirmationText">This will permanently delete your event.</string>
     <string name="eventDeleteErrorMessage">There was an error deleting this event. Please check your connection and try again.</string>

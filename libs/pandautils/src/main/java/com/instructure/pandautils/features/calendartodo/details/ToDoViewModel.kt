@@ -80,8 +80,7 @@ class ToDoViewModel @Inject constructor(
     }
 
     private fun loadData() {
-
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             initDataById()
 
             plannerItem?.let { plannerItem ->
@@ -101,6 +100,13 @@ class ToDoViewModel @Inject constructor(
                     )
                 }
             }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    loading = false,
+                    loadError = context.getString(R.string.errorLoadingTodo)
+                )
+            }
         }
 
         observeReminders()
@@ -108,6 +114,7 @@ class ToDoViewModel @Inject constructor(
 
     private suspend fun initDataById() {
         plannableId?.let { plannableId ->
+            _uiState.update { it.copy(loading = true) }
             val plannable = toDoRepository.getPlannerNote(plannableId)
 
             plannerItem = when {
@@ -127,6 +134,8 @@ class ToDoViewModel @Inject constructor(
                     plannable.toPlannableItem()
                 }
             }
+
+            _uiState.update { it.copy(loading = false) }
         }
     }
 

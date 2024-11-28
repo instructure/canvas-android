@@ -28,6 +28,8 @@ data class ToDoUiState(
     val description: String = "",
     val deleting: Boolean = false,
     val errorSnack: String? = null,
+    val loading: Boolean = false,
+    val loadError: String? = null,
     val reminderUiState: ReminderViewState = ReminderViewState()
 )
 

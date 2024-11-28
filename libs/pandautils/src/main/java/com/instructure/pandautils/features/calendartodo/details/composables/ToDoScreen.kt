@@ -55,6 +55,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.FullScreenError
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.calendartodo.details.ToDoAction
@@ -187,72 +189,83 @@ private fun ToDoContent(
         modifier = modifier,
         color = colorResource(id = R.color.backgroundLightest)
     ) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = toDoUiState.title,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .testTag("title"),
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 22.sp
-            )
-            if (!toDoUiState.contextName.isNullOrEmpty() && toDoUiState.contextColor != null) {
-                Spacer(modifier = Modifier.height(4.dp))
+        when {
+            !toDoUiState.loadError.isNullOrEmpty() -> FullScreenError(errorText = toDoUiState.loadError)
+            toDoUiState.loading -> Loading()
+            else -> Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = toDoUiState.contextName,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = Color(toDoUiState.contextColor),
-                    fontSize = 16.sp
+                    text = toDoUiState.title,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .testTag("title"),
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 22.sp
                 )
-            }
-            Spacer(modifier = Modifier.height(28.dp))
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = stringResource(id = R.string.todoDateLabel),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                color = colorResource(id = R.color.textDark),
-                fontSize = 14.sp
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = toDoUiState.date,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .testTag("date"),
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 16.sp
-            )
-            val context = LocalContext.current
-            Spacer(modifier = Modifier.height(28.dp))
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-            ReminderView(
-                viewState = toDoUiState.reminderUiState,
-                onAddClick = { actionHandler(ToDoAction.OnReminderAddClicked) },
-                onRemoveClick = { actionHandler(ToDoAction.OnReminderDeleteClicked(context, it)) },
-            )
-            if (toDoUiState.description.isNotEmpty()) {
+                if (!toDoUiState.contextName.isNullOrEmpty() && toDoUiState.contextColor != null) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = toDoUiState.contextName,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = Color(toDoUiState.contextColor),
+                        fontSize = 16.sp
+                    )
+                }
                 Spacer(modifier = Modifier.height(28.dp))
                 Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = stringResource(id = R.string.todoDescriptionLabel),
+                    text = stringResource(id = R.string.todoDateLabel),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = toDoUiState.description,
+                    text = toDoUiState.date,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .testTag("description"),
+                        .testTag("date"),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )
+                val context = LocalContext.current
+                Spacer(modifier = Modifier.height(28.dp))
+                Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+                ReminderView(
+                    viewState = toDoUiState.reminderUiState,
+                    onAddClick = { actionHandler(ToDoAction.OnReminderAddClicked) },
+                    onRemoveClick = {
+                        actionHandler(
+                            ToDoAction.OnReminderDeleteClicked(
+                                context,
+                                it
+                            )
+                        )
+                    },
+                )
+                if (toDoUiState.description.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(28.dp))
+                    Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = stringResource(id = R.string.todoDescriptionLabel),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = toDoUiState.description,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .testTag("description"),
+                        color = colorResource(id = R.color.textDarkest),
+                        fontSize = 16.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(24.dp))
             }
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
