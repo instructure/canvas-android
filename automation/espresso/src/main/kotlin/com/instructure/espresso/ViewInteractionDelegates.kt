@@ -25,7 +25,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.matchers.WaitForViewMatcher
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.equalToIgnoringCase

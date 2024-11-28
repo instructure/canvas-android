@@ -1906,6 +1906,10 @@
     <string name="reminderNotificationMessageWithoutDueDate">Reminder for %1$s with no due date</string>
     <string name="courseRefreshFailed">Failed to refresh course</string>
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
+    <string name="failed_to_load_summary">Failed to load summary</string>
+    <string name="no_summary_items_to_display">No summary items to display</string>
+    <string name="scheduleItemNoDueDate">No Due Date</string>
+    <string name="a11y_refresh">Refresh</string>
     <string name="masqueradingAs">You are acting as %s</string>
     <string name="stopActingAsTitle">Stop acting as…</string>
     <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>

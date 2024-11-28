@@ -23,7 +23,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 
 /**
  * Represents the WebView Login Page.

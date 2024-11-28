@@ -14,25 +14,20 @@
  *     limitations under the License.
  *
  */
+package com.instructure.parentapp.utils
 
-package com.instructure.parentapp.ui.pages
-
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 
+object ParentComposeWaitMatchers {
 
-class NotAParentPage(private val composeTestRule: ComposeTestRule) {
-
-    fun expandAppOptions() {
-        composeTestRule.onNodeWithText("Are you a student or teacher?").performClick()
+    fun waitForNodeWithText(composeTestRule: ComposeTestRule, text: String, timeoutMillis: Long = 5000) {
+        composeTestRule.waitUntil(timeoutMillis) {
+            composeTestRule.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
+        }
+        composeTestRule.onNodeWithText(text).assertIsDisplayed()
     }
 
-    fun tapReturnToLogin() {
-        composeTestRule.onNodeWithText("Return to login").performClick()
-    }
-
-    fun tapApp(appName: String) {
-        composeTestRule.onNodeWithText(appName).performClick()
-    }
 }

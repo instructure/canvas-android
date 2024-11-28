@@ -31,10 +31,10 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.plus
+import com.instructure.espresso.pages.withAncestor
+import com.instructure.espresso.pages.withId
 import com.instructure.pandautils.R
 import org.hamcrest.Matchers
 

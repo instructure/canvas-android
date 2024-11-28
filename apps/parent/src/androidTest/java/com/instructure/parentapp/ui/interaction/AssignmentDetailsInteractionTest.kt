@@ -455,7 +455,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         tokenLogin(data.domain, data.tokenFor(observer)!!, observer)
         composeTestRule.waitForIdle()
 
-        dashboardPage.clickAlerts()
+        dashboardPage.clickAlertsBottomMenu()
         composeTestRule.waitForIdle()
 
         val alert = data.addObserverAlert(

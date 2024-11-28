@@ -90,7 +90,7 @@ class CourseDetailsScreenTest {
                     isLoading = false,
                     isError = false,
                     courseName = "Course 1",
-                    tabs = listOf(TabType.SYLLABUS, TabType.SUMMARY)
+                    tabs = listOf(TabType.SYLLABUS)
                 ),
                 actionHandler = {},
                 applyOnWebView = {},
@@ -104,14 +104,6 @@ class CourseDetailsScreenTest {
             .assertIsDisplayed()
             .assertHasClickAction()
         composeTestRule.onNodeWithText("Course 1")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithText("SYLLABUS")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithText("SUMMARY")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithTag("courseDetailsTabRow")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithTag("courseDetailsPager")
             .assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Send a message about this course")
             .assertIsDisplayed()

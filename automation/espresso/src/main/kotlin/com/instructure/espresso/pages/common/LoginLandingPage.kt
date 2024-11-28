@@ -1,15 +1,20 @@
-package com.instructure.teacher.ui.pages
+package com.instructure.espresso.pages.common
 
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.withText
-import com.instructure.teacher.R
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withText
+import com.instructure.loginapi.login.R
+import org.hamcrest.CoreMatchers
 
 /**
  * Represents the Login Landing Page.
@@ -34,6 +39,7 @@ class LoginLandingPage : BasePage() {
     private val previousLoginRecyclerView by  OnViewWithId(R.id.previousLoginRecyclerView, autoAssert = false)
     private val canvasWordmarkView by OnViewWithId(R.id.canvasWordmark, autoAssert = false)
     private val appDescriptionTypeTextView by OnViewWithId(R.id.appDescriptionType, autoAssert = false)
+    private val qrCodeButton by OnViewWithId(R.id.qrLogin, autoAssert = false)
 
     /**
      * Clicks the "Find My School" button.
@@ -64,9 +70,16 @@ class LoginLandingPage : BasePage() {
     }
 
     /**
+     * Clicks on the 'QR Code' (login) button.
+     */
+    fun clickQRCodeButton() {
+        qrCodeButton.click()
+    }
+
+    /**
      * Asserts that the canvas wordmark view is displayed.
      */
-    fun assertDisplaysCanvasWorkmark() {
+    fun assertDisplaysCanvasWordmark() {
         canvasWordmarkView.assertDisplayed()
     }
 
@@ -109,5 +122,36 @@ class LoginLandingPage : BasePage() {
     fun loginWithPreviousUser(previousUser: User) {
         onViewWithText(previousUser.name).click()
     }
+
+    /**
+     * Assert that the 'Previous Login' sections is not displayed.
+     */
+    fun assertNotDisplaysPreviousLogins() {
+        previousLoginTitleText.assertNotDisplayed()
+    }
+
+    /**
+     * Assert that the given user is not present among the 'Previous Logins' section's users.
+     *
+     * @param userName The previous user's name to assert.
+     */
+    fun assertPreviousLoginUserNotExist(userName: String) {
+        onView(withText(userName)).check(ViewAssertions.doesNotExist())
+    }
+
+    /**
+     * Remove the given user from the 'Previous Logins' section.
+     *
+     * @param userName The previous user to remove.
+     */
+    fun removeUserFromPreviousLogins(userName: String) {
+        onView(
+            CoreMatchers.allOf(
+                withId(R.id.removePreviousUser),
+                ViewMatchers.hasSibling(ViewMatchers.withChild(withText(userName)))
+            )
+        ).click()
+    }
+
 }
 
