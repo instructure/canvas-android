@@ -80,51 +80,54 @@ class ToDoViewModel @Inject constructor(
     }
 
     private fun loadData() {
-        plannableId?.let { plannableId ->
-            viewModelScope.launch {
-                val plannable = toDoRepository.getPlannerNote(plannableId)
-                plannerItem = plannable.toPlannableItem()
 
+        viewModelScope.launch {
+            initDataById()
 
-                plannerItem?.let { plannerItem ->
-                    val dateText = plannerItem.plannable.todoDate.toDate()?.let {
-                        val dateText = DateHelper.dayMonthDateFormat.format(it)
-                        val timeText = DateHelper.getFormattedTime(context, it)
-                        context.getString(R.string.calendarAtDateTime, dateText, timeText)
-                    }
+            plannerItem?.let { plannerItem ->
+                val dateText = plannerItem.plannable.todoDate.toDate()?.let {
+                    val dateText = DateHelper.dayMonthDateFormat.format(it)
+                    val timeText = DateHelper.getFormattedTime(context, it)
+                    context.getString(R.string.calendarAtDateTime, dateText, timeText)
+                }
 
-                    _uiState.update {
-                        it.copy(
-                            title = plannerItem.plannable.title,
-                            contextName = plannerItem.contextName,
-                            contextColor = plannerItem.canvasContext.color,
-                            date = dateText.orEmpty(),
-                            description = plannerItem.plannable.details.orEmpty()
-                        )
-                    }
+                _uiState.update {
+                    it.copy(
+                        title = plannerItem.plannable.title,
+                        contextName = plannerItem.contextName,
+                        contextColor = plannerItem.canvasContext.color,
+                        date = dateText.orEmpty(),
+                        description = plannerItem.plannable.details.orEmpty()
+                    )
                 }
             }
         }
 
-        plannerItem?.let { plannerItem ->
-            val dateText = plannerItem.plannable.todoDate.toDate()?.let {
-                val dateText = DateHelper.dayMonthDateFormat.format(it)
-                val timeText = DateHelper.getFormattedTime(context, it)
-                context.getString(R.string.calendarAtDateTime, dateText, timeText)
-            }
+        observeReminders()
+    }
 
-            _uiState.update {
-                it.copy(
-                    title = plannerItem.plannable.title,
-                    contextName = plannerItem.contextName,
-                    contextColor = plannerItem.canvasContext.color,
-                    date = dateText.orEmpty(),
-                    description = plannerItem.plannable.details.orEmpty()
-                )
+    private suspend fun initDataById() {
+        plannableId?.let { plannableId ->
+            val plannable = toDoRepository.getPlannerNote(plannableId)
+
+            plannerItem = when {
+                plannable.courseId != null -> {
+                    val course = toDoRepository.getCourse(plannable.courseId.orDefault())
+                    plannable.toPlannableItem(course.name)
+                }
+                plannable.groupId != null -> {
+                    val group = toDoRepository.getGroup(plannable.groupId.orDefault())
+                    plannable.toPlannableItem(group.name)
+                }
+                plannable.userId != null -> {
+                    val user = toDoRepository.getUser(plannable.userId.orDefault())
+                    plannable.toPlannableItem(user.name)
+                }
+                else -> {
+                    plannable.toPlannableItem()
+                }
             }
         }
-
-        observeReminders()
     }
 
     private fun deleteToDo() {

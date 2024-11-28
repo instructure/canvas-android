@@ -17,12 +17,23 @@
 
 package com.instructure.pandautils.features.calendartodo.details
 
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Plannable
+import com.instructure.canvasapi2.models.User
 
 
-class ToDoRepository(private val plannerApi: PlannerAPI.PlannerInterface) {
+class ToDoRepository(
+    private val plannerApi: PlannerAPI.PlannerInterface,
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val groupApi: GroupAPI.GroupInterface,
+    private val userApi: UserAPI.UsersInterface,
+) {
 
     suspend fun deletePlannerNote(noteId: Long) {
         plannerApi.deletePlannerNote(
@@ -34,6 +45,27 @@ class ToDoRepository(private val plannerApi: PlannerAPI.PlannerInterface) {
     suspend fun getPlannerNote(noteId: Long): Plannable {
         return plannerApi.getPlannerNote(
             noteId,
+            RestParams()
+        ).dataOrThrow
+    }
+
+    suspend fun getCourse(courseId: Long): Course {
+        return courseApi.getCourse(
+            courseId,
+            RestParams()
+        ).dataOrThrow
+    }
+
+    suspend fun getGroup(groupId: Long): Group {
+        return groupApi.getDetailedGroup(
+            groupId,
+            RestParams()
+        ).dataOrThrow
+    }
+
+    suspend fun getUser(userId: Long): User {
+        return userApi.getUser(
+            userId,
             RestParams()
         ).dataOrThrow
     }

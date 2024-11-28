@@ -17,8 +17,14 @@
 
 package com.instructure.pandautils.features.calendartodo.details
 
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Plannable
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -29,11 +35,14 @@ import org.junit.Test
 class ToDoRepositoryTest {
 
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val groupApi: GroupAPI.GroupInterface = mockk(relaxed = true)
+    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
 
-    private val toDoRepository = ToDoRepository(plannerApi)
+    private val toDoRepository = ToDoRepository(plannerApi, courseApi, groupApi, userApi)
 
     @Test(expected = IllegalStateException::class)
-    fun `Throw exception when get fails`() = runTest {
+    fun `Throw exception when plannerNote get fails`() = runTest {
         coEvery { plannerApi.getPlannerNote(any(), any()) } returns DataResult.Fail()
 
         toDoRepository.getPlannerNote(1)
@@ -47,6 +56,57 @@ class ToDoRepositoryTest {
         val result = toDoRepository.getPlannerNote(1)
 
         Assert.assertEquals(note, result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `Throw exception when Course get fails`() = runTest {
+        coEvery { courseApi.getCourse(any(), any()) } returns DataResult.Fail()
+
+        toDoRepository.getCourse(1)
+    }
+
+    @Test
+    fun `Get Course successful`() = runTest {
+        val course: Course = mockk(relaxed = true)
+        coEvery { courseApi.getCourse(any(), any()) } returns DataResult.Success(course)
+
+        val result = toDoRepository.getCourse(1)
+
+        Assert.assertEquals(course, result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `Throw exception when Group get fails`() = runTest {
+        coEvery { groupApi.getDetailedGroup(any(), any()) } returns DataResult.Fail()
+
+        toDoRepository.getGroup(1)
+    }
+
+    @Test
+    fun `Get Group successful`() = runTest {
+        val group: Group = mockk(relaxed = true)
+        coEvery { groupApi.getDetailedGroup(any(), any()) } returns DataResult.Success(group)
+
+        val result = toDoRepository.getGroup(1)
+
+        Assert.assertEquals(group, result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `Throw exception when User get fails`() = runTest {
+        coEvery { userApi.getUser(any(), any()) } returns DataResult.Fail()
+
+        toDoRepository.getUser(1)
+    }
+
+    @Test
+    fun `Get User successful`() = runTest {
+        val user: User = mockk(relaxed = true)
+        coEvery { userApi.getUser(any(), any()) } returns DataResult.Success(user)
+
+        val result = toDoRepository.getUser(1)
+
+        Assert.assertEquals(user, result)
     }
 
     @Test(expected = IllegalStateException::class)
