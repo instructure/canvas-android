@@ -22,7 +22,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellView
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.student.R

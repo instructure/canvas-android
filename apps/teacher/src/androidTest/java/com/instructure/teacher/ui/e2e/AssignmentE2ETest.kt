@@ -32,7 +32,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.pages.onViewWithId
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
