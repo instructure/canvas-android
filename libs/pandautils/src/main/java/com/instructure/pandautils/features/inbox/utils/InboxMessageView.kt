@@ -36,6 +36,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -52,7 +53,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -116,8 +116,7 @@ private fun InboxMessageDetailsView(
                         actionHandler(MessageAction.UrlSelected(it))
                     }
                 },
-                style = TextStyle.Default.copy(
-                    fontSize = 16.sp,
+                style = MaterialTheme.typography.body1.copy(
                     color = colorResource(id = R.color.textDarkest)
                 )
             )
