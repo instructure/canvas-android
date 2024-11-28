@@ -100,6 +100,8 @@ class ToDoViewModel @Inject constructor(
                     )
                 }
             }
+
+            observeReminders()
         } catch {
             _uiState.update {
                 it.copy(
@@ -108,8 +110,6 @@ class ToDoViewModel @Inject constructor(
                 )
             }
         }
-
-        observeReminders()
     }
 
     private suspend fun initDataById() {
@@ -211,15 +211,13 @@ class ToDoViewModel @Inject constructor(
 
     private fun observeReminders() {
         plannerItem?.let { plannerItem ->
-            viewModelScope.launch {
-                reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), plannerItem.plannable.id) { reminders ->
-                    _uiState.update {
-                        it.copy(
-                            reminderUiState = it.reminderUiState.copy(
-                                reminders = reminders.map { ReminderItem(it.id, it.text, Date(it.time)) }
-                            )
+            reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), plannerItem.plannable.id) { reminders ->
+                _uiState.update {
+                    it.copy(
+                        reminderUiState = it.reminderUiState.copy(
+                            reminders = reminders.map { ReminderItem(it.id, it.text, Date(it.time)) }
                         )
-                    }
+                    )
                 }
             }
         }

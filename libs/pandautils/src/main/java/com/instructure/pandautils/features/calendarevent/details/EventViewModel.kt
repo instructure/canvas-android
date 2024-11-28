@@ -278,17 +278,15 @@ class EventViewModel @Inject constructor(
 
     private fun observeReminders() {
         scheduleItem?.let { scheduleItem ->
-            viewModelScope.launch {
-                reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), scheduleItem.id) { reminders ->
-                        _uiState.update {
-                            it.copy(
-                                reminderUiState = it.reminderUiState.copy(
-                                    reminders = reminders.map { ReminderItem(it.id, it.text, Date(it.time)) }
-                                )
+            reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), scheduleItem.id) { reminders ->
+                    _uiState.update {
+                        it.copy(
+                            reminderUiState = it.reminderUiState.copy(
+                                reminders = reminders.map { ReminderItem(it.id, it.text, Date(it.time)) }
                             )
-                        }
+                        )
                     }
-            }
+                }
         }
     }
 }
