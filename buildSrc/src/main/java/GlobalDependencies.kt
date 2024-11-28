@@ -41,6 +41,7 @@ object Versions {
     const val NAVIGATION = "2.8.3"
     const val MEDIA3 = "1.4.1"
     const val DATASTORE = "1.1.1"
+    const val LOTTIE = "6.5.2"
 }
 
 object Libs {
@@ -151,7 +152,8 @@ object Libs {
     const val OKIO = "com.squareup.okio:okio:3.9.1"
 
     /* Other */
-    const val LOTTIE = "com.airbnb.android:lottie:6.5.2"
+    const val LOTTIE = "com.airbnb.android:lottie:${Versions.LOTTIE}"
+    const val LOTTIE_COMPOSE = "com.airbnb.android:lottie-compose:${Versions.LOTTIE}"
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"

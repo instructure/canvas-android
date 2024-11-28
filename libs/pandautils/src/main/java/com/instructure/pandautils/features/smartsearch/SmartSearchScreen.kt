@@ -105,7 +105,7 @@ fun SmartSearchScreen(
                             .testTag("loading"),
                         title = stringResource(R.string.smartSearchLoadingTitle),
                         message = stringResource(R.string.smartSearchLoadingSubtitle),
-                        icon = R.drawable.ic_smart_search_loading
+                        animation = R.raw.panda_reading
                     )
                 }
 

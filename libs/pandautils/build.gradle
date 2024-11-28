@@ -241,4 +241,6 @@ dependencies {
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
     debugImplementation Libs.COMPOSE_UI_TEST_MANIFEST
+
+    implementation Libs.LOTTIE_COMPOSE
 }
