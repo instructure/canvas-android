@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.espresso.page
+package com.instructure.espresso.pages
 
 import androidx.annotation.IdRes
 import androidx.test.espresso.ViewInteraction

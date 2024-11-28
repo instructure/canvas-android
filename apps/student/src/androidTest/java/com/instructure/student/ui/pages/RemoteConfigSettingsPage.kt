@@ -26,7 +26,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 import com.instructure.pandautils.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers

@@ -19,9 +19,7 @@
 package com.instructure.teacher.ui.pages
 
 import android.widget.DatePicker
-import android.widget.NumberPicker
 import android.widget.TimePicker
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
@@ -33,18 +31,14 @@ import com.instructure.espresso.assertEnabled
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.getDateInCanvasFormat
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.waitForViewWithClassName
-import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.replaceText
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.onViewWithId
+import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.pages.waitForViewWithClassName
+import com.instructure.espresso.pages.waitForViewWithId
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
-import com.instructure.espresso.typeText
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import java.text.SimpleDateFormat
