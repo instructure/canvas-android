@@ -162,7 +162,7 @@ class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.primaryTextColor)
+                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
             } else {
                 viewModel.checkingReminderPermission = true
                 startActivity(
@@ -173,14 +173,14 @@ class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
                 )
             }
         } else {
-            viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.primaryTextColor)
+            viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
         }
     }
 
     private fun checkAlarmPermissionResult() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
             if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
-                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.primaryTextColor)
+                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }
