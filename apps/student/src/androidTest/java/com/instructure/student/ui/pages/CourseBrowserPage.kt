@@ -37,7 +37,9 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
