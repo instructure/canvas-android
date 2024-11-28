@@ -31,8 +31,8 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.getStringFromResource
 import com.instructure.pandautils.R
 import org.junit.Assert.assertTrue
 

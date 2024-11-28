@@ -4,14 +4,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withParent
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
 
 class PandaAvatarPage : BasePage(R.id.panda_create_layout) {
 

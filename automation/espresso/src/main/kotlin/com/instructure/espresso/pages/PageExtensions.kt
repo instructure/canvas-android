@@ -15,7 +15,7 @@
  */
 @file:Suppress("unused")
 
-package com.instructure.espresso.page
+package com.instructure.espresso.pages
 
 import android.view.View
 import androidx.annotation.PluralsRes
