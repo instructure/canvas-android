@@ -48,6 +48,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
@@ -130,7 +131,10 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
                                 requireContext().getColor(R.color.textLightest)
                             )
                         },
-                        onSearch = { query -> }
+                        onSearch = { query ->
+                            RouteMatcher.route(requireActivity(), SmartSearchFragment.makeRoute(canvasContext, query))
+                        },
+                        collapseOnSearch = true
                     )
                 }
             }
