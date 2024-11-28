@@ -199,7 +199,6 @@ class LoginE2ETest : TeacherTest() {
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
     }
 
-
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
 
         if(lastSchoolSaved) {

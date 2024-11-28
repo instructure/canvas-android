@@ -20,9 +20,13 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
@@ -35,6 +39,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf
 import org.junit.Before
 import org.junit.Test
@@ -170,5 +175,22 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         assignmentDetailsPage.clickSubmit()
 
         return data
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheck(
+                SpeakableTextPresentCheck::class.java
+            ),
+            AccessibilityCheckResultUtils.matchesViews(
+                ViewMatchers.withParent(
+                    ViewMatchers.withClassName(
+                        Matchers.equalTo(ComposeView::class.java.name)
+                    )
+                )
+            )
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
     }
 }

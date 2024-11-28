@@ -1,4 +1,4 @@
-package com.instructure.espresso.page
+package com.instructure.espresso.pages
 
 import org.junit.Before
 import org.junit.Rule

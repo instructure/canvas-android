@@ -35,17 +35,17 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithContentDescription
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithClassName
-import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.waitScrollClick
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.onViewWithContentDescription
+import com.instructure.espresso.pages.onViewWithId
+import com.instructure.espresso.pages.waitForView
+import com.instructure.espresso.pages.waitForViewWithClassName
+import com.instructure.espresso.pages.waitForViewWithId
+import com.instructure.espresso.pages.waitForViewWithText
+import com.instructure.espresso.pages.waitScrollClick
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withText
 import com.instructure.espresso.randomString
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
@@ -54,7 +54,8 @@ import com.instructure.teacher.view.AssignmentOverrideView
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * The `EditQuizDetailsPage` class represents a page for editing quiz details.

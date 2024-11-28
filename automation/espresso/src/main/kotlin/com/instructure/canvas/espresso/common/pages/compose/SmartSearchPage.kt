@@ -24,7 +24,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.performClick
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 
 class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 

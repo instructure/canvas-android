@@ -30,10 +30,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.pages.withText
 import com.instructure.espresso.retry
 import com.instructure.pandautils.utils.AppTheme
 
