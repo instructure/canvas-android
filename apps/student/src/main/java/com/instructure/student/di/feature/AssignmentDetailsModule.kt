@@ -26,7 +26,6 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -90,9 +89,8 @@ class AssignmentDetailsModule {
         localDataSource: AssignmentDetailsLocalDataSource,
         networkDataSource: AssignmentDetailsNetworkDataSource,
         featureFlagProvider: FeatureFlagProvider,
-        reminderDao: ReminderDao
     ): AssignmentDetailsRepository {
-        return StudentAssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, reminderDao)
+        return StudentAssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 
     @Provides

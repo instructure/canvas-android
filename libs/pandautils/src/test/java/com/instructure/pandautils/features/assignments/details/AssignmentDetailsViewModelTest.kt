@@ -41,8 +41,9 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
-import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.DateTimePicker
 import com.instructure.pandautils.features.reminder.ReminderManager
+import com.instructure.pandautils.features.reminder.ReminderRepository
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
@@ -88,7 +89,6 @@ class AssignmentDetailsViewModelTest {
     private val application: Application = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val submissionHandler: AssignmentDetailsSubmissionHandler = mockk(relaxed = true)
-    private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
     private val colorProvider: AssignmentDetailsColorProvider = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val reminderManager: ReminderManager = mockk(relaxed = true)
@@ -109,7 +109,6 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns 0L
         every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 0L
 
-        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData()
         every { apiPrefs.user } returns User(id = 1)
         every { themePrefs.textButtonColor } returns 0
     }
@@ -119,7 +118,7 @@ class AssignmentDetailsViewModelTest {
         unmockkAll()
     }
 
-    private fun getViewModel() = AssignmentDetailsViewModel(
+    private fun getViewModel(manager: ReminderManager = reminderManager) = AssignmentDetailsViewModel(
         savedStateHandle,
         assignmentDetailsRepository,
         resources,
@@ -127,9 +126,8 @@ class AssignmentDetailsViewModelTest {
         application,
         apiPrefs,
         submissionHandler,
-        alarmScheduler,
         colorProvider,
-        reminderManager
+        manager
     )
 
     @Test
@@ -737,8 +735,11 @@ class AssignmentDetailsViewModelTest {
             ReminderEntity(3, 1, 1, "htmlUrl3", "Assignment 3", "3 days", 3000)
         )
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        val dateTimePicker: DateTimePicker = mockk(relaxed = true)
+        val reminderRepository: ReminderRepository = mockk(relaxed = true)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository)
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
+        every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
         every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
 
         val assignment = Assignment(
@@ -748,7 +749,7 @@ class AssignmentDetailsViewModelTest {
         )
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
-        val viewModel = getViewModel()
+        val viewModel = getViewModel(realReminderManager)
 
         assertEquals(
             reminderEntities.map { ReminderViewData(it.id, it.text) },
@@ -760,8 +761,11 @@ class AssignmentDetailsViewModelTest {
     fun `Reminders update correctly`() {
         val remindersLiveData = MutableLiveData<List<ReminderEntity>>()
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        val dateTimePicker: DateTimePicker = mockk(relaxed = true)
+        val reminderRepository: ReminderRepository = mockk(relaxed = true)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository)
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns remindersLiveData
+        every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns remindersLiveData
         every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
 
         val assignment = Assignment(
@@ -771,7 +775,7 @@ class AssignmentDetailsViewModelTest {
         )
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
-        val viewModel = getViewModel()
+        val viewModel = getViewModel(realReminderManager)
 
         assertEquals(0, viewModel.data.value?.reminders?.size)
 

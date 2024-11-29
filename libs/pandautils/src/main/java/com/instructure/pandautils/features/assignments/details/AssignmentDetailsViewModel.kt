@@ -55,7 +55,6 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
-import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.reminder.ReminderItem
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.ReminderViewState
@@ -88,7 +87,6 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val application: Application,
     private val apiPrefs: ApiPrefs,
     private val submissionHandler: AssignmentDetailsSubmissionHandler,
-    private val alarmScheduler: AlarmScheduler,
     private val assignmentDetailsColorProvider: AssignmentDetailsColorProvider,
     private val reminderManager: ReminderManager,
 ) : ViewModel() {

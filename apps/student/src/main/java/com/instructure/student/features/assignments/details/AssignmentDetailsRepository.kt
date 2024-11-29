@@ -17,15 +17,12 @@
 
 package com.instructure.student.features.assignments.details
 
-import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
-import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsDataSource
@@ -37,7 +34,6 @@ class StudentAssignmentDetailsRepository(
     networkDataSource: AssignmentDetailsNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-    private val reminderDao: ReminderDao
 ) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), AssignmentDetailsRepository {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
@@ -59,23 +55,4 @@ class StudentAssignmentDetailsRepository(
     override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
         return dataSource().getLtiFromAuthenticationUrl(url, forceNetwork)
     }
-
-    override fun getRemindersByAssignmentIdLiveData(userId: Long, assignmentId: Long): LiveData<List<ReminderEntity>> {
-        return reminderDao.findByAssignmentIdLiveData(userId, assignmentId)
-    }
-
-    override suspend fun deleteReminderById(id: Long) {
-        reminderDao.deleteById(id)
-    }
-
-    override suspend fun addReminder(userId: Long, assignment: Assignment, text: String, time: Long) = reminderDao.insert(
-        ReminderEntity(
-            userId = userId,
-            assignmentId = assignment.id,
-            htmlUrl = assignment.htmlUrl.orEmpty(),
-            name = assignment.name.orEmpty(),
-            text = text,
-            time = time
-        )
-    )
 }

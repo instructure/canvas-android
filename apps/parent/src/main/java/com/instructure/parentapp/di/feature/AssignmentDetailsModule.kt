@@ -25,7 +25,6 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsBehaviour
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsColorProvider
@@ -63,9 +62,8 @@ class AssignmentDetailsModule {
         assignmentApi: AssignmentAPI.AssignmentInterface,
         quizApi: QuizAPI.QuizInterface,
         submissionApi: SubmissionAPI.SubmissionInterface,
-        reminderDao: ReminderDao
     ): AssignmentDetailsRepository {
-        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi, reminderDao)
+        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi)
     }
 
     @Provides
