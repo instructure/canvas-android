@@ -97,6 +97,11 @@ class RequestInterceptor : Interceptor {
             request = request.newBuilder().url(url).build()
         }
 
+        if (params.domain != null && domain != params.domain) {
+            val url = request.url.newBuilder().host(params.domain.removePrefix("https://")).build()
+            request = request.newBuilder().url(url).build()
+        }
+
         return chain.proceed(request)
     }
 

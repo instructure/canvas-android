@@ -32,6 +32,7 @@ class AnnotationSubmissionViewFragment : BaseCanvasFragment() {
 
     private var submissionId by LongArg()
     private var submissionAttempt by LongArg()
+    private var courseId by LongArg()
 
     private val viewModel: AnnotationSubmissionViewModel by viewModels()
 
@@ -52,6 +53,7 @@ class AnnotationSubmissionViewFragment : BaseCanvasFragment() {
                 PdfStudentSubmissionView(
                     requireActivity(),
                     it,
+                    courseId,
                     childFragmentManager,
                     studentAnnotationView = true,
                 )
@@ -62,10 +64,11 @@ class AnnotationSubmissionViewFragment : BaseCanvasFragment() {
     }
 
     companion object {
-        fun newInstance(submissionId: Long, submissionAttempt: Long): AnnotationSubmissionViewFragment {
+        fun newInstance(submissionId: Long, submissionAttempt: Long, courseId: Long): AnnotationSubmissionViewFragment {
             return AnnotationSubmissionViewFragment().apply {
                 this.submissionId = submissionId
                 this.submissionAttempt = submissionAttempt
+                this.courseId = courseId
             }
         }
     }

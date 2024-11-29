@@ -4,6 +4,7 @@ import android.net.Uri
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.orDefault
@@ -47,8 +48,14 @@ class EnabledTabs(
     }
 
     suspend fun initTabs() {
-        enabledTabs = courseApi.getFirstPageCourses(RestParams(usePerPageQueryParam = true)).depaginate {
+        val tabs = courseApi.getFirstPageCourses(RestParams(usePerPageQueryParam = true)).depaginate {
             courseApi.next(it, RestParams(usePerPageQueryParam = true))
-        }.dataOrNull?.mapNotNull { it.tabs }?.flatten() ?: emptyList()
+        }.dataOrNull?.associate { it.id to it.tabs.orEmpty() } ?: emptyMap()
+        tabs.forEach { entry ->
+            entry.value.find { tab -> tab.tabId == Tab.ASSIGNMENTS_ID }?.domain?.let { domain ->
+                ApiPrefs.overrideDomains[entry.key] = domain
+            }
+        }
+        enabledTabs = tabs.values.flatten()
     }
 }
