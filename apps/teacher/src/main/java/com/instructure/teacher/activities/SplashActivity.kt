@@ -42,6 +42,7 @@ import com.instructure.teacher.databinding.ActivitySplashBinding
 import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import io.heap.autocapture.ViewAutocaptureSDK
 import io.heap.core.Heap
 import kotlinx.coroutines.CoroutineStart
@@ -49,7 +50,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 
-@Suppress("EXPERIMENTAL_FEATURE_WARNING")
+@AndroidEntryPoint
 class SplashActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivitySplashBinding::inflate)
