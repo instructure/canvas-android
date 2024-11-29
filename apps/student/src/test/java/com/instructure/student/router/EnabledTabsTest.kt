@@ -37,7 +37,7 @@ import org.junit.Test
 class EnabledTabsTest {
     private val mockUri: Uri = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val enabledTabs = EnabledTabs(courseApi)
+    private val enabledTabs = EnabledTabsImpl(courseApi)
 
     @Before
     fun setup() {
