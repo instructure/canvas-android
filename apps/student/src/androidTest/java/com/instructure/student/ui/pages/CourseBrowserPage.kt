@@ -19,7 +19,6 @@ package com.instructure.student.ui.pages
 import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -31,7 +30,6 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withChild
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -43,7 +41,9 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
 import com.instructure.espresso.pages.plus
+import com.instructure.espresso.pages.withId
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.views.SwipeRefreshLayoutAppBar

@@ -25,7 +25,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.base.AppConfig
 import com.instructure.pandautils.base.AppConfigProvider
 import com.instructure.pandautils.utils.AppTheme
@@ -41,6 +43,7 @@ abstract class BaseAppManager : AppManager() {
     override fun onCreate() {
         super.onCreate()
         AppConfigProvider.appConfig = AppConfig(AppType.PARENT, MainActivity::class.java)
+        MasqueradeHelper.masqueradeLogoutTask = Runnable { ParentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
 
         val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)

@@ -41,6 +41,7 @@ object Versions {
     const val NAVIGATION = "2.8.3"
     const val MEDIA3 = "1.4.1"
     const val DATASTORE = "1.1.1"
+    const val LOTTIE = "6.5.2"
 }
 
 object Libs {
@@ -151,7 +152,8 @@ object Libs {
     const val OKIO = "com.squareup.okio:okio:3.9.1"
 
     /* Other */
-    const val LOTTIE = "com.airbnb.android:lottie:6.5.2"
+    const val LOTTIE = "com.airbnb.android:lottie:${Versions.LOTTIE}"
+    const val LOTTIE_COMPOSE = "com.airbnb.android:lottie-compose:${Versions.LOTTIE}"
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"
@@ -162,7 +164,7 @@ object Libs {
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
-    const val HEAP = "com.heapanalytics.android:heap-android-client:${Versions.HEAP}"
+    const val HEAP_CORE = "com.contentsquare.android:sdk:0.3.0"
 
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
@@ -197,5 +199,5 @@ object Plugins {
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
-    const val HEAP = "com.heapanalytics.android:heap-android-gradle:${Versions.HEAP}"
+    const val HEAP = "io.heap.gradle:io.heap.gradle.gradle.plugin:0.5.0"
 }

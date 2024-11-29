@@ -1918,4 +1918,13 @@
     <string name="a11y_searchBarCloseButton">Close search bar</string>
     <string name="a11y_searchBarClearButton">Clear query</string>
     <string name="a11y_searchBarSearchButton">Search</string>
+    <string name="smartSearchCourseHeaderTitle">Results in course</string>
+    <string name="smartSearchAnnouncementTitle">Announcement</string>
+    <string name="smartSearchDiscussionTitle">Discussion</string>
+    <string name="smartSearchAssignmentTitle">Assignment</string>
+    <string name="smartSearchPageTitle">Page</string>
+    <string name="smartSearchLoadingTitle">Hang Tight, We\'re Fetching Your Results!</string>
+    <string name="smartSearchLoadingSubtitle">We’re working hard to find the best matches for your search. This won\'t take long! Thank you for your patience.</string>
+    <string name="smartSearchEmptyTitle">No Perfect Match</string>
+    <string name="smartSearchEmptyMessage">We didn’t find exactly what you’re looking for. Maybe try searching for something else?</string>
 </resources>

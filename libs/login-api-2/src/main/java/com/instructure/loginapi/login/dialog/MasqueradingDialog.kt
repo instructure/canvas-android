@@ -34,10 +34,11 @@ import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.databinding.DialogMasqueradingBinding
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.base.BaseCanvasDialogFragment
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onTextChanged
@@ -159,6 +160,10 @@ class MasqueradingDialog : BaseCanvasDialogFragment() {
 
     private fun validateDomain(domain: String) = Patterns.DOMAIN_NAME.matcher(domain).matches()
 
+    override fun onDestroy() {
+        super.onDestroy()
+        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+    }
 
     /**
      * An [Interpolator] which pads the provided [interpolator] with start and end values.
