@@ -8,9 +8,14 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.orDefault
 
-class EnabledTabs(
+interface EnabledTabs {
+    fun isPathTabNotEnabled(route: Route?): Boolean
+    suspend fun initTabs()
+}
+
+class EnabledTabsImpl(
     private val courseApi: CourseAPI.CoursesInterface
-) {
+): EnabledTabs {
     private var enabledTabs: List<Tab>? = null
 
     private fun isPathTabEnabled(courseId: Long, uri: Uri): Boolean {
@@ -31,7 +36,7 @@ class EnabledTabs(
         }
     }
 
-    fun isPathTabNotEnabled(route: Route?): Boolean {
+    override fun isPathTabNotEnabled(route: Route?): Boolean {
         route?.uri?.let { uri ->
             route.courseId?.let { courseId ->
                 return !isPathTabEnabled(courseId, uri)
@@ -46,7 +51,7 @@ class EnabledTabs(
         return false
     }
 
-    suspend fun initTabs() {
+    override suspend fun initTabs() {
         enabledTabs = courseApi.getFirstPageCourses(RestParams(usePerPageQueryParam = true)).depaginate {
             courseApi.next(it, RestParams(usePerPageQueryParam = true))
         }.dataOrNull?.mapNotNull { it.tabs }?.flatten() ?: emptyList()
