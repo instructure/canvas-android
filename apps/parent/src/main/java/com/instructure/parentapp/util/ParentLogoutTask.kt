@@ -30,7 +30,7 @@ import com.instructure.parentapp.features.login.LoginActivity
 class ParentLogoutTask(
     type: Type,
     uri: Uri? = null,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler?
 ) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
@@ -60,6 +60,6 @@ class ParentLogoutTask(
     }
 
     override suspend fun cancelAlarms() {
-        alarmScheduler.cancelAllAlarmsForCurrentUser()
+        alarmScheduler?.cancelAllAlarmsForCurrentUser()
     }
 }

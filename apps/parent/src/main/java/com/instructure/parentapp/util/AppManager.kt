@@ -18,8 +18,7 @@
 package com.instructure.parentapp.util
 
 import androidx.hilt.work.HiltWorkerFactory
-import com.instructure.canvasapi2.AppManager
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -30,9 +29,16 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
     override fun performLogoutOnAuthError() {
         // TODO: Implement
     }
 
     override fun getWorkManagerFactory() = workerFactory
+
+    override fun getScheduler(): AlarmScheduler {
+        return alarmScheduler
+    }
 }
