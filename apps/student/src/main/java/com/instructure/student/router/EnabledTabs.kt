@@ -6,15 +6,19 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.orDefault
 
-class EnabledTabs(
+interface EnabledTabs {
+    fun isPathTabNotEnabled(route: Route?): Boolean
+    suspend fun initTabs()
+}
+
+class EnabledTabsImpl(
     private val courseApi: CourseAPI.CoursesInterface
-) {
-    private var enabledTabs: List<Tab>? = null
+): EnabledTabs {
+    private var enabledTabs: Map<Long, List<Tab>>? = null
 
     private fun isPathTabEnabled(courseId: Long, uri: Uri): Boolean {
-        val tabs = enabledTabs ?: return true
+        val tabs = enabledTabs?.get(courseId) ?: return true
         if (tabs.isEmpty()) return true
 
         val pathSegments = uri.pathSegments
@@ -23,7 +27,7 @@ class EnabledTabs(
         return if (pathSegments.last() == Tab.SYLLABUS_ID) { // handle syllabus which has the same url scheme as assignment details
             tabs.any { relativePath == it.htmlUrl }
         } else if (pathSegments.size == 3) { // tab urls
-            tabs.any { relativePath?.contains(it.htmlUrl.orEmpty()).orDefault() && it.tabId != Tab.HOME_ID}
+            tabs.any { relativePath == it.htmlUrl }
         } else if (pathSegments.contains("external_tools") && pathSegments.size == 4) { // external tools
             return tabs.any { relativePath == it.htmlUrl }
         } else {
@@ -31,7 +35,7 @@ class EnabledTabs(
         }
     }
 
-    fun isPathTabNotEnabled(route: Route?): Boolean {
+    override fun isPathTabNotEnabled(route: Route?): Boolean {
         route?.uri?.let { uri ->
             route.courseId?.let { courseId ->
                 return !isPathTabEnabled(courseId, uri)
@@ -46,9 +50,10 @@ class EnabledTabs(
         return false
     }
 
-    suspend fun initTabs() {
-        enabledTabs = courseApi.getFirstPageCourses(RestParams(usePerPageQueryParam = true)).depaginate {
-            courseApi.next(it, RestParams(usePerPageQueryParam = true))
-        }.dataOrNull?.mapNotNull { it.tabs }?.flatten() ?: emptyList()
+    override suspend fun initTabs() {
+        enabledTabs = courseApi.getFirstPageCourses(RestParams(usePerPageQueryParam = true))
+            .depaginate {
+                courseApi.next(it, RestParams(usePerPageQueryParam = true))
+            }.dataOrNull?.associate { it.id to (it.tabs ?: emptyList()) } ?: emptyMap()
     }
 }
