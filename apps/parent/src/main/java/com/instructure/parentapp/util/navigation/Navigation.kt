@@ -64,8 +64,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
     private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}/{${LtiLaunchFragment.SESSION_LESS_LAUNCH}}"
     private val simpleWebView = "$baseUrl/internal/{${Const.URL}}/{${Const.TITLE}}/{${INITIAL_COOKIES}}"
+    private val splash = "$baseUrl/splash/{${Const.QR_CODE_MASQUERADE_ID}}"
 
-    val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
     val courses = "$baseUrl/courses"
     val calendar = "$baseUrl/calendar"
@@ -75,6 +75,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
 
+    private fun splashRoute(qrCodeMasqueradeId: Long) = "$baseUrl/splash/$qrCodeMasqueradeId"
     fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
     fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
     fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
@@ -90,11 +91,16 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun ltiLaunchRoute(url: String, title: String, sessionlessLaunch: Boolean) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}/$sessionlessLaunch"
     fun internalWebViewRoute(url: String, title: String?, initialCookies: Map<String, String>? = null) = "$baseUrl/internal/${Uri.encode(url)}/${Uri.encode(title)}/${Uri.encode(initialCookies?.toJson())}"
 
-    fun crateMainNavGraph(navController: NavController): NavGraph {
+    fun crateMainNavGraph(navController: NavController, qrCodeMasqueradeId: Long): NavGraph {
         return navController.createGraph(
-            splash
+            splashRoute(qrCodeMasqueradeId)
         ) {
-            fragment<SplashFragment>(splash)
+            fragment<SplashFragment>(splash) {
+                argument(Const.QR_CODE_MASQUERADE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+            }
             fragment<NotAParentFragment>(notAParent)
             fragment<DashboardFragment>(courses) {
                 deepLink {

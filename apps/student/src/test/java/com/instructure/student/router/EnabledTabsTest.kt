@@ -37,7 +37,7 @@ import org.junit.Test
 class EnabledTabsTest {
     private val mockUri: Uri = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val enabledTabs = EnabledTabs(courseApi)
+    private val enabledTabs = EnabledTabsImpl(courseApi)
 
     @Before
     fun setup() {
@@ -108,7 +108,7 @@ class EnabledTabsTest {
     fun `isPathTabNotEnabled should return false value for valid details urls`() = runTest {
         coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
             listOf(
-                Course(tabs = listOf(Tab(tabId = "assignment", htmlUrl = "/courses/1/assignments"))),
+                Course(id = 1, tabs = listOf(Tab(tabId = "assignment", htmlUrl = "/courses/1/assignments"))),
             )
         )
         enabledTabs.initTabs()
@@ -126,7 +126,7 @@ class EnabledTabsTest {
     fun `isPathTabNotEnabled handle home urls correctly`() = runTest {
         coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
             listOf(
-                Course(tabs = listOf(Tab(tabId = "home", htmlUrl = "/courses/1"))),
+                Course(id = 1, tabs = listOf(Tab(tabId = "home", htmlUrl = "/courses/1"))),
             )
         )
         enabledTabs.initTabs()
@@ -144,7 +144,7 @@ class EnabledTabsTest {
     fun `isPathTabNotEnabled handle syllabus urls correctly with disabled tab`() = runTest {
         coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
             listOf(
-                Course(tabs = listOf(Tab(tabId = "assignments", htmlUrl = "/courses/1/assignments"))),
+                Course(id = 1, tabs = listOf(Tab(tabId = "assignments", htmlUrl = "/courses/1/assignments"))),
             )
         )
         enabledTabs.initTabs()
@@ -162,7 +162,7 @@ class EnabledTabsTest {
     fun `isPathTabNotEnabled handle syllabus urls correctly with enabled tab`() = runTest {
         coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
             listOf(
-                Course(tabs = listOf(Tab(tabId = "syllabus", htmlUrl = "/courses/1/assignments/syllabus"))),
+                Course(id = 1, tabs = listOf(Tab(tabId = "syllabus", htmlUrl = "/courses/1/assignments/syllabus"))),
             )
         )
         enabledTabs.initTabs()
@@ -173,6 +173,45 @@ class EnabledTabsTest {
 
         val result = enabledTabs.isPathTabNotEnabled(route)
 
+        assertFalse(result)
+    }
+
+    @Test
+    fun `isPathTabNotEnabled can handle cross-course navigation`() = runTest {
+        coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
+            listOf(
+                Course(id = 1, tabs = listOf(Tab(tabId = "assignments", htmlUrl = "/courses/1/assignments"))),
+                Course(id = 2, tabs = listOf(Tab(tabId = "syllabus", htmlUrl = "/courses/2/assignments/syllabus"))),
+            )
+        )
+        enabledTabs.initTabs()
+
+        // Check course 1 disabled tab
+        var route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/1/assignments/syllabus"
+        every { mockUri.pathSegments } returns listOf("courses", "1", "assignments", "syllabus")
+        var result = enabledTabs.isPathTabNotEnabled(route)
+        assertTrue(result)
+
+        // Check course 1 enabled tab
+        route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/1/assignments"
+        every { mockUri.pathSegments } returns listOf("courses", "1", "assignments")
+        result = enabledTabs.isPathTabNotEnabled(route)
+        assertFalse(result)
+
+        // Check course 2 disabled tab
+        route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/2/assignments"
+        every { mockUri.pathSegments } returns listOf("courses", "2", "assignments")
+        result = enabledTabs.isPathTabNotEnabled(route)
+        assertTrue(result)
+
+        // Check course 2 enabled tab
+        route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/2/assignments/syllabus"
+        every { mockUri.pathSegments } returns listOf("courses", "2", "assignments", "syllabus")
+        result = enabledTabs.isPathTabNotEnabled(route)
         assertFalse(result)
     }
 }

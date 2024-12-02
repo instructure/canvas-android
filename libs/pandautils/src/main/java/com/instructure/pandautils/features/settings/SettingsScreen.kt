@@ -57,7 +57,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -102,7 +101,7 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
     LaunchedEffect(Unit) {
         scrollState.scrollTo(uiState.scrollValue)
     }
-    LazyColumn (
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .scrollable(state = scrollState, orientation = Orientation.Vertical)
@@ -185,7 +184,8 @@ private fun AppThemeItem(appTheme: Int, appThemeSelected: (AppTheme, Int, Int) -
                 .testTag("label")
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             text = stringResource(id = R.string.appThemeSettingsTitle),
-            style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.textDarkest)
         )
     }
     Row(
@@ -271,11 +271,9 @@ private fun AppThemeButton(
             modifier = Modifier
                 .padding(top = 8.dp),
             text = stringResource(title),
-            style = TextStyle(
-                fontSize = 12.sp,
-                color = colorResource(id = R.color.textDarkest),
-                textAlign = TextAlign.Center
-            )
+            fontSize = 12.sp,
+            color = colorResource(id = R.color.textDarkest),
+            textAlign = TextAlign.Center
         )
     }
 

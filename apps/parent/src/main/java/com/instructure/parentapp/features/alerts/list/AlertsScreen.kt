@@ -54,7 +54,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -158,7 +157,7 @@ fun AlertsListContent(
                 alert = alert,
                 userColor = uiState.studentColor,
                 actionHandler = actionHandler,
-                modifier = Modifier.animateItemPlacement()
+                modifier = Modifier.animateItem()
             )
             Spacer(modifier = Modifier.size(8.dp))
         }
@@ -182,18 +181,22 @@ fun AlertsListItem(
                 R.string.assignmentGradeHighAlertTitle,
                 threshold
             )
+
             AlertType.ASSIGNMENT_GRADE_LOW -> context.getString(
                 R.string.assignmentGradeLowAlertTitle,
                 threshold
             )
+
             AlertType.COURSE_GRADE_HIGH -> context.getString(
                 R.string.courseGradeHighAlertTitle,
                 threshold
             )
+
             AlertType.COURSE_GRADE_LOW -> context.getString(
                 R.string.courseGradeLowAlertTitle,
                 threshold
             )
+
             AlertType.COURSE_ANNOUNCEMENT -> context.getString(R.string.courseAnnouncementAlertTitle)
             AlertType.INSTITUTION_ANNOUNCEMENT -> context.getString(R.string.institutionAnnouncementAlertTitle)
         }
@@ -220,7 +223,14 @@ fun AlertsListItem(
     Row(modifier = modifier
         .fillMaxWidth()
         .clickable {
-            actionHandler(AlertsAction.Navigate(alert.alertId, alert.contextId, alert.htmlUrl, alert.alertType))
+            actionHandler(
+                AlertsAction.Navigate(
+                    alert.alertId,
+                    alert.contextId,
+                    alert.htmlUrl,
+                    alert.alertType
+                )
+            )
         }
         .padding(8.dp)
         .testTag("alertItem"),
@@ -251,12 +261,14 @@ fun AlertsListItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = alertTitle(alert.alertType, alert.observerAlertThreshold),
-                style = TextStyle(color = Color(alertColor(alert.alertType)), fontSize = 12.sp)
+                color = Color(alertColor(alert.alertType)),
+                fontSize = 12.sp
             )
             Text(
                 modifier = Modifier.padding(vertical = 4.dp),
                 text = alert.title,
-                style = TextStyle(color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 16.sp
             )
             alert.date?.let {
                 Text(
@@ -265,10 +277,8 @@ fun AlertsListItem(
                         com.instructure.pandares.R.string.alertDateTime,
                         it
                     ) ?: "",
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 12.sp
-                    )
+                    fontSize = 12.sp,
+                    color = colorResource(id = R.color.textDark)
                 )
             }
         }
