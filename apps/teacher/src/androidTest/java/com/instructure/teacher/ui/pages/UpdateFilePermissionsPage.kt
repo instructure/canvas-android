@@ -123,7 +123,7 @@ class UpdateFilePermissionsPage : BasePage() {
     }
 
     fun assertUnlockDate(unlockDate: Date) {
-        val dateString = SimpleDateFormat("MMM d, YYYY").format(unlockDate)
+        val dateString = SimpleDateFormat("MMM d, yyyy").format(unlockDate)
         val timeString = SimpleDateFormat("h:mm a").format(unlockDate)
 
         waitForViewWithId(R.id.availableFromDate).scrollTo().assertDisplayed()
@@ -132,7 +132,7 @@ class UpdateFilePermissionsPage : BasePage() {
     }
 
     fun assertLockDate(lockDate: Date) {
-        val dateString = SimpleDateFormat("MMM d, YYYY").format(lockDate)
+        val dateString = SimpleDateFormat("MMM d, yyyy").format(lockDate)
         val timeString = SimpleDateFormat("h:mm a").format(lockDate)
 
         waitForViewWithId(R.id.availableUntilDate).scrollTo().assertDisplayed()
