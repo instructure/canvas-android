@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -157,6 +158,7 @@ internal fun CreateAccountScreen(
                     if (uiState.isLoading) {
                         Loading(modifier = Modifier
                             .fillMaxSize()
+                            .testTag("loading")
                             .pointerInput(Unit) { }
                         )
                     }
@@ -221,7 +223,9 @@ private fun TextFields(
     )
 
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("nameInput"),
         singleLine = true,
         value = uiState.name,
         isError = !uiState.nameError.isNullOrBlank(),
@@ -246,7 +250,9 @@ private fun TextFields(
     }
     Spacer(modifier = Modifier.height(12.dp))
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("emailInput"),
         singleLine = true,
         value = uiState.email,
         isError = !uiState.emailError.isNullOrBlank(),
@@ -274,6 +280,7 @@ private fun TextFields(
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag("passwordInput")
             .onFocusChanged { focused = it.isFocused },
         singleLine = true,
         value = uiState.password,

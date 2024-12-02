@@ -16,6 +16,7 @@
  */package com.instructure.parentapp.features.login.createaccount
 
 import android.content.Context
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -66,21 +67,21 @@ class CreateAccountViewModel @Inject constructor(
             is CreateAccountAction.UpdateName -> _uiState.update {
                 it.copy(
                     name = action.name,
-                    nameError = ""
+                    nameError = null
                 )
             }
 
             is CreateAccountAction.UpdateEmail -> _uiState.update {
                 it.copy(
                     email = action.email,
-                    emailError = ""
+                    emailError = null
                 )
             }
 
             is CreateAccountAction.UpdatePassword -> _uiState.update {
                 it.copy(
                     password = action.password,
-                    passwordError = ""
+                    passwordError = null
                 )
             }
 
@@ -125,7 +126,7 @@ class CreateAccountViewModel @Inject constructor(
             if (email.isBlank()) {
                 valid = false
                 _uiState.update { it.copy(emailError = context.getString(R.string.createAccEnterEmail)) }
-            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            } else if (!PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()) {
                 valid = false
                 _uiState.update { it.copy(emailError = context.getString(R.string.createAccEnterValidEmail)) }
             }
