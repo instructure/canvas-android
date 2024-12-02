@@ -1926,4 +1926,5 @@
     <string name="smartSearchLoadingSubtitle">We’re working hard to find the best matches for your search. This won\'t take long! Thank you for your patience.</string>
     <string name="smartSearchEmptyTitle">No Perfect Match</string>
     <string name="smartSearchEmptyMessage">We didn’t find exactly what you’re looking for. Maybe try searching for something else?</string>
+    <string name="webAccessLimitedMessage">Interactions on this page are limited by your institution.</string>
 </resources>

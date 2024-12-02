@@ -17,24 +17,22 @@
 
 package com.instructure.parentapp.di
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.parentapp.util.navigation.Navigation
-import com.instructure.parentapp.util.navigation.ParentWebViewRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ActivityComponent
 
 /**
- * Module for various common Fragment scope dependencies that are used in different Fragments.
+ * Module for various common Activity scope dependencies.
  */
 @Module
-@InstallIn(FragmentComponent::class)
-class FragmentModule {
+@InstallIn(ActivityComponent::class)
+class ActivityModule {
 
     @Provides
-    fun provideWebViewRouter(activity: FragmentActivity, navigation: Navigation): WebViewRouter {
-        return ParentWebViewRouter(activity, navigation)
+    fun provideNavigation(apiPrefs: ApiPrefs): Navigation {
+        return Navigation(apiPrefs)
     }
 }
