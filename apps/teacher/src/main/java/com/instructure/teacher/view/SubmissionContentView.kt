@@ -51,7 +51,6 @@ import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.Enrollment
@@ -149,7 +148,7 @@ class SubmissionContentView(
         private val mAssignment: Assignment,
         private val mCourse: Course,
         var initialTabIndex: Int = 0
-) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+) : PdfSubmissionView(context, courseId = mCourse.id), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewSubmissionContentBinding
 

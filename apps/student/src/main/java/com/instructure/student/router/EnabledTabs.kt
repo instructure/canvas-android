@@ -4,6 +4,7 @@ import android.net.Uri
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.interactions.router.Route
 
@@ -55,5 +56,10 @@ class EnabledTabsImpl(
             .depaginate {
                 courseApi.next(it, RestParams(usePerPageQueryParam = true))
             }.dataOrNull?.associate { it.id to (it.tabs ?: emptyList()) } ?: emptyMap()
+        enabledTabs?.forEach { entry ->
+            entry.value.find { tab -> tab.tabId == Tab.ASSIGNMENTS_ID }?.domain?.let { domain ->
+                ApiPrefs.overrideDomains[entry.key] = domain
+            }
+        }
     }
 }
