@@ -1904,11 +1904,6 @@
     <string name="createAccFullName">Full Name</string>
     <string name="createAccEmail">Email Address</string>
     <string name="createAccPassword">Password</string>
-    <string name="createAccAgreeTos">By tapping \'Create Account\', you agree to the</string>
-    <string name="createAccTos">Terms of Service</string>
-    <string name="createAccAndAcknowledgePrivacy">and acknowledge the</string>
-    <string name="createAccViewPrivacy">View the</string>
-    <string name="createAccPrivacy">Privacy Policy</string>
     <string name="createAccButton">Create Account</string>
     <string name="createAccAlreadyHaveAccount">Already have an account?</string>
     <string name="createAccSignIn">Sign in</string>
@@ -1920,6 +1915,8 @@
     <string name="createAccEnterPassword">Password is required</string>
     <string name="createAccPasswordTooShort">Password must contain at least 8 characters</string>
     <string name="createAccErrorCreatingAccount">An error occurred creating your account. Please check your internet connection and try again.</string>
+    <string name="createAccTosAndPrivacy">By tapping \'Create Account\', you agree to the <annotation url="tos">Terms of Service</annotation> and acknowledge the <annotation url="privacy">Privacy Policy</annotation></string>
+    <string name="createAccPrivacy">View the <annotation url="privacy">Privacy Policy</annotation></string>
     <string name="route_not_available">That page has been disabled for this course</string>
     <string name="a11y_refresh">Refresh</string>
     <string name="reminderTitleAfterDueDate">After Due Date (%1$s)</string>

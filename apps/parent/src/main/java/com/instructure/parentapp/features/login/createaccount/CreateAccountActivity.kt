@@ -16,15 +16,12 @@
  */
 package com.instructure.parentapp.features.login.createaccount
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityCreateAccountBinding
 import com.instructure.parentapp.util.navigation.Navigation
@@ -44,15 +41,7 @@ class CreateAccountActivity : BaseCanvasActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        setupTheme()
         setupNavigation()
-    }
-
-    private fun setupTheme() {
-        ThemePrefs.reapplyCanvasTheme(this)
-        val nightModeFlags: Int =
-            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
     private fun setupNavigation() {

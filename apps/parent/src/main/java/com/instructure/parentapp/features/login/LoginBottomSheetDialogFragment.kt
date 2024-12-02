@@ -59,6 +59,7 @@ class LoginBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 ParentLoginWithQRActivity::class.java
             )
         )
+        dismiss()
     }
 
     private fun onNotHaveAccountClick() {
@@ -68,6 +69,7 @@ class LoginBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 CreateAccountActivity::class.java
             )
         )
+        dismiss()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

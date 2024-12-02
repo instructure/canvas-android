@@ -83,7 +83,8 @@
 
         <activity
             android:name=".features.login.createaccount.CreateAccountActivity"
-            android:theme="@style/LoginFlowTheme.NoActionBar" />
+            android:theme="@style/LoginFlowTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name=".features.login.routevalidator.RouteValidatorActivity"

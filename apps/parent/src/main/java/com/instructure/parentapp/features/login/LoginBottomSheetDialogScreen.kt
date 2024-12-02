@@ -19,16 +19,17 @@ package com.instructure.parentapp.features.login
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.parentapp.R
 
 @Composable
@@ -36,43 +37,41 @@ fun LoginBottomSheetDialogScreen(
     onHaveAccountClick: () -> Unit,
     onNotHaveAccountClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .background(colorResource(R.color.backgroundLightest))
-            .padding(vertical = 24.dp)
-    ) {
-        Text(
-            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 20.dp),
-            text = stringResource(id = R.string.select),
-            style = TextStyle(
-                color = colorResource(id = R.color.textDark),
-                fontSize = 14.sp
-            )
-        )
-        Text(
+    CanvasTheme {
+        Column(
             modifier = Modifier
-                .padding(start = 12.dp, end = 12.dp, bottom = 24.dp, top = 20.dp)
-                .clickable {
-                    onHaveAccountClick()
-                },
-            text = stringResource(R.string.haveCanvasAccount),
-            style = TextStyle(
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 14.sp
+                .background(colorResource(R.color.backgroundLightest))
+                .padding(vertical = 24.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 20.dp),
+                text = stringResource(id = R.string.select),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDark)
             )
-        )
-        Text(
-            modifier = Modifier
-                .padding(start = 12.dp, end = 12.dp, bottom = 24.dp, top = 24.dp)
-                .clickable {
-                    onNotHaveAccountClick()
-                },
-            text = stringResource(R.string.notHaveCanvasAccount),
-            style = TextStyle(
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 14.sp
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onHaveAccountClick()
+                    }
+                    .padding(start = 12.dp, end = 12.dp, bottom = 24.dp, top = 20.dp),
+                text = stringResource(R.string.haveCanvasAccount),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest)
             )
-        )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onNotHaveAccountClick()
+                    }
+                    .padding(start = 12.dp, end = 12.dp, bottom = 24.dp, top = 24.dp),
+                text = stringResource(R.string.notHaveCanvasAccount),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest)
+            )
+        }
     }
 }
 

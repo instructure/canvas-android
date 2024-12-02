@@ -19,12 +19,9 @@ package com.instructure.parentapp.features.login
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
-import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.parentapp.R
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,18 +55,11 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return Intent(this, ParentLoginWithQRActivity::class.java)
     }
 
-    private fun openBottomSheetDialog() {
+    override fun qrLoginClicked() {
         LoginBottomSheetDialogFragment().show(
             supportFragmentManager,
             LoginBottomSheetDialogFragment::class.java.simpleName
         )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        findViewById<TextView>(R.id.qrLogin).onClickWithRequireNetwork {
-            openBottomSheetDialog()
-        }
     }
 
     companion object {

@@ -16,6 +16,8 @@
  */
 package com.instructure.parentapp.features.login.createaccount
 
+import android.text.Annotation
+import android.text.SpannedString
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +37,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
@@ -55,13 +56,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -70,7 +71,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -111,22 +111,22 @@ internal fun CreateAccountScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(modifier = Modifier.height(50.dp))
+                        Spacer(modifier = Modifier.height(48.dp))
 
                         CanvasHeader()
-                        Spacer(modifier = Modifier.height(50.dp))
+                        Spacer(modifier = Modifier.height(48.dp))
 
                         TextFields(uiState, actionHandler)
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
                         TermsOrPrivacyText(actionHandler, uiState.termsOfService)
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
                         TextButton(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = com.instructure.pandautils.R.color.backgroundInfo)),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundInfo)),
                             onClick = { actionHandler(CreateAccountAction.CreateAccountTapped) }
                         ) {
                             Text(
@@ -134,22 +134,22 @@ internal fun CreateAccountScreen(
                                 color = colorResource(R.color.textLightest)
                             )
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
+                        Spacer(modifier = Modifier.height(28.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
                                 text = stringResource(R.string.createAccAlreadyHaveAccount),
-                                color = colorResource(R.color.ash)
+                                color = colorResource(R.color.textDark)
                             )
-                            Spacer(Modifier.width(2.dp))
+                            Spacer(Modifier.width(4.dp))
                             Text(
                                 modifier = Modifier.clickable {
                                     actionHandler(CreateAccountAction.SignInTapped)
                                 },
                                 text = stringResource(R.string.createAccSignIn),
-                                color = colorResource(R.color.login_parentAppTheme)
+                                color = colorResource(R.color.textInfo)
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
@@ -182,21 +182,19 @@ private fun CanvasHeader(
         )
         Spacer(modifier = Modifier.height(24.dp))
         Icon(
-            modifier = Modifier.width(170.dp),
+            modifier = Modifier.width(168.dp),
             painter = painterResource(id = R.drawable.ic_canvas_wordmark),
             tint = colorResource(id = R.color.textDarkest),
             contentDescription = null
         )
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(com.instructure.parentapp.R.string.appUserTypeParent).uppercase(),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 12.sp,
             textAlign = TextAlign.Center,
-            style = TextStyle(
-                letterSpacing = TextUnit(3F, TextUnitType.Sp),
-                fontWeight = FontWeight.Bold
-            )
+            letterSpacing = TextUnit(3F, TextUnitType.Sp),
+            fontWeight = FontWeight.Bold
         )
     }
 }
@@ -210,12 +208,16 @@ private fun TextFields(
 
     val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         textColor = colorResource(R.color.textDarkest),
-        unfocusedLabelColor = colorResource(R.color.ash),
+        unfocusedLabelColor = colorResource(R.color.textDark),
         unfocusedBorderColor = colorResource(R.color.textDarkest),
-        focusedBorderColor = colorResource(id = com.instructure.pandautils.R.color.backgroundInfo),
-        focusedLabelColor = colorResource(id = com.instructure.pandautils.R.color.backgroundInfo),
-        cursorColor = colorResource(id = com.instructure.pandautils.R.color.backgroundInfo),
-        trailingIconColor = colorResource(R.color.textDarkest)
+        focusedBorderColor = colorResource(id = R.color.backgroundInfo),
+        focusedLabelColor = colorResource(id = R.color.backgroundInfo),
+        cursorColor = colorResource(id = R.color.backgroundInfo),
+        trailingIconColor = colorResource(R.color.textDarkest),
+        errorBorderColor = colorResource(R.color.borderDanger),
+        errorCursorColor = colorResource(R.color.textDanger),
+        errorLabelColor = colorResource(R.color.textDanger),
+        errorTrailingIconColor = colorResource(R.color.borderDanger),
     )
 
     OutlinedTextField(
@@ -232,17 +234,17 @@ private fun TextFields(
         )
     )
     if (!uiState.nameError.isNullOrBlank()) {
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             textAlign = TextAlign.Start,
             text = uiState.nameError,
-            color = MaterialTheme.colors.error
+            color = colorResource(R.color.textDanger)
         )
     }
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(12.dp))
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
@@ -257,17 +259,17 @@ private fun TextFields(
         )
     )
     if (!uiState.emailError.isNullOrBlank()) {
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             textAlign = TextAlign.Start,
             text = uiState.emailError,
-            color = MaterialTheme.colors.error
+            color = colorResource(R.color.textDanger)
         )
     }
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(12.dp))
     var focused by remember { mutableStateOf(false) }
     OutlinedTextField(
         modifier = Modifier
@@ -305,7 +307,7 @@ private fun TextFields(
                     Icon(
                         painter = icon,
                         description,
-                        tint = colorResource(id = com.instructure.pandautils.R.color.backgroundInfo)
+                        tint = colorResource(id = R.color.backgroundInfo)
                     )
                 } else {
                     Icon(painter = icon, description)
@@ -314,14 +316,14 @@ private fun TextFields(
         }
     )
     if (!uiState.passwordError.isNullOrBlank()) {
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             textAlign = TextAlign.Start,
             text = uiState.passwordError,
-            color = MaterialTheme.colors.error
+            color = colorResource(R.color.textDanger)
         )
     }
 }
@@ -331,75 +333,59 @@ private fun TermsOrPrivacyText(
     actionHandler: (CreateAccountAction) -> Unit,
     termsOfService: TermsOfService?
 ) {
-    if (termsOfService == null) {
-        TermsAndPrivacyText(actionHandler)
+    val textRes = if (termsOfService == null) {
+        R.string.createAccTosAndPrivacy
     } else if (termsOfService.passive) {
-        PrivacyText(actionHandler)
+        R.string.createAccPrivacy
     } else {
-        TermsAndPrivacyText(actionHandler)
+        R.string.createAccTosAndPrivacy
     }
+    PrivacyTextSpan(textRes, actionHandler)
 }
 
 @Composable
-private fun TermsAndPrivacyText(
+private fun PrivacyTextSpan(
+    textResource: Int,
     actionHandler: (CreateAccountAction) -> Unit
 ) {
+    val titleText = SpannedString(LocalContext.current.resources.getText(textResource))
+    val annotations = titleText.getSpans(0, titleText.length, Annotation::class.java)
+
     Text(buildAnnotatedString {
         withStyle(
             style = SpanStyle(
                 fontSize = 14.sp,
-                color = colorResource(R.color.ash)
+                color = colorResource(R.color.textDark)
             )
         ) {
-            append("${stringResource(R.string.createAccAgreeTos)} ")
-            withLink(
-                LinkAnnotation.Clickable(
-                    tag = "tos",
-                    styles = TextLinkStyles(style = SpanStyle(color = colorResource(R.color.login_parentAppTheme)))
-                ) {
-                    actionHandler(CreateAccountAction.TosTapped)
-                }
-            ) {
-                append("${stringResource(R.string.createAccTos)} ")
-            }
-
-            append("${stringResource(R.string.createAccAndAcknowledgePrivacy)} ")
-            withLink(
-                LinkAnnotation.Clickable(
-                    tag = "privacy",
-                    styles = TextLinkStyles(style = SpanStyle(color = colorResource(R.color.login_parentAppTheme)))
-                ) {
-                    actionHandler(CreateAccountAction.PrivacyTapped)
-                }
-            ) {
-                append("${stringResource(R.string.createAccPrivacy)} ")
+            append(titleText)
+            for (annotation in annotations) {
+                val start = titleText.getSpanStart(annotation)
+                val end = titleText.getSpanEnd(annotation)
+                addLink(
+                    clickable = LinkAnnotation.Clickable(
+                        tag = annotation.value,
+                        styles = TextLinkStyles(style = SpanStyle(color = colorResource(R.color.textInfo)))
+                    ) {
+                        textLinkTapped(annotation.value, actionHandler)
+                    },
+                    start = start,
+                    end = end
+                )
             }
         }
     })
 }
 
-@Composable
-private fun PrivacyText(actionHandler: (CreateAccountAction) -> Unit) {
-    Text(buildAnnotatedString {
-        withStyle(
-            style = SpanStyle(
-                fontSize = 14.sp,
-                color = colorResource(R.color.ash)
-            )
-        ) {
-            append("${stringResource(R.string.createAccViewPrivacy)} ")
-            withLink(
-                LinkAnnotation.Clickable(
-                    tag = "privacy",
-                    styles = TextLinkStyles(style = SpanStyle(color = colorResource(R.color.login_parentAppTheme)))
-                ) {
-                    actionHandler(CreateAccountAction.PrivacyTapped)
-                }
-            ) {
-                append("${stringResource(R.string.createAccPrivacy)} ")
-            }
-        }
-    })
+private fun textLinkTapped(
+    tag: String,
+    actionHandler: (CreateAccountAction) -> Unit
+) {
+    if (tag == "tos") {
+        actionHandler(CreateAccountAction.TosTapped)
+    } else if (tag == "privacy") {
+        actionHandler(CreateAccountAction.PrivacyTapped)
+    }
 }
 
 @Preview

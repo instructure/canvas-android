@@ -126,13 +126,17 @@ abstract class BaseLoginLandingPageActivity : BaseCanvasActivity() {
             qrLogin.setVisible()
             qrDivider.setVisible()
             qrLogin.onClickWithRequireNetwork {
-                Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_CLICKED)
-                startActivity(loginWithQRIntent())
+                qrLoginClicked()
             }
         } else {
             qrLogin.setGone()
             qrDivider.setGone()
         }
+    }
+
+    protected open fun qrLoginClicked() {
+        Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_CLICKED)
+        startActivity(loginWithQRIntent())
     }
 
     private fun requestLoginHelp() {
