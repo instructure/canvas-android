@@ -12,27 +12,17 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
+package com.instructure.student.features.smartsearch
 
-package com.instructure.parentapp.ui.pages
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
+import com.instructure.student.router.RouteMatcher
 
-import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-
-
-class NotAParentPage(private val composeTestRule: ComposeTestRule) {
-
-    fun expandAppOptions() {
-        composeTestRule.onNodeWithText("Are you a student or teacher?").performClick()
-    }
-
-    fun tapReturnToLogin() {
-        composeTestRule.onNodeWithText("Return to login").performClick()
-    }
-
-    fun tapApp(appName: String) {
-        composeTestRule.onNodeWithText(appName).performClick()
+class StudentSmartSearchRouter(
+    private val activity: FragmentActivity,
+) : SmartSearchRouter {
+    override fun route(url: String) {
+        RouteMatcher.routeUrl(activity, url)
     }
 }

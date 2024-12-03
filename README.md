@@ -59,7 +59,6 @@ App | Description
 Module | Description
    --- | ---
 annotations     | A wrapper for the PSPDFKit library and logic for annotation handling and converting in PDF documents.
-blueprint       | An MVP Architecture that depends on PandaRecyclerView. (deprecated)
 buildSrc        | Library for common gradle dependencies and gradle transformers that are used by the project.
 canvas-api-2    | Canvas for Android Api used to talk to the Canvas LMS and is testable.
 dataseedingapi  | gRPC wrapper for Canvas that enables creating data to test the apps.

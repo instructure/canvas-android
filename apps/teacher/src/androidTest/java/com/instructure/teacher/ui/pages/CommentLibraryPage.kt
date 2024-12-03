@@ -22,9 +22,9 @@ import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithContentDescription
-import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onViewWithContentDescription
+import com.instructure.espresso.pages.onViewWithText
 import com.instructure.teacher.R
 
 /**

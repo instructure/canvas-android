@@ -16,10 +16,15 @@
 
 package com.instructure.pandautils.utils
 
+import android.content.Context
+import android.net.Uri
+import androidx.annotation.ColorInt
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.work.Data
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
-import java.util.*
+import java.util.Locale
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -91,4 +96,29 @@ suspend fun <T> poll(
         delay(pollInterval)
     }
     return null
+}
+
+fun Context.launchCustomTab(url: String, @ColorInt color: Int) {
+    val uri = Uri.parse(url)
+        .buildUpon()
+        .appendQueryParameter("display", "borderless")
+        .appendQueryParameter("platform", "android")
+        .build()
+
+    val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+        .setToolbarColor(color)
+        .build()
+
+    var intent = CustomTabsIntent.Builder()
+        .setDefaultColorSchemeParams(colorSchemeParams)
+        .setShowTitle(true)
+        .build()
+        .intent
+
+    intent.data = uri
+
+    // Exclude Instructure apps from chooser options
+    intent = intent.asChooserExcludingInstructure()
+
+    startActivity(intent)
 }

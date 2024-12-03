@@ -21,19 +21,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.instructure.pandautils.base.BaseCanvasFragment
+import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.StringArg
 
 class PdfSubmissionViewFragment : BaseCanvasFragment() {
 
     private var pdfUrl by StringArg()
+    private var courseId by LongArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return PdfStudentSubmissionView(requireActivity(), pdfUrl, childFragmentManager)
+        return PdfStudentSubmissionView(requireActivity(), pdfUrl, courseId, childFragmentManager)
     }
 
     companion object {
-        fun newInstance(url: String) = PdfSubmissionViewFragment().apply {
+        fun newInstance(url: String, courseId: Long) = PdfSubmissionViewFragment().apply {
             pdfUrl = url
+            this.courseId = courseId
         }
     }
 }

@@ -17,6 +17,7 @@
 
 package com.instructure.canvasapi2.models
 
+import android.net.Uri
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.ApiPrefs
 import kotlinx.parcelize.Parcelize
@@ -52,6 +53,14 @@ data class Tab(
             }
 
             return ApiPrefs.domain + tempHtmlUrl
+        }
+
+    val domain: String?
+        get() {
+            return externalUrl?.let {
+                val uri = Uri.parse(externalUrl)
+                return uri.scheme + "://" + uri.host
+            }
         }
 
     override fun toString(): String {

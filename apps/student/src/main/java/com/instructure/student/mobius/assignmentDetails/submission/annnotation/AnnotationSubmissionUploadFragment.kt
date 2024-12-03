@@ -66,11 +66,17 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
 
         viewModel.loadAnnotatedPdfUrl(submissionId)
 
-        viewModel.pdfUrl.observe(viewLifecycleOwner, {
+        viewModel.pdfUrl.observe(viewLifecycleOwner) {
             binding.annotationSubmissionViewContainer.addView(
-                PdfStudentSubmissionView(requireActivity(), it, childFragmentManager, studentAnnotationSubmit = true)
+                PdfStudentSubmissionView(
+                    activity = requireActivity(),
+                    pdfUrl = it,
+                    fragmentManager = childFragmentManager,
+                    studentAnnotationSubmit = true,
+                    courseId = canvasContext.id
+                )
             )
-        })
+        }
 
         setUpToolbar(binding.annotationSubmissionToolbar)
 

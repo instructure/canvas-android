@@ -19,9 +19,14 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import android.net.Uri
 import android.webkit.MimeTypeMap
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.LtiType
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
@@ -195,7 +200,9 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                 } ?: SubmissionDetailsContentType.UnsupportedContent(assignment?.id ?: -1)
 
                 // File uploads
-                Assignment.SubmissionType.ONLINE_UPLOAD -> getAttachmentContent(submission.attachments[0])
+                Assignment.SubmissionType.ONLINE_UPLOAD -> submission.attachments.firstOrNull()?.let {
+                    getAttachmentContent(submission.attachments[0])
+                } ?: SubmissionDetailsContentType.UnsupportedContent(assignment?.id ?: -1)
 
                 // URL Submission
                 Assignment.SubmissionType.ONLINE_URL -> SubmissionDetailsContentType.UrlContent(submission.url!!, submission.attachments.firstOrNull()?.url)

@@ -61,5 +61,17 @@
             android:contentDescription=""
             android:icon="@drawable/ic_navigation_logout"
             android:title="@string/navigationDrawerLogOut" />
+        <item
+            android:id="@+id/act_as_user"
+            android:contentDescription=""
+            android:icon="@drawable/ic_masquerade"
+            android:title="@string/actAsUser"
+            android:visible="false"/>
+        <item
+            android:id="@+id/stop_act_as_user"
+            android:contentDescription=""
+            android:icon="@drawable/ic_masquerade"
+            android:title="@string/stopMasquerading"
+            android:visible="false"/>
     </group>
 </menu>

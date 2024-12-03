@@ -606,7 +606,7 @@ class InboxDetailsViewModelTest {
 
     // endregion
 
-    private fun getViewModel(fileDownloader: FileDownloader = FileDownloader(context)): InboxDetailsViewModel {
+    private fun getViewModel(fileDownloader: FileDownloader = FileDownloader(context, mockk(relaxed = true))): InboxDetailsViewModel {
         return InboxDetailsViewModel(context, savedStateHandle, inboxDetailsRepository, fileDownloader)
     }
 }

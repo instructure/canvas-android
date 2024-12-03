@@ -19,7 +19,6 @@ package com.instructure.student.activity
 
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
@@ -63,6 +62,8 @@ import com.instructure.student.router.EnabledTabs
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
+import io.heap.autocapture.ViewAutocaptureSDK
+import io.heap.core.Heap
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
@@ -175,7 +176,13 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     private suspend fun setupHeapTracking() {
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
-        Heap.setTrackingEnabled(sendUsageMetrics)
+        if (sendUsageMetrics) {
+            Heap.startRecording(context.applicationContext, BuildConfig.HEAP_APP_ID)
+            ViewAutocaptureSDK.register()
+        } else {
+            Heap.stopRecording()
+            ViewAutocaptureSDK.deregister()
+        }
     }
 
     private suspend fun getUnreadMessageCount() {

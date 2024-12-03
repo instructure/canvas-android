@@ -25,8 +25,8 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.getStringFromResource
 
 @OptIn(ExperimentalTestApi::class)
 class ProgressPage(private val composeTestRule: ComposeTestRule) : BasePage() {

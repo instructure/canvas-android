@@ -120,6 +120,9 @@ object UserAPI {
         @GET("accounts/{accountId}/permissions?permissions[]=become_user")
         fun getBecomeUserPermission(@Path("accountId") accountId: Long): Call<BecomeUserPermission>
 
+        @GET("accounts/self/permissions?permissions[]=become_user")
+        suspend fun getBecomeUserPermission(@Tag restParams: RestParams): DataResult<BecomeUserPermission>
+
         @GET("courses/{courseId}/student_view_student")
         fun getTestUser(@Path("courseId") courseId: Long?): Call<User>
 

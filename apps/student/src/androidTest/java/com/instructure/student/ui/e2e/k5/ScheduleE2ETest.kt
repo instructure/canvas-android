@@ -21,7 +21,6 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.ReleaseExclude
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
@@ -30,8 +29,8 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.espresso.page.getStringFromResource
-import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.pages.getStringFromResource
+import com.instructure.espresso.pages.withAncestor
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
@@ -42,7 +41,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
 import java.lang.Thread.sleep
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 @HiltAndroidTest
 class ScheduleE2ETest : StudentTest() {

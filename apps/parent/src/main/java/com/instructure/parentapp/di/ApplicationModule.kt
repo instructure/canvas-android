@@ -17,18 +17,15 @@
 
 package com.instructure.parentapp.di
 
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.parentapp.util.ParentLogoutHelper
 import com.instructure.parentapp.util.ParentPrefs
-import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -52,11 +49,5 @@ class ApplicationModule {
     @Provides
     fun provideParentPrefs(): ParentPrefs {
         return ParentPrefs
-    }
-
-    @Provides
-    @Singleton
-    fun provideNavigation(apiPrefs: ApiPrefs): Navigation {
-        return Navigation(apiPrefs)
     }
 }

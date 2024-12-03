@@ -31,8 +31,8 @@ import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.plus
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.plus
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
