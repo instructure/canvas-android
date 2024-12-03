@@ -25,12 +25,18 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.base.BaseCanvasFragment
+import com.instructure.pandautils.features.legal.LegalRouter
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.features.login.SignInActivity
+import com.instructure.parentapp.features.webview.HtmlContentActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateAccountFragment : BaseCanvasFragment() {
+
+    @Inject
+    lateinit var legalRouter: LegalRouter
 
     private val viewModel: CreateAccountViewModel by viewModels()
 
@@ -56,6 +62,19 @@ class CreateAccountFragment : BaseCanvasFragment() {
                 if (action.closeActivity) {
                     requireActivity().finish()
                 }
+            }
+
+            is CreateAccountViewModelAction.NavigateToHtmlContent -> {
+                val intent = HtmlContentActivity.createIntent(requireActivity(), action.title, action.html, true)
+                requireActivity().startActivity(intent)
+            }
+
+            is CreateAccountViewModelAction.NavigateToPrivacyPolicy -> {
+                legalRouter.routeToPrivacyPolicy()
+            }
+
+            CreateAccountViewModelAction.NavigateToTermsOfService -> {
+                legalRouter.routeToTermsOfService("")
             }
         }
     }

@@ -343,7 +343,7 @@ private fun TermsOrPrivacyText(
     val textRes = if (termsOfService == null) {
         R.string.createAccTosAndPrivacy
     } else if (termsOfService.passive) {
-        R.string.createAccPrivacy
+        R.string.createAccViewPrivacy
     } else {
         R.string.createAccTosAndPrivacy
     }

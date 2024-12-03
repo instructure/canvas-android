@@ -44,4 +44,10 @@ sealed class CreateAccountAction {
 sealed class CreateAccountViewModelAction {
     data class NavigateToSignIn(val accountDomain: AccountDomain, val closeActivity: Boolean) :
         CreateAccountViewModelAction()
+
+    data class NavigateToHtmlContent(val html: String, val title: String) :
+        CreateAccountViewModelAction()
+
+    data object NavigateToPrivacyPolicy : CreateAccountViewModelAction()
+    data object NavigateToTermsOfService : CreateAccountViewModelAction()
 }

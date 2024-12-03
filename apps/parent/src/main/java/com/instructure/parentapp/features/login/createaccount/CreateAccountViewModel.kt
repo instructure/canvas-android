@@ -101,11 +101,36 @@ class CreateAccountViewModel @Inject constructor(
             }
 
             CreateAccountAction.PrivacyTapped -> {
-                // TODO needs MBL-17672 implemented
+                openPrivacyPolicy()
             }
 
             is CreateAccountAction.TosTapped -> {
-                // TODO needs MBL-17672 implemented
+                openTermsOfService()
+            }
+        }
+    }
+
+    private fun openPrivacyPolicy() {
+        viewModelScope.launch {
+            _events.send(
+                CreateAccountViewModelAction.NavigateToPrivacyPolicy
+            )
+        }
+    }
+
+    private fun openTermsOfService() {
+        viewModelScope.launch {
+            _uiState.value.termsOfService?.content?.let {
+                _events.send(
+                    CreateAccountViewModelAction.NavigateToHtmlContent(
+                        html = it,
+                        context.getString(R.string.termsOfUse)
+                    )
+                )
+            } ?: run {
+                _events.send(
+                    CreateAccountViewModelAction.NavigateToTermsOfService
+                )
             }
         }
     }
