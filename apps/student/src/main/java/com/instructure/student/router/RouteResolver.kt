@@ -12,6 +12,8 @@ import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
@@ -53,9 +55,6 @@ import com.instructure.student.fragment.DiscussionsReplyFragment
 import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.FeatureFlagsFragment
-import com.instructure.student.fragment.InboxComposeMessageFragment
-import com.instructure.student.fragment.InboxConversationFragment
-import com.instructure.student.fragment.InboxRecipientsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
@@ -124,9 +123,8 @@ object RouteResolver {
             cls.isA<EditDashboardFragment>() -> EditDashboardFragment.newInstance(route)
             cls.isA<ModuleQuizDecider>() -> ModuleQuizDecider.newInstance(route)
             cls.isA<EditPageDetailsFragment>() -> EditPageDetailsFragment.newInstance(route)
-            cls.isA<InboxConversationFragment>() -> InboxConversationFragment.newInstance(route)
-            cls.isA<InboxRecipientsFragment>() -> InboxRecipientsFragment.newInstance(route)
-            cls.isA<InboxComposeMessageFragment>() -> InboxComposeMessageFragment.newInstance(route)
+            cls.isA<InboxDetailsFragment>() -> InboxDetailsFragment.newInstance(route)
+            cls.isA<InboxComposeFragment>() -> InboxComposeFragment.newInstance(route)
             cls.isA<QuizListFragment>() -> QuizListFragment.newInstance(route)
             cls.isA<BasicQuizViewFragment>() -> BasicQuizViewFragment.newInstance(route)
             cls.isA<AssignmentListFragment>() -> AssignmentListFragment.newInstance(route)

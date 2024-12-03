@@ -27,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -35,16 +34,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreenWrapper
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.FORWARD
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.NEW_MESSAGE
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.REPLY
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.REPLY_ALL
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 
@@ -123,5 +126,16 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
     companion object {
         const val TAG = "InboxComposeFragment"
         const val FRAGMENT_RESULT_KEY = "InboxComposeFragmentResultKey"
+
+        fun newInstance(route: Route): InboxComposeFragment {
+            return InboxComposeFragment().withArgs(route.arguments)
+        }
+
+        fun makeRoute(options: InboxComposeOptions): Route {
+            val bundle = bundleOf().apply {
+                putParcelable(InboxComposeOptions.COMPOSE_PARAMETERS, options)
+            }
+            return Route(null, InboxComposeFragment::class.java, null, bundle)
+        }
     }
 }

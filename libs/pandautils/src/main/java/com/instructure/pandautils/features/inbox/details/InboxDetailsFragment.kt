@@ -27,20 +27,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -129,6 +133,20 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
 
         fun newInstance(): InboxDetailsFragment {
             return InboxDetailsFragment()
+        }
+
+        fun newInstance(route: Route): InboxDetailsFragment {
+            route.paramsHash[RouterParams.CONVERSATION_ID]?.let {
+                route.arguments.putLong(Const.CONVERSATION_ID, it.toLong())
+            }
+            return InboxDetailsFragment().withArgs(route.arguments)
+        }
+
+        fun makeRoute(conversationId: Long): Route {
+            val bundle = bundleOf().apply {
+                putLong(Const.CONVERSATION_ID, conversationId)
+            }
+            return Route(null, InboxDetailsFragment::class.java, null, bundle)
         }
     }
 }
