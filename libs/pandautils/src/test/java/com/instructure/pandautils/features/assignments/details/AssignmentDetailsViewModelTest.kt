@@ -446,13 +446,19 @@ class AssignmentDetailsViewModelTest {
     fun `Grade cell click`() {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment(htmlUrl = "https://assignment.url")
 
         val viewModel = getViewModel()
         viewModel.onGradeCellClicked()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+        val expected = AssignmentDetailAction.NavigateToSubmissionScreen(
+            isObserver = false,
+            selectedSubmissionAttempt = null,
+            assignmentUrl = "https://assignment.url",
+            isAssignmentEnhancementEnabled = true
+        )
+        assertEquals(expected, viewModel.events.value?.peekContent())
     }
 
     @Test

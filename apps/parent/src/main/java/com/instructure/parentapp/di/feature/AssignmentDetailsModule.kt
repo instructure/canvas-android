@@ -17,6 +17,7 @@ package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -43,8 +44,8 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(FragmentComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
-    fun provideAssignmentDetailsRouter(navigation: Navigation): AssignmentDetailsRouter {
-        return ParentAssignmentDetailsRouter(navigation)
+    fun provideAssignmentDetailsRouter(navigation: Navigation, parentPrefs: ParentPrefs, apiPrefs: ApiPrefs): AssignmentDetailsRouter {
+        return ParentAssignmentDetailsRouter(navigation, parentPrefs, apiPrefs)
     }
 
     @Provides
@@ -62,8 +63,10 @@ class AssignmentDetailsModule {
         assignmentApi: AssignmentAPI.AssignmentInterface,
         quizApi: QuizAPI.QuizInterface,
         submissionApi: SubmissionAPI.SubmissionInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        parentPrefs: ParentPrefs
     ): AssignmentDetailsRepository {
-        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi)
+        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi, featuresApi, parentPrefs)
     }
 
     @Provides

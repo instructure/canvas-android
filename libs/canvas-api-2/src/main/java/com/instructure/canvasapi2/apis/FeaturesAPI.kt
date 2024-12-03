@@ -21,6 +21,7 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
@@ -44,7 +45,7 @@ object FeaturesAPI {
         suspend fun getEnvironmentFeatureFlags(@Tag restParams: RestParams): DataResult<Map<String, Boolean>>
 
         @GET("settings/environment")
-        suspend fun getAccountSettingsFeatures(@Tag restParams: RestParams): DataResult<Map<String, Boolean>>
+        suspend fun getAccountSettingsFeatures(@Tag restParams: RestParams): DataResult<EnvironmentSettings>
     }
 
     fun getEnabledFeaturesForCourse(adapter: RestBuilder, courseId: Long, callback: StatusCallback<List<String>>, params: RestParams) {

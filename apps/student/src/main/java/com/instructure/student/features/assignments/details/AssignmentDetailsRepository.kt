@@ -55,4 +55,7 @@ class StudentAssignmentDetailsRepository(
     override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
         return dataSource().getLtiFromAuthenticationUrl(url, forceNetwork)
     }
+
+    // Not relevant for student
+    override suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean) = false
 }

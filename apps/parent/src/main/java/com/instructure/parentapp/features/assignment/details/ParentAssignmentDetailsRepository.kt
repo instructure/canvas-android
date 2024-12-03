@@ -17,6 +17,7 @@ package com.instructure.parentapp.features.assignment.details
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -33,6 +34,8 @@ class ParentAssignmentDetailsRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val quizApi: QuizAPI.QuizInterface,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
+    private val parentPrefs: ParentPrefs
 ): AssignmentDetailsRepository {
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -46,7 +49,11 @@ class ParentAssignmentDetailsRepository(
         forceNetwork: Boolean
     ): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentApi.getAssignmentIncludeObservees(courseId, assignmentId, params).dataOrThrow.toAssignment(ParentPrefs.currentStudent?.id.orDefault())
+        return assignmentApi.getAssignmentIncludeObservees(
+            courseId,
+            assignmentId,
+            params
+        ).dataOrThrow.toAssignment(parentPrefs.currentStudent?.id.orDefault())
     }
 
     override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
@@ -59,15 +66,20 @@ class ParentAssignmentDetailsRepository(
         externalToolId: Long,
         assignmentId: Long,
         forceNetwork: Boolean
-    ): LTITool? {
+    ): LTITool {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return assignmentApi.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params).dataOrThrow
     }
 
-    override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
+    override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return submissionApi.getLtiFromAuthenticationUrl(url, params).dataOrThrow
     }
 
     override fun isOnline(): Boolean = true
+
+    override suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean): Boolean {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull?.contains("assignments_2_student").orDefault()
+    }
 }

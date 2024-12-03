@@ -255,6 +255,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withText(R.string.done)).click()
     }
 
+    fun clickSubmissionAndRubric() {
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).click()
+    }
+
     //OfflineMethod
     fun assertSubmitButtonDisabled() {
         onView(withId(R.id.submitButton)).check(matches(ViewMatchers.isNotEnabled()))

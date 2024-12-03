@@ -20,30 +20,34 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.parentapp.R
 
-class ParentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
+class ParentWebViewRouter(
+    private val activity: FragmentActivity,
+    private val navigation: Navigation
+) : WebViewRouter {
 
     override fun canRouteInternally(url: String, routeIfPossible: Boolean): Boolean {
-        TODO("Not yet implemented")
+        return navigation.canNavigate(activity, url, routeIfPossible)
     }
 
     override fun routeInternally(url: String, extras: Bundle?) {
-        TODO("Not yet implemented")
+        navigation.canNavigate(activity, url, true)
     }
 
     override fun openMedia(url: String, mime: String, filename: String, canvasContext: CanvasContext?) {
-        TODO("Not yet implemented")
+        navigation.navigate(activity, navigation.internalWebViewRoute(url, url))
     }
 
     override fun routeExternally(url: String) {
-        TODO("Not yet implemented")
+        navigation.navigate(activity, navigation.internalWebViewRoute(url, url))
     }
 
     override fun openLtiScreen(canvasContext: CanvasContext?, url: String) {
-        TODO("Not yet implemented")
+        navigation.navigate(activity, navigation.ltiLaunchRoute(url, activity.getString(R.string.utils_externalToolTitle), sessionlessLaunch = true))
     }
 
     override fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?) {
-        TODO("Not yet implemented")
+        navigation.navigate(activity, navigation.internalWebViewRoute(url, canvasContext?.name ?: url))
     }
 }

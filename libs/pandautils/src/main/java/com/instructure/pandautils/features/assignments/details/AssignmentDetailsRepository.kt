@@ -42,4 +42,6 @@ interface AssignmentDetailsRepository {
     suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool?
 
     fun isOnline(): Boolean
+
+    suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean): Boolean
 }

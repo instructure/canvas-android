@@ -317,7 +317,7 @@ class SubmissionDetailsView(
                 DiscussionSubmissionViewFragment.newInstance(type.previewUrl.orEmpty()),
                 isOnline
             )
-            is SubmissionDetailsContentType.PdfContent -> getFragmentWithOnlineCheck(PdfSubmissionViewFragment.newInstance(type.url), isOnline)
+            is SubmissionDetailsContentType.PdfContent -> getFragmentWithOnlineCheck(PdfSubmissionViewFragment.newInstance(type.url, canvasContext.id), isOnline)
             is SubmissionDetailsContentType.ExternalToolContent -> LtiSubmissionViewFragment.newInstance(type)
             is SubmissionDetailsContentType.MediaContent -> getFragmentWithOnlineCheck(MediaSubmissionViewFragment.newInstance(type), isOnline)
             is SubmissionDetailsContentType.OtherAttachmentContent -> ViewUnsupportedFileFragment.newInstance(
@@ -350,7 +350,8 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.StudentAnnotationContent -> getFragmentWithOnlineCheck(
                 AnnotationSubmissionViewFragment.newInstance(
                     type.subissionId,
-                    type.submissionAttempt
+                    type.submissionAttempt,
+                    canvasContext.id
                 ), isOnline
             )
             is SubmissionDetailsContentType.UnsupportedContent -> {
