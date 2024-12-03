@@ -242,7 +242,8 @@ private fun TextFields(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag("nameError"),
             textAlign = TextAlign.Start,
             text = uiState.nameError,
             color = colorResource(R.color.textDanger)
@@ -269,7 +270,8 @@ private fun TextFields(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag("emailError"),
             textAlign = TextAlign.Start,
             text = uiState.emailError,
             color = colorResource(R.color.textDanger)
@@ -327,7 +329,8 @@ private fun TextFields(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag("passwordError"),
             textAlign = TextAlign.Start,
             text = uiState.passwordError,
             color = colorResource(R.color.textDanger)

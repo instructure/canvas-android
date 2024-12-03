@@ -18,6 +18,7 @@
 package com.instructure.parentapp.ui.pages
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -33,10 +34,23 @@ class CreateAccountPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Create Account").assertIsDisplayed()
     }
 
-    fun createTestAccount() {
-        composeTestRule.onNodeWithTag("NameInput").performTextInput("Test Name")
+    fun fillValidData() {
+        composeTestRule.onNodeWithTag("nameInput").performTextInput("Test Name")
         composeTestRule.onNodeWithTag("emailInput").performTextInput("test@email.com")
         composeTestRule.onNodeWithTag("passwordInput").performTextInput("password")
+    }
+
+    fun fillInvalidData() {
+        composeTestRule.onNodeWithTag("emailInput").performTextInput("email")
+        composeTestRule.onNodeWithTag("passwordInput").performTextInput("pwd")
+    }
+
+    fun clickCreateAccountButton() {
         composeTestRule.onNodeWithText("Create Account").performClick()
+    }
+
+    fun isRecipientsLoading(): Boolean {
+        composeTestRule.waitForIdle()
+        return composeTestRule.onNodeWithTag("loading").isDisplayed()
     }
 }
