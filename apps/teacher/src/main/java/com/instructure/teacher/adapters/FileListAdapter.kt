@@ -25,7 +25,7 @@ import com.instructure.teacher.databinding.AdapterFileFolderBinding
 import com.instructure.teacher.holders.FileFolderViewHolder
 import com.instructure.teacher.presenters.FileListPresenter
 import com.instructure.teacher.viewinterface.FileListView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class FileListAdapter(
     private val mContext: Context,

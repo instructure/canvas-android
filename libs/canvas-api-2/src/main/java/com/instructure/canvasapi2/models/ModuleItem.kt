@@ -46,6 +46,8 @@ data class ModuleItem(
     val unpublishable: Boolean = true,
     @SerializedName("mastery_paths")
     var masteryPaths: MasteryPath? = null,
+    @SerializedName("quiz_lti")
+    var quizLti: Boolean = false,
     // When we display the "Choose Assignment Group" when an assignment uses Mastery Paths we create a new row to display.
     // We still need the module item id to select the assignment group that we want, but if we use the same id as the root
     // module item both items wouldn't display (because they would have the same id at that point).

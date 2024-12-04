@@ -511,22 +511,7 @@
     <string name="colorPickerDialogMessage">Ini adalah pengaturan warna pribadi Anda. Hanya Anda yang bisa melihat warna ini untuk kursus.</string>
     <string name="colorPickerError">Warna kursus tidak dapat diatur pada saat ini.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Merah Muda</string>
-    <string name="contentDescriptionColorBarbie">Hot Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Ungu</string>
-    <string name="contentDescriptionColorUltramarine">Biru Gelap</string>
-    <string name="contentDescriptionColorOcean11">Biru</string>
-    <string name="contentDescriptionColorCyan">Sian</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
-    <string name="contentDescriptionColorFreshCutLawn">Hijau</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Kuning</string>
-    <string name="contentDescriptionColorTangerine">Oranye</string>
-    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
-    <string name="contentDescriptionColorSriracha">Merah</string>
-    <string name="launch_link_in_external_browser">Jalankan tautan di browser eksternal</string>
+                                                                <string name="launch_link_in_external_browser">Jalankan tautan di browser eksternal</string>
     <string name="contentDescriptionSelectedFile">File yang Dipilih</string>
     <string name="contentDescriptionFileIcon">Ikon File</string>
     <string name="contentDescriptionExpandPage">Perbesar Halaman</string>
@@ -612,6 +597,7 @@
     <string name="discussion_details">Detail Diskusi</string>
     <string name="discussions_pinned">Dipin</string>
     <string name="discussions_unpinned">Diskusi</string>
+    <string name="discussions_close">Tutup untuk Komentar</string>
     <string name="discussions_closed">Ditutup untuk Komentar</string>
     <string name="discussions_open">Buka untuk melihat Komentar</string>
     <string name="discussions_pin">Pin</string>

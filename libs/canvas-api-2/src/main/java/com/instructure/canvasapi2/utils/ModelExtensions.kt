@@ -208,3 +208,7 @@ fun convertPercentScoreToLetterGrade(percentScore: Double, gradingScheme: List<G
     val grade = gradingScheme.firstOrNull { percentScore >= it.value } ?: gradingScheme.last()
     return grade.name
 }
+
+fun convertPercentToPointBased(percentScore: Double, scalingFactor: Double): String {
+    return String.format("%.2f / %.2f", scalingFactor * (percentScore / 100.0), scalingFactor)
+}

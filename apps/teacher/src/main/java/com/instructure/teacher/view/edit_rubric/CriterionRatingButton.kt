@@ -19,7 +19,6 @@ package com.instructure.teacher.view.edit_rubric
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.StateListDrawable
 import android.util.AttributeSet
@@ -29,7 +28,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onLongClick
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.CustomRubricRatingDialog

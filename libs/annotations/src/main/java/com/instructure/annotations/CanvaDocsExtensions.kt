@@ -60,12 +60,13 @@ suspend fun FileCache.awaitFileDownload(url: String, onProgressChanged: ((Float)
  * @param url The original URL to be redirected
  * @return The redirected URL
  */
-suspend fun getCanvaDocsRedirect(url: String): String =
+suspend fun getCanvaDocsRedirect(url: String, domain: String? = null): String =
         suspendCancellableCoroutine { continuation ->
             CanvaDocsRedirectAsyncTask(
                     url,
                     { continuation.resumeSafely(it) },
-                    { continuation.resumeSafelyWithException(it) }
+                    { continuation.resumeSafelyWithException(it) },
+                    domain
             ).execute()
         }
 

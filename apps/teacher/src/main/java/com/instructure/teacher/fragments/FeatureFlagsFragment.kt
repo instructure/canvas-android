@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.FeatureFlagPref
 import com.instructure.pandautils.binding.viewBinding
@@ -33,7 +33,7 @@ import com.instructure.teacher.databinding.AdapterFeatureFlagBinding
 import com.instructure.teacher.databinding.FragmentFeatureFlagsBinding
 import com.instructure.teacher.utils.FeatureFlags
 
-class FeatureFlagsFragment : Fragment() {
+class FeatureFlagsFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentFeatureFlagsBinding::bind)
 

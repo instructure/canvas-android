@@ -59,7 +59,7 @@ class NotAParentInteractionsTest : ParentComposeTest() {
         val data = initData()
         goToNotAParentScreen(data)
 
-        notAParentPage.tapReturnToLogin()
+        notAParentPage.clickReturnToLogin()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()
@@ -82,7 +82,7 @@ class NotAParentInteractionsTest : ParentComposeTest() {
             )
         )
         Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-        notAParentPage.tapApp("STUDENT")
+        notAParentPage.clickApp("STUDENT")
         Intents.intended(expectedIntent)
     }
 
@@ -101,7 +101,7 @@ class NotAParentInteractionsTest : ParentComposeTest() {
             )
         )
         Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-        notAParentPage.tapApp("TEACHER")
+        notAParentPage.clickApp("TEACHER")
         Intents.intended(expectedIntent)
     }
 

@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Dissenyador</string>
     <string name="enrollmentTypeUnknown">Desconegut</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Estudiants</string>
+    <string name="enrollmentTypeTeachers">Professors</string>
+    <string name="enrollmentTypeObservers">Observadors</string>
+    <string name="enrollmentTypeTeachingAssistants">Auxiliars de professors</string>
+    <string name="enrollmentTypeDesigners">Dissenyadors</string>
 </resources>

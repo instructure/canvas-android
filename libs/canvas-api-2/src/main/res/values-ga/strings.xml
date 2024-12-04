@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Dearthóir</string>
     <string name="enrollmentTypeUnknown">Anaithnid</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Mic léinn</string>
+    <string name="enrollmentTypeTeachers">Teachers</string>
+    <string name="enrollmentTypeObservers">Breathnóirí</string>
+    <string name="enrollmentTypeTeachingAssistants">CTanna</string>
+    <string name="enrollmentTypeDesigners">Dearthóirí</string>
 </resources>

@@ -553,22 +553,7 @@
     <string name="colorPickerDialogMessage">هذا إعداد اللون الشخصي الخاص بك. أنت فقط من سترى هذا اللون للمساق.</string>
     <string name="colorPickerError">تعذر تعيين لون المساق في الوقت الحالي.</string>
 
-    <string name="contentDescriptionColorCottonCandy">وردي</string>
-    <string name="contentDescriptionColorBarbie">وردي ناصع</string>
-    <string name="contentDescriptionColorBarneyPurple">بنفسجي</string>
-    <string name="contentDescriptionColorEggplant">أرجواني</string>
-    <string name="contentDescriptionColorUltramarine">أزرق داكن</string>
-    <string name="contentDescriptionColorOcean11">أزرق</string>
-    <string name="contentDescriptionColorCyan">سماوي</string>
-    <string name="contentDescriptionColorAquaMarine">أزرق مائي</string>
-    <string name="contentDescriptionColorEmeraldGreen">أخضر زمردي</string>
-    <string name="contentDescriptionColorFreshCutLawn">أخضر</string>
-    <string name="contentDescriptionColorChartreuse">أخضر مائل للصفرة</string>
-    <string name="contentDescriptionColorSunFlower">أصفر</string>
-    <string name="contentDescriptionColorTangerine">برتقالي</string>
-    <string name="contentDescriptionColorBloodOrange">برتقالي غامق</string>
-    <string name="contentDescriptionColorSriracha">أحمر</string>
-    <string name="launch_link_in_external_browser">رابط تشغيل في مستعرض خارجي</string>
+                                                                <string name="launch_link_in_external_browser">رابط تشغيل في مستعرض خارجي</string>
     <string name="contentDescriptionSelectedFile">الملف المحدد</string>
     <string name="contentDescriptionFileIcon">أيقونة الملف</string>
     <string name="contentDescriptionExpandPage">توسيع الصفحة</string>
@@ -658,6 +643,7 @@
     <string name="discussion_details">تفاصيل النقاش</string>
     <string name="discussions_pinned">تم التثبيت</string>
     <string name="discussions_unpinned">النقاشات</string>
+    <string name="discussions_close">التعليقات مغلقة</string>
     <string name="discussions_closed">مغلق للتعليقات</string>
     <string name="discussions_open">مفتوح للتعليقات</string>
     <string name="discussions_pin">تثبيت</string>

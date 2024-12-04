@@ -16,7 +16,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.User
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface ProfileEditFragmentView : FragmentViewInterface {
     fun readyToLoadUI(user: User?)

@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.events.CourseColorOverlayToggledEvent
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.viewinterface.InitActivityView
-import instructure.androidblueprint.Presenter
+import com.instructure.pandautils.blueprint.Presenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job

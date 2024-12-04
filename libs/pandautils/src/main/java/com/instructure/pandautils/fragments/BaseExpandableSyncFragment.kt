@@ -27,10 +27,10 @@ import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
-import instructure.androidblueprint.SyncExpandableFragment
-import instructure.androidblueprint.SyncExpandableManager
-import instructure.androidblueprint.SyncExpandablePresenter
-import instructure.androidblueprint.SyncExpandableRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncExpandableFragment
+import com.instructure.pandautils.blueprint.SyncExpandableManager
+import com.instructure.pandautils.blueprint.SyncExpandablePresenter
+import com.instructure.pandautils.blueprint.SyncExpandableRecyclerAdapter
 
 abstract class BaseExpandableSyncFragment<
         GROUP,

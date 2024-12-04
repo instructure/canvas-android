@@ -233,7 +233,7 @@ class AlertsInteractionTest : ParentComposeTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.clickAlerts()
+        dashboardPage.clickAlertsBottomMenu()
     }
 
     override fun enableAndConfigureAccessibilityChecks() {

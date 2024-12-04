@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -43,6 +42,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.NullableStringArg
@@ -59,7 +59,6 @@ import com.instructure.student.R
 import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,7 +91,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @PageViewUrl
     @Suppress("unused")
-    private fun makePageViewUrl(): String {
+    fun makePageViewUrl(): String {
         val url = StringBuilder(ApiPrefs.fullDomain)
         page.let {
             url.append(canvasContext.toAPIString())
@@ -230,7 +229,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
                 canvasWebViewWrapper.loadHtml(it, page.title, baseUrl = page.htmlUrl)
             }) {
-                LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
+                RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
             }
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
@@ -330,9 +329,13 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         }
     }
 
-    @BeforePageView
     private fun setPageObject(page: Page) {
         this.page = page
+        completePageViewPrerequisite("pageSet")
+    }
+
+    override fun beforePageViewPrerequisites(): List<String> {
+        return listOf("pageSet")
     }
 
     @Suppress("unused")

@@ -20,11 +20,10 @@ package com.instructure.teacher.dialog
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +36,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.DialogSectionPickerBinding
 import com.instructure.teacher.databinding.ViewSectionListItemBinding
 
-class SectionPickerDialog : DialogFragment() {
+class SectionPickerDialog : BaseCanvasDialogFragment() {
 
     private lateinit var binding: DialogSectionPickerBinding
 

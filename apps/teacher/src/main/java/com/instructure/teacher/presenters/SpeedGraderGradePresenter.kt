@@ -25,7 +25,7 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.viewinterface.SpeedGraderGradeView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.*
 
 class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Assignment, val course: Course, val assignee: Assignee) : FragmentPresenter<SpeedGraderGradeView>() {

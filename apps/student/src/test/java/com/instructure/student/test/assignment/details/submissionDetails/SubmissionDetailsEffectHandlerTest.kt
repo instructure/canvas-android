@@ -110,7 +110,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Fail(Failure.Network(errorMessage)),
                     rootSubmissionResult = DataResult.Fail(Failure.Network(errorMessage)),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -147,7 +147,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Fail(Failure.Authorization(errorMessage)),
                     rootSubmissionResult = DataResult.Fail(Failure.Authorization(errorMessage)),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -197,7 +197,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Success(ltiTool),
+                    ltiTool = DataResult.Success(ltiTool),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -246,7 +246,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     SubmissionDetailsEvent.DataLoaded(
                             assignment = DataResult.Success(assignment),
                             rootSubmissionResult = DataResult.Success(submission),
-                            ltiUrlResult = DataResult.Success(ltiTool),
+                            ltiTool = DataResult.Success(ltiTool),
                             isStudioEnabled = false,
                             quizResult = null,
                             studioLTIToolResult = DataResult.Fail(null),
@@ -288,7 +288,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Success(ltiTool),
+                    ltiTool = DataResult.Success(ltiTool),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -332,7 +332,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = DataResult.Success(quiz),
                     studioLTIToolResult = DataResult.Fail(null),
@@ -380,7 +380,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = true,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Success(studioLTITool),

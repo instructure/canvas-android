@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
+import com.instructure.canvasapi2.utils.convertPercentToPointBased
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -73,8 +74,12 @@ class GradeFormatter(@ApplicationContext private val context: Context) {
                     else -> context.getString(R.string.noGradeText)
                 }
             } else {
-                val percentage = NumberHelper.doubleToPercentage(score.orDefault())
-                if (hasGradeString) "$percentage $grade" else percentage
+                val result = if (course?.pointsBasedGradingScheme == true) {
+                    convertPercentToPointBased(score.orDefault(), course.scalingFactor.orDefault())
+                } else {
+                    NumberHelper.doubleToPercentage(score.orDefault())
+                }
+                if (hasGradeString) "$result $grade" else result
             }
         }
     }

@@ -29,8 +29,7 @@
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,11 +70,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
+                            android:layout_marginBottom="4dp"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
                             android:foreground="?attr/selectableItemBackground">
 
                             <ImageView
+                                android:id="@+id/navigationButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
@@ -104,7 +105,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="12dp">
+                            android:layout_marginBottom="12dp"
+                            app:visible="@{viewModel.data.selectedStudent != null}">
 
                             <ImageView
                                 android:id="@+id/student_image"
@@ -210,6 +212,13 @@
 
             </LinearLayout>
 
+            <com.instructure.pandautils.views.EmptyView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/backgroundLightest"
+                app:emptyViewState="@{viewModel.state}" />
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
@@ -228,13 +237,6 @@
                 app:menu="@menu/bottom_nav" />
 
         </LinearLayout>
-
-        <com.instructure.pandautils.views.EmptyView
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/backgroundLightest"
-            app:emptyViewState="@{viewModel.state}" />
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"

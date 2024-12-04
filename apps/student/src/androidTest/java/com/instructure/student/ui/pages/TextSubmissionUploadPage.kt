@@ -20,7 +20,7 @@ import com.instructure.canvas.espresso.explicitClick
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 import com.instructure.student.R
 
 class TextSubmissionUploadPage : BasePage(R.id.textSubmissionUpload) {

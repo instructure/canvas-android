@@ -71,7 +71,7 @@ enum class SubmissionStateLabel(
 }
 
 sealed class GradesAction {
-    data object Refresh : GradesAction()
+    data class Refresh(val clearItems: Boolean = false) : GradesAction()
     data class GroupHeaderClick(val id: Long) : GradesAction()
     data object ShowGradePreferences : GradesAction()
     data object HideGradePreferences : GradesAction()

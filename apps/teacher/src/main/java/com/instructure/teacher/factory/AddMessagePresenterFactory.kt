@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.teacher.presenters.AddMessagePresenter
 import com.instructure.teacher.viewinterface.AddMessageView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 import java.util.*
 
 class AddMessagePresenterFactory(

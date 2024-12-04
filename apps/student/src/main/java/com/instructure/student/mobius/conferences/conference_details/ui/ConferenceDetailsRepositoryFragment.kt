@@ -22,6 +22,8 @@ import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFERENCE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
@@ -31,6 +33,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @PageView(url = "{canvasContext}/conferences/{conferenceId}")
+@ScreenView(SCREEN_VIEW_CONFERENCE_DETAILS)
 class ConferenceDetailsRepositoryFragment : ConferenceDetailsFragment() {
 
     @Inject

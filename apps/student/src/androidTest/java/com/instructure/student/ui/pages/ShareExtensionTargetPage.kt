@@ -20,8 +20,17 @@ import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.WaitForViewWithStringTextIgnoreCase
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.onViewWithId
+import com.instructure.espresso.pages.plus
+import com.instructure.espresso.pages.withAncestor
+import com.instructure.espresso.pages.withText
 import com.instructure.student.R
 import org.hamcrest.Matchers.anything
 

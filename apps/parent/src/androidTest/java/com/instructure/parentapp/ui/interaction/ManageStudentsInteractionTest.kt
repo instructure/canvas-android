@@ -111,7 +111,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
         dashboardPage.openNavigationDrawer()
-        dashboardPage.tapManageStudents()
+        leftSideNavigationDrawerPage.clickManageStudents()
     }
 
     override fun enableAndConfigureAccessibilityChecks() {

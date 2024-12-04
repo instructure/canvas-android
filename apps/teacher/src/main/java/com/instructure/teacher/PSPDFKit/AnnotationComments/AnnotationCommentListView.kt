@@ -17,7 +17,7 @@
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
-import instructure.androidblueprint.ListManager
+import com.instructure.pandautils.blueprint.ListManager
 
 interface AnnotationCommentListView : ListManager<CanvaDocAnnotation> {
     fun showSendingStatus()

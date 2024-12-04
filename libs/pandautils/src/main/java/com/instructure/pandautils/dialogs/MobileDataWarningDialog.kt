@@ -19,7 +19,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.NetworkUtils
@@ -29,7 +29,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 
 @ScreenView(SCREEN_VIEW_MOBILE_DATA_WARNING)
-class MobileDataWarningDialog : AppCompatDialogFragment() {
+class MobileDataWarningDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var mOnProceed: (() -> Unit)? by BlindSerializableArg()
 

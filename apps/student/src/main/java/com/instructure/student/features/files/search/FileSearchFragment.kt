@@ -158,7 +158,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
 
     override fun fileClicked(file: FileFolder) {
         PageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
-        openMedia(file.contentType, file.url, file.displayName, canvasContext, file.isLocalFile)
+        openMedia(file.contentType, file.url, file.displayName, file.id.toString(), canvasContext, file.isLocalFile)
     }
 
     override fun onMediaLoadingStarted() {

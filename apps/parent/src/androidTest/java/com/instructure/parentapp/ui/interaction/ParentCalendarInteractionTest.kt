@@ -45,7 +45,7 @@ class ParentCalendarInteractionTest : CalendarInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.clickCalendar()
+        dashboardPage.clickCalendarBottomMenu()
 
         composeTestRule.waitForIdle()
     }

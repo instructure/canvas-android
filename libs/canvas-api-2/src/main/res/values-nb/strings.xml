@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Designer</string>
     <string name="enrollmentTypeUnknown">Ukjent</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Studenter</string>
+    <string name="enrollmentTypeTeachers">Lærere</string>
+    <string name="enrollmentTypeObservers">Observatører</string>
+    <string name="enrollmentTypeTeachingAssistants">LAer</string>
+    <string name="enrollmentTypeDesigners">Designere</string>
 </resources>

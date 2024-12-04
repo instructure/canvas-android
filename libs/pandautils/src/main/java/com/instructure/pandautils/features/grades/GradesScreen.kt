@@ -125,7 +125,7 @@ fun GradesScreen(
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = uiState.isRefreshing,
                 onRefresh = {
-                    actionHandler(GradesAction.Refresh)
+                    actionHandler(GradesAction.Refresh())
                 }
             )
             Box(
@@ -138,7 +138,7 @@ fun GradesScreen(
                         ErrorContent(
                             errorMessage = stringResource(id = R.string.errorLoadingGrades),
                             retryClick = {
-                                actionHandler(GradesAction.Refresh)
+                                actionHandler(GradesAction.Refresh())
                             }, modifier = Modifier.fillMaxSize()
                         )
                     }

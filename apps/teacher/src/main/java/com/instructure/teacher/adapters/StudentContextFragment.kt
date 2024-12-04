@@ -66,7 +66,7 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.StudentContextView
-import instructure.androidblueprint.PresenterFragment
+import com.instructure.pandautils.blueprint.PresenterFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

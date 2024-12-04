@@ -18,7 +18,7 @@ package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.teacher.models.DueDateGroup
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface DueDatesView : SyncManager<DueDateGroup> {
     fun hideMenu()

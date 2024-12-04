@@ -23,7 +23,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,7 +45,7 @@ import com.instructure.teacher.adapters.PeopleFilterAdapter
 import kotlinx.coroutines.Job
 import kotlin.properties.Delegates
 
-class PeopleListFilterDialog : AppCompatDialogFragment() {
+class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
     init {
         retainInstance = true
     }

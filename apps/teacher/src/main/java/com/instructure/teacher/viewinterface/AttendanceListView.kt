@@ -18,7 +18,7 @@ package com.instructure.teacher.viewinterface
 import com.instructure.canvasapi2.models.Attendance
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Tab
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface AttendanceListView : SyncManager<Attendance> {
     fun launchLTI(tab: Tab)

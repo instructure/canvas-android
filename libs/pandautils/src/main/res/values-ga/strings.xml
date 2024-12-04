@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Roghnaigh Meáin</string>
     <string name="takeVideo">Tóg Físeán</string>
     <string name="noCameraOnDevice">Níl Ceamara Ann</string>
@@ -329,7 +330,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Ní féidir an dáta díghlasála a bheith tar éis an dáta dlite</string>
     <string name="utils_lockBeforeDueDateError">Ní féidir an dáta glasála a bheith roimh an dáta dlite</string>
     <string name="utils_lockAfterUnlockError">Ní féidir an dáta glasála a bheith roimh an dáta díghlasála</string>
@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Le Déanamh</string>
     <string name="a11y_page">Leathanach</string>
+    <string name="a11y_assessment_request">Iarratas taisc</string>
     <string name="a11y_marked_as_done">Marcáilte mar déanta</string>
     <string name="a11y_not_marked_as_done">Níl sé marcáilte mar dhéanta</string>
     <string name="error_loading_course_details">Uh oh! Tharla earráid agus sonraí an chúrsa á lódáil.</string>

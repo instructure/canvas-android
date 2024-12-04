@@ -111,7 +111,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             pointsPossible?.let { context.resources.getQuantityString(R.plurals.moduleItemPoints, it.toInt(), it) }
 
         val iconRes: Int? = when (tryOrNull { ModuleItem.Type.valueOf(item.type.orEmpty()) }) {
-            ModuleItem.Type.Assignment -> R.drawable.ic_assignment
+            ModuleItem.Type.Assignment -> if (item.quizLti) R.drawable.ic_quiz else R.drawable.ic_assignment
             ModuleItem.Type.Discussion -> R.drawable.ic_discussion
             ModuleItem.Type.File -> R.drawable.ic_attachment
             ModuleItem.Type.Page -> R.drawable.ic_pages

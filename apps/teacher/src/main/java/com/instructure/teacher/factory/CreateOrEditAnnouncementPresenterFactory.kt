@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.teacher.presenters.CreateOrEditAnnouncementPresenter
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 
 class CreateOrEditAnnouncementPresenterFactory(private var canvasContext: CanvasContext, private var editAnnouncement: DiscussionTopicHeader?) : PresenterFactory<CreateOrEditAnnouncementView, CreateOrEditAnnouncementPresenter> {

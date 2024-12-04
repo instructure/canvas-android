@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">المصمم</string>
     <string name="enrollmentTypeUnknown">غير معروف</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">الطلاب</string>
+    <string name="enrollmentTypeTeachers">المعلمون</string>
+    <string name="enrollmentTypeObservers">المراقبون</string>
+    <string name="enrollmentTypeTeachingAssistants">مساعدو المعلمين</string>
+    <string name="enrollmentTypeDesigners">المصممون</string>
 </resources>

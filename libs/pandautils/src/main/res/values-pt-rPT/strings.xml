@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Teste</string>
     <string name="a11y_todo">A Fazer</string>
     <string name="a11y_page">Página</string>
+    <string name="a11y_assessment_request">Pedido de avaliação</string>
     <string name="a11y_marked_as_done">Marcado como terminado</string>
     <string name="a11y_not_marked_as_done">Não marcado como terminado</string>
     <string name="error_loading_course_details">Ah não! Ocorreu um erro ao carregar os detalhes da disciplina.</string>

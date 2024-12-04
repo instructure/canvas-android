@@ -27,11 +27,11 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.inParallel
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.utils.groupedDueDates
 import com.instructure.teacher.viewinterface.DueDatesView
-import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

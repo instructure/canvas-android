@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">設計師</string>
     <string name="enrollmentTypeUnknown">未知</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">學生</string>
+    <string name="enrollmentTypeTeachers">教師</string>
+    <string name="enrollmentTypeObservers">觀察者</string>
+    <string name="enrollmentTypeTeachingAssistants">助教</string>
+    <string name="enrollmentTypeDesigners">設計師</string>
 </resources>

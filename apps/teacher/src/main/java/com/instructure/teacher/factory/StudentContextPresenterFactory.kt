@@ -18,7 +18,7 @@ package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.StudentContextPresenter
 import com.instructure.teacher.viewinterface.StudentContextView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class StudentContextPresenterFactory(private val studentId: Long, private val courseId: Long) : PresenterFactory<StudentContextView, StudentContextPresenter> {
     override fun create() = StudentContextPresenter(studentId, courseId)

@@ -17,7 +17,7 @@
 package com.instructure.teacher.features.files.search
 
 import com.instructure.canvasapi2.models.FileFolder
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface FileSearchView : SyncManager<FileFolder> {
 

@@ -97,6 +97,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
             if (isMasquerading || isStudentView) masqueradeDomain = strippedDomain else originalDomain = strippedDomain
         }
 
+    var overrideDomains: MutableMap<Long, String?> = mutableMapOf()
+
     val fullDomain: String
         get() = if (isMasquerading || isStudentView)  {
             when {

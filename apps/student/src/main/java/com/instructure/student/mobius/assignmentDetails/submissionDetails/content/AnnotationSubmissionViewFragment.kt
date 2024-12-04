@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.student.databinding.FragmentAnnotationSubmissionViewBinding
@@ -28,10 +28,11 @@ import com.instructure.student.mobius.assignmentDetails.submission.annnotation.A
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AnnotationSubmissionViewFragment : Fragment() {
+class AnnotationSubmissionViewFragment : BaseCanvasFragment() {
 
     private var submissionId by LongArg()
     private var submissionAttempt by LongArg()
+    private var courseId by LongArg()
 
     private val viewModel: AnnotationSubmissionViewModel by viewModels()
 
@@ -52,6 +53,7 @@ class AnnotationSubmissionViewFragment : Fragment() {
                 PdfStudentSubmissionView(
                     requireActivity(),
                     it,
+                    courseId,
                     childFragmentManager,
                     studentAnnotationView = true,
                 )
@@ -62,10 +64,11 @@ class AnnotationSubmissionViewFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(submissionId: Long, submissionAttempt: Long): AnnotationSubmissionViewFragment {
+        fun newInstance(submissionId: Long, submissionAttempt: Long, courseId: Long): AnnotationSubmissionViewFragment {
             return AnnotationSubmissionViewFragment().apply {
                 this.submissionId = submissionId
                 this.submissionAttempt = submissionAttempt
+                this.courseId = courseId
             }
         }
     }

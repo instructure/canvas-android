@@ -27,7 +27,7 @@ import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.models.EveryoneAssignee
 import com.instructure.teacher.utils.EditDateGroups
 import com.instructure.teacher.viewinterface.AssigneeListView
-import instructure.androidblueprint.SyncExpandablePresenter
+import com.instructure.pandautils.blueprint.SyncExpandablePresenter
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 

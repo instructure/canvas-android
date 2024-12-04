@@ -509,22 +509,7 @@
     <string name="colorPickerDialogMessage">Ko tēnei tō tae tautuhinga. Ko koe anake ka kite i tēnei tae mo te akoranga</string>
     <string name="colorPickerError">Kaore e taea te whakatau te tae o te akoranga i tēnei wā</string>
 
-    <string name="contentDescriptionColorCottonCandy">Māwhero</string>
-    <string name="contentDescriptionColorBarbie">māwhero wera</string>
-    <string name="contentDescriptionColorBarneyPurple">puru</string>
-    <string name="contentDescriptionColorEggplant">Waiporoporo</string>
-    <string name="contentDescriptionColorUltramarine">Kikorangi pouri</string>
-    <string name="contentDescriptionColorOcean11">Kikorangi</string>
-    <string name="contentDescriptionColorCyan">Kawariki</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua puru</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerara matomato</string>
-    <string name="contentDescriptionColorFreshCutLawn">Kākāriki</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Kōwhai</string>
-    <string name="contentDescriptionColorTangerine">Ārani</string>
-    <string name="contentDescriptionColorBloodOrange">Ārani pouri</string>
-    <string name="contentDescriptionColorSriracha">whero</string>
-    <string name="launch_link_in_external_browser">Hono whakarewa i roto i te pūtirotiro waho</string>
+                                                                <string name="launch_link_in_external_browser">Hono whakarewa i roto i te pūtirotiro waho</string>
     <string name="contentDescriptionSelectedFile">Kōnae kua tīpakohia</string>
     <string name="contentDescriptionFileIcon">Icon kōnae</string>
     <string name="contentDescriptionExpandPage">Whakawhānui i te whārangi</string>
@@ -610,6 +595,7 @@
     <string name="discussion_details">Kōrerorero Taipitopito</string>
     <string name="discussions_pinned">Kua pinea</string>
     <string name="discussions_unpinned">Ngā Kōrerorero</string>
+    <string name="discussions_close">Katia mō ngā Kōrero</string>
     <string name="discussions_closed">Kua kati mo ngā kōrero</string>
     <string name="discussions_open">Whakatuwheratia mō ngā kōrerorero</string>
     <string name="discussions_pin">Pine</string>

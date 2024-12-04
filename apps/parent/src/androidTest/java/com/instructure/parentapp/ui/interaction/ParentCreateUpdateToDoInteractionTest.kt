@@ -45,7 +45,7 @@ class ParentCreateUpdateToDoInteractionTest : CreateUpdateToDoInteractionTest() 
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.clickCalendar()
+        dashboardPage.clickCalendarBottomMenu()
 
         composeTestRule.waitForIdle()
         calendarScreenPage.clickOnAddButton()
@@ -57,7 +57,7 @@ class ParentCreateUpdateToDoInteractionTest : CreateUpdateToDoInteractionTest() 
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.clickCalendar()
+        dashboardPage.clickCalendarBottomMenu()
 
         val todo = data.todos.first()
 

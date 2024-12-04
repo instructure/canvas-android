@@ -34,6 +34,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -65,7 +66,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -268,7 +268,7 @@ private fun ActionsSegment(
         )
     }
 
-    val saveEnabled = uiState.title.isNotEmpty()
+    val saveEnabled = uiState.title.isNotBlank()
     val focusManager = LocalFocusManager.current
     TextButton(
         onClick = {
@@ -556,9 +556,8 @@ private fun LabeledTextField(
                 .padding(horizontal = 16.dp)
                 .focusRequester(focusRequester),
             cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-            textStyle = TextStyle(
+            textStyle = MaterialTheme.typography.body1.copy(
                 color = colorResource(id = R.color.textDarkest),
-                fontSize = 16.sp
             )
         )
     }
@@ -608,9 +607,8 @@ private fun TitleInput(
                 }
                 .testTag("addTitleField"),
             cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
-            textStyle = TextStyle(
+            textStyle = MaterialTheme.typography.body1.copy(
                 color = colorResource(id = R.color.textDark),
-                fontSize = 16.sp
             ),
             maxLines = 2
         )

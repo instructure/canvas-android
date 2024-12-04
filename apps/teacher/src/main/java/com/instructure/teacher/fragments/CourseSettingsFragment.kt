@@ -56,7 +56,7 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "courses/${course.id}/settings"
+    fun makePageViewUrl() = "courses/${course.id}/settings"
 
     private val mHomePages: Map<String, String> by lazy {
         // Use LinkedHashMap map to keep order consistent between API levels

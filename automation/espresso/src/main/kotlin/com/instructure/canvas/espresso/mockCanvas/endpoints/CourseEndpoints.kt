@@ -54,6 +54,9 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.models.QuizSubmissionResponse
 import com.instructure.canvasapi2.models.QuizSubmissionTime
+import com.instructure.canvasapi2.models.SmartSearchContentType
+import com.instructure.canvasapi2.models.SmartSearchResult
+import com.instructure.canvasapi2.models.SmartSearchResultWrapper
 import com.instructure.canvasapi2.models.postmodels.BulkUpdateProgress
 import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
@@ -63,6 +66,7 @@ import okio.Buffer
 import org.json.JSONObject
 import java.util.Calendar
 import java.util.Date
+import kotlin.random.Random
 
 /**
  * Endpoint that can return a list of courses in which the request user is enrolled.
@@ -154,7 +158,75 @@ object CourseEndpoint : Endpoint(
                     }
                 }
         ),
+        Segment("smartsearch") to Endpoint(
+            response = {
+                GET {
+                    val courseId = pathVars.courseId
+                    val query = request.url.queryParameter("q").orEmpty()
 
+                    //We are only looking for matches in the name of the items
+
+                    val assignments = data.assignments.values.filter { it.courseId == courseId }
+                        .filter { it.name?.contains(query) == true }
+                        .map {
+                            SmartSearchResult(
+                                contentId = it.id,
+                                title = it.name.orEmpty(),
+                                contentType = SmartSearchContentType.ASSIGNMENT,
+                                htmlUrl = "https://mock-data.instructure.com/courses/$courseId/assignments/${it.id}",
+                                body = "query body",
+                                relevance = Random.nextInt(50, 100),
+                                distance = Random.nextDouble(0.0, 1.0)
+                            )
+                        }
+
+                    val announcements = data.courseDiscussionTopicHeaders[courseId]?.filter {
+                        it.announcement && it.title?.contains(query) == true
+                    }?.map {
+                        SmartSearchResult(
+                            contentId = it.id,
+                            title = it.title.orEmpty(),
+                            contentType = SmartSearchContentType.ANNOUNCEMENT,
+                            htmlUrl = "https://mock-data.instructure.com/courses/$courseId/announcements/${it.id}",
+                            body = "query body",
+                            relevance = Random.nextInt(50, 100),
+                            distance = Random.nextDouble(0.0, 1.0)
+                        )
+                    } ?: emptyList()
+
+                    val discussions = data.courseDiscussionTopicHeaders[courseId]?.filter {
+                        !it.announcement && it.title?.contains(query) == true
+                    }?.map {
+                        SmartSearchResult(
+                            contentId = it.id,
+                            title = it.title.orEmpty(),
+                            contentType = SmartSearchContentType.DISCUSSION_TOPIC,
+                            htmlUrl = "https://mock-data.instructure.com/courses/$courseId/discussion_topics/${it.id}",
+                            body = "query body",
+                            relevance = Random.nextInt(50, 100),
+                            distance = Random.nextDouble(0.0, 1.0)
+                        )
+                    } ?: emptyList()
+
+                    val pages = data.coursePages[courseId]?.filter { it.title?.contains(query) == true }
+                        ?.map {
+                            SmartSearchResult(
+                                contentId = it.id,
+                                title = it.title.orEmpty(),
+                                contentType = SmartSearchContentType.WIKI_PAGE,
+                                htmlUrl = it.url.orEmpty(),
+                                body = it.body.orEmpty(),
+                                relevance = Random.nextInt(50, 100),
+                                distance = Random.nextDouble(0.0, 1.0)
+                            )
+                        } ?: emptyList()
+
+                    val results = (assignments + announcements + discussions + pages).sortedByDescending { it.relevance }
+
+                    request.successResponse(SmartSearchResultWrapper(results))
+                }
+            }
+        ),
         response = {
             GET {
                 val courseId = pathVars.courseId
@@ -287,7 +359,7 @@ object CoursePagesEndpoint : Endpoint(
 object CoursePageEndpoint : Endpoint(response = {
     GET {
         val pages = data.coursePages[pathVars.courseId]
-        val page = pages?.firstOrNull { it -> it.url == pathVars.pageUrl }
+        val page = pages?.firstOrNull { it.url == pathVars.pageUrl }
         if (page == null) {
             request.unauthorizedResponse()
         } else {

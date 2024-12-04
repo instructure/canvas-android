@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.teacher.presenters.AssigneeListPresenter
 import com.instructure.teacher.utils.EditDateGroups
 import com.instructure.teacher.viewinterface.AssigneeListView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class AssigneeListPresenterFactory(
         val dateGroups: EditDateGroups,

@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">डिज़ाइनर</string>
     <string name="enrollmentTypeUnknown">अज्ञात</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">छात्र</string>
+    <string name="enrollmentTypeTeachers">शिक्षक</string>
+    <string name="enrollmentTypeObservers">समीक्षक</string>
+    <string name="enrollmentTypeTeachingAssistants">TA</string>
+    <string name="enrollmentTypeDesigners">डिज़ाइनर</string>
 </resources>

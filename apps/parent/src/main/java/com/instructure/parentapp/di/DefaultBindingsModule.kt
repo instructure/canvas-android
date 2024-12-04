@@ -20,6 +20,7 @@ package com.instructure.parentapp.di
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.pandautils.features.elementary.grades.GradesRouter
@@ -29,6 +30,7 @@ import com.instructure.pandautils.features.elementary.resources.itemviewmodels.R
 import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
 import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
+import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
 import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.Module
 import dagger.Provides
@@ -102,6 +104,16 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideSyncRouter(): SyncRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideDiscussionDetailsWebViewFragmentBehavior(): DiscussionDetailsWebViewFragmentBehavior {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideSmartSearchRouter(): SmartSearchRouter {
         throw NotImplementedError()
     }
 }

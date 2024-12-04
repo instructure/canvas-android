@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Próf</string>
     <string name="a11y_todo">Verkefnalisti</string>
     <string name="a11y_page">Síða</string>
+    <string name="a11y_assessment_request">Matsbeiðni</string>
     <string name="a11y_marked_as_done">Merkt sem lokið</string>
     <string name="a11y_not_marked_as_done">Ekki merkt sem lokið</string>
     <string name="error_loading_course_details">Æi! Villa átti sér stað við að hlaða inn námskeiðsupplýsingum.</string>

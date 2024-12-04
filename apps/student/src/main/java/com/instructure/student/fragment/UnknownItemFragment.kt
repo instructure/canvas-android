@@ -56,6 +56,7 @@ class UnknownItemFragment : ParentFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.unknown_item, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         streamItem.getMessage(requireContext()).let { binding.message.setVisible(it.isValid()).text = it }
         streamItem.notificationCategory.let { binding.notificationCategory.setVisible(it.isValid()).text = it }
         streamItem.updatedDate.let {

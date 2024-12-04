@@ -36,6 +36,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -65,7 +66,6 @@ import com.instructure.teacher.features.assignment.submission.AssignmentSubmissi
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
@@ -97,7 +97,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
+    fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
 
     override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentAssignmentDetailsBinding = FragmentAssignmentDetailsBinding::inflate
 
@@ -249,7 +249,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     private fun configureSubmissionTypes(assignment: Assignment) = with(binding) {
         submissionTypesTextView.text = assignment.submissionTypesRaw.map {
-            submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext()) }.joinToString("\n")
+            submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext(), assignment.ltiToolType()) }.joinToString("\n")
 
         if(assignment.submissionTypesRaw.contains(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)) {
             // External tool
@@ -262,8 +262,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
-                    val args = LtiLaunchFragment.makeBundle(course, ltiUrl, assignment.name!!, true)
-                    RouteMatcher.route(requireActivity(), Route(LtiLaunchFragment::class.java, course, args))
+                    val route = LtiLaunchFragment.makeRoute(course, ltiUrl, assignment.name!!, assignmentLti = true, openInternally = assignment.ltiToolType().openInternally)
+                    RouteMatcher.route(requireActivity(), route)
                 }
             }
         }
@@ -310,7 +310,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), assignment.description, {
             descriptionWebViewWrapper.loadHtml(it, assignment.name, baseUrl = assignment.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), course, it)
+            RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), course, it))
         }
     }
 

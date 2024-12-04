@@ -19,7 +19,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.teacher.presenters.DueDatesPresenter
 import com.instructure.teacher.viewinterface.DueDatesView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class DueDatesPresenterFactory(val assignment: Assignment) : PresenterFactory<DueDatesView, DueDatesPresenter> {
     override fun create() = DueDatesPresenter(assignment)

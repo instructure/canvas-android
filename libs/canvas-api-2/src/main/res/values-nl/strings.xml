@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Ontwerper</string>
     <string name="enrollmentTypeUnknown">Onbekend</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Studenten</string>
+    <string name="enrollmentTypeTeachers">Docenten</string>
+    <string name="enrollmentTypeObservers">Waarnemers</string>
+    <string name="enrollmentTypeTeachingAssistants">Onderwijsassistenten</string>
+    <string name="enrollmentTypeDesigners">Ontwerpers</string>
 </resources>

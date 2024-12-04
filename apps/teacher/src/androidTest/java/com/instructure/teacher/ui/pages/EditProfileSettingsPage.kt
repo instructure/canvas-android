@@ -19,9 +19,9 @@ package com.instructure.teacher.ui.pages
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.withId
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.withId
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
 

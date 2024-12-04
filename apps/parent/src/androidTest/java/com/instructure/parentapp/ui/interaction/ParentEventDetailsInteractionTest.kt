@@ -44,7 +44,7 @@ class ParentEventDetailsInteractionTest : EventDetailsInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.clickCalendar()
+        dashboardPage.clickCalendarBottomMenu()
 
         val event = data.courseCalendarEvents.values.first().first()
 

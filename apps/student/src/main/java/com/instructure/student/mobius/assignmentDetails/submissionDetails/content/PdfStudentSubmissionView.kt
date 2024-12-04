@@ -61,11 +61,12 @@ import org.greenrobot.eventbus.ThreadMode
 class PdfStudentSubmissionView(
     private val activity: FragmentActivity,
     private val pdfUrl: String,
+    private val courseId: Long,
     private val fragmentManager: FragmentManager,
     private val studentAnnotationSubmit: Boolean = false,
     private val studentAnnotationView: Boolean = false,
 ) : PdfSubmissionView(
-    activity, studentAnnotationView
+    activity, studentAnnotationView, courseId
 ), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewPdfStudentSubmissionBinding

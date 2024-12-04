@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.tryOrNull
@@ -41,7 +42,7 @@ import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FileDetailsFragment : Fragment() {
+class FileDetailsFragment : BaseCanvasFragment() {
 
     private val viewModel: FileDetailsViewModel by viewModels()
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)

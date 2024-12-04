@@ -38,6 +38,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
@@ -235,5 +236,9 @@ class StudentAssignmentDetailsBehaviour (
             return true
         }
         return false
+    }
+
+    override fun getThemeColor(course: Course): Int {
+        return course.color
     }
 }

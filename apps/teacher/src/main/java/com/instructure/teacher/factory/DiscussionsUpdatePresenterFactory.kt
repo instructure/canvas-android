@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.teacher.presenters.DiscussionsUpdatePresenter
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class DiscussionsUpdatePresenterFactory(
         val canvasContext: CanvasContext,

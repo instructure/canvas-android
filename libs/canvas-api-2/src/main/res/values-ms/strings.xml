@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Pereka bentuk</string>
     <string name="enrollmentTypeUnknown">Tidak diketahui</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Pelajar</string>
+    <string name="enrollmentTypeTeachers">Guru</string>
+    <string name="enrollmentTypeObservers">Pemerhati</string>
+    <string name="enrollmentTypeTeachingAssistants">PP</string>
+    <string name="enrollmentTypeDesigners">Pereka bentuk</string>
 </resources>

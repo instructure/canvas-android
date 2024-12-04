@@ -22,7 +22,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.annotation.OptIn
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
@@ -55,7 +55,7 @@ import com.instructure.student.util.Const
 
 @OptIn(UnstableApi::class)
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
-class VideoViewActivity : AppCompatActivity() {
+class VideoViewActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityVideoViewBinding::inflate)
 

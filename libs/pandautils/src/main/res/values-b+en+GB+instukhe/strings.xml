@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">To-do</string>
     <string name="a11y_page">Page</string>
+    <string name="a11y_assessment_request">Assessment request</string>
     <string name="a11y_marked_as_done">Marked as done</string>
     <string name="a11y_not_marked_as_done">Not marked as done</string>
     <string name="error_loading_course_details">Uh oh! An error occurred while loading the module details.</string>

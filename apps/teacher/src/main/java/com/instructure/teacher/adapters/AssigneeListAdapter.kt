@@ -33,7 +33,7 @@ import com.instructure.teacher.holders.AssigneeViewHolder
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.presenters.AssigneeListPresenter
 import com.instructure.teacher.viewinterface.AssigneeListView
-import instructure.androidblueprint.SyncExpandableRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncExpandableRecyclerAdapter
 
 class AssigneeListAdapter(
     context: Context, val presenter: AssigneeListPresenter

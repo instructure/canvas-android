@@ -19,7 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.NullableParcelableArg
@@ -30,7 +30,7 @@ import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentEmptyBinding
 
-class EmptyFragment: Fragment() {
+class EmptyFragment: BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentEmptyBinding::bind)
 

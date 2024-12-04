@@ -75,7 +75,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     @Suppress("unused")
     @PageViewUrlParam(name = "userId")
-    private fun getUserIdForPageView() = userId
+    fun getUserIdForPageView() = userId
 
     @Inject
     lateinit var repository: PeopleDetailsRepository
@@ -86,13 +86,15 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     private var userId by LongArg(key = Const.USER_ID)
 
-    private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     override fun title(): String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.fragment_people_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.compose.backgroundTintList = ColorStateList.valueOf(ThemePrefs.buttonColor)
         binding.compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, ThemePrefs.buttonTextColor))
         binding.compose.setOnClickListener {

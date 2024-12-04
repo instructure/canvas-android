@@ -20,7 +20,7 @@ package com.instructure.student.dialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FATAL_ERROR
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
@@ -28,7 +28,7 @@ import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 
 @ScreenView(SCREEN_VIEW_FATAL_ERROR)
-class FatalErrorDialogStyled : DialogFragment() {
+class FatalErrorDialogStyled : BaseCanvasDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 

@@ -24,13 +24,14 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.pandautils.R
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SyncSettingsInteractionTest : StudentTest() {
+class SyncSettingsInteractionTest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -104,6 +105,6 @@ class SyncSettingsInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
         dashboardPage.waitForRender()
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openOfflineSyncSettingsPage()
+        settingsPage.clickOnSyncSettingsItem()
     }
 }

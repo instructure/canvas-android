@@ -19,10 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
-import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS
-import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
@@ -37,11 +34,10 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsUpdate
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-@ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS)
-@PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
 abstract class SubmissionDetailsFragment : MobiusFragment<SubmissionDetailsModel, SubmissionDetailsEvent,
         SubmissionDetailsEffect, SubmissionDetailsView, SubmissionDetailsViewState, FragmentSubmissionDetailsBinding>() {
 
+    @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
     @get:PageViewUrlParam(name = "assignmentId")

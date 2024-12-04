@@ -35,7 +35,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -53,6 +52,7 @@ import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.pandarecycler.BaseRecyclerAdapter
 import com.instructure.pandarecycler.PandaRecyclerView
 import com.instructure.pandarecycler.interfaces.EmptyViewInterface
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -70,7 +70,7 @@ import com.instructure.student.util.onMainThread
 import java.io.File
 import java.io.FileOutputStream
 
-abstract class ParentFragment : DialogFragment(), FragmentInteractions, NavigationCallbacks {
+abstract class ParentFragment : BaseCanvasDialogFragment(), FragmentInteractions, NavigationCallbacks {
 
     private var openMediaBundle: Bundle? = null
     private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? = null
@@ -372,13 +372,13 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         return recyclerView
     }
 
-    fun openMedia(mime: String?, url: String?, filename: String?, canvasContext: CanvasContext, localFile: Boolean = false, useOutsideApps: Boolean = false) {
+    fun openMedia(mime: String?, url: String?, filename: String?, fileId: String?, canvasContext: CanvasContext, localFile: Boolean = false, useOutsideApps: Boolean = false) {
         val owner = activity ?: return
 
         openMediaBundle = if (localFile) {
-            OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, url, filename, useOutsideApps)
+            OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, url, filename, fileId, useOutsideApps)
         } else {
-            OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, useOutsideApps)
+            OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, fileId, useOutsideApps)
         }
 
         onMainThread {
@@ -391,10 +391,10 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         }
     }
 
-    fun openMedia(canvasContext: CanvasContext, url: String, filename: String?) {
+    fun openMedia(canvasContext: CanvasContext, url: String, filename: String?, fileId: String?) {
         val owner = activity ?: return
         onMainThread {
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, filename, canvasContext)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, filename, fileId, canvasContext)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
         }
     }

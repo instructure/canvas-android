@@ -17,7 +17,7 @@
 package com.instructure.teacher.view
 
 import com.instructure.canvasapi2.models.FileFolder
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface EditFileView : FragmentViewInterface {
     fun folderDeleted(deletedFileFolder: FileFolder)

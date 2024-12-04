@@ -63,7 +63,8 @@ class LoginLandingScreen extends StatelessWidget {
                                 // TODO: needs test
                                 locator<QuickNav>().push(
                                   context,
-                                  WebLoginScreen(snicker.domain,
+                                  WebLoginScreen(
+                                      snicker.domain,
                                       user: snicker.username,
                                       pass: snicker.password),
                                 );
@@ -361,7 +362,7 @@ class LoginLandingScreen extends StatelessWidget {
     locator<QuickNav>().pushRoute(
         context,
         PandaRouter.loginWeb(lastAccount.item1.domain,
-            accountName: lastAccount.item1.name!, loginFlow: lastAccount.item2));
+            accountName: lastAccount.item1.name!, authenticationProvider: lastAccount.item1.authenticationProvider, loginFlow: lastAccount.item2));
   }
 
   void _changeLoginFlow(BuildContext context) {

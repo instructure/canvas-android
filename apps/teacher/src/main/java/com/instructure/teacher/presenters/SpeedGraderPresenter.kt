@@ -43,7 +43,7 @@ import com.instructure.teacher.features.assignment.submission.SubmissionListFilt
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.instructure.teacher.viewinterface.SpeedGraderView
-import instructure.androidblueprint.Presenter
+import com.instructure.pandautils.blueprint.Presenter
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

@@ -32,12 +32,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.FileFolderManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CreateFolder
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
@@ -55,7 +58,28 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.FileUploadEvent
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isCourseOrGroup
+import com.instructure.pandautils.utils.isGroup
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileListBinding
 import com.instructure.student.dialog.EditTextDialog
@@ -69,7 +93,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -90,7 +114,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl(): String {
+    fun makePageViewUrl(): String {
         var url = if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"
         else "${ApiPrefs.fullDomain}/${canvasContext.contextId.replace("_", "s/")}/files"
 
@@ -129,7 +153,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         super.onCreate(savedInstanceState)
         // We only want full screen dialog style if its user files
         if (canvasContext.type == CanvasContext.Type.USER) {
-            setStyle(DialogFragment.STYLE_NORMAL, R.style.LightStatusBarDialog)
+            setStyle(STYLE_NORMAL, R.style.LightStatusBarDialog)
         }
         setUpCallbacks()
     }
@@ -231,7 +255,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     }
                     else -> {
                         recordFilePreviewEvent(item)
-                        openMedia(item.contentType, item.url, item.displayName, canvasContext, localFile = item.isLocalFile)
+                        openMedia(item.contentType, item.url, item.displayName, item.id.toString(), canvasContext, localFile = item.isLocalFile)
                     }
                 }
             }
@@ -384,7 +408,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             when (menuItem.itemId) {
                 R.id.openAlternate -> {
                     recordFilePreviewEvent(item)
-                    openMedia(item.contentType, item.url, item.displayName, canvasContext, localFile = !fileListRepository.isOnline(), useOutsideApps = true)
+                    openMedia(item.contentType, item.url, item.displayName, item.id.toString(), canvasContext, localFile = !fileListRepository.isOnline(), useOutsideApps = true)
                 }
                 R.id.download -> downloadItem(item)
                 R.id.rename -> renameItem(item)

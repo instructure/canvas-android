@@ -16,7 +16,7 @@
 package com.instructure.student.ui.renderTests
 
 import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.pages.onViewWithId
 import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.QuizSubmissionViewFragment

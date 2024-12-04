@@ -41,7 +41,7 @@ import com.instructure.teacher.models.PendingCommentWrapper
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.models.SubmissionWrapper
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
-import instructure.androidblueprint.ListPresenter
+import com.instructure.pandautils.blueprint.ListPresenter
 import kotlinx.coroutines.Job
 import java.util.*
 

@@ -15,7 +15,7 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 import com.instructure.student.R
 
 open class SubmissionDetailsEmptyContentPage : BasePage(R.id.submissionDetailsEmptyContent)

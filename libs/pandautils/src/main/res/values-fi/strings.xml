@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Testi</string>
     <string name="a11y_todo">Tehtävälista</string>
     <string name="a11y_page">Sivu</string>
+    <string name="a11y_assessment_request">Arviointipyyntö</string>
     <string name="a11y_marked_as_done">Merkitty tehdyksi</string>
     <string name="a11y_not_marked_as_done">Ei ole merkitty valmiiksi</string>
     <string name="error_loading_course_details">Voi ei! Kurssin tietoja ladattaessa ilmeni virhe.</string>

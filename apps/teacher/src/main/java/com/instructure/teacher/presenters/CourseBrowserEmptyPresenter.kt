@@ -17,7 +17,7 @@ package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 
 class CourseBrowserEmptyPresenter(val course: Course) : FragmentPresenter<CourseBrowserEmptyView>() {
 

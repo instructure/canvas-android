@@ -18,6 +18,8 @@ package com.instructure.student.ui.e2e
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
@@ -32,21 +34,28 @@ import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.espresso.ViewUtils
+import com.instructure.pandautils.utils.AppTheme
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.ui.utils.IntentActionMatcher
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 
 @HiltAndroidTest
-class SettingsE2ETest : StudentTest() {
+class SettingsE2ETest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    @After
+    fun tearDown() {
+        Intents.release()
+    }
 
     @E2E
     @Test
@@ -66,7 +75,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open Profile Settings Page.")
-        settingsPage.openProfileSettings()
+        settingsPage.clickOnSettingsItem("Profile Settings")
         profileSettingsPage.assertPageObjects()
 
         val newUserName = "John Doe"
@@ -82,7 +91,7 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate to Settings Page again and open Panda Avatar Creator.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
-        settingsPage.openProfileSettings()
+        settingsPage.clickOnSettingsItem("Profile Settings")
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.launchPandaAvatarCreator()
 
@@ -126,13 +135,9 @@ class SettingsE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings.")
-        settingsPage.openAppThemeSettings()
 
         Log.d(STEP_TAG,"Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
-        settingsPage.selectAppTheme("Dark")
-        settingsPage.assertAppThemeTitleTextColor("#FFFFFFFF") //Currently, this color is used in the Dark mode for the AppTheme Title text.
-        settingsPage.assertAppThemeStatusTextColor("#FF919CA8") //Currently, this color is used in the Dark mode for the AppTheme Status text.
+        settingsPage.selectAppTheme(AppTheme.DARK)
 
         Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Dark mode).")
         Espresso.pressBack()
@@ -146,12 +151,9 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings again.")
         Espresso.pressBack()
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openAppThemeSettings()
 
         Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
-        settingsPage.selectAppTheme("Light")
-        settingsPage.assertAppThemeTitleTextColor("#FF273540") //Currently, this color is used in the Light mode for the AppTheme Title texts.
-        settingsPage.assertAppThemeStatusTextColor("#FF6A7883") //Currently, this color is used in the Light mode for the AppTheme Status text.
+        settingsPage.selectAppTheme(AppTheme.LIGHT)
 
         Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Light mode).")
         Espresso.pressBack()
@@ -176,7 +178,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'Legal' link to open Legal Page. Assert that Legal Page has opened.")
-        settingsPage.openLegalPage()
+        settingsPage.clickOnSettingsItem("Legal")
         legalPage.assertPageObjects()
     }
 
@@ -198,7 +200,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'About' link to open About Page. Assert that About Page has opened.")
-        settingsPage.openAboutPage()
+        settingsPage.clickOnSettingsItem("About")
         aboutPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Check that domain is equal to: ${student.domain} (student's domain).")
@@ -236,7 +238,7 @@ class SettingsE2ETest : StudentTest() {
         RemoteConfigParam.values().forEach {param -> initialValues.put(param.rc_name, RemoteConfigUtils.getString(param))}
 
         Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
-        settingsPage.openRemoteConfigParams()
+        settingsPage.clickOnSettingsItem("Remote Config Params")
 
         RemoteConfigParam.values().forEach { param ->
 
@@ -256,7 +258,7 @@ class SettingsE2ETest : StudentTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
-        settingsPage.openRemoteConfigParams()
+        settingsPage.clickOnSettingsItem("Remote Config Params")
 
         Log.d(STEP_TAG, "Assert that all fields have maintained their initial value.")
         RemoteConfigParam.values().forEach { param ->
@@ -282,21 +284,17 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'Subscribe to Calendar'.")
-        settingsPage.openSubscribeToCalendar()
+        settingsPage.clickOnSettingsItem("Subscribe to Calendar Feed")
 
         Log.d(STEP_TAG, "Click on the 'SUBSCRIBE' button of the pop-up dialog.")
-        settingsPage.clickOnSubscribe()
+        settingsPage.clickOnSubscribeButton()
 
         Log.d(STEP_TAG, "Assert that the proper intents has launched, so the NavigationActivity has been launched with an Intent from SettingsActivity.")
         val calendarDataMatcherString = "https://calendar.google.com/calendar/r?cid=webcal://"
         val intentActionMatcher = IntentActionMatcher(Intent.ACTION_VIEW, calendarDataMatcherString)
         intended(intentActionMatcher)
-
-        Log.d(PREPARATION_TAG, "Release Intents.")
-        Intents.release()
     }
 
     @E2E

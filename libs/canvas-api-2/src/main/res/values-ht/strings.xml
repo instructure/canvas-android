@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Kreyatè</string>
     <string name="enrollmentTypeUnknown">Enkoni</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Elèv</string>
+    <string name="enrollmentTypeTeachers">Pwofesè</string>
+    <string name="enrollmentTypeObservers">Obsèvatè</string>
+    <string name="enrollmentTypeTeachingAssistants">TAs</string>
+    <string name="enrollmentTypeDesigners">Kreyatè</string>
 </resources>

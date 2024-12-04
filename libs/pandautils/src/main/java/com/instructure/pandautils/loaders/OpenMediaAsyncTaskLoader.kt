@@ -29,6 +29,7 @@ import androidx.loader.content.AsyncTaskLoader
 import com.instructure.canvasapi2.CanvasRestAdapter.Companion.okHttpClient
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.HttpHelper.redirectURL
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.R
@@ -86,6 +87,8 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
     var path: String = ""
     var filename: String? = null
         private set
+    var fileId: String? = null
+        private set
     private var isSubmission = false
     private var canvasContext: CanvasContext? = null
     private var isUseOutsideApps = false
@@ -101,7 +104,8 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             if (args.containsKey(Const.MIME) && args.containsKey(Const.FILE_URL)) {
                 mimeType = args.getString(Const.MIME)
                 filename = args.getString(Const.FILE_URL)
-                filename = makeFilenameUnique(filename, url)
+                fileId = args.getString(Const.FILE_ID)
+                filename = makeFilenameUnique(filename, url, fileId)
             } else if (args.containsKey(Const.FILE_URL)) {
                 val name = args.getString(Const.FILE_URL)
                 if (name.isValid()) filename = name
@@ -231,7 +235,11 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
         // They have to download the content first... gross.
         // Download it if the file doesn't exist in the external cache
         Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "downloadFile URL: $url")
-        val attachmentFile = File(getAttachmentsDirectory(context), filename)
+        val attachmentFile = if (filename?.endsWith(".pdf").orDefault()) {
+            File(File(context.filesDir, "pdfs-${ApiPrefs.user?.id}"), filename)
+        } else {
+            File(getAttachmentsDirectory(context), filename)
+        }
         Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "File: $attachmentFile")
         if (!attachmentFile.exists()) {
             // Download the content from the url
@@ -310,47 +318,50 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             return filename
         }
 
-        fun makeFilenameUnique(filename: String?, url: String): String {
+        fun makeFilenameUnique(filename: String?, url: String, fileId: String? = null): String {
             val matcher = Pattern.compile("(.*)\\.(.*)").matcher(filename)
             return if (matcher.find()) {
                 val actualFilename = matcher.group(1)
                 val fileType = matcher.group(2)
-                String.format("%s_%s.%s", actualFilename, url.hashCode(), fileType)
+                String.format("%s_%s.%s", actualFilename, fileId ?: url.hashCode(), fileType)
             } else {
                 url.hashCode().toString() + filename
             }
         }
 
-        fun createBundle(canvasContext: CanvasContext?, mime: String?, url: String?, filename: String?): Bundle {
+        fun createBundle(canvasContext: CanvasContext?, mime: String?, url: String?, filename: String?, fileId: String?): Bundle {
             val openMediaBundle = Bundle()
             openMediaBundle.putString(Const.MIME, mime)
             openMediaBundle.putString(Const.URL, url)
             openMediaBundle.putString(Const.FILE_URL, filename)
+            openMediaBundle.putString(Const.FILE_ID, fileId)
             openMediaBundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
             return openMediaBundle
         }
 
-        fun createLocalBundle(canvasContext: CanvasContext?, mime: String?, path: String?, filename: String?, useOutsideApps: Boolean): Bundle {
+        fun createLocalBundle(canvasContext: CanvasContext?, mime: String?, path: String?, filename: String?, fileId: String?, useOutsideApps: Boolean): Bundle {
             val openMediaBundle = Bundle()
             openMediaBundle.putString(Const.MIME, mime)
             openMediaBundle.putString(Const.PATH, path)
             openMediaBundle.putString(Const.FILE_URL, filename)
+            openMediaBundle.putString(Const.FILE_ID, fileId)
             openMediaBundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
             openMediaBundle.putBoolean(Const.OPEN_OUTSIDE, useOutsideApps)
             return openMediaBundle
         }
 
-        fun createBundle(canvasContext: CanvasContext?, mime: String?, url: String?, filename: String?, useOutsideApps: Boolean): Bundle {
-            val openMediaBundle = createBundle(canvasContext, mime, url, filename)
+        fun createBundle(canvasContext: CanvasContext?, mime: String?, url: String?, filename: String?, fileId: String?, useOutsideApps: Boolean): Bundle {
+            val openMediaBundle = createBundle(canvasContext, mime, url, filename, fileId)
             openMediaBundle.putBoolean(Const.OPEN_OUTSIDE, useOutsideApps)
             return openMediaBundle
         }
 
-        fun createBundle(url: String?, filename: String?, canvasContext: CanvasContext? = null): Bundle {
+        fun createBundle(url: String?, filename: String?, fileId: String?, canvasContext: CanvasContext? = null): Bundle {
             val openMediaBundle = Bundle()
             openMediaBundle.putString(Const.URL, url)
             openMediaBundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
             openMediaBundle.putString(Const.FILE_URL, filename)
+            openMediaBundle.putString(Const.FILE_ID, fileId)
             return openMediaBundle
         }
 
@@ -360,28 +371,31 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             return openMediaBundle
         }
 
-        fun createBundle(mime: String?, url: String?, filename: String?): Bundle {
+        fun createBundle(mime: String?, url: String?, filename: String?, fileId: String?): Bundle {
             val openMediaBundle = Bundle()
             openMediaBundle.putString(Const.MIME, mime)
             openMediaBundle.putString(Const.URL, url)
             openMediaBundle.putString(Const.FILE_URL, filename)
+            openMediaBundle.putString(Const.FILE_ID, fileId)
             return openMediaBundle
         }
 
-        fun createBundle(mime: String?, url: String?, filename: String?, extras: Bundle?): Bundle {
+        fun createBundle(mime: String?, url: String?, filename: String?, fileId: String?, extras: Bundle?): Bundle {
             val openMediaBundle = Bundle()
             openMediaBundle.putString(Const.MIME, mime)
             openMediaBundle.putString(Const.URL, url)
             openMediaBundle.putString(Const.FILE_URL, filename)
+            openMediaBundle.putString(Const.FILE_ID, fileId)
             openMediaBundle.putBundle(Const.EXTRAS, extras)
             return openMediaBundle
         }
 
-        fun createBundle(canvasContext: CanvasContext?, isSubmission: Boolean, mime: String?, url: String?, filename: String?): Bundle {
+        fun createBundle(canvasContext: CanvasContext?, isSubmission: Boolean, mime: String?, url: String?, filename: String?, fileId: String?): Bundle {
             val openMediaBundle = Bundle()
             openMediaBundle.putString(Const.MIME, mime)
             openMediaBundle.putString(Const.URL, url)
             openMediaBundle.putString(Const.FILE_URL, filename)
+            openMediaBundle.putString(Const.FILE_ID, fileId)
             openMediaBundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
             openMediaBundle.putBoolean(Const.IS_SUBMISSION, isSubmission)
             return openMediaBundle

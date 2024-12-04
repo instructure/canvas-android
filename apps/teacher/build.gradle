@@ -13,17 +13,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-import com.instructure.android.buildtools.transform.*
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'com.heapanalytics.android'
+apply plugin: 'io.heap.gradle'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -39,8 +35,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 71
-        versionName = '1.34.0'
+        versionCode = 72
+        versionName = '1.35.0'
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -110,10 +106,6 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
-
-            ext {
-                heapEnabled = true
-            }
         }
 
         debugMinify {
@@ -139,10 +131,6 @@ android {
             buildConfigField "boolean", "POINT_NINE", "false"
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
-
-            ext {
-                heapEnabled = true
-            }
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
@@ -196,15 +184,7 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    registerTransform(
-            new ProjectTransformer(
-                    android,
-                    new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
-                    new PageViewTransformer(),
-                    new LocaleTransformer(project),
-                    new ScreenViewTransformer("teacher")
-            )
-    )
+
 
     compileOptions {
         sourceCompatibility 1.8
@@ -314,7 +294,7 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
-    implementation Libs.HEAP
+    implementation Libs.HEAP_CORE
 
     implementation Libs.CAMERA_VIEW
 

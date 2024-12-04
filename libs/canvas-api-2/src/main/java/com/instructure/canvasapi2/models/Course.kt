@@ -86,6 +86,10 @@ data class Course(
         val settings: CourseSettings? = null,
         @SerializedName("grading_scheme")
         val gradingSchemeRaw: List<List<@RawValue Any>>? = null,
+        @SerializedName("points_based_grading_scheme")
+        val pointsBasedGradingScheme: Boolean = false,
+        @SerializedName("scaling_factor")
+        val scalingFactor: Double = 1.0,
 ) : CanvasContext(), Comparable<CanvasContext> {
     override val type: Type get() = Type.COURSE
 

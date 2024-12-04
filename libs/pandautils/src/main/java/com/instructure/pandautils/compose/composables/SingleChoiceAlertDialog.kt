@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -78,7 +79,7 @@ fun SingleChoiceAlertDialog(
                     text = dialogTitle,
                     color = colorResource(id = R.color.textDarkest),
                     modifier = Modifier.padding(20.dp),
-                    style = MaterialTheme.typography.subtitle1
+                    fontSize = 16.sp,
                 )
                 ChoiceList(
                     items = items,
@@ -161,7 +162,7 @@ private fun ChoiceList(
                     Text(
                         text = item,
                         color = colorResource(id = R.color.textDarkest),
-                        style = MaterialTheme.typography.body2
+                        fontSize = 14.sp,
                     )
                 }
             }

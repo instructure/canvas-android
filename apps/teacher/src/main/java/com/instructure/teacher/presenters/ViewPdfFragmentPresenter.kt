@@ -21,7 +21,7 @@ import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.viewinterface.ViewPdfFragmentView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import java.io.File
 

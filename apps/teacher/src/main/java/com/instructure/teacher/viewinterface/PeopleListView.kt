@@ -16,6 +16,6 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.User
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface PeopleListView : SyncManager<User>

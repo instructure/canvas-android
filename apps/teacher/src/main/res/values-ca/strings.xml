@@ -511,22 +511,7 @@
     <string name="colorPickerDialogMessage">Aquesta és la configuració del vostre color personal. Cap altre usuari no veurà aquest color per a l\'assignatura.</string>
     <string name="colorPickerError">En aquest moment, no s\'ha pogut establir el color de l\'assignatura.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Rosa fort</string>
-    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
-    <string name="contentDescriptionColorEggplant">Porpra</string>
-    <string name="contentDescriptionColorUltramarine">Blau fosc</string>
-    <string name="contentDescriptionColorOcean11">Blau</string>
-    <string name="contentDescriptionColorCyan">Cian</string>
-    <string name="contentDescriptionColorAquaMarine">Blau cel</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verd maragda</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verd</string>
-    <string name="contentDescriptionColorChartreuse">Verd groguenc</string>
-    <string name="contentDescriptionColorSunFlower">Groc</string>
-    <string name="contentDescriptionColorTangerine">Taronja</string>
-    <string name="contentDescriptionColorBloodOrange">Taronja fosc</string>
-    <string name="contentDescriptionColorSriracha">Vermell</string>
-    <string name="launch_link_in_external_browser">Inicia l\'enllaç al navegador extern</string>
+                                                                <string name="launch_link_in_external_browser">Inicia l\'enllaç al navegador extern</string>
     <string name="contentDescriptionSelectedFile">Fitxer seleccionat</string>
     <string name="contentDescriptionFileIcon">Icona de fitxer</string>
     <string name="contentDescriptionExpandPage">Desplega la pàgina</string>
@@ -612,6 +597,7 @@
     <string name="discussion_details">Informació sobre el fòrum</string>
     <string name="discussions_pinned">Ancorat</string>
     <string name="discussions_unpinned">Fòrums</string>
+    <string name="discussions_close">Tanca per a comentaris</string>
     <string name="discussions_closed">Tancat per als comentaris</string>
     <string name="discussions_open">Obre per a comentaris</string>
     <string name="discussions_pin">Ancora</string>

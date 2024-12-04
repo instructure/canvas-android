@@ -18,7 +18,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.teacher.presenters.MessageThreadPresenter
 import com.instructure.teacher.viewinterface.MessageThreadView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class MessageThreadPresenterFactory(
     private val conversation: Conversation? = null,

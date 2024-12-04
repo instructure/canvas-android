@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Kiểm Tra</string>
     <string name="a11y_todo">Việc Cần Làm</string>
     <string name="a11y_page">Trang</string>
+    <string name="a11y_assessment_request">Yêu cầu đánh giá</string>
     <string name="a11y_marked_as_done">Được đánh dấu là đã xong</string>
     <string name="a11y_not_marked_as_done">Không được đánh dấu là đã xong</string>
     <string name="error_loading_course_details">Rất tiếc! Đã xảy ra lỗi khi tải thông tin chi tiết khóa học.</string>

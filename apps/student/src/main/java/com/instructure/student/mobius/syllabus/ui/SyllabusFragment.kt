@@ -17,9 +17,7 @@
 package com.instructure.student.mobius.syllabus.ui
 
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
-import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.databinding.FragmentSyllabusBinding
@@ -32,10 +30,9 @@ import com.instructure.student.mobius.syllabus.SyllabusPresenter
 import com.instructure.student.mobius.syllabus.SyllabusRepository
 import com.instructure.student.mobius.syllabus.SyllabusUpdate
 
-@ScreenView(SCREEN_VIEW_SYLLABUS)
-@PageView(url = "{canvasContext}/assignments/syllabus")
 abstract class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState, FragmentSyllabusBinding>() {
 
+    @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
     override fun makeEffectHandler() = SyllabusEffectHandler(getRepository())

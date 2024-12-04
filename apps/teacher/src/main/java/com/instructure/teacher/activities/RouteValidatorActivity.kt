@@ -39,6 +39,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Const
@@ -51,7 +52,7 @@ import com.instructure.teacher.services.FileDownloadService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import kotlinx.coroutines.Job
 
-class RouteValidatorActivity : FragmentActivity() {
+class RouteValidatorActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityRouteValidatorBinding::inflate)
 
