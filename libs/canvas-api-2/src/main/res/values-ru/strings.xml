@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Дизайнер</string>
     <string name="enrollmentTypeUnknown">Неизвестно</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Учащиеся</string>
+    <string name="enrollmentTypeTeachers">Преподаватели</string>
+    <string name="enrollmentTypeObservers">Наблюдатели</string>
+    <string name="enrollmentTypeTeachingAssistants">Ассистенты</string>
+    <string name="enrollmentTypeDesigners">Дизайнеры</string>
 </resources>

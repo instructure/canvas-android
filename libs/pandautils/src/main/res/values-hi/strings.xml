@@ -479,6 +479,7 @@
     <string name="a11y_quiz">प्रश्नोत्तरी</string>
     <string name="a11y_todo">करने के लिए</string>
     <string name="a11y_page">पेज</string>
+    <string name="a11y_assessment_request">आकलन का अनुरोध</string>
     <string name="a11y_marked_as_done">हो गया के रूप में चिह्नित किया गया</string>
     <string name="a11y_not_marked_as_done">हो गया के रूप में नहीं चिह्नित किया गया है।</string>
     <string name="error_loading_course_details">उह ओह! पाठ्यक्रम विवरण लोड करते समय त्रुटि उत्पन्न हुई।</string>
