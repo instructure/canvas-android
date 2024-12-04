@@ -741,7 +741,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Syllabus": "Programme",
+  "Syllabus": "Plan de cours",
   "@Syllabus": {
     "description": "Label for the \"Syllabus\" tab in course details",
     "type": "text",

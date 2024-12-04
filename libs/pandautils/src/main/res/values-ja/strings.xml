@@ -473,6 +473,7 @@
     <string name="a11y_quiz">小テスト</string>
     <string name="a11y_todo">タスク</string>
     <string name="a11y_page">ページ</string>
+    <string name="a11y_assessment_request">アセスメントの要求</string>
     <string name="a11y_marked_as_done">完了としてマークする</string>
     <string name="a11y_not_marked_as_done">完了とマークされていない</string>
     <string name="error_loading_course_details">エラーです！コース詳細の読み込み中にエラーが発生しました：</string>
