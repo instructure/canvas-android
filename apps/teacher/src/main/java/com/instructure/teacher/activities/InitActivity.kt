@@ -212,6 +212,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
 
+        scheduleAlarms()
+
         if (!ThemePrefs.isThemeApplied) {
             // This will be only called when we change dark/light mode, because the Theme is already applied before in the SplashActivity.
             updateTheme()
@@ -732,6 +734,12 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private fun setPushNotificationAsRead() {
         intent.putExtra(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false)
         PushNotification.remove(intent)
+    }
+
+    private fun scheduleAlarms() {
+        lifecycleScope.launch {
+            alarmScheduler.scheduleAllAlarmsForCurrentUser()
+        }
     }
 
     //endregion

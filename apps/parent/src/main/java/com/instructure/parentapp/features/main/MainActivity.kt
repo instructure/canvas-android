@@ -34,6 +34,7 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -61,6 +62,9 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     lateinit var inboxCountUpdater: InboxCountUpdater
 
     @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
     lateinit var oAuthApi: OAuthAPI.OAuthInterface
 
     private lateinit var navController: NavController
@@ -71,6 +75,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         setupTheme()
         setupNavigation()
         handleQrMasquerading()
+        scheduleAlarms()
 
         if (ApiPrefs.isFirstMasqueradingStart) {
             loadAuthenticatedSession()
@@ -157,6 +162,12 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
 
     override fun onStopMasquerading() {
         MasqueradeHelper.stopMasquerading(MainActivity::class.java)
+    }
+
+    private fun scheduleAlarms() {
+        lifecycleScope.launch {
+            alarmScheduler.scheduleAllAlarmsForCurrentUser()
+        }
     }
 
     companion object {

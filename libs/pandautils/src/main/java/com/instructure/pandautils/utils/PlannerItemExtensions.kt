@@ -19,7 +19,6 @@ package com.instructure.pandautils.utils
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 
-val PlannerItem.todoHtmlUrl: String
-    get() {
-        return "${ApiPrefs.fullDomain}/todos/${this.plannable.id}"
-    }
+fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
+    return "${apiPrefs.fullDomain}/todos/${this.plannable.id}"
+}

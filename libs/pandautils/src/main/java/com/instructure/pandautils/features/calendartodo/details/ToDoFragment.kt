@@ -15,9 +15,11 @@
  */
 package com.instructure.pandautils.features.calendartodo.details
 
+import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +27,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -64,6 +67,8 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
 
     @Inject
     lateinit var sharedEvents: CalendarSharedEvents
+
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
@@ -109,7 +114,11 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
 
     private fun checkAlarmPermission() {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && requireActivity().checkSelfPermission(
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            viewModel.checkingNotificationPermission = true
+            notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
                 viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
             } else {
@@ -127,7 +136,14 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
     }
 
     private fun checkAlarmPermissionResult() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && viewModel.checkingNotificationPermission) {
+            if (requireActivity().checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                checkAlarmPermission()
+            } else {
+                Snackbar.make(requireView(), getString(R.string.notificationPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
+            }
+            viewModel.checkingNotificationPermission = false
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
             if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
                 viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
             } else {

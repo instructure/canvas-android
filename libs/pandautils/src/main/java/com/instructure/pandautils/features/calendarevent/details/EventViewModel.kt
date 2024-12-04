@@ -80,6 +80,7 @@ class EventViewModel @Inject constructor(
     private var scheduleItem: ScheduleItem? = null
 
     var checkingReminderPermission = false
+    var checkingNotificationPermission = false
 
     init {
         loadData()

@@ -69,6 +69,7 @@ class ToDoViewModel @Inject constructor(
     private var plannerItem: PlannerItem? = savedStateHandle.get<PlannerItem>(PLANNER_ITEM)
 
     var checkingReminderPermission = false
+    var checkingNotificationPermission = false
 
     init {
         loadData()
@@ -188,7 +189,7 @@ class ToDoViewModel @Inject constructor(
                         apiPrefs.user?.id.orDefault(),
                         plannerItem.plannable.id,
                         plannerItem.plannable.title,
-                        plannerItem.todoHtmlUrl,
+                        plannerItem.todoHtmlUrl(apiPrefs),
                         plannerItem.plannableDate,
                     )
                     else -> reminderManager.showBeforeDueDateReminderDialog(
@@ -196,7 +197,7 @@ class ToDoViewModel @Inject constructor(
                         apiPrefs.user?.id.orDefault(),
                         plannerItem.plannable.id,
                         plannerItem.plannable.title,
-                        plannerItem.todoHtmlUrl,
+                        plannerItem.todoHtmlUrl(apiPrefs),
                         plannerItem.plannableDate,
                         color
                     )

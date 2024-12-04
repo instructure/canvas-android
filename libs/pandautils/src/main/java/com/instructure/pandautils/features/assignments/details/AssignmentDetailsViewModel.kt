@@ -132,6 +132,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     val reminderViewState = _reminderViewState.asStateFlow()
 
     var checkingReminderPermission = false
+    var checkingNotificationPermission = false
 
     init {
         markSubmissionAsRead()
