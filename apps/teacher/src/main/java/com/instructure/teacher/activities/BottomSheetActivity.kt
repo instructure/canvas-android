@@ -45,7 +45,6 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityBottomSheetBinding
-import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.utils.getColorCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -146,13 +145,6 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     }
 
     private fun animateBottomSheetGoneAndFinish() {
-        //don't want to finish if there are unsaved changes
-        if (supportFragmentManager.findFragmentById(R.id.bottom) is AddMessageFragment) {
-            if(!(supportFragmentManager.findFragmentById(R.id.bottom) as AddMessageFragment).shouldAllowExit()) {
-                (supportFragmentManager.findFragmentById(R.id.bottom) as AddMessageFragment).handleExit()
-                return
-            }
-        }
         binding.bottom.post {
             animateBottomOut()
             fadeOutBackground()
