@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.TermsOfService
 data class CreateAccountUiState(
     val isLoading: Boolean = false,
     val showErrorSnack: Boolean = false,
+    val errorSnackMessage: String = "",
     val name: String = "",
     val email: String = "",
     val password: String = "",

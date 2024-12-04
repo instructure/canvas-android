@@ -20,11 +20,15 @@ import androidx.core.util.PatternsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.JsonParser
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandares.R
+import com.instructure.pandautils.utils.getArrayOrNull
+import com.instructure.pandautils.utils.getObjectOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -33,6 +37,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -86,7 +91,10 @@ class CreateAccountViewModel @Inject constructor(
             }
 
             CreateAccountAction.SnackbarDismissed -> _uiState.update {
-                it.copy(showErrorSnack = false)
+                it.copy(
+                    showErrorSnack = false,
+                    errorSnackMessage = ""
+                )
             }
 
             CreateAccountAction.SignInTapped -> {
@@ -170,7 +178,7 @@ class CreateAccountViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
 
-            repository.createObserverUser(
+            val response = repository.createObserverUser(
                 domain,
                 accountId,
                 pairingCode,
@@ -180,18 +188,100 @@ class CreateAccountViewModel @Inject constructor(
             )
 
             _uiState.update { it.copy(isLoading = false) }
-            ApiPrefs.domain = domain
-            _events.send(
-                CreateAccountViewModelAction.NavigateToSignIn(
-                    AccountDomain(domain = domain),
-                    true
+            if (response.isSuccess) {
+                ApiPrefs.domain = domain
+                _events.send(
+                    CreateAccountViewModelAction.NavigateToSignIn(
+                        AccountDomain(domain = domain),
+                        true
+                    )
                 )
-            )
+            } else {
+                val responseBody = (response as? DataResult.Fail)?.errorBody
+                handleError(responseBody)
+            }
         } catch {
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    showErrorSnack = true
+                    showErrorSnack = true,
+                    errorSnackMessage = context.getString(R.string.createAccErrorCreatingAccount)
+                )
+            }
+        }
+    }
+
+    private fun handleError(responseBody: ResponseBody?) {
+        responseBody?.let {
+            val jsonObj = JsonParser.parseString(it.string()).asJsonObject
+            val uniqueIdError = jsonObj
+                .getObjectOrNull("errors")
+                ?.getObjectOrNull("pseudonym")
+                ?.getArrayOrNull("unique_id")
+                ?.firstOrNull()
+                ?.asJsonObject
+                ?.get("message")
+
+            uniqueIdError?.let {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        emailError = context.getString(R.string.createAccErrorEmailAlreadyInUse)
+                    )
+                }
+                return
+            }
+
+            val pairingError = jsonObj
+                .getObjectOrNull("errors")
+                ?.getObjectOrNull("pairing_code")
+                ?.getArrayOrNull("code")
+                ?.firstOrNull()
+                ?.asJsonObject
+                ?.get("message")
+
+            pairingError?.let {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        showErrorSnack = true,
+                        errorSnackMessage = context.getString(R.string.createAccErrorPairingCode)
+                    )
+                }
+                return
+            }
+
+            val emailError = jsonObj
+                .getObjectOrNull("errors")
+                ?.getObjectOrNull("user")
+                ?.getArrayOrNull("pseudonyms")
+                ?.firstOrNull()
+                ?.asJsonObject
+                ?.get("message")
+
+            emailError?.let {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        emailError = context.getString(R.string.createAccEnterValidEmail)
+                    )
+                }
+                return
+            }
+
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    showErrorSnack = true,
+                    errorSnackMessage = context.getString(R.string.createAccErrorCreatingAccount)
+                )
+            }
+        } ?: run {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    showErrorSnack = true,
+                    errorSnackMessage = context.getString(R.string.createAccErrorCreatingAccount)
                 )
             }
         }

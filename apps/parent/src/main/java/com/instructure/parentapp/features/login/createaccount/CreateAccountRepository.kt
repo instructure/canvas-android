@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.CreateObserverPostBody
 import com.instructure.canvasapi2.models.postmodels.Observer
 import com.instructure.canvasapi2.models.postmodels.Pseudonym
+import com.instructure.canvasapi2.utils.DataResult
 import javax.inject.Inject
 
 class CreateAccountRepository @Inject constructor(
@@ -36,7 +37,7 @@ class CreateAccountRepository @Inject constructor(
         fullName: String,
         email: String,
         password: String
-    ): User {
+    ): DataResult<User> {
         val domainUrl = if (!domain.startsWith("https://")) {
             "https://$domain"
         } else {
@@ -48,7 +49,7 @@ class CreateAccountRepository @Inject constructor(
             Pseudonym(email, password),
             PairingCode(pairingCode)
         )
-        return userApi.createObserverAccount(url, createObserver).dataOrThrow
+        return userApi.createObserverAccount(url, createObserver)
     }
 
     suspend fun getTermsOfService(

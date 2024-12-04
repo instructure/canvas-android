@@ -20,7 +20,6 @@ import android.text.Annotation
 import android.text.SpannedString
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -90,7 +89,7 @@ internal fun CreateAccountScreen(
 ) {
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
-        val errorMessage = stringResource(id = R.string.createAccErrorCreatingAccount)
+        val errorMessage = uiState.errorSnackMessage
         LaunchedEffect(uiState.showErrorSnack) {
             if (uiState.showErrorSnack) {
                 val result = snackbarHostState.showSnackbar(errorMessage)
@@ -104,64 +103,63 @@ internal fun CreateAccountScreen(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
-                Box {
-                    Column(
+                Column(
+                    modifier = Modifier
+                        .padding(padding)
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(48.dp))
+
+                    CanvasHeader()
+                    Spacer(modifier = Modifier.height(48.dp))
+
+                    TextFields(uiState, actionHandler)
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    TermsOrPrivacyText(actionHandler, uiState.termsOfService)
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    TextButton(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundInfo)),
+                        onClick = { actionHandler(CreateAccountAction.CreateAccountTapped) }
                     ) {
-                        Spacer(modifier = Modifier.height(48.dp))
-
-                        CanvasHeader()
-                        Spacer(modifier = Modifier.height(48.dp))
-
-                        TextFields(uiState, actionHandler)
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        TermsOrPrivacyText(actionHandler, uiState.termsOfService)
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        TextButton(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundInfo)),
-                            onClick = { actionHandler(CreateAccountAction.CreateAccountTapped) }
-                        ) {
-                            Text(
-                                text = stringResource(R.string.createAccButton),
-                                color = colorResource(R.color.textLightest)
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(28.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = stringResource(R.string.createAccAlreadyHaveAccount),
-                                color = colorResource(R.color.textDark)
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(
-                                modifier = Modifier.clickable {
-                                    actionHandler(CreateAccountAction.SignInTapped)
-                                },
-                                text = stringResource(R.string.createAccSignIn),
-                                color = colorResource(R.color.textInfo)
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                    if (uiState.isLoading) {
-                        Loading(modifier = Modifier
-                            .fillMaxSize()
-                            .testTag("loading")
-                            .pointerInput(Unit) { }
+                        Text(
+                            text = stringResource(R.string.createAccButton),
+                            color = colorResource(R.color.textLightest)
                         )
                     }
+                    Spacer(modifier = Modifier.height(28.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.createAccAlreadyHaveAccount),
+                            color = colorResource(R.color.textDark)
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            modifier = Modifier.clickable {
+                                actionHandler(CreateAccountAction.SignInTapped)
+                            },
+                            text = stringResource(R.string.createAccSignIn),
+                            color = colorResource(R.color.textInfo)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                if (uiState.isLoading) {
+                    Loading(modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("loading")
+                        .pointerInput(Unit) { }
+                    )
                 }
             })
     }

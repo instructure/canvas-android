@@ -49,7 +49,7 @@ class CreateAccountPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Create Account").performClick()
     }
 
-    fun isRecipientsLoading(): Boolean {
+    fun isLoading(): Boolean {
         composeTestRule.waitForIdle()
         return composeTestRule.onNodeWithTag("loading").isDisplayed()
     }

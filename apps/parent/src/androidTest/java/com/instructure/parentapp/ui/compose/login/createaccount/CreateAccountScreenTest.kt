@@ -82,7 +82,8 @@ class CreateAccountScreenTest {
         composeTestRule.setContent {
             CreateAccountScreen(
                 uiState = CreateAccountUiState(
-                    showErrorSnack = true
+                    showErrorSnack = true,
+                    errorSnackMessage = "An error occurred creating your account. Please check your internet connection and try again."
                 ),
                 actionHandler = {}
             )
@@ -124,6 +125,4 @@ class CreateAccountScreenTest {
         composeTestRule.onNodeWithText("Please enter an email address").assertIsDisplayed()
         composeTestRule.onNodeWithText("Password is required").assertIsDisplayed()
     }
-
-
 }

@@ -1915,6 +1915,8 @@
     <string name="createAccEnterPassword">Password is required</string>
     <string name="createAccPasswordTooShort">Password must contain at least 8 characters</string>
     <string name="createAccErrorCreatingAccount">An error occurred creating your account. Please check your internet connection and try again.</string>
+    <string name="createAccErrorEmailAlreadyInUse">This email address is already in use.</string>
+    <string name="createAccErrorPairingCode">This pairing code is expired or already used. Please try again with a new one.</string>
     <string name="createAccTosAndPrivacy">By tapping \'Create Account\', you agree to the <annotation url="tos">Terms of Service</annotation> and acknowledge the <annotation url="privacy">Privacy Policy</annotation></string>
     <string name="createAccViewPrivacy">View the <annotation url="privacy">Privacy Policy</annotation></string>
     <string name="route_not_available">That page has been disabled for this course</string>

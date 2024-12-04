@@ -50,7 +50,7 @@ class CreateAccountInteractionTest : ParentComposeTest() {
     fun testEmptyFieldErrorsDisplayed() {
         val data = initData()
         goToCreateAccount(data)
-        composeTestRule.waitUntil { !createAccountPage.isRecipientsLoading() }
+        composeTestRule.waitUntil { !createAccountPage.isLoading() }
         createAccountPage.clickCreateAccountButton()
 
         composeTestRule.onNodeWithText("Please enter full name").assertIsDisplayed()
@@ -62,7 +62,7 @@ class CreateAccountInteractionTest : ParentComposeTest() {
     fun testInvalidFieldErrorsDisplayed() {
         val data = initData()
         goToCreateAccount(data)
-        composeTestRule.waitUntil { !createAccountPage.isRecipientsLoading() }
+        composeTestRule.waitUntil { !createAccountPage.isLoading() }
         createAccountPage.fillInvalidData()
         createAccountPage.clickCreateAccountButton()
 
@@ -76,7 +76,7 @@ class CreateAccountInteractionTest : ParentComposeTest() {
     fun testValidData() {
         val data = initData()
         goToCreateAccount(data)
-        composeTestRule.waitUntil { !createAccountPage.isRecipientsLoading() }
+        composeTestRule.waitUntil { !createAccountPage.isLoading() }
         createAccountPage.fillValidData()
         createAccountPage.clickCreateAccountButton()
 
