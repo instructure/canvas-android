@@ -247,7 +247,7 @@
 
     <string-array name="people_filters">
         <item>De réir Ainm</item>
-        <item>Marc Ard go Íseal</item>
+        <item>Marc Ard go hÍseal</item>
         <item>Marc Íseal go hArd</item>
     </string-array>
 
@@ -511,22 +511,7 @@
     <string name="colorPickerDialogMessage">Seo é do shocrú dathanna pearsanta. Ní fheicfidh tú ach an dath seo don chúrsa.</string>
     <string name="colorPickerError">Níorbh fhéidir dath an chúrsa a shocrú ag an am seo.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Bándearg</string>
-    <string name="contentDescriptionColorBarbie">Bándearg Te</string>
-    <string name="contentDescriptionColorBarneyPurple">Corcairghorm</string>
-    <string name="contentDescriptionColorEggplant">Corcra</string>
-    <string name="contentDescriptionColorUltramarine">Dúghorm</string>
-    <string name="contentDescriptionColorOcean11">Gorm</string>
-    <string name="contentDescriptionColorCyan">Cian</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Gorm</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragaidghlas</string>
-    <string name="contentDescriptionColorFreshCutLawn">Glas</string>
-    <string name="contentDescriptionColorChartreuse">Chairtreuse</string>
-    <string name="contentDescriptionColorSunFlower">Buí</string>
-    <string name="contentDescriptionColorTangerine">Oráiste</string>
-    <string name="contentDescriptionColorBloodOrange">Oráiste Dorcha</string>
-    <string name="contentDescriptionColorSriracha">Dearg</string>
-    <string name="launch_link_in_external_browser">Seol nasc sa bhrabhsálaí seachtrach</string>
+                                                                <string name="launch_link_in_external_browser">Seol nasc sa bhrabhsálaí seachtrach</string>
     <string name="contentDescriptionSelectedFile">Comhad Roghnaithe</string>
     <string name="contentDescriptionFileIcon">Deilbhín Comhaid</string>
     <string name="contentDescriptionExpandPage">Leathnaigh Leathanaigh</string>
@@ -612,6 +597,7 @@
     <string name="discussion_details">Sonraí Plé</string>
     <string name="discussions_pinned">Pionnáilte</string>
     <string name="discussions_unpinned">Fóraim</string>
+    <string name="discussions_close">Dún le haghaidh Ráitis</string>
     <string name="discussions_closed">Dúnta le haghaidh Ráitis</string>
     <string name="discussions_open">Oscailte le haghaidh Ráitis</string>
     <string name="discussions_pin">Pionnáil</string>
@@ -685,7 +671,7 @@
     <string name="viewQuizSubmission">Féach ar Uaslódáil</string>
     <string name="gradeQuizSubmission">Marcáil Uaslódáil</string>
     <string name="comment">Ráiteas</string>
-    <string name="messageStudentsWho">Cuir Teachtaireacht chuig Mic Léinn a&#8230;</string>
+    <string name="messageStudentsWho">Cuir Teachtaireacht chuig Mic Léinn maidir le&#8230;</string>
 
     <string name="on">ar siúl</string>
 
