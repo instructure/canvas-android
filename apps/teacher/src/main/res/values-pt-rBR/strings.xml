@@ -510,22 +510,7 @@
     <string name="colorPickerDialogMessage">Essa é a sua configuração pessoal de cores. Só você verá essa cor para o curso.</string>
     <string name="colorPickerError">A cor do curso não pode ser definida nesse momento.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Rosa quente</string>
-    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
-    <string name="contentDescriptionColorEggplant">Roxo</string>
-    <string name="contentDescriptionColorUltramarine">Azul escuro</string>
-    <string name="contentDescriptionColorOcean11">Azul</string>
-    <string name="contentDescriptionColorCyan">Ciano</string>
-    <string name="contentDescriptionColorAquaMarine">Azul água</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verde esmeralda</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verde</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Amarelo</string>
-    <string name="contentDescriptionColorTangerine">Laranja</string>
-    <string name="contentDescriptionColorBloodOrange">Laranja escuro</string>
-    <string name="contentDescriptionColorSriracha">Vermelho</string>
-    <string name="launch_link_in_external_browser">Lançar link no navegador externo</string>
+                                                                <string name="launch_link_in_external_browser">Lançar link no navegador externo</string>
     <string name="contentDescriptionSelectedFile">Arquivo selecionado</string>
     <string name="contentDescriptionFileIcon">Ícone de Arquivo</string>
     <string name="contentDescriptionExpandPage">Expandir página</string>
@@ -611,6 +596,7 @@
     <string name="discussion_details">Detalhes do fórum</string>
     <string name="discussions_pinned">Fixado</string>
     <string name="discussions_unpinned">Fóruns</string>
+    <string name="discussions_close">Fechar para Comentários</string>
     <string name="discussions_closed">Fechado para comentários</string>
     <string name="discussions_open">Reabrir para comentários</string>
     <string name="discussions_pin">Fixar</string>

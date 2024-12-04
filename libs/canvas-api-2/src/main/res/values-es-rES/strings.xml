@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version='1.0' encoding='UTF-8'?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Diseñador</string>
     <string name="enrollmentTypeUnknown">Desconocido</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Estudiantes</string>
+    <string name="enrollmentTypeTeachers">Profesores</string>
+    <string name="enrollmentTypeObservers">Observadores</string>
+    <string name="enrollmentTypeTeachingAssistants">Profesores auxiliares</string>
+    <string name="enrollmentTypeDesigners">Diseñadores</string>
 </resources>
