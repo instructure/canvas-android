@@ -18,13 +18,13 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withAncestor
-import com.instructure.espresso.pages.withId
-import com.instructure.espresso.pages.withParent
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 

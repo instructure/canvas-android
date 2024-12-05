@@ -29,8 +29,8 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithText
 
 class AlertsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 

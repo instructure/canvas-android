@@ -27,7 +27,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import com.instructure.canvasapi2.models.AlertType
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 
 class AlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
