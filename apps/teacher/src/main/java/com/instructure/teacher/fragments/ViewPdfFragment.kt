@@ -39,7 +39,7 @@ import com.instructure.teacher.viewinterface.ViewPdfFragmentView
 import com.pspdfkit.configuration.PdfConfiguration
 import com.pspdfkit.configuration.page.PageScrollDirection
 import com.pspdfkit.ui.PdfFragment
-import instructure.androidblueprint.PresenterFragment
+import com.instructure.pandautils.blueprint.PresenterFragment
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_PDF)

@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setHidden
@@ -43,16 +44,15 @@ import com.instructure.student.databinding.DialogSubmissionPickerBinding
 import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
 import com.instructure.student.databinding.FragmentSubmissionDetailsEmptyContentBinding
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.StudioWebViewFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
@@ -145,7 +145,7 @@ class SubmissionDetailsEmptyContentView(
             canvasContext,
             ltiTool?.url ?: "",
             title,
-            isAssignmentLTI = true,
+            assignmentLti = true,
             ltiTool = ltiTool
         ))
     }

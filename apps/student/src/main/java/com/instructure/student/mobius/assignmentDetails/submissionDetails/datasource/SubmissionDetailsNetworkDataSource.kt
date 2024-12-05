@@ -20,6 +20,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.datas
 import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 
@@ -40,7 +41,7 @@ class SubmissionDetailsNetworkDataSource(
     }
 
     override suspend fun getSingleSubmission(courseId: Long, assignmentId: Long, studentId: Long, forceNetwork: Boolean): DataResult<Submission> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork, domain = ApiPrefs.overrideDomains[courseId])
         return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, params)
     }
 

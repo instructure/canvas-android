@@ -150,7 +150,7 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
 
-    implementation Libs.HEAP
+    implementation Libs.HEAP_CORE
 
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX

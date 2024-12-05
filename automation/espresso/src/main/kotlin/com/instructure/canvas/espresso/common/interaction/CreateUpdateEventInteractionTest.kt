@@ -365,6 +365,26 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         createUpdateEventDetailsPage.assertUnsavedChangesDialog()
     }
 
+    @Test
+    fun saveDisabledWhenTitleBlank() {
+        val data = initData()
+        goToCreateEvent(data)
+
+        composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.typeTitle("  ")
+        createUpdateEventDetailsPage.assertSaveDisabled()
+    }
+
+    @Test
+    fun saveEnabledWhenTitleIsNotBlank() {
+        val data = initData()
+        goToCreateEvent(data)
+
+        composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.typeTitle("New Title")
+        createUpdateEventDetailsPage.assertSaveEnabled()
+    }
+
     abstract fun goToCreateEvent(data: MockCanvas)
 
     abstract fun goToEditEvent(data: MockCanvas)

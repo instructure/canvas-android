@@ -18,7 +18,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.presenters.PeopleListPresenter
 import com.instructure.teacher.viewinterface.PeopleListView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class PeopleListPresenterFactory(private val mCanvasContext: CanvasContext) : PresenterFactory<PeopleListView, PeopleListPresenter> {
     override fun create() = PeopleListPresenter(mCanvasContext)

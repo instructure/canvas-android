@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.weave.inParallel
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.viewinterface.AddMessageView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response

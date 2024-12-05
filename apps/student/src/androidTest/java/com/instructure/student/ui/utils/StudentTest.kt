@@ -36,6 +36,9 @@ import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
+import com.instructure.espresso.pages.common.LoginFindSchoolPage
+import com.instructure.espresso.pages.common.LoginLandingPage
+import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
@@ -67,9 +70,6 @@ import com.instructure.student.ui.pages.ImportantDatesPage
 import com.instructure.student.ui.pages.InboxConversationPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
-import com.instructure.student.ui.pages.LoginFindSchoolPage
-import com.instructure.student.ui.pages.LoginLandingPage
-import com.instructure.student.ui.pages.LoginSignInPage
 import com.instructure.student.ui.pages.ModuleProgressionPage
 import com.instructure.student.ui.pages.ModulesPage
 import com.instructure.student.ui.pages.NewMessagePage
@@ -89,7 +89,6 @@ import com.instructure.student.ui.pages.QuizTakingPage
 import com.instructure.student.ui.pages.RemoteConfigSettingsPage
 import com.instructure.student.ui.pages.ResourcesPage
 import com.instructure.student.ui.pages.SchedulePage
-import com.instructure.student.ui.pages.SettingsPage
 import com.instructure.student.ui.pages.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.ShareExtensionTargetPage
 import com.instructure.student.ui.pages.StudentAssignmentDetailsPage
@@ -164,7 +163,6 @@ abstract class StudentTest : CanvasTest() {
     val quizTakingPage = QuizTakingPage()
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
-    val settingsPage = SettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
@@ -185,7 +183,7 @@ abstract class StudentTest : CanvasTest() {
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
-        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight();
+        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight()
     }
 
     // Get the number of files/avatars in our panda avatars folder

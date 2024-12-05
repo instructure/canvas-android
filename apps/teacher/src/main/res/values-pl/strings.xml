@@ -531,22 +531,7 @@
     <string name="colorPickerDialogMessage">To jest twoje osobiste ustawienie koloru. Tylko ty będziesz widzieć ten kurs podczas kursu.</string>
     <string name="colorPickerError">W danej chwili nie można ustawić koloru kursu.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Różowy</string>
-    <string name="contentDescriptionColorBarbie">Gorący róż</string>
-    <string name="contentDescriptionColorBarneyPurple">Fioletowy</string>
-    <string name="contentDescriptionColorEggplant">Fioletowy</string>
-    <string name="contentDescriptionColorUltramarine">Ciemnoniebieski</string>
-    <string name="contentDescriptionColorOcean11">Niebieski</string>
-    <string name="contentDescriptionColorCyan">Cyjan</string>
-    <string name="contentDescriptionColorAquaMarine">Akwamaryn</string>
-    <string name="contentDescriptionColorEmeraldGreen">Szmaragdowy</string>
-    <string name="contentDescriptionColorFreshCutLawn">Zielony</string>
-    <string name="contentDescriptionColorChartreuse">Żółto-zielony</string>
-    <string name="contentDescriptionColorSunFlower">Żółty</string>
-    <string name="contentDescriptionColorTangerine">Pomarańczowy</string>
-    <string name="contentDescriptionColorBloodOrange">Ciemnopomarańczowy</string>
-    <string name="contentDescriptionColorSriracha">Czerwony</string>
-    <string name="launch_link_in_external_browser">Link uruchamiający w zewnętrznej przeglądarce</string>
+                                                                <string name="launch_link_in_external_browser">Link uruchamiający w zewnętrznej przeglądarce</string>
     <string name="contentDescriptionSelectedFile">Wybrany plik</string>
     <string name="contentDescriptionFileIcon">Ikona pliku</string>
     <string name="contentDescriptionExpandPage">Rozwiń stronę</string>
@@ -634,6 +619,7 @@
     <string name="discussion_details">Informacje szczegółowe dotyczące dyskusji</string>
     <string name="discussions_pinned">Przyczepione</string>
     <string name="discussions_unpinned">Dyskusje</string>
+    <string name="discussions_close">Komentarze zablokowane</string>
     <string name="discussions_closed">Zablokowano dodawanie komentarzy</string>
     <string name="discussions_open">Odblokuj dodawanie komentarzy</string>
     <string name="discussions_pin">Przypnij</string>

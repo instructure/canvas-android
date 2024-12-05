@@ -48,7 +48,7 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&include[]=settings&state[]=completed&state[]=available&include[]=grading_scheme")
         val firstPageCoursesWithGradingScheme: Call<List<Course>>
 
-        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available&include[]=tabs&include[]=settings")
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available&include[]=tabs&include[]=settings&include[]=grading_scheme")
         suspend fun getFirstPageCourses(@Tag params: RestParams): DataResult<List<Course>>
 
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&enrollment_state=active")
@@ -182,7 +182,7 @@ object CourseAPI {
         @GET("courses?include[]=total_scores&include[]=current_grading_period_scores&include[]=grading_periods&include[]=course_image&include[]=settings&enrollment_state=active")
         fun getFirstPageCoursesWithGrades(): Call<List<Course>>
 
-        @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=observed_users&include[]=settings&include[]=grading_scheme&enrollment_state=active")
+        @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=observed_users&include[]=settings&include[]=grading_scheme&enrollment_state=active&include[]=grading_scheme")
         suspend fun firstPageObserveeCourses(@Tag params: RestParams): DataResult<List<Course>>
     }
 
@@ -198,7 +198,7 @@ object CourseAPI {
 
         return if (linkHeaders.nextUrl != null) {
             try {
-                val nextPageResponse = adapter.build(CoursesInterface::class.java, params).next(linkHeaders.nextUrl!!).execute()
+                val nextPageResponse = adapter.build(CoursesInterface::class.java, params).next(linkHeaders.nextUrl).execute()
                 nextPageResponse.body()?.let { courses ->
                     list?.addAll(courses)
                 }

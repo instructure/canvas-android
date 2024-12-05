@@ -28,7 +28,7 @@ import com.instructure.teacher.holders.SpeedGraderCommentHolder
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
-import instructure.androidblueprint.ListRecyclerAdapter
+import com.instructure.pandautils.blueprint.ListRecyclerAdapter
 
 class SpeedGraderCommentsAdapter(
     context: Context,

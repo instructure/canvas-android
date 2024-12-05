@@ -13,8 +13,10 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
@@ -52,7 +54,6 @@ import com.instructure.teacher.fragments.FeatureFlagsFragment
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.fragments.MessageThreadFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.PageListFragment
@@ -62,7 +63,6 @@ import com.instructure.teacher.fragments.ProfileFragment
 import com.instructure.teacher.fragments.QuizDetailsFragment
 import com.instructure.teacher.fragments.QuizListFragment
 import com.instructure.teacher.fragments.QuizPreviewWebviewFragment
-import com.instructure.teacher.fragments.SettingsFragment
 import com.instructure.teacher.fragments.SpeedGraderQuizWebViewFragment
 import com.instructure.teacher.fragments.ViewHtmlFragment
 import com.instructure.teacher.fragments.ViewImageFragment
@@ -189,7 +189,7 @@ object RouteResolver {
         } else if (CreateOrEditAnnouncementFragment::class.java.isAssignableFrom(cls)) {
             fragment = CreateOrEditAnnouncementFragment.newInstance(route.arguments)
         } else if (SettingsFragment::class.java.isAssignableFrom(cls)) {
-            fragment = SettingsFragment.newInstance(route.arguments)
+            fragment = SettingsFragment.newInstance(route)
         } else if (ProfileEditFragment::class.java.isAssignableFrom(cls)) {
             fragment = ProfileEditFragment.newInstance(route.arguments)
         } else if (FeatureFlagsFragment::class.java.isAssignableFrom(cls)) {
@@ -201,7 +201,7 @@ object RouteResolver {
         } else if (RemoteConfigParamsFragment::class.java.isAssignableFrom(cls)) {
             fragment = RemoteConfigParamsFragment()
         } else if (LtiLaunchFragment::class.java.isAssignableFrom(cls)) {
-            fragment = LtiLaunchFragment.newInstance(route.arguments)
+            fragment = LtiLaunchFragment.newInstance(route)
         } else if (PeopleListFragment::class.java.isAssignableFrom(cls)) {
             fragment = PeopleListFragment.newInstance(canvasContext!!)
         } else if (StudentContextFragment::class.java.isAssignableFrom(cls)) {

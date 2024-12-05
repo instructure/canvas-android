@@ -480,6 +480,7 @@
     <string name="a11y_quiz">แบบทดสอบ</string>
     <string name="a11y_todo">สิ่งที่ต้องทำ</string>
     <string name="a11y_page">หน้าเพจ</string>
+    <string name="a11y_assessment_request">คำขอประเมิน</string>
     <string name="a11y_marked_as_done">กำกับว่าเสร็จสิ้นแล้ว</string>
     <string name="a11y_not_marked_as_done">ไม่ได้กำกับว่าเสร็จสิ้นแล้ว</string>
     <string name="error_loading_course_details">โอ๊ะ โอ! เกิดข้อผิดพลาดขณะโหลดรายละเอียดบทเรียน</string>

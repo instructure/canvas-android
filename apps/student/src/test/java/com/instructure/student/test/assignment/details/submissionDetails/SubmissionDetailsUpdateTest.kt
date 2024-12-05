@@ -18,11 +18,21 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.MediaComment
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffect
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsModel
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.instructure.student.util.Const
@@ -34,7 +44,12 @@ import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import io.mockk.unmockkObject
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -57,7 +72,7 @@ class SubmissionDetailsUpdateTest : Assert() {
     @Before
     fun setup() {
         course = Course()
-        assignment = Assignment(id = 1234L, courseId = course.id)
+        assignment = Assignment(id = 1234L, courseId = course.id, name = "Assignment")
         submission = Submission(id = 30L, attempt = 1L, assignmentId = assignment.id)
         initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isStudioEnabled = isStudioEnabled, assignmentEnhancementsEnabled = true)
         ltiTool = LTITool(url = "https://www.instructure.com")
@@ -294,7 +309,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)),
             submission,
-            SubmissionDetailsContentType.ExternalToolContent(course, ltiTool.url!!),
+            SubmissionDetailsContentType.ExternalToolContent(course, ltiTool, assignment.name!!),
             ltiTool
         )
     }
@@ -373,34 +388,8 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(previewUrl = url, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
-        )
-    }
-
-    @Test
-    fun `BASIC_LTI_LAUNCH without a preview url results in SubmissionDetailsContentType of ExternalToolContent`() {
-        verifyGetSubmissionContentType(
-            assignment.copy(url = url),
-            submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
-        )
-    }
-
-    @Test
-    fun `BASIC_LTI_LAUNCH without a preview url or an assignment url results in SubmissionDetailsContentType of ExternalToolContent`() {
-        verifyGetSubmissionContentType(
-            assignment.copy(url = null, htmlUrl = url),
-            submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
-        )
-    }
-
-    @Test
-    fun `BASIC_LTI_LAUNCH without a preview url or an assignment url or an assignment html url results in SubmissionDetailsContentType of ExternalToolContent`() {
-        verifyGetSubmissionContentType(
-            assignment.copy(url = null, htmlUrl = null),
-            submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, "")
+            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, ltiTool, assignment.name!!),
+            lti = ltiTool
         )
     }
 

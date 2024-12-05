@@ -27,7 +27,8 @@ import okhttp3.Request
 class CanvaDocsRedirectAsyncTask(
         private val canvaDocsUrl: String,
         private val onSuccess: (String) -> Unit,
-        private val onException: (Throwable) -> Unit
+        private val onException: (Throwable) -> Unit,
+        private val domain: String? = null
 ) : AsyncTask<Unit, Unit, String>() {
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
@@ -41,7 +42,7 @@ class CanvaDocsRedirectAsyncTask(
                     .build()
 
             val request = Request.Builder()
-                    .url(ApiPrefs.fullDomain + canvaDocsUrl)
+                    .url((domain ?: ApiPrefs.fullDomain) + canvaDocsUrl)
                     .build()
 
             val response = client.newCall(request).execute()

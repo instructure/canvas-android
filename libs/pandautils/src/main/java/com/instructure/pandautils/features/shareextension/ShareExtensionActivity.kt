@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
@@ -68,7 +68,7 @@ data class ShareFileSubmissionTarget(
 ) : Parcelable
 
 @AndroidEntryPoint
-abstract class ShareExtensionActivity : AppCompatActivity(), FileUploadDialogParent {
+abstract class ShareExtensionActivity : BaseCanvasActivity(), FileUploadDialogParent {
 
     private val shareExtensionViewModel: ShareExtensionViewModel by viewModels()
 

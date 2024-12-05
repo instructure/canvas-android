@@ -65,7 +65,7 @@ class EditPageDetailsFragment : ParentFragment() {
 
     @PageViewUrl
     @Suppress("unused")
-    private fun makePageViewUrl(): String {
+    fun makePageViewUrl(): String {
         val url = StringBuilder(ApiPrefs.fullDomain)
         page.let {
             url.append(canvasContext.toAPIString())
@@ -79,6 +79,7 @@ class EditPageDetailsFragment : ParentFragment() {
             inflater.inflate(R.layout.fragment_edit_page, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupDescription()
     }

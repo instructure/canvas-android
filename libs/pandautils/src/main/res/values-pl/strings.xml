@@ -493,6 +493,7 @@
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Lista zadań</string>
     <string name="a11y_page">Strona</string>
+    <string name="a11y_assessment_request">Prośba o ocenę</string>
     <string name="a11y_marked_as_done">Oznaczono jako gotowe</string>
     <string name="a11y_not_marked_as_done">Nie oznaczono jako gotowe</string>
     <string name="error_loading_course_details">O, nie! Podczas wczytywania szczegółów kursu wystąpił błąd.</string>
