@@ -103,7 +103,7 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
     private fun handleAction(action: InboxComposeViewModelAction) {
         when (action) {
             is InboxComposeViewModelAction.NavigateBack -> {
-                activity?.supportFragmentManager?.popBackStack()
+                requireActivity().onBackPressed()
             }
             is InboxComposeViewModelAction.OpenAttachmentPicker -> {
                 val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
