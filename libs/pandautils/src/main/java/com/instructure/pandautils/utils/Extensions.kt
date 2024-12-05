@@ -24,6 +24,8 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.work.Data
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -41,6 +43,24 @@ fun Any.toJson(): String {
 
 inline fun <reified T> String.fromJson(): T {
     return Gson().fromJson<T>(this, T::class.java)
+}
+
+fun JsonObject.getObjectOrNull(memberName: String): JsonObject? {
+    val jsonObj = this.get(memberName) ?: return null
+    return if (jsonObj.isJsonObject) {
+        jsonObj as JsonObject
+    } else {
+        null
+    }
+}
+
+fun JsonObject.getArrayOrNull(memberName: String): JsonArray? {
+    val jsonArray = this.get(memberName) ?: return null
+    return if (jsonArray.isJsonArray) {
+        jsonArray as JsonArray
+    } else {
+        null
+    }
 }
 
 fun Long.humanReadableByteCount(): String {

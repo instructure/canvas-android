@@ -1901,6 +1901,26 @@
     <string name="openTheQuizButton">Open the Quiz</string>
     <string name="newQuizSubmissionTitle">Quiz Submission</string>
     <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
+    <string name="haveCanvasAccount">I have a Canvas account</string>
+    <string name="notHaveCanvasAccount">I don\'t have a Canvas account</string>
+    <string name="createAccFullName">Full Name</string>
+    <string name="createAccEmail">Email Address</string>
+    <string name="createAccPassword">Password</string>
+    <string name="createAccButton">Create Account</string>
+    <string name="createAccAlreadyHaveAccount">Already have an account?</string>
+    <string name="createAccSignIn">Sign in</string>
+    <string name="createAccShowPassword">Show password</string>
+    <string name="createAccHidePassword">Hide password</string>
+    <string name="createAccEnterFullName">Please enter full name</string>
+    <string name="createAccEnterEmail">Please enter an email address</string>
+    <string name="createAccEnterValidEmail">Please enter a valid email address</string>
+    <string name="createAccEnterPassword">Password is required</string>
+    <string name="createAccPasswordTooShort">Password must contain at least 8 characters</string>
+    <string name="createAccErrorCreatingAccount">An error occurred creating your account. Please check your internet connection and try again.</string>
+    <string name="createAccErrorEmailAlreadyInUse">This email address is already in use.</string>
+    <string name="createAccErrorPairingCode">This pairing code is expired or already used. Please try again with a new one.</string>
+    <string name="createAccTosAndPrivacy">By tapping \'Create Account\', you agree to the <annotation url="tos">Terms of Service</annotation> and acknowledge the <annotation url="privacy">Privacy Policy</annotation></string>
+    <string name="createAccViewPrivacy">View the <annotation url="privacy">Privacy Policy</annotation></string>
     <string name="route_not_available">That page has been disabled for this course</string>
     <string name="reminderTitleAfterDueDate">After Due Date (%1$s)</string>
     <string name="reminderNotificationTitleFor">Reminder for %1$s</string>
