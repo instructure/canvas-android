@@ -202,7 +202,15 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                 webViewRouter.openLtiScreen(viewModel.course.value, action.url)
             }
             is AssignmentDetailAction.NavigateToSubmissionScreen -> {
-                assignmentDetailsRouter.navigateToSubmissionScreen(requireActivity(), canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
+                assignmentDetailsRouter.navigateToSubmissionScreen(
+                    requireActivity(),
+                    canvasContext,
+                    assignmentId,
+                    action.assignmentUrl,
+                    action.isAssignmentEnhancementEnabled,
+                    action.isObserver,
+                    action.selectedSubmissionAttempt
+                )
             }
             is AssignmentDetailAction.NavigateToQuizScreen -> {
                 assignmentDetailsRouter.navigateToQuizScreen(requireActivity(), canvasContext, action.quiz, action.quiz.url.orEmpty())

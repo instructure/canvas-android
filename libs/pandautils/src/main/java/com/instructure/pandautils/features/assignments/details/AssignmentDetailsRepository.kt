@@ -53,4 +53,6 @@ interface AssignmentDetailsRepository {
     suspend fun addReminder(userId: Long, assignment: Assignment, text: String, time: Long): Long
 
     fun isOnline(): Boolean
+
+    suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean): Boolean
 }

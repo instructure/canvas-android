@@ -78,4 +78,7 @@ class StudentAssignmentDetailsRepository(
             time = time
         )
     )
+
+    // Not relevant for student
+    override suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean) = false
 }

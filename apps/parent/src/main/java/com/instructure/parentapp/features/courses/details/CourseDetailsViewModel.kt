@@ -157,6 +157,12 @@ class CourseDetailsViewModel @Inject constructor(
                 }
             }
 
+            is CourseDetailsAction.NavigateToCalendarEvent -> {
+                viewModelScope.launch {
+                    _events.send(CourseDetailsViewModelAction.NavigateToCalendarEvent(action.contextType, action.contextId, action.eventId))
+                }
+            }
+
             is CourseDetailsAction.CurrentTabChanged -> {
                 viewModelScope.launch {
                     _uiState.update {

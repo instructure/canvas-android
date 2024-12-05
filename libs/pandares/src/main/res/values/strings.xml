@@ -1899,14 +1899,37 @@
     <string name="openTheQuizButton">Open the Quiz</string>
     <string name="newQuizSubmissionTitle">Quiz Submission</string>
     <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
+    <string name="haveCanvasAccount">I have a Canvas account</string>
+    <string name="notHaveCanvasAccount">I don\'t have a Canvas account</string>
+    <string name="createAccFullName">Full Name</string>
+    <string name="createAccEmail">Email Address</string>
+    <string name="createAccPassword">Password</string>
+    <string name="createAccButton">Create Account</string>
+    <string name="createAccAlreadyHaveAccount">Already have an account?</string>
+    <string name="createAccSignIn">Sign in</string>
+    <string name="createAccShowPassword">Show password</string>
+    <string name="createAccHidePassword">Hide password</string>
+    <string name="createAccEnterFullName">Please enter full name</string>
+    <string name="createAccEnterEmail">Please enter an email address</string>
+    <string name="createAccEnterValidEmail">Please enter a valid email address</string>
+    <string name="createAccEnterPassword">Password is required</string>
+    <string name="createAccPasswordTooShort">Password must contain at least 8 characters</string>
+    <string name="createAccErrorCreatingAccount">An error occurred creating your account. Please check your internet connection and try again.</string>
+    <string name="createAccErrorEmailAlreadyInUse">This email address is already in use.</string>
+    <string name="createAccErrorPairingCode">This pairing code is expired or already used. Please try again with a new one.</string>
+    <string name="createAccTosAndPrivacy">By tapping \'Create Account\', you agree to the <annotation url="tos">Terms of Service</annotation> and acknowledge the <annotation url="privacy">Privacy Policy</annotation></string>
+    <string name="createAccViewPrivacy">View the <annotation url="privacy">Privacy Policy</annotation></string>
     <string name="route_not_available">That page has been disabled for this course</string>
-    <string name="a11y_refresh">Refresh</string>
     <string name="reminderTitleAfterDueDate">After Due Date (%1$s)</string>
     <string name="reminderNotificationTitleFor">Reminder for %1$s</string>
     <string name="reminderNotificationMessageWithDueDate">Reminder for %1$s due at %2$s</string>
     <string name="reminderNotificationMessageWithoutDueDate">Reminder for %1$s with no due date</string>
     <string name="courseRefreshFailed">Failed to refresh course</string>
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
+    <string name="failed_to_load_summary">Failed to load summary</string>
+    <string name="no_summary_items_to_display">No summary items to display</string>
+    <string name="scheduleItemNoDueDate">No Due Date</string>
+    <string name="a11y_refresh">Refresh</string>
     <string name="masqueradingAs">You are acting as %s</string>
     <string name="stopActingAsTitle">Stop acting as…</string>
     <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>
@@ -1914,4 +1937,14 @@
     <string name="a11y_searchBarCloseButton">Close search bar</string>
     <string name="a11y_searchBarClearButton">Clear query</string>
     <string name="a11y_searchBarSearchButton">Search</string>
+    <string name="smartSearchCourseHeaderTitle">Results in course</string>
+    <string name="smartSearchAnnouncementTitle">Announcement</string>
+    <string name="smartSearchDiscussionTitle">Discussion</string>
+    <string name="smartSearchAssignmentTitle">Assignment</string>
+    <string name="smartSearchPageTitle">Page</string>
+    <string name="smartSearchLoadingTitle">Hang Tight, We\'re Fetching Your Results!</string>
+    <string name="smartSearchLoadingSubtitle">We’re working hard to find the best matches for your search. This won\'t take long! Thank you for your patience.</string>
+    <string name="smartSearchEmptyTitle">No Perfect Match</string>
+    <string name="smartSearchEmptyMessage">We didn’t find exactly what you’re looking for. Maybe try searching for something else?</string>
+    <string name="webAccessLimitedMessage">Interactions on this page are limited by your institution.</string>
 </resources>

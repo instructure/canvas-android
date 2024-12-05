@@ -21,8 +21,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.heapanalytics.android.Heap
-import com.heapanalytics.android.config.Options
 import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -94,10 +92,6 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
         filter.addAction(Const.ACTION_MEDIA_UPLOAD_SUCCESS)
         filter.addAction(Const.ACTION_MEDIA_UPLOAD_FAIL)
         LocalBroadcastManager.getInstance(this).registerReceiver(mediaUploadReceiver, filter)
-
-        val options = Options()
-        options.disableTracking()
-        Heap.init(this, BuildConfig.HEAP_APP_ID, options)
 
         PageViewUploadService.schedule(this, TeacherPageViewService::class.java)
     }

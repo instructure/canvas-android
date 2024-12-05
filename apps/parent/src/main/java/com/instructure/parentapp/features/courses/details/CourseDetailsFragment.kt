@@ -112,6 +112,10 @@ class CourseDetailsFragment : BaseCanvasFragment() {
                 navigation.navigate(activity, navigation.assignmentDetailsRoute(action.courseId, action.assignmentId))
             }
 
+            is CourseDetailsViewModelAction.NavigateToCalendarEvent -> {
+                navigation.navigate(activity, navigation.calendarEventRoute(action.contextType, action.contextId, action.eventId))
+            }
+
             is CourseDetailsViewModelAction.OpenLtiScreen -> {
                 navigation.navigate(activity, navigation.ltiLaunchRoute(action.url, getString(R.string.utils_externalToolTitle), sessionlessLaunch = true))
             }

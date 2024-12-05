@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
@@ -36,10 +37,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.Loading
@@ -77,61 +76,63 @@ private fun PairingScreenContent(
     onCancelClick: () -> Unit
 ) {
     var pairingCode by remember { mutableStateOf("") }
-    Column(modifier = modifier) {
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-                .testTag("pairingCodeTextField"),
-            value = pairingCode,
-            onValueChange = {
-                pairingCode = it
-                if (uiState.isError) {
-                    uiState.actionHandler(AddStudentAction.ResetError)
-                }
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                focusedIndicatorColor = if (uiState.isError) {
-                    colorResource(id = R.color.textDanger)
-                } else {
-                    Color(uiState.color)
+    CanvasTheme {
+        Column(modifier = modifier) {
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                    .testTag("pairingCodeTextField"),
+                value = pairingCode,
+                onValueChange = {
+                    pairingCode = it
+                    if (uiState.isError) {
+                        uiState.actionHandler(AddStudentAction.ResetError)
+                    }
                 },
-                focusedLabelColor = Color(uiState.color),
-                cursorColor = Color(uiState.color),
-                textColor = colorResource(id = R.color.textDarkest),
-                unfocusedLabelColor = colorResource(id = R.color.textDark),
-                unfocusedIndicatorColor = colorResource(id = R.color.textDark)
-            ),
-            textStyle = TextStyle(fontSize = 16.sp),
-            label = {
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = if (uiState.isError) {
+                        colorResource(id = R.color.textDanger)
+                    } else {
+                        Color(uiState.color)
+                    },
+                    focusedLabelColor = Color(uiState.color),
+                    cursorColor = Color(uiState.color),
+                    textColor = colorResource(id = R.color.textDarkest),
+                    unfocusedLabelColor = colorResource(id = R.color.textDark),
+                    unfocusedIndicatorColor = colorResource(id = R.color.textDark)
+                ),
+                textStyle = MaterialTheme.typography.body1,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.pairingCodeDialogLabel)
+                    )
+                })
+            if (uiState.isError) {
                 Text(
-                    text = stringResource(id = R.string.pairingCodeDialogLabel)
-                )
-            })
-        if (uiState.isError) {
-            Text(
-                modifier = Modifier.testTag("errorText"),
-                text = stringResource(id = R.string.pairingCodeDialogError),
-                style = TextStyle(color = colorResource(id = R.color.textDanger))
-            )
-        }
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            TextButton(onClick = { onCancelClick() }) {
-                Text(
-                    text = stringResource(id = R.string.pairingCodeDialogNegativeButton),
-                    style = TextStyle(color = Color(uiState.color))
+                    modifier = Modifier.testTag("errorText"),
+                    text = stringResource(id = R.string.pairingCodeDialogError),
+                    color = colorResource(id = R.color.textDanger)
                 )
             }
-            TextButton(
-                modifier = Modifier.testTag("okButton"),
-                onClick = { uiState.actionHandler(AddStudentAction.PairStudent(pairingCode)) },
-            ) {
-                Text(
-                    text = stringResource(id = R.string.pairingCodeDialogPositiveButton),
-                    style = TextStyle(color = Color(uiState.color))
-                )
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                TextButton(onClick = { onCancelClick() }) {
+                    Text(
+                        text = stringResource(id = R.string.pairingCodeDialogNegativeButton),
+                        color = Color(uiState.color)
+                    )
+                }
+                TextButton(
+                    modifier = Modifier.testTag("okButton"),
+                    onClick = { uiState.actionHandler(AddStudentAction.PairStudent(pairingCode)) },
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.pairingCodeDialogPositiveButton),
+                        color = Color(uiState.color)
+                    )
+                }
             }
         }
     }

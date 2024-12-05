@@ -22,7 +22,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -43,6 +42,8 @@ import com.instructure.teacher.databinding.ActivitySplashBinding
 import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
+import io.heap.autocapture.ViewAutocaptureSDK
+import io.heap.core.Heap
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -214,7 +215,13 @@ class SplashActivity : BaseCanvasActivity() {
     private suspend fun setupHeapTracking() {
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
-        Heap.setTrackingEnabled(sendUsageMetrics)
+        if (sendUsageMetrics) {
+            Heap.startRecording(applicationContext, BuildConfig.HEAP_APP_ID)
+            ViewAutocaptureSDK.register()
+        } else {
+            Heap.stopRecording()
+            ViewAutocaptureSDK.deregister()
+        }
     }
 
     override fun onStop() {

@@ -42,16 +42,16 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.pages.plus
+import com.instructure.espresso.pages.waitForView
+import com.instructure.espresso.pages.waitForViewWithText
+import com.instructure.espresso.pages.withAncestor
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withParent
+import com.instructure.espresso.pages.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.swipeUp
@@ -253,6 +253,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun clickDone() {
         onView(withText(R.string.done)).click()
+    }
+
+    fun clickSubmissionAndRubric() {
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).click()
     }
 
     //OfflineMethod

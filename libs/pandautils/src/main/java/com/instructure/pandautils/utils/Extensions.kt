@@ -16,10 +16,17 @@
 
 package com.instructure.pandautils.utils
 
+import android.content.Context
+import android.net.Uri
+import androidx.annotation.ColorInt
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.work.Data
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import kotlinx.coroutines.delay
-import java.util.*
+import java.util.Locale
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -29,6 +36,24 @@ fun Any.toJson(): String {
 
 inline fun <reified T> String.fromJson(): T {
     return Gson().fromJson<T>(this, T::class.java)
+}
+
+fun JsonObject.getObjectOrNull(memberName: String): JsonObject? {
+    val jsonObj = this.get(memberName) ?: return null
+    return if (jsonObj.isJsonObject) {
+        jsonObj as JsonObject
+    } else {
+        null
+    }
+}
+
+fun JsonObject.getArrayOrNull(memberName: String): JsonArray? {
+    val jsonArray = this.get(memberName) ?: return null
+    return if (jsonArray.isJsonArray) {
+        jsonArray as JsonArray
+    } else {
+        null
+    }
 }
 
 fun Long.humanReadableByteCount(): String {
@@ -91,4 +116,29 @@ suspend fun <T> poll(
         delay(pollInterval)
     }
     return null
+}
+
+fun Context.launchCustomTab(url: String, @ColorInt color: Int) {
+    val uri = Uri.parse(url)
+        .buildUpon()
+        .appendQueryParameter("display", "borderless")
+        .appendQueryParameter("platform", "android")
+        .build()
+
+    val colorSchemeParams = CustomTabColorSchemeParams.Builder()
+        .setToolbarColor(color)
+        .build()
+
+    var intent = CustomTabsIntent.Builder()
+        .setDefaultColorSchemeParams(colorSchemeParams)
+        .setShowTitle(true)
+        .build()
+        .intent
+
+    intent.data = uri
+
+    // Exclude Instructure apps from chooser options
+    intent = intent.asChooserExcludingInstructure()
+
+    startActivity(intent)
 }

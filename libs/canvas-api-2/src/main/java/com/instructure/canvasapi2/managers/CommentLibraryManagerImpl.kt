@@ -19,21 +19,41 @@ package com.instructure.canvasapi2.managers
 import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.instructure.canvasapi2.CommentLibraryQuery
 import com.instructure.canvasapi2.QLCallback
+import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.weave.awaitQL
 
 class CommentLibraryManagerImpl : CommentLibraryManager {
 
-    override suspend fun getCommentLibraryItems(userId: Long): CommentLibraryQuery.Data {
-        return awaitQL { getCommentLibraryItems(userId, it) }
+    override suspend fun getCommentLibraryItems(userId: Long): List<String> {
+        var hasNextPage = true
+        var nextCursor: String? = null
+        val commentBankItems = mutableListOf<String>()
+
+        while (hasNextPage) {
+            val data = awaitQL { getCommentLibraryItems(userId, it, nextCursor) }
+            val user = data.user as CommentLibraryQuery.AsUser
+            val newItems =  user.commentBankItems?.edges?.mapNotNull {
+                it.node?.comment
+            } ?: emptyList()
+
+            commentBankItems.addAll(newItems)
+            hasNextPage = user.commentBankItems?.pageInfo?.isHasNextPage ?: false
+            nextCursor = user.commentBankItems?.pageInfo?.endCursor
+        }
+
+        return commentBankItems
     }
 
     private fun getCommentLibraryItems(
         userId: Long,
-        callback: QLCallback<CommentLibraryQuery.Data>
+        callback: QLCallback<CommentLibraryQuery.Data>,
+        nextCursor: String? = null
     ) {
         val query = CommentLibraryQuery.builder()
             .userId(userId.toString())
+            .pageSize(QLClientConfig.GRAPHQL_PAGE_SIZE)
+            .nextCursor(nextCursor)
             .build()
 
         callback.enqueueQuery(query) {

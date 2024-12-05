@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,7 +65,8 @@ fun LabelValueSwitch(
             Text(
                 modifier = Modifier.testTag("label"),
                 text = label,
-                style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest)
             )
             value?.let {
                 Text(
@@ -74,10 +74,8 @@ fun LabelValueSwitch(
                         .padding(top = 4.dp)
                         .testTag("value"),
                     text = it,
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        color = colorResource(id = R.color.textDark)
-                    )
+                    fontSize = 12.sp,
+                    color = colorResource(id = R.color.textDark)
                 )
             }
         }

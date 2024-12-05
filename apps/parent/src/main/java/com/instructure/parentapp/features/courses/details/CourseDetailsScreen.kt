@@ -180,7 +180,16 @@ private fun CourseDetailsScreenContent(
             }
 
             TabType.SUMMARY -> {
-                { SummaryScreen() }
+                {
+                    SummaryScreen(
+                        navigateToCalendarEvent = { contextType, contextId, eventId ->
+                            actionHandler(CourseDetailsAction.NavigateToCalendarEvent(contextType, contextId, eventId))
+                        },
+                        navigateToAssignmentDetails = { courseId, assignmentId ->
+                            actionHandler(CourseDetailsAction.NavigateToAssignmentDetails(courseId, assignmentId))
+                        }
+                    )
+                }
             }
         }
     }
