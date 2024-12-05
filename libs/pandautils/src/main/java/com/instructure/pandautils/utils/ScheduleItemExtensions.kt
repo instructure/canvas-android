@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.utils
 
+import android.net.Uri
 import android.content.Context
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -35,12 +36,30 @@ val ScheduleItem.iconRes: Int
     }
 
 fun ScheduleItem.getDisplayDate(context: Context): String {
-        val date: Date? = if (this.isAllDay) {
+    val date: Date? = if (this.isAllDay) {
+        this.allDayDate ?: this.startAt.toSimpleDate()
+    } else {
+        this.startAt.toSimpleDate() ?: this.allDayDate
+    }
+
+    return date?.toFormattedString() ?: context.getString(com.instructure.pandautils.R.string.scheduleItemNoDueDate)
+}
+
+val ScheduleItem.dueAt: Date?
+    get() {
+        return if (this.isAllDay) {
             this.allDayDate ?: this.startAt.toSimpleDate()
         } else {
             this.startAt.toSimpleDate() ?: this.allDayDate
         }
+    }
 
-        return date?.toFormattedString()
-            ?: context.getString(com.instructure.pandautils.R.string.scheduleItemNoDueDate)
+val ScheduleItem.eventHtmlUrl: String?
+    get() {
+        if (this.htmlUrl == null) return null
+
+        val htmlUri = Uri.parse(this.htmlUrl)
+        val eventId = htmlUri.getQueryParameter("event_id")
+
+        return "${htmlUri.scheme}://${htmlUri.host}/${this.contextType?.apiString}/${this.contextId}/calendar_events/${eventId}"
     }

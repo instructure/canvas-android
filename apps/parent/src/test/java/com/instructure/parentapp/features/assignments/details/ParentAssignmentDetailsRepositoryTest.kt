@@ -17,13 +17,11 @@
 
 package com.instructure.parentapp.features.assignments.details
 
-import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.ObserveeAssignment
@@ -32,11 +30,9 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
-import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -59,7 +55,6 @@ class ParentAssignmentDetailsRepositoryTest {
         assignmentInterface,
         quizInterface,
         submissionInterface,
-        reminderDao,
         featuresApi,
         parentPrefs
     )
@@ -150,43 +145,6 @@ class ParentAssignmentDetailsRepositoryTest {
         coEvery { submissionInterface.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Fail()
 
         repository.getLtiFromAuthenticationUrl("", true)
-    }
-
-    @Test
-    fun `Get reminders liveData`() = runTest {
-        val expected = MutableLiveData<List<ReminderEntity>>()
-        every { reminderDao.findByAssignmentIdLiveData(any(), any()) } returns expected
-
-        val reminderLiveData = repository.getRemindersByAssignmentIdLiveData(1, 1)
-
-        Assert.assertEquals(expected, reminderLiveData)
-    }
-
-    @Test
-    fun `Delete reminder`() = runTest {
-        repository.deleteReminderById(1)
-
-        coVerify(exactly = 1) {
-            reminderDao.deleteById(1)
-        }
-    }
-
-    @Test
-    fun `Add reminder`() = runTest {
-        repository.addReminder(1, Assignment(1, name = "Assignment 1", htmlUrl = "htmlUrl"), "Test Reminder", 1000)
-
-        coVerify(exactly = 1) {
-            reminderDao.insert(
-                ReminderEntity(
-                    userId = 1,
-                    assignmentId = 1,
-                    htmlUrl = "htmlUrl",
-                    name = "Assignment 1",
-                    text = "Test Reminder",
-                    time = 1000
-                )
-            )
-        }
     }
 
     @Test

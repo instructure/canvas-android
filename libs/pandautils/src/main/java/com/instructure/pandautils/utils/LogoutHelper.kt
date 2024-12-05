@@ -18,9 +18,10 @@
 
 package com.instructure.pandautils.utils
 
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 
 interface LogoutHelper {
 
-    fun logout(databaseProvider: DatabaseProvider)
+    fun logout(databaseProvider: DatabaseProvider, alarmScheduler: AlarmScheduler)
 }

@@ -99,7 +99,7 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
 
     fun selectDate(calendar: Calendar) {
         onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
-            .perform(PickerActions.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)))
+            .perform(PickerActions.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)))
 
         onView(withId(android.R.id.button1)).perform(click())
     }

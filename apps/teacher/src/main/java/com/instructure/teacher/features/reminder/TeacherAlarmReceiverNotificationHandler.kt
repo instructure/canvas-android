@@ -12,24 +12,17 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
+package com.instructure.teacher.features.reminder
 
-package com.instructure.parentapp.ui.espresso
+import android.content.Context
+import android.content.Intent
+import androidx.core.net.toUri
+import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
+import com.instructure.teacher.activities.RouteValidatorActivity
 
-import androidx.work.WorkerFactory
-import com.instructure.pandautils.features.reminder.AlarmScheduler
-import com.instructure.parentapp.util.BaseAppManager
-
-open class TestAppManager : BaseAppManager() {
-
-    var workerFactory: WorkerFactory? = null
-
-    override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
-    }
-
-    override fun getScheduler(): AlarmScheduler? {
-        return null
+class TeacherAlarmReceiverNotificationHandler: AlarmReceiverNotificationHandler() {
+    override fun getIntent(context: Context, htmlPath: String): Intent {
+        return RouteValidatorActivity.createIntent(context, htmlPath.toUri())
     }
 }

@@ -15,7 +15,9 @@
  */
 package com.instructure.pandautils.features.calendartodo.details
 
+import android.content.Context
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.pandautils.features.reminder.ReminderViewState
 import org.threeten.bp.LocalDate
 
 data class ToDoUiState(
@@ -25,16 +27,22 @@ data class ToDoUiState(
     val date: String = "",
     val description: String = "",
     val deleting: Boolean = false,
-    val errorSnack: String? = null
+    val errorSnack: String? = null,
+    val loading: Boolean = false,
+    val loadError: String? = null,
+    val reminderUiState: ReminderViewState = ReminderViewState()
 )
 
 sealed class ToDoAction {
     data object DeleteToDo : ToDoAction()
     data object SnackbarDismissed : ToDoAction()
     data object EditToDo : ToDoAction()
+    data object OnReminderAddClicked : ToDoAction()
+    data class OnReminderDeleteClicked(val context: Context, val reminderId: Long) : ToDoAction()
 }
 
 sealed class ToDoViewModelAction {
     data class RefreshCalendarDay(val date: LocalDate) : ToDoViewModelAction()
     data class OpenEditToDo(val plannerItem: PlannerItem) : ToDoViewModelAction()
+    data object OnReminderAddClicked: ToDoViewModelAction()
 }

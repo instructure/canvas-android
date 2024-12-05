@@ -15,7 +15,6 @@
  */
 package com.instructure.parentapp.features.assignment.details
 
-import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
@@ -27,8 +26,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
-import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.util.ParentPrefs
 
@@ -37,10 +34,9 @@ class ParentAssignmentDetailsRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val quizApi: QuizAPI.QuizInterface,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
-    private val reminderDao: ReminderDao,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val parentPrefs: ParentPrefs
-) : AssignmentDetailsRepository {
+): AssignmentDetailsRepository {
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return coursesApi.getCourseWithGrade(courseId, params).dataOrThrow
@@ -78,35 +74,6 @@ class ParentAssignmentDetailsRepository(
     override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return submissionApi.getLtiFromAuthenticationUrl(url, params).dataOrThrow
-    }
-
-    override fun getRemindersByAssignmentIdLiveData(
-        userId: Long,
-        assignmentId: Long
-    ): LiveData<List<ReminderEntity>> {
-        return reminderDao.findByAssignmentIdLiveData(userId, assignmentId)
-    }
-
-    override suspend fun deleteReminderById(id: Long) {
-        reminderDao.deleteById(id)
-    }
-
-    override suspend fun addReminder(
-        userId: Long,
-        assignment: Assignment,
-        text: String,
-        time: Long
-    ): Long {
-        return reminderDao.insert(
-            ReminderEntity(
-                userId = userId,
-                assignmentId = assignment.id,
-                htmlUrl = assignment.htmlUrl.orEmpty(),
-                name = assignment.name.orEmpty(),
-                text = text,
-                time = time
-            )
-        )
     }
 
     override fun isOnline(): Boolean = true

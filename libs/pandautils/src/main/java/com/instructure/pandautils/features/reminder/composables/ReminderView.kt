@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.reminder.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -64,8 +65,10 @@ fun ReminderView(
             )
 
             Row(
-                modifier = Modifier.padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .clickable { onAddClick() }
             ) {
                 IconButton(onClick = { onAddClick() }) {
                     Icon(

@@ -14,31 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.teacher.di
 
-package com.instructure.parentapp.util
+import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
+import com.instructure.teacher.features.reminder.TeacherAlarmReceiverNotificationHandler
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-import androidx.hilt.work.HiltWorkerFactory
-import com.instructure.pandautils.features.reminder.AlarmScheduler
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
-
-
-@HiltAndroidApp
-class AppManager : BaseAppManager() {
-
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    @Inject
-    lateinit var alarmScheduler: AlarmScheduler
-
-    override fun performLogoutOnAuthError() {
-        // TODO: Implement
-    }
-
-    override fun getWorkManagerFactory() = workerFactory
-
-    override fun getScheduler(): AlarmScheduler {
-        return alarmScheduler
+@Module
+@InstallIn(SingletonComponent::class)
+class AlarmSchedulerModule {
+    @Provides
+    fun provideAssignmentDetailsNotificationHandler(): AlarmReceiverNotificationHandler {
+        return TeacherAlarmReceiverNotificationHandler()
     }
 }

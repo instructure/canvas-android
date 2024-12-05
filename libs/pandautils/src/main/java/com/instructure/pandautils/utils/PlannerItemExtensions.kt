@@ -14,31 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.pandautils.utils
 
-package com.instructure.parentapp.util
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 
-import androidx.hilt.work.HiltWorkerFactory
-import com.instructure.pandautils.features.reminder.AlarmScheduler
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
-
-
-@HiltAndroidApp
-class AppManager : BaseAppManager() {
-
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    @Inject
-    lateinit var alarmScheduler: AlarmScheduler
-
-    override fun performLogoutOnAuthError() {
-        // TODO: Implement
-    }
-
-    override fun getWorkManagerFactory() = workerFactory
-
-    override fun getScheduler(): AlarmScheduler {
-        return alarmScheduler
-    }
+fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
+    return "${apiPrefs.fullDomain}/todos/${this.plannable.id}"
 }

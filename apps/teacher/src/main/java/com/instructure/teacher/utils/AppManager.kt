@@ -17,8 +17,8 @@
 package com.instructure.teacher.utils
 
 import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
 import androidx.work.WorkerFactory
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -28,5 +28,10 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
     override fun getWorkManagerFactory(): WorkerFactory = workerFactory
+
+    override fun getScheduler(): AlarmScheduler = alarmScheduler
 }
