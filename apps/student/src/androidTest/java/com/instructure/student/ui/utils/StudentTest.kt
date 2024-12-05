@@ -36,6 +36,7 @@ import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
+import com.instructure.espresso.pages.common.EmailNotificationsPage
 import com.instructure.espresso.pages.common.LoginFindSchoolPage
 import com.instructure.espresso.pages.common.LoginLandingPage
 import com.instructure.espresso.pages.common.LoginSignInPage
@@ -59,7 +60,6 @@ import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionListPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.pages.EmailNotificationsPage
 import com.instructure.student.ui.pages.FileChooserPage
 import com.instructure.student.ui.pages.FileListPage
 import com.instructure.student.ui.pages.GoToQuizPage

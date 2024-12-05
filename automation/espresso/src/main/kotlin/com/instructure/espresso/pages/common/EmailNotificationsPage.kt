@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.pages
+package com.instructure.espresso.pages.common
 
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
@@ -22,20 +22,20 @@ import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.espresso.WaitForViewWithText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.getStringFromResource
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.getStringFromResource
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.plus
+import com.instructure.espresso.pages.waitForView
+import com.instructure.espresso.pages.waitForViewWithText
+import com.instructure.espresso.pages.withAncestor
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withParent
+import com.instructure.espresso.pages.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.scrollToItem
 import com.instructure.espresso.swipeUp
-import com.instructure.student.R
+import com.instructure.pandautils.R
 import org.hamcrest.Matchers.allOf
 
 class EmailNotificationsPage : BasePage() {
