@@ -207,6 +207,9 @@ class InboxComposeViewModel @Inject constructor(
                     InboxComposeOptionsMode.REPLY_ALL -> createMessage()
                     InboxComposeOptionsMode.FORWARD -> createMessage()
                 }
+                _uiState.update { it.copy(
+                    enableCustomBackHandler = false,
+                ) }
             }
             is InboxComposeActionHandler.SubjectChanged -> {
                 _uiState.update { it.copy(subject = action.subject) }
