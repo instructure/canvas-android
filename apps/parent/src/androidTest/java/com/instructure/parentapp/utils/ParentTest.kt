@@ -18,9 +18,9 @@
 package com.instructure.parentapp.utils
 
 import com.instructure.canvas.espresso.CanvasTest
-import com.instructure.espresso.pages.common.LoginFindSchoolPage
-import com.instructure.espresso.pages.common.LoginLandingPage
-import com.instructure.espresso.pages.common.LoginSignInPage
+import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
+import com.instructure.canvas.espresso.common.pages.LoginLandingPage
+import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage

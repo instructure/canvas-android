@@ -14,11 +14,11 @@
  *     limitations under the License.
  *
  */
-package com.instructure.espresso.pages.common
+package com.instructure.canvas.espresso.common.pages
 
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.replaceText
 import com.instructure.loginapi.login.R
 

@@ -28,7 +28,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.espresso.pages.plus
+import com.instructure.espresso.page.plus
 import com.instructure.pandautils.binding.BindableViewHolder
 import org.apache.commons.lang3.StringUtils
 import org.hamcrest.Matcher
