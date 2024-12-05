@@ -25,7 +25,7 @@ import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter.Companion.makeGroupSubmissions
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.viewinterface.ToDoView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import org.greenrobot.eventbus.EventBus
 
 class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {

@@ -18,16 +18,18 @@ package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.FileFolderManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CreateFolder
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.License
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.teacher.viewinterface.FileListView
-import instructure.androidblueprint.ListChangeCallback
-import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Job
 
 class FileListPresenter(var currentFolder: FileFolder, val mCanvasContext: CanvasContext) : SyncPresenter<FileFolder, FileListView>(FileFolder::class.java) {

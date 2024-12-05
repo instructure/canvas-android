@@ -331,6 +331,28 @@ class ModuleListPresenterTest : Assert() {
     }
 
     @Test
+    fun `Returns correct state for New Quiz module item`() {
+        val item = moduleItemTemplate.copy(
+            title = "New Quiz",
+            type = "Assignment",
+            quizLti = true
+        )
+        val model = modelTemplate.copy(
+            modules = listOf(
+                moduleTemplate.copy(items = listOf(item))
+            )
+        )
+        val expectedState = moduleItemDataTemplate.copy(
+            title = item.title,
+            iconResId = R.drawable.ic_quiz,
+            type = ModuleItem.Type.Assignment
+        )
+        val viewState = ModuleListPresenter.present(model, context)
+        val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
+        assertEquals(expectedState, itemState)
+    }
+
+    @Test
     fun `Returns correct state for SubHeader`() {
         val item = moduleItemTemplate.copy(
             title = "This is a header",

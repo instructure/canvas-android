@@ -22,12 +22,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 
-abstract class BaseFragment : Fragment(), NavigationCallbacks {
+abstract class BaseFragment : BaseCanvasFragment(), NavigationCallbacks {
     protected lateinit var rootView: View
 
     abstract fun layoutResId(): Int

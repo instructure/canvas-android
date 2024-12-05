@@ -19,7 +19,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFIRM_REMOVE_ASSIGNMENT_OVERRIDE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ThemePrefs
@@ -28,7 +28,7 @@ import com.instructure.pandautils.utils.BlindSerializableArg
 import com.instructure.pandautils.utils.dismissExisting
 
 @ScreenView(SCREEN_VIEW_CONFIRM_REMOVE_ASSIGNMENT_OVERRIDE)
-class ConfirmRemoveAssignmentOverrideDialog : AppCompatDialogFragment() {
+class ConfirmRemoveAssignmentOverrideDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var mListener: (() -> Unit)? by BlindSerializableArg()
 

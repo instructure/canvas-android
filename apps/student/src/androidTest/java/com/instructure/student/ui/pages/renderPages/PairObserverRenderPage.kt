@@ -20,10 +20,10 @@ import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertGone
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withParent
+import com.instructure.espresso.pages.withText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.PairObserverPage
 import org.hamcrest.Matchers.allOf

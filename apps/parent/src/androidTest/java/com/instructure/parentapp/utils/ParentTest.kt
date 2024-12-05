@@ -18,9 +18,13 @@
 package com.instructure.parentapp.utils
 
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.espresso.pages.common.LoginFindSchoolPage
+import com.instructure.espresso.pages.common.LoginLandingPage
+import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
 
 
 abstract class ParentTest : CanvasTest() {
@@ -30,4 +34,10 @@ abstract class ParentTest : CanvasTest() {
     override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
 
     val dashboardPage = DashboardPage()
+    val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
+
+    //Common pages
+    val loginLandingPage = LoginLandingPage()
+    val loginFindSchoolPage = LoginFindSchoolPage()
+    val loginSignInPage = LoginSignInPage()
 }

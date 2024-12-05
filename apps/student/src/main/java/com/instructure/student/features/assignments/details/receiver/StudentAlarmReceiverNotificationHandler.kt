@@ -29,10 +29,10 @@ import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 
 class StudentAlarmReceiverNotificationHandler: AlarmReceiverNotificationHandler {
-    override fun showNotification(context: Context, assignmentId: Long, assignmentPath: String, assignmentName: String, dueIn: String) {
+    override fun showNotification(context: Context, contentId: Long, htmlPath: String, title: String, message: String) {
         val intent = Intent(context, NavigationActivity.startActivityClass).apply {
             putExtra(Const.LOCAL_NOTIFICATION, true)
-            putExtra(PushNotification.HTML_URL, assignmentPath)
+            putExtra(PushNotification.HTML_URL, htmlPath)
         }
 
         val pendingIntent = PendingIntent.getActivity(
@@ -42,14 +42,14 @@ class StudentAlarmReceiverNotificationHandler: AlarmReceiverNotificationHandler 
 
         val builder = NotificationCompat.Builder(context, AlarmReceiver.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-            .setContentTitle(context.getString(R.string.reminderNotificationTitle))
-            .setContentText(context.getString(R.string.reminderNotificationDescription, dueIn, assignmentName))
+            .setContentTitle(title)
+            .setContentText(message)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(assignmentId.toInt(), builder.build())
+        notificationManager.notify(contentId.toInt(), builder.build())
     }
 
     override fun createNotificationChannel(context: Context) {

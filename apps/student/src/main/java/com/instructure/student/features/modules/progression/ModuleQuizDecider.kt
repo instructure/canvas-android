@@ -36,7 +36,18 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_QUIZ_DECIDER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentModuleQuizDeciderBinding
@@ -67,7 +78,7 @@ class ModuleQuizDecider : ParentFragment() {
 
     private var webViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
         override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-            openMedia(mime, url, filename, canvasContext)
+            openMedia(mime, url, filename, null, canvasContext)
         }
 
         override fun onPageFinishedCallback(webView: WebView, url: String) = Unit

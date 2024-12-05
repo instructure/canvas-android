@@ -62,7 +62,9 @@ data class CourseEntity(
     val workflowState: String?,
     val homeroomCourse: Boolean,
     val courseColor: String?,
-    val gradingScheme: List<GradingSchemeRow>?
+    val gradingScheme: List<GradingSchemeRow>?,
+    val pointsBasedGradingScheme: Boolean,
+    val scalingFactor: Double
 ) {
     constructor(course: Course) : this(
         course.id,
@@ -93,7 +95,9 @@ data class CourseEntity(
         course.workflowState?.name,
         course.homeroomCourse,
         course.courseColor,
-        course.gradingScheme
+        course.gradingScheme,
+        course.pointsBasedGradingScheme,
+        course.scalingFactor
     )
 
     fun toApiModel(
@@ -138,7 +142,9 @@ data class CourseEntity(
             gradingPeriods = gradingPeriods,
             tabs = tabs,
             settings = settings,
-            gradingSchemeRaw = gradingScheme?.map { listOf(it.name, it.value) }
+            gradingSchemeRaw = gradingScheme?.map { listOf(it.name, it.value) },
+            pointsBasedGradingScheme = pointsBasedGradingScheme,
+            scalingFactor = scalingFactor
         )
     }
 }

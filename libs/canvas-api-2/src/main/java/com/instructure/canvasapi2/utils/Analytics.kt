@@ -18,23 +18,24 @@
 package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
-import com.heapanalytics.android.Heap
+import io.heap.core.Heap
 
 object Analytics {
 
     fun logEvent(eventName: String, bundle: Bundle? = null) {
         val map = bundle?.let { bundle ->
             bundle.keySet()
+                .filterNotNull()
                 .filter { it.isNotBlank() && it.isNotEmpty() }
                 .associateWith {
-                bundle.getString(it)
+                bundle.getString(it).orEmpty()
             }
-        }
+        } ?: emptyMap()
         Heap.track(eventName, map)
     }
 
     fun logEvent(eventName: String) {
-        Heap.track(eventName, null)
+        Heap.track(eventName, emptyMap())
     }
 
     fun setUserProperty(propertyName: String, propertyValue: String) {

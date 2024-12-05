@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT
@@ -87,7 +88,8 @@ class CreateOrEditAnnouncementFragment : BasePresenterFragment<
     FileUploadDialogParent {
 
     /* The course this announcement belongs to */
-    private var canvasContext by ParcelableArg<CanvasContext>(Course())
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext by ParcelableArg<CanvasContext>(Course())
 
     /* The announcement to be edited. This will be null if we're creating a new announcement */
     private var editAnnouncement by NullableParcelableArg<DiscussionTopicHeader>()

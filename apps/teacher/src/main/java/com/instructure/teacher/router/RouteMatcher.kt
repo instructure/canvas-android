@@ -50,6 +50,8 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -95,7 +97,6 @@ import com.instructure.teacher.fragments.EditQuizDetailsFragment
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.fragments.MessageThreadFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.PageListFragment
@@ -105,7 +106,6 @@ import com.instructure.teacher.fragments.ProfileFragment
 import com.instructure.teacher.fragments.QuizDetailsFragment
 import com.instructure.teacher.fragments.QuizListFragment
 import com.instructure.teacher.fragments.QuizPreviewWebviewFragment
-import com.instructure.teacher.fragments.SettingsFragment
 import com.instructure.teacher.fragments.SpeedGraderQuizWebViewFragment
 import com.instructure.teacher.fragments.ViewHtmlFragment
 import com.instructure.teacher.fragments.ViewImageFragment
@@ -240,6 +240,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 DiscussionRouterFragment::class.java
             )
         )
+        routes.add(Route(courseOrGroup("/:course_id/users"), PeopleListFragment::class.java))
     }
 
     private fun initClassMap() {
@@ -510,9 +511,9 @@ object RouteMatcher : BaseRouteMatcher() {
             CreateDiscussionFragment::class.java.isAssignableFrom(cls) -> fragment = CreateDiscussionFragment.newInstance(route.arguments)
             CreateOrEditAnnouncementFragment::class.java.isAssignableFrom(cls) -> fragment = CreateOrEditAnnouncementFragment
                 .newInstance(route.arguments)
-            SettingsFragment::class.java.isAssignableFrom(cls) -> fragment = SettingsFragment.newInstance(route.arguments)
+            SettingsFragment::class.java.isAssignableFrom(cls) -> fragment = SettingsFragment.newInstance(route)
             ProfileEditFragment::class.java.isAssignableFrom(cls) -> fragment = ProfileEditFragment.newInstance(route.arguments)
-            LtiLaunchFragment::class.java.isAssignableFrom(cls) -> fragment = LtiLaunchFragment.newInstance(route.arguments)
+            LtiLaunchFragment::class.java.isAssignableFrom(cls) -> fragment = LtiLaunchFragment.newInstance(route)
             PeopleListFragment::class.java.isAssignableFrom(cls) -> fragment = PeopleListFragment.newInstance(canvasContext!!)
             StudentContextFragment::class.java.isAssignableFrom(cls) -> fragment = StudentContextFragment.newInstance(route.arguments)
             AttendanceListFragment::class.java.isAssignableFrom(cls) -> fragment = AttendanceListFragment
@@ -659,10 +660,10 @@ object RouteMatcher : BaseRouteMatcher() {
         return openMediaCallbacks!!
     }
 
-    fun openMedia(activity: FragmentActivity?, url: String?, fileName: String? = null) {
+    fun openMedia(activity: FragmentActivity?, url: String?, fileName: String? = null, fileId: String? = null) {
         if (activity != null) {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, fileName)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, fileName, fileId)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
                 LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID
             )
@@ -684,7 +685,7 @@ object RouteMatcher : BaseRouteMatcher() {
             }
         } else {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename, fileId)
             LoaderUtils.restartLoaderWithBundle(
                 LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID
             )

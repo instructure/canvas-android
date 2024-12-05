@@ -38,7 +38,7 @@ import com.instructure.teacher.events.post
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateOrEditPageView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import retrofit2.Response
 
 class CreateOrEditPagePresenter(private val canvasContext: CanvasContext, mPage: Page? = null)

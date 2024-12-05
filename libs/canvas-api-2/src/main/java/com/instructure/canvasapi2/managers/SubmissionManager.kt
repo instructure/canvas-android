@@ -20,7 +20,12 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionSummary
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
 
@@ -135,7 +140,7 @@ object SubmissionManager {
         attemptId: Long?
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams()
+        val params = RestParams(domain = ApiPrefs.overrideDomains[courseId])
         SubmissionAPI.postSubmissionComment(
             courseId,
             assignmentId,
@@ -198,7 +203,7 @@ object SubmissionManager {
         callback: StatusCallback<Submission>
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext)
+        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
 
         SubmissionAPI.postTextSubmission(canvasContext.id, assignmentId, text, adapter, params, callback)
     }
@@ -211,7 +216,7 @@ object SubmissionManager {
         callback: StatusCallback<Submission>
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext)
+        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
         val type = if (isLti) "basic_lti_launch" else "online_url"
 
         SubmissionAPI.postUrlSubmission(canvasContext.id, assignmentId, type, url, adapter, params, callback)
@@ -238,7 +243,7 @@ object SubmissionManager {
         callback: StatusCallback<Submission>
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext)
+        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
 
         SubmissionAPI.postMediaSubmissionComment(
             canvasContext.id,
@@ -283,7 +288,7 @@ object SubmissionManager {
         attachmentsIds: List<Long>
     ): Submission? {
         val adapter = RestBuilder()
-        val params = RestParams()
+        val params = RestParams(domain = ApiPrefs.overrideDomains[courseId])
 
         return SubmissionAPI.postSubmissionAttachmentsSynchronous(
             courseId,
@@ -298,7 +303,7 @@ object SubmissionManager {
         canvasContext: CanvasContext,
         assignmentId: Long,
         annotatableAttachmentId: Long
-    ) = apiAsync<Submission> {
+    ) = apiAsync {
         postStudentAnnotationSubmission(canvasContext, assignmentId, annotatableAttachmentId, it)
     }
 
@@ -318,7 +323,7 @@ object SubmissionManager {
         callback: StatusCallback<Submission>
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext)
+        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
 
         SubmissionAPI.postStudentAnnotationSubmission(
             canvasContext.id,

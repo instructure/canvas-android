@@ -17,6 +17,6 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Attachment
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface SpeedGraderFilesView : SyncManager<Attachment>

@@ -31,10 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.parentapp.R
 
 @Composable
@@ -42,27 +42,27 @@ fun AddStudentScreen(
     onPairingCodeClick: () -> Unit,
     onQrCodeClick: () -> Unit
 ) {
-    Column(modifier = Modifier.padding(vertical = 16.dp)) {
-        Text(
-            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
-            text = stringResource(id = R.string.addStudentTitle),
-            style = TextStyle(
+    CanvasTheme {
+        Column(modifier = Modifier.padding(vertical = 16.dp)) {
+            Text(
+                modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
+                text = stringResource(id = R.string.addStudentTitle),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 14.sp
             )
-        )
-        AddStudentButton(
-            title = R.string.addStudentPairingCodeTitle,
-            explanation = R.string.addStudentPairingCodeExplanation,
-            icon = R.drawable.ic_keyboard_shortcut,
-            onClick = onPairingCodeClick
-        )
-        AddStudentButton(
-            title = R.string.addStudentQrCodeTitle,
-            explanation = R.string.addStudentQrCodeExplanation,
-            icon = R.drawable.ic_qr_code,
-            onClick = onQrCodeClick
-        )
+            AddStudentButton(
+                title = R.string.addStudentPairingCodeTitle,
+                explanation = R.string.addStudentPairingCodeExplanation,
+                icon = R.drawable.ic_keyboard_shortcut,
+                onClick = onPairingCodeClick
+            )
+            AddStudentButton(
+                title = R.string.addStudentQrCodeTitle,
+                explanation = R.string.addStudentQrCodeExplanation,
+                icon = R.drawable.ic_qr_code,
+                onClick = onQrCodeClick
+            )
+        }
     }
 }
 
@@ -88,20 +88,15 @@ private fun AddStudentButton(
         )
         Column {
             Text(
-                text = stringResource(id = title), style = TextStyle(
-                    color = colorResource(
-                        id = R.color.textDarkest
-                    ),
-                    fontSize = 16.sp
-                )
+                text = stringResource(id = title),
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 16.sp
             )
             Text(
                 modifier = Modifier.padding(top = 4.dp),
                 text = stringResource(id = explanation),
-                style = TextStyle(
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 14.sp
-                )
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 14.sp
             )
         }
     }

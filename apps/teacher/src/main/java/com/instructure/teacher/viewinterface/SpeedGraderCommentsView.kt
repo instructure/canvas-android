@@ -18,7 +18,7 @@ package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.teacher.models.SubmissionCommentWrapper
-import instructure.androidblueprint.ListManager
+import com.instructure.pandautils.blueprint.ListManager
 import java.util.*
 
 interface SpeedGraderCommentsView : ListManager<SubmissionCommentWrapper> {

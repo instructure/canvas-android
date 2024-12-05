@@ -29,7 +29,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.BookmarkManager
 import com.instructure.canvasapi2.models.Bookmark
@@ -65,7 +64,7 @@ class BookmarksFragment : ParentFragment() {
     //region Fragment Lifecycle Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.LightStatusBarDialog)
+        setStyle(STYLE_NORMAL, R.style.LightStatusBarDialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

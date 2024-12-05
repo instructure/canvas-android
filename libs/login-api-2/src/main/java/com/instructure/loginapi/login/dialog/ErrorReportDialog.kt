@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.util.PatternsCompat
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.managers.ErrorReportManager
 import com.instructure.canvasapi2.managers.UserManager
@@ -57,7 +57,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ErrorReportDialog : DialogFragment() {
+class ErrorReportDialog : BaseCanvasDialogFragment() {
     private val binding by viewBinding(DialogErrorReportBinding::bind)
 
     private val severityOptions by lazy {

@@ -46,7 +46,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -105,7 +104,7 @@ fun AnnouncementDetailsScreen(
                         actionHandler(AnnouncementDetailsAction.Refresh)
                     }
                 )
-                Box(modifier = modifier.pullRefresh(pullRefreshState)) {
+                Box(modifier = modifier.padding(padding).pullRefresh(pullRefreshState)) {
                     when {
                         uiState.isError -> {
                             ErrorContent(
@@ -164,10 +163,8 @@ private fun AnnouncementDetailsSuccessScreen(
             Column(modifier = Modifier.padding(horizontal = padding)) {
                 Text(
                     text = uiState.announcementTitle.orEmpty(),
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 24.sp
-                    )
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 24.sp
                 )
                 Text(
                     text = DateHelper.getDateAtTimeString(
@@ -176,10 +173,8 @@ private fun AnnouncementDetailsSuccessScreen(
                         uiState.postedDate
                     ).orEmpty(),
                     modifier = Modifier.padding(top = 4.dp, bottom = 18.dp),
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 14.sp
-                    )
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 14.sp
                 )
                 AttachmentsRow(uiState.attachment, actionHandler)
             }
@@ -190,11 +185,9 @@ private fun AnnouncementDetailsSuccessScreen(
                         top = 18.dp, bottom = 6.dp, start = padding, end = padding
                     ),
                     text = stringResource(R.string.description),
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium
                 )
                 ComposeCanvasWebViewWrapper(
                     modifier = Modifier.padding(horizontal = 6.dp),

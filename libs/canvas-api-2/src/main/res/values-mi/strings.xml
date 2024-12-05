@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">kaitātai</string>
     <string name="enrollmentTypeUnknown">Kaore e mōhiotia</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Ngā ākonga</string>
+    <string name="enrollmentTypeTeachers">Ngā Kaiako</string>
+    <string name="enrollmentTypeObservers">Kaitirotiro</string>
+    <string name="enrollmentTypeTeachingAssistants">TAs</string>
+    <string name="enrollmentTypeDesigners">Kaitātai</string>
 </resources>

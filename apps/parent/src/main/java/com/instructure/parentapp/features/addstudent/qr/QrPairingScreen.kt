@@ -34,7 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,10 +70,8 @@ fun QrPairingScreen(
                             TextButton(onClick = onNextClicked) {
                                 Text(
                                     text = stringResource(id = R.string.next),
-                                    style = TextStyle(
-                                        color = colorResource(id = R.color.textInfo),
-                                        fontSize = 16.sp
-                                    )
+                                    color = colorResource(id = R.color.textInfo),
+                                    fontSize = 16.sp
                                 )
                             }
                         }
@@ -127,19 +124,15 @@ private fun QrPairingError(
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = stringResource(id = R.string.qrPairingErrorTitle),
-            style = TextStyle(
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
+            color = colorResource(id = R.color.textDarkest),
+            textAlign = TextAlign.Center,
+            fontSize = 18.sp
         )
         Text(
             text = stringResource(id = R.string.qrPairingErrorDescription),
-            style = TextStyle(
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center
-            )
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
         )
         OutlinedButton(
             modifier = Modifier.padding(top = 16.dp),
@@ -149,10 +142,8 @@ private fun QrPairingError(
             }) {
             Text(
                 text = stringResource(id = R.string.retry),
-                style = TextStyle(
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 18.sp,
-                )
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 18.sp,
             )
         }
         Spacer(
@@ -171,10 +162,8 @@ private fun QrPairingContent() {
     ) {
         Text(
             text = stringResource(id = R.string.qrPairingDescription),
-            style = TextStyle(
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 18.sp
-            )
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 18.sp
         )
         Spacer(
             modifier = Modifier

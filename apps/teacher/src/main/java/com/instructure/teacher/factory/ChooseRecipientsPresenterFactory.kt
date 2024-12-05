@@ -17,7 +17,7 @@ package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.ChooseRecipientsPresenter
 import com.instructure.teacher.viewinterface.ChooseRecipientsView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class ChooseRecipientsPresenterFactory(private val mRootContextId: String) :
     PresenterFactory<ChooseRecipientsView, ChooseRecipientsPresenter> {

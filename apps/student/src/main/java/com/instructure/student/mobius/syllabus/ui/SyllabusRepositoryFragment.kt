@@ -22,7 +22,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
@@ -30,6 +33,8 @@ import com.instructure.student.mobius.syllabus.SyllabusRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_SYLLABUS)
+@PageView(url = "{canvasContext}/assignments/syllabus")
 @AndroidEntryPoint
 class SyllabusRepositoryFragment : SyllabusFragment() {
 

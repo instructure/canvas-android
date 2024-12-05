@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.viewinterface.CourseSettingsFragmentView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Response
 

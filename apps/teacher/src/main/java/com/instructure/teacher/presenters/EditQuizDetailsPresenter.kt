@@ -26,7 +26,7 @@ import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 
 class EditQuizDetailsPresenter(var mQuiz: Quiz, var mAssignment: Assignment, val canvasContext: CanvasContext) : FragmentPresenter<EditQuizDetailsView>() {

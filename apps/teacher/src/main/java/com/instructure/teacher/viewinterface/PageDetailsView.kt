@@ -18,7 +18,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Page
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface PageDetailsView : FragmentViewInterface {
     fun populatePageDetails(page: Page)

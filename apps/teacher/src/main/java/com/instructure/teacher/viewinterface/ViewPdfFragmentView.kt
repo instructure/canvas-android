@@ -17,7 +17,7 @@
 package com.instructure.teacher.viewinterface
 
 import android.net.Uri
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface ViewPdfFragmentView : FragmentViewInterface {
     fun onLoadingStarted()

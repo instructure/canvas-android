@@ -18,20 +18,4 @@ package com.instructure.parentapp.features.settings
 
 import com.instructure.pandautils.features.settings.SettingsRouter
 
-class ParentSettingsRouter : SettingsRouter {
-    override fun navigateToProfileSettings() {
-        throw IllegalStateException("Profile settings item not available")
-    }
-
-    override fun navigateToPushNotificationsSettings() {
-        throw IllegalStateException("Push settings item not available")
-    }
-
-    override fun navigateToEmailNotificationsSettings() {
-        throw IllegalStateException("Email settings item not available")
-    }
-
-    override fun navigateToPairWithObserver() {
-        throw IllegalStateException("Pair with observer item not available")
-    }
-}
+class ParentSettingsRouter : SettingsRouter

@@ -55,7 +55,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -126,7 +125,10 @@ fun AlertSettingsScreen(
                                         showConfirmationDialog = true
                                     }
                                 }) {
-                                Text(text = stringResource(id = R.string.delete), color = colorResource(id = R.color.textDarkest))
+                                Text(
+                                    text = stringResource(id = R.string.delete),
+                                    color = colorResource(id = R.color.textDarkest)
+                                )
                             }
                         }
                     }
@@ -174,7 +176,8 @@ fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
         Text(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp),
             text = stringResource(id = R.string.alertSettingsThresholdsTitle),
-            style = TextStyle(fontSize = 14.sp, color = colorResource(id = R.color.textDark))
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.textDark)
         )
         listOf(
             AlertType.COURSE_GRADE_LOW,
@@ -329,12 +332,14 @@ private fun PercentageItem(
         Text(
             modifier = Modifier.testTag("${alertType.name}_thresholdTitle"),
             text = title,
-            style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.textDarkest)
         )
         Text(
             text = threshold?.let { stringResource(id = R.string.alertSettingsPercentage, it) }
                 ?: stringResource(id = R.string.alertSettingsThresholdNever),
-            style = TextStyle(color = color, textAlign = TextAlign.End),
+            color = color,
+            textAlign = TextAlign.End,
             modifier = Modifier
                 .padding(8.dp)
                 .testTag("${alertType.name}_thresholdValue")
@@ -375,7 +380,8 @@ private fun SwitchItem(
         Text(
             modifier = Modifier.testTag("${alertType.name}_thresholdTitle"),
             text = title,
-            style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.textDarkest)
         )
         Switch(
             modifier = Modifier.testTag("${alertType.name}_thresholdSwitch"),
@@ -403,7 +409,7 @@ private fun ThresholdDialog(
     onDismiss: () -> Unit
 ) {
     var percentage by remember { mutableStateOf(threshold.orEmpty()) }
-    val enabled = percentage.toIntOrNull().orDefault() in (min + 1)..< max
+    val enabled = percentage.toIntOrNull().orDefault() in (min + 1)..<max
     Dialog(onDismissRequest = { onDismiss() }) {
         Column(
             Modifier
@@ -415,10 +421,8 @@ private fun ThresholdDialog(
                     .padding(bottom = 16.dp)
                     .testTag("thresholdDialogTitle"),
                 text = stringResource(id = getTitle(alertType)),
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.textDarkest)
-                )
+                fontSize = 18.sp,
+                color = colorResource(id = R.color.textDarkest)
             )
 
             TextField(
@@ -455,7 +459,7 @@ private fun ThresholdDialog(
                         .padding(top = 8.dp)
                         .testTag("thresholdDialogError"),
                     text = errorText,
-                    style = TextStyle(color = colorResource(id = R.color.textDanger))
+                    color = colorResource(id = R.color.textDanger)
                 )
             }
 
@@ -516,13 +520,13 @@ private fun UnpairStudentDialog(
             Text(
                 modifier = Modifier.testTag("deleteDialogTitle"),
                 text = stringResource(id = R.string.unpairStudentTitle),
-                style = TextStyle(color = colorResource(id = R.color.textDarkest))
+                color = colorResource(id = R.color.textDarkest)
             )
         },
         text = {
             Text(
                 text = stringResource(id = R.string.unpairStudentMessage),
-                style = TextStyle(color = colorResource(id = R.color.textDarkest))
+                color = colorResource(id = R.color.textDarkest)
             )
         },
         onDismissRequest = { onDismiss() },
@@ -541,7 +545,8 @@ private fun UnpairStudentDialog(
             TextButton(
                 modifier = Modifier.testTag("deleteCancelButton"),
                 onClick = { onDismiss() },
-                colors = ButtonDefaults.textButtonColors(contentColor = color)) {
+                colors = ButtonDefaults.textButtonColors(contentColor = color)
+            ) {
                 Text(text = stringResource(id = R.string.cancel))
             }
         })

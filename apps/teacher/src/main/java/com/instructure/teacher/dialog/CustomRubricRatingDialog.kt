@@ -25,7 +25,7 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -38,7 +38,7 @@ import org.greenrobot.eventbus.EventBus
 import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_CUSTOM_RUBRIC_RATING)
-class CustomRubricRatingDialog : AppCompatDialogFragment() {
+class CustomRubricRatingDialog : BaseCanvasAppCompatDialogFragment() {
 
     var mCriterionId by StringArg()
     var mStudentId by LongArg(-1L)

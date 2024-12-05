@@ -32,7 +32,7 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -58,7 +58,7 @@ import retrofit2.Response
 import java.util.Locale
 import java.util.regex.Pattern
 
-abstract class BaseLoginFindSchoolActivity : AppCompatActivity() {
+abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityFindSchoolBinding::inflate)
 

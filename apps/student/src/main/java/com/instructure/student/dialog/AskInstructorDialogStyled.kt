@@ -29,7 +29,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.CourseManager.getAllFavoriteCourses
 import com.instructure.canvasapi2.managers.InboxManager.createConversation
@@ -51,7 +51,7 @@ import com.instructure.student.R
 import com.instructure.student.dialog.FatalErrorDialogStyled.Companion.newInstance
 
 @ScreenView(SCREEN_VIEW_ASK_INSTRUCTOR)
-class AskInstructorDialogStyled : DialogFragment() {
+class AskInstructorDialogStyled : BaseCanvasDialogFragment() {
 
     // Data
     private var courseList: List<Course> = emptyList()

@@ -32,7 +32,7 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 
 class DiscussionsUpdatePresenter(

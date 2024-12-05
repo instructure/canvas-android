@@ -25,7 +25,6 @@ val kotlinVersion = "2.0.21"
 dependencies {
     implementation("com.android.tools.build:gradle:$agpVersion")
     implementation("com.android.tools.build:gradle-api:$agpVersion")
-    implementation("org.javassist:javassist:3.24.1-GA")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:$kotlinVersion")

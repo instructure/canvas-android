@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Kviz</string>
     <string name="a11y_todo">Čakajoča opravila</string>
     <string name="a11y_page">Stran</string>
+    <string name="a11y_assessment_request">Zahteva za ocenjevanje</string>
     <string name="a11y_marked_as_done">Označi kot dokončano</string>
     <string name="a11y_not_marked_as_done">Ni označeno kot dokončano</string>
     <string name="error_loading_course_details">Ojoj! Pri nalaganju podrobnosti o predmetu je prišlo do napake.</string>

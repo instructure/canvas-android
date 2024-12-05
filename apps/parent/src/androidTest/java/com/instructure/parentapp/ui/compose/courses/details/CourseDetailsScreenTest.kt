@@ -20,9 +20,11 @@ package com.instructure.parentapp.ui.compose.courses.details
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -50,6 +52,7 @@ class CourseDetailsScreenTest {
                     isLoading = true
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
@@ -67,6 +70,7 @@ class CourseDetailsScreenTest {
                     isError = true
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
@@ -86,9 +90,10 @@ class CourseDetailsScreenTest {
                     isLoading = false,
                     isError = false,
                     courseName = "Course 1",
-                    tabs = listOf(TabType.SYLLABUS, TabType.SUMMARY)
+                    tabs = listOf(TabType.SYLLABUS)
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
@@ -100,21 +105,13 @@ class CourseDetailsScreenTest {
             .assertHasClickAction()
         composeTestRule.onNodeWithText("Course 1")
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText("SYLLABUS")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithText("SUMMARY")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithTag("courseDetailsTabRow")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithTag("courseDetailsPager")
-            .assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Send a message about this course")
             .assertIsDisplayed()
             .assertHasClickAction()
     }
 
     @Test
-    fun assertCourseDetailsContentWithJustOnTab() {
+    fun assertCourseDetailsContentWithJustOneTab() {
         composeTestRule.setContent {
             CourseDetailsScreen(
                 uiState = CourseDetailsUiState(
@@ -124,6 +121,7 @@ class CourseDetailsScreenTest {
                     tabs = listOf(TabType.SYLLABUS)
                 ),
                 actionHandler = {},
+                applyOnWebView = {},
                 navigationActionClick = {}
             )
         }
@@ -137,5 +135,26 @@ class CourseDetailsScreenTest {
         composeTestRule.onNodeWithContentDescription("Send a message about this course")
             .assertIsDisplayed()
             .assertHasClickAction()
+    }
+
+    @Test
+    fun assertSnackbarText() {
+        composeTestRule.setContent {
+            CourseDetailsScreen(
+                uiState = CourseDetailsUiState(
+                    isLoading = false,
+                    isError = false,
+                    courseName = "Course 1",
+                    tabs = listOf(TabType.SYLLABUS),
+                    snackbarMessage = "Snackbar message"
+                ),
+                actionHandler = {},
+                applyOnWebView = {},
+                navigationActionClick = {}
+            )
+        }
+
+        val snackbarText = composeTestRule.onNode(hasText("Snackbar message").and(hasAnyAncestor(hasTestTag("snackbarHost"))))
+        snackbarText.assertIsDisplayed()
     }
 }

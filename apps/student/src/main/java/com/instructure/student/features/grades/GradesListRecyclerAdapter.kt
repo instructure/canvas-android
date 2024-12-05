@@ -83,7 +83,7 @@ open class GradesListRecyclerAdapter(
 
     interface AdapterToGradesCallback {
         val isEdit: Boolean
-        fun notifyGradeChanged(courseGrade: CourseGrade?, restrictQuantitativeData: Boolean, gradingScheme: List<GradingSchemeRow>)
+        fun notifyGradeChanged(course: Course?, courseGrade: CourseGrade?, restrictQuantitativeData: Boolean, gradingScheme: List<GradingSchemeRow>)
         fun setTermSpinnerState(isEnabled: Boolean)
         fun setIsWhatIfGrading(isWhatIfGrading: Boolean)
     }
@@ -199,7 +199,7 @@ open class GradesListRecyclerAdapter(
                         course.enrollments = mutableListOf(it)
                         courseGrade = course.getCourseGradeFromEnrollment(it, false)
                         val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
-                        adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, course.gradingScheme)
+                        adapterToGradesCallback?.notifyGradeChanged(course, courseGrade, restrictQuantitativeData, course.gradingScheme)
                     }
                 }
             } catch (e: CancellationException) {
@@ -274,7 +274,7 @@ open class GradesListRecyclerAdapter(
                 val course = canvasContext as Course?
                 courseGrade = course!!.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment = enrollment)
                 val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
-                adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, course.gradingScheme)
+                adapterToGradesCallback?.notifyGradeChanged(course, courseGrade, restrictQuantitativeData, course.gradingScheme)
                 // We need to update the course that the fragment is using
                 course.addEnrollment(enrollment)
             }
@@ -287,7 +287,7 @@ open class GradesListRecyclerAdapter(
         courseGrade = course?.getCourseGrade(true)
         val restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?: false
         val gradingScheme = course?.gradingScheme ?: emptyList()
-        adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, gradingScheme)
+        adapterToGradesCallback?.notifyGradeChanged(course, courseGrade, restrictQuantitativeData, gradingScheme)
     }
 
     private fun updateWithAllAssignments(forceNetwork: Boolean) {

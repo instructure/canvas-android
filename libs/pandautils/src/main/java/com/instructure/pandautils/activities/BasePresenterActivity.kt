@@ -21,8 +21,8 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
-import instructure.androidblueprint.Presenter
-import instructure.androidblueprint.PresenterActivity
+import com.instructure.pandautils.blueprint.Presenter
+import com.instructure.pandautils.blueprint.PresenterActivity
 
 abstract class BasePresenterActivity<PRESENTER : Presenter<VIEW>, VIEW> : PresenterActivity<PRESENTER, VIEW>() {
     private var mCanvasContext: CanvasContext? = null

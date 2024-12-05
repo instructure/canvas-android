@@ -77,7 +77,8 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     private val binding by viewBinding(FragmentDiscussionListBinding::bind)
 
-    protected var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView

@@ -4,7 +4,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.pages.BasePage
 import com.instructure.teacher.R
 
 /**

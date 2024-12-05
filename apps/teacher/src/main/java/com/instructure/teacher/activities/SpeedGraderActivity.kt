@@ -92,9 +92,9 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     /* These should be passed to the presenter factory and should not be directly referenced otherwise */
     @get:PageViewUrlParam("courseId")
-    private val courseId: Long by lazy { intent.extras!!.getLong(Const.COURSE_ID) }
+    val courseId: Long by lazy { intent.extras!!.getLong(Const.COURSE_ID) }
     @get:PageViewUrlParam("assignmentId")
-    private val assignmentId: Long by lazy { intent.extras!!.getLong(Const.ASSIGNMENT_ID) }
+    val assignmentId: Long by lazy { intent.extras!!.getLong(Const.ASSIGNMENT_ID) }
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }

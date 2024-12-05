@@ -224,7 +224,7 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         CourseSyncProgressEntity::class,
         FileSyncProgressEntity::class,
         StudioMediaProgressEntity::class
-    ], version = 3
+    ], version = 4
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {

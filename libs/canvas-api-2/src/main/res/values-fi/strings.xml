@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Suunnittelija</string>
     <string name="enrollmentTypeUnknown">Tuntematon</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Opiskelijat</string>
+    <string name="enrollmentTypeTeachers">Opettajat</string>
+    <string name="enrollmentTypeObservers">Tarkkailijat</string>
+    <string name="enrollmentTypeTeachingAssistants">Apuopettajat</string>
+    <string name="enrollmentTypeDesigners">Suunnittelijaa</string>
 </resources>

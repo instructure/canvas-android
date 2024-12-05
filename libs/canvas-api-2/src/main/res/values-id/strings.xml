@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Desainer</string>
     <string name="enrollmentTypeUnknown">Tidak dikenal</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Siswa</string>
+    <string name="enrollmentTypeTeachers">Guru</string>
+    <string name="enrollmentTypeObservers">Pengamat</string>
+    <string name="enrollmentTypeTeachingAssistants">TA</string>
+    <string name="enrollmentTypeDesigners">Desainer</string>
 </resources>

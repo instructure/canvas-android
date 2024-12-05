@@ -19,7 +19,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.teacher.presenters.SpeedGraderFilesPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderFilesView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class SpeedGraderFilesPresenterFactory(val submission: Submission?) : PresenterFactory<SpeedGraderFilesView, SpeedGraderFilesPresenter> {
     override fun create() = SpeedGraderFilesPresenter(submission)

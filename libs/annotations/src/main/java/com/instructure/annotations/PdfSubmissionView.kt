@@ -87,7 +87,7 @@ import java.io.File
 import java.util.*
 
 @SuppressLint("ViewConstructor")
-abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false, private val courseId: Long) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     protected lateinit var docSession: DocSession
     protected lateinit var apiValues: ApiValues
@@ -358,7 +358,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     protected fun handlePdfContent(url: String) {
         pdfContentJob = tryWeave {
             if (url.contains("canvadoc")) {
-                val redirectUrl = getCanvaDocsRedirect(url)
+                val redirectUrl = getCanvaDocsRedirect(url, domain = ApiPrefs.overrideDomains[courseId])
                 //extract the domain for API use
                 if (redirectUrl.isNotEmpty()) {
                     docSession = awaitApi { CanvaDocsManager.getCanvaDoc(redirectUrl, it) }

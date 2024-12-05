@@ -50,7 +50,7 @@ class ParentToDoDetailsInteractionTest : ToDoDetailsInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.clickCalendar()
+        dashboardPage.clickCalendarBottomMenu()
 
         val todo = data.todos.first()
 

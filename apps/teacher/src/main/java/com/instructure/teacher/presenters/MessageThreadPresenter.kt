@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.teacher.R
 import com.instructure.teacher.viewinterface.MessageThreadView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import kotlinx.coroutines.Job
 import java.util.*
 

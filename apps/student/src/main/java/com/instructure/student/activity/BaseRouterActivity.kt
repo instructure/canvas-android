@@ -177,7 +177,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
                     if (it.isLocked || it.isLockedForUser) {
                         Toast.makeText(context, String.format(context.getString(R.string.fileLocked), if (it.displayName == null) getString(R.string.file) else it.displayName), Toast.LENGTH_LONG).show()
                     } else {
-                        openMedia(canvasContext, it.contentType.orEmpty(), it.url.orEmpty(), it.displayName.orEmpty())
+                        openMedia(canvasContext, it.contentType.orEmpty(), it.url.orEmpty(), it.displayName.orEmpty(), fileID)
                     }
                 }
             }
@@ -195,7 +195,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
                     if (it.isLocked || it.isLockedForUser) {
                         Toast.makeText(context, String.format(context.getString(R.string.fileLocked), if (it.displayName == null) getString(R.string.file) else it.displayName), Toast.LENGTH_LONG).show()
                     } else {
-                        openMedia(CanvasContext.emptyUserContext(), it.contentType.orEmpty(), it.url.orEmpty(), it.displayName.orEmpty())
+                        openMedia(CanvasContext.emptyUserContext(), it.contentType.orEmpty(), it.url.orEmpty(), it.displayName.orEmpty(), fileID)
                     }
                 }
             }
@@ -204,14 +204,14 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         FileFolderManager.getFileFolderFromURL("files/$fileID", true, fileFolderCanvasCallback)
     }
 
-    fun openMedia(canvasContext: CanvasContext?, url: String) {
-        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, null, canvasContext)
+    fun openMedia(canvasContext: CanvasContext?, url: String, fileID: String?) {
+        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, null, fileID, canvasContext)
         LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
             LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
     }
 
-    fun openMedia(canvasContext: CanvasContext?, mime: String, url: String, filename: String) {
-        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename)
+    fun openMedia(canvasContext: CanvasContext?, mime: String, url: String, filename: String, fileID: String?) {
+        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, fileID)
         LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
             LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
     }

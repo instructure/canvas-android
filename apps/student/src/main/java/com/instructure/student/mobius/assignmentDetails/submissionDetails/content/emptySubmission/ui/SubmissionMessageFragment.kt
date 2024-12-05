@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.IntArg
@@ -29,7 +29,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSubmissionMessageBinding
 
-class SubmissionMessageFragment : Fragment() {
+class SubmissionMessageFragment : BaseCanvasFragment() {
     private var titleRes by IntArg()
     private var subtitleRes by IntArg()
     private var messageRes by IntArg()

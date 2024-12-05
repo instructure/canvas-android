@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.utils.weave.awaitQLPaginated
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.StudentContextView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 
 
 class StudentContextPresenter(

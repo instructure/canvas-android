@@ -161,7 +161,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
         dashboardPage.openNavigationDrawer()
-        dashboardPage.tapManageStudents()
+        leftSideNavigationDrawerPage.clickManageStudents()
         manageStudentsPage.tapAddStudent()
     }
 

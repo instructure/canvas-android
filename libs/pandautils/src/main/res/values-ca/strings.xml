@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Prova</string>
     <string name="a11y_todo">Tasques pendents</string>
     <string name="a11y_page">Pàgina</string>
+    <string name="a11y_assessment_request">Sol·licitud d’avaluació</string>
     <string name="a11y_marked_as_done">Marcada com a feta</string>
     <string name="a11y_not_marked_as_done">No marcada com a feta</string>
     <string name="error_loading_course_details">Oh! S\'ha produït un error en carregar els detalls de l\'assignatura.</string>

@@ -24,7 +24,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_WHAT_IF
@@ -35,7 +35,7 @@ import com.instructure.student.R
 import kotlin.properties.Delegates
 
 @ScreenView(SCREEN_VIEW_WHAT_IF)
-class WhatIfDialogStyled : DialogFragment() {
+class WhatIfDialogStyled : BaseCanvasDialogFragment() {
 
     private var callback: (Double?, Double) -> Unit by Delegates.notNull()
     private var assignment: Assignment by ParcelableArg()

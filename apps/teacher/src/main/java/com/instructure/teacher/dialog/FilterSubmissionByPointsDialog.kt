@@ -25,7 +25,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -34,7 +34,7 @@ import com.instructure.teacher.R
 import java.util.*
 import kotlin.properties.Delegates
 
-class FilterSubmissionByPointsDialog : AppCompatDialogFragment() {
+class FilterSubmissionByPointsDialog : BaseCanvasAppCompatDialogFragment() {
 
     private var mFilterCallback: (Double) -> Unit by Delegates.notNull()
 

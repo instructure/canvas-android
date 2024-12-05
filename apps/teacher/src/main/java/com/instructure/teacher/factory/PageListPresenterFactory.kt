@@ -20,7 +20,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.presenters.PageListPresenter
 import com.instructure.teacher.viewinterface.PageListView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class PageListPresenterFactory(private var canvasContext: CanvasContext) : PresenterFactory<PageListView, PageListPresenter> {
     override fun create(): PageListPresenter = PageListPresenter(canvasContext)

@@ -32,8 +32,8 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onViewWithId
 import com.instructure.teacher.R
 import com.instructure.teacher.holders.AssigneeItemViewHolder
 import org.hamcrest.Description

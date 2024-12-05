@@ -42,7 +42,7 @@
         android:layout_below="@id/toolbar"
         android:clipToPadding="false"/>
 
-    <com.instructure.loginapi.login.view.CanvasLoadingView
+    <com.instructure.pandautils.views.CanvasLoadingView
         android:id="@+id/loading"
         android:layout_width="68dp"
         android:layout_height="68dp"

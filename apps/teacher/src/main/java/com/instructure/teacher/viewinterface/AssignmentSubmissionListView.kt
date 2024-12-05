@@ -17,7 +17,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface AssignmentSubmissionListView : SyncManager<GradeableStudentSubmission> {
 }

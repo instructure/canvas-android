@@ -21,7 +21,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.core.content.ContextCompat
 import com.google.zxing.integration.android.IntentIntegrator
 import com.instructure.canvasapi2.utils.APIHelper
@@ -34,7 +34,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
 
-abstract class LoginWithQRActivity : AppCompatActivity() {
+abstract class LoginWithQRActivity : BaseCanvasActivity() {
 
     protected abstract fun launchApplicationWithQRLogin(loginUri: Uri)
 

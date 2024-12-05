@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Opgaveliste</string>
     <string name="a11y_page">Side</string>
+    <string name="a11y_assessment_request">Vurderingsanmodning</string>
     <string name="a11y_marked_as_done">Markeret som færdig</string>
     <string name="a11y_not_marked_as_done">Ikke markeret som færdig</string>
     <string name="error_loading_course_details">Åh nej! Der opstod en fejl ved forsøg på at indlæse fagdetaljer.</string>

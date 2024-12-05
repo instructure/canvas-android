@@ -18,11 +18,10 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
-import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.teacher.viewinterface.CoursesView
-import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job

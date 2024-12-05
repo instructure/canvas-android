@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.NetworkUtils
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -55,7 +56,8 @@ class CreateAnnouncementFragment : ParentFragment() {
     /* The announcement to be edited. This will be null if we're creating a new announcement */
     private var editAnnouncement by NullableParcelableArg<DiscussionTopicHeader>(key = DISCUSSION_TOPIC_HEADER)
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     /* Menu buttons. We don't cache these because the toolbar is reconstructed on configuration change. */
     private val mSaveMenuButton get() = binding.createAnnouncementToolbar.menu.findItem(R.id.menuSaveAnnouncement)

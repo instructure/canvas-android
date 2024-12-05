@@ -18,11 +18,10 @@ package com.instructure.loginapi.login.features.acceptableusepolicy
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.databinding.ActivityAcceptableUsePolicyBinding
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.utils.ToolbarColorizeHelper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setMenu
@@ -32,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AcceptableUsePolicyActivity : AppCompatActivity() {
+class AcceptableUsePolicyActivity : BaseCanvasActivity() {
 
     private val viewModel by viewModels<AcceptableUsePolicyViewModel>()
 

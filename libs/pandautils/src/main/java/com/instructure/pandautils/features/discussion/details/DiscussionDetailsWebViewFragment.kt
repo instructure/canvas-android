@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -36,7 +36,17 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS_REDES
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
 import com.instructure.pandautils.navigation.WebViewRouter
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionRequester
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
@@ -46,12 +56,16 @@ import javax.inject.Inject
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN)
 @AndroidEntryPoint
-class DiscussionDetailsWebViewFragment : Fragment() {
+class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var webViewRouter: WebViewRouter
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @Inject
+    lateinit var discussionDetailsWebViewFragmentBehavior: DiscussionDetailsWebViewFragmentBehavior
+
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
 
@@ -60,7 +74,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     private lateinit var binding: FragmentDiscussionDetailsWebViewBinding
 
     @PageViewUrlParam("topicId")
-    private fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
+    fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -147,12 +161,17 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
     private fun setupToolbar(title: String) = with(binding) {
         toolbar.title = title
-        toolbar.setupAsBackButton(this@DiscussionDetailsWebViewFragment)
+
+        if (discussionDetailsWebViewFragmentBehavior.showBackButton) {
+            toolbar.setupAsBackButton(this@DiscussionDetailsWebViewFragment)
+        }
+
         binding.toolbar.setMenu(R.menu.menu_discussion_details) {
             when (it.itemId) {
                 R.id.refresh -> binding.discussionWebView.reload()
             }
         }
+
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 

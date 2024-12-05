@@ -40,6 +40,7 @@
     <string name="dueLabel">Fällig</string>
     <string name="submissionStatusSuccessTitle">Wurde abgegeben!</string>
     <string name="submissionStatusSuccessSubtitle">Ihre Abgabe wartet nun auf die Benotung.</string>
+    <string name="submissionStatusWaitingSubtitle">Die Abgabe wartet nun auf die Benotung.</string>
     <string name="submissionStatusUploadingTitle">Abgabe erfolgt &#8230;</string>
     <string name="submissionStatusUploadingSubtitle">Zum Anzeigen des Fortschritts antippen</string>
     <string name="submissionStatusFailedTitle">Abgabe fehlgeschlagen</string>
@@ -1327,6 +1328,7 @@
     <string name="appThemeLight">Hell</string>
     <string name="appThemeDark">Dunkel</string>
     <string name="appThemeSystem">Wie Gerät</string>
+    <string name="appThemeAuto">System</string>
     <string name="themeSelectorTitle">Canvas ist jetzt in dunklem Design verfügbar</string>
     <string name="themeSelectorDescription">App-Design auswählen</string>
     <string name="themeSelectorLightTheme">Helles Design</string>
@@ -1777,7 +1779,7 @@
     <string name="courseGradeHighAlertTitle">Kursnote über %s</string>
     <string name="courseGradeLowAlertTitle">Kursnote unter %s</string>
     <string name="courseAnnouncementAlertTitle">Kursankündigung</string>
-    <string name="institutionAnnouncementAlertTitle">Institutsankündigung</string>
+    <string name="institutionAnnouncementAlertTitle">Globale Ankündigung</string>
     <string name="a11y_contentDescription_observerAlertDelete">Löschwarnung</string>
     <string name="alertDateTime">Am %s um %s</string>
     <string name="alertDismissMessage">Warnung abgelehnt</string>
@@ -1824,7 +1826,7 @@
     <string name="alertSettingsAssignmentGradeLow">Aufgabennote unter</string>
     <string name="alertSettingsCourseGradeHigh">Kursnote über</string>
     <string name="alertSettingsCourseGradeLow">Kursnote unter</string>
-    <string name="alertSettingsInstitutionAnnouncement">Institutsankündigungen</string>
+    <string name="alertSettingsGlobalAnnouncement">Globale Ankündigungen</string>
     <string name="alertSettingsCourseAnnouncement">Kursankündigungen</string>
     <string name="alertSettingsPercentage">%1$s\%%</string>
     <string name="alertSettingsThresholdNever">Nie</string>
@@ -1867,4 +1869,18 @@
     <string name="courseDetailsMessageContentDescription">Nachricht über diesen Kurs senden</string>
     <string name="gradeLockedContentDescription">Note gesperrt</string>
     <string name="gradesRefreshFailed">Noten konnten nicht aktualisiert werden.</string>
+    <string name="chooseACourseToMessage">Einen Kurs zur Benachrichtigung wählen</string>
+    <string name="regardingHiddenMessage">Betreffend: %1$s, %2$s</string>
+    <string name="regardingHiddenMessageWithAssignmentPrefix">Betreffend: %1$s, Aufgabe – %2$s</string>
+    <string name="sendMessageAboutAssignment">„Eine Nachricht zu dieser Aufgabe senden“</string>
+    <string name="forStudentLabel">für %1$s</string>
+    <string name="view_description">Beschreibung anzeigen</string>
+    <string name="a11y_contentDescription_viewDescription">Beschreibung anzeigen</string>
+    <string name="errorLoadingAnnouncement">Beim Laden dieser Ankündigung ist ein Fehler aufgetreten</string>
+    <string name="announcementPageTitle">Ankündigung</string>
+    <string name="globalAnnouncementPageTitle">Globale Ankündigung</string>
+    <string name="openTheQuizButton">Quiz öffnen</string>
+    <string name="newQuizSubmissionTitle">Quizabgabe</string>
+    <string name="newQuizSubmissionSubtitle">Dieses Quiz wird in einen Web-Browser geöffnet. Wählen Sie „Das Quiz öffnen“, um fortzufahren</string>
+    <string name="a11y_refresh">Aktualisieren</string>
 </resources>

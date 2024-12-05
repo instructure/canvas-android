@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.apis.SmartSearchApi
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.TabAPI
@@ -340,5 +341,10 @@ class ApiModule {
     @Provides
     fun provideStudioApi(): StudioApi {
         return RestBuilder().build(StudioApi::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideSmartSearchApi(): SmartSearchApi {
+        return RestBuilder().build(SmartSearchApi::class.java, RestParams())
     }
 }

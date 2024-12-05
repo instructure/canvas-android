@@ -68,9 +68,10 @@ class DiscussionsUpdateFragment : BasePresenterFragment<
         FragmentDiscussionsEditBinding>(),
     DiscussionsUpdateView {
 
-    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
     @get:PageViewUrlParam("topicId")
-    private var discussionTopicHeaderId: Long by LongArg(key = DISCUSSION_TOPIC_HEADER_ID, default = 0L) // The topic the discussion belongs too
+    var discussionTopicHeaderId: Long by LongArg(key = DISCUSSION_TOPIC_HEADER_ID, default = 0L) // The topic the discussion belongs too
     private var discussionEntry: DiscussionEntry by ParcelableArg(key = DISCUSSION_ENTRY, default = DiscussionEntry())
     private var discussionTopic: DiscussionTopic by ParcelableArg(key = DISCUSSION_TOPIC, default = DiscussionTopic())
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()

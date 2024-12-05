@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Hönnuður</string>
     <string name="enrollmentTypeUnknown">Óþekkt</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Nemendur</string>
+    <string name="enrollmentTypeTeachers">Kennarar</string>
+    <string name="enrollmentTypeObservers">Skoðendur</string>
+    <string name="enrollmentTypeTeachingAssistants">Aðstoðarkennarar</string>
+    <string name="enrollmentTypeDesigners">Hönnuðir</string>
 </resources>

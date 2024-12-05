@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class SpeedGraderCommentsPresenterFactory(
     val rawComments: java.util.ArrayList<SubmissionComment>,

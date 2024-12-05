@@ -25,7 +25,12 @@ import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.firstAncestorOrNull
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.topOffsetIn
 import com.instructure.teacher.databinding.ViewRubricCriterionItemBinding
 import com.instructure.teacher.dialog.CriterionLongDescriptionDialog
 import com.instructure.teacher.dialog.EditRubricCommentDialog

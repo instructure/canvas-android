@@ -28,7 +28,7 @@ import com.instructure.canvas.espresso.mockCanvas.addTodo
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.pages.getStringFromResource
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
@@ -38,7 +38,7 @@ import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.AssertionFailedError
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltAndroidTest

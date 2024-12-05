@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.weave.weave
 import io.paperdb.Book
 import io.paperdb.Paper
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 object PageViewUtils {
@@ -106,7 +106,7 @@ class PageViewVisibilityTracker() {
     private var isShowing = true
     private val customConditions = mutableMapOf<String, Boolean>()
 
-    constructor(vararg conditions: String) : this() {
+    fun addCustomConditions(conditions: List<String>) {
         conditions.forEach { customConditions[it] = false }
     }
 

@@ -509,22 +509,7 @@
     <string name="colorPickerDialogMessage">This is your personal colour setting. Only you will see this colour for the module.</string>
     <string name="colorPickerError">The module colour could not be set at this time.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Pink</string>
-    <string name="contentDescriptionColorBarbie">Hot Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Purple</string>
-    <string name="contentDescriptionColorUltramarine">Dark Blue</string>
-    <string name="contentDescriptionColorOcean11">Blue</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
-    <string name="contentDescriptionColorFreshCutLawn">Green</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Yellow</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
-    <string name="contentDescriptionColorSriracha">Red</string>
-    <string name="launch_link_in_external_browser">Launch link in external browser</string>
+                                                                <string name="launch_link_in_external_browser">Launch link in external browser</string>
     <string name="contentDescriptionSelectedFile">Selected File</string>
     <string name="contentDescriptionFileIcon">File icon</string>
     <string name="contentDescriptionExpandPage">Expand Page</string>
@@ -610,6 +595,7 @@
     <string name="discussion_details">Discussion Details</string>
     <string name="discussions_pinned">Pinned</string>
     <string name="discussions_unpinned">Discussions</string>
+    <string name="discussions_close">Close for comments</string>
     <string name="discussions_closed">Closed for Comments</string>
     <string name="discussions_open">Open for comments</string>
     <string name="discussions_pin">Pin</string>

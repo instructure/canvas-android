@@ -28,6 +28,9 @@ import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
+import com.instructure.espresso.pages.common.LoginFindSchoolPage
+import com.instructure.espresso.pages.common.LoginLandingPage
+import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
@@ -59,9 +62,6 @@ import com.instructure.teacher.ui.pages.HelpPage
 import com.instructure.teacher.ui.pages.InboxMessagePage
 import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.teacher.ui.pages.LegalPage
-import com.instructure.teacher.ui.pages.LoginFindSchoolPage
-import com.instructure.teacher.ui.pages.LoginLandingPage
-import com.instructure.teacher.ui.pages.LoginSignInPage
 import com.instructure.teacher.ui.pages.ModulesPage
 import com.instructure.teacher.ui.pages.NavDrawerPage
 import com.instructure.teacher.ui.pages.NotATeacherPage
@@ -75,7 +75,6 @@ import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage
 import com.instructure.teacher.ui.pages.RemoteConfigSettingsPage
-import com.instructure.teacher.ui.pages.SettingsPage
 import com.instructure.teacher.ui.pages.SpeedGraderCommentsPage
 import com.instructure.teacher.ui.pages.SpeedGraderFilesPage
 import com.instructure.teacher.ui.pages.SpeedGraderGradePage
@@ -116,7 +115,6 @@ abstract class TeacherTest : CanvasTest() {
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val editDashboardPage = EditDashboardPage()
-    val settingsPage = SettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
     val legalPage = LegalPage()
     val helpPage = HelpPage()

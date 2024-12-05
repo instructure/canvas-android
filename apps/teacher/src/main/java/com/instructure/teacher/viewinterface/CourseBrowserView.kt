@@ -16,7 +16,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.Tab
-import instructure.androidblueprint.SyncManager
+import com.instructure.pandautils.blueprint.SyncManager
 
 interface CourseBrowserView : SyncManager<Tab> {
     fun isStudentInstalled(): Boolean

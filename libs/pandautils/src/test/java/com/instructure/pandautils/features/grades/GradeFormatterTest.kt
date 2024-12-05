@@ -126,4 +126,14 @@ class GradeFormatterTest {
 
         Assert.assertEquals("92% A", result)
     }
+
+    @Test
+    fun `Point based grades map correctly`() = runTest {
+        val course = Course(id = 1L, settings = CourseSettings(restrictQuantitativeData = false), pointsBasedGradingScheme = true, scalingFactor = 10.0)
+        val courseGrade = CourseGrade(currentScore = 90.0, currentGrade = "A")
+
+        val result = gradeFormatter.getGradeString(course = course, courseGrade = courseGrade, isFinal = false)
+
+        Assert.assertEquals("9.00 / 10.00 A", result)
+    }
 }

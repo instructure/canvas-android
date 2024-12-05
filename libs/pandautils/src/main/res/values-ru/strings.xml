@@ -493,6 +493,7 @@
     <string name="a11y_quiz">Тест</string>
     <string name="a11y_todo">Задачи</string>
     <string name="a11y_page">Страница</string>
+    <string name="a11y_assessment_request">Запрос задания</string>
     <string name="a11y_marked_as_done">Отмечено как выполненное</string>
     <string name="a11y_not_marked_as_done">Не отмечено как выполненное</string>
     <string name="error_loading_course_details">Ой-ой! Произошла ошибка при загрузке информации о курсе.</string>

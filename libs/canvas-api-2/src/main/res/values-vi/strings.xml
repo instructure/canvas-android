@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Người Thiết Kế</string>
     <string name="enrollmentTypeUnknown">Không xác định</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Sinh Viên</string>
+    <string name="enrollmentTypeTeachers">Giáo Viên</string>
+    <string name="enrollmentTypeObservers">Người Quan Sát</string>
+    <string name="enrollmentTypeTeachingAssistants">Trợ Giảng</string>
+    <string name="enrollmentTypeDesigners">Người Thiết Kế</string>
 </resources>

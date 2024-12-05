@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Snovalec</string>
     <string name="enrollmentTypeUnknown">Neznano</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Študenti</string>
+    <string name="enrollmentTypeTeachers">Izvajalci</string>
+    <string name="enrollmentTypeObservers">Skriti bralci</string>
+    <string name="enrollmentTypeTeachingAssistants">Demonstratorji</string>
+    <string name="enrollmentTypeDesigners">Snovalci</string>
 </resources>

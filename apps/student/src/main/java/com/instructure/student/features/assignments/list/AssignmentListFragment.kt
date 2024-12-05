@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -84,7 +85,8 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private val binding by viewBinding(AssignmentListLayoutBinding::bind)
 
-    private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private var recyclerAdapter: AssignmentListRecyclerAdapter? = null
     private var termAdapter: TermSpinnerAdapter? = null
@@ -146,6 +148,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             inflater.inflate(R.layout.assignment_list_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerAdapter = createRecyclerAdapter()
 
         binding.sortByTextView.setText(sortOrder.buttonTextRes)

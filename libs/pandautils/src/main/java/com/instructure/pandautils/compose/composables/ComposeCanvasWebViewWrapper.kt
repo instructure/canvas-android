@@ -18,8 +18,10 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
@@ -36,23 +38,27 @@ fun ComposeCanvasWebViewWrapper(
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null
 ) {
-    AndroidView(
-        factory = {
-            CanvasWebViewWrapper(it).apply {
-                applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
-            }
-        },
-        update = {
-            it.loadHtml(html, title)
+    if (LocalInspectionMode.current) {
+        Text(text = html)
+    } else {
+        AndroidView(
+            factory = {
+                CanvasWebViewWrapper(it).apply {
+                    applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
+                }
+            },
+            update = {
+                it.loadHtml(html, title)
 
-            if (onLtiButtonPressed != null) {
-                it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
-            }
+                if (onLtiButtonPressed != null) {
+                    it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
+                }
 
-            if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-                it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
-            }
-        },
-        modifier = modifier.fillMaxSize()
-    )
+                if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
+                    it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
+                }
+            },
+            modifier = modifier.fillMaxSize()
+        )
+    }
 }

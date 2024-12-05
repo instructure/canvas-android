@@ -18,6 +18,7 @@ package com.instructure.parentapp.di.feature
 
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRouter
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import com.instructure.parentapp.features.settings.ParentSettingsBehaviour
 import com.instructure.parentapp.features.settings.ParentSettingsRouter
 import dagger.Module
@@ -30,8 +31,8 @@ import dagger.hilt.components.SingletonComponent
 class SettingsModule {
 
     @Provides
-    fun provideSettingsBehaviour(): SettingsBehaviour {
-        return ParentSettingsBehaviour()
+    fun provideSettingsBehaviour(selectedStudentHolder: SelectedStudentHolder): SettingsBehaviour {
+        return ParentSettingsBehaviour(selectedStudentHolder)
     }
 
     @Provides

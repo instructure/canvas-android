@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
@@ -40,6 +41,7 @@ import javax.inject.Inject
 abstract class ModuleListMobiusFragment : MobiusFragment<ModuleListModel, ModuleListEvent, ModuleListEffect,
         ModuleListView, ModuleListViewState, FragmentModuleListBinding>() {
 
+    @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<CanvasContext>(key = Const.COURSE)
 
     private val scrollToItemId by NLongArg(key = Const.MODULE_ITEM_ID)

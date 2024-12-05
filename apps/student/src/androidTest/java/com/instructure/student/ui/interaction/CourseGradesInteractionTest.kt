@@ -45,7 +45,7 @@ class CourseGradesInteractionTest : StudentTest() {
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
         setUpCustomGrade("A", 100.0, data, false)
         goToGrades(data)
-        courseGradesPage.assertTotalGrade(ViewMatchers.withText("100% (A)"))
+        courseGradesPage.assertTotalGrade(ViewMatchers.withText("100% A"))
     }
 
     @Test

@@ -24,7 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.R
-import instructure.androidblueprint.*
+import com.instructure.pandautils.blueprint.*
 
 object RecyclerViewUtils {
     fun buildRecyclerView(

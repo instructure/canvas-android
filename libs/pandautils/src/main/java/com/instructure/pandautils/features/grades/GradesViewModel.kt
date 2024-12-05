@@ -233,6 +233,7 @@ class GradesViewModel @Inject constructor(
     fun handleAction(action: GradesAction) {
         when (action) {
             is GradesAction.Refresh -> {
+                if (action.clearItems) _uiState.update { it.copy(items = emptyList()) }
                 loadGrades(true)
             }
 

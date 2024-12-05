@@ -25,10 +25,10 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
-import instructure.androidblueprint.ListFragment
-import instructure.androidblueprint.ListManager
-import instructure.androidblueprint.ListPresenter
-import instructure.androidblueprint.ListRecyclerAdapter
+import com.instructure.pandautils.blueprint.ListFragment
+import com.instructure.pandautils.blueprint.ListManager
+import com.instructure.pandautils.blueprint.ListPresenter
+import com.instructure.pandautils.blueprint.ListRecyclerAdapter
 
 abstract class BaseListFragment<
         MODEL,

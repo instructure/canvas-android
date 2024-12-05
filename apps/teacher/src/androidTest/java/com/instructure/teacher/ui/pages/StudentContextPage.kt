@@ -18,8 +18,17 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.plus
+import com.instructure.espresso.pages.waitForView
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withParent
+import com.instructure.espresso.pages.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 
 /**

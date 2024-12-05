@@ -19,7 +19,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.viewinterface.DiscussionListView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class DiscussionListPresenterFactory(private var canvasContext: CanvasContext, private var isAnnouncements: Boolean) : PresenterFactory<DiscussionListView, DiscussionListPresenter> {
     override fun create(): DiscussionListPresenter = DiscussionListPresenter(canvasContext, isAnnouncements)

@@ -15,6 +15,10 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.compose.ui.platform.ComposeView
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -30,17 +34,19 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.Calendar
 
 @HiltAndroidTest
-class AssignmentDetailsInteractionTest : StudentTest() {
+class AssignmentDetailsInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
@@ -389,7 +395,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun testReminderSectionIsNotVisibleWhenThereIsNoFutureDueDate() {
+    fun testReminderSectionIsVisibleWhenThereIsNoFutureDueDate() {
         val data = setUpData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
@@ -399,7 +405,20 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionIsVisibleWhenThereIsNoDueDate() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment")
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -414,72 +433,64 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertReminderSectionDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddReminder() {
+        val reminderCalendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }
         val data = setUpData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 1)
+            add(Calendar.DAY_OF_MONTH, 2)
         }.time.toApiString())
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testRemoveReminder() {
+        val reminderCalendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }
         val data = setUpData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 1)
+            add(Calendar.DAY_OF_MONTH, 2)
         }.time.toApiString())
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
 
-        assignmentDetailsPage.removeReminderWithText("1 Hour Before")
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
 
-        assignmentDetailsPage.assertReminderNotDisplayedWithText("1 Hour Before")
-    }
+        reminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
 
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun testAddCustomReminder() {
-        val data = setUpData()
-        val course = data.courses.values.first()
-        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 1)
-        }.time.toApiString())
-        goToAssignmentList()
-
-        assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickCustom()
-        assignmentDetailsPage.assertDoneButtonIsDisabled()
-        assignmentDetailsPage.fillQuantity("15")
-        assignmentDetailsPage.assertDoneButtonIsDisabled()
-        assignmentDetailsPage.clickHoursBefore()
-        assignmentDetailsPage.clickDone()
-
-        assignmentDetailsPage.assertReminderDisplayedWithText("15 Hours Before")
+        reminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddReminderInPastShowsError() {
+        val reminderCalendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -1)
+        }
         val data = setUpData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
@@ -488,8 +499,10 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderInPast, activityRule.activity)
     }
@@ -497,41 +510,27 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddReminderForTheSameTimeShowsError() {
-        val data = setUpData()
-        val course = data.courses.values.first()
-        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+        val reminderCalendar = Calendar.getInstance().apply {
             add(Calendar.DAY_OF_MONTH, 1)
-        }.time.toApiString())
-        goToAssignmentList()
-
-        assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
-
-        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
-    }
-
-    @Test
-    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun testAddReminderForTheSameTimeWithDifferentMeasureOfTimeShowsError() {
+        }
         val data = setUpData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 10)
+            add(Calendar.DAY_OF_MONTH, 2)
         }.time.toApiString())
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Week Before")
-        assignmentDetailsPage.clickAddReminder()
 
-        assignmentDetailsPage.clickCustom()
-        assignmentDetailsPage.fillQuantity("7")
-        assignmentDetailsPage.clickDaysBefore()
-        assignmentDetailsPage.clickDone()
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
+
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }
@@ -598,5 +597,22 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         data.addSubmissionForAssignment(assignment.id, student.id, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString, grade = grade, score = score, excused = excused)
 
         return assignment
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheck(
+                SpeakableTextPresentCheck::class.java
+            ),
+            AccessibilityCheckResultUtils.matchesViews(
+                ViewMatchers.withParent(
+                    ViewMatchers.withClassName(
+                        Matchers.equalTo(ComposeView::class.java.name)
+                    )
+                )
+            )
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
     }
 }

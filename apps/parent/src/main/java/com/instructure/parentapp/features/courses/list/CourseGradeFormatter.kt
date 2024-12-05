@@ -19,6 +19,7 @@ package com.instructure.parentapp.features.courses.list
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.convertPercentToPointBased
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -46,7 +47,11 @@ class CourseGradeFormatter(@ApplicationContext private val context: Context) {
         val formattedScore = grade.currentScore?.takeIf {
             !restrictQuantitativeData
         }?.let {
-            percentageFormat.format(it / 100)
+            if (course.pointsBasedGradingScheme) {
+                convertPercentToPointBased(it, course.scalingFactor)
+            } else {
+                percentageFormat.format(it / 100)
+            }
         }.orEmpty()
 
         return when {

@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Dylunydd</string>
     <string name="enrollmentTypeUnknown">Anhysbys</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Myfyrwyr</string>
+    <string name="enrollmentTypeTeachers">Athrawon</string>
+    <string name="enrollmentTypeObservers">Arsyllwyr</string>
+    <string name="enrollmentTypeTeachingAssistants">Cynorthwywyr Dysgu</string>
+    <string name="enrollmentTypeDesigners">Dylunwyr</string>
 </resources>

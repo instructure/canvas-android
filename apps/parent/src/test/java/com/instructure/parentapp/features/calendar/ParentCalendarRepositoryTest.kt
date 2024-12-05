@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -292,21 +293,12 @@ class ParentCalendarRepositoryTest {
     }
 
     @Test
-    fun `Return 20 for calendar filter limit when context limit is increased`() = runTest {
-        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(mapOf("calendar_contexts_limit" to true))
+    fun `Return context limit from api when request is success`() = runTest {
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(EnvironmentSettings(calendarContextsLimit = 20))
 
         val result = calendarRepository.getCalendarFilterLimit()
 
         assertEquals(20, result)
-    }
-
-    @Test
-    fun `Return 10 for calendar filter limit when context limit is not increased`() = runTest {
-        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(mapOf("calendar_contexts_limit" to false))
-
-        val result = calendarRepository.getCalendarFilterLimit()
-
-        assertEquals(10, result)
     }
 
     @Test

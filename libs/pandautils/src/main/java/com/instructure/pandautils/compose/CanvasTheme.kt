@@ -47,7 +47,8 @@ import com.instructure.pandautils.R
 fun CanvasTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         typography = typography.copy(
-            button = typography.button.copy(letterSpacing = TextUnit(0.5f, TextUnitType.Sp))
+            button = typography.button.copy(letterSpacing = TextUnit(0.5f, TextUnitType.Sp)),
+            body1 = typography.body1.copy(letterSpacing = TextUnit(0.0f, TextUnitType.Sp))
         )
     ) {
         CompositionLocalProvider(

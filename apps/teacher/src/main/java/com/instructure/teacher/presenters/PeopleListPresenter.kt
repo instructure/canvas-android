@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.teacher.viewinterface.PeopleListView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import retrofit2.Response
 import java.util.*
 

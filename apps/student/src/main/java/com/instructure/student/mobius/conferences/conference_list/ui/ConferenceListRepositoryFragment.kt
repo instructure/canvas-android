@@ -18,13 +18,18 @@ package com.instructure.student.mobius.conferences.conference_list.ui
 
 import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFERENCE_LIST
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@PageView(url = "{canvasContext}/conferences")
+@ScreenView(SCREEN_VIEW_CONFERENCE_LIST)
 @AndroidEntryPoint
 class ConferenceListRepositoryFragment : ConferenceListFragment() {
 

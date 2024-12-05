@@ -509,22 +509,7 @@
     <string name="colorPickerDialogMessage">Voici votre paramètre de couleur personnel. Vous seul verrez cette couleur pour ce cours.</string>
     <string name="colorPickerError">La couleur du cours n’a pas pu être paramétrée pour le moment.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rose</string>
-    <string name="contentDescriptionColorBarbie">Rose vif</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Violet</string>
-    <string name="contentDescriptionColorUltramarine">Bleu marine</string>
-    <string name="contentDescriptionColorOcean11">Bleu</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Bleu aqua</string>
-    <string name="contentDescriptionColorEmeraldGreen">Vert émeraude</string>
-    <string name="contentDescriptionColorFreshCutLawn">Vert</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Jaune</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Orange foncé</string>
-    <string name="contentDescriptionColorSriracha">Rouge</string>
-    <string name="launch_link_in_external_browser">Lancer le lien dans un navigateur externe</string>
+                                                                <string name="launch_link_in_external_browser">Lancer le lien dans un navigateur externe</string>
     <string name="contentDescriptionSelectedFile">Fichier sélectionné</string>
     <string name="contentDescriptionFileIcon">Icône de fichier</string>
     <string name="contentDescriptionExpandPage">Étendre page</string>
@@ -610,6 +595,7 @@
     <string name="discussion_details">Détails de la discussion</string>
     <string name="discussions_pinned">Épinglé</string>
     <string name="discussions_unpinned">Discussions</string>
+    <string name="discussions_close">Fermer pour commentaires</string>
     <string name="discussions_closed">Commentaires fermés</string>
     <string name="discussions_open">Ouvrir aux commentaires</string>
     <string name="discussions_pin">Épingler</string>

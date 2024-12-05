@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.R
 import com.instructure.teacher.view.EditFileView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import java.util.*
 

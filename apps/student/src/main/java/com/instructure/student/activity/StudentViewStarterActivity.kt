@@ -16,7 +16,7 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
@@ -30,7 +30,7 @@ import com.instructure.student.databinding.ActivityStudentViewStarterBinding
 // The sole purpose of this activity is to capture the intent from the Teacher app that signals the Student app
 // to start the Student view
 @ScreenView(SCREEN_VIEW_STUDENT_VIEW)
-class StudentViewStarterActivity : AppCompatActivity() {
+class StudentViewStarterActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityStudentViewStarterBinding::inflate)
 

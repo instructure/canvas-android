@@ -31,7 +31,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
@@ -78,7 +78,7 @@ import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
-abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSet {
+abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationSet {
     companion object {
         const val ACCOUNT_DOMAIN = "accountDomain"
         const val SUCCESS_URL = "/login/oauth2/auth?code="

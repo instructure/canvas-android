@@ -38,7 +38,7 @@ import com.instructure.teacher.events.DiscussionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

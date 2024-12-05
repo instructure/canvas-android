@@ -17,7 +17,7 @@
 package com.instructure.teacher.viewinterface
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import instructure.androidblueprint.SyncExpandableManager
+import com.instructure.pandautils.blueprint.SyncExpandableManager
 
 interface DiscussionListView : SyncExpandableManager<String, DiscussionTopicHeader> {
     fun askToDeleteDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader)

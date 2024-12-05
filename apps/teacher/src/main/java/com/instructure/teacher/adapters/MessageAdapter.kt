@@ -28,7 +28,7 @@ import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.presenters.MessageThreadPresenter
 import com.instructure.teacher.viewinterface.MessageThreadView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 open class MessageAdapter(
     context: Context,

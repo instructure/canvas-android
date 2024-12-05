@@ -18,7 +18,6 @@
 package com.instructure.teacher.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.pandautils.utils.*
@@ -26,12 +25,13 @@ import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
 import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.teacher.R
+import com.instructure.pandautils.base.BaseCanvasActivity
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
-abstract class BaseAppCompatActivity : AppCompatActivity(),
+abstract class BaseAppCompatActivity : BaseCanvasActivity(),
     ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -119,9 +119,8 @@ class TeacherCalendarRepository(
     override suspend fun getCalendarFilterLimit(): Int {
         val result = featuresApi.getAccountSettingsFeatures(RestParams())
         return if (result.isSuccess) {
-            val features = result.dataOrThrow
-            val increasedContextLimit = features["calendar_contexts_limit"]
-            if (increasedContextLimit == true) 20 else 10
+            val settings = result.dataOrThrow
+            settings.calendarContextsLimit
         } else {
             10
         }

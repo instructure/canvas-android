@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.webkit.WebChromeClient
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FEEDBACK
 import com.instructure.pandautils.analytics.ScreenView
@@ -19,7 +19,7 @@ import com.instructure.teacher.databinding.ActivityFeedbackBinding
 import com.instructure.teacher.utils.setupBackButton
 
 @ScreenView(SCREEN_VIEW_FEEDBACK)
-class FeedbackActivity : AppCompatActivity() {
+class FeedbackActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivityFeedbackBinding::inflate)
 

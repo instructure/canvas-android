@@ -16,7 +16,7 @@
 package com.instructure.teacher.presenters
 
 import com.instructure.teacher.viewinterface.InternalWebView
-import instructure.androidblueprint.Presenter
+import com.instructure.pandautils.blueprint.Presenter
 
 class InternalWebViewPresenter : Presenter<InternalWebView> {
     override fun onViewAttached(view: InternalWebView) = this

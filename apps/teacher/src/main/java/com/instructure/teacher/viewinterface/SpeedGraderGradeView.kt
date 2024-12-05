@@ -16,7 +16,7 @@
  */
 package com.instructure.teacher.viewinterface
 
-import instructure.androidblueprint.FragmentViewInterface
+import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface SpeedGraderGradeView : FragmentViewInterface {
     fun updateGradeText()

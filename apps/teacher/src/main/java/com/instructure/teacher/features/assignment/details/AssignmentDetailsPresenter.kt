@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.SubmissionSummary
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.teacher.viewinterface.AssignmentDetailsView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 
 class AssignmentDetailsPresenter(var mAssignment: Assignment) : FragmentPresenter<AssignmentDetailsView>() {

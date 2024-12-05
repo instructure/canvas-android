@@ -473,6 +473,7 @@
     <string name="a11y_quiz">测验</string>
     <string name="a11y_todo">待办事项</string>
     <string name="a11y_page">页面</string>
+    <string name="a11y_assessment_request">评估请求</string>
     <string name="a11y_marked_as_done">标记为完成</string>
     <string name="a11y_not_marked_as_done">未标记为完成</string>
     <string name="error_loading_course_details">嗳哟！加载课程详情时遇到错误。</string>
