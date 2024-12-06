@@ -67,7 +67,7 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
     ): View {
         applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
+        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {

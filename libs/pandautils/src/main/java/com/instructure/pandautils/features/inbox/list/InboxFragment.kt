@@ -121,7 +121,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
+        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
