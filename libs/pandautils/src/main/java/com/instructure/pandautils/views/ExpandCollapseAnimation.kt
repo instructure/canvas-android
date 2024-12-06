@@ -20,9 +20,9 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 
 class ExpandCollapseAnimation(
-    private val mView: View,
-    private var mStartWidth: Int,
-    private var mTargetWidth: Int,
+    private val view: View,
+    private var startWidth: Int,
+    private var targetWidth: Int,
     onAnimationFinished: () -> Unit
 ) : Animation() {
 
@@ -38,14 +38,14 @@ class ExpandCollapseAnimation(
     }
 
     fun updateValues(startWidth: Int, targetWidth: Int) {
-        mStartWidth = startWidth
-        mTargetWidth = targetWidth
+        this.startWidth = startWidth
+        this.targetWidth = targetWidth
     }
 
     override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
-        mView.layoutParams.width =
-            mStartWidth + ((mTargetWidth - mStartWidth) * interpolatedTime).toInt()
-        mView.requestLayout()
+        view.layoutParams.width =
+            startWidth + ((targetWidth - startWidth) * interpolatedTime).toInt()
+        view.requestLayout()
     }
 
     override fun willChangeBounds(): Boolean {
