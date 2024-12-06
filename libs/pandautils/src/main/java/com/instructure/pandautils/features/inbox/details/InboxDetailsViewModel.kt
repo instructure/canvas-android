@@ -138,8 +138,12 @@ class InboxDetailsViewModel @Inject constructor(
         }
     }
 
-    fun refreshParentFragment() {
+    private fun refreshParentFragment() {
         viewModelScope.launch { _events.send(InboxDetailsFragmentAction.UpdateParentFragment) }
+    }
+
+    fun refreshConversation() {
+        getConversation(true)
     }
 
     private fun getConversation(forceRefresh: Boolean = false) {

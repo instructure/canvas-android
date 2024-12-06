@@ -38,10 +38,9 @@ import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -55,18 +54,20 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
-import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
-import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
+import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
+import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.items
@@ -95,6 +96,9 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
     @Inject
     lateinit var inboxRouter: InboxRouter
 
+    @Inject
+    lateinit var sharedEvents: InboxSharedEvents
+
     private lateinit var binding: FragmentInboxBinding
 
     private var onUnreadCountInvalidated: OnUnreadCountInvalidated? = null
@@ -117,7 +121,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
-        setupFragmentResultListener()
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -150,12 +154,12 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         configureItemTouchHelper()
     }
 
-    private fun setupFragmentResultListener() {
-        setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
-        }
-        setFragmentResultListener(InboxDetailsFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxDetailsFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
+    private fun handleSharedViewModelAction(action: InboxSharedAction) {
+        when (action) {
+            is InboxSharedAction.RefreshListScreen -> {
+                viewModel.refresh()
+            }
+            else -> {}
         }
     }
 

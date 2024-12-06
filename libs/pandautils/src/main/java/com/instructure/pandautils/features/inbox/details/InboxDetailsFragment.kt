@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.inbox.details
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.interactions.FragmentInteractions
@@ -37,9 +36,10 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
 import com.instructure.pandautils.base.BaseCanvasFragment
-import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
+import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -57,6 +57,9 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
     @Inject
     lateinit var inboxRouter: InboxRouter
 
+    @Inject
+    lateinit var sharedEvents: InboxSharedEvents
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,27 +67,13 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
     ): View {
         applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
 
                 InboxDetailsScreen(title(), uiState,  viewModel::messageActionHandler, viewModel::handleAction)
-            }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupFragmentResultListener()
-    }
-
-    private fun setupFragmentResultListener() {
-        setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) {
-                viewModel.handleAction(InboxDetailsAction.RefreshCalled)
-                viewModel.refreshParentFragment()
             }
         }
     }
@@ -119,7 +108,7 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
                 }
             }
             is InboxDetailsFragmentAction.UpdateParentFragment -> {
-                setFragmentResult(FRAGMENT_RESULT_KEY, bundleOf())
+                sharedEvents.sendEvent(lifecycleScope, InboxSharedAction.RefreshListScreen)
             }
             is InboxDetailsFragmentAction.NavigateToCompose -> {
                 inboxRouter.routeToCompose(action.options)
@@ -127,9 +116,18 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
         }
     }
 
+    private fun handleSharedViewModelAction(action: InboxSharedAction) {
+        when (action) {
+            is InboxSharedAction.RefreshDetailsScreen -> {
+                Log.d("InboxDetailsFragment", "RefreshDetailsScreen")
+                viewModel.refreshConversation()
+            }
+            else -> {}
+        }
+    }
+
     companion object {
         const val CONVERSATION_ID = "conversation_id"
-        const val FRAGMENT_RESULT_KEY = "InboxDetailsFragmentResultKey"
 
         fun newInstance(): InboxDetailsFragment {
             return InboxDetailsFragment()
