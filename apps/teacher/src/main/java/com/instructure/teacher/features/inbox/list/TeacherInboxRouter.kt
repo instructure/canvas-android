@@ -28,19 +28,13 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
-import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.StudentContextFragment
-import com.instructure.teacher.events.ConversationDeletedEvent
-import com.instructure.teacher.events.ConversationUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteMatcher.openMedia
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class TeacherInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
@@ -81,37 +75,6 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
             RouteMatcher.route(activity, Route(StudentContextFragment::class.java, null, bundle))
         } else {
             openConversation(conversation, scope)
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onConversationUpdated(event: ConversationUpdatedEvent) {
-        event.once(javaClass.simpleName) {
-            if (fragment is InboxFragment) {
-                fragment.conversationUpdated()
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onConversationDeleted(event: ConversationDeletedEvent) {
-        event.once(javaClass.simpleName) {
-            if (fragment is InboxFragment) {
-                fragment.conversationUpdated()
-            }
-
-            //pop current detail fragment if tablet
-            if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
-                val fragmentManager = fragment.parentFragmentManager
-                val currentFrag = fragmentManager.findFragmentById(R.id.detail)
-                if (currentFrag != null) {
-                    val transaction = fragmentManager.beginTransaction()
-                    transaction.remove(currentFrag)
-                    transaction.commit()
-                }
-            }
         }
     }
 

@@ -28,7 +28,6 @@ import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerBottomSheetDialog
 import com.instructure.parentapp.util.navigation.Navigation
-import org.greenrobot.eventbus.Subscribe
 
 
 class ParentInboxRouter(
@@ -57,13 +56,7 @@ class ParentInboxRouter(
     }
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {
-        // TODO: Implement
-    }
-
-    @Suppress("unused")
-    @Subscribe(sticky = true)
-    fun onUpdateConversation(event: Any) {
-        // TODO: Implement
+        openConversation(conversation, scope)
     }
 
     override fun routeToAttachment(attachment: Attachment) {

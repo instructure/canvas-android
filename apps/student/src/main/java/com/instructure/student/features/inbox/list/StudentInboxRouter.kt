@@ -27,12 +27,9 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-import com.instructure.pandautils.utils.ConversationUpdatedEvent
-import com.instructure.pandautils.utils.remove
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteMatcher.openMedia
-import org.greenrobot.eventbus.Subscribe
 
 class StudentInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
@@ -63,17 +60,5 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
 
     override fun routeToAttachment(attachment: Attachment) {
         openMedia(activity, attachment.url)
-    }
-
-    // We need to keep this update mechanism until the other Inbox components will be rewritten
-    @Suppress("unused")
-    @Subscribe(sticky = true)
-    fun onUpdateConversation(event: ConversationUpdatedEvent) {
-        event.get {
-            if (fragment is InboxFragment) {
-                event.remove()
-                fragment.conversationUpdated()
-            }
-        }
     }
 }
