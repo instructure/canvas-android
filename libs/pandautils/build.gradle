@@ -31,6 +31,7 @@ static String isTesting() {
 }
 
 android {
+    namespace 'com.instructure.pandautils'
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -75,8 +76,13 @@ android {
         exclude 'LICENSE.txt'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     testOptions {

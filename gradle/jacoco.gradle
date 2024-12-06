@@ -40,9 +40,9 @@ configure(coveredProject) { project ->
         description = 'Generate Jacoco coverage'
 
         reports {
-            csv.enabled = true
-            xml.enabled = false
-            html.enabled = true
+            csv.required = true
+            xml.required = false
+            html.required = true
         }
         def params = [:]
         params.variantName = variant
@@ -152,9 +152,9 @@ configure(coveredProject) { project ->
         params.executionData = fileTree(dir: ".", includes: ['results/**/*.ec', "**/test${params.variantCapName}UnitTest.exec"])
 
         reports {
-            html.enabled true
-            csv.enabled  false
-            xml.enabled  false
+            html.required = true
+            csv.required = false
+            xml.required = false
         }
 
         classDirectories.setFrom params.classDirectories
@@ -185,11 +185,11 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
 
     reports {
         html {
-            enabled true
+            required = true
             destination file('build/reports/jacoco/html')
         }
         csv {
-            enabled true
+            required = true
             destination file('build/reports/jacoco/jacocoFullReport.csv')
         }
     }
@@ -217,11 +217,11 @@ task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
 
     reports {
         html {
-            enabled true
+            required = true
             destination file('build/reports/jacoco/html')
         }
         csv {
-            enabled true
+            required = true
             destination file('build/reports/jacoco/jacocoFullCombinedReport.csv')
         }
     }
