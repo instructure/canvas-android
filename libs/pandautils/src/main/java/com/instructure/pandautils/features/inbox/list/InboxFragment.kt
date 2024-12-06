@@ -79,7 +79,6 @@ import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
-import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 private const val ANIM_DURATION = 150L
@@ -458,16 +457,6 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         viewModel.invalidateCache()
         viewModel.refresh()
         onUnreadCountInvalidated?.invalidateUnreadCount()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(inboxRouter)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(inboxRouter)
     }
 
     // We might need to change this for the teacher implementation
