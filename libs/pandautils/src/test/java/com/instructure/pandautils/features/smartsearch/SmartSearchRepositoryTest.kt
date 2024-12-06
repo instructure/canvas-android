@@ -56,7 +56,7 @@ class SmartSearchRepositoryTest {
                 )
             )
         )
-        coEvery { smartSearchApi.smartSearch(any(), any(), any()) } returns DataResult.Success(
+        coEvery { smartSearchApi.smartSearch(any(), any(), any(), any()) } returns DataResult.Success(
             result
         )
 
@@ -64,7 +64,7 @@ class SmartSearchRepositoryTest {
         val response = repository.smartSearch(1L, "query")
 
         coVerify {
-            smartSearchApi.smartSearch(1L, "query", RestParams(isForceReadFromNetwork = true))
+            smartSearchApi.smartSearch(1L, "query", any(), RestParams(isForceReadFromNetwork = true))
         }
 
         assertEquals(result.results, response)
@@ -72,7 +72,7 @@ class SmartSearchRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Smart Search error`() = runTest {
-        coEvery { smartSearchApi.smartSearch(any(), any(), any()) } returns DataResult.Fail()
+        coEvery { smartSearchApi.smartSearch(any(), any(), any(), any()) } returns DataResult.Fail()
 
         val repository = createRepository()
 
@@ -125,7 +125,7 @@ class SmartSearchRepositoryTest {
                 )
             )
         )
-        coEvery { smartSearchApi.smartSearch(any(), any(), any()) } returns DataResult.Success(
+        coEvery { smartSearchApi.smartSearch(any(), any(), any(), any()) } returns DataResult.Success(
             result
         )
 
@@ -135,7 +135,7 @@ class SmartSearchRepositoryTest {
         val expected = listOf(result.results[0], result.results[1], result.results[3])
 
         coVerify {
-            smartSearchApi.smartSearch(1L, "query", RestParams(isForceReadFromNetwork = true))
+            smartSearchApi.smartSearch(1L, "query", any(), RestParams(isForceReadFromNetwork = true))
         }
 
         assertEquals(expected, response)
