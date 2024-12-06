@@ -124,7 +124,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     /* Modules */
-    api project(path: ':blueprint')
+    api project(path: ':canvas-api-2')
+    api project(path: ':recyclerview')
     api project(path: ':interactions')
 
     implementation Libs.CAMERA_VIEW
