@@ -107,6 +107,9 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
                     Toast.makeText(requireContext(), R.string.inboxMessageFailedToOpenUrl, Toast.LENGTH_SHORT).show()
                 }
             }
+            is InboxDetailsFragmentAction.OpenAttachment -> {
+                inboxRouter.routeToAttachment(action.attachment)
+            }
             is InboxDetailsFragmentAction.UpdateParentFragment -> {
                 sharedEvents.sendEvent(lifecycleScope, InboxSharedAction.RefreshListScreen)
             }

@@ -25,7 +25,6 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
-import com.instructure.pandautils.utils.FileDownloader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -41,7 +40,6 @@ class InboxDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val repository: InboxDetailsRepository,
-    private val fileDownloader: FileDownloader
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
@@ -63,7 +61,11 @@ class InboxDetailsViewModel @Inject constructor(
             is MessageAction.ReplyAll -> handleAction(InboxDetailsAction.ReplyAll(action.message))
             is MessageAction.Forward -> handleAction(InboxDetailsAction.Forward(action.message))
             is MessageAction.DeleteMessage -> handleAction(InboxDetailsAction.DeleteMessage(conversationId ?: 0, action.message))
-            is MessageAction.OpenAttachment -> { fileDownloader.downloadFileToDevice(action.attachment) }
+            is MessageAction.OpenAttachment -> {
+                viewModelScope.launch {
+                    _events.send(InboxDetailsFragmentAction.OpenAttachment(action.attachment))
+                }
+            }
             is MessageAction.UrlSelected -> {
                 viewModelScope.launch {
                     _events.send(InboxDetailsFragmentAction.UrlSelected(action.url))

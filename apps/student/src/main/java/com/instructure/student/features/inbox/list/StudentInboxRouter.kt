@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
@@ -30,6 +31,7 @@ import com.instructure.pandautils.utils.ConversationUpdatedEvent
 import com.instructure.pandautils.utils.remove
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.router.RouteMatcher.openMedia
 import org.greenrobot.eventbus.Subscribe
 
 class StudentInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
@@ -57,6 +59,10 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {
         openConversation(conversation, scope)
+    }
+
+    override fun routeToAttachment(attachment: Attachment) {
+        openMedia(activity, attachment.url)
     }
 
     // We need to keep this update mechanism until the other Inbox components will be rewritten

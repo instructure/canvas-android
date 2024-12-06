@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -36,6 +37,7 @@ import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.events.ConversationDeletedEvent
 import com.instructure.teacher.events.ConversationUpdatedEvent
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.router.RouteMatcher.openMedia
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -111,5 +113,9 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
                 }
             }
         }
+    }
+
+    override fun routeToAttachment(attachment: Attachment) {
+        openMedia(activity, attachment.url)
     }
 }
