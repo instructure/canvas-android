@@ -447,6 +447,8 @@
     <string name="save_comment">Save comment</string>
     <string name="cancel_editing_comment">Cancel editing comment</string>
     <string name="skip">Skip</string>
+    <string name="collapseGradePanel">Collapse Grade Panel</string>
+    <string name="expandGradePanel">Expand Grade Panel</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Custom score %1$s</string>
