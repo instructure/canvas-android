@@ -42,7 +42,7 @@ fun InboxComposeScreenWrapper(
     ) {
     val animationLabel = "ScreenSlideTransition"
 
-    BackHandler {
+    BackHandler(uiState.enableCustomBackHandler) {
         when (uiState.screenOption) {
             is InboxComposeScreenOptions.None -> {
                 inboxComposeActionHandler(InboxComposeActionHandler.CancelDismissDialog(true))
