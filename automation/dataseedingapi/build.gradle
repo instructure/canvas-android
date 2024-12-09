@@ -58,8 +58,6 @@ task addPrivateData {
     }
 }
 
-//compileKotlin.dependsOn(addPrivateData)
-
 tasks.named('compileKotlin') {
     dependsOn addPrivateData
     dependsOn generateTestServiceApolloSources

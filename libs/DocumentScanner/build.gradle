@@ -85,7 +85,6 @@ dependencies {
 task sourceJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     from fileTree(dir: 'src/libs', include: ['*.jar'])
-//    classifier "sources"
 }
 
 task androidSourcesJar(type: Jar) {
