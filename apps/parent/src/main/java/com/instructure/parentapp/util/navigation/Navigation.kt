@@ -68,7 +68,6 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val splash = "$baseUrl/splash/{${Const.QR_CODE_MASQUERADE_ID}}"
     private val createAccount = "$baseUrl/account_creation?pairing_code={${CreateAccountFragment.PAIRING_CODE}}&domain={${CreateAccountFragment.DOMAIN}}&accountId={${CreateAccountFragment.ACCOUNT_ID}}"
 
-
     val notAParent = "$baseUrl/not-a-parent"
     val courses = "$baseUrl/courses"
     val calendar = "$baseUrl/calendar"

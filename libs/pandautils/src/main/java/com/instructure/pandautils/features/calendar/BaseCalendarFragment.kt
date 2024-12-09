@@ -93,7 +93,7 @@ open class BaseCalendarFragment : BaseCanvasFragment(), NavigationCallbacks, Fra
     private fun handleAction(action: CalendarViewModelAction) {
         when (action) {
             is CalendarViewModelAction.OpenAssignment -> calendarRouter.openAssignment(action.canvasContext, action.assignmentId)
-            is CalendarViewModelAction.OpenDiscussion -> calendarRouter.openDiscussion(action.canvasContext, action.discussionId)
+            is CalendarViewModelAction.OpenDiscussion -> calendarRouter.openDiscussion(action.canvasContext, action.discussionId, action.assignmentId)
             is CalendarViewModelAction.OpenQuiz -> calendarRouter.openQuiz(action.canvasContext, action.htmlUrl)
             is CalendarViewModelAction.OpenCalendarEvent -> calendarRouter.openCalendarEvent(action.canvasContext, action.eventId)
             is CalendarViewModelAction.OpenToDo -> calendarRouter.openToDo(action.plannerItem)
