@@ -85,7 +85,8 @@ class SmartSearchViewModel @Inject constructor(
             }
             is SmartSearchAction.Filter -> {
                 viewModelScope.launch {
-                    search(canvasContext.id, query, action.filters)
+                    if (action.filters.toSet() == _uiState.value.filters.toSet()) return@launch
+                    search(canvasContext.id, _uiState.value.query, action.filters)
                 }
             }
         }
