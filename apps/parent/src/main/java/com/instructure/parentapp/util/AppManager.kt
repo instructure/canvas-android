@@ -18,8 +18,7 @@
 package com.instructure.parentapp.util
 
 import androidx.hilt.work.HiltWorkerFactory
-import com.instructure.canvasapi2.AppManager
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.loginapi.login.tasks.LogoutTask
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class AppManager : BaseAppManager() {
     lateinit var workerFactory: HiltWorkerFactory
 
     override fun performLogoutOnAuthError() {
-        // TODO: Implement
+        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
 
     override fun getWorkManagerFactory() = workerFactory

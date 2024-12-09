@@ -28,12 +28,16 @@ import com.instructure.canvasapi2.models.Course
 class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertCourseDetailsDisplayed(course: Course) {
-        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
+        assertCourseNameDisplayed(course)
         composeTestRule.onNodeWithText("GRADES")
             .assertIsDisplayed()
             .assertIsSelected()
         composeTestRule.onNodeWithText("SYLLABUS").assertIsDisplayed()
         composeTestRule.onNodeWithText("SUMMARY").assertIsDisplayed()
+    }
+
+    fun assertCourseNameDisplayed(course: Course) {
+        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
     }
 
     fun selectTab(tabName: String) {

@@ -100,8 +100,9 @@ class CoursesInteractionTest : ParentComposeTest() {
         goToCourses(data)
 
         composeTestRule.waitForIdle()
-        coursesPage.tapCurseItem(data.courses.values.first().name)
-        // TODO Assert course details when implemented
+        val course = data.courses.values.first()
+        coursesPage.tapCurseItem(course.name)
+        courseDetailsPage.assertCourseNameDisplayed(course)
     }
 
     private fun initData(): MockCanvas {

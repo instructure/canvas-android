@@ -26,6 +26,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -106,6 +107,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleDeeplink(intent.data)
+        showMessageExtra(intent)
     }
 
     private fun setupNavigation() {
@@ -124,6 +126,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
             navController.graph.setStartDestination(navigation.courses)
 
             handleDeeplink(deeplinkUri)
+            showMessageExtra(intent)
         }
     }
 
@@ -132,6 +135,13 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
             navController.navigate(uri ?: return)
         } catch (e: Exception) {
             Log.e(this.javaClass.simpleName, e.message.orEmpty())
+        }
+    }
+
+    private fun showMessageExtra(intent: Intent) {
+        val message = intent.getStringExtra(Const.MESSAGE)
+        if (!message.isNullOrBlank()) {
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -168,7 +178,6 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
 
         fun createIntent(context: Context, masqueradingUserId: Long): Intent {
             val intent = Intent(context, MainActivity::class.java)
-            // TODO: Implement masquerading
             intent.putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
             return intent
         }
