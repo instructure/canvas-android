@@ -214,4 +214,20 @@ class EnabledTabsTest {
         result = enabledTabs.isPathTabNotEnabled(route)
         assertFalse(result)
     }
+
+    @Test
+    fun `replace ~ in consortia courseId to 0s`() = runTest {
+        coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
+            listOf(
+                Course(id = 110000000000000012, tabs = listOf(Tab(tabId = "assignments", htmlUrl = "/courses/11~12/assignments"))),
+            )
+        )
+        enabledTabs.initTabs()
+
+        val route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/11~12/assignments"
+        every { mockUri.pathSegments } returns listOf("courses", "11~12", "assignments")
+        val result = enabledTabs.isPathTabNotEnabled(route)
+        assert(result)
+    }
 }
