@@ -101,7 +101,7 @@ class HelpDialogViewModel @Inject constructor(
         return list
             // Only want links for students
             .filter { helpLinkFilter.isLinkAllowed(it, favoriteCourses) }
-            .filter { !it.text.isNullOrBlank() && !it.url.isNullOrBlank() }
+            .filter { it.text != null && it.url != null }
             .map { HelpLinkItemViewModel(HelpLinkViewData(it.text.orEmpty(), it.subtext.orEmpty(), mapAction(it)), ::onLinkClicked) }
             .plus(HelpLinkItemViewModel(rateLink, ::onLinkClicked))
     }
