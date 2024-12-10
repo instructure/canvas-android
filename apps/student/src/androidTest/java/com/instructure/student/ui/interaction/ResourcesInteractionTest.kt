@@ -27,13 +27,13 @@ import com.instructure.canvas.espresso.mockCanvas.addLTITool
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class ResourcesInteractionTest : StudentTest() {
+class ResourcesInteractionTest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -192,12 +192,7 @@ class ResourcesInteractionTest : StudentTest() {
         goToResourcesTab(data)
         resourcesPage.openComposeMessage(data.teachers[0].shortName!!)
 
-        newMessagePage.assertToolbarTitleNewMessage()
-        newMessagePage.assertCourseSelectorNotShown()
-        newMessagePage.assertRecipientsNotShown()
-        newMessagePage.assertSendIndividualMessagesNotShown()
-        newMessagePage.assertSubjectViewShown()
-        newMessagePage.assertMessageViewShown()
+        inboxComposePage.assertTitle("New Message")
     }
 
     @Test

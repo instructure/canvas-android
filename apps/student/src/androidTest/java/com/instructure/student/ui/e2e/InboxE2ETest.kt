@@ -29,14 +29,14 @@ import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.espresso.retryWithIncreasingDelay
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class InboxE2ETest: StudentTest() {
+class InboxE2ETest: StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -80,11 +80,11 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Assert that is has not been starred already.")
         inboxPage.openConversation(seededConversation.subject)
-        inboxConversationPage.assertNotStarred()
+        inboxDetailsPage.assertStarred(false)
 
         Log.d(STEP_TAG,"Toggle Starred to mark '${seededConversation.subject}' conversation as favourite. Assert that it has became starred.")
-        inboxConversationPage.toggleStarred()
-        inboxConversationPage.assertStarred()
+        inboxDetailsPage.pressStarButton(true)
+        inboxDetailsPage.assertStarred(true)
 
         Log.d(STEP_TAG,"Navigate back to Inbox Page and  assert that the conversation itself is starred as well.")
         Espresso.pressBack() // To main inbox page
@@ -93,14 +93,15 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Mark as Unread by clicking on the 'More Options' menu, 'Mark as Unread' menu point.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
         inboxPage.openConversation(seededConversation.subject)
-        inboxConversationPage.markUnread() //After select 'Mark as Unread', we will be navigated back to Inbox Page
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Mark as Unread")
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
         inboxPage.openConversation(seededConversation.subject)
-        inboxConversationPage.archive() //After select 'Archive', we will be navigated back to Inbox Page
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
+        Espresso.pressBack()
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
@@ -132,7 +133,8 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
         inboxPage.openConversation(seededConversation.subject)
-        inboxConversationPage.archive() //After select 'Archive', we will be navigated back to Inbox Page
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
+        Espresso.pressBack()
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
@@ -260,10 +262,17 @@ class InboxE2ETest: StudentTest() {
         val newMessageSubject = "Hey There"
         val newMessage = "Just checking in"
         Log.d(STEP_TAG,"Create a new message with subject: '$newMessageSubject', and message: '$newMessage'")
-        newMessagePage.populateMessage(course, student2, newMessageSubject, newMessage)
+        inboxComposePage.pressCourseSelector()
+        selectContextPage.selectContext(course.name)
+        inboxComposePage.pressAddRecipient()
+        recipientPickerPage.pressLabel("Students")
+        recipientPickerPage.pressLabel(student2.name)
+        recipientPickerPage.pressDone()
+        inboxComposePage.typeSubject(newMessageSubject)
+        inboxComposePage.typeBody(newMessage)
 
         Log.d(STEP_TAG,"Click on 'Send' button.")
-        newMessagePage.clickSend()
+        inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG,"Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
@@ -271,10 +280,18 @@ class InboxE2ETest: StudentTest() {
         val newGroupMessageSubject = "Group Message"
         val newGroupMessage = "Testing Group ${group.name}"
         Log.d(STEP_TAG,"Create a new message with subject: '$newGroupMessageSubject', and message: '$newGroupMessage'")
-        newMessagePage.populateGroupMessage(group, student2, newGroupMessageSubject, newGroupMessage)
+        inboxComposePage.pressCourseSelector()
+        selectContextPage.selectContext(course.name)
+        inboxComposePage.pressAddRecipient()
+        recipientPickerPage.pressLabel("Students")
+        recipientPickerPage.pressLabel(student2.name)
+        recipientPickerPage.pressDone()
+        inboxComposePage.typeSubject(newGroupMessageSubject)
+        inboxComposePage.typeBody(newGroupMessage)
+        inboxComposePage.pressIndividualSendSwitch()
 
         Log.d(STEP_TAG,"Click on 'Send' button.")
-        newMessagePage.clickSend()
+        inboxComposePage.pressSendButton()
 
         sleep(2000) // Allow time for messages to propagate
 
@@ -299,14 +316,15 @@ class InboxE2ETest: StudentTest() {
         inboxPage.openConversation(newMessageSubject)
         val newReplyMessage = "This is a quite new reply message."
         Log.d(STEP_TAG,"Reply to $newGroupMessageSubject conversation with '$newReplyMessage' message. Assert that the reply is displayed.")
-        inboxConversationPage.replyToMessage(newReplyMessage)
+        inboxComposePage.typeBody(newReplyMessage)
+        inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG,"Delete '$newReplyMessage' reply and assert is has been deleted.")
-        inboxConversationPage.deleteMessage(newReplyMessage)
-        inboxConversationPage.assertMessageNotDisplayed(newReplyMessage)
+        inboxDetailsPage.pressOverflowMenuItemForMessage(newReplyMessage, "Delete")
+        inboxDetailsPage.assertMessageNotDisplayed(newReplyMessage)
 
         Log.d(STEP_TAG,"Delete the whole '$newGroupMessageSubject' subject and assert that it has been removed from the conversation list on the Inbox Page.")
-        inboxConversationPage.deleteConversation() //After deletion we will be navigated back to Inbox Page
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Delete")
         inboxPage.assertConversationNotDisplayed(newMessageSubject)
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed("Group Message")
@@ -445,7 +463,7 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Open the conversation and assert that the message body is equal to which the student asked in the 'Ask Your Instructor' dialog: '$questionText'.")
         inboxPage.openConversationWithRecipients(recipientList)
-        inboxConversationPage.assertMessageDisplayed(questionText)
+        inboxDetailsPage.assertMessageDisplayed(questionText)
 
         Log.d(STEP_TAG,"Log out with '${student.name}' student.")
         Espresso.pressBack()
@@ -463,7 +481,7 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Open the conversation and assert that there is no subject of the conversation and the message body is equal to which the student typed in the 'Ask Your Instructor' dialog: '$questionText'.")
         inboxPage.openConversationWithRecipients(recipientList)
-        inboxConversationPage.assertMessageDisplayed(questionText)
-        inboxConversationPage.assertNoSubjectDisplayed()
+        inboxDetailsPage.assertMessageDisplayed(questionText)
+        inboxDetailsPage.assertConversationSubject("")
     }
 }

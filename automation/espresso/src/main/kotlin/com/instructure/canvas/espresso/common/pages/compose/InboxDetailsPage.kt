@@ -16,7 +16,7 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.filter
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
@@ -47,14 +47,19 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
             .isDisplayed()
     }
 
-    fun assertMessageDisplayed(message: Message) {
+    fun assertMessageDisplayed(messageBody: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(message.body ?: "").performScrollTo()
+        composeTestRule.onNodeWithText(messageBody).performScrollTo()
+    }
+
+    fun assertMessageNotDisplayed(messageBody: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(messageBody).assertIsNotDisplayed()
     }
 
     fun assertAllMessagesDisplayed(conversation: Conversation) {
         conversation.messages.forEach { message ->
-            assertMessageDisplayed(message)
+            assertMessageDisplayed(message.body ?: "")
         }
     }
 
@@ -129,8 +134,8 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText(buttonLabel).performClick()
     }
 
-    fun pressOverflowMenuItemForMessage(conversation: Conversation, message: Message, buttonLabel: String) {
-        pressOverflowIconButtonForMessage(conversation, message)
+    fun pressOverflowMenuItemForMessage(messageBody: String, buttonLabel: String) {
+        pressOverflowIconButtonForMessage(messageBody)
 
         composeTestRule.onNode(hasTestTag("messageMenuItem").and(hasText(buttonLabel)), true)
             .performClick()
@@ -143,15 +148,15 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 
-    private fun pressOverflowIconButtonForMessage(conversation: Conversation, message: Message) {
+    private fun pressOverflowIconButtonForMessage(messageBody: String) {
         composeTestRule.waitForIdle()
 
-        val overflowButton = composeTestRule.onNodeWithText(message.body ?: "")
+        val overflowButton = composeTestRule.onNodeWithText(messageBody)
             .onParent() // SelectionContainer
             .onParent() // Column
             .onChildren()
-            .filter(hasContentDescription("More options"))
-            .get(conversation.messages.indexOf(message))
+            .filterToOne(hasContentDescription("More options"))
+            //.get(conversation.messages.indexOf(message))
 
         overflowButton.performScrollTo()
         composeTestRule.waitForIdle()

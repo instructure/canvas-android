@@ -77,7 +77,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         val message = conversation.messages.first()
-        inboxDetailsPage.pressOverflowMenuItemForMessage(conversation, message, "Reply")
+        inboxDetailsPage.pressOverflowMenuItemForMessage(message.body.orEmpty(), "Reply")
 
         inboxDetailsPage.assertConversationSubject("Re: ${conversation.subject}")
         assertReplyComposeScreenDisplayed(conversation)
@@ -91,7 +91,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         val message = conversation.messages.first()
-        inboxDetailsPage.pressOverflowMenuItemForMessage(conversation, message, "Reply All")
+        inboxDetailsPage.pressOverflowMenuItemForMessage(message.body.orEmpty(), "Reply All")
 
         inboxDetailsPage.assertConversationSubject("Re: ${conversation.subject}")
         assertReplyAllComposeScreenDisplayed(conversation)
@@ -105,7 +105,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         val message = conversation.messages.first()
-        inboxDetailsPage.pressOverflowMenuItemForMessage(conversation, message, "Forward")
+        inboxDetailsPage.pressOverflowMenuItemForMessage(message.body.orEmpty(), "Forward")
 
         inboxDetailsPage.assertConversationSubject("Fwd: ${conversation.subject}")
         assertForwardComposeScreenDisplayed(conversation)
@@ -119,7 +119,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         val message = conversation.messages.first()
-        inboxDetailsPage.pressOverflowMenuItemForMessage(conversation, message, "Delete")
+        inboxDetailsPage.pressOverflowMenuItemForMessage(message.body.orEmpty(), "Delete")
         inboxDetailsPage.assertDeleteMessageAlertDialog()
         inboxDetailsPage.pressAlertButton("Cancel")
 
@@ -135,7 +135,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         val message = conversation.messages[2]
-        inboxDetailsPage.pressOverflowMenuItemForMessage(conversation, message, "Delete")
+        inboxDetailsPage.pressOverflowMenuItemForMessage(message.body.orEmpty(), "Delete")
         inboxDetailsPage.assertDeleteMessageAlertDialog()
         inboxDetailsPage.pressAlertButton("Delete")
 
