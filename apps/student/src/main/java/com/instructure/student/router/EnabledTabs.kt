@@ -43,7 +43,13 @@ class EnabledTabsImpl(
             }
             if (uri.pathSegments.contains("courses")) {
                 val courseIdIndex = uri.pathSegments.indexOf("courses") + 1
-                val courseId = uri.pathSegments[courseIdIndex]
+                var courseId = uri.pathSegments[courseIdIndex]
+                if (courseId.contains("~")) {
+                    val parts = courseId.split("~")
+                    val length = parts[0].length + parts[1].length
+                    val padding = 18 - length
+                    courseId = parts[0] + "0".repeat(padding) + parts[1]
+                }
                 return !isPathTabEnabled(courseId.toLong(), uri)
             }
 
