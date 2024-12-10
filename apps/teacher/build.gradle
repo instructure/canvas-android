@@ -25,6 +25,7 @@ def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
 
 android {
+    namespace 'com.instructure.teacher'
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
@@ -187,12 +188,12 @@ android {
 
 
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     buildFeatures {

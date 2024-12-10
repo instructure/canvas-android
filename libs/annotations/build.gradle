@@ -28,8 +28,9 @@ static String isTesting() {
 }
 
 android {
+    namespace 'com.instructure.annotations'
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     compileSdkVersion Versions.COMPILE_SDK
@@ -77,8 +78,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     configurations.all {

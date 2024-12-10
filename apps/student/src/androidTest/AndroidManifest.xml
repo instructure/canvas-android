@@ -16,8 +16,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.instructure.student">
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18" />
     <!-- Google is awesome and ignores these permissions on the test apk.
          DISABLE_KEYGUARD is duplicated into the deubg/AndroidManifest to avoid a security exception
