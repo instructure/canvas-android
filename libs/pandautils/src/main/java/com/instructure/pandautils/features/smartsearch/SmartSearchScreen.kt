@@ -38,6 +38,10 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,92 +71,132 @@ fun SmartSearchScreen(
     uiState: SmartSearchUiState,
     navigationItemClick: () -> Unit
 ) {
+    var showPreferences by remember { mutableStateOf(false) }
     CanvasTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    backgroundColor = Color(uiState.canvasContext.color),
-                    navigationIcon = {
-                        IconButton(onClick = { navigationItemClick() }) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_back_arrow),
-                                contentDescription = stringResource(R.string.contentDescription_back),
-                                tint = colorResource(R.color.textLightest)
-                            )
-                        }
-                    },
-                    title = {
-                        SearchBar(
-                            modifier = Modifier.testTag("searchBar"),
-                            icon = R.drawable.ic_smart_search,
-                            tintColor = colorResource(R.color.textLightest),
-                            onExpand = {},
-                            onSearch = { uiState.actionHandler(SmartSearchAction.Search(it)) },
-                            placeholder = stringResource(R.string.smartSearchPlaceholder),
-                            collapsable = false,
-                            searchQuery = uiState.query
+        if (showPreferences) {
+            SmartSearchPreferencesScreen(Color(uiState.canvasContext.color), uiState.filters) {
+                showPreferences = false
+                uiState.actionHandler(SmartSearchAction.Filter(it))
+            }
+        } else {
+            SmartSearchScreenContent(uiState, navigationItemClick) {
+                showPreferences = true
+            }
+        }
+    }
+}
+
+@Composable
+private fun SmartSearchScreenContent(
+    uiState: SmartSearchUiState,
+    navigationItemClick: () -> Unit,
+    onFilterClick: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                backgroundColor = Color(uiState.canvasContext.color),
+                navigationIcon = {
+                    IconButton(onClick = { navigationItemClick() }) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_back_arrow),
+                            contentDescription = stringResource(R.string.contentDescription_back),
+                            tint = colorResource(R.color.textLightest)
                         )
-                    },
+                    }
+                },
+                title = {
+                    SearchBar(
+                        modifier = Modifier.testTag("searchBar"),
+                        icon = R.drawable.ic_smart_search,
+                        tintColor = colorResource(R.color.textLightest),
+                        onExpand = {},
+                        onSearch = { uiState.actionHandler(SmartSearchAction.Search(it)) },
+                        placeholder = stringResource(R.string.smartSearchPlaceholder),
+                        collapsable = false,
+                        searchQuery = uiState.query
+                    )
+                },
+                actions = {
+                    IconButton(
+                        modifier = Modifier.testTag("filterButton"),
+                        onClick = { onFilterClick() }
+                    ) {
+                        Icon(
+                            painterResource(
+                                id = if (uiState.filters.size == 4 || uiState.filters.isEmpty()) {
+                                    R.drawable.ic_filter_outline
+                                } else {
+                                    R.drawable.ic_filter_filled
+                                }
+                            ),
+                            contentDescription = stringResource(R.string.contentDescription_filter),
+                            tint = colorResource(R.color.textLightest)
+                        )
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        when {
+            uiState.loading -> {
+                Loading(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLight))
+                        .testTag("loading"),
+                    title = stringResource(R.string.smartSearchLoadingTitle),
+                    message = stringResource(R.string.smartSearchLoadingSubtitle),
+                    animation = R.raw.panda_reading
                 )
             }
-        ) { padding ->
-            when {
-                uiState.loading -> {
-                    Loading(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(colorResource(R.color.backgroundLight))
-                            .testTag("loading"),
-                        title = stringResource(R.string.smartSearchLoadingTitle),
-                        message = stringResource(R.string.smartSearchLoadingSubtitle),
-                        animation = R.raw.panda_reading
-                    )
-                }
 
-                uiState.error -> {
-                    ErrorContent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(colorResource(R.color.backgroundLight))
-                            .testTag("error"),
-                        errorMessage = stringResource(R.string.errorOccurred),
-                        retryClick = {
-                            uiState.actionHandler(
-                                SmartSearchAction.Search(
-                                    uiState.query
-                                )
+            uiState.error -> {
+                ErrorContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLight))
+                        .testTag("error"),
+                    errorMessage = stringResource(R.string.errorOccurred),
+                    retryClick = {
+                        uiState.actionHandler(
+                            SmartSearchAction.Search(
+                                uiState.query
+                            )
+                        )
+                    }
+                )
+            }
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .testTag("results")
+                        .fillMaxSize()
+                        .padding(padding)
+                        .background(colorResource(R.color.backgroundLight))
+                ) {
+                    item {
+                        CourseHeader(uiState.canvasContext.name.orEmpty())
+                    }
+                    if (uiState.results.isNotEmpty()) {
+                        items(uiState.results) {
+                            ResultItem(
+                                it,
+                                Color(uiState.canvasContext.color),
+                                uiState.actionHandler
                             )
                         }
-                    )
-                }
-
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                            .background(colorResource(R.color.backgroundLight))
-                    ) {
+                    } else {
                         item {
-                            CourseHeader(uiState.canvasContext.name.orEmpty())
-                        }
-                        if (uiState.results.isNotEmpty()) {
-                            items(uiState.results) {
-                                ResultItem(
-                                    it,
-                                    Color(uiState.canvasContext.color),
-                                    uiState.actionHandler
-                                )
-                            }
-                        } else {
-                            item {
-                                EmptyContent(
-                                    modifier = Modifier.fillMaxHeight().testTag("empty"),
-                                    emptyTitle = stringResource(R.string.smartSearchEmptyTitle),
-                                    emptyMessage = stringResource(R.string.smartSearchEmptyMessage),
-                                    imageRes = R.drawable.ic_smart_search_empty
-                                )
-                            }
+                            EmptyContent(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .testTag("empty"),
+                                emptyTitle = stringResource(R.string.smartSearchEmptyTitle),
+                                emptyMessage = stringResource(R.string.smartSearchEmptyMessage),
+                                imageRes = R.drawable.ic_smart_search_empty
+                            )
                         }
                     }
                 }

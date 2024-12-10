@@ -268,4 +268,24 @@ class SmartSearchScreenTest {
         ).assertCountEquals(1)
 
     }
+
+    @Test
+    fun assertFilterButton() {
+        composeTestRule.setContent {
+            SmartSearchScreen(
+                uiState = SmartSearchUiState(
+                    query = "Test",
+                    canvasContext = Course(name = "Test course"),
+                    results = emptyList(),
+                    actionHandler = {},
+                    loading = false,
+                    error = false
+                )
+            ) { }
+        }
+
+        composeTestRule.onNodeWithTag("filterButton")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
 }

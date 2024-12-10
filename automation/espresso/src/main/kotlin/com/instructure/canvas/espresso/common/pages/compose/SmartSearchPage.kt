@@ -23,7 +23,9 @@ import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.instructure.espresso.page.BasePage
 
 class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage() {
@@ -47,6 +49,22 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     fun assertItemDisplayed(title: String, type: String) {
+        val resultMatcher = hasTestTag("resultItem")
+            .and(
+                hasAnyChild(hasTestTag("resultTitle").and(hasText(title)))
+            )
+            .and(
+                hasAnyChild(hasTestTag("resultType").and(hasText(type)))
+            )
+        composeTestRule.onNodeWithTag("results", useUnmergedTree = true)
+            .performScrollToNode(resultMatcher)
+
+        composeTestRule.onNode(resultMatcher, useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    fun assertItemNotDisplayed(title: String, type: String) {
         composeTestRule.onNode(
             hasTestTag("resultItem")
                 .and(
@@ -54,11 +72,9 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
                 )
                 .and(
                     hasAnyChild(hasTestTag("resultType").and(hasText(type)))
-                ),
-            useUnmergedTree = true
+                ), useUnmergedTree = true
         )
-            .assertIsDisplayed()
-            .assertHasClickAction()
+            .assertDoesNotExist()
     }
 
     fun clickOnItem(title: String) {
@@ -70,6 +86,14 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
             useUnmergedTree = true
         )
             .assertIsDisplayed()
+            .performClick()
+    }
+
+    fun openFilters() {
+        composeTestRule.onNode(
+            hasTestTag("filterButton"),
+            useUnmergedTree = true
+        )
             .performClick()
     }
 }
