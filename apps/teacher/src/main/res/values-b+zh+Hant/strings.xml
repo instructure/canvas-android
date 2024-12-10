@@ -498,22 +498,7 @@
     <string name="colorPickerDialogMessage">這是您的個人顏色設定。只有您會看見本課程顏色。</string>
     <string name="colorPickerError">無法設定課程顏色。</string>
 
-    <string name="contentDescriptionColorCottonCandy">粉色</string>
-    <string name="contentDescriptionColorBarbie">亮粉色</string>
-    <string name="contentDescriptionColorBarneyPurple">紫羅蘭色</string>
-    <string name="contentDescriptionColorEggplant">紫色</string>
-    <string name="contentDescriptionColorUltramarine">深藍色</string>
-    <string name="contentDescriptionColorOcean11">藍色</string>
-    <string name="contentDescriptionColorCyan">青色</string>
-    <string name="contentDescriptionColorAquaMarine">水藍色</string>
-    <string name="contentDescriptionColorEmeraldGreen">翡翠綠色</string>
-    <string name="contentDescriptionColorFreshCutLawn">綠色</string>
-    <string name="contentDescriptionColorChartreuse">黃綠色</string>
-    <string name="contentDescriptionColorSunFlower">黃色</string>
-    <string name="contentDescriptionColorTangerine">橙色</string>
-    <string name="contentDescriptionColorBloodOrange">深橙色</string>
-    <string name="contentDescriptionColorSriracha">紅色</string>
-    <string name="launch_link_in_external_browser">於外部瀏覽器啟動連接</string>
+                                                                <string name="launch_link_in_external_browser">於外部瀏覽器啟動連結</string>
     <string name="contentDescriptionSelectedFile">已選擇檔案</string>
     <string name="contentDescriptionFileIcon">檔案圖標</string>
     <string name="contentDescriptionExpandPage">展開內容頁</string>
@@ -598,6 +583,7 @@
     <string name="discussion_details">討論詳細資料</string>
     <string name="discussions_pinned">已釘選</string>
     <string name="discussions_unpinned">討論區</string>
+    <string name="discussions_close">結束以徵求意見</string>
     <string name="discussions_closed">已結束以徵求評論</string>
     <string name="discussions_open">開啟以徵求意見</string>
     <string name="discussions_pin">釘選</string>

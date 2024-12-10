@@ -498,22 +498,7 @@
     <string name="colorPickerDialogMessage">これはあなたの個人的な色の設定です。あなただけがコースにこの色を見ます。</string>
     <string name="colorPickerError">現時点でコースの色を設定できませんでした。</string>
 
-    <string name="contentDescriptionColorCottonCandy">ピンク</string>
-    <string name="contentDescriptionColorBarbie">ホットピンク</string>
-    <string name="contentDescriptionColorBarneyPurple">バイオレット</string>
-    <string name="contentDescriptionColorEggplant">パープル</string>
-    <string name="contentDescriptionColorUltramarine">ダークブルー</string>
-    <string name="contentDescriptionColorOcean11">ブルー</string>
-    <string name="contentDescriptionColorCyan">シアン</string>
-    <string name="contentDescriptionColorAquaMarine">アクアブルー</string>
-    <string name="contentDescriptionColorEmeraldGreen">エメラルドグリーン</string>
-    <string name="contentDescriptionColorFreshCutLawn">グリーン</string>
-    <string name="contentDescriptionColorChartreuse">黄緑</string>
-    <string name="contentDescriptionColorSunFlower">イエロー</string>
-    <string name="contentDescriptionColorTangerine">オレンジ</string>
-    <string name="contentDescriptionColorBloodOrange">ダークオレンジ</string>
-    <string name="contentDescriptionColorSriracha">レッド</string>
-    <string name="launch_link_in_external_browser">外部ブラウザでリンクを起動する</string>
+                                                                <string name="launch_link_in_external_browser">外部ブラウザでリンクを起動する</string>
     <string name="contentDescriptionSelectedFile">選択したファイル</string>
     <string name="contentDescriptionFileIcon">ファイルアイコン</string>
     <string name="contentDescriptionExpandPage">ページを拡張</string>
@@ -598,6 +583,7 @@
     <string name="discussion_details">ディスカッションの詳細</string>
     <string name="discussions_pinned">ピン付けしました</string>
     <string name="discussions_unpinned">ディスカッション</string>
+    <string name="discussions_close">コメントを許可しない</string>
     <string name="discussions_closed">コメントを閉じました</string>
     <string name="discussions_open">コメントを受け付ける</string>
     <string name="discussions_pin">固定</string>

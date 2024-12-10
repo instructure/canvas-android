@@ -38,6 +38,7 @@ import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
+import com.instructure.parentapp.features.login.createaccount.CreateAccountFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
 import com.instructure.parentapp.features.splash.SplashFragment
@@ -65,6 +66,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}/{${LtiLaunchFragment.SESSION_LESS_LAUNCH}}"
     private val simpleWebView = "$baseUrl/internal/{${Const.URL}}/{${Const.TITLE}}/{${INITIAL_COOKIES}}"
     private val splash = "$baseUrl/splash/{${Const.QR_CODE_MASQUERADE_ID}}"
+    private val createAccount = "$baseUrl/account_creation?pairing_code={${CreateAccountFragment.PAIRING_CODE}}&domain={${CreateAccountFragment.DOMAIN}}&accountId={${CreateAccountFragment.ACCOUNT_ID}}"
 
     val notAParent = "$baseUrl/not-a-parent"
     val courses = "$baseUrl/courses"
@@ -79,6 +81,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
     fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
     fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
+    fun createAccount(domain: String, accountId: String, pairingCode: String) = "$baseUrl/account_creation?pairing_code=$pairingCode&domain=$domain&accountId=$accountId"
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
     fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
     fun createEventRoute(initialDate: String?) = "$baseUrl/create-event/${Uri.encode(initialDate.orEmpty())}"
@@ -276,6 +279,28 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<AlertsFragment>(alerts) {
                 deepLink {
                     uriPattern = alerts
+                }
+            }
+        }
+    }
+
+    fun createAccountCreationNavGraph(navController: NavController): NavGraph {
+        return navController.createGraph(
+            qrPairing
+        ) {
+            fragment<QrPairingFragment>(qrPairing)
+            fragment<CreateAccountFragment>(createAccount) {
+                argument(CreateAccountFragment.PAIRING_CODE) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(CreateAccountFragment.DOMAIN) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(CreateAccountFragment.ACCOUNT_ID) {
+                    type = NavType.StringType
+                    nullable = false
                 }
             }
         }

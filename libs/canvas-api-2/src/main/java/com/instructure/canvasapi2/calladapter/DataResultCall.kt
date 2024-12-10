@@ -50,7 +50,7 @@ class DataResultCall<T : Any>(private val delegate: Call<T>, private val success
                         } else {
                             Failure.Network(response.message(), code)
                         }
-                        callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail(failure, response.raw())))
+                        callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail(failure, response.raw(), error)))
                     } else {
                         callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail()))
                     }

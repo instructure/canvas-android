@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">ผู้ออกแบบ</string>
     <string name="enrollmentTypeUnknown">ไม่ทราบ</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">ผู้เรียน</string>
+    <string name="enrollmentTypeTeachers">ผู้สอน</string>
+    <string name="enrollmentTypeObservers">ผู้สังเกตการณ์</string>
+    <string name="enrollmentTypeTeachingAssistants">TA</string>
+    <string name="enrollmentTypeDesigners">ผู้ออกแบบ</string>
 </resources>

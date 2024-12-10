@@ -503,6 +503,7 @@
     <string name="a11y_quiz">الاختبار الموجز</string>
     <string name="a11y_todo">قائمة المهام</string>
     <string name="a11y_page">صفحة</string>
+    <string name="a11y_assessment_request">طلب التقييم</string>
     <string name="a11y_marked_as_done">تم وضع علامة "تم"</string>
     <string name="a11y_not_marked_as_done">لم يتم وضع علامة "تم"</string>
     <string name="error_loading_course_details">عذرًا! حدث خطأ أثناء تحميل تفاصيل المساق.</string>

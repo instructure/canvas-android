@@ -24,13 +24,14 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
+import com.instructure.canvas.espresso.common.pages.LoginLandingPage
+import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
-import com.instructure.espresso.pages.common.LoginFindSchoolPage
-import com.instructure.espresso.pages.common.LoginLandingPage
-import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
@@ -112,6 +113,7 @@ abstract class TeacherTest : CanvasTest() {
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val editDashboardPage = EditDashboardPage()
     val pushNotificationsPage = PushNotificationsPage()
+    val emailNotificationsPage = EmailNotificationsPage()
     val legalPage = LegalPage()
     val helpPage = HelpPage()
     val aboutPage = AboutPage()
