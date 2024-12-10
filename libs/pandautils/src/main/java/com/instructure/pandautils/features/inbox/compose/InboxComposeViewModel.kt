@@ -178,6 +178,7 @@ class InboxComposeViewModel @Inject constructor(
         when (action) {
             is InboxComposeActionHandler.CancelDismissDialog -> {
                 _uiState.update { it.copy(
+                    enableCustomBackHandler = action.isShow.not(),
                     showConfirmationDialog = action.isShow
                 ) }
             }
@@ -206,6 +207,9 @@ class InboxComposeViewModel @Inject constructor(
                     InboxComposeOptionsMode.REPLY_ALL -> createMessage()
                     InboxComposeOptionsMode.FORWARD -> createMessage()
                 }
+                _uiState.update { it.copy(
+                    enableCustomBackHandler = false,
+                ) }
             }
             is InboxComposeActionHandler.SubjectChanged -> {
                 _uiState.update { it.copy(subject = action.subject) }

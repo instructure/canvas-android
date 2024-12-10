@@ -48,6 +48,7 @@ import com.instructure.espresso.scrollTo
 import com.instructure.espresso.waitForCheck
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
+import com.instructure.student.ui.utils.ImageViewDrawableMatcher
 import org.hamcrest.Matchers.allOf
 
 class ModulesPage : BasePage(R.id.modulesPage) {

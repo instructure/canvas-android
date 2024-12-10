@@ -15,14 +15,14 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.retry
 import com.instructure.espresso.retryWithIncreasingDelay
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class InboxE2ETest : TeacherTest() {
+class InboxE2ETest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -69,7 +69,8 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Click on the conversation. Write a reply with the message: '$replyMessage'.")
         inboxPage.openConversation(seedConversation[0].subject)
         inboxMessagePage.clickReply()
-        addMessagePage.addReply(replyMessage)
+        inboxComposePage.typeBody(replyMessage)
+        inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG,"Assert that the reply has successfully sent and it's displayed.")
         inboxMessagePage.assertHasReply()
@@ -85,9 +86,11 @@ class InboxE2ETest : TeacherTest() {
         addNewMessage(course,data.studentsList)
 
         val subject = "Hello there"
+        val body = "General Kenobi"
         Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
-        addMessagePage.composeMessageWithSubject(subject, "General Kenobi")
-        addMessagePage.clickSendButton()
+        inboxComposePage.typeSubject(subject)
+        inboxComposePage.typeBody(body)
+        inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
         inboxPage.filterInbox("Sent")
@@ -101,7 +104,8 @@ class InboxE2ETest : TeacherTest() {
         val replyMessageTwo = "Test Reply 2"
         Log.d(STEP_TAG,"Click on 'Reply' button. Write a reply with the message: '$replyMessageTwo'.")
         inboxMessagePage.clickReply()
-        addMessagePage.addReply(replyMessageTwo)
+        inboxComposePage.typeBody(replyMessageTwo)
+        inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG,"Assert that the reply has successfully sent and it's displayed.")
         inboxMessagePage.assertHasReply()
@@ -556,16 +560,16 @@ class InboxE2ETest : TeacherTest() {
     }
 
     private fun addNewMessage(course: CourseApiModel, userRecipientList: MutableList<CanvasUserApiModel>) {
-        addMessagePage.clickCourseSpinner()
-        addMessagePage.selectCourseFromSpinner(course.name)
+        inboxComposePage.pressCourseSelector()
+        selectContextPage.selectContext(course.name)
 
-        addMessagePage.clickAddContacts()
-        chooseRecipientsPage.clickStudentCategory()
+        inboxComposePage.pressAddRecipient()
+        recipientPickerPage.pressLabel("Students")
         for(recipient in userRecipientList) {
-            chooseRecipientsPage.clickStudent(recipient)
+            recipientPickerPage.pressLabel(recipient.name)
         }
 
-        chooseRecipientsPage.clickDone()
+        recipientPickerPage.pressDone()
     }
 
 }
