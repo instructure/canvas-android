@@ -39,6 +39,7 @@ import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -207,9 +208,6 @@ class InboxComposeViewModel @Inject constructor(
                     InboxComposeOptionsMode.REPLY_ALL -> createMessage()
                     InboxComposeOptionsMode.FORWARD -> createMessage()
                 }
-                _uiState.update { it.copy(
-                    enableCustomBackHandler = false,
-                ) }
             }
             is InboxComposeActionHandler.SubjectChanged -> {
                 _uiState.update { it.copy(subject = action.subject) }
@@ -447,6 +445,8 @@ class InboxComposeViewModel @Inject constructor(
                         isIndividual = uiState.value.sendIndividual
                     ).dataOrThrow
 
+                    _uiState.emit(uiState.value.copy(enableCustomBackHandler = false))
+                    delay(100)
                     _events.send(InboxComposeViewModelAction.UpdateParentFragment)
 
                     sendScreenResult(context.getString(R.string.messageSentSuccessfully))
@@ -477,6 +477,8 @@ class InboxComposeViewModel @Inject constructor(
                         context = canvasContext
                     ).dataOrThrow
 
+                    _uiState.emit(uiState.value.copy(enableCustomBackHandler = false))
+                    delay(100)
                     _events.send(InboxComposeViewModelAction.UpdateParentFragment)
 
                     sendScreenResult(context.getString(R.string.messageSentSuccessfully))

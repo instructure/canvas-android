@@ -116,7 +116,7 @@ class AssignmentSubmissionListPageTest : TeacherComposeTest() {
         val student = data.students[0]
         assignmentSubmissionListPage.clickAddMessage()
 
-        inboxComposePage.assertRecipientSelected(student.name)
+        inboxComposePage.assertRecipientSelected(student.shortName!!)
     }
 
     private fun goToAssignmentSubmissionListPage(

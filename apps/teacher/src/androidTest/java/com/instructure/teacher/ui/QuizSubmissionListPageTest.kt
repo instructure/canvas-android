@@ -100,7 +100,7 @@ class QuizSubmissionListPageTest : TeacherComposeTest() {
         val student = data.students[0]
         quizSubmissionListPage.clickAddMessage()
 
-        inboxComposePage.assertRecipientSelected(student.name)
+        inboxComposePage.assertRecipientSelected(student.shortName!!)
     }
 
     private fun goToQuizSubmissionListPage(

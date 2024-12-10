@@ -31,7 +31,6 @@ import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.models.Message
 
 class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
@@ -93,10 +92,10 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithContentDescription("Go Back").performClick()
     }
 
-    fun pressReplyTextButtonForMessage(message: Message) {
+    fun pressReplyTextButtonForMessage(messageBody: String) {
         composeTestRule.waitForIdle()
 
-        val replyButton = composeTestRule.onNodeWithText(message.body ?: "")
+        val replyButton = composeTestRule.onNodeWithText(messageBody)
             .onParent() // SelectionContainer
             .onParent() // Column
             .onChildren()
@@ -107,10 +106,10 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         replyButton.performClick()
     }
 
-    fun pressReplyIconButtonForMessage(message: Message) {
+    fun pressReplyIconButtonForMessage(messageBody: String) {
         composeTestRule.waitForIdle()
 
-        val replyButton = composeTestRule.onNodeWithText(message.body ?: "")
+        val replyButton = composeTestRule.onNodeWithText(messageBody ?: "")
             .onParent() // SelectionContainer
             .onParent() // Column
             .onChildren()

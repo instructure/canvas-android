@@ -51,7 +51,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         val message = conversation.messages.first()
-        inboxDetailsPage.pressReplyTextButtonForMessage(message)
+        inboxDetailsPage.pressReplyTextButtonForMessage(message.body.orEmpty())
 
         assertReplyComposeScreenDisplayed(conversation)
     }
@@ -64,7 +64,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         val message = conversation.messages.first()
-        inboxDetailsPage.pressReplyIconButtonForMessage(message)
+        inboxDetailsPage.pressReplyIconButtonForMessage(message.body.orEmpty())
 
         assertReplyComposeScreenDisplayed(conversation)
     }

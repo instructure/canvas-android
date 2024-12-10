@@ -58,7 +58,6 @@ import com.instructure.teacher.ui.pages.EditQuizDetailsPage
 import com.instructure.teacher.ui.pages.EditSyllabusPage
 import com.instructure.teacher.ui.pages.FileListPage
 import com.instructure.teacher.ui.pages.HelpPage
-import com.instructure.teacher.ui.pages.InboxMessagePage
 import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.teacher.ui.pages.LegalPage
 import com.instructure.teacher.ui.pages.ModulesPage
@@ -128,7 +127,6 @@ abstract class TeacherTest : CanvasTest() {
     val editPageDetailsPage = EditPageDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val editQuizDetailsPage = EditQuizDetailsPage()
     val editSyllabusPage = EditSyllabusPage()
-    val inboxMessagePage = InboxMessagePage()
     val inboxPage = InboxPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
