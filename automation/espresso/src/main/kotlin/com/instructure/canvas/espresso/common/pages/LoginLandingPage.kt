@@ -1,4 +1,4 @@
-package com.instructure.espresso.pages.common
+package com.instructure.canvas.espresso.common.pages
 
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -8,11 +8,11 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.onViewWithText
-import com.instructure.espresso.pages.withId
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.loginapi.login.R
 import org.hamcrest.CoreMatchers
 

@@ -17,9 +17,9 @@ package com.instructure.teacher.ui.utils
 
 import androidx.test.espresso.action.ViewActions
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.waitForViewWithContentDescription
-import com.instructure.espresso.pages.waitForViewWithId
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.waitForViewWithContentDescription
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.teacher.R
 
 // Navigation Extensions

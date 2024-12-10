@@ -18,6 +18,7 @@
 package com.instructure.parentapp.util
 
 import androidx.hilt.work.HiltWorkerFactory
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -33,7 +34,7 @@ class AppManager : BaseAppManager() {
     lateinit var alarmScheduler: AlarmScheduler
 
     override fun performLogoutOnAuthError() {
-        // TODO: Implement
+        ParentLogoutTask(LogoutTask.Type.LOGOUT, null, getScheduler()).execute()
     }
 
     override fun getWorkManagerFactory() = workerFactory

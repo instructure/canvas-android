@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.espresso.pages.common
+package com.instructure.canvas.espresso.common.pages
 
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
@@ -28,7 +28,7 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.loginapi.login.R
 import org.hamcrest.CoreMatchers.containsString
 

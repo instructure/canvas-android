@@ -23,11 +23,11 @@ import androidx.test.espresso.web.model.Atoms
 import androidx.test.espresso.web.sugar.Web.onWebView
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withAncestor
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString

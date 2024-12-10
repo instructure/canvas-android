@@ -54,6 +54,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collectDistinctUntilChanged
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.isTablet
@@ -118,8 +119,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
         navHostFragment?.let {
             navController = it.navController
             navController.graph = navigation.createDashboardNavGraph(navController)
@@ -177,15 +177,19 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupLaunchDefinitions(it.launchDefinitionViewData)
-                setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.data.collectDistinctUntilChanged(lifecycle, { it.selectedStudent }) { selectedStudent ->
+                setupAppColors(selectedStudent)
             }
         }
 
@@ -243,8 +247,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private fun setupNavigation() {
         if (!this::navController.isInitialized) {
-            val navHostFragment =
-                childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
             navController.graph = navigation.createDashboardNavGraph(navController)
         }

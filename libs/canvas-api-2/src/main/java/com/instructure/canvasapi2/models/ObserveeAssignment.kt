@@ -97,6 +97,8 @@ data class ObserveeAssignment(
         val anonymousGrading: Boolean = false,
         @SerializedName("allowed_attempts")
         val allowedAttempts: Long = -1, // API gives -1 for unlimited submissions
+        @SerializedName("external_tool_tag_attributes")
+        val externalToolAttributes: ExternalToolAttributes? = null,
         var isStudioEnabled: Boolean = false,
         @SerializedName("hide_in_gradebook")
         val isHiddenInGradeBook: Boolean = false
@@ -203,6 +205,7 @@ data class ObserveeAssignment(
         moderatedGrading = moderatedGrading,
         anonymousGrading = anonymousGrading,
         allowedAttempts = allowedAttempts,
+        externalToolAttributes = externalToolAttributes,
         isStudioEnabled = isStudioEnabled,
         isHiddenInGradeBook = isHiddenInGradeBook
     )

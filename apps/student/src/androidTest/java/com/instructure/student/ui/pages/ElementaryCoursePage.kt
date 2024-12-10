@@ -18,10 +18,10 @@ package com.instructure.student.ui.pages
 
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.matchers.WaitForViewMatcher
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withParent
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 
 

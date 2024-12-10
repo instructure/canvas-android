@@ -136,8 +136,7 @@ class RouteValidatorViewModel @Inject constructor(
             }
 
             if (!domain.contains(host)) {
-                // TODO: Handle different domain
-                _events.send(RouteValidatorAction.Finish)
+                postActionWithDelay(RouteValidatorAction.StartMainActivity(message = context.getString(R.string.differentDomainFromLink)))
             } else {
                 postActionWithDelay(RouteValidatorAction.StartMainActivity(data = data))
             }
