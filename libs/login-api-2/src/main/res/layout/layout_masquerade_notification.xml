@@ -36,8 +36,8 @@
 
     <ImageView
         android:id="@+id/cancelMasqueradeButton"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/masqueradeButtonSize"
+        android:layout_height="@dimen/masqueradeButtonSize"
         android:layout_gravity="end|center_vertical"
         android:contentDescription="@string/close"
         android:padding="4dp"
