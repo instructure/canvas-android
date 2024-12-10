@@ -32,13 +32,14 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
+import com.instructure.canvas.espresso.common.pages.LoginLandingPage
+import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
-import com.instructure.espresso.pages.common.LoginFindSchoolPage
-import com.instructure.espresso.pages.common.LoginLandingPage
-import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
@@ -164,6 +165,7 @@ abstract class StudentTest : CanvasTest() {
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
+    val emailNotificationsPage = EmailNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()

@@ -24,8 +24,8 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasChild
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.waitForViewWithText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R

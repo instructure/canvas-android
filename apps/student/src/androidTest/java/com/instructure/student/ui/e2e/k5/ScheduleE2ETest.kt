@@ -29,8 +29,8 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.espresso.pages.getStringFromResource
-import com.instructure.espresso.pages.withAncestor
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.page.withAncestor
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest

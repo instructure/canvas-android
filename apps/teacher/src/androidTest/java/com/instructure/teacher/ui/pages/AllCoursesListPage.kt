@@ -27,11 +27,11 @@ import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.withAncestor
-import com.instructure.espresso.pages.withId
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers
