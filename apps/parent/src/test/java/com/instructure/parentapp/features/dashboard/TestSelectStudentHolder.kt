@@ -28,7 +28,7 @@ class TestSelectStudentHolder(
     override val selectedStudentChangedFlow: SharedFlow<User> = MutableSharedFlow(),
     override val selectedStudentColorChanged: SharedFlow<Unit> = MutableSharedFlow()
 ) : SelectedStudentHolder {
-    override suspend fun updateSelectedStudent(user: User) {
+    override suspend fun updateSelectedStudent(user: User?) {
         selectedStudentState.emit(user)
     }
 
