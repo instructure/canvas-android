@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.PageListView
-import instructure.androidblueprint.SyncPresenter
+import com.instructure.pandautils.blueprint.SyncPresenter
 import kotlinx.coroutines.Job
 
 class PageListPresenter(private val mCanvasContext: CanvasContext) :

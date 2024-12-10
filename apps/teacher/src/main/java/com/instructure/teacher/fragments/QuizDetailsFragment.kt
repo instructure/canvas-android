@@ -36,6 +36,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
@@ -405,7 +406,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), quiz.description, {
             instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = this@QuizDetailsFragment.quiz.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
+            RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
         }
     }
 

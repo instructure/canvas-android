@@ -15,12 +15,21 @@
  */
 package com.instructure.parentapp.ui.interaction
 
+import android.webkit.CookieManager
 import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.model.Atoms.getCurrentUrl
+import androidx.test.espresso.web.sugar.Web.onWebView
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
+import com.instructure.canvas.espresso.common.pages.ReminderPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
@@ -33,10 +42,13 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.ModuleItemInteractions
+import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import junit.framework.Assert.assertTrue
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matchers
 import org.junit.Test
 import java.util.Calendar
@@ -47,6 +59,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+    private val reminderPage = ReminderPage(composeTestRule)
 
     @Test
     fun testSubmissionStatus_Missing() {
@@ -242,7 +255,8 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
     }
 
     @Test
-    fun testReminderSectionIsNotVisibleWhenThereIsNoFutureDueDate() {
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionIsVisibleWhenThereIsNoFutureDueDate() {
         val data = setupData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
@@ -250,10 +264,22 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.assertReminderSectionNotDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionIsVisibleWhenThereIsNoDueDate() {
+        val data = setupData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment")
+        gotoAssignment(data, assignment)
+
+        reminderPage.assertReminderSectionDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testReminderSectionIsVisibleWhenThereIsFutureDueDate() {
         val data = setupData()
         val course = data.courses.values.first()
@@ -262,65 +288,62 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.assertReminderSectionDisplayed()
+        reminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddReminder() {
+        val reminderCalendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }
         val data = setupData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 1)
+            add(Calendar.DAY_OF_MONTH, 2)
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testRemoveReminder() {
+        val reminderCalendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }
         val data = setupData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 1)
+            add(Calendar.DAY_OF_MONTH, 2)
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
-        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
 
-        assignmentDetailsPage.removeReminderWithText("1 Hour Before")
+        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
 
-        assignmentDetailsPage.assertReminderNotDisplayedWithText("1 Hour Before")
+        reminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
+
+        reminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
-    fun testAddCustomReminder() {
-        val data = setupData()
-        val course = data.courses.values.first()
-        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 1)
-        }.time.toApiString())
-        gotoAssignment(data, assignment)
-
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickCustom()
-        assignmentDetailsPage.assertDoneButtonIsDisabled()
-        assignmentDetailsPage.fillQuantity("15")
-        assignmentDetailsPage.assertDoneButtonIsDisabled()
-        assignmentDetailsPage.clickHoursBefore()
-        assignmentDetailsPage.clickDone()
-
-        assignmentDetailsPage.assertReminderDisplayedWithText("15 Hours Before")
-    }
-
-    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddReminderInPastShowsError() {
+        val reminderCalendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -1)
+        }
         val data = setupData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
@@ -328,48 +351,71 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderInPast, activityRule.activity)
     }
 
     @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddReminderForTheSameTimeShowsError() {
+        val reminderCalendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }
         val data = setupData()
         val course = data.courses.values.first()
         val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 1)
+            add(Calendar.DAY_OF_MONTH, 2)
         }.time.toApiString())
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
+
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(reminderCalendar)
+        reminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }
 
     @Test
-    fun testAddReminderForTheSameTimeWithDifferentMeasureOfTimeShowsError() {
+    fun testSubmissionOpensInWebViewWhenAssigmentEnhancementsEnabled() {
         val data = setupData()
         val course = data.courses.values.first()
-        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, 10)
-        }.time.toApiString())
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", htmlUrl = "https://www.instructure.com")
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.selectTimeOption("1 Week Before")
-        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickSubmissionAndRubric()
 
-        assignmentDetailsPage.clickCustom()
-        assignmentDetailsPage.fillQuantity("7")
-        assignmentDetailsPage.clickDaysBefore()
-        assignmentDetailsPage.clickDone()
+        val cookieManager = CookieManager.getInstance()
+        val cookies = cookieManager.getCookie("https://www.instructure.com/")
+        assertTrue(cookies.contains("k5_observed_user_for_${data.parents.first().id}=${data.students.first().id}"))
+        onWebView().check(webMatches(getCurrentUrl(), containsString("https://www.instructure.com/")))
+    }
 
-        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+    @Test
+    fun testSubmissionOpensInWebViewWhenAssigmentEnhancementsDisabled() {
+        val data = setupData()
+        data.assignmentEnhancementsEnabled = false
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", htmlUrl = "https://www.instructure.com")
+        gotoAssignment(data, assignment)
+
+        assignmentDetailsPage.clickSubmissionAndRubric()
+
+        val currentStudentId = data.students.first().id
+        val expectedUrl = "https://www.instructure.com/submissions/$currentStudentId"
+        val cookieManager = CookieManager.getInstance()
+        val cookies = cookieManager.getCookie(expectedUrl)
+        assertTrue(cookies.contains("k5_observed_user_for_${data.parents.first().id}=$currentStudentId"))
+        onWebView().check(webMatches(getCurrentUrl(), containsString(expectedUrl)))
     }
 
     private fun setupData(restrictQuantitativeData: Boolean = false): MockCanvas {
@@ -409,7 +455,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         tokenLogin(data.domain, data.tokenFor(observer)!!, observer)
         composeTestRule.waitForIdle()
 
-        dashboardPage.clickAlerts()
+        dashboardPage.clickAlertsBottomMenu()
         composeTestRule.waitForIdle()
 
         val alert = data.addObserverAlert(

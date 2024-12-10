@@ -1,6 +1,5 @@
 package com.instructure.pandautils.features.assignments.details
 
-import android.content.res.Resources
 import android.text.Spanned
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -11,7 +10,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
-import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
@@ -43,7 +41,6 @@ data class AssignmentDetailsViewData(
     val quizDetails: QuizViewViewData? = null,
     val attemptsViewData: AttemptsViewData? = null,
     @Bindable var hasDraft: Boolean = false,
-    val showReminders: Boolean = false,
     @Bindable var reminders: List<ReminderItemViewModel> = emptyList()
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()
@@ -65,35 +62,16 @@ data class DiscussionHeaderViewData(
 
 data class ReminderViewData(val id: Long, val text: String)
 
-sealed class ReminderChoice {
-    data class Minute(val quantity: Int) : ReminderChoice()
-    data class Hour(val quantity: Int) : ReminderChoice()
-    data class Day(val quantity: Int) : ReminderChoice()
-    data class Week(val quantity: Int) : ReminderChoice()
-    data object Custom : ReminderChoice()
-
-    fun getText(resources: Resources) = when (this) {
-        is Minute -> resources.getQuantityString(R.plurals.reminderMinute, quantity, quantity)
-        is Hour -> resources.getQuantityString(R.plurals.reminderHour, quantity, quantity)
-        is Day -> resources.getQuantityString(R.plurals.reminderDay, quantity, quantity)
-        is Week -> resources.getQuantityString(R.plurals.reminderWeek, quantity, quantity)
-        is Custom -> resources.getString(R.string.reminderCustom)
-    }
-
-    fun getTimeInMillis() = when (this) {
-        is Minute -> quantity * 60 * 1000L
-        is Hour -> quantity * 60 * 60 * 1000L
-        is Day -> quantity * 24 * 60 * 60 * 1000L
-        is Week -> quantity * 7 * 24 * 60 * 60 * 1000L
-        else -> 0
-    }
-}
-
 sealed class AssignmentDetailAction {
     data class ShowToast(val message: String) : AssignmentDetailAction()
     data class NavigateToSendMessage(val options: InboxComposeOptions) : AssignmentDetailAction()
     data class NavigateToLtiScreen(val url: String) : AssignmentDetailAction()
-    data class NavigateToSubmissionScreen(val isObserver: Boolean, val selectedSubmissionAttempt: Long?) : AssignmentDetailAction()
+    data class NavigateToSubmissionScreen(
+        val isObserver: Boolean,
+        val selectedSubmissionAttempt: Long?,
+        val assignmentUrl: String?,
+        val isAssignmentEnhancementEnabled: Boolean
+    ) : AssignmentDetailAction()
     data class NavigateToQuizScreen(val quiz: Quiz) : AssignmentDetailAction()
     data class NavigateToDiscussionScreen(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailAction()
     data class NavigateToUploadScreen(val assignment: Assignment) : AssignmentDetailAction()
@@ -110,12 +88,11 @@ sealed class AssignmentDetailAction {
     ) : AssignmentDetailAction()
 
     data class NavigateToAnnotationSubmissionScreen(val assignment: Assignment) : AssignmentDetailAction()
-    data class NavigateToLtiLaunchScreen(val title: String, val ltiTool: LTITool?) : AssignmentDetailAction()
+    data class NavigateToLtiLaunchScreen(val title: String, val ltiTool: LTITool?, val openInternally: Boolean) : AssignmentDetailAction()
     data class ShowMediaDialog(val assignment: Assignment) : AssignmentDetailAction()
     data class ShowSubmitDialog(val assignment: Assignment, val studioLTITool: LTITool?) : AssignmentDetailAction()
     data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()
     data class OnDiscussionHeaderAttachmentClicked(val attachments: List<RemoteFile>) : AssignmentDetailAction()
     data object ShowReminderDialog : AssignmentDetailAction()
-    data object ShowCustomReminderDialog : AssignmentDetailAction()
-    data class ShowDeleteReminderConfirmationDialog(val onConfirmed: () -> Unit) : AssignmentDetailAction()
+    data class ShowDeleteReminderConfirmationDialog(val reminderId: Long) : AssignmentDetailAction()
 }

@@ -24,7 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -40,7 +40,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentViewImageBinding
 import org.greenrobot.eventbus.EventBus
 
-class ViewImageFragment : Fragment(), ShareableFile {
+class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
 
     private val binding by viewBinding(FragmentViewImageBinding::bind)
 

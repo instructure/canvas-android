@@ -7,7 +7,7 @@
     android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
-    <com.instructure.loginapi.login.view.CanvasLoadingView
+    <com.instructure.pandautils.views.CanvasLoadingView
         android:id="@+id/canvasLoadingView"
         android:layout_width="120dp"
         android:layout_height="120dp"

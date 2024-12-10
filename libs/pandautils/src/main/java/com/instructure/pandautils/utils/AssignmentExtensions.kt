@@ -32,6 +32,8 @@ private const val NO_GRADE_INDICATOR = "-"
 fun Assignment.getAssignmentIcon() = when {
     Assignment.SubmissionType.ONLINE_QUIZ.apiString in submissionTypesRaw -> R.drawable.ic_quiz
     Assignment.SubmissionType.DISCUSSION_TOPIC.apiString in submissionTypesRaw -> R.drawable.ic_discussion
+    Assignment.SubmissionType.EXTERNAL_TOOL.apiString in submissionTypesRaw -> ltiToolType().assignmentIconRes
+    Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString in submissionTypesRaw -> ltiToolType().assignmentIconRes
     else -> R.drawable.ic_assignment
 }
 

@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Toets</string>
     <string name="a11y_todo">Takenlijst</string>
     <string name="a11y_page">Pagina</string>
+    <string name="a11y_assessment_request">Beoordelingsverzoek</string>
     <string name="a11y_marked_as_done">Gemarkeerd als klaar</string>
     <string name="a11y_not_marked_as_done">Niet gemarkeerd als klaar</string>
     <string name="error_loading_course_details">Let op! Er is een fout opgetreden tijdens het laden van de cursusdetails.</string>

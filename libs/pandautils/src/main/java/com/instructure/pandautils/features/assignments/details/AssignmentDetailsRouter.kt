@@ -26,23 +26,76 @@ import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
 open class AssignmentDetailsRouter {
-    open fun navigateToAssignmentUploadPicker(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, mediaUri: Uri) = Unit
+    open fun navigateToAssignmentUploadPicker(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        assignment: Assignment,
+        mediaUri: Uri
+    ) = Unit
 
-    open fun navigateToSubmissionScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, isObserver: Boolean = false, initialSelectedSubmissionAttempt: Long? = null) = Unit
+    open fun navigateToSubmissionScreen(
+        activity: FragmentActivity,
+        course: CanvasContext,
+        assignmentId: Long,
+        assignmentUrl: String?,
+        isAssignmentEnhancementEnabled: Boolean,
+        isObserver: Boolean = false,
+        initialSelectedSubmissionAttempt: Long? = null
+    ) = Unit
 
     open fun navigateToQuizScreen(activity: FragmentActivity, canvasContext: CanvasContext, quiz: Quiz, url: String) = Unit
 
-    open fun navigateToDiscussionScreen(activity: FragmentActivity, canvasContext: CanvasContext, discussionTopicHeaderId: Long, isAnnouncement: Boolean = false) = Unit
+    open fun navigateToDiscussionScreen(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        discussionTopicHeaderId: Long,
+        isAnnouncement: Boolean = false
+    ) = Unit
 
-    open fun navigateToUploadScreen(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, attemptId: Long? = null) = Unit
+    open fun navigateToUploadScreen(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        assignment: Assignment,
+        attemptId: Long? = null
+    ) = Unit
 
-    open fun navigateToTextEntryScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false) = Unit
+    open fun navigateToTextEntryScreen(
+        activity: FragmentActivity,
+        course: CanvasContext,
+        assignmentId: Long,
+        assignmentName: String? = "",
+        initialText: String? = null,
+        isFailure: Boolean = false
+    ) = Unit
 
-    open fun navigateToUrlSubmissionScreen(activity: FragmentActivity, course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialUrl: String?, isFailure: Boolean = false) = Unit
+    open fun navigateToUrlSubmissionScreen(
+        activity: FragmentActivity,
+        course: CanvasContext,
+        assignmentId: Long,
+        assignmentName: String? = "",
+        initialUrl: String?,
+        isFailure: Boolean = false
+    ) = Unit
 
-    open fun navigateToAnnotationSubmissionScreen(activity: FragmentActivity, canvasContext: CanvasContext, annotatableAttachmentId: Long, submissionId: Long, assignmentId: Long, assignmentName: String) = Unit
+    open fun navigateToAnnotationSubmissionScreen(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        annotatableAttachmentId: Long,
+        submissionId: Long,
+        assignmentId: Long,
+        assignmentName: String
+    ) = Unit
 
-    open fun navigateToLtiLaunchScreen(activity: FragmentActivity, canvasContext: CanvasContext, url: String, title: String? = null, sessionLessLaunch: Boolean = false, isAssignmentLTI: Boolean = false, ltiTool: LTITool? = null) = Unit
+    open fun navigateToLtiLaunchScreen(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        url: String,
+        title: String? = null,
+        sessionLessLaunch: Boolean = false,
+        isAssignmentLTI: Boolean = false,
+        ltiTool: LTITool? = null,
+        openInternally: Boolean = false
+    ) = Unit
 
     open fun navigateToUploadStatusScreen(activity: FragmentActivity, submissionId: Long) = Unit
 

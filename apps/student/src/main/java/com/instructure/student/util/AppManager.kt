@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
-import com.instructure.pandautils.features.assignments.details.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.tasks.StudentLogoutTask
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject

@@ -14,15 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-import com.instructure.android.buildtools.transform.*
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'com.heapanalytics.android'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'io.heap.gradle'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -50,6 +48,7 @@ android {
 
         /* Add private data */
         PrivateData.merge(project, "student")
+        buildConfigField "String", "TRANSLATION_TAGS", "\"${LocaleScanner.getAvailableLanguageTags(project)}\""
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
 
         testBuildType = "debug"
@@ -111,10 +110,6 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
-
-            ext {
-                heapEnabled = true
-            }
         }
 
         debugMinify {
@@ -140,10 +135,6 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
-
-            ext {
-                heapEnabled = true
-            }
         }
     }
 
@@ -209,15 +200,7 @@ android {
         javaMaxHeapSize '4g'
     }
 
-    registerTransform(
-            new ProjectTransformer(
-                    android,
-                    new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
-                    new PageViewTransformer(),
-                    new ScreenViewTransformer("student"),
-                    new LocaleTransformer(project)
-            )
-    )
+
 
     compileOptions {
         sourceCompatibility 1.8
@@ -334,7 +317,7 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
-    implementation Libs.HEAP
+    implementation Libs.HEAP_CORE
 
     /* ROOM */
     implementation Libs.ROOM

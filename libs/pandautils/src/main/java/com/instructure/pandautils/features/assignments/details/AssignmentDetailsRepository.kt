@@ -15,12 +15,10 @@
  */
 package com.instructure.pandautils.features.assignments.details
 
-import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 
 interface AssignmentDetailsRepository {
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course
@@ -43,14 +41,7 @@ interface AssignmentDetailsRepository {
 
     suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool?
 
-    fun getRemindersByAssignmentIdLiveData(
-        userId: Long,
-        assignmentId: Long
-    ): LiveData<List<ReminderEntity>>
-
-    suspend fun deleteReminderById(id: Long)
-
-    suspend fun addReminder(userId: Long, assignment: Assignment, text: String, time: Long): Long
-
     fun isOnline(): Boolean
+
+    suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean): Boolean
 }

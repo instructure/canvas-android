@@ -27,7 +27,7 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.annotation.OptIn
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.media3.common.util.UnstableApi
@@ -56,7 +56,7 @@ import com.instructure.pandautils.utils.viewExternally
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
-abstract class BaseViewMediaActivity : AppCompatActivity() {
+abstract class BaseViewMediaActivity : BaseCanvasActivity() {
 
     abstract fun allowEditing(): Boolean
     abstract fun handleEditing(editableFile: EditableFile)

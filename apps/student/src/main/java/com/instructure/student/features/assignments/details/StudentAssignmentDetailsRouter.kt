@@ -27,9 +27,9 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
@@ -56,6 +56,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
+        assignmentUrl: String?,
+        isAssignmentEnhancementEnabled: Boolean,
         isObserver: Boolean,
         initialSelectedSubmissionAttempt: Long?
     ) {
@@ -154,7 +156,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         title: String?,
         sessionLessLaunch: Boolean,
         isAssignmentLTI: Boolean,
-        ltiTool: LTITool?
+        ltiTool: LTITool?,
+        openInternally: Boolean
     ) {
         RouteMatcher.route(
             activity,
@@ -163,8 +166,9 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
                 url,
                 title,
                 sessionLessLaunch = sessionLessLaunch,
-                isAssignmentLTI = isAssignmentLTI,
-                ltiTool = ltiTool
+                assignmentLti = isAssignmentLTI,
+                ltiTool = ltiTool,
+                openInternally = openInternally
             )
         )
     }
@@ -178,7 +182,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
             canvasContext,
             attachment.contentType.orEmpty(),
             attachment.url.orEmpty(),
-            attachment.fileName.orEmpty()
+            attachment.fileName.orEmpty(),
+            attachment.id.toString()
         )
     }
 

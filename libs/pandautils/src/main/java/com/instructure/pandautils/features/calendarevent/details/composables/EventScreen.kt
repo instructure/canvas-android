@@ -68,6 +68,7 @@ import com.instructure.pandautils.compose.composables.SingleChoiceAlertDialog
 import com.instructure.pandautils.features.calendarevent.details.EventAction
 import com.instructure.pandautils.features.calendarevent.details.EventUiState
 import com.instructure.pandautils.features.calendarevent.details.ToolbarUiState
+import com.instructure.pandautils.features.reminder.composables.ReminderView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.views.CanvasWebView
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -283,6 +284,13 @@ private fun EventContent(
                     )
                 }
                 Spacer(modifier = Modifier.height(28.dp))
+                Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+                val context = LocalContext.current
+                ReminderView(
+                    viewState = uiState.reminderUiState,
+                    onAddClick = { actionHandler(EventAction.OnReminderAddClicked) },
+                    onRemoveClick = { actionHandler(EventAction.OnReminderDeleteClicked(context, it)) },
+                )
                 Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
                 if (uiState.location.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(24.dp))

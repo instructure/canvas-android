@@ -33,17 +33,29 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getModuleItemId
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileDetailsBinding
 import com.instructure.student.events.ModuleUpdatedEvent
@@ -51,7 +63,7 @@ import com.instructure.student.events.post
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.util.StringUtilities
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_FILE_DETAILS)
@@ -67,7 +79,8 @@ class FileDetailsFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
 
-    private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private var moduleObject by ParcelableArg<ModuleObject>(key = Const.MODULE_OBJECT)
     private var itemId: Long by LongArg(key = Const.ITEM_ID)
@@ -80,14 +93,19 @@ class FileDetailsFragment : ParentFragment() {
         get() = this.getModuleItemId()
 
     @PageViewUrlParam(name = "fileId")
-    private fun getFileIdValue(): Long = fileId
+    fun getFileIdValue(): Long = fileId
 
     @Suppress("unused") // For page view stats
     @PageViewUrlQuery(name = "module_item_id")
-    private fun getModuleIdValue(): Long? = moduleItemId
+    fun getModuleIdValue(): Long? = moduleItemId
 
-    @BeforePageView
-    private fun setPageViewReady() {}
+    private fun setPageViewReady() {
+        completePageViewPrerequisite("pageViewReady")
+    }
+
+    override fun beforePageViewPrerequisites(): List<String> {
+        return listOf("pageViewReady")
+    }
 
     override fun title(): String {
         return if (file != null && file!!.lockInfo == null) file!!.displayName ?: getString(R.string.file) else getString(R.string.file)
@@ -124,7 +142,7 @@ class FileDetailsFragment : ParentFragment() {
     private fun setupClickListeners() {
         binding.openButton.setOnClickListener {
             file?.let { fileFolder ->
-                openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, canvasContext, fileFolder.isLocalFile)
+                openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, fileFolder.id.toString(), canvasContext, fileFolder.isLocalFile)
                 markAsRead()
             }
         }

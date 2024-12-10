@@ -23,16 +23,24 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.snackbar.Snackbar
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.loginapi.login.dialog.MasqueradingDialog
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityMainBinding
 import com.instructure.parentapp.features.dashboard.InboxCountUpdater
@@ -44,7 +52,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
+class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, MasqueradingDialog.OnMasqueradingSet {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
@@ -54,6 +62,12 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
     @Inject
     lateinit var inboxCountUpdater: InboxCountUpdater
 
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
+    lateinit var oAuthApi: OAuthAPI.OAuthInterface
+
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +75,32 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
         setContentView(binding.root)
         setupTheme()
         setupNavigation()
+        handleQrMasquerading()
+        scheduleAlarms()
+
+        if (ApiPrefs.isFirstMasqueradingStart) {
+            loadAuthenticatedSession()
+            ApiPrefs.isFirstMasqueradingStart = false
+        }
+    }
+
+    private fun loadAuthenticatedSession() {
+        lifecycleScope.launch {
+            oAuthApi.getAuthenticatedSession(
+                ApiPrefs.fullDomain,
+                RestParams(isForceReadFromNetwork = true)
+            ).dataOrNull?.sessionUrl?.let {
+                loadUrlIntoHeadlessWebView(this@MainActivity, it)
+            }
+        }
+    }
+
+    private fun handleQrMasquerading() {
+        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        if (masqueradingUserId != 0L) {
+            MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, MainActivity::class.java)
+            finish()
+        }
     }
 
     private fun setupTheme() {
@@ -72,6 +112,7 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleDeeplink(intent.data)
+        showMessageExtra(intent)
     }
 
     private fun setupNavigation() {
@@ -80,7 +121,8 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        navController.graph = navigation.crateMainNavGraph(navController)
+        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        navController.graph = navigation.crateMainNavGraph(navController, masqueradingUserId)
 
         navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(SplashFragment.INITIAL_DATA_LOADED_KEY)?.observe(this) {
             // If the initial data has been loaded, we can navigate to courses, remove splash from backstack
@@ -89,6 +131,7 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
             navController.graph.setStartDestination(navigation.courses)
 
             handleDeeplink(deeplinkUri)
+            showMessageExtra(intent)
         }
     }
 
@@ -97,6 +140,13 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
             navController.navigate(uri ?: return)
         } catch (e: Exception) {
             Log.e(this.javaClass.simpleName, e.message.orEmpty())
+        }
+    }
+
+    private fun showMessageExtra(intent: Intent) {
+        val message = intent.getStringExtra(Const.MESSAGE)
+        if (!message.isNullOrBlank()) {
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -116,6 +166,20 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
         }
     }
 
+    override fun onStartMasquerading(domain: String, userId: Long) {
+        MasqueradeHelper.startMasquerading(userId, domain, MainActivity::class.java)
+    }
+
+    override fun onStopMasquerading() {
+        MasqueradeHelper.stopMasquerading(MainActivity::class.java)
+    }
+
+    private fun scheduleAlarms() {
+        lifecycleScope.launch {
+            alarmScheduler.scheduleAllAlarmsForCurrentUser()
+        }
+    }
+
     companion object {
         fun createIntent(context: Context, uri: Uri): Intent {
             val intent = Intent(context, MainActivity::class.java)
@@ -125,7 +189,6 @@ class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
 
         fun createIntent(context: Context, masqueradingUserId: Long): Intent {
             val intent = Intent(context, MainActivity::class.java)
-            // TODO: Implement masquerading
             intent.putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
             return intent
         }

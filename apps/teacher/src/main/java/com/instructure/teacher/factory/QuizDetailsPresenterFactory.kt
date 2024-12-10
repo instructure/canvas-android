@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.teacher.presenters.QuizDetailsPresenter
 import com.instructure.teacher.viewinterface.QuizDetailsView
 
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class QuizDetailsPresenterFactory(val mCourse: Course, val mQuiz: Quiz) : PresenterFactory<QuizDetailsView, QuizDetailsPresenter> {
     override fun create(): QuizDetailsPresenter = QuizDetailsPresenter(mCourse, mQuiz)

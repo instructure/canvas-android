@@ -18,12 +18,20 @@ package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.scrollTo
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListItemViewState
 import com.instructure.student.ui.pages.ConferenceListPage
-import com.instructure.student.ui.pages.SyllabusPage
 import com.instructure.student.ui.utils.assertIsRefreshing
 import org.hamcrest.Matchers.allOf
 

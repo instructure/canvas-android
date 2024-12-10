@@ -26,7 +26,7 @@ import com.instructure.teacher.router.RouteMatcher
 
 class TeacherDashboardRouter(private val activity: FragmentActivity) : DashboardRouter {
     override fun routeToGlobalAnnouncement(subject: String, message: String) {
-        val args = HtmlContentFragment.makeBundle(title = subject, html = message)
+        val args = HtmlContentFragment.makeBundle(title = subject, html = message, darkToolbar = true)
         val route = Route(HtmlContentFragment::class.java, null, args)
         RouteMatcher.route(activity, route)
     }

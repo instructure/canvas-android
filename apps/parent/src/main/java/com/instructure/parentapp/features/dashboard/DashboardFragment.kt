@@ -28,7 +28,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -41,16 +40,24 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collectDistinctUntilChanged
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -63,6 +70,7 @@ import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
 import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
+import com.instructure.parentapp.features.main.MainActivity
 import com.instructure.parentapp.util.ParentLogoutTask
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -74,7 +82,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(), NavigationCallbacks {
+class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private lateinit var binding: FragmentDashboardBinding
 
@@ -88,6 +96,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     @Inject
     lateinit var firebaseCrashlytics: FirebaseCrashlytics
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
@@ -108,8 +119,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
         navHostFragment?.let {
             navController = it.navController
             navController.graph = navigation.createDashboardNavGraph(navController)
@@ -167,15 +177,19 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupLaunchDefinitions(it.launchDefinitionViewData)
-                setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.data.collectDistinctUntilChanged(lifecycle, { it.selectedStudent }) { selectedStudent ->
+                setupAppColors(selectedStudent)
             }
         }
 
@@ -201,7 +215,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 }
             }
             is DashboardViewModelAction.OpenLtiTool -> {
-                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name))
+                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name, sessionlessLaunch = true))
             }
         }
     }
@@ -233,8 +247,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private fun setupNavigation() {
         if (!this::navController.isInitialized) {
-            val navHostFragment =
-                childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
             navController.graph = navigation.createDashboardNavGraph(navController)
         }
@@ -270,7 +283,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         inboxBadge?.height = 24.toPx
         inboxBadge?.gravity = Gravity.CENTER
         inboxBadge?.textSize = 10f
-        inboxBadge?.setTextColor(requireContext().getColor(R.color.white))
+        inboxBadge?.setTextColor(requireContext().getColor(R.color.textLightest))
         inboxBadge?.setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
         inboxBadge?.visibility = View.GONE
 
@@ -286,9 +299,17 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
                 R.id.switch_users -> menuItemSelected { onSwitchUsers() }
+                R.id.act_as_user -> menuItemSelected { MasqueradingDialog.show(requireActivity().supportFragmentManager, ApiPrefs.domain, null, !isTablet) }
+                R.id.stop_act_as_user -> menuItemSelected { MasqueradeHelper.stopMasquerading(MainActivity::class.java) }
                 else -> false
             }
         }
+
+        val actAsUserItem = binding.navView.menu.findItem(R.id.act_as_user)
+        actAsUserItem.isVisible = !ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true
+
+        val stopActAsUserItem = binding.navView.menu.findItem(R.id.stop_act_as_user)
+        stopActAsUserItem.isVisible = ApiPrefs.isMasquerading
     }
 
     private fun menuItemSelected(action: () -> Unit): Boolean {
@@ -319,10 +340,13 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.bottomNav.applyTheme(color, requireActivity().getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(requireActivity(), color)
 
+        val toolbarIconsColor = if (student != null) requireContext().getColor(R.color.textLightest) else ThemePrefs.primaryTextColor
         val gradientDrawable = requireContext().getDrawableCompat(R.drawable.bg_button_full_rounded_filled_with_border) as? GradientDrawable
         gradientDrawable?.setStroke(2.toPx, color)
+        gradientDrawable?.setColor(toolbarIconsColor)
         binding.unreadCountBadge.background = gradientDrawable
         binding.unreadCountBadge.setTextColor(color)
+        binding.navigationButton.setColorFilter(toolbarIconsColor)
 
         binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
         viewModel.updateColor(color)
@@ -344,14 +368,20 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.logout_warning)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                ParentLogoutTask(
+                    LogoutTask.Type.LOGOUT,
+                    alarmScheduler = alarmScheduler
+                ).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .showThemed(ParentPrefs.currentStudent.studentColor)
     }
 
     private fun onSwitchUsers() {
-        ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+        ParentLogoutTask(
+            LogoutTask.Type.SWITCH_USERS,
+            alarmScheduler = alarmScheduler
+        ).execute()
     }
 
     private fun setupLaunchDefinitions(launchDefinitionViewData: List<LaunchDefinitionViewData>) {

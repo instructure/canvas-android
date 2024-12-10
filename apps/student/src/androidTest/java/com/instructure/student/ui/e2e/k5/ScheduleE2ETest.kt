@@ -21,7 +21,6 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.ReleaseExclude
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
@@ -42,7 +41,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
 import java.lang.Thread.sleep
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 @HiltAndroidTest
 class ScheduleE2ETest : StudentTest() {

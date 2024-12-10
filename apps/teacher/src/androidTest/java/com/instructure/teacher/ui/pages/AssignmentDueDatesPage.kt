@@ -15,10 +15,23 @@
  */
 package com.instructure.teacher.ui.pages
 
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
 
-
+import com.instructure.espresso.OnViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotHasText
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 
 /**

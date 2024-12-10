@@ -19,7 +19,6 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import androidx.test.espresso.matcher.ViewMatchers.withParent
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.espresso.OnViewWithId

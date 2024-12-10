@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Teste</string>
     <string name="a11y_todo">Lista de Tarefas</string>
     <string name="a11y_page">Página</string>
+    <string name="a11y_assessment_request">Solicitação de avaliação</string>
     <string name="a11y_marked_as_done">Marcado como concluído</string>
     <string name="a11y_not_marked_as_done">Não marcado como concluído</string>
     <string name="error_loading_course_details">Que difícil... Ocorreu um erro ao carregar os detalhes do curso.</string>

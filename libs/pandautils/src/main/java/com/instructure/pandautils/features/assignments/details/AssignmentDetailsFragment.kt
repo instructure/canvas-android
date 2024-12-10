@@ -17,9 +17,11 @@
 
 package com.instructure.pandautils.features.assignments.details
 
+import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,7 +32,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
@@ -48,7 +51,9 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.reminder.composables.ReminderView
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
@@ -59,7 +64,6 @@ import com.instructure.pandautils.utils.needsPermissions
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
-import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
@@ -70,7 +74,7 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 @PageView(url = "courses/{courseId}/assignments/{assignmentId}")
 @AndroidEntryPoint
-class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable {
+class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmarkable {
 
     @Inject
     lateinit var assignmentDetailsRouter: AssignmentDetailsRouter
@@ -113,6 +117,8 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         }
     }
 
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
+
     override val bookmark: Bookmarker by lazy { viewModel.bookmarker }
 
     override fun applyTheme() {
@@ -135,6 +141,19 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
         binding = FragmentAssignmentDetailsBinding.inflate(inflater, container, false)
         binding?.lifecycleOwner = this
         binding?.viewModel = viewModel
+        viewModel.course.value?.let {
+            viewModel.updateReminderColor(assignmentDetailsBehaviour.getThemeColor(it))
+        }
+        binding?.reminderComposeView?.setContent {
+            val state by viewModel.reminderViewState.collectAsState()
+            ReminderView(
+                viewState = state,
+                onAddClick = { checkAlarmPermission() },
+                onRemoveClick = { reminderId ->
+                    viewModel.showDeleteReminderConfirmationDialog(requireContext(), reminderId, assignmentDetailsBehaviour.dialogColor)
+                }
+            )
+        }
         return binding?.root
     }
 
@@ -187,7 +206,15 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 webViewRouter.openLtiScreen(viewModel.course.value, action.url)
             }
             is AssignmentDetailAction.NavigateToSubmissionScreen -> {
-                assignmentDetailsRouter.navigateToSubmissionScreen(requireActivity(), canvasContext, assignmentId, action.isObserver, action.selectedSubmissionAttempt)
+                assignmentDetailsRouter.navigateToSubmissionScreen(
+                    requireActivity(),
+                    canvasContext,
+                    assignmentId,
+                    action.assignmentUrl,
+                    action.isAssignmentEnhancementEnabled,
+                    action.isObserver,
+                    action.selectedSubmissionAttempt
+                )
             }
             is AssignmentDetailAction.NavigateToQuizScreen -> {
                 assignmentDetailsRouter.navigateToQuizScreen(requireActivity(), canvasContext, action.quiz, action.quiz.url.orEmpty())
@@ -217,7 +244,15 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 }
             }
             is AssignmentDetailAction.NavigateToLtiLaunchScreen -> {
-                assignmentDetailsRouter.navigateToLtiLaunchScreen(requireActivity(), canvasContext,  action.ltiTool?.url.orEmpty(), action.title, isAssignmentLTI = true, ltiTool = action.ltiTool)
+                assignmentDetailsRouter.navigateToLtiLaunchScreen(
+                    requireActivity(),
+                    canvasContext,
+                    action.ltiTool?.url.orEmpty(),
+                    action.title,
+                    isAssignmentLTI = true,
+                    ltiTool = action.ltiTool,
+                    openInternally = action.openInternally
+                )
             }
             is AssignmentDetailAction.ShowMediaDialog -> {
                 assignmentDetailsBehaviour.showMediaDialog(
@@ -254,11 +289,8 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
             is AssignmentDetailAction.ShowReminderDialog -> {
                 checkAlarmPermission()
             }
-            is AssignmentDetailAction.ShowCustomReminderDialog -> {
-                assignmentDetailsBehaviour.showCustomReminderDialog(this)
-            }
             is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
-                showDeleteReminderConfirmationDialog(requireContext(), onConfirmed = action.onConfirmed)
+                viewModel.showDeleteReminderConfirmationDialog(requireContext(), action.reminderId, assignmentDetailsBehaviour.dialogColor)
             }
             is AssignmentDetailAction.NavigateToSendMessage -> {
                 assignmentDetailsRouter.navigateToSendMessage(requireActivity(), action.options)
@@ -335,9 +367,12 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
 
     private fun checkAlarmPermission() {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && requireActivity().checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            viewModel.checkingNotificationPermission = true
+            notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
+                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
             } else {
                 viewModel.checkingReminderPermission = true
                 startActivity(
@@ -348,60 +383,26 @@ class AssignmentDetailsFragment : Fragment(), FragmentInteractions, Bookmarkable
                 )
             }
         } else {
-            showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
+            viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
         }
     }
 
     private fun checkAlarmPermissionResult() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && viewModel.checkingNotificationPermission) {
+            if (requireActivity().checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                checkAlarmPermission()
+            } else {
+                Snackbar.make(requireView(), getString(R.string.notificationPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
+            }
+            viewModel.checkingNotificationPermission = false
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
             if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
-                showCreateReminderDialog(requireActivity(), viewModel::onReminderSelected)
+                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }
             viewModel.checkingReminderPermission = false
         }
-    }
-
-    private fun showDeleteReminderConfirmationDialog(context: Context, onConfirmed: () -> Unit) {
-        AlertDialog.Builder(context)
-            .setTitle(R.string.deleteReminderTitle)
-            .setMessage(R.string.deleteReminderMessage)
-            .setNegativeButton(R.string.no, null)
-            .setPositiveButton(R.string.yes) { dialog, _ ->
-                onConfirmed()
-                dialog.dismiss()
-            }
-            .showThemed(assignmentDetailsBehaviour.dialogColor)
-    }
-
-    private fun showCreateReminderDialog(context: Context, onReminderSelected: (ReminderChoice) -> Unit) {
-        val choices = listOf(
-            ReminderChoice.Minute(5),
-            ReminderChoice.Minute(15),
-            ReminderChoice.Minute(30),
-            ReminderChoice.Hour(1),
-            ReminderChoice.Day(1),
-            ReminderChoice.Week(1),
-            ReminderChoice.Custom,
-        )
-
-        AlertDialog.Builder(context)
-            .setTitle(R.string.reminderTitle)
-            .setNegativeButton(R.string.cancel, null)
-            .setSingleChoiceItems(
-                choices.map {
-                    if (it is ReminderChoice.Custom) {
-                        it.getText(context.resources)
-                    } else {
-                        context.getString(R.string.reminderBefore, it.getText(context.resources))
-                    }
-                }.toTypedArray(), -1
-            ) { dialog, which ->
-                onReminderSelected(choices[which])
-                dialog.dismiss()
-            }
-            .showThemed(assignmentDetailsBehaviour.dialogColor)
     }
 
     companion object {

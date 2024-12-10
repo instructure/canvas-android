@@ -17,7 +17,10 @@
 package com.instructure.student.ui.pages
 
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
 import com.instructure.student.R
 
 open class PairObserverPage : BasePage(R.id.pairObserverPage) {

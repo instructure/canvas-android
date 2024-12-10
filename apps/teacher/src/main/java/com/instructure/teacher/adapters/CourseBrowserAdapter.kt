@@ -25,7 +25,7 @@ import com.instructure.teacher.databinding.AdapterCourseBrowserBinding
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.viewinterface.CourseBrowserView
-import instructure.androidblueprint.SyncRecyclerAdapter
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class CourseBrowserAdapter(
     context: Context,

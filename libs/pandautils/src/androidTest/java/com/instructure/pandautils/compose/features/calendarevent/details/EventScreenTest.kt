@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.features.calendarevent.details.EventUiState
 import com.instructure.pandautils.features.calendarevent.details.ToolbarUiState
 import com.instructure.pandautils.features.calendarevent.details.composables.EventScreen
+import com.instructure.pandautils.features.reminder.ReminderItem
+import com.instructure.pandautils.features.reminder.ReminderViewState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -245,5 +247,33 @@ class EventScreenTest {
         }
 
         composeTestRule.onNode(hasText("Error message")).assertIsDisplayed()
+    }
+
+    @Test
+    fun assertReminder() {
+        composeTestRule.setContent {
+            EventScreen(
+                title = "Event",
+                eventUiState = EventUiState(
+                    title = "Event title",
+                    reminderUiState = ReminderViewState(
+                        reminders = listOf(
+                            ReminderItem(
+                                id = 1,
+                                title = "Reminder title",
+                                date = Date()
+                            )
+                        )
+                    )
+                ),
+                actionHandler = {},
+                navigationAction = {},
+                applyOnWebView = {}
+            )
+        }
+
+        composeTestRule.onNode(hasText("Reminder")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Reminder title")).assertIsDisplayed()
+        composeTestRule.onNode(hasContentDescription("Add reminder")).assertIsDisplayed()
     }
 }

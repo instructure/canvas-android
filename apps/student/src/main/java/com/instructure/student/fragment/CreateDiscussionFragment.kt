@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.NetworkUtils
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
@@ -60,7 +61,8 @@ class CreateDiscussionFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentCreateDiscussionBinding::bind)
 
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private val sendButton: TextView? get() = view?.findViewById(R.id.menuSaveDiscussion)
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
 //    private val mAttachmentButton: TextView? get() = view?.findViewById(R.id.menuAddAttachment) BLOCKED COMMS 868

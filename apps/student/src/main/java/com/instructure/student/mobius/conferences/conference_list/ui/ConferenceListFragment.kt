@@ -19,20 +19,23 @@ package com.instructure.student.mobius.conferences.conference_list.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFERENCE_LIST
-import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.instructure.student.mobius.conferences.conference_list.*
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffect
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffectHandler
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListModel
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListPresenter
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListUpdate
 
-@PageView(url = "{canvasContext}/conferences")
-@ScreenView(SCREEN_VIEW_CONFERENCE_LIST)
 abstract class ConferenceListFragment : MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect,
         ConferenceListView, ConferenceListViewState, FragmentConferenceListBinding>() {
 
+    @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     override fun makeUpdate() = ConferenceListUpdate()
