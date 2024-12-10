@@ -119,10 +119,17 @@ private fun SmartSearchScreenContent(
                 },
                 actions = {
                     IconButton(
+                        modifier = Modifier.testTag("filterButton"),
                         onClick = { onFilterClick() }
                     ) {
                         Icon(
-                            painterResource(id = R.drawable.ic_filter),
+                            painterResource(
+                                id = if (uiState.filters.size == 4 || uiState.filters.isEmpty()) {
+                                    R.drawable.ic_filter_outline
+                                } else {
+                                    R.drawable.ic_filter_filled
+                                }
+                            ),
                             contentDescription = stringResource(R.string.contentDescription_filter),
                             tint = colorResource(R.color.textLightest)
                         )

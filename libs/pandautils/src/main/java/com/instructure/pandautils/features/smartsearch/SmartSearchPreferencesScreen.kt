@@ -39,6 +39,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -96,13 +97,16 @@ fun SmartSearchPreferencesScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = color
                     ),
+                    modifier = Modifier.testTag("toggleAllButton")
                 ) {
                     Text(
                         if (selectedTypes.size == 4) {
                             stringResource(R.string.unselect_all)
                         } else {
                             stringResource(R.string.select_all)
-                        }, fontWeight = FontWeight.Normal, fontSize = 14.sp
+                        },
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp
                     )
                 }
             }
@@ -116,13 +120,17 @@ fun SmartSearchPreferencesScreen(
                     }
                 }
                 Row(
-                    modifier = Modifier.clickable {
-                        toggleFilter()
-                    },
+                    modifier = Modifier
+                        .testTag("${filter.name.lowercase()}FilterRow")
+                        .clickable {
+                            toggleFilter()
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        modifier = Modifier.padding(start = 8.dp),
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .testTag("checkbox"),
                         checked = selectedTypes.contains(filter),
                         onCheckedChange = { toggleFilter() },
                         colors = CheckboxDefaults.colors(
@@ -137,6 +145,7 @@ fun SmartSearchPreferencesScreen(
                         modifier = Modifier
                             .padding(vertical = 16.dp, horizontal = 8.dp)
                             .weight(1f)
+                            .testTag("filterTitle")
                     )
                     Icon(
                         painter = painterResource(getFilterIcon(filter)),
