@@ -171,6 +171,7 @@ private fun SmartSearchScreenContent(
             else -> {
                 LazyColumn(
                     modifier = Modifier
+                        .testTag("results")
                         .fillMaxSize()
                         .padding(padding)
                         .background(colorResource(R.color.backgroundLight))
