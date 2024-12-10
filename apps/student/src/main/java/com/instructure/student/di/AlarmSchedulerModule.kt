@@ -14,19 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.student.di
 
-package com.instructure.parentapp.util
+import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
+import com.instructure.student.features.reminder.StudentAlarmReceiverNotificationHandler
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.features.reminder.AlarmScheduler
-import com.instructure.pandautils.room.offline.DatabaseProvider
-import com.instructure.pandautils.utils.LogoutHelper
-
-class ParentLogoutHelper : LogoutHelper {
-    override fun logout(databaseProvider: DatabaseProvider, alarmScheduler: AlarmScheduler) {
-        ParentLogoutTask(
-            LogoutTask.Type.LOGOUT,
-            alarmScheduler = alarmScheduler
-        ).execute()
+@Module
+@InstallIn(SingletonComponent::class)
+class AlarmSchedulerModule {
+    @Provides
+    fun provideAssignmentDetailsNotificationHandler(): AlarmReceiverNotificationHandler {
+        return StudentAlarmReceiverNotificationHandler()
     }
 }

@@ -14,19 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.pandautils.utils
 
-package com.instructure.parentapp.util
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 
-import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.features.reminder.AlarmScheduler
-import com.instructure.pandautils.room.offline.DatabaseProvider
-import com.instructure.pandautils.utils.LogoutHelper
-
-class ParentLogoutHelper : LogoutHelper {
-    override fun logout(databaseProvider: DatabaseProvider, alarmScheduler: AlarmScheduler) {
-        ParentLogoutTask(
-            LogoutTask.Type.LOGOUT,
-            alarmScheduler = alarmScheduler
-        ).execute()
-    }
+fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
+    return "${apiPrefs.fullDomain}/todos/${this.plannable.id}"
 }
