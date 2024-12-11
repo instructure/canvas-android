@@ -33,6 +33,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -175,7 +176,7 @@ private fun SmartSearchScreenContent(
             }
 
             else -> {
-                var openedGroups by remember { mutableStateOf(emptySet<SmartSearchContentType>()) }
+                var openedGroups by remember { mutableStateOf(SmartSearchContentType.entries.toSet()) }
                 LazyColumn(
                     modifier = Modifier
                         .testTag("results")
@@ -221,7 +222,8 @@ private fun LazyListScope.defaultItems(uiState: SmartSearchUiState) {
         ResultItem(
             it,
             Color(uiState.canvasContext.color),
-            uiState.actionHandler
+            modifier = Modifier.animateItem(),
+            actionHandler = uiState.actionHandler
         )
     }
 }
@@ -232,50 +234,77 @@ private fun LazyListScope.groupedItems(
     onGroupClick: (SmartSearchContentType) -> Unit
 ) {
     val groupedItems = uiState.results.groupBy { it.type }
-    groupedItems.forEach { (type, items) ->
+    groupedItems.onEachIndexed { index, entry ->
         item {
-            Row(
-                modifier = Modifier
-                    .clickable { onGroupClick(type) }
-                    .fillMaxWidth()
-                    .background(colorResource(R.color.backgroundLightest)),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(
-                        when (type) {
-                            SmartSearchContentType.ANNOUNCEMENT -> R.string.smartSearchAnnouncementTitle
-                            SmartSearchContentType.DISCUSSION_TOPIC -> R.string.smartSearchDiscussionTitle
-                            SmartSearchContentType.ASSIGNMENT -> R.string.smartSearchAssignmentTitle
-                            SmartSearchContentType.WIKI_PAGE -> R.string.smartSearchPageTitle
-                        }
-                    ),
-                    color = colorResource(R.color.textDark),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier
-                        .padding(16.dp)
-                )
-
-                IconButton(onClick = { onGroupClick(type) }) {
-                    Icon(
-                        modifier = Modifier.rotate(if (openedGroups.contains(type)) 180f else 0f),
-                        painter = painterResource(R.drawable.ic_chevron_down),
-                        contentDescription = null
-                    )
-                }
-            }
-
+            GroupHeader(
+                entry.key,
+                entry.value,
+                openedGroups,
+                onGroupClick,
+                openedGroups.contains(entry.key) || index == groupedItems.size - 1
+            )
         }
-        if (openedGroups.contains(type)) {
-            items(items) {
+        if (openedGroups.contains(entry.key)) {
+            items(entry.value) {
                 ResultItem(
                     it,
                     Color(uiState.canvasContext.color),
-                    uiState.actionHandler
+                    modifier = Modifier.animateItem(),
+                    actionHandler = uiState.actionHandler
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun GroupHeader(
+    type: SmartSearchContentType,
+    items: List<SmartSearchResultUiState>,
+    openedGroups: Set<SmartSearchContentType>,
+    onGroupClick: (SmartSearchContentType) -> Unit,
+    hasBottomDivider: Boolean
+) {
+    Column(
+        modifier = Modifier
+            .clickable { onGroupClick(type) }
+            .fillMaxWidth()
+            .background(colorResource(R.color.backgroundLightest)),
+    ) {
+        Divider(color = colorResource(R.color.borderMedium))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(
+                    when (type) {
+                        SmartSearchContentType.ANNOUNCEMENT -> R.string.smartSearchAnnouncementGroupTitle
+                        SmartSearchContentType.DISCUSSION_TOPIC -> R.string.smartSearchDiscussionGroupTitle
+                        SmartSearchContentType.ASSIGNMENT -> R.string.smartSearchAssignmentGroupTitle
+                        SmartSearchContentType.WIKI_PAGE -> R.string.smartSearchPageGroupTitle
+                    },
+                    items.size
+                ),
+                color = colorResource(R.color.textDark),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .padding(16.dp)
+            )
+
+            Icon(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .rotate(if (openedGroups.contains(type)) 180f else 0f),
+                painter = painterResource(R.drawable.ic_chevron_down),
+                contentDescription = null,
+                tint = colorResource(R.color.textDarkest)
+            )
+        }
+        if (hasBottomDivider) {
+            Divider(color = colorResource(R.color.borderMedium))
         }
     }
 }
@@ -317,6 +346,7 @@ private fun CourseHeader(title: String) {
 private fun ResultItem(
     result: SmartSearchResultUiState,
     color: Color,
+    modifier: Modifier = Modifier,
     actionHandler: (SmartSearchAction) -> Unit
 ) {
     fun getContentTypeTitle(type: SmartSearchContentType): Int {
@@ -337,7 +367,7 @@ private fun ResultItem(
         }
     }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(colorResource(R.color.backgroundLightest))
             .clickable { actionHandler(SmartSearchAction.Route(result.url)) }
@@ -548,9 +578,9 @@ fun SmartSearchEmptyDarkPreview() {
         ) {}) {}
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun SmartSearchGroupedDarkPreview() {
+fun SmartSearchGroupedPreview() {
     ContextKeeper.appContext = LocalContext.current
     SmartSearchScreen(
         SmartSearchUiState(
@@ -577,9 +607,9 @@ fun SmartSearchGroupedDarkPreview() {
         ) {}) {}
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SmartSearchGroupedPreview() {
+fun SmartSearchGroupedDarkPreview() {
     ContextKeeper.appContext = LocalContext.current
     SmartSearchScreen(
         SmartSearchUiState(

@@ -278,8 +278,9 @@ fun SmartSearchPreferencesScreenPreview() {
 fun SmartSearchPreferencesScreenDarkPreview() {
     SmartSearchPreferencesScreen(
         Color.Magenta,
+        sortType = SmartSearchSortType.RELEVANCE,
         filters = SmartSearchFilter.entries,
-        navigationClick = {}
+        navigationClick = {_, _ ->}
     )
 }
 
