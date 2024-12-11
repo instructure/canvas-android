@@ -1954,4 +1954,7 @@
     <string name="smartSearchPagesTitle">Pages</string>
     <string name="resultTypeTitle">Result type</string>
     <string name="searchPreferencesTitle">Search Preferences</string>
+    <string name="sortByTitle">Sort By</string>
+    <string name="sortByRelevanceTitle">Relevance</string>
+    <string name="sortByTypeTitle">Type</string>
 </resources>

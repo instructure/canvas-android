@@ -30,11 +30,16 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,24 +56,93 @@ import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 
+enum class SmartSearchSortType {
+    RELEVANCE,
+    TYPE
+}
+
 @Composable
 fun SmartSearchPreferencesScreen(
     color: Color,
+    sortType: SmartSearchSortType,
     filters: List<SmartSearchFilter>,
-    navigationClick: (List<SmartSearchFilter>) -> Unit
+    navigationClick: (List<SmartSearchFilter>, SmartSearchSortType) -> Unit
 ) {
     val selectedTypes = remember { filters.toMutableStateList() }
+    var selectedSort by remember { mutableStateOf(sortType) }
     Scaffold(
         topBar = {
             CanvasAppBar(
                 backgroundColor = color,
                 textColor = colorResource(R.color.textLightest),
                 title = stringResource(R.string.searchPreferencesTitle),
-                navigationActionClick = { navigationClick(selectedTypes) }
+                navigationActionClick = { navigationClick(selectedTypes, selectedSort) }
             )
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .background(color = colorResource(R.color.backgroundLight))
+                    .padding(start = 16.dp, end = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    stringResource(R.string.sortByTitle),
+                    fontSize = 14.sp,
+                    color = colorResource(R.color.textDark),
+                )
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { selectedSort = SmartSearchSortType.RELEVANCE }) {
+                RadioButton(
+                    modifier = Modifier.padding(start = 8.dp),
+                    selected = SmartSearchSortType.RELEVANCE == selectedSort,
+                    onClick = { selectedSort = SmartSearchSortType.RELEVANCE },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = color,
+                        unselectedColor = color,
+                    )
+                )
+
+                Text(
+                    text = stringResource(R.string.sortByRelevanceTitle),
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.textDarkest),
+                    modifier = Modifier
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                        .weight(1f)
+                        .testTag("sortTitle")
+                )
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { selectedSort = SmartSearchSortType.TYPE }) {
+                RadioButton(
+                    modifier = Modifier.padding(start = 8.dp),
+                    selected = SmartSearchSortType.TYPE == selectedSort,
+                    onClick = { selectedSort = SmartSearchSortType.TYPE },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = color,
+                        unselectedColor = color,
+                    )
+                )
+
+                Text(
+                    text = stringResource(R.string.sortByTypeTitle),
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.textDarkest),
+                    modifier = Modifier
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                        .weight(1f)
+                        .testTag("sortTitle")
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -186,7 +260,8 @@ private fun getFilterIcon(smartSearchFilter: SmartSearchFilter): Int {
 fun SmartSearchPreferencesScreenPreview() {
     SmartSearchPreferencesScreen(
         Color.Magenta,
+        sortType = SmartSearchSortType.RELEVANCE,
         filters = SmartSearchFilter.entries,
-        navigationClick = {}
+        navigationClick = { _, _ -> }
     )
 }

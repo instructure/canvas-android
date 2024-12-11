@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -45,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -74,9 +76,13 @@ fun SmartSearchScreen(
     var showPreferences by remember { mutableStateOf(false) }
     CanvasTheme {
         if (showPreferences) {
-            SmartSearchPreferencesScreen(Color(uiState.canvasContext.color), uiState.filters) {
+            SmartSearchPreferencesScreen(
+                Color(uiState.canvasContext.color),
+                uiState.sortType,
+                uiState.filters
+            ) { filters, sortType ->
                 showPreferences = false
-                uiState.actionHandler(SmartSearchAction.Filter(it))
+                uiState.actionHandler(SmartSearchAction.Filter(filters, sortType))
             }
         } else {
             SmartSearchScreenContent(uiState, navigationItemClick) {
@@ -169,6 +175,7 @@ private fun SmartSearchScreenContent(
             }
 
             else -> {
+                var openedGroups by remember { mutableStateOf(emptySet<SmartSearchContentType>()) }
                 LazyColumn(
                     modifier = Modifier
                         .testTag("results")
@@ -180,12 +187,16 @@ private fun SmartSearchScreenContent(
                         CourseHeader(uiState.canvasContext.name.orEmpty())
                     }
                     if (uiState.results.isNotEmpty()) {
-                        items(uiState.results) {
-                            ResultItem(
-                                it,
-                                Color(uiState.canvasContext.color),
-                                uiState.actionHandler
-                            )
+                        if (uiState.sortType == SmartSearchSortType.TYPE) {
+                            groupedItems(uiState, openedGroups) { type ->
+                                openedGroups = if (type in openedGroups) {
+                                    openedGroups - type
+                                } else {
+                                    openedGroups + type
+                                }
+                            }
+                        } else {
+                            defaultItems(uiState)
                         }
                     } else {
                         item {
@@ -200,6 +211,70 @@ private fun SmartSearchScreenContent(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+private fun LazyListScope.defaultItems(uiState: SmartSearchUiState) {
+    items(uiState.results) {
+        ResultItem(
+            it,
+            Color(uiState.canvasContext.color),
+            uiState.actionHandler
+        )
+    }
+}
+
+private fun LazyListScope.groupedItems(
+    uiState: SmartSearchUiState,
+    openedGroups: Set<SmartSearchContentType>,
+    onGroupClick: (SmartSearchContentType) -> Unit
+) {
+    val groupedItems = uiState.results.groupBy { it.type }
+    groupedItems.forEach { (type, items) ->
+        item {
+            Row(
+                modifier = Modifier
+                    .clickable { onGroupClick(type) }
+                    .fillMaxWidth()
+                    .background(colorResource(R.color.backgroundLightest)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(
+                        when (type) {
+                            SmartSearchContentType.ANNOUNCEMENT -> R.string.smartSearchAnnouncementTitle
+                            SmartSearchContentType.DISCUSSION_TOPIC -> R.string.smartSearchDiscussionTitle
+                            SmartSearchContentType.ASSIGNMENT -> R.string.smartSearchAssignmentTitle
+                            SmartSearchContentType.WIKI_PAGE -> R.string.smartSearchPageTitle
+                        }
+                    ),
+                    color = colorResource(R.color.textDark),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .padding(16.dp)
+                )
+
+                IconButton(onClick = { onGroupClick(type) }) {
+                    Icon(
+                        modifier = Modifier.rotate(if (openedGroups.contains(type)) 180f else 0f),
+                        painter = painterResource(R.drawable.ic_chevron_down),
+                        contentDescription = null
+                    )
+                }
+            }
+
+        }
+        if (openedGroups.contains(type)) {
+            items(items) {
+                ResultItem(
+                    it,
+                    Color(uiState.canvasContext.color),
+                    uiState.actionHandler
+                )
             }
         }
     }
@@ -470,5 +545,63 @@ fun SmartSearchEmptyDarkPreview() {
             query = "query",
             canvasContext = Course(name = "Test course"),
             results = emptyList()
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SmartSearchGroupedDarkPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = false,
+            query = "query",
+            sortType = SmartSearchSortType.TYPE,
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
+                SmartSearchResultUiState(
+                    title = "Title",
+                    body = "Body",
+                    relevance = 75,
+                    type = SmartSearchContentType.ANNOUNCEMENT,
+                    url = "url"
+                ),
+                SmartSearchResultUiState(
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 50,
+                    type = SmartSearchContentType.DISCUSSION_TOPIC,
+                    url = "url"
+                )
+            )
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun SmartSearchGroupedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        SmartSearchUiState(
+            loading = false,
+            query = "query",
+            sortType = SmartSearchSortType.TYPE,
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
+                SmartSearchResultUiState(
+                    title = "Title",
+                    body = "Body",
+                    relevance = 75,
+                    type = SmartSearchContentType.ANNOUNCEMENT,
+                    url = "url"
+                ),
+                SmartSearchResultUiState(
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 50,
+                    type = SmartSearchContentType.DISCUSSION_TOPIC,
+                    url = "url"
+                )
+            )
         ) {}) {}
 }

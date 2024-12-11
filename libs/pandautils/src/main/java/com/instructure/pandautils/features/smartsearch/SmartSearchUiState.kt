@@ -26,6 +26,7 @@ data class SmartSearchUiState(
     val loading: Boolean = true,
     val error: Boolean = false,
     val filters: List<SmartSearchFilter> = SmartSearchFilter.entries,
+    val sortType: SmartSearchSortType = SmartSearchSortType.RELEVANCE,
     val actionHandler: (SmartSearchAction) -> Unit
 )
 
@@ -40,7 +41,8 @@ data class SmartSearchResultUiState(
 sealed class SmartSearchAction {
     data class Search(val query: String) : SmartSearchAction()
     data class Route(val url: String) : SmartSearchAction()
-    data class Filter(val filters: List<SmartSearchFilter>): SmartSearchAction()
+    data class Filter(val filters: List<SmartSearchFilter>, val sortType: SmartSearchSortType) :
+        SmartSearchAction()
 }
 
 sealed class SmartSearchViewModelAction {
