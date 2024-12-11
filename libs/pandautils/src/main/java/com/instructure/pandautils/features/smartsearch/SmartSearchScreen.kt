@@ -73,10 +73,11 @@ import com.instructure.pandautils.utils.color
 @Composable
 fun SmartSearchScreen(
     uiState: SmartSearchUiState,
+    smartSearchSortType: SmartSearchSortType = SmartSearchSortType.RELEVANCE,
     navigationItemClick: () -> Unit
 ) {
     var showPreferences by remember { mutableStateOf(false) }
-    var sortType by remember { mutableStateOf(SmartSearchSortType.RELEVANCE) }
+    var sortType by remember { mutableStateOf(smartSearchSortType) }
     CanvasTheme {
         if (showPreferences) {
             SmartSearchPreferencesScreen(
@@ -296,6 +297,7 @@ private fun GroupHeader(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .padding(16.dp)
+                    .testTag("groupHeaderTitle")
             )
 
             Icon(
@@ -579,5 +581,63 @@ fun SmartSearchEmptyDarkPreview() {
             query = "query",
             canvasContext = Course(name = "Test course"),
             results = emptyList()
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun SmartSearchGroupPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        smartSearchSortType = SmartSearchSortType.TYPE,
+        uiState = SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
+                SmartSearchResultUiState(
+                    title = "Title",
+                    body = "Body",
+                    relevance = 23,
+                    type = SmartSearchContentType.ASSIGNMENT,
+                    url = "url"
+                ),
+                SmartSearchResultUiState(
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 75,
+                    type = SmartSearchContentType.WIKI_PAGE,
+                    url = "url"
+                )
+            )
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SmartSearchGroupDarkPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        smartSearchSortType = SmartSearchSortType.TYPE,
+        uiState = SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
+                SmartSearchResultUiState(
+                    title = "Title",
+                    body = "Body",
+                    relevance = 75,
+                    type = SmartSearchContentType.ANNOUNCEMENT,
+                    url = "url"
+                ),
+                SmartSearchResultUiState(
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 50,
+                    type = SmartSearchContentType.DISCUSSION_TOPIC,
+                    url = "url"
+                )
+            )
         ) {}) {}
 }
