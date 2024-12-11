@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.smartsearch
 
+import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -80,7 +82,12 @@ fun SmartSearchPreferencesScreen(
             )
         }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(color = colorResource(R.color.backgroundLightest))
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -265,3 +272,14 @@ fun SmartSearchPreferencesScreenPreview() {
         navigationClick = { _, _ -> }
     )
 }
+
+@Composable
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+fun SmartSearchPreferencesScreenDarkPreview() {
+    SmartSearchPreferencesScreen(
+        Color.Magenta,
+        filters = SmartSearchFilter.entries,
+        navigationClick = {}
+    )
+}
+
