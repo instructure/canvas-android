@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.smartsearch
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -222,7 +223,6 @@ private fun LazyListScope.defaultItems(uiState: SmartSearchUiState) {
         ResultItem(
             it,
             Color(uiState.canvasContext.color),
-            modifier = Modifier.animateItem(),
             actionHandler = uiState.actionHandler
         )
     }
@@ -249,7 +249,6 @@ private fun LazyListScope.groupedItems(
                 ResultItem(
                     it,
                     Color(uiState.canvasContext.color),
-                    modifier = Modifier.animateItem(),
                     actionHandler = uiState.actionHandler
                 )
             }
@@ -265,6 +264,7 @@ private fun GroupHeader(
     onGroupClick: (SmartSearchContentType) -> Unit,
     hasBottomDivider: Boolean
 ) {
+    val rotation = animateFloatAsState(if (openedGroups.contains(type)) 180f else 0f, label = "rotation")
     Column(
         modifier = Modifier
             .clickable { onGroupClick(type) }
@@ -297,7 +297,7 @@ private fun GroupHeader(
             Icon(
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .rotate(if (openedGroups.contains(type)) 180f else 0f),
+                    .rotate(rotation.value),
                 painter = painterResource(R.drawable.ic_chevron_down),
                 contentDescription = null,
                 tint = colorResource(R.color.textDarkest)
