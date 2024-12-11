@@ -70,7 +70,7 @@ abstract class InboxComposeRepository(
             message = message,
             contextCode = context.contextId,
             attachmentIds = attachments.map { it.id }.toLongArray(),
-            isBulk = if (isIndividual) { 0 } else { 1 },
+            isBulk = if (!isIndividual) { 0 } else { 1 },
             params = restParams
         )
     }
