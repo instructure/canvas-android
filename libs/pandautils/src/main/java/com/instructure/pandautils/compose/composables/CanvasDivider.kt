@@ -18,11 +18,12 @@ package com.instructure.pandautils.compose.composables
 
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 
 @Composable
-fun CanvasDivider() {
-    Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+fun CanvasDivider(modifier: Modifier = Modifier) {
+    Divider(modifier = modifier, color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
 }

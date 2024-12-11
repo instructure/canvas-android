@@ -69,9 +69,9 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         dashboardPage.openNavigationDrawer()
-        dashboardPage.tapLogout()
-        dashboardPage.assertLogoutDialog()
-        dashboardPage.tapOk()
+        leftSideNavigationDrawerPage.clickLogout()
+        leftSideNavigationDrawerPage.assertLogoutDialog()
+        leftSideNavigationDrawerPage.clickOk()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()
@@ -86,7 +86,7 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         dashboardPage.openNavigationDrawer()
-        dashboardPage.tapSwitchUsers()
+        leftSideNavigationDrawerPage.clickSwitchUsers()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()
@@ -101,10 +101,10 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         try {
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         } catch (e: Exception) {
             dashboardPage.openStudentSelector()
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         }
 
         addStudentPage.tapPairingCode()
@@ -119,10 +119,10 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         try {
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         } catch (e: Exception) {
             dashboardPage.openStudentSelector()
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         }
 
         addStudentPage.tapQrCode()

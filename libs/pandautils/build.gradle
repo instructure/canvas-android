@@ -107,6 +107,7 @@ tasks.withType(Test) {
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    androidTestImplementation.exclude module:'protobuf-lite'
 
     all*.resolutionStrategy {
         force Libs.KOTLIN_STD_LIB
@@ -241,4 +242,6 @@ dependencies {
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
     debugImplementation Libs.COMPOSE_UI_TEST_MANIFEST
+
+    implementation Libs.LOTTIE_COMPOSE
 }

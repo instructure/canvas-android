@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.QuizListView
-import instructure.androidblueprint.SyncExpandablePresenter
+import com.instructure.pandautils.blueprint.SyncExpandablePresenter
 import kotlinx.coroutines.Job
 
 class QuizListPresenter(private val mCanvasContext: CanvasContext) :

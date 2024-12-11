@@ -511,22 +511,7 @@
     <string name="colorPickerDialogMessage">Esta es tu configuración de color personal. Solo tú verás este color para la asignatura.</string>
     <string name="colorPickerError">No se ha podido establecer el color de la asignatura en este momento.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Rosa intenso</string>
-    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
-    <string name="contentDescriptionColorEggplant">Morado</string>
-    <string name="contentDescriptionColorUltramarine">Azul oscuro</string>
-    <string name="contentDescriptionColorOcean11">Azul</string>
-    <string name="contentDescriptionColorCyan">Turquesa</string>
-    <string name="contentDescriptionColorAquaMarine">Azul agua</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verde esmeralda</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verde</string>
-    <string name="contentDescriptionColorChartreuse">Verde amarillento</string>
-    <string name="contentDescriptionColorSunFlower">Amarillo</string>
-    <string name="contentDescriptionColorTangerine">Naranja</string>
-    <string name="contentDescriptionColorBloodOrange">Naranja oscuro</string>
-    <string name="contentDescriptionColorSriracha">Rojo</string>
-    <string name="launch_link_in_external_browser">Ejecutar el enlace en un navegador externo</string>
+                                                                <string name="launch_link_in_external_browser">Ejecutar el enlace en un navegador externo</string>
     <string name="contentDescriptionSelectedFile">Archivo seleccionado</string>
     <string name="contentDescriptionFileIcon">Icono de archivo</string>
     <string name="contentDescriptionExpandPage">Expandir página</string>
@@ -612,6 +597,7 @@
     <string name="discussion_details">Detalles del foro de discusión</string>
     <string name="discussions_pinned">Fijado</string>
     <string name="discussions_unpinned">Foros de discusión</string>
+    <string name="discussions_close">Cerrar para comentarios</string>
     <string name="discussions_closed">No admite comentarios</string>
     <string name="discussions_open">Abierto para comentarios</string>
     <string name="discussions_pin">Fijar</string>

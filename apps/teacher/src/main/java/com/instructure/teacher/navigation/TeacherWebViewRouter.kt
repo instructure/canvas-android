@@ -21,11 +21,11 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
@@ -53,7 +53,7 @@ class TeacherWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
     }
 
     override fun openLtiScreen(canvasContext: CanvasContext?, url: String) {
-        LtiLaunchFragment.routeLtiLaunchFragment(activity, canvasContext, url)
+        RouteMatcher.route(activity, LtiLaunchFragment.makeSessionlessLtiUrlRoute(activity, canvasContext, url))
     }
 
     override fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?) {

@@ -17,10 +17,13 @@
 package com.instructure.student.mobius.elementary.resources
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentResourcesRouter(private val activity: FragmentActivity) : ResourcesRouter {
@@ -32,7 +35,7 @@ class StudentResourcesRouter(private val activity: FragmentActivity) : Resources
             ltiTool.url ?: ltiTool.courseNavigation?.url ?: "",
             ltiTool.courseNavigation?.text ?: ltiTool.name ?: "",
             sessionLessLaunch = true,
-            isAssignmentLTI = false,
+            assignmentLti = false,
             ltiTool = ltiTool)
         RouteMatcher.route(activity, route)
     }

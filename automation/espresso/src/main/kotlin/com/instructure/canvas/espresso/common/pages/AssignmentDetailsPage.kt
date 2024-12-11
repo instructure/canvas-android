@@ -27,7 +27,6 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -43,16 +42,16 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.pages.onView
+import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.pages.plus
+import com.instructure.espresso.pages.waitForView
+import com.instructure.espresso.pages.waitForViewWithText
+import com.instructure.espresso.pages.withAncestor
+import com.instructure.espresso.pages.withId
+import com.instructure.espresso.pages.withParent
+import com.instructure.espresso.pages.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.swipeUp
@@ -229,44 +228,6 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
         onView(withText(submissionType) + withAncestor(R.id.customPanel)).assertDisplayed()
-    }
-
-    fun assertReminderSectionNotDisplayed() {
-        onView(withId(R.id.reminderTitle)).assertNotDisplayed()
-        onView(withId(R.id.reminderDescription)).assertNotDisplayed()
-        onView(withId(R.id.reminderAdd)).assertNotDisplayed()
-    }
-
-    fun assertReminderSectionDisplayed() {
-        onView(withId(R.id.reminderTitle)).scrollTo().assertDisplayed()
-        onView(withId(R.id.reminderDescription)).scrollTo().assertDisplayed()
-        onView(withId(R.id.reminderAdd)).scrollTo().assertDisplayed()
-    }
-
-    fun clickAddReminder() {
-        onView(withId(R.id.reminderAdd)).scrollTo().click()
-    }
-
-    fun selectTimeOption(timeOption: String) {
-        onView(withText(timeOption)).scrollTo().click()
-    }
-
-    fun assertReminderDisplayedWithText(text: String) {
-        onView(withText(text)).scrollTo().assertDisplayed()
-    }
-
-    fun removeReminderWithText(text: String) {
-        onView(
-            allOf(
-                withId(R.id.remove),
-                hasSibling(withText(text))
-            )
-        ).click()
-        onView(withText(R.string.yes)).scrollTo().click()
-    }
-
-    fun assertReminderNotDisplayedWithText(text: String) {
-        onView(withText(text)).check(doesNotExist())
     }
 
     fun clickCustom() {

@@ -158,7 +158,7 @@ class FileListFragment : BaseSyncFragment<
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl(): String {
+    fun makePageViewUrl(): String {
         var url = if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"
         else "${ApiPrefs.fullDomain}/${canvasContext.contextId.replace("_", "s/")}/files"
 

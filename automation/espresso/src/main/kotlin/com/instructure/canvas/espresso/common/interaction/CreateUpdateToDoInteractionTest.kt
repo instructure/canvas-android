@@ -279,6 +279,27 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.assertUnsavedChangesDialog()
     }
 
+    @Test
+    fun saveDisabledWhenTitleBlank() {
+        val data = initData()
+        goToCreateToDo(data)
+
+        composeTestRule.waitForIdle()
+        calendarToDoCreateUpdatePage.typeTodoTitle("  ")
+        calendarToDoCreateUpdatePage.assertSaveDisabled()
+    }
+
+    @Test
+    fun saveEnabledWhenTitleIsNotBlank() {
+        val data = initData()
+        goToCreateToDo(data)
+
+        composeTestRule.waitForIdle()
+        calendarToDoCreateUpdatePage.typeTodoTitle("New Title")
+        calendarToDoCreateUpdatePage.assertSaveEnabled()
+    }
+
+
     abstract fun goToCreateToDo(data: MockCanvas)
 
     abstract fun goToEditToDo(data: MockCanvas)

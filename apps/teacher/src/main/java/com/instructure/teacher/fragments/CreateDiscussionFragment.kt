@@ -45,6 +45,7 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
@@ -113,7 +114,8 @@ class CreateDiscussionFragment : BasePresenterFragment<
     Identity,
     FileUploadDialogParent {
 
-    private var canvasContext: CanvasContext by ParcelableArg(Course(), CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(Course(), CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(null, DISCUSSION_TOPIC_HEADER)
     private val sendButton: TextView? get() = view?.findViewById(R.id.menuSaveDiscussion)
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
