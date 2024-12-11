@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -43,7 +43,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class ManageStudentsFragment : Fragment() {
+class ManageStudentsFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var navigation: Navigation

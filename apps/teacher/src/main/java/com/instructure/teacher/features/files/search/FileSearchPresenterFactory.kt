@@ -17,7 +17,7 @@
 package com.instructure.teacher.features.files.search
 
 import com.instructure.canvasapi2.models.CanvasContext
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class FileSearchPresenterFactory(val canvasContext: CanvasContext) : PresenterFactory<FileSearchView, FileSearchPresenter> {
 

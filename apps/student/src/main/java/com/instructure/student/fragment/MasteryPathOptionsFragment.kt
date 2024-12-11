@@ -74,6 +74,7 @@ class MasteryPathOptionsFragment : ParentFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mRecyclerAdapter = MasteryPathOptionsRecyclerAdapter(
             requireContext(),
             assignments.toTypedArray(),

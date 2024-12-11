@@ -21,7 +21,7 @@ import com.instructure.teacher.features.assignment.submission.AssignmentSubmissi
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.presenters.SpeedGraderPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderView
-import instructure.androidblueprint.PresenterFactory
+import com.instructure.pandautils.blueprint.PresenterFactory
 
 class SpeedGraderPresenterFactory(
         private val courseId: Long,

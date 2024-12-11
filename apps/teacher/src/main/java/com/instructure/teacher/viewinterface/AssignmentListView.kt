@@ -19,7 +19,7 @@ package com.instructure.teacher.viewinterface
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradingPeriod
-import instructure.androidblueprint.SyncExpandableManager
+import com.instructure.pandautils.blueprint.SyncExpandableManager
 
 interface AssignmentListView : SyncExpandableManager<AssignmentGroup, Assignment> {
     fun getDefaultGradingPeriodTitle(): String

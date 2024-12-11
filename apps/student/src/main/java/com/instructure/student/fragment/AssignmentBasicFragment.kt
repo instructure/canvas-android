@@ -30,7 +30,16 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_BASIC
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.OnBackStackChangedEvent
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentAssignmentBasicBinding
@@ -39,7 +48,9 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_BASIC)
 class AssignmentBasicFragment : ParentFragment() {
@@ -142,7 +153,7 @@ class AssignmentBasicFragment : ParentFragment() {
         loadHtmlJob = assignmentWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
             assignmentWebViewWrapper.loadHtml(it, assignment.name)
         }, {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
+            RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
         })
     }
 

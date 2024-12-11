@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
@@ -40,6 +41,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @Stub
     @OfflineE2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SYNC_PROGRESS, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)

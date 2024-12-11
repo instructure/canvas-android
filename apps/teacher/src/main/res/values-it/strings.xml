@@ -510,22 +510,7 @@
     <string name="colorPickerDialogMessage">Questa è l’impostazione colore personale. Solo tu vedrai questo colore per il corso.</string>
     <string name="colorPickerError">Impossibile impostare il colore corso in questo momento.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Rosa shocking</string>
-    <string name="contentDescriptionColorBarneyPurple">Violetto</string>
-    <string name="contentDescriptionColorEggplant">Viola</string>
-    <string name="contentDescriptionColorUltramarine">Blu scuro</string>
-    <string name="contentDescriptionColorOcean11">Blu</string>
-    <string name="contentDescriptionColorCyan">Ciano</string>
-    <string name="contentDescriptionColorAquaMarine">Verde turchese</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verde smeraldo</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verde</string>
-    <string name="contentDescriptionColorChartreuse">Verde chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Giallo</string>
-    <string name="contentDescriptionColorTangerine">Arancione</string>
-    <string name="contentDescriptionColorBloodOrange">Arancione scuro</string>
-    <string name="contentDescriptionColorSriracha">Rosso</string>
-    <string name="launch_link_in_external_browser">Avvia link in browser esterno</string>
+                                                                <string name="launch_link_in_external_browser">Avvia link in browser esterno</string>
     <string name="contentDescriptionSelectedFile">File selezionato</string>
     <string name="contentDescriptionFileIcon">Icona File</string>
     <string name="contentDescriptionExpandPage">Espandi pagina</string>
@@ -611,6 +596,7 @@
     <string name="discussion_details">Dettagli discussioni</string>
     <string name="discussions_pinned">Bloccata</string>
     <string name="discussions_unpinned">Discussioni</string>
+    <string name="discussions_close">Chiudi per i commenti</string>
     <string name="discussions_closed">Chiuso per i commenti</string>
     <string name="discussions_open">Apri per i commenti</string>
     <string name="discussions_pin">Blocca</string>

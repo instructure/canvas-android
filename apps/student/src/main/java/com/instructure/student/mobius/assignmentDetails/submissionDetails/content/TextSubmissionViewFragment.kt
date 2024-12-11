@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.replaceFirstAfter
 import com.instructure.pandautils.binding.viewBinding
@@ -35,7 +35,7 @@ import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.databinding.FragmentTextSubmissionBinding
 import com.instructure.student.router.RouteMatcher
 
-class TextSubmissionViewFragment : Fragment() {
+class TextSubmissionViewFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentTextSubmissionBinding::bind)
 

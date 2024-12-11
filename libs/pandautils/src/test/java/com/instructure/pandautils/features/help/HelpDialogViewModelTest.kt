@@ -78,7 +78,7 @@ class HelpDialogViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        
+
     }
 
     @Test
@@ -264,10 +264,42 @@ class HelpDialogViewModelTest {
         assertEquals(HelpLinkViewData("Share your love title", "", HelpDialogAction.RateTheApp), linksViewData[2].helpLinkViewData)
     }
 
+    @Test
+    fun `Remove link if text or url is blank`() {
+        // Given
+        val defaultLinks = listOf(
+            createHelpLink(listOf("student"), text = "", subText = "Test", url = "Test"),
+            createHelpLink(listOf("student"), text = "Test", subText = "Test", url = ""),
+            createHelpLink(listOf("student"), text = "Test title", subText = "", url = "Test url"),
+            createHelpLink(listOf("student"), text = "", subText = "", url = ""),
+            createHelpLink(listOf("student"), text = "Test title", subText = "Test", url = "Test url")
+        )
+
+        val helpLinks = HelpLinks(emptyList(), defaultLinks)
+        every { helpLinksManager.getHelpLinksAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(helpLinks)
+        }
+
+        every { courseManager.getAllFavoriteCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val linksViewData = viewModel.data.value?.helpLinks ?: emptyList()
+        assertEquals(3, linksViewData.size)
+        assertEquals(HelpLinkViewData("Test title", "", HelpDialogAction.OpenWebView("Test url", "Test title")), linksViewData[0].helpLinkViewData)
+        assertEquals(HelpLinkViewData("Test title", "Test", HelpDialogAction.OpenWebView("Test url", "Test title")), linksViewData[1].helpLinkViewData)
+    }
+
     private fun createViewModel() =
         HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider, helpLinkFilter)
 
-    private fun createHelpLink(availableTo: List<String>, text: String?, subText: String? = "", id: String = "", url: String? = ""): HelpLink {
+    private fun createHelpLink(availableTo: List<String>, text: String?, subText: String? = "", id: String = "", url: String? = "https://dummy.url"): HelpLink {
         return HelpLink(id, "", availableTo, url, text, subText)
     }
 }

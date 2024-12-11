@@ -34,7 +34,7 @@ import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateDiscussionView
-import instructure.androidblueprint.FragmentPresenter
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

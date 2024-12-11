@@ -85,6 +85,7 @@ class CourseDetailsViewModelTest {
         every { apiPrefs.fullDomain } returns "https://domain.com"
         every { context.getString(R.string.regardingHiddenMessage, any(), any()) } returns "https://domain.com/courses/1"
         every { context.getString(R.string.regardingHiddenMessage, any(), "") } returns "Regarding: User 1"
+        every { context.getString(R.string.courseRefreshFailed) } returns "Failed to refresh course"
     }
 
     @After
@@ -128,7 +129,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES, TabType.SYLLABUS)
+            tabs = listOf(TabType.GRADES, TabType.SYLLABUS),
+            syllabus = "Syllabus body"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -152,7 +154,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY)
+            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY),
+            syllabus = "Syllabus body"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -174,7 +177,7 @@ class CourseDetailsViewModelTest {
     }
 
     @Test
-    fun `Refresh course details`() = runTest {
+    fun `Refresh course and tabs`() = runTest {
         coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
 
@@ -203,7 +206,70 @@ class CourseDetailsViewModelTest {
 
         val expectedAfterRefresh = expected.copy(
             courseName = "Course 2",
-            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY)
+            tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY),
+            syllabus = "Syllabus body"
+        )
+
+        Assert.assertEquals(expectedAfterRefresh, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Refresh course`() = runTest {
+        coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
+
+        createViewModel()
+
+        val expected = CourseDetailsUiState(
+            courseName = "Course 1",
+            studentColor = 1,
+            isLoading = false,
+            isError = false,
+            tabs = listOf(TabType.GRADES)
+        )
+
+        Assert.assertEquals(expected, viewModel.uiState.value)
+
+        coEvery { repository.getCourse(1, any()) } returns Course(
+            id = 1,
+            name = "Course 2",
+            syllabusBody = "Syllabus body"
+        )
+
+        viewModel.handleAction(CourseDetailsAction.RefreshCourse)
+
+        val expectedAfterRefresh = expected.copy(
+            courseName = "Course 2",
+            syllabus = "Syllabus body"
+        )
+
+        Assert.assertEquals(expectedAfterRefresh, viewModel.uiState.value)
+    }
+
+
+    @Test
+    fun `Error refreshing course`() = runTest {
+        coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
+
+        createViewModel()
+
+        val expected = CourseDetailsUiState(
+            courseName = "Course 1",
+            studentColor = 1,
+            isLoading = false,
+            isError = false,
+            tabs = listOf(TabType.GRADES)
+        )
+
+        Assert.assertEquals(expected, viewModel.uiState.value)
+
+        coEvery { repository.getCourse(1, any()) } throws Exception()
+
+        viewModel.handleAction(CourseDetailsAction.RefreshCourse)
+
+        val expectedAfterRefresh = expected.copy(
+            snackbarMessage = "Failed to refresh course"
         )
 
         Assert.assertEquals(expectedAfterRefresh, viewModel.uiState.value)
@@ -236,6 +302,21 @@ class CourseDetailsViewModelTest {
         viewModel.handleAction(CourseDetailsAction.SendAMessage)
 
         val expected = CourseDetailsViewModelAction.NavigateToComposeMessageScreen(getInboxComposeOptions())
+        Assert.assertEquals(expected, events.last())
+    }
+
+    @Test
+    fun `Navigate to LTI screen`() = runTest {
+        createViewModel()
+
+        val events = mutableListOf<CourseDetailsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(CourseDetailsAction.OnLtiClicked("ltiUrl"))
+
+        val expected = CourseDetailsViewModelAction.OpenLtiScreen("ltiUrl")
         Assert.assertEquals(expected, events.last())
     }
 

@@ -56,4 +56,9 @@ class SplashRepository(
             .orEmpty()
             .mapNotNull { it.observedUser }
     }
+
+    suspend fun getBecomeUserPermission(): Boolean {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return userApi.getBecomeUserPermission(params).dataOrNull?.becomeUser ?: false
+    }
 }

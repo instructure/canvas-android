@@ -479,6 +479,7 @@
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Gjøremål</string>
     <string name="a11y_page">Side</string>
+    <string name="a11y_assessment_request">Vurderingsforespørsel</string>
     <string name="a11y_marked_as_done">Merket som ferdig</string>
     <string name="a11y_not_marked_as_done">Er ikke merket som ferdig</string>
     <string name="error_loading_course_details">Oi sann! Det oppsto en feil ved lasting av emnedetaljer.</string>

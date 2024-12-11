@@ -22,21 +22,19 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
 import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
-import com.instructure.loginapi.login.view.CanvasLoadingView
+import com.instructure.pandautils.views.CanvasLoadingView
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
-import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
 import javax.inject.Inject
 
-abstract class BaseLoginInitActivity : AppCompatActivity() {
+abstract class BaseLoginInitActivity : BaseCanvasActivity() {
 
     /**** Login Flow:
      *

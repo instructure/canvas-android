@@ -76,4 +76,10 @@
     <string name="enrollmentTypeDesigner">Designer</string>
     <string name="enrollmentTypeUnknown">Desconhecido</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Alunos</string>
+    <string name="enrollmentTypeTeachers">Professores</string>
+    <string name="enrollmentTypeObservers">Observadores</string>
+    <string name="enrollmentTypeTeachingAssistants">TAs</string>
+    <string name="enrollmentTypeDesigners">Designers</string>
 </resources>
