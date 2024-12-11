@@ -34,7 +34,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -64,6 +63,7 @@ import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -76,18 +76,20 @@ fun SmartSearchScreen(
     navigationItemClick: () -> Unit
 ) {
     var showPreferences by remember { mutableStateOf(false) }
+    var sortType by remember { mutableStateOf(SmartSearchSortType.RELEVANCE) }
     CanvasTheme {
         if (showPreferences) {
             SmartSearchPreferencesScreen(
                 Color(uiState.canvasContext.color),
-                uiState.sortType,
+                sortType,
                 uiState.filters
-            ) { filters, sortType ->
+            ) { filters, type ->
                 showPreferences = false
-                uiState.actionHandler(SmartSearchAction.Filter(filters, sortType))
+                sortType = type
+                uiState.actionHandler(SmartSearchAction.Filter(filters))
             }
         } else {
-            SmartSearchScreenContent(uiState, navigationItemClick) {
+            SmartSearchScreenContent(uiState, sortType, navigationItemClick) {
                 showPreferences = true
             }
         }
@@ -97,6 +99,7 @@ fun SmartSearchScreen(
 @Composable
 private fun SmartSearchScreenContent(
     uiState: SmartSearchUiState,
+    sortType: SmartSearchSortType,
     navigationItemClick: () -> Unit,
     onFilterClick: () -> Unit
 ) {
@@ -189,7 +192,7 @@ private fun SmartSearchScreenContent(
                         CourseHeader(uiState.canvasContext.name.orEmpty())
                     }
                     if (uiState.results.isNotEmpty()) {
-                        if (uiState.sortType == SmartSearchSortType.TYPE) {
+                        if (sortType == SmartSearchSortType.TYPE) {
                             groupedItems(uiState, openedGroups) { type ->
                                 openedGroups = if (type in openedGroups) {
                                     openedGroups - type
@@ -269,9 +272,10 @@ private fun GroupHeader(
         modifier = Modifier
             .clickable { onGroupClick(type) }
             .fillMaxWidth()
-            .background(colorResource(R.color.backgroundLightest)),
+            .background(colorResource(R.color.backgroundLightest))
+            .testTag("${type.name.lowercase()}GroupHeader"),
     ) {
-        Divider(color = colorResource(R.color.borderMedium))
+        CanvasDivider()
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -304,7 +308,7 @@ private fun GroupHeader(
             )
         }
         if (hasBottomDivider) {
-            Divider(color = colorResource(R.color.borderMedium))
+            CanvasDivider()
         }
     }
 }
@@ -575,63 +579,5 @@ fun SmartSearchEmptyDarkPreview() {
             query = "query",
             canvasContext = Course(name = "Test course"),
             results = emptyList()
-        ) {}) {}
-}
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-fun SmartSearchGroupedPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    SmartSearchScreen(
-        SmartSearchUiState(
-            loading = false,
-            query = "query",
-            sortType = SmartSearchSortType.TYPE,
-            canvasContext = Course(name = "Test course"),
-            results = listOf(
-                SmartSearchResultUiState(
-                    title = "Title",
-                    body = "Body",
-                    relevance = 75,
-                    type = SmartSearchContentType.ANNOUNCEMENT,
-                    url = "url"
-                ),
-                SmartSearchResultUiState(
-                    title = "Not to lay peacefully between its four familiar walls.",
-                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
-                    relevance = 50,
-                    type = SmartSearchContentType.DISCUSSION_TOPIC,
-                    url = "url"
-                )
-            )
-        ) {}) {}
-}
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun SmartSearchGroupedDarkPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    SmartSearchScreen(
-        SmartSearchUiState(
-            loading = false,
-            query = "query",
-            sortType = SmartSearchSortType.TYPE,
-            canvasContext = Course(name = "Test course"),
-            results = listOf(
-                SmartSearchResultUiState(
-                    title = "Title",
-                    body = "Body",
-                    relevance = 75,
-                    type = SmartSearchContentType.ANNOUNCEMENT,
-                    url = "url"
-                ),
-                SmartSearchResultUiState(
-                    title = "Not to lay peacefully between its four familiar walls.",
-                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
-                    relevance = 50,
-                    type = SmartSearchContentType.DISCUSSION_TOPIC,
-                    url = "url"
-                )
-            )
         ) {}) {}
 }

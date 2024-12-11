@@ -18,8 +18,10 @@ package com.instructure.pandautils.compose.features.smartsearch
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -29,6 +31,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.pandautils.features.smartsearch.SmartSearchPreferencesScreen
+import com.instructure.pandautils.features.smartsearch.SmartSearchSortType
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,7 +48,8 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = listOf(SmartSearchFilter.ASSIGNMENTS, SmartSearchFilter.ANNOUNCEMENTS),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
@@ -96,7 +100,8 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = listOf(SmartSearchFilter.ASSIGNMENTS, SmartSearchFilter.ANNOUNCEMENTS),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
@@ -137,7 +142,8 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = emptyList(),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
@@ -162,7 +168,8 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = emptyList(),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
@@ -176,5 +183,57 @@ class SmartSearchPreferencesScreenTest {
 
         assignmentCheckbox.performClick()
         assignmentCheckbox.assertIsOff()
+    }
+
+    @Test
+    fun assertRelevanceTypeSelector() {
+        composeTestRule.setContent {
+            SmartSearchPreferencesScreen(
+                color = Color.Magenta,
+                filters = emptyList(),
+                sortType = SmartSearchSortType.TYPE,
+                navigationClick = {_, _ ->}
+            )
+        }
+
+        composeTestRule.onNodeWithTag("typeRadioButton")
+            .assertIsSelected()
+
+        composeTestRule.onNodeWithTag("relevanceTypeSelector")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+            .assertTextEquals("Relevance")
+            .performClick()
+
+        composeTestRule.onNodeWithTag("relevanceRadioButton")
+            .assertIsSelected()
+        composeTestRule.onNodeWithTag("typeRadioButton")
+            .assertIsNotSelected()
+    }
+
+    @Test
+    fun assertTypeTypeSelector() {
+        composeTestRule.setContent {
+            SmartSearchPreferencesScreen(
+                color = Color.Magenta,
+                filters = emptyList(),
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
+            )
+        }
+
+        composeTestRule.onNodeWithTag("relevanceRadioButton")
+            .assertIsSelected()
+
+        composeTestRule.onNodeWithTag("typeTypeSelector")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+            .assertTextEquals("Type")
+            .performClick()
+
+        composeTestRule.onNodeWithTag("typeRadioButton")
+            .assertIsSelected()
+        composeTestRule.onNodeWithTag("relevanceRadioButton")
+            .assertIsNotSelected()
     }
 }

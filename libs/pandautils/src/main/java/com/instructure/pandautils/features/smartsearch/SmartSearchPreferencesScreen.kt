@@ -105,9 +105,13 @@ fun SmartSearchPreferencesScreen(
             }
 
             Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { selectedSort = SmartSearchSortType.RELEVANCE }) {
+                modifier = Modifier
+                    .clickable { selectedSort = SmartSearchSortType.RELEVANCE }
+                    .testTag("relevanceTypeSelector")) {
                 RadioButton(
-                    modifier = Modifier.padding(start = 8.dp),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .testTag("relevanceRadioButton"),
                     selected = SmartSearchSortType.RELEVANCE == selectedSort,
                     onClick = { selectedSort = SmartSearchSortType.RELEVANCE },
                     colors = RadioButtonDefaults.colors(
@@ -128,9 +132,13 @@ fun SmartSearchPreferencesScreen(
             }
 
             Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { selectedSort = SmartSearchSortType.TYPE }) {
+                modifier = Modifier
+                    .clickable { selectedSort = SmartSearchSortType.TYPE }
+                    .testTag("typeTypeSelector")) {
                 RadioButton(
-                    modifier = Modifier.padding(start = 8.dp),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .testTag("typeRadioButton"),
                     selected = SmartSearchSortType.TYPE == selectedSort,
                     onClick = { selectedSort = SmartSearchSortType.TYPE },
                     colors = RadioButtonDefaults.colors(
@@ -280,7 +288,7 @@ fun SmartSearchPreferencesScreenDarkPreview() {
         Color.Magenta,
         sortType = SmartSearchSortType.RELEVANCE,
         filters = SmartSearchFilter.entries,
-        navigationClick = {_, _ ->}
+        navigationClick = { _, _ -> }
     )
 }
 
