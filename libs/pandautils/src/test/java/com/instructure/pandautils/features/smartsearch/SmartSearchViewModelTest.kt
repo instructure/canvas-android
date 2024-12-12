@@ -23,9 +23,11 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.SmartSearchContentType
+import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.canvasapi2.models.SmartSearchResult
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -101,7 +103,7 @@ class SmartSearchViewModelTest {
                 body = "This is the body of the announcement"
             )
         )
-        coEvery { repository.smartSearch(any(), any()) } returns result
+        coEvery { repository.smartSearch(any(), any(), any()) } returns result
 
         val expected = result.map {
             SmartSearchResultUiState(
@@ -143,7 +145,7 @@ class SmartSearchViewModelTest {
 
     @Test
     fun `Error if api call fails`() {
-        coEvery { repository.smartSearch(any(), any()) } throws Exception()
+        coEvery { repository.smartSearch(any(), any(), any()) } throws Exception()
 
         val viewModel = createViewModel()
 
@@ -188,12 +190,12 @@ class SmartSearchViewModelTest {
                 body = it.body,
                 relevance = it.relevance,
                 url = it.htmlUrl,
-                type = it.contentType
+                type = it.contentType,
             )
         }
         val query = "test"
-        coEvery { repository.smartSearch(any(), "query") } returns emptyList()
-        coEvery { repository.smartSearch(any(), "test") } returns result
+        coEvery { repository.smartSearch(any(), "query", any()) } returns emptyList()
+        coEvery { repository.smartSearch(any(), "test", any()) } returns result
 
         val viewModel = createViewModel()
 
@@ -220,5 +222,23 @@ class SmartSearchViewModelTest {
 
     private fun createViewModel(): SmartSearchViewModel {
         return SmartSearchViewModel(repository, savedStateHandle)
+    }
+
+    @Test
+    fun `Apply filters`() {
+        coEvery { repository.smartSearch(any(), any(), any()) } returns emptyList()
+        val viewModel = createViewModel()
+
+        val filters = listOf(SmartSearchFilter.ASSIGNMENTS, SmartSearchFilter.PAGES)
+
+        viewModel.uiState.value.actionHandler(SmartSearchAction.Filter(filters))
+
+        coVerify {
+            repository.smartSearch(any(), any(), filters)
+        }
+
+        val uiState = viewModel.uiState.value
+
+        assertEquals(filters, uiState.filters)
     }
 }
