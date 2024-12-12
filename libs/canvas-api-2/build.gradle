@@ -41,6 +41,7 @@ buildscript {
 }
 
 android {
+    namespace 'com.instructure.canvasapi2'
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -63,6 +64,19 @@ android {
 
     hilt {
         enableAggregatingTask = false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 

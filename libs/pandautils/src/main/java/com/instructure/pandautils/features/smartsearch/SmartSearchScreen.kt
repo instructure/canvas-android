@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.smartsearch
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -38,9 +40,14 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -56,6 +63,7 @@ import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -65,98 +73,250 @@ import com.instructure.pandautils.utils.color
 @Composable
 fun SmartSearchScreen(
     uiState: SmartSearchUiState,
+    smartSearchSortType: SmartSearchSortType = SmartSearchSortType.RELEVANCE,
     navigationItemClick: () -> Unit
 ) {
+    var showPreferences by remember { mutableStateOf(false) }
+    var sortType by remember { mutableStateOf(smartSearchSortType) }
+
     CanvasTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    backgroundColor = Color(uiState.canvasContext.color),
-                    navigationIcon = {
-                        IconButton(onClick = { navigationItemClick() }) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_back_arrow),
-                                contentDescription = stringResource(R.string.contentDescription_back),
-                                tint = colorResource(R.color.textLightest)
-                            )
-                        }
-                    },
-                    title = {
-                        SearchBar(
-                            modifier = Modifier.testTag("searchBar"),
-                            icon = R.drawable.ic_smart_search,
-                            tintColor = colorResource(R.color.textLightest),
-                            onExpand = {},
-                            onSearch = { uiState.actionHandler(SmartSearchAction.Search(it)) },
-                            placeholder = stringResource(R.string.smartSearchPlaceholder),
-                            collapsable = false,
-                            searchQuery = uiState.query
+        if (showPreferences) {
+            SmartSearchPreferencesScreen(
+                Color(uiState.canvasContext.color),
+                sortType,
+                uiState.filters
+            ) { filters, type ->
+                showPreferences = false
+                sortType = type
+                uiState.actionHandler(SmartSearchAction.Filter(filters))
+            }
+        }
+
+        SmartSearchScreenContent(uiState, sortType, navigationItemClick) {
+            showPreferences = true
+        }
+    }
+}
+
+@Composable
+private fun SmartSearchScreenContent(
+    uiState: SmartSearchUiState,
+    sortType: SmartSearchSortType,
+    navigationItemClick: () -> Unit,
+    onFilterClick: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                backgroundColor = Color(uiState.canvasContext.color),
+                navigationIcon = {
+                    IconButton(onClick = { navigationItemClick() }) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_back_arrow),
+                            contentDescription = stringResource(R.string.contentDescription_back),
+                            tint = colorResource(R.color.textLightest)
                         )
-                    },
+                    }
+                },
+                title = {
+                    SearchBar(
+                        modifier = Modifier.testTag("searchBar"),
+                        icon = R.drawable.ic_smart_search,
+                        tintColor = colorResource(R.color.textLightest),
+                        onExpand = {},
+                        onSearch = { uiState.actionHandler(SmartSearchAction.Search(it)) },
+                        placeholder = stringResource(R.string.smartSearchPlaceholder),
+                        collapsable = false,
+                        searchQuery = uiState.query
+                    )
+                },
+                actions = {
+                    IconButton(
+                        modifier = Modifier.testTag("filterButton"),
+                        onClick = { onFilterClick() }
+                    ) {
+                        Icon(
+                            painterResource(
+                                id = if (uiState.filters.size == 4 || uiState.filters.isEmpty()) {
+                                    R.drawable.ic_filter_outline
+                                } else {
+                                    R.drawable.ic_filter_filled
+                                }
+                            ),
+                            contentDescription = stringResource(R.string.contentDescription_filter),
+                            tint = colorResource(R.color.textLightest)
+                        )
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        when {
+            uiState.loading -> {
+                Loading(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLight))
+                        .testTag("loading"),
+                    title = stringResource(R.string.smartSearchLoadingTitle),
+                    message = stringResource(R.string.smartSearchLoadingSubtitle),
+                    animation = R.raw.panda_reading
                 )
             }
-        ) { padding ->
-            when {
-                uiState.loading -> {
-                    Loading(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(colorResource(R.color.backgroundLight))
-                            .testTag("loading"),
-                        title = stringResource(R.string.smartSearchLoadingTitle),
-                        message = stringResource(R.string.smartSearchLoadingSubtitle),
-                        animation = R.raw.panda_reading
-                    )
-                }
 
-                uiState.error -> {
-                    ErrorContent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(colorResource(R.color.backgroundLight))
-                            .testTag("error"),
-                        errorMessage = stringResource(R.string.errorOccurred),
-                        retryClick = {
-                            uiState.actionHandler(
-                                SmartSearchAction.Search(
-                                    uiState.query
-                                )
+            uiState.error -> {
+                ErrorContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLight))
+                        .testTag("error"),
+                    errorMessage = stringResource(R.string.errorOccurred),
+                    retryClick = {
+                        uiState.actionHandler(
+                            SmartSearchAction.Search(
+                                uiState.query
                             )
-                        }
-                    )
-                }
+                        )
+                    }
+                )
+            }
 
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                            .background(colorResource(R.color.backgroundLight))
-                    ) {
-                        item {
-                            CourseHeader(uiState.canvasContext.name.orEmpty())
-                        }
-                        if (uiState.results.isNotEmpty()) {
-                            items(uiState.results) {
-                                ResultItem(
-                                    it,
-                                    Color(uiState.canvasContext.color),
-                                    uiState.actionHandler
-                                )
+            else -> {
+                var openedGroups by remember { mutableStateOf(SmartSearchContentType.entries.toSet()) }
+                LazyColumn(
+                    modifier = Modifier
+                        .testTag("results")
+                        .fillMaxSize()
+                        .padding(padding)
+                        .background(colorResource(R.color.backgroundLight))
+                ) {
+                    item {
+                        CourseHeader(uiState.canvasContext.name.orEmpty())
+                    }
+                    if (uiState.results.isNotEmpty()) {
+                        if (sortType == SmartSearchSortType.TYPE) {
+                            groupedItems(uiState, openedGroups) { type ->
+                                openedGroups = if (type in openedGroups) {
+                                    openedGroups - type
+                                } else {
+                                    openedGroups + type
+                                }
                             }
                         } else {
-                            item {
-                                EmptyContent(
-                                    modifier = Modifier.fillMaxHeight().testTag("empty"),
-                                    emptyTitle = stringResource(R.string.smartSearchEmptyTitle),
-                                    emptyMessage = stringResource(R.string.smartSearchEmptyMessage),
-                                    imageRes = R.drawable.ic_smart_search_empty
-                                )
-                            }
+                            defaultItems(uiState)
+                        }
+                    } else {
+                        item {
+                            EmptyContent(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .testTag("empty"),
+                                emptyTitle = stringResource(R.string.smartSearchEmptyTitle),
+                                emptyMessage = stringResource(R.string.smartSearchEmptyMessage),
+                                imageRes = R.drawable.ic_smart_search_empty
+                            )
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+private fun LazyListScope.defaultItems(uiState: SmartSearchUiState) {
+    items(uiState.results) {
+        ResultItem(
+            it,
+            Color(uiState.canvasContext.color),
+            actionHandler = uiState.actionHandler
+        )
+    }
+}
+
+private fun LazyListScope.groupedItems(
+    uiState: SmartSearchUiState,
+    openedGroups: Set<SmartSearchContentType>,
+    onGroupClick: (SmartSearchContentType) -> Unit
+) {
+    val groupedItems = uiState.results.groupBy { it.type }
+    groupedItems.onEachIndexed { index, entry ->
+        item(key = entry.key.name) {
+            GroupHeader(
+                type = entry.key,
+                items = entry.value,
+                openedGroups = openedGroups,
+                onGroupClick = onGroupClick,
+                hasBottomDivider = openedGroups.contains(entry.key) || index == groupedItems.size - 1,
+                modifier = Modifier.animateItem()
+            )
+        }
+        if (openedGroups.contains(entry.key)) {
+            items(entry.value,
+                key = { it.url }) {
+                ResultItem(
+                    it,
+                    Color(uiState.canvasContext.color),
+                    actionHandler = uiState.actionHandler,
+                    modifier = Modifier.animateItem()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun GroupHeader(
+    type: SmartSearchContentType,
+    items: List<SmartSearchResultUiState>,
+    hasBottomDivider: Boolean,
+    openedGroups: Set<SmartSearchContentType>,
+    modifier: Modifier = Modifier,
+    onGroupClick: (SmartSearchContentType) -> Unit
+) {
+    val rotation =
+        animateFloatAsState(if (openedGroups.contains(type)) 180f else 0f, label = "rotation")
+    Column(
+        modifier = modifier
+            .clickable { onGroupClick(type) }
+            .fillMaxWidth()
+            .background(colorResource(R.color.backgroundLightest))
+            .testTag("${type.name.lowercase()}GroupHeader"),
+    ) {
+        CanvasDivider()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(
+                    when (type) {
+                        SmartSearchContentType.ANNOUNCEMENT -> R.string.smartSearchAnnouncementGroupTitle
+                        SmartSearchContentType.DISCUSSION_TOPIC -> R.string.smartSearchDiscussionGroupTitle
+                        SmartSearchContentType.ASSIGNMENT -> R.string.smartSearchAssignmentGroupTitle
+                        SmartSearchContentType.WIKI_PAGE -> R.string.smartSearchPageGroupTitle
+                    },
+                    items.size
+                ),
+                color = colorResource(R.color.textDark),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .testTag("groupHeaderTitle")
+            )
+
+            Icon(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .rotate(rotation.value),
+                painter = painterResource(R.drawable.ic_chevron_down),
+                contentDescription = null,
+                tint = colorResource(R.color.textDarkest)
+            )
+        }
+        if (hasBottomDivider) {
+            CanvasDivider()
         }
     }
 }
@@ -198,6 +358,7 @@ private fun CourseHeader(title: String) {
 private fun ResultItem(
     result: SmartSearchResultUiState,
     color: Color,
+    modifier: Modifier = Modifier,
     actionHandler: (SmartSearchAction) -> Unit
 ) {
     fun getContentTypeTitle(type: SmartSearchContentType): Int {
@@ -218,7 +379,7 @@ private fun ResultItem(
         }
     }
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(colorResource(R.color.backgroundLightest))
             .clickable { actionHandler(SmartSearchAction.Route(result.url)) }
@@ -426,5 +587,63 @@ fun SmartSearchEmptyDarkPreview() {
             query = "query",
             canvasContext = Course(name = "Test course"),
             results = emptyList()
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun SmartSearchGroupPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        smartSearchSortType = SmartSearchSortType.TYPE,
+        uiState = SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
+                SmartSearchResultUiState(
+                    title = "Title",
+                    body = "Body",
+                    relevance = 23,
+                    type = SmartSearchContentType.ASSIGNMENT,
+                    url = "url"
+                ),
+                SmartSearchResultUiState(
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 75,
+                    type = SmartSearchContentType.WIKI_PAGE,
+                    url = "url"
+                )
+            )
+        ) {}) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SmartSearchGroupDarkPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SmartSearchScreen(
+        smartSearchSortType = SmartSearchSortType.TYPE,
+        uiState = SmartSearchUiState(
+            loading = false,
+            query = "query",
+            canvasContext = Course(name = "Test course"),
+            results = listOf(
+                SmartSearchResultUiState(
+                    title = "Title",
+                    body = "Body",
+                    relevance = 75,
+                    type = SmartSearchContentType.ANNOUNCEMENT,
+                    url = "url"
+                ),
+                SmartSearchResultUiState(
+                    title = "Not to lay peacefully between its four familiar walls.",
+                    body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
+                    relevance = 50,
+                    type = SmartSearchContentType.DISCUSSION_TOPIC,
+                    url = "url"
+                )
+            )
         ) {}) {}
 }
