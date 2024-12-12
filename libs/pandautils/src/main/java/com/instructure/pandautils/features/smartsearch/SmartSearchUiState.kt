@@ -40,7 +40,8 @@ data class SmartSearchResultUiState(
 sealed class SmartSearchAction {
     data class Search(val query: String) : SmartSearchAction()
     data class Route(val url: String) : SmartSearchAction()
-    data class Filter(val filters: List<SmartSearchFilter>): SmartSearchAction()
+    data class Filter(val filters: List<SmartSearchFilter>) :
+        SmartSearchAction()
 }
 
 sealed class SmartSearchViewModelAction {

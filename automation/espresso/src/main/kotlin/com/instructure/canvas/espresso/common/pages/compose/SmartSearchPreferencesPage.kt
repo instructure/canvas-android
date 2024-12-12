@@ -22,11 +22,14 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.instructure.canvasapi2.models.SmartSearchFilter
 
 class SmartSearchPreferencesPage(private val composeTestRule: ComposeTestRule) {
 
     fun toggleFilter(filter: SmartSearchFilter) {
+        composeTestRule.onNodeWithTag("preferencesScreen", useUnmergedTree = true)
+            .performScrollToNode(hasTestTag("${filter.name.lowercase()}FilterRow"))
         composeTestRule.onNodeWithTag("${filter.name.lowercase()}FilterRow")
             .performClick()
     }
@@ -37,6 +40,8 @@ class SmartSearchPreferencesPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertFilterChecked(filter: SmartSearchFilter) {
+        composeTestRule.onNodeWithTag("preferencesScreen", useUnmergedTree = true)
+            .performScrollToNode(hasTestTag("${filter.name.lowercase()}FilterRow"))
         composeTestRule.onNode(
             hasTestTag("checkbox").and(hasParent(hasTestTag("${filter.name.lowercase()}FilterRow"))),
             useUnmergedTree = true
@@ -45,6 +50,8 @@ class SmartSearchPreferencesPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertFilterNotChecked(filter: SmartSearchFilter) {
+        composeTestRule.onNodeWithTag("preferencesScreen", useUnmergedTree = true)
+            .performScrollToNode(hasTestTag("${filter.name.lowercase()}FilterRow"))
         composeTestRule.onNode(
             hasTestTag("checkbox").and(hasParent(hasTestTag("${filter.name.lowercase()}FilterRow"))),
             useUnmergedTree = true
@@ -54,6 +61,16 @@ class SmartSearchPreferencesPage(private val composeTestRule: ComposeTestRule) {
 
     fun toggleAll() {
         composeTestRule.onNodeWithTag("toggleAllButton", useUnmergedTree = true)
+            .performClick()
+    }
+
+    fun selectRelevanceSortType() {
+        composeTestRule.onNodeWithTag("relevanceTypeSelector")
+            .performClick()
+    }
+
+    fun selectTypeSortType() {
+        composeTestRule.onNodeWithTag("typeTypeSelector")
             .performClick()
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.espresso.page.BasePage
 
 class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage() {
@@ -94,6 +95,27 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
             hasTestTag("filterButton"),
             useUnmergedTree = true
         )
+            .performClick()
+    }
+
+    fun assertGroupHeaderDisplayed(type: SmartSearchContentType) {
+        composeTestRule.onNodeWithTag("results", useUnmergedTree = true)
+            .performScrollToNode(hasTestTag("${type.name.lowercase()}GroupHeader"))
+
+        composeTestRule.onNodeWithTag("${type.name.lowercase()}GroupHeader", useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    fun assertGroupHeaderNotDisplayed(type: SmartSearchContentType) {
+        composeTestRule.onNodeWithTag("${type.name.lowercase()}GroupHeader", useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
+    fun toggleGroup(type: SmartSearchContentType) {
+        composeTestRule.onNodeWithTag("results", useUnmergedTree = true)
+            .performScrollToNode(hasTestTag("${type.name.lowercase()}GroupHeader"))
+        composeTestRule.onNodeWithTag("${type.name.lowercase()}GroupHeader", useUnmergedTree = true)
             .performClick()
     }
 }

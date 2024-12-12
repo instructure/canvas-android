@@ -1956,4 +1956,11 @@
     <string name="smartSearchPagesTitle">Pages</string>
     <string name="resultTypeTitle">Result type</string>
     <string name="searchPreferencesTitle">Search Preferences</string>
+    <string name="sortByTitle">Sort By</string>
+    <string name="sortByRelevanceTitle">Relevance</string>
+    <string name="sortByTypeTitle">Type</string>
+    <string name="smartSearchAnnouncementGroupTitle">Announcements (%d)</string>
+    <string name="smartSearchDiscussionGroupTitle">Discussion topics (%d)</string>
+    <string name="smartSearchAssignmentGroupTitle">Assignments (%d)</string>
+    <string name="smartSearchPageGroupTitle">Pages (%d)</string>
 </resources>

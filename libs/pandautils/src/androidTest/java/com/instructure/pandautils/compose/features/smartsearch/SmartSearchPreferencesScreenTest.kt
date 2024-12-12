@@ -18,17 +18,21 @@ package com.instructure.pandautils.compose.features.smartsearch
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.pandautils.features.smartsearch.SmartSearchPreferencesScreen
+import com.instructure.pandautils.features.smartsearch.SmartSearchSortType
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,49 +49,40 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = listOf(SmartSearchFilter.ASSIGNMENTS, SmartSearchFilter.ANNOUNCEMENTS),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
-        composeTestRule.onNodeWithTag("assignmentsFilterRow")
-            .assertIsDisplayed()
-            .assertHasClickAction()
-        composeTestRule.onNode(
-            hasTestTag("checkbox").and(hasParent(hasTestTag("assignmentsFilterRow"))),
-            useUnmergedTree = true
-        )
-            .assertIsDisplayed()
-            .assertIsOn()
+        listOf("assignmentsFilterRow", "announcementsFilterRow").forEach {
+            composeTestRule.onNodeWithTag("preferencesScreen", useUnmergedTree = true)
+                .performScrollToNode(hasTestTag(it))
 
-        composeTestRule.onNodeWithTag("announcementsFilterRow")
-            .assertIsDisplayed()
-            .assertHasClickAction()
-        composeTestRule.onNode(
-            hasTestTag("checkbox").and(hasParent(hasTestTag("announcementsFilterRow"))),
-            useUnmergedTree = true
-        )
-            .assertIsDisplayed()
-            .assertIsOn()
+            composeTestRule.onNodeWithTag(it)
+                .assertIsDisplayed()
+                .assertHasClickAction()
+            composeTestRule.onNode(
+                hasTestTag("checkbox").and(hasParent(hasTestTag(it))),
+                useUnmergedTree = true
+            )
+                .assertIsDisplayed()
+                .assertIsOn()
+        }
 
-        composeTestRule.onNodeWithTag("pagesFilterRow")
-            .assertIsDisplayed()
-            .assertHasClickAction()
-        composeTestRule.onNode(
-            hasTestTag("checkbox").and(hasParent(hasTestTag("pagesFilterRow"))),
-            useUnmergedTree = true
-        )
-            .assertIsDisplayed()
-            .assertIsOff()
+        listOf("pagesFilterRow", "discussion_topicsFilterRow").forEach {
+            composeTestRule.onNodeWithTag("preferencesScreen", useUnmergedTree = true)
+                .performScrollToNode(hasTestTag(it))
 
-        composeTestRule.onNodeWithTag("discussion_topicsFilterRow")
-            .assertIsDisplayed()
-            .assertHasClickAction()
-        composeTestRule.onNode(
-            hasTestTag("checkbox").and(hasParent(hasTestTag("discussion_topicsFilterRow"))),
-            useUnmergedTree = true
-        )
-            .assertIsDisplayed()
-            .assertIsOff()
+            composeTestRule.onNodeWithTag(it)
+                .assertIsDisplayed()
+                .assertHasClickAction()
+            composeTestRule.onNode(
+                hasTestTag("checkbox").and(hasParent(hasTestTag(it))),
+                useUnmergedTree = true
+            )
+                .assertIsDisplayed()
+                .assertIsOff()
+        }
     }
 
     @Test
@@ -96,7 +91,8 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = listOf(SmartSearchFilter.ASSIGNMENTS, SmartSearchFilter.ANNOUNCEMENTS),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
@@ -107,6 +103,8 @@ class SmartSearchPreferencesScreenTest {
             .performClick()
 
         SmartSearchFilter.entries.forEach { filter ->
+            composeTestRule.onNodeWithTag("preferencesScreen", useUnmergedTree = true)
+                .performScrollToNode(hasTestTag("${filter.name.lowercase()}FilterRow"))
             composeTestRule.onNode(
                 hasTestTag("checkbox").and(hasParent(hasTestTag("${filter.name.lowercase()}FilterRow"))),
                 useUnmergedTree = true
@@ -122,6 +120,8 @@ class SmartSearchPreferencesScreenTest {
             .performClick()
 
         SmartSearchFilter.entries.forEach { filter ->
+            composeTestRule.onNodeWithTag("preferencesScreen", useUnmergedTree = true)
+                .performScrollToNode(hasTestTag("${filter.name.lowercase()}FilterRow"))
             composeTestRule.onNode(
                 hasTestTag("checkbox").and(hasParent(hasTestTag("${filter.name.lowercase()}FilterRow"))),
                 useUnmergedTree = true
@@ -137,7 +137,8 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = emptyList(),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
@@ -162,7 +163,8 @@ class SmartSearchPreferencesScreenTest {
             SmartSearchPreferencesScreen(
                 color = Color.Magenta,
                 filters = emptyList(),
-                navigationClick = {}
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
             )
         }
 
@@ -176,5 +178,57 @@ class SmartSearchPreferencesScreenTest {
 
         assignmentCheckbox.performClick()
         assignmentCheckbox.assertIsOff()
+    }
+
+    @Test
+    fun assertRelevanceTypeSelector() {
+        composeTestRule.setContent {
+            SmartSearchPreferencesScreen(
+                color = Color.Magenta,
+                filters = emptyList(),
+                sortType = SmartSearchSortType.TYPE,
+                navigationClick = {_, _ ->}
+            )
+        }
+
+        composeTestRule.onNodeWithTag("typeRadioButton")
+            .assertIsSelected()
+
+        composeTestRule.onNodeWithTag("relevanceTypeSelector")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+            .assertTextEquals("Relevance")
+            .performClick()
+
+        composeTestRule.onNodeWithTag("relevanceRadioButton")
+            .assertIsSelected()
+        composeTestRule.onNodeWithTag("typeRadioButton")
+            .assertIsNotSelected()
+    }
+
+    @Test
+    fun assertTypeTypeSelector() {
+        composeTestRule.setContent {
+            SmartSearchPreferencesScreen(
+                color = Color.Magenta,
+                filters = emptyList(),
+                sortType = SmartSearchSortType.RELEVANCE,
+                navigationClick = {_, _ ->}
+            )
+        }
+
+        composeTestRule.onNodeWithTag("relevanceRadioButton")
+            .assertIsSelected()
+
+        composeTestRule.onNodeWithTag("typeTypeSelector")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+            .assertTextEquals("Type")
+            .performClick()
+
+        composeTestRule.onNodeWithTag("typeRadioButton")
+            .assertIsSelected()
+        composeTestRule.onNodeWithTag("relevanceRadioButton")
+            .assertIsNotSelected()
     }
 }
