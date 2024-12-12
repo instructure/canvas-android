@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
@@ -86,7 +88,9 @@ fun SmartSearchPreferencesScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .background(color = colorResource(R.color.backgroundLightest))
+                .testTag("preferencesScreen")
         ) {
             Row(
                 modifier = Modifier

@@ -56,4 +56,14 @@ class SmartSearchPreferencesPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("toggleAllButton", useUnmergedTree = true)
             .performClick()
     }
+
+    fun selectRelevanceSortType() {
+        composeTestRule.onNodeWithTag("relevanceTypeSelector")
+            .performClick()
+    }
+
+    fun selectTypeSortType() {
+        composeTestRule.onNodeWithTag("typeTypeSelector")
+            .performClick()
+    }
 }
