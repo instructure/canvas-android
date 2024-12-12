@@ -35,6 +35,7 @@ import com.instructure.student.ui.pages.PageDetailsPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Test
 
 @HiltAndroidTest
 class StudentSmartSearchInteractionTest : SmartSearchInteractionTest() {
@@ -46,6 +47,11 @@ class StudentSmartSearchInteractionTest : SmartSearchInteractionTest() {
     private val dashboardPage = DashboardPage()
     private val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions())
     private val pageDetailsPage = PageDetailsPage(ModuleItemInteractions())
+
+    @Test
+    fun dummyTest() {
+        // This is a dummy test to make the test runner happy
+    }
 
     override fun initData(): MockCanvas {
         val data = MockCanvas.init(
