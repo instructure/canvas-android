@@ -312,7 +312,7 @@ class SmartSearchScreenTest {
                             body = "Test body 2",
                             relevance = 50,
                             type = SmartSearchContentType.ANNOUNCEMENT,
-                            url = "https://example.com"
+                            url = "https://example2.com"
                         )
                     ),
                     actionHandler = {},
