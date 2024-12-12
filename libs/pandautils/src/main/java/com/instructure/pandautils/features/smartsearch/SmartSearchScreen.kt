@@ -78,6 +78,7 @@ fun SmartSearchScreen(
 ) {
     var showPreferences by remember { mutableStateOf(false) }
     var sortType by remember { mutableStateOf(smartSearchSortType) }
+
     CanvasTheme {
         if (showPreferences) {
             SmartSearchPreferencesScreen(
@@ -89,10 +90,10 @@ fun SmartSearchScreen(
                 sortType = type
                 uiState.actionHandler(SmartSearchAction.Filter(filters))
             }
-        } else {
-            SmartSearchScreenContent(uiState, sortType, navigationItemClick) {
-                showPreferences = true
-            }
+        }
+
+        SmartSearchScreenContent(uiState, sortType, navigationItemClick) {
+            showPreferences = true
         }
     }
 }
@@ -268,7 +269,8 @@ private fun GroupHeader(
     onGroupClick: (SmartSearchContentType) -> Unit,
     hasBottomDivider: Boolean
 ) {
-    val rotation = animateFloatAsState(if (openedGroups.contains(type)) 180f else 0f, label = "rotation")
+    val rotation =
+        animateFloatAsState(if (openedGroups.contains(type)) 180f else 0f, label = "rotation")
     Column(
         modifier = Modifier
             .clickable { onGroupClick(type) }
