@@ -1960,7 +1960,7 @@
     <string name="sortByRelevanceTitle">Relevance</string>
     <string name="sortByTypeTitle">Type</string>
     <string name="smartSearchAnnouncementGroupTitle">Announcements (%d)</string>
-    <string name="smartSearchDiscussionGroupTitle">Discussions (%d)</string>
+    <string name="smartSearchDiscussionGroupTitle">Discussion topics (%d)</string>
     <string name="smartSearchAssignmentGroupTitle">Assignments (%d)</string>
     <string name="smartSearchPageGroupTitle">Pages (%d)</string>
 </resources>

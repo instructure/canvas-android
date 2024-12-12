@@ -240,21 +240,24 @@ private fun LazyListScope.groupedItems(
 ) {
     val groupedItems = uiState.results.groupBy { it.type }
     groupedItems.onEachIndexed { index, entry ->
-        item {
+        item(key = entry.key.name) {
             GroupHeader(
-                entry.key,
-                entry.value,
-                openedGroups,
-                onGroupClick,
-                openedGroups.contains(entry.key) || index == groupedItems.size - 1
+                type = entry.key,
+                items = entry.value,
+                openedGroups = openedGroups,
+                onGroupClick = onGroupClick,
+                hasBottomDivider = openedGroups.contains(entry.key) || index == groupedItems.size - 1,
+                modifier = Modifier.animateItem()
             )
         }
         if (openedGroups.contains(entry.key)) {
-            items(entry.value) {
+            items(entry.value,
+                key = { it.url }) {
                 ResultItem(
                     it,
                     Color(uiState.canvasContext.color),
-                    actionHandler = uiState.actionHandler
+                    actionHandler = uiState.actionHandler,
+                    modifier = Modifier.animateItem()
                 )
             }
         }
@@ -265,14 +268,15 @@ private fun LazyListScope.groupedItems(
 private fun GroupHeader(
     type: SmartSearchContentType,
     items: List<SmartSearchResultUiState>,
+    hasBottomDivider: Boolean,
     openedGroups: Set<SmartSearchContentType>,
-    onGroupClick: (SmartSearchContentType) -> Unit,
-    hasBottomDivider: Boolean
+    modifier: Modifier = Modifier,
+    onGroupClick: (SmartSearchContentType) -> Unit
 ) {
     val rotation =
         animateFloatAsState(if (openedGroups.contains(type)) 180f else 0f, label = "rotation")
     Column(
-        modifier = Modifier
+        modifier = modifier
             .clickable { onGroupClick(type) }
             .fillMaxWidth()
             .background(colorResource(R.color.backgroundLightest))
