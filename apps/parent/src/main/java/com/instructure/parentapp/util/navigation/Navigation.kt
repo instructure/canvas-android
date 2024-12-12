@@ -60,6 +60,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val createEvent = "$baseUrl/create-event/{${CreateUpdateEventFragment.INITIAL_DATE}}"
     private val updateEvent = "$baseUrl/update-event/{${CreateUpdateEventFragment.SCHEDULE_ITEM}}"
     private val todo = "$baseUrl/todos/{${ToDoFragment.PLANNER_ITEM}}"
+    private val todoById = "$baseUrl/todos/{${ToDoFragment.PLANNABLE_ID}}"
     private val createToDo = "$baseUrl/create-todo/{${CreateUpdateToDoFragment.INITIAL_DATE}}"
     private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
     private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
@@ -67,7 +68,6 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val simpleWebView = "$baseUrl/internal/{${Const.URL}}/{${Const.TITLE}}/{${INITIAL_COOKIES}}"
     private val splash = "$baseUrl/splash/{${Const.QR_CODE_MASQUERADE_ID}}"
     private val createAccount = "$baseUrl/account_creation?pairing_code={${CreateAccountFragment.PAIRING_CODE}}&domain={${CreateAccountFragment.DOMAIN}}&accountId={${CreateAccountFragment.ACCOUNT_ID}}"
-
 
     val notAParent = "$baseUrl/not-a-parent"
     val courses = "$baseUrl/courses"
@@ -180,6 +180,15 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
                 deepLink {
                     uriPattern = calendarEvent
+                }
+            }
+            fragment<ToDoFragment>(todoById) {
+                argument(ToDoFragment.PLANNABLE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = todoById
                 }
             }
             fragment<ToDoFragment>(todo) {

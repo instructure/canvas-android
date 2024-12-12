@@ -174,6 +174,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadStudents(forceNetwork: Boolean) {
+        selectedStudentHolder.updateSelectedStudent(null)
         val students = repository.getStudents(forceNetwork)
         val selectedStudent = if (this.students.isEmpty()) {
             students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
@@ -183,9 +184,7 @@ class DashboardViewModel @Inject constructor(
         this.students = students.toMutableList()
 
         parentPrefs.currentStudent = selectedStudent
-        selectedStudent?.let {
-            selectedStudentHolder.updateSelectedStudent(it)
-        }
+        selectedStudentHolder.updateSelectedStudent(selectedStudent)
 
         val studentItems = students.map { user ->
             StudentItemViewModel(
