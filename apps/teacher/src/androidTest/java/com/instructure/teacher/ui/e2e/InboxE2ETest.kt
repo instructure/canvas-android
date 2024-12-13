@@ -131,7 +131,7 @@ class InboxE2ETest : TeacherComposeTest() {
         inboxPage.openConversation(seedConversation[0].subject)
 
         Log.d(STEP_TAG, "Star the conversation and navigate back to Inbox Page.")
-        inboxDetailsPage.pressOverflowMenuItemForConversation("Star")
+        inboxDetailsPage.pressStarButton(true)
         composeTestRule.waitForIdle()
         Espresso.pressBack()
 
@@ -164,7 +164,7 @@ class InboxE2ETest : TeacherComposeTest() {
         inboxPage.openConversation(seedConversation[0].subject)
 
         Log.d(STEP_TAG, "Remove star from the conversation and navigate back to Inbox Page.")
-        inboxDetailsPage.pressOverflowMenuItemForConversation("Unstar")
+        inboxDetailsPage.pressStarButton(false)
         composeTestRule.waitForIdle()
         Espresso.pressBack()
 
@@ -259,6 +259,7 @@ class InboxE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
         inboxPage.filterInbox("Archived")
+        refresh()
 
         Log.d(STEP_TAG,"Assert that '${seedConversation2[0].subject}' conversation is displayed by the 'Archived' filter.")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
@@ -473,6 +474,7 @@ class InboxE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Delete the '${seedConversation3[0]}' conversation and assert that it has disappeared from the list.")
         inboxDetailsPage.pressOverflowMenuItemForConversation("Delete")
+        inboxDetailsPage.pressAlertButton("Delete")
 
         Log.d(STEP_TAG, "Assert that the empty view is displayed.")
         inboxPage.assertInboxEmpty()

@@ -209,8 +209,8 @@ class InboxDetailsViewModelTest {
 
         assertEquals(3, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeleted)), events[0])
-        assertEquals(InboxDetailsFragmentAction.CloseFragment, events[1])
-        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[2])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
+        assertEquals(InboxDetailsFragmentAction.CloseFragment, events[2])
     }
 
     @Test
