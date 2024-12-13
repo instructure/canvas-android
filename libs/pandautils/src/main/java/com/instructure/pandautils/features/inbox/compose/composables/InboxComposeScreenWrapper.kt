@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.inbox.compose.composables
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -29,7 +28,6 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandl
 import com.instructure.pandautils.features.inbox.compose.InboxComposeScreenOptions
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
-import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.utils.isGroup
 
 @Composable
@@ -41,29 +39,6 @@ fun InboxComposeScreenWrapper(
     recipientPickerActionHandler: (RecipientPickerActionHandler) -> Unit,
     ) {
     val animationLabel = "ScreenSlideTransition"
-
-    BackHandler(uiState.enableCustomBackHandler) {
-        when (uiState.screenOption) {
-            is InboxComposeScreenOptions.None -> {
-                inboxComposeActionHandler(InboxComposeActionHandler.CancelDismissDialog(true))
-            }
-
-            is InboxComposeScreenOptions.ContextPicker -> {
-                contextPickerActionHandler(ContextPickerActionHandler.DoneClicked)
-            }
-
-            is InboxComposeScreenOptions.RecipientPicker -> {
-                when (uiState.recipientPickerUiState.screenOption) {
-                    RecipientPickerScreenOption.Recipients -> {
-                        recipientPickerActionHandler(RecipientPickerActionHandler.RecipientBackClicked)
-                    }
-                    RecipientPickerScreenOption.Roles -> {
-                        recipientPickerActionHandler(RecipientPickerActionHandler.DoneClicked)
-                    }
-                }
-            }
-        }
-    }
 
     AnimatedContent(
         label = animationLabel,

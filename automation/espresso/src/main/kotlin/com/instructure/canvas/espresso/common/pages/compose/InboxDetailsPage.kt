@@ -15,6 +15,8 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import androidx.compose.ui.semantics.SemanticsProperties.Text
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.filterToOne
@@ -24,6 +26,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -150,12 +153,15 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
     private fun pressOverflowIconButtonForMessage(messageBody: String) {
         composeTestRule.waitForIdle()
 
-        val overflowButton = composeTestRule.onNodeWithText(messageBody)
-            .onParent() // SelectionContainer
-            .onParent() // Column
-            .onChildren()
-            .filterToOne(hasContentDescription("More options"))
-            //.get(conversation.messages.indexOf(message))
+        var messageId = 0
+        composeTestRule
+            .onAllNodes(hasTestTag("messageBodyText")).fetchSemanticsNodes().forEachIndexed() { index, node ->
+                if (node.config.getOrNull(Text)?.first()?.text == messageBody) {
+                    messageId = index
+                }
+            }
+        val overflowButton = composeTestRule
+            .onAllNodesWithContentDescription("More options")[messageId]
 
         overflowButton.performScrollTo()
         composeTestRule.waitForIdle()

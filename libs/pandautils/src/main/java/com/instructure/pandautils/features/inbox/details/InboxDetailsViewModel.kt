@@ -189,10 +189,10 @@ class InboxDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val result = repository.deleteConversation(conversationId)
             if (result.isSuccess) {
+                refreshParentFragment()
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeleted)))
                 _events.send(InboxDetailsFragmentAction.CloseFragment)
 
-                refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)))
             }

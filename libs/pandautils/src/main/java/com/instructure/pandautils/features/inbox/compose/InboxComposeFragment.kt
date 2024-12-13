@@ -46,6 +46,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode.REPLY_ALL
 import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.withArgs
@@ -55,7 +56,8 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUploadDialogParent {
+class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUploadDialogParent,
+    NavigationCallbacks {
 
     private val viewModel: InboxComposeViewModel by viewModels()
 
@@ -142,5 +144,33 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
             }
             return Route(null, InboxComposeFragment::class.java, null, bundle)
         }
+    }
+
+    override fun onHandleBackPressed(): Boolean {
+        val uiState = viewModel.uiState.value
+        if (!uiState.enableCustomBackHandler) return false
+
+        when (uiState.screenOption) {
+            is InboxComposeScreenOptions.None -> {
+                viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(true))
+            }
+
+            is InboxComposeScreenOptions.ContextPicker -> {
+                viewModel.handleAction(ContextPickerActionHandler.DoneClicked)
+            }
+
+            is InboxComposeScreenOptions.RecipientPicker -> {
+                when (uiState.recipientPickerUiState.screenOption) {
+                    RecipientPickerScreenOption.Recipients -> {
+                        viewModel.handleAction(RecipientPickerActionHandler.RecipientBackClicked)
+                    }
+                    RecipientPickerScreenOption.Roles -> {
+                        viewModel.handleAction(RecipientPickerActionHandler.DoneClicked)
+                    }
+                }
+            }
+        }
+
+        return true
     }
 }

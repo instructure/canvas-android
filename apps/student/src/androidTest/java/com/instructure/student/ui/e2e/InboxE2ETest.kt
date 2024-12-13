@@ -143,6 +143,7 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
         inboxPage.filterInbox("Archived")
+        refresh()
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
@@ -277,6 +278,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxComposePage.pressSendButton()
 
         composeTestRule.waitForIdle()
+        sleep(1000) // Allow time for messages to propagate
 
         Log.d(STEP_TAG,"Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
@@ -320,15 +322,18 @@ class InboxE2ETest: StudentComposeTest() {
         inboxPage.openConversation(newMessageSubject)
         val newReplyMessage = "This is a quite new reply message."
         Log.d(STEP_TAG,"Reply to $newGroupMessageSubject conversation with '$newReplyMessage' message. Assert that the reply is displayed.")
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Reply")
         inboxComposePage.typeBody(newReplyMessage)
         inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG,"Delete '$newReplyMessage' reply and assert is has been deleted.")
         inboxDetailsPage.pressOverflowMenuItemForMessage(newReplyMessage, "Delete")
+        inboxDetailsPage.pressAlertButton("Delete")
         inboxDetailsPage.assertMessageNotDisplayed(newReplyMessage)
 
         Log.d(STEP_TAG,"Delete the whole '$newGroupMessageSubject' subject and assert that it has been removed from the conversation list on the Inbox Page.")
         inboxDetailsPage.pressOverflowMenuItemForConversation("Delete")
+        inboxDetailsPage.pressAlertButton("Delete")
         inboxPage.assertConversationNotDisplayed(newMessageSubject)
         inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed("Group Message")

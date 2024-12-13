@@ -265,6 +265,8 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
 
         inboxDetailsPage.pressAlertButton("Delete")
 
+        composeTestRule.waitForIdle()
+
         inboxPage.assertConversationNotDisplayed(conversation.subject!!)
     }
 
