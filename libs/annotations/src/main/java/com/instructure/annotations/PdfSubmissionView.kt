@@ -624,6 +624,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
     //region Annotation Manipulation
     fun createNewAnnotation(annotation: Annotation) {
+        if (annotation.type == AnnotationType.FREETEXT) {
+            annotation.flags.remove(AnnotationFlags.NOZOOM)
+        }
+
         if (docSession.annotationMetadata?.canWrite() != true) return
 
         // This is a new annotation; Post it
