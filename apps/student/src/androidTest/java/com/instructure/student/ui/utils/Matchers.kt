@@ -145,12 +145,6 @@ class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : Ty
     override fun describeTo(description: Description) {
         description.appendText("with drawable from resource id: ")
         description.appendValue(resourceId)
-        // TODO: Support resource name in description
-//        if (resourceName != null) {
-//            description.appendText("[");
-//            description.appendText(resourceName);
-//            description.appendText("]");
-//        }
     }
 
     override fun matchesSafely(target: View?): Boolean {
