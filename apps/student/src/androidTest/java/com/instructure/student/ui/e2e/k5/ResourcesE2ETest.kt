@@ -75,6 +75,7 @@ class ResourcesE2ETest : StudentComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back to K5 Resources Page and assert that is displayed.")
         Espresso.pressBack()
+        inboxComposePage.pressExitConfirmationButton()
         resourcesPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Assert that the important links, LTI tools and contacts are still displayed correctly, after the navigation.")

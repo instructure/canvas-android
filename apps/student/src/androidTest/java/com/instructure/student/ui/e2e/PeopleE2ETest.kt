@@ -83,8 +83,12 @@ class PeopleE2ETest : StudentComposeTest() {
         inboxComposePage.pressSendButton()
         personDetailsPage.assertPageObjects()
 
+        composeTestRule.waitForIdle()
+
         Log.d(STEP_TAG,"Navigate back to the Dashboard (Course List) Page.")
         ViewUtils.pressBackButton(3)
+
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Sign out with ${student1.name} student.")
         leftSideNavigationDrawerPage.logout()

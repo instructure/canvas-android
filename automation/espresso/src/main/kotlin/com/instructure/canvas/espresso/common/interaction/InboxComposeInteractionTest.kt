@@ -91,6 +91,8 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         inboxComposePage.typeBody("Test Body")
         inboxComposePage.pressSendButton()
 
+        composeTestRule.waitForIdle()
+
         inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed("Test Subject")
     }
@@ -241,6 +243,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
                 data
             )
         }
+        composeTestRule.waitForIdle()
 
         inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed("Test Subject")

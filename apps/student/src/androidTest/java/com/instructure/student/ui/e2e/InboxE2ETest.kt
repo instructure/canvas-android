@@ -94,6 +94,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
         inboxPage.openConversation(seededConversation.subject)
         inboxDetailsPage.pressOverflowMenuItemForConversation("Mark as Unread")
+        Espresso.pressBack()
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
@@ -135,6 +136,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxPage.openConversation(seededConversation.subject)
         inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
         Espresso.pressBack()
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
@@ -266,13 +268,15 @@ class InboxE2ETest: StudentComposeTest() {
         selectContextPage.selectContext(course.name)
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Students")
-        recipientPickerPage.pressLabel(student2.name)
+        recipientPickerPage.pressLabel(student2.shortName)
         recipientPickerPage.pressDone()
         inboxComposePage.typeSubject(newMessageSubject)
         inboxComposePage.typeBody(newMessage)
 
         Log.d(STEP_TAG,"Click on 'Send' button.")
         inboxComposePage.pressSendButton()
+
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
@@ -284,7 +288,7 @@ class InboxE2ETest: StudentComposeTest() {
         selectContextPage.selectContext(course.name)
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Students")
-        recipientPickerPage.pressLabel(student2.name)
+        recipientPickerPage.pressLabel(student2.shortName)
         recipientPickerPage.pressDone()
         inboxComposePage.typeSubject(newGroupMessageSubject)
         inboxComposePage.typeBody(newGroupMessage)

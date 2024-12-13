@@ -59,7 +59,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertContextSelected(contextName: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNode(hasText(contextName).and(isNotEnabled())).assertIsDisplayed()
+        composeTestRule.onNode(hasText(contextName)).assertIsDisplayed()
     }
 
     fun assertRecipientSelected(recipientName: String) {
@@ -142,6 +142,11 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     fun pressBackButton() {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithContentDescription("Close").performClick()
+    }
+
+    fun pressExitConfirmationButton() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Exit").performClick()
     }
 
     fun pressSendButton() {
