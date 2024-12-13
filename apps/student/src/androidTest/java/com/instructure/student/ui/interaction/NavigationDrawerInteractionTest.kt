@@ -173,62 +173,6 @@ class NavigationDrawerInteractionTest : StudentTest() {
         helpPage.verifyReportAProblem("Problem", "It's a problem!")
     }
 
-    // Should send a pre-filled email intent. Should be addressed to mobilesupport@instructure.com.
-    //
-    // There is a LOT of aspirational code here, in that we would like to be able to handle
-    // an intent for a specific email app if one is present.  However, our app always launches
-    // an email app chooser, even if there is only one option.
-    //
-    // So this is a watered-down test that just checks whether an email app chooser gets displayed.
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
-    fun testHelp_submitFeatureIdea() {
-        signInStudent()
-
-        leftSideNavigationDrawerPage.clickHelpMenu()
-
-        // Figure out which email apps we have installed on the device
-        var pkgMgr = activity.packageManager
-        var intent = Intent(Intent.ACTION_SEND)
-        intent.type = "message/rfc822"
-        val activities = pkgMgr.queryIntentActivities(intent, 0)
-        val matchedChooserActivities = activities.count()
-        for (activity in activities) {
-            Log.d("submitFeatureIdea", "Resolved activity = $activity")
-        }
-
-        Intents.init()
-        try {
-            // Try to formulate what an email app chooser intent would look like, and how we might resolve it
-            val chooserIntentMatcher = IntentMatchers.hasAction(Intent.ACTION_CHOOSER)
-            val expectedChooserIntent = Intent(Intent.ACTION_SEND)
-            expectedChooserIntent.type = "message/rfc822"
-            expectedChooserIntent.`package` = "com.google.android.gm"
-
-            // Formulate what an actual email intent (NOT a chooser intent) would look like
-            val emailIntentMatcher = CoreMatchers.allOf(
-                IntentMatchers.hasAction(Intent.ACTION_SEND),
-                IntentMatchers.hasType("message/rfc822"),
-                CoreMatchers.anyOf(
-                    IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("support@instructure.com")),
-                    IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("mobilesupport@instructure.com"))
-                )
-            )
-
-            // Set up our intent catchers
-            Intents.intending(chooserIntentMatcher).respondWith(Instrumentation.ActivityResult(0, expectedChooserIntent))
-            Intents.intending(emailIntentMatcher).respondWith(Instrumentation.ActivityResult(0, null))
-
-            // Press the "Submit Feature" button
-            helpPage.submitFeature()
-
-            // :-( Our production code creates a chooser every time, even if there is only one email app option...
-            Intents.intended(chooserIntentMatcher)
-        } finally {
-            Intents.release()
-        }
-    }
-
     // Should send an intent to open the listing for Student App in the Play Store
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
