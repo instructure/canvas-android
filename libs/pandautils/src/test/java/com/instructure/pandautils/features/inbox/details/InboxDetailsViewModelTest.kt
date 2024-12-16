@@ -611,6 +611,6 @@ class InboxDetailsViewModelTest {
     // endregion
 
     private fun getViewModel(): InboxDetailsViewModel {
-        return InboxDetailsViewModel(context, savedStateHandle, inboxDetailsRepository)
+        return InboxDetailsViewModel(context, savedStateHandle, InboxDetailsBehavior(), inboxDetailsRepository)
     }
 }
