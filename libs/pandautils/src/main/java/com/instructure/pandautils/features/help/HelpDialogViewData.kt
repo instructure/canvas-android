@@ -24,7 +24,6 @@ sealed class HelpDialogAction {
     object ReportProblem : HelpDialogAction()
     object AskInstructor : HelpDialogAction()
     object RateTheApp : HelpDialogAction()
-    data class SubmitFeatureIdea(val recipient: String, val subject: String, val emailBody: String) : HelpDialogAction()
     data class Phone(val url: String) : HelpDialogAction()
     data class SendMail(val url: String) : HelpDialogAction()
     data class OpenExternalBrowser(val url: String) : HelpDialogAction()

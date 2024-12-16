@@ -56,8 +56,6 @@ class HelpDialogViewModelTest {
     private val helpLinksManager: HelpLinksManager = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val packageInfoProvider: PackageInfoProvider = mockk(relaxed = true)
     private val helpLinkFilter: HelpLinkFilter = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
@@ -265,7 +263,7 @@ class HelpDialogViewModelTest {
     }
 
     private fun createViewModel() =
-        HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider, helpLinkFilter)
+        HelpDialogViewModel(helpLinksManager, courseManager, context, helpLinkFilter)
 
     private fun createHelpLink(availableTo: List<String>, text: String?, subText: String? = "", id: String = "", url: String? = ""): HelpLink {
         return HelpLink(id, "", availableTo, url, text, subText)
