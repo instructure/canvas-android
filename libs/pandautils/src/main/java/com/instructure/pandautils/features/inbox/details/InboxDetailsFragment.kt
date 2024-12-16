@@ -29,11 +29,14 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_CONVERSATION
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
 import com.instructure.pandautils.features.inbox.list.InboxRouter
@@ -47,7 +50,8 @@ import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
+@ScreenView(SCREEN_VIEW_INBOX_CONVERSATION)
+@PageView(url = "conversations")
 @AndroidEntryPoint
 class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
 

@@ -31,10 +31,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
@@ -54,7 +57,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 import javax.inject.Inject
 
-
+@PageView(url = "conversations/compose")
+@ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 @AndroidEntryPoint
 class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUploadDialogParent,
     NavigationCallbacks {
@@ -152,20 +156,20 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
 
         when (uiState.screenOption) {
             is InboxComposeScreenOptions.None -> {
-                viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(true))
+                viewModel.cancelDismissDialog(true)
             }
 
             is InboxComposeScreenOptions.ContextPicker -> {
-                viewModel.handleAction(ContextPickerActionHandler.DoneClicked)
+                viewModel.closeContextPicker()
             }
 
             is InboxComposeScreenOptions.RecipientPicker -> {
                 when (uiState.recipientPickerUiState.screenOption) {
                     RecipientPickerScreenOption.Recipients -> {
-                        viewModel.handleAction(RecipientPickerActionHandler.RecipientBackClicked)
+                        viewModel.recipientPickerBackToRoles()
                     }
                     RecipientPickerScreenOption.Roles -> {
-                        viewModel.handleAction(RecipientPickerActionHandler.DoneClicked)
+                        viewModel.recipientPickerDone()
                     }
                 }
             }

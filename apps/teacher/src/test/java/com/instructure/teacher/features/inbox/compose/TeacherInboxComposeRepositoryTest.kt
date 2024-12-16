@@ -2,7 +2,6 @@ package com.instructure.teacher.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.models.Conversation
@@ -28,13 +27,11 @@ import org.junit.Test
 class TeacherInboxComposeRepositoryTest {
 
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val groupApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
 
     private val inboxComposeRepository = TeacherInboxComposeRepository(
         courseAPI,
-        groupApi,
         recipientAPI,
         inboxAPI,
     )
@@ -95,38 +92,12 @@ class TeacherInboxComposeRepositoryTest {
     }
 
     @Test
-    fun `Get groups successfully`() = runTest {
-        val expected = listOf(
-            Group(id = 1),
-            Group(id = 2)
-        )
-
-        coEvery { groupApi.getFirstPageGroups(any()) } returns DataResult.Success(expected)
+    fun `Get groups returns empty list`() = runTest {
+        val expected = emptyList<Group>()
 
         val result = inboxComposeRepository.getGroups().dataOrThrow
 
         assertEquals(expected, result)
-    }
-
-    @Test
-    fun `Test group paging`() = runTest {
-        val list1 = listOf(Group(id = 1))
-        val list2 = listOf(Group(id = 2))
-        val expected = list1 + list2
-
-        coEvery { groupApi.getFirstPageGroups(any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
-        coEvery { groupApi.getNextPageGroups(any(), any()) } returns DataResult.Success(list2)
-
-        val result = inboxComposeRepository.getGroups().dataOrThrow
-
-        assertEquals(expected, result)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Get group with error`() = runTest {
-        coEvery { groupApi.getFirstPageGroups(any()) } returns DataResult.Fail()
-
-        inboxComposeRepository.getGroups().dataOrThrow
     }
 
     @Test

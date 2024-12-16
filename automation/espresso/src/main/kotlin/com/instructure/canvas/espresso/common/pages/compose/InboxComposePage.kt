@@ -59,7 +59,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertContextSelected(contextName: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNode(hasText(contextName)).assertIsDisplayed()
+        composeTestRule.onNode(hasText(contextName) and hasTestTag("contextValueRow")).assertIsDisplayed()
     }
 
     fun assertRecipientSelected(recipientName: String) {
