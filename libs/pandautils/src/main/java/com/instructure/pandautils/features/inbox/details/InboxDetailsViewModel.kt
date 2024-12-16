@@ -25,6 +25,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.isTablet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -54,7 +55,7 @@ class InboxDetailsViewModel @Inject constructor(
     init {
         _uiState.update { it.copy(
             conversationId = conversationId,
-            showBackButton = behavior.showBackButton
+            showBackButton = behavior.getShowBackButton(context)
         ) }
         getConversation()
     }

@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.features.inbox.details
 
+import android.content.Context
+
 open class InboxDetailsBehavior {
-    open fun getShowBackButton(isTablet: Boolean): Boolean = true
+    open fun getShowBackButton(context: Context): Boolean = true
 }

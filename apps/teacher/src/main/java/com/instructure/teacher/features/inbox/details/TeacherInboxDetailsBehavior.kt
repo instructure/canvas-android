@@ -16,8 +16,10 @@
  */
 package com.instructure.teacher.features.inbox.details
 
+import android.content.Context
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
+import com.instructure.teacher.utils.isTablet
 
 class TeacherInboxDetailsBehavior: InboxDetailsBehavior() {
-    override fun getShowBackButton(isTablet: Boolean): Boolean = !isTablet
+    override fun getShowBackButton(context: Context): Boolean = !context.isTablet
 }
