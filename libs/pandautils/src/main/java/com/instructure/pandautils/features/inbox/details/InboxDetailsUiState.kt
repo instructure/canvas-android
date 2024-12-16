@@ -26,7 +26,8 @@ data class InboxDetailsUiState(
     val conversation: Conversation? = null,
     val messageStates: List<InboxMessageUiState> = emptyList(),
     val state: ScreenState = ScreenState.Loading,
-    val confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState()
+    val confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState(),
+    val showBackButton: Boolean = true,
 )
 
 data class ConfirmationDialogState(

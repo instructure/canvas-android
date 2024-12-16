@@ -39,6 +39,7 @@ import javax.inject.Inject
 class InboxDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
+    private val behavior: InboxDetailsBehavior,
     private val repository: InboxDetailsRepository,
 ): ViewModel() {
 
@@ -51,7 +52,10 @@ class InboxDetailsViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
-        _uiState.update { it.copy(conversationId = conversationId) }
+        _uiState.update { it.copy(
+            conversationId = conversationId,
+            showBackButton = behavior.showBackButton
+        ) }
         getConversation()
     }
 

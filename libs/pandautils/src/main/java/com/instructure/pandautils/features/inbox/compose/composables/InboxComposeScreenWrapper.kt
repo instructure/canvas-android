@@ -20,8 +20,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
-import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.compose.composables.SelectContextScreen
 import com.instructure.pandautils.features.inbox.compose.ContextPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
@@ -43,19 +41,6 @@ fun InboxComposeScreenWrapper(
     AnimatedContent(
         label = animationLabel,
         targetState = uiState.screenOption,
-        transitionSpec = {
-            when(uiState.screenOption) {
-                is InboxComposeScreenOptions.None -> {
-                    ScreenSlideBackTransition
-                }
-                is InboxComposeScreenOptions.ContextPicker -> {
-                    ScreenSlideTransition
-                }
-                is InboxComposeScreenOptions.RecipientPicker -> {
-                    ScreenSlideTransition
-                }
-            }
-        }
     ) { screenOption ->
         when (screenOption) {
             InboxComposeScreenOptions.None -> {

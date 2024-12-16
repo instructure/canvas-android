@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.utils.FileDownloader
@@ -78,5 +79,10 @@ class InboxModule {
         enrollmentAPI: EnrollmentAPI.EnrollmentInterface,
     ): ParentInboxCoursePickerRepository {
         return ParentInboxCoursePickerRepository(courseAPI, enrollmentAPI)
+    }
+
+    @Provides
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return InboxDetailsBehavior()
     }
 }
