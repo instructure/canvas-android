@@ -92,7 +92,7 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun pressBackButton() {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithContentDescription("Go Back").performClick()
+        composeTestRule.onNodeWithContentDescription("Back").performClick()
     }
 
     fun pressReplyTextButtonForMessage(messageBody: String) {
