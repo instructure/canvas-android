@@ -434,11 +434,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                         val annotation = item.convertCanvaDocAnnotationToPDF(this@PdfSubmissionView.context)
                         if (annotation != null) {
                             // If the user doesn't have at least write permissions we need to lock down all annotations
-                            if (docSession.annotationMetadata?.canWrite() == false) {
-                                annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS, AnnotationFlags.NOZOOM)
-                            } else {
-                                if (item.userId != docSession.annotationMetadata?.userId) {
-                                    annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS, AnnotationFlags.NOZOOM)
+                            if (docSession.annotationMetadata?.canWrite() == false || item.userId != docSession.annotationMetadata?.userId) {
+                                annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS)
+                                if (annotation.type != AnnotationType.FREETEXT) {
+                                    annotation.flags.add(AnnotationFlags.NOZOOM)
                                 }
                             }
 
@@ -665,6 +664,9 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     }
 
     private fun updateAnnotation(annotation: Annotation) {
+        if (annotation.type == AnnotationType.FREETEXT) {
+            annotation.flags.remove(AnnotationFlags.NOZOOM)
+        }
         if (docSession.annotationMetadata?.canWrite() != true) return
 
         // Don't want to update if we just created a stamp.
