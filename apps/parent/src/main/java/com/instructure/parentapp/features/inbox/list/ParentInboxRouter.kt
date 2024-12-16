@@ -62,4 +62,8 @@ class ParentInboxRouter(
     override fun routeToAttachment(attachment: Attachment) {
         fileDownloader.downloadFileToDevice(attachment)
     }
+
+    override fun popDetailsScreen(activity: FragmentActivity?) {
+        activity?.onBackPressed()
+    }
 }

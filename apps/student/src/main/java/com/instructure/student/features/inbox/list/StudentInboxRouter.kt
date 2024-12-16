@@ -61,4 +61,8 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
     override fun routeToAttachment(attachment: Attachment) {
         openMedia(activity, attachment.url)
     }
+
+    override fun popDetailsScreen(activity: FragmentActivity?) {
+        activity?.onBackPressed()
+    }
 }

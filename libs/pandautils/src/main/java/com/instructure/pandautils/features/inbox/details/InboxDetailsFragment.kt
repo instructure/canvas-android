@@ -97,7 +97,7 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
     private fun handleAction(action: InboxDetailsFragmentAction) {
         when (action) {
             is InboxDetailsFragmentAction.CloseFragment -> {
-                requireActivity().onBackPressed()
+                inboxRouter.popDetailsScreen(activity)
             }
             is InboxDetailsFragmentAction.ShowScreenResult -> {
                 Toast.makeText(requireContext(), action.message, Toast.LENGTH_SHORT).show()

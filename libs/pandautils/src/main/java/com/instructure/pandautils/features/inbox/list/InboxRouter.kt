@@ -36,4 +36,6 @@ interface InboxRouter {
     fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope)
 
     fun routeToAttachment(attachment: Attachment)
+
+    fun popDetailsScreen(activity: FragmentActivity?)
 }

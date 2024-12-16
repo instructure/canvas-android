@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.interactions.FullScreenInteractions
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
@@ -80,5 +82,13 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
 
     override fun routeToAttachment(attachment: Attachment) {
         openMedia(activity, attachment.url)
+    }
+
+    override fun popDetailsScreen(activity: FragmentActivity?) {
+        if (activity is MasterDetailInteractions) {
+            (activity as MasterDetailInteractions).popFragment(CanvasContext.emptyUserContext())
+        } else if (activity is FullScreenInteractions) {
+           activity.finish()
+        }
     }
 }

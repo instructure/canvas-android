@@ -130,7 +130,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/login.*", RouteContext.DO_NOT_ROUTE))//FIXME: we know about this
 
         routes.add(Route("/conversations", InboxFragment::class.java))
-        routes.add(Route("/conversations/:conversation_id", InboxDetailsFragment::class.java))
+        routes.add(Route("/conversations/:conversation_id", InboxFragment::class.java, InboxDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
