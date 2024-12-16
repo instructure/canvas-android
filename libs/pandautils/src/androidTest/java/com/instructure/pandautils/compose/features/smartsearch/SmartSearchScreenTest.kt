@@ -417,4 +417,64 @@ class SmartSearchScreenTest {
         )
             .assertIsDisplayed()
     }
+
+    @Test
+    fun assertLastVisitedIndicator() {
+        composeTestRule.setContent {
+            SmartSearchScreen(
+                smartSearchSortType = SmartSearchSortType.TYPE,
+                uiState = SmartSearchUiState(
+                    query = "Test",
+                    canvasContext = Course(name = "Test course"),
+                    results = listOf(
+                        SmartSearchResultUiState(
+                            title = "Test title",
+                            body = "Test body",
+                            relevance = 75,
+                            type = SmartSearchContentType.ASSIGNMENT,
+                            url = "https://example.com",
+                        ),
+                        SmartSearchResultUiState(
+                            title = "Test title 2",
+                            body = "Test body 2",
+                            relevance = 50,
+                            type = SmartSearchContentType.ANNOUNCEMENT,
+                            url = "https://example2.com"
+                        )
+                    ),
+                    actionHandler = {},
+                    loading = false,
+                    error = false
+                )
+            ) { }
+        }
+
+        val indicator = hasTestTag("lastVisitedIndicator").and(
+            hasParent(
+                hasTestTag("resultItem").and(
+                    hasAnyChild(
+                        hasTestTag("resultTitle").and(hasText("Test title"))
+                    )
+                )
+            )
+        )
+
+        composeTestRule.onNode(
+            indicator,
+            useUnmergedTree = true
+        ).assertDoesNotExist()
+
+        composeTestRule.onNode(
+            hasTestTag("resultItem").and(
+                hasAnyChild(
+                    hasTestTag("resultTitle").and(hasText("Test title"))
+                )
+            ), useUnmergedTree = true
+        ).performClick()
+
+        composeTestRule.onNode(
+            indicator,
+            useUnmergedTree = true
+        ).assertIsDisplayed()
+    }
 }
