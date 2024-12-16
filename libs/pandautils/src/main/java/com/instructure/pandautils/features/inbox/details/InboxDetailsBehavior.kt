@@ -17,5 +17,5 @@
 package com.instructure.pandautils.features.inbox.details
 
 open class InboxDetailsBehavior {
-    open val showBackButton: Boolean = true
+    open fun getShowBackButton(isTablet: Boolean): Boolean = true
 }

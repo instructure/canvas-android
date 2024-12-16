@@ -19,5 +19,5 @@ package com.instructure.teacher.features.inbox.details
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 
 class TeacherInboxDetailsBehavior: InboxDetailsBehavior() {
-    override val showBackButton: Boolean = false
+    override fun getShowBackButton(isTablet: Boolean): Boolean = !isTablet
 }
