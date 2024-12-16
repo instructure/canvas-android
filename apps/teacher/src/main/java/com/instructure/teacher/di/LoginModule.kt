@@ -19,6 +19,7 @@ package com.instructure.teacher.di
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.teacher.features.login.TeacherAcceptableUsePolicyRouter
 import com.instructure.teacher.features.login.TeacherLoginNavigation
 import dagger.Module
@@ -31,12 +32,12 @@ import dagger.hilt.android.components.ActivityComponent
 class LoginModule {
 
     @Provides
-    fun provideAcceptabelUsePolicyRouter(activity: FragmentActivity): AcceptableUsePolicyRouter {
-        return TeacherAcceptableUsePolicyRouter(activity)
+    fun provideAcceptabelUsePolicyRouter(activity: FragmentActivity, alarmScheduler: AlarmScheduler): AcceptableUsePolicyRouter {
+        return TeacherAcceptableUsePolicyRouter(activity, alarmScheduler)
     }
 
     @Provides
-    fun provideLoginNavigation(activity: FragmentActivity): LoginNavigation {
-        return TeacherLoginNavigation(activity)
+    fun provideLoginNavigation(activity: FragmentActivity, alarmScheduler: AlarmScheduler): LoginNavigation {
+        return TeacherLoginNavigation(activity, alarmScheduler)
     }
 }

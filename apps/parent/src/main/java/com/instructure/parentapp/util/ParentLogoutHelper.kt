@@ -18,11 +18,15 @@
 package com.instructure.parentapp.util
 
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.utils.LogoutHelper
 
 class ParentLogoutHelper : LogoutHelper {
-    override fun logout(databaseProvider: DatabaseProvider) {
-        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+    override fun logout(databaseProvider: DatabaseProvider, alarmScheduler: AlarmScheduler) {
+        ParentLogoutTask(
+            LogoutTask.Type.LOGOUT,
+            alarmScheduler = alarmScheduler
+        ).execute()
     }
 }

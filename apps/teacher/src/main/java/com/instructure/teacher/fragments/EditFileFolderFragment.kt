@@ -18,6 +18,8 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -119,6 +121,17 @@ class EditFileFolderFragment : BasePresenterFragment<
         }.show(requireActivity().supportFragmentManager, TimePickerDialogFragment::class.java.simpleName)
     }
 
+    private val titleTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+            if (s?.isBlank() == false) {
+                binding.titleLabel.error = null
+            }
+        }
+    }
+
     override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentEditFilefolderBinding = FragmentEditFilefolderBinding::inflate
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -189,6 +202,8 @@ class EditFileFolderFragment : BasePresenterFragment<
         lockTimeEditText.setOnClickListener { timeClickListener(it, true) }
         unlockDateEditText.setOnClickListener { dateClickListener(it, false) }
         unlockTimeEditText.setOnClickListener { timeClickListener(it, false) }
+
+        titleEditText.addTextChangedListener(titleTextWatcher)
 
         // Apply theming
         ViewStyler.themeEditText(requireActivity(), titleEditText, ThemePrefs.brandColor)
@@ -412,6 +427,10 @@ class EditFileFolderFragment : BasePresenterFragment<
     }
 
     private fun saveFileFolder() = with(binding) {
+        if (binding.titleEditText.text?.isBlank() == true) {
+            binding.titleLabel.error = getString(R.string.errorEmptyTitle)
+            return
+        }
 
         // Check unlock/lock dates
         if (unlockDate != null && lockDate != null)

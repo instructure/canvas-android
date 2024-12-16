@@ -25,14 +25,14 @@ import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.parentapp.features.login.createaccount.CreateAccountActivity
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class LoginBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragment() {
 
     @Inject
     lateinit var navigation: Navigation

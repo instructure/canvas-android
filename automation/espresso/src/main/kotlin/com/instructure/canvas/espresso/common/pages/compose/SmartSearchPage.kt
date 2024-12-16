@@ -23,7 +23,10 @@ import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
+import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.espresso.page.BasePage
 
 class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage() {
@@ -47,6 +50,22 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     fun assertItemDisplayed(title: String, type: String) {
+        val resultMatcher = hasTestTag("resultItem")
+            .and(
+                hasAnyChild(hasTestTag("resultTitle").and(hasText(title)))
+            )
+            .and(
+                hasAnyChild(hasTestTag("resultType").and(hasText(type)))
+            )
+        composeTestRule.onNodeWithTag("results", useUnmergedTree = true)
+            .performScrollToNode(resultMatcher)
+
+        composeTestRule.onNode(resultMatcher, useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    fun assertItemNotDisplayed(title: String, type: String) {
         composeTestRule.onNode(
             hasTestTag("resultItem")
                 .and(
@@ -54,11 +73,9 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
                 )
                 .and(
                     hasAnyChild(hasTestTag("resultType").and(hasText(type)))
-                ),
-            useUnmergedTree = true
+                ), useUnmergedTree = true
         )
-            .assertIsDisplayed()
-            .assertHasClickAction()
+            .assertDoesNotExist()
     }
 
     fun clickOnItem(title: String) {
@@ -70,6 +87,35 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
             useUnmergedTree = true
         )
             .assertIsDisplayed()
+            .performClick()
+    }
+
+    fun openFilters() {
+        composeTestRule.onNode(
+            hasTestTag("filterButton"),
+            useUnmergedTree = true
+        )
+            .performClick()
+    }
+
+    fun assertGroupHeaderDisplayed(type: SmartSearchContentType) {
+        composeTestRule.onNodeWithTag("results", useUnmergedTree = true)
+            .performScrollToNode(hasTestTag("${type.name.lowercase()}GroupHeader"))
+
+        composeTestRule.onNodeWithTag("${type.name.lowercase()}GroupHeader", useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    fun assertGroupHeaderNotDisplayed(type: SmartSearchContentType) {
+        composeTestRule.onNodeWithTag("${type.name.lowercase()}GroupHeader", useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
+    fun toggleGroup(type: SmartSearchContentType) {
+        composeTestRule.onNodeWithTag("results", useUnmergedTree = true)
+            .performScrollToNode(hasTestTag("${type.name.lowercase()}GroupHeader"))
+        composeTestRule.onNodeWithTag("${type.name.lowercase()}GroupHeader", useUnmergedTree = true)
             .performClick()
     }
 }
