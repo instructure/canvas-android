@@ -26,6 +26,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -40,6 +41,7 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.BottomSheetInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -145,6 +147,13 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     }
 
     private fun animateBottomSheetGoneAndFinish() {
+        //don't want to finish if there are unsaved changes
+        if (supportFragmentManager.findFragmentById(R.id.bottom) is InboxComposeFragment) {
+            if(!(supportFragmentManager.findFragmentById(R.id.bottom) as InboxComposeFragment).shouldAllowExit()) {
+                (supportFragmentManager.findFragmentById(R.id.bottom) as InboxComposeFragment).handleExit()
+                return
+            }
+        }
         binding.bottom.post {
             animateBottomOut()
             fadeOutBackground()

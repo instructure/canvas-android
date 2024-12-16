@@ -135,21 +135,6 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
         }
     }
 
-    companion object {
-        const val TAG = "InboxComposeFragment"
-
-        fun newInstance(route: Route): InboxComposeFragment {
-            return InboxComposeFragment().withArgs(route.arguments)
-        }
-
-        fun makeRoute(options: InboxComposeOptions): Route {
-            val bundle = bundleOf().apply {
-                putParcelable(InboxComposeOptions.COMPOSE_PARAMETERS, options)
-            }
-            return Route(null, InboxComposeFragment::class.java, null, bundle)
-        }
-    }
-
     override fun onHandleBackPressed(): Boolean {
         val uiState = viewModel.uiState.value
         if (!uiState.enableCustomBackHandler) return false
@@ -176,5 +161,29 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
         }
 
         return true
+    }
+
+    // For Teacher BottomSheetDialog handling
+    fun shouldAllowExit(): Boolean {
+        return !viewModel.uiState.value.enableCustomBackHandler
+    }
+
+    fun handleExit() {
+        onHandleBackPressed()
+    }
+
+    companion object {
+        const val TAG = "InboxComposeFragment"
+
+        fun newInstance(route: Route): InboxComposeFragment {
+            return InboxComposeFragment().withArgs(route.arguments)
+        }
+
+        fun makeRoute(options: InboxComposeOptions): Route {
+            val bundle = bundleOf().apply {
+                putParcelable(InboxComposeOptions.COMPOSE_PARAMETERS, options)
+            }
+            return Route(InboxComposeFragment::class.java, null, bundle)
+        }
     }
 }
