@@ -196,9 +196,6 @@ private fun SmartSearchScreenContent(
                     item {
                         CourseHeader(uiState.canvasContext.name.orEmpty())
                     }
-                    item {
-                        CanvasDivider()
-                    }
                     if (uiState.results.isNotEmpty()) {
                         if (sortType == SmartSearchSortType.TYPE) {
                             groupedItems(
@@ -306,6 +303,7 @@ private fun GroupHeader(
             .background(colorResource(R.color.backgroundLightest))
             .testTag("${type.name.lowercase()}GroupHeader"),
     ) {
+        CanvasDivider()
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
