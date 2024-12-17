@@ -108,8 +108,6 @@ private fun SmartSearchScreenContent(
     navigationItemClick: () -> Unit,
     onFilterClick: () -> Unit
 ) {
-    var visitedItems by remember { mutableStateOf(setOf<String>()) }
-    var lastVisitedItem by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -206,13 +204,9 @@ private fun SmartSearchScreenContent(
                             groupedItems(
                                 uiState = uiState,
                                 openedGroups = openedGroups,
-                                visitedItems = visitedItems,
                                 onItemClick = {
-                                    lastVisitedItem = it
-                                    visitedItems = visitedItems + it
                                     uiState.actionHandler(SmartSearchAction.Route(it))
                                 },
-                                lastVisitedItem = lastVisitedItem,
                                 onGroupClick = { type ->
                                     openedGroups = if (type in openedGroups) {
                                         openedGroups - type
@@ -223,11 +217,7 @@ private fun SmartSearchScreenContent(
                         } else {
                             defaultItems(
                                 uiState = uiState,
-                                lastVisitedItem = lastVisitedItem,
-                                visitedItems = visitedItems
                             ) {
-                                lastVisitedItem = it
-                                visitedItems = visitedItems + it
                                 uiState.actionHandler(SmartSearchAction.Route(it))
                             }
                         }
@@ -251,16 +241,14 @@ private fun SmartSearchScreenContent(
 
 private fun LazyListScope.defaultItems(
     uiState: SmartSearchUiState,
-    visitedItems: Set<String>,
-    lastVisitedItem: String,
     onItemClick: (String) -> Unit
 ) {
     items(uiState.results) {
         ResultItem(
             result = it,
             color = Color(uiState.canvasContext.color),
-            visited = it.url in visitedItems,
-            lastVisited = it.url == lastVisitedItem,
+            visited = it.visited,
+            lastVisited = it.lastVisited,
             onItemClick = onItemClick
         )
     }
@@ -269,8 +257,6 @@ private fun LazyListScope.defaultItems(
 private fun LazyListScope.groupedItems(
     uiState: SmartSearchUiState,
     openedGroups: Set<SmartSearchContentType>,
-    visitedItems: Set<String>,
-    lastVisitedItem: String,
     onGroupClick: (SmartSearchContentType) -> Unit,
     onItemClick: (String) -> Unit
 ) {
@@ -293,8 +279,8 @@ private fun LazyListScope.groupedItems(
                     result = it,
                     color = Color(uiState.canvasContext.color),
                     onItemClick = onItemClick,
-                    visited = it.url in visitedItems,
-                    lastVisited = it.url == lastVisitedItem,
+                    visited = it.visited,
+                    lastVisited = it.lastVisited,
                     modifier = Modifier.animateItem()
                 )
             }
@@ -523,14 +509,18 @@ fun SmartSearchPreview() {
                     body = "Body",
                     relevance = 23,
                     type = SmartSearchContentType.ASSIGNMENT,
-                    url = "url1"
+                    url = "url1",
+                    visited = true,
+                    lastVisited = false
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 75,
                     type = SmartSearchContentType.WIKI_PAGE,
-                    url = "url2"
+                    url = "url2",
+                    visited = false,
+                    lastVisited = false
                 )
             )
         ) {}) {}
@@ -551,14 +541,18 @@ fun SmartSearchDarkPreview() {
                     body = "Body",
                     relevance = 75,
                     type = SmartSearchContentType.ANNOUNCEMENT,
-                    url = "url1"
+                    url = "url1",
+                    visited = false,
+                    lastVisited = false
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 50,
                     type = SmartSearchContentType.DISCUSSION_TOPIC,
-                    url = "url2"
+                    url = "url2",
+                    visited = false,
+                    lastVisited = false
                 )
             )
         ) {}) {}
@@ -660,14 +654,18 @@ fun SmartSearchGroupPreview() {
                     body = "Body",
                     relevance = 23,
                     type = SmartSearchContentType.ASSIGNMENT,
-                    url = "url1"
+                    url = "url1",
+                    visited = true,
+                    lastVisited = true
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 75,
                     type = SmartSearchContentType.WIKI_PAGE,
-                    url = "url2"
+                    url = "url2",
+                    visited = true,
+                    lastVisited = false
                 )
             )
         ) {}) {}
@@ -689,14 +687,18 @@ fun SmartSearchGroupDarkPreview() {
                     body = "Body",
                     relevance = 75,
                     type = SmartSearchContentType.ANNOUNCEMENT,
-                    url = "url1"
+                    url = "url1",
+                    visited = false,
+                    lastVisited = false
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 50,
                     type = SmartSearchContentType.DISCUSSION_TOPIC,
-                    url = "url2"
+                    url = "url2",
+                    visited = false,
+                    lastVisited = false
                 )
             )
         ) {}) {}

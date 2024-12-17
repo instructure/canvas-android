@@ -157,7 +157,9 @@ class SmartSearchScreenTest {
                             body = "",
                             relevance = 50,
                             type = SmartSearchContentType.ASSIGNMENT,
-                            url = "https://example.com"
+                            url = "https://example.com",
+                            visited = false,
+                            lastVisited = false
                         )
                     ),
                     actionHandler = {},
@@ -192,7 +194,9 @@ class SmartSearchScreenTest {
                             body = "Test body",
                             relevance = 50,
                             type = SmartSearchContentType.ASSIGNMENT,
-                            url = "https://example.com"
+                            url = "https://example.com",
+                            visited = false,
+                            lastVisited = false
                         )
                     ),
                     actionHandler = {},
@@ -232,14 +236,18 @@ class SmartSearchScreenTest {
                             body = "Test body",
                             relevance = 75,
                             type = SmartSearchContentType.ASSIGNMENT,
-                            url = "https://example.com"
+                            url = "https://example.com",
+                            visited = false,
+                            lastVisited = false
                         ),
                         SmartSearchResultUiState(
                             title = "Test title 2",
                             body = "Test body 2",
                             relevance = 50,
                             type = SmartSearchContentType.ASSIGNMENT,
-                            url = "https://example.com"
+                            url = "https://example.com",
+                            visited = false,
+                            lastVisited = false
                         )
                     ),
                     actionHandler = {},
@@ -305,14 +313,18 @@ class SmartSearchScreenTest {
                             body = "Test body",
                             relevance = 75,
                             type = SmartSearchContentType.ASSIGNMENT,
-                            url = "https://example.com"
+                            url = "https://example.com",
+                            visited = false,
+                            lastVisited = false
                         ),
                         SmartSearchResultUiState(
                             title = "Test title 2",
                             body = "Test body 2",
                             relevance = 50,
                             type = SmartSearchContentType.ANNOUNCEMENT,
-                            url = "https://example2.com"
+                            url = "https://example2.com",
+                            visited = false,
+                            lastVisited = false
                         )
                     ),
                     actionHandler = {},
@@ -433,13 +445,17 @@ class SmartSearchScreenTest {
                             relevance = 75,
                             type = SmartSearchContentType.ASSIGNMENT,
                             url = "https://example.com",
+                            visited = true,
+                            lastVisited = true
                         ),
                         SmartSearchResultUiState(
                             title = "Test title 2",
                             body = "Test body 2",
                             relevance = 50,
                             type = SmartSearchContentType.ANNOUNCEMENT,
-                            url = "https://example2.com"
+                            url = "https://example2.com",
+                            visited = false,
+                            lastVisited = false
                         )
                     ),
                     actionHandler = {},
@@ -458,19 +474,6 @@ class SmartSearchScreenTest {
                 )
             )
         )
-
-        composeTestRule.onNode(
-            indicator,
-            useUnmergedTree = true
-        ).assertDoesNotExist()
-
-        composeTestRule.onNode(
-            hasTestTag("resultItem").and(
-                hasAnyChild(
-                    hasTestTag("resultTitle").and(hasText("Test title"))
-                )
-            ), useUnmergedTree = true
-        ).performClick()
 
         composeTestRule.onNode(
             indicator,

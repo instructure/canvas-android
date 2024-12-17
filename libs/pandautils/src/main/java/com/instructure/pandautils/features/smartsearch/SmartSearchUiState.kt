@@ -34,7 +34,9 @@ data class SmartSearchResultUiState(
     val body: String,
     val relevance: Int,
     val url: String,
-    val type: SmartSearchContentType
+    val type: SmartSearchContentType,
+    val visited: Boolean,
+    val lastVisited: Boolean
 )
 
 sealed class SmartSearchAction {
