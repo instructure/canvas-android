@@ -598,6 +598,7 @@
     <string name="discussion_details">Discussion Details</string>
     <string name="discussions_pinned">Pinned</string>
     <string name="discussions_unpinned">Discussions</string>
+    <string name="discussions_close">Close for Comments</string>
     <string name="discussions_closed">Closed for Comments</string>
     <string name="discussions_open">Open for Comments</string>
     <string name="discussions_pin">Pin</string>

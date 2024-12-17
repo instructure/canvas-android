@@ -691,7 +691,7 @@ object RouteMatcher : BaseRouteMatcher() {
             }
         } else {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename, fileId)
             LoaderUtils.restartLoaderWithBundle(
                 LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID
             )
