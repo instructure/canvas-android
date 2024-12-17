@@ -44,10 +44,10 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.base.BaseCanvasFragment
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -59,7 +59,6 @@ import com.instructure.pandautils.utils.setCourseImage
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
-import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
@@ -268,8 +267,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
             val tabs = repository.getTabs(canvasContext, isRefresh)
 
-            //TODO: Remove the debug flag when the search tab is ready
-            binding.searchBar.setVisible(BuildConfig.IS_DEBUG && tabs.find { it.tabId == Tab.SEARCH_ID } != null)
+            binding.searchBar.setVisible(tabs.find { it.tabId == Tab.SEARCH_ID } != null)
 
             // Finds the home tab so we can reorder them if necessary
             val sortedTabs = tabs.filter { it.tabId != Tab.SEARCH_ID }.toMutableList()
