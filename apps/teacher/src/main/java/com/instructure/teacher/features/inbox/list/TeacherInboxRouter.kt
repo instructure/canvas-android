@@ -25,15 +25,17 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.interactions.FullScreenInteractions
-import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteMatcher.openMedia
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
@@ -85,10 +87,20 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
     }
 
     override fun popDetailsScreen(activity: FragmentActivity?) {
-        if (activity is MasterDetailInteractions) {
-            (activity as MasterDetailInteractions).popFragment(CanvasContext.emptyUserContext())
-        } else if (activity is FullScreenInteractions) {
-           activity.finish()
+        if (activity == null) return
+
+        if (activity.resources.getBoolean(R.bool.isDeviceTablet).orDefault()) {
+            val fragmentManager = fragment.parentFragmentManager
+            val currentFrag = fragmentManager.findFragmentById(R.id.detail)
+            val newFragment = EmptyFragment.newInstance(RouteMatcher.getClassDisplayName(activity, InboxFragment::class.java))
+            if (currentFrag != null) {
+                val transaction = fragmentManager.beginTransaction()
+                transaction.remove(currentFrag)
+                transaction.add(R.id.detail, newFragment)
+                transaction.commit()
+            }
+        } else {
+            activity.onBackPressed()
         }
     }
 }

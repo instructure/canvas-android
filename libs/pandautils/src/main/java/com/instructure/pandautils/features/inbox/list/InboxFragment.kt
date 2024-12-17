@@ -466,7 +466,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
     }
 
     companion object {
-        fun makeRoute() = Route(InboxFragment::class.java, null)
+        fun makeRoute() = Route(primaryClass = InboxFragment::class.java, secondaryClass = null)
 
         fun newInstance(route: Route) = if (validateRoute(route)) InboxFragment().withArgs(route.arguments) else null
 
