@@ -37,13 +37,26 @@ class SmartSearchViewModel @Inject constructor(
     ViewModel() {
 
     private val query: String = savedStateHandle.get<String>(QUERY).orEmpty()
-    private val canvasContext: CanvasContext = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) ?: throw IllegalArgumentException("CanvasContext is required")
+    private val canvasContext: CanvasContext =
+        savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) ?: throw IllegalArgumentException(
+            "CanvasContext is required"
+        )
 
-    private val _uiState = MutableStateFlow(SmartSearchUiState(query, canvasContext, emptyList(), actionHandler = this::handleAction))
+    private val _uiState = MutableStateFlow(
+        SmartSearchUiState(
+            query,
+            canvasContext,
+            emptyList(),
+            actionHandler = this::handleAction
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private val _events = Channel<SmartSearchViewModelAction>()
     val events = _events.receiveAsFlow()
+
+    private val visitedItems = mutableSetOf<String>()
+    private var lastVisited = ""
 
     init {
         viewModelScope.launch {
@@ -51,8 +64,14 @@ class SmartSearchViewModel @Inject constructor(
         }
     }
 
-    private suspend fun search(courseId: Long, query: String, filters: List<SmartSearchFilter> = SmartSearchFilter.entries) {
-        _uiState.value = _uiState.value.copy(error = false, loading = true, query = query, filters = filters)
+    private suspend fun search(
+        courseId: Long,
+        query: String,
+        filters: List<SmartSearchFilter> = SmartSearchFilter.entries
+    ) {
+        _uiState.emit(
+            _uiState.value.copy(error = false, loading = true, query = query, filters = filters)
+        )
         try {
             val results = smartSearchRepository.smartSearch(courseId, query, filters)
                 .map { result ->
@@ -61,13 +80,15 @@ class SmartSearchViewModel @Inject constructor(
                         body = result.body,
                         relevance = result.relevance,
                         url = result.htmlUrl,
-                        type = result.contentType
+                        type = result.contentType,
+                        visited = visitedItems.contains(result.htmlUrl),
+                        lastVisited = result.htmlUrl == lastVisited
                     )
                 }
-            _uiState.value = _uiState.value.copy(results = results, loading = false)
+            _uiState.emit(_uiState.value.copy(results = results, loading = false))
         } catch (e: Exception) {
             e.printStackTrace()
-            _uiState.value = _uiState.value.copy(error = true, loading = false)
+            _uiState.emit(_uiState.value.copy(error = true, loading = false))
         }
     }
 
@@ -78,11 +99,26 @@ class SmartSearchViewModel @Inject constructor(
                     search(canvasContext.id, action.query)
                 }
             }
+
             is SmartSearchAction.Route -> {
                 viewModelScope.launch {
+                    visitedItems.add(action.url)
+                    lastVisited = action.url
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            results = _uiState.value.results.map { result ->
+                                if (result.url == action.url) {
+                                    result.copy(visited = true, lastVisited = true)
+                                } else {
+                                    result.copy(lastVisited = false)
+                                }
+                            }
+                        )
+                    )
                     _events.send(SmartSearchViewModelAction.Route(action.url))
                 }
             }
+
             is SmartSearchAction.Filter -> {
                 viewModelScope.launch {
                     if (action.filters.toSet() == _uiState.value.filters.toSet()) return@launch

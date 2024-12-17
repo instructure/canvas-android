@@ -22,13 +22,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -188,22 +191,32 @@ private fun SmartSearchScreenContent(
                         .testTag("results")
                         .fillMaxSize()
                         .padding(padding)
-                        .background(colorResource(R.color.backgroundLight))
+                        .background(colorResource(R.color.backgroundLightest))
                 ) {
                     item {
                         CourseHeader(uiState.canvasContext.name.orEmpty())
                     }
                     if (uiState.results.isNotEmpty()) {
                         if (sortType == SmartSearchSortType.TYPE) {
-                            groupedItems(uiState, openedGroups) { type ->
-                                openedGroups = if (type in openedGroups) {
-                                    openedGroups - type
-                                } else {
-                                    openedGroups + type
-                                }
-                            }
+                            groupedItems(
+                                uiState = uiState,
+                                openedGroups = openedGroups,
+                                onItemClick = {
+                                    uiState.actionHandler(SmartSearchAction.Route(it))
+                                },
+                                onGroupClick = { type ->
+                                    openedGroups = if (type in openedGroups) {
+                                        openedGroups - type
+                                    } else {
+                                        openedGroups + type
+                                    }
+                                })
                         } else {
-                            defaultItems(uiState)
+                            defaultItems(
+                                uiState = uiState,
+                            ) {
+                                uiState.actionHandler(SmartSearchAction.Route(it))
+                            }
                         }
                     } else {
                         item {
@@ -223,12 +236,17 @@ private fun SmartSearchScreenContent(
     }
 }
 
-private fun LazyListScope.defaultItems(uiState: SmartSearchUiState) {
+private fun LazyListScope.defaultItems(
+    uiState: SmartSearchUiState,
+    onItemClick: (String) -> Unit
+) {
     items(uiState.results) {
         ResultItem(
-            it,
-            Color(uiState.canvasContext.color),
-            actionHandler = uiState.actionHandler
+            result = it,
+            color = Color(uiState.canvasContext.color),
+            visited = it.visited,
+            lastVisited = it.lastVisited,
+            onItemClick = onItemClick
         )
     }
 }
@@ -236,7 +254,8 @@ private fun LazyListScope.defaultItems(uiState: SmartSearchUiState) {
 private fun LazyListScope.groupedItems(
     uiState: SmartSearchUiState,
     openedGroups: Set<SmartSearchContentType>,
-    onGroupClick: (SmartSearchContentType) -> Unit
+    onGroupClick: (SmartSearchContentType) -> Unit,
+    onItemClick: (String) -> Unit
 ) {
     val groupedItems = uiState.results.groupBy { it.type }
     groupedItems.onEachIndexed { index, entry ->
@@ -254,9 +273,11 @@ private fun LazyListScope.groupedItems(
             items(entry.value,
                 key = { it.url }) {
                 ResultItem(
-                    it,
-                    Color(uiState.canvasContext.color),
-                    actionHandler = uiState.actionHandler,
+                    result = it,
+                    color = Color(uiState.canvasContext.color),
+                    onItemClick = onItemClick,
+                    visited = it.visited,
+                    lastVisited = it.lastVisited,
                     modifier = Modifier.animateItem()
                 )
             }
@@ -323,44 +344,50 @@ private fun GroupHeader(
 
 @Composable
 private fun CourseHeader(title: String) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        backgroundColor = colorResource(R.color.backgroundLightestElevated)
-    ) {
-        Column(
-            modifier = Modifier.padding(
-                top = 8.dp,
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            )
+    Box(modifier = Modifier.background(colorResource(R.color.backgroundLight))) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            backgroundColor = colorResource(R.color.backgroundLightestElevated)
         ) {
-            Text(
-                stringResource(R.string.smartSearchCourseHeaderTitle),
-                color = colorResource(R.color.textDark),
-                fontSize = 16.sp,
-            )
-            Text(
-                modifier = Modifier.testTag("courseTitle"),
-                text = title,
-                color = colorResource(R.color.textDarkest),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp,
-                maxLines = 2
-            )
+            Column(
+                modifier = Modifier.padding(
+                    top = 8.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
+            ) {
+                Text(
+                    stringResource(R.string.smartSearchCourseHeaderTitle),
+                    color = colorResource(R.color.textDark),
+                    fontSize = 16.sp,
+                )
+                Text(
+                    modifier = Modifier.testTag("courseTitle"),
+                    text = title,
+                    color = colorResource(R.color.textDarkest),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    maxLines = 2
+                )
+            }
         }
     }
+
 }
 
 @Composable
 private fun ResultItem(
     result: SmartSearchResultUiState,
     color: Color,
+    visited: Boolean,
+    lastVisited: Boolean,
     modifier: Modifier = Modifier,
-    actionHandler: (SmartSearchAction) -> Unit
+    onItemClick: (String) -> Unit
 ) {
+
     fun getContentTypeTitle(type: SmartSearchContentType): Int {
         return when (type) {
             SmartSearchContentType.ANNOUNCEMENT -> R.string.smartSearchAnnouncementTitle
@@ -378,18 +405,29 @@ private fun ResultItem(
             SmartSearchContentType.WIKI_PAGE -> R.drawable.ic_pages
         }
     }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .background(colorResource(R.color.backgroundLightest))
-            .clickable { actionHandler(SmartSearchAction.Route(result.url)) }
+            .clickable { onItemClick(result.url) }
             .testTag("resultItem"),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (lastVisited) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(4.dp)
+                    .background(color)
+                    .testTag("lastVisitedIndicator")
+            )
+        }
         Icon(
             modifier = Modifier
-                .padding(start = 24.dp, top = 14.dp)
+                .padding(start = if (lastVisited) 20.dp else 24.dp, top = 14.dp)
                 .size(20.dp)
                 .align(Alignment.Top),
             painter = painterResource(getContentTypeIcon(result.type)),
@@ -407,7 +445,7 @@ private fun ResultItem(
                 maxLines = 2,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = colorResource(R.color.textDarkest)
+                color = if (visited) color else colorResource(R.color.textDarkest)
             )
             Text(
                 modifier = Modifier.testTag("resultType"),
@@ -469,14 +507,18 @@ fun SmartSearchPreview() {
                     body = "Body",
                     relevance = 23,
                     type = SmartSearchContentType.ASSIGNMENT,
-                    url = "url"
+                    url = "url1",
+                    visited = true,
+                    lastVisited = false
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 75,
                     type = SmartSearchContentType.WIKI_PAGE,
-                    url = "url"
+                    url = "url2",
+                    visited = false,
+                    lastVisited = false
                 )
             )
         ) {}) {}
@@ -497,14 +539,18 @@ fun SmartSearchDarkPreview() {
                     body = "Body",
                     relevance = 75,
                     type = SmartSearchContentType.ANNOUNCEMENT,
-                    url = "url"
+                    url = "url1",
+                    visited = false,
+                    lastVisited = false
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 50,
                     type = SmartSearchContentType.DISCUSSION_TOPIC,
-                    url = "url"
+                    url = "url2",
+                    visited = false,
+                    lastVisited = false
                 )
             )
         ) {}) {}
@@ -606,14 +652,18 @@ fun SmartSearchGroupPreview() {
                     body = "Body",
                     relevance = 23,
                     type = SmartSearchContentType.ASSIGNMENT,
-                    url = "url"
+                    url = "url1",
+                    visited = true,
+                    lastVisited = true
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 75,
                     type = SmartSearchContentType.WIKI_PAGE,
-                    url = "url"
+                    url = "url2",
+                    visited = true,
+                    lastVisited = false
                 )
             )
         ) {}) {}
@@ -635,14 +685,18 @@ fun SmartSearchGroupDarkPreview() {
                     body = "Body",
                     relevance = 75,
                     type = SmartSearchContentType.ANNOUNCEMENT,
-                    url = "url"
+                    url = "url1",
+                    visited = false,
+                    lastVisited = false
                 ),
                 SmartSearchResultUiState(
                     title = "Not to lay peacefully between its four familiar walls.",
                     body = "...nsformed in his bed into a horrible vermin. He lessoned on his armour-like back, and if he lifted his head a...",
                     relevance = 50,
                     type = SmartSearchContentType.DISCUSSION_TOPIC,
-                    url = "url"
+                    url = "url2",
+                    visited = false,
+                    lastVisited = false
                 )
             )
         ) {}) {}
