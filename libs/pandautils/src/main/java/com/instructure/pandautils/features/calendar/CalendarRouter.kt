@@ -24,7 +24,7 @@ interface CalendarRouter {
 
     fun openAssignment(canvasContext: CanvasContext, assignmentId: Long)
 
-    fun openDiscussion(canvasContext: CanvasContext, discussionId: Long)
+    fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, assignmentId: Long?)
 
     fun openQuiz(canvasContext: CanvasContext, htmlUrl: String)
 

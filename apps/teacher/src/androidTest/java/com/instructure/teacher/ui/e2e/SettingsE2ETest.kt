@@ -22,6 +22,7 @@ import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.RemoteConfigParam
@@ -357,5 +358,59 @@ class SettingsE2ETest : TeacherComposeTest() {
         RemoteConfigParam.values().forEach { param ->
             remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
         }
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.E2E, SecondaryFeatureCategory.SETTINGS_EMAIL_NOTIFICATIONS)
+    fun testEmailNotificationsUIE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to Settings Page on the Left Side menu.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+
+        Log.d(STEP_TAG, "Open Email Notifications Page.")
+        settingsPage.clickOnSettingsItem("Email Notifications")
+
+        Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Email Notifications' on the Email Notifications Page.")
+        emailNotificationsPage.assertToolbarTitle()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Course Activities' email notifications are displayed.")
+        emailNotificationsPage.assertCourseActivitiesEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Discussions' email notifications are displayed.")
+        emailNotificationsPage.assertDiscussionsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Conversations' email notifications are displayed.")
+        emailNotificationsPage.assertConversationsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Scheduling' email notifications are displayed.")
+        emailNotificationsPage.assertSchedulingEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Groups' email notifications are displayed.")
+        emailNotificationsPage.assertGroupsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Alerts' email notifications are displayed.")
+        emailNotificationsPage.assertAlertsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Conferences' email notifications are displayed.")
+        emailNotificationsPage.assertConferencesEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Appointment Availability' email notification's frequency is 'Immediately' yet.")
+        emailNotificationsPage.assertNotificationFrequency("Appointment Availability", "Immediately")
+
+        Log.d(STEP_TAG, "Click on the 'Appointment Availability' and select the 'Weekly' frequency.")
+        emailNotificationsPage.clickOnNotification("Appointment Availability")
+        emailNotificationsPage.selectFrequency("Weekly")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Appointment Availability' email notification's frequency is 'Weekly' yet.")
+        emailNotificationsPage.assertNotificationFrequency("Appointment Availability", "Weekly")
     }
 }

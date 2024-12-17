@@ -25,12 +25,14 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.composeTest.hasSiblingWithText
 import com.instructure.pandautils.features.smartsearch.SmartSearchResultUiState
 import com.instructure.pandautils.features.smartsearch.SmartSearchScreen
+import com.instructure.pandautils.features.smartsearch.SmartSearchSortType
 import com.instructure.pandautils.features.smartsearch.SmartSearchUiState
 import org.junit.Rule
 import org.junit.Test
@@ -267,5 +269,152 @@ class SmartSearchScreenTest {
             useUnmergedTree = true
         ).assertCountEquals(1)
 
+    }
+
+    @Test
+    fun assertFilterButton() {
+        composeTestRule.setContent {
+            SmartSearchScreen(
+                uiState = SmartSearchUiState(
+                    query = "Test",
+                    canvasContext = Course(name = "Test course"),
+                    results = emptyList(),
+                    actionHandler = {},
+                    loading = false,
+                    error = false
+                )
+            ) { }
+        }
+
+        composeTestRule.onNodeWithTag("filterButton")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    @Test
+    fun assertGroups() {
+        composeTestRule.setContent {
+            SmartSearchScreen(
+                smartSearchSortType = SmartSearchSortType.TYPE,
+                uiState = SmartSearchUiState(
+                    query = "Test",
+                    canvasContext = Course(name = "Test course"),
+                    results = listOf(
+                        SmartSearchResultUiState(
+                            title = "Test title",
+                            body = "Test body",
+                            relevance = 75,
+                            type = SmartSearchContentType.ASSIGNMENT,
+                            url = "https://example.com"
+                        ),
+                        SmartSearchResultUiState(
+                            title = "Test title 2",
+                            body = "Test body 2",
+                            relevance = 50,
+                            type = SmartSearchContentType.ANNOUNCEMENT,
+                            url = "https://example2.com"
+                        )
+                    ),
+                    actionHandler = {},
+                    loading = false,
+                    error = false
+                )
+            ) { }
+        }
+
+        val assignmentHeader = hasTestTag("assignmentGroupHeader")
+
+        composeTestRule.onNode(assignmentHeader, useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertHasClickAction()
+
+        composeTestRule.onNode(
+            hasTestTag("groupHeaderTitle").and(hasParent(assignmentHeader)),
+            useUnmergedTree = true
+        )
+            .assertIsDisplayed()
+            .assertTextEquals("Assignments (1)")
+
+        composeTestRule.onNode(
+            hasTestTag("resultItem")
+                .and(
+                    hasAnyChild(hasTestTag("resultBody").and(hasText("Test body")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultTitle").and(hasText("Test title")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultType").and(hasText("Assignment")))
+                ),
+            useUnmergedTree = true
+        )
+            .assertIsDisplayed()
+
+        composeTestRule.onNode(assignmentHeader, useUnmergedTree = true)
+            .performClick()
+
+        composeTestRule.onNode(
+            hasTestTag("resultItem")
+                .and(
+                    hasAnyChild(hasTestTag("resultBody").and(hasText("Test body")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultTitle").and(hasText("Test title")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultType").and(hasText("Assignment")))
+                ),
+            useUnmergedTree = true
+        )
+            .assertDoesNotExist()
+
+        val announcementHeader = hasTestTag("announcementGroupHeader")
+
+        composeTestRule.onNode(announcementHeader, useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertHasClickAction()
+
+        composeTestRule.onNode(
+            hasTestTag("groupHeaderTitle").and(hasParent(announcementHeader)),
+            useUnmergedTree = true
+        )
+            .assertIsDisplayed()
+            .assertTextEquals("Announcements (1)")
+
+        composeTestRule.onNode(announcementHeader, useUnmergedTree = true)
+            .performClick()
+
+        composeTestRule.onNode(
+            hasTestTag("resultItem")
+                .and(
+                    hasAnyChild(hasTestTag("resultBody").and(hasText("Test body 2")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultTitle").and(hasText("Test title 2")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultType").and(hasText("Announcement")))
+                ),
+            useUnmergedTree = true
+        )
+            .assertDoesNotExist()
+
+        composeTestRule.onNode(announcementHeader, useUnmergedTree = true)
+            .performClick()
+
+        composeTestRule.onNode(
+            hasTestTag("resultItem")
+                .and(
+                    hasAnyChild(hasTestTag("resultBody").and(hasText("Test body 2")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultTitle").and(hasText("Test title 2")))
+                )
+                .and(
+                    hasAnyChild(hasTestTag("resultType").and(hasText("Announcement")))
+                ),
+            useUnmergedTree = true
+        )
+            .assertIsDisplayed()
     }
 }

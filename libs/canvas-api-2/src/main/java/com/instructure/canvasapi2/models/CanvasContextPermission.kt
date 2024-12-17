@@ -49,7 +49,9 @@ data class CanvasContextPermission(
         @SerializedName(MANAGE_COURSE_CONTENT_EDIT)
         val canEditCourseContent: Boolean = false,
         @SerializedName(MANAGE_CALENDAR)
-        val manageCalendar: Boolean = false
+        val manageCalendar: Boolean = false,
+        @SerializedName(LIMIT_PARENT_APP_WEB_ACCESS)
+        val limitParentAppWebAccess: Boolean = false
 ) : Parcelable {
     companion object {
         const val BECOME_USER = "become_user"
@@ -67,5 +69,6 @@ data class CanvasContextPermission(
         const val MANAGE_CONTENT = "manage_content"
         const val MANAGE_COURSE_CONTENT_EDIT = "manage_course_content_edit"
         const val MANAGE_CALENDAR = "manage_calendar"
+        const val LIMIT_PARENT_APP_WEB_ACCESS = "limit_parent_app_web_access"
     }
 }

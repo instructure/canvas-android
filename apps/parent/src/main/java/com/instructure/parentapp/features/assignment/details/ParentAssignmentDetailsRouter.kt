@@ -16,15 +16,49 @@
 package com.instructure.parentapp.features.assignment.details
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.parentapp.R
+import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 
 class ParentAssignmentDetailsRouter(
-    private val navigation: Navigation
-): AssignmentDetailsRouter() {
+    private val navigation: Navigation,
+    private val parentPrefs: ParentPrefs,
+    private val apiPrefs: ApiPrefs
+) : AssignmentDetailsRouter() {
     override fun navigateToSendMessage(activity: FragmentActivity, options: InboxComposeOptions) {
         val route = navigation.inboxComposeRoute(options)
         navigation.navigate(activity, route)
+    }
+
+    override fun navigateToSubmissionScreen(
+        activity: FragmentActivity,
+        course: CanvasContext,
+        assignmentId: Long,
+        assignmentUrl: String?,
+        isAssignmentEnhancementEnabled: Boolean,
+        isObserver: Boolean,
+        initialSelectedSubmissionAttempt: Long?
+    ) {
+        assignmentUrl ?: return
+        val parentId = apiPrefs.user?.id ?: return
+        val currentStudentId = parentPrefs.currentStudent?.id ?: return
+        val cookies = mapOf("k5_observed_user_for_$parentId" to "$currentStudentId")
+        val url = if (isAssignmentEnhancementEnabled) {
+            assignmentUrl
+        } else {
+            "$assignmentUrl/submissions/$currentStudentId"
+        }
+
+        navigation.navigate(
+            activity, navigation.internalWebViewRoute(
+                url = url,
+                title = activity.getString(R.string.submission),
+                initialCookies = cookies
+            )
+        )
     }
 }

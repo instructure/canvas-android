@@ -26,8 +26,8 @@ import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.pages.onViewWithText
-import com.instructure.espresso.pages.waitForViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData

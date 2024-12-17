@@ -56,6 +56,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         activity: FragmentActivity,
         course: CanvasContext,
         assignmentId: Long,
+        assignmentUrl: String?,
+        isAssignmentEnhancementEnabled: Boolean,
         isObserver: Boolean,
         initialSelectedSubmissionAttempt: Long?
     ) {

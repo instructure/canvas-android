@@ -43,7 +43,7 @@ class StudentCalendarRouter(private val activity: FragmentActivity, private val 
         RouteMatcher.route(activity, route)
     }
 
-    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long) {
+    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, assignmentId: Long?) {
         val route = DiscussionRouterFragment.makeRoute(canvasContext, discussionId)
         RouteMatcher.route(activity, route)
     }

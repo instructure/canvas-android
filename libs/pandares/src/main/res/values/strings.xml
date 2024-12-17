@@ -106,6 +106,7 @@
     <string name="deleteReminderTitle">Delete Reminder</string>
     <string name="deleteReminderMessage">Are you sure you would like to delete this reminder?</string>
     <string name="reminderPermissionNotGrantedError">You need to enable exact alarm permission for this action</string>
+    <string name="notificationPermissionNotGrantedError">You need to enable notification permission for this action</string>
 
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
@@ -1675,6 +1676,7 @@
     <string name="eventAddressLabel">Address</string>
     <string name="eventDetailsLabel">Details</string>
     <string name="errorLoadingEvent">There was a problem loading this event. Please check your connection and try again.</string>
+    <string name="errorLoadingTodo">There was a problem loading this todo. Please check your connection and try again.</string>
     <string name="eventDeleteConfirmationTitle">Delete Event?</string>
     <string name="eventDeleteConfirmationText">This will permanently delete your event.</string>
     <string name="eventDeleteErrorMessage">There was an error deleting this event. Please check your connection and try again.</string>
@@ -1899,6 +1901,26 @@
     <string name="openTheQuizButton">Open the Quiz</string>
     <string name="newQuizSubmissionTitle">Quiz Submission</string>
     <string name="newQuizSubmissionSubtitle">This quiz opens in a web browser. Select "Open The Quiz" to proceed.</string>
+    <string name="haveCanvasAccount">I have a Canvas account</string>
+    <string name="notHaveCanvasAccount">I don\'t have a Canvas account</string>
+    <string name="createAccFullName">Full Name</string>
+    <string name="createAccEmail">Email Address</string>
+    <string name="createAccPassword">Password</string>
+    <string name="createAccButton">Create Account</string>
+    <string name="createAccAlreadyHaveAccount">Already have an account?</string>
+    <string name="createAccSignIn">Sign in</string>
+    <string name="createAccShowPassword">Show password</string>
+    <string name="createAccHidePassword">Hide password</string>
+    <string name="createAccEnterFullName">Please enter full name</string>
+    <string name="createAccEnterEmail">Please enter an email address</string>
+    <string name="createAccEnterValidEmail">Please enter a valid email address</string>
+    <string name="createAccEnterPassword">Password is required</string>
+    <string name="createAccPasswordTooShort">Password must contain at least 8 characters</string>
+    <string name="createAccErrorCreatingAccount">An error occurred creating your account. Please check your internet connection and try again.</string>
+    <string name="createAccErrorEmailAlreadyInUse">This email address is already in use.</string>
+    <string name="createAccErrorPairingCode">This pairing code is expired or already used. Please try again with a new one.</string>
+    <string name="createAccTosAndPrivacy">By tapping \'Create Account\', you agree to the <annotation url="tos">Terms of Service</annotation> and acknowledge the <annotation url="privacy">Privacy Policy</annotation></string>
+    <string name="createAccViewPrivacy">View the <annotation url="privacy">Privacy Policy</annotation></string>
     <string name="route_not_available">That page has been disabled for this course</string>
     <string name="reminderTitleAfterDueDate">After Due Date (%1$s)</string>
     <string name="reminderNotificationTitleFor">Reminder for %1$s</string>
@@ -1926,4 +1948,19 @@
     <string name="smartSearchLoadingSubtitle">We’re working hard to find the best matches for your search. This won\'t take long! Thank you for your patience.</string>
     <string name="smartSearchEmptyTitle">No Perfect Match</string>
     <string name="smartSearchEmptyMessage">We didn’t find exactly what you’re looking for. Maybe try searching for something else?</string>
+    <string name="webAccessLimitedMessage">Interactions on this page are limited by your institution.</string>
+    <string name="contentDescription_filter">Filters</string>
+    <string name="smartSearchAnnouncementsTitle">Announcements</string>
+    <string name="smartSearchAssignmentsTitle">Assignments</string>
+    <string name="smartSearchDiscussionTopicsTitle">Discussion topics</string>
+    <string name="smartSearchPagesTitle">Pages</string>
+    <string name="resultTypeTitle">Result type</string>
+    <string name="searchPreferencesTitle">Search Preferences</string>
+    <string name="sortByTitle">Sort By</string>
+    <string name="sortByRelevanceTitle">Relevance</string>
+    <string name="sortByTypeTitle">Type</string>
+    <string name="smartSearchAnnouncementGroupTitle">Announcements (%d)</string>
+    <string name="smartSearchDiscussionGroupTitle">Discussion topics (%d)</string>
+    <string name="smartSearchAssignmentGroupTitle">Assignments (%d)</string>
+    <string name="smartSearchPageGroupTitle">Pages (%d)</string>
 </resources>

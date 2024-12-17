@@ -24,14 +24,14 @@ import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.parentapp.features.addstudent.pairingcode.PairingCodeDialogFragment
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class AddStudentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragment() {
 
     @Inject
     lateinit var navigation: Navigation

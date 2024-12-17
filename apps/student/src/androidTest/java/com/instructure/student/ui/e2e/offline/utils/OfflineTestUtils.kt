@@ -30,7 +30,7 @@ import androidx.test.uiautomator.UiSelector
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
-import com.instructure.espresso.pages.plus
+import com.instructure.espresso.page.plus
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 
