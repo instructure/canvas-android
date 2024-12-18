@@ -59,6 +59,9 @@ task addPrivateData {
 }
 
 tasks.named('compileKotlin') {
+    kotlinOptions {
+        jvmTarget = '17'
+    }
     dependsOn addPrivateData
     dependsOn generateTestServiceApolloSources
 }
