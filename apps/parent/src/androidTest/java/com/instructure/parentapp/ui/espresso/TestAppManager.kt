@@ -22,9 +22,11 @@ import com.instructure.parentapp.util.BaseAppManager
 
 open class TestAppManager : BaseAppManager() {
 
-    var workerFactory: WorkerFactory? = null
+    private var workerFactory: WorkerFactory? = null
 
     override fun getWorkManagerFactory(): WorkerFactory {
         return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
     }
+
+    override fun performFlutterAppMigration() = Unit
 }

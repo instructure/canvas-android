@@ -25,17 +25,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
 class ReminderModule {
-    @Provides
-    fun provideReminderRepository(
-        reminderDao: ReminderDao,
-        alarmScheduler: AlarmScheduler,
-    ): ReminderRepository {
-        return ReminderRepository(reminderDao, alarmScheduler)
-    }
 
     @Provides
     fun provideReminderManager(
@@ -48,5 +43,19 @@ class ReminderModule {
     @Provides
     fun provideDateTimePicker(): DateTimePicker {
         return DateTimePicker()
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class ReminderSingletonModule {
+
+    @Provides
+    @Singleton
+    fun provideReminderRepository(
+        reminderDao: ReminderDao,
+        alarmScheduler: AlarmScheduler,
+    ): ReminderRepository {
+        return ReminderRepository(reminderDao, alarmScheduler)
     }
 }

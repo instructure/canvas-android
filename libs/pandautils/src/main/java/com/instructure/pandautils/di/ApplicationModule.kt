@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
+import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
@@ -159,5 +160,11 @@ class ApplicationModule {
         featureFlagProvider: FeatureFlagProvider
     ): OfflineAnalyticsManager {
         return OfflineAnalyticsManager(context, analytics, pageViewUtils, apiPrefs, dateTimeProvider, featureFlagProvider)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRatingDialogPrefs(): RatingDialog.Prefs {
+        return RatingDialog.Prefs
     }
 }

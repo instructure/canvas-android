@@ -42,6 +42,9 @@ abstract class BaseAppManager : AppManager() {
 
     override fun onCreate() {
         super.onCreate()
+
+        performFlutterAppMigration()
+
         AppConfigProvider.appConfig = AppConfig(AppType.PARENT, MainActivity::class.java)
         MasqueradeHelper.masqueradeLogoutTask = Runnable { ParentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
 
@@ -54,9 +57,9 @@ abstract class BaseAppManager : AppManager() {
         RemoteConfigUtils.initialize()
 
         if (BuildConfig.DEBUG) {
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+            FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = false
         } else {
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+            FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = true
         }
 
         ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.textDarkest)
@@ -69,4 +72,6 @@ abstract class BaseAppManager : AppManager() {
     }
 
     override fun performLogoutOnAuthError() = Unit
+
+    abstract fun performFlutterAppMigration()
 }

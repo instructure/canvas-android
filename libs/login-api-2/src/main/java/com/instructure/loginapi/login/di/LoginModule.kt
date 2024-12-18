@@ -15,17 +15,23 @@
  *
  */
 
-package com.instructure.parentapp.util
+package com.instructure.loginapi.login.di
 
-import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.GsonPref
-import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.loginapi.login.util.LoginPrefs
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 
-object ParentPrefs : PrefManager("parentSP") {
+@Module
+@InstallIn(SingletonComponent::class)
+class LoginModule {
 
-    var currentStudent: User? by GsonPref(User::class.java, null, "current_student", false)
-    var hasMigratedPrefs: Boolean by BooleanPref(false, "has_migrated_prefs_from_old_app")
-    var hasMigratedDb: Boolean by BooleanPref(false, "has_migrated_db_from_old_app")
+    @Provides
+    @Singleton
+    fun provideApiPrefs(): LoginPrefs {
+        return LoginPrefs
+    }
 }

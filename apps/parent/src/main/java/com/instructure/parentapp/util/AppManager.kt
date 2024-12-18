@@ -29,9 +29,16 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject
+    lateinit var flutterAppMigration: FlutterAppMigration
+
     override fun performLogoutOnAuthError() {
         ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
 
     override fun getWorkManagerFactory() = workerFactory
+
+    override fun performFlutterAppMigration() {
+        flutterAppMigration.migratePreferencesIfNecessary()
+    }
 }
