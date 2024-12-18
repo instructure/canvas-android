@@ -163,63 +163,73 @@ object CourseEndpoint : Endpoint(
                 GET {
                     val courseId = pathVars.courseId
                     val query = request.url.queryParameter("q").orEmpty()
+                    val filters = request.url.queryParameterValues("filter[]").toMutableList()
+                    if (filters.isEmpty()) filters.addAll(listOf("assignments", "announcements", "discussion_topics", "pages"))
 
                     //We are only looking for matches in the name of the items
 
-                    val assignments = data.assignments.values.filter { it.courseId == courseId }
-                        .filter { it.name?.contains(query) == true }
-                        .map {
+                    val assignments = if (filters.contains("assignments")) {
+                        data.assignments.values.filter { it.courseId == courseId }
+                            .filter { it.name?.contains(query) == true }
+                            .map {
+                                SmartSearchResult(
+                                    contentId = it.id,
+                                    title = it.name.orEmpty(),
+                                    contentType = SmartSearchContentType.ASSIGNMENT,
+                                    htmlUrl = "https://mock-data.instructure.com/courses/$courseId/assignments/${it.id}",
+                                    body = "query body",
+                                    relevance = Random.nextInt(50, 100),
+                                    distance = Random.nextDouble(0.0, 1.0)
+                                )
+                            }
+                    } else emptyList()
+
+                    val announcements = if (filters.contains("announcements")) {
+                        data.courseDiscussionTopicHeaders[courseId]?.filter {
+                            it.announcement && it.title?.contains(query) == true
+                        }?.map {
                             SmartSearchResult(
                                 contentId = it.id,
-                                title = it.name.orEmpty(),
-                                contentType = SmartSearchContentType.ASSIGNMENT,
-                                htmlUrl = "https://mock-data.instructure.com/courses/$courseId/assignments/${it.id}",
+                                title = it.title.orEmpty(),
+                                contentType = SmartSearchContentType.ANNOUNCEMENT,
+                                htmlUrl = "https://mock-data.instructure.com/courses/$courseId/announcements/${it.id}",
                                 body = "query body",
                                 relevance = Random.nextInt(50, 100),
                                 distance = Random.nextDouble(0.0, 1.0)
                             )
-                        }
+                        } ?: emptyList()
+                    } else emptyList()
 
-                    val announcements = data.courseDiscussionTopicHeaders[courseId]?.filter {
-                        it.announcement && it.title?.contains(query) == true
-                    }?.map {
-                        SmartSearchResult(
-                            contentId = it.id,
-                            title = it.title.orEmpty(),
-                            contentType = SmartSearchContentType.ANNOUNCEMENT,
-                            htmlUrl = "https://mock-data.instructure.com/courses/$courseId/announcements/${it.id}",
-                            body = "query body",
-                            relevance = Random.nextInt(50, 100),
-                            distance = Random.nextDouble(0.0, 1.0)
-                        )
-                    } ?: emptyList()
-
-                    val discussions = data.courseDiscussionTopicHeaders[courseId]?.filter {
-                        !it.announcement && it.title?.contains(query) == true
-                    }?.map {
-                        SmartSearchResult(
-                            contentId = it.id,
-                            title = it.title.orEmpty(),
-                            contentType = SmartSearchContentType.DISCUSSION_TOPIC,
-                            htmlUrl = "https://mock-data.instructure.com/courses/$courseId/discussion_topics/${it.id}",
-                            body = "query body",
-                            relevance = Random.nextInt(50, 100),
-                            distance = Random.nextDouble(0.0, 1.0)
-                        )
-                    } ?: emptyList()
-
-                    val pages = data.coursePages[courseId]?.filter { it.title?.contains(query) == true }
-                        ?.map {
+                    val discussions = if (filters.contains("discussion_topics")) {
+                        data.courseDiscussionTopicHeaders[courseId]?.filter {
+                            !it.announcement && it.title?.contains(query) == true
+                        }?.map {
                             SmartSearchResult(
                                 contentId = it.id,
                                 title = it.title.orEmpty(),
-                                contentType = SmartSearchContentType.WIKI_PAGE,
-                                htmlUrl = it.url.orEmpty(),
-                                body = it.body.orEmpty(),
+                                contentType = SmartSearchContentType.DISCUSSION_TOPIC,
+                                htmlUrl = "https://mock-data.instructure.com/courses/$courseId/discussion_topics/${it.id}",
+                                body = "query body",
                                 relevance = Random.nextInt(50, 100),
                                 distance = Random.nextDouble(0.0, 1.0)
                             )
                         } ?: emptyList()
+                    } else emptyList()
+
+                    val pages = if (filters.contains("pages")) {
+                        data.coursePages[courseId]?.filter { it.title?.contains(query) == true }
+                            ?.map {
+                                SmartSearchResult(
+                                    contentId = it.id,
+                                    title = it.title.orEmpty(),
+                                    contentType = SmartSearchContentType.WIKI_PAGE,
+                                    htmlUrl = it.url.orEmpty(),
+                                    body = it.body.orEmpty(),
+                                    relevance = Random.nextInt(50, 100),
+                                    distance = Random.nextDouble(0.0, 1.0)
+                                )
+                            } ?: emptyList()
+                    } else emptyList()
 
                     val results = (assignments + announcements + discussions + pages).sortedByDescending { it.relevance }
 

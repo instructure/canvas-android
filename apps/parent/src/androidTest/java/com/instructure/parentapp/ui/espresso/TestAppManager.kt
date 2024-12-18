@@ -18,6 +18,7 @@
 package com.instructure.parentapp.ui.espresso
 
 import androidx.work.WorkerFactory
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.util.BaseAppManager
 
 open class TestAppManager : BaseAppManager() {
@@ -26,6 +27,10 @@ open class TestAppManager : BaseAppManager() {
 
     override fun getWorkManagerFactory(): WorkerFactory {
         return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
+    }
+
+    override fun getScheduler(): AlarmScheduler? {
+        return null
     }
 
     override fun performFlutterAppMigration() = Unit

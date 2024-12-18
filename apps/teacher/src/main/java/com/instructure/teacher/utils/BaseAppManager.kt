@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.base.AppConfig
 import com.instructure.pandautils.base.AppConfigProvider
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
@@ -84,7 +85,12 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
             Logger.e("Invalid or Trial PSPDFKIT License!")
         }
 
-        MasqueradeHelper.masqueradeLogoutTask = Runnable { TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+        MasqueradeHelper.masqueradeLogoutTask = Runnable {
+            TeacherLogoutTask(
+                LogoutTask.Type.LOGOUT,
+                alarmScheduler = getScheduler()
+            ).execute()
+        }
 
         // SpeedGrader submission media comment
         val mediaUploadReceiver = SGPendingMediaCommentReceiver()
@@ -97,8 +103,13 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
     }
 
     override fun performLogoutOnAuthError() {
-        TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
+        TeacherLogoutTask(
+            LogoutTask.Type.LOGOUT,
+            alarmScheduler = getScheduler()
+        ).execute()
     }
+
+    abstract fun getScheduler(): AlarmScheduler?
 
     companion object {
         val PREF_FILE_NAME = "teacherSP"

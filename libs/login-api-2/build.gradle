@@ -32,6 +32,7 @@ static String isTesting() {
 }
 
 android {
+    namespace 'com.instructure.loginapi.login'
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -80,7 +81,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {

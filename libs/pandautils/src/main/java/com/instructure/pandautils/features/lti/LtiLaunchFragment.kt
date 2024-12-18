@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.lti
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -50,6 +52,8 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionRequester
+import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -65,6 +69,8 @@ import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
 import javax.inject.Inject
 
@@ -148,8 +154,10 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     private fun loadLtiToolIntoWebView(url: String) {
+        setupFilePicker()
         binding.webView.enableAlgorithmicDarkening()
         binding.webView.setZoomSettings(false)
+        binding.webView.addVideoClient(requireActivity())
         binding.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
 
@@ -184,6 +192,44 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     fun contextLink() = "${ApiPrefs.fullDomain}${canvasContext.toAPIString()}"
+
+    private fun setupFilePicker() {
+        binding.webView.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+            override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
+                startActivityForResult(intent, requestCode)
+            }
+
+            override fun permissionsGranted(): Boolean {
+                return if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    true
+                } else {
+                    requestFilePermissions()
+                    false
+                }
+            }
+        })
+    }
+
+    private fun requestFilePermissions() {
+        requestPermissions(
+            PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA),
+            PermissionUtils.PERMISSION_REQUEST_CODE
+        )
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRequestPermissionsResult(result: PermissionRequester.PermissionResult) {
+        if (PermissionUtils.allPermissionsGrantedResultSummary(result.grantResults)) {
+            binding.webView.clearPickerCallback()
+            Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!binding.webView.handleOnActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 
     companion object {
         const val LTI_URL = "lti_url"

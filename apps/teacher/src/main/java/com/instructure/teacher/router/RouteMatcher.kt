@@ -241,6 +241,12 @@ object RouteMatcher : BaseRouteMatcher() {
             )
         )
         routes.add(Route(courseOrGroup("/:course_id/users"), PeopleListFragment::class.java))
+
+        // Calendar
+        routes.add(Route("/:${EventFragment.CONTEXT_TYPE}/:${EventFragment.CONTEXT_ID}/calendar_events/:${EventFragment.SCHEDULE_ITEM_ID}", EventFragment::class.java))
+
+        // To Do
+        routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
     }
 
     private fun initClassMap() {
@@ -685,7 +691,7 @@ object RouteMatcher : BaseRouteMatcher() {
             }
         } else {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename, fileId)
             LoaderUtils.restartLoaderWithBundle(
                 LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID
             )

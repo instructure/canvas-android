@@ -14,8 +14,7 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.instructure.parentapp">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Features -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -176,6 +175,16 @@
         <receiver
             android:name="com.instructure.pandautils.receivers.alarm.AlarmReceiver"
             android:exported="false" />
+
+        <receiver android:name=".receivers.InitializeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

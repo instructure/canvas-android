@@ -20,12 +20,17 @@ package com.instructure.pandautils.compose.composables
 import android.view.WindowManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.R
 
 
 @Composable
@@ -45,8 +50,16 @@ fun FullScreenDialog(
             setDimAmount(0f)
             clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         }
+        var modifier = Modifier.fillMaxSize()
+        if (ApiPrefs.isMasquerading) {
+            modifier = modifier.padding(
+                top = dimensionResource(R.dimen.masqueradeButtonSize),
+                start = 2.dp,
+                end = 2.dp
+            )
+        }
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier
         ) {
             content()
         }

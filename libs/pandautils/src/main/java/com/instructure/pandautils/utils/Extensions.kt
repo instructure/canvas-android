@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.utils
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.ColorInt
@@ -25,8 +26,14 @@ import androidx.work.Data
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -141,4 +148,19 @@ fun Context.launchCustomTab(url: String, @ColorInt color: Int) {
     intent = intent.asChooserExcludingInstructure()
 
     startActivity(intent)
+}
+
+fun BroadcastReceiver.goAsync(
+    context: CoroutineContext = EmptyCoroutineContext,
+    block: suspend CoroutineScope.() -> Unit
+) {
+    val pendingResult = goAsync()
+    @OptIn(DelicateCoroutinesApi::class)
+    GlobalScope.launch(context) {
+        try {
+            block()
+        } finally {
+            pendingResult.finish()
+        }
+    }
 }
