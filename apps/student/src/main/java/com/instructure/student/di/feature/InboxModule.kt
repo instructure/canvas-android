@@ -14,12 +14,19 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.compose.animations
+package com.instructure.student.di.feature
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-public val ScreenSlideTransition = slideInHorizontally(animationSpec = tween(300), initialOffsetX = { it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { -it })
-public val ScreenSlideBackTransition = slideInHorizontally(animationSpec = tween(300), initialOffsetX = { -it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { it })
+@Module
+@InstallIn(ViewModelComponent::class)
+class InboxModule {
+    @Provides
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return InboxDetailsBehavior()
+    }
+}

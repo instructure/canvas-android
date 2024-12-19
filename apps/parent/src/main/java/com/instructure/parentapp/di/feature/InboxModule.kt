@@ -25,8 +25,10 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeRepository
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
@@ -43,8 +45,8 @@ import dagger.hilt.android.components.ViewModelComponent
 class InboxFragmentModule {
 
     @Provides
-    fun provideInboxRouter(activity: FragmentActivity, navigation: Navigation): InboxRouter {
-        return ParentInboxRouter(activity, navigation)
+    fun provideInboxRouter(activity: FragmentActivity, navigation: Navigation, fileDownloader: FileDownloader): InboxRouter {
+        return ParentInboxRouter(activity, navigation, fileDownloader)
     }
 }
 
@@ -77,5 +79,10 @@ class InboxModule {
         enrollmentAPI: EnrollmentAPI.EnrollmentInterface,
     ): ParentInboxCoursePickerRepository {
         return ParentInboxCoursePickerRepository(courseAPI, enrollmentAPI)
+    }
+
+    @Provides
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return InboxDetailsBehavior()
     }
 }

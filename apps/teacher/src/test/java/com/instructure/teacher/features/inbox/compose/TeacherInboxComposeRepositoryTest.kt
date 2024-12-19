@@ -1,4 +1,4 @@
-package com.instructure.parentapp.features.inbox.compose
+package com.instructure.teacher.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -24,13 +24,13 @@ import org.junit.After
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ParentInboxComposeRepositoryTest {
+class TeacherInboxComposeRepositoryTest {
 
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
 
-    private val inboxComposeRepository = ParentInboxComposeRepository(
+    private val inboxComposeRepository = TeacherInboxComposeRepository(
         courseAPI,
         recipientAPI,
         inboxAPI,
@@ -49,7 +49,7 @@ class ParentInboxComposeRepositoryTest {
             Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE)))
         )
 
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(expected)
+        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
 
@@ -63,7 +63,7 @@ class ParentInboxComposeRepositoryTest {
             Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_COMPLETED)))
         )
 
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(expected)
+        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
 
@@ -76,7 +76,7 @@ class ParentInboxComposeRepositoryTest {
         val list2 = listOf(Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),)
         val expected = list1 + list2
 
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
+        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
         coEvery { courseAPI.next(any(), any()) } returns DataResult.Success(list2)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
@@ -86,13 +86,13 @@ class ParentInboxComposeRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Get courses with error`() = runTest {
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Fail()
+        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Fail()
 
         inboxComposeRepository.getCourses().dataOrThrow
     }
 
     @Test
-    fun `Get groups successfully`() = runTest {
+    fun `Get groups returns empty list`() = runTest {
         val expected = emptyList<Group>()
 
         val result = inboxComposeRepository.getGroups().dataOrThrow

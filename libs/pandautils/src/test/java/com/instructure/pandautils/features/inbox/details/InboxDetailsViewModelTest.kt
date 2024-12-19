@@ -27,7 +27,6 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
-import com.instructure.pandautils.utils.FileDownloader
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -210,8 +209,8 @@ class InboxDetailsViewModelTest {
 
         assertEquals(3, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeleted)), events[0])
-        assertEquals(InboxDetailsFragmentAction.CloseFragment, events[1])
-        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[2])
+        assertEquals(InboxDetailsFragmentAction.UpdateParentFragment, events[1])
+        assertEquals(InboxDetailsFragmentAction.CloseFragment, events[2])
     }
 
     @Test
@@ -445,14 +444,19 @@ class InboxDetailsViewModelTest {
     //region MessageAction tests
 
     @Test
-    fun `Test MessageAction Attachment onClick`() {
-        val fileDownloader: FileDownloader = mockk(relaxed = true)
-        val viewModel = getViewModel(fileDownloader)
+    fun `Test MessageAction Attachment onClick`() = runTest {
+        val viewModel = getViewModel()
         val attachment = Attachment()
 
         viewModel.messageActionHandler(MessageAction.OpenAttachment(attachment))
 
-        coVerify(exactly = 1) { fileDownloader.downloadFileToDevice(attachment) }
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(1, events.size)
+        assertEquals(InboxDetailsFragmentAction.OpenAttachment(attachment), events[0])
     }
 
     @Test
@@ -606,7 +610,7 @@ class InboxDetailsViewModelTest {
 
     // endregion
 
-    private fun getViewModel(fileDownloader: FileDownloader = FileDownloader(context, mockk(relaxed = true))): InboxDetailsViewModel {
-        return InboxDetailsViewModel(context, savedStateHandle, inboxDetailsRepository, fileDownloader)
+    private fun getViewModel(): InboxDetailsViewModel {
+        return InboxDetailsViewModel(context, savedStateHandle, InboxDetailsBehavior(), inboxDetailsRepository)
     }
 }

@@ -45,6 +45,7 @@ data class InboxComposeUiState(
     val screenState: ScreenState = ScreenState.Data,
     val showConfirmationDialog: Boolean = false,
     val hiddenBodyMessage: String? = null,
+    val enableCustomBackHandler: Boolean = true,
 ) {
     val isSendButtonEnabled: Boolean
         get() = selectContextUiState.selectedCanvasContext != null &&

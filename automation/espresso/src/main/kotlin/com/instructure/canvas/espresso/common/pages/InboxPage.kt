@@ -103,7 +103,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun filterInbox(filterFor: String) {
-        refresh()
         waitForView(withId(R.id.scopeFilterText))
         scopeButton.click()
         waitForViewWithText(filterFor).click()

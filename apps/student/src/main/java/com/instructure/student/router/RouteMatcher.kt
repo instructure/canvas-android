@@ -46,6 +46,7 @@ import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
@@ -82,7 +83,6 @@ import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
 import com.instructure.student.fragment.DashboardFragment
-import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
@@ -120,7 +120,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/", DashboardFragment::class.java))
         // region Conversations
         routes.add(Route("/conversations", InboxFragment::class.java))
-        routes.add(Route("/conversations/:${RouterParams.CONVERSATION_ID}", InboxConversationFragment::class.java))
+        routes.add(Route("/conversations/:${InboxDetailsFragment.CONVERSATION_ID}", InboxDetailsFragment::class.java))
         routes.add(Route("/login.*", RouteContext.DO_NOT_ROUTE))//FIXME: we know about this
         // endregion
 
