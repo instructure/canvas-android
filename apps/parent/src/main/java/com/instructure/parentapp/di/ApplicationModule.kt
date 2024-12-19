@@ -26,6 +26,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.reminder.ReminderRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.utils.LogoutHelper
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.util.FlutterAppMigration
 import com.instructure.parentapp.util.ParentLogoutHelper
 import com.instructure.parentapp.util.ParentPrefs
@@ -68,6 +69,7 @@ class ApplicationModule {
     @Singleton
     fun provideFlutterAppMigration(
         @ApplicationContext context: Context,
+        themePrefs: ThemePrefs,
         parentPrefs: ParentPrefs,
         loginPrefs: LoginPrefs,
         previousUsersUtils: PreviousUsersUtils,
@@ -78,6 +80,7 @@ class ApplicationModule {
     ): FlutterAppMigration {
         return FlutterAppMigration(
             context,
+            themePrefs,
             parentPrefs,
             loginPrefs,
             previousUsersUtils,

@@ -23,6 +23,7 @@ import android.net.Uri
 import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.models.User
@@ -31,9 +32,12 @@ import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.SavedLoginInfo
+import com.instructure.pandautils.R
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.reminder.ReminderRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -56,8 +60,40 @@ private const val KEY_LAST_ACCOUNT = "flutter.last_account"
 private const val KEY_LAST_ACCOUNT_LOGIN_FLOW = "flutter.last_account_login_flow"
 private const val KEY_RATING_DONT_SHOW_AGAIN = "flutter.dont_show_again"
 
+data class FlutterSignedInUser(
+    val uuid: String?,
+    val domain: String?,
+    val accessToken: String?,
+    val refreshToken: String?,
+    val user: User?,
+    val clientId: String?,
+    val clientSecret: String?,
+    val selectedStudentId: Long?,
+    val canMasquerade: Boolean?,
+    val masqueradeUser: User?,
+    val masqueradeDomain: String?,
+    val isMasqueradingFromQRCode: Boolean?
+) {
+    fun toSignedInUser(): SignedInUser {
+        val domainUri = Uri.parse(domain)
+        return SignedInUser(
+            user = user ?: User(),
+            domain = domainUri.host.orEmpty(),
+            protocol = domainUri.scheme.orEmpty(),
+            token = accessToken.orEmpty(),
+            accessToken = accessToken.orEmpty(),
+            refreshToken = refreshToken.orEmpty(),
+            clientId = clientId.orEmpty(),
+            clientSecret = clientSecret.orEmpty(),
+            calendarFilterPrefs = null,
+            selectedStudentId = selectedStudentId
+        )
+    }
+}
+
 class FlutterAppMigration(
     @ApplicationContext private val context: Context,
+    private val themePrefs: ThemePrefs,
     private val parentPrefs: ParentPrefs,
     private val loginPrefs: LoginPrefs,
     private val previousUsersUtils: PreviousUsersUtils,
@@ -66,21 +102,27 @@ class FlutterAppMigration(
     private val reminderRepository: ReminderRepository,
     private val calendarFilterDao: CalendarFilterDao
 ) {
-    fun migratePreferencesIfNecessary() {
-        try {
-            //    if (!parentPrefs.hasMigratedPrefs) {
-            parentPrefs.hasMigratedPrefs = true
+    fun migrateIfNecessary() {
+        if (!parentPrefs.hasMigrated) {
+            parentPrefs.hasMigrated = true
             migratePrefs()
-            migrateReminders()
-            migrateCalendarFilters()
-            //      }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            migrateEncryptedSharedPrefs()
+            migrateDatabase()
         }
     }
 
+    private fun migratePrefs() = try {
+        val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+
+        val isDarkMode = prefs.getBoolean("flutter.dark_mode", false)
+
+        themePrefs.appTheme = if (isDarkMode) 1 else 0
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
     @Suppress("DEPRECATION")
-    private fun migratePrefs() {
+    private fun migrateEncryptedSharedPrefs() = try {
         val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
         val encryptedPrefs = EncryptedSharedPreferences.create(
@@ -100,14 +142,15 @@ class FlutterAppMigration(
         }
 
         prefs[KEY_LOGINS]?.let { loginListJsonString ->
-            val logins = parseSignedInUsersWithUuids(loginListJsonString.toString())
-            logins.map { it.second }.forEach {
+            val typeToken = object : TypeToken<List<FlutterSignedInUser>>() {}
+            val logins: List<FlutterSignedInUser> = Gson().fromJson(loginListJsonString.toString(), typeToken.type)
+            logins.map { it.toSignedInUser() }.forEach {
                 previousUsersUtils.add(context, it, it.domain, it.user)
             }
 
             prefs[KEY_CURRENT_LOGIN_UUID]?.let { currentLoginUuid ->
-                logins.find { it.first == currentLoginUuid }?.let {
-                    setCurrentLoginInfo(it.second)
+                logins.find { it.uuid == currentLoginUuid }?.let {
+                    setCurrentLoginInfo(it)
                 }
             }
         }
@@ -120,23 +163,19 @@ class FlutterAppMigration(
             val currentStudent: User = it.toString().fromJson()
             parentPrefs.currentStudent = currentStudent
         }
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 
-    private fun getAllPrefs(allPrefs: Map<String, *>): Map<String, Any?> {
-        val decodedPrefs = mutableMapOf<String, Any?>()
-
-        allPrefs.keys
-            .filter { it.startsWith("flutter.") }
-            .forEach { key ->
-                var value = allPrefs[key]
-                if (value is String) {
-                    value = decodeValue(value)
-                }
-                decodedPrefs[key] = value
+    private fun getAllPrefs(allPrefs: Map<String, *>) = allPrefs
+        .filterKeys { it.startsWith("flutter.") }
+        .mapValues { (_, value) ->
+            if (value is String) {
+                decodeValue(value)
+            } else {
+                value
             }
-
-        return decodedPrefs
-    }
+        }
 
     private fun decodeValue(value: String): Any {
         return when {
@@ -153,37 +192,64 @@ class FlutterAppMigration(
         }
     }
 
-    private fun parseSignedInUsersWithUuids(jsonString: String): List<Pair<String, SignedInUser>> {
-        val parsedList: List<Map<String, Any>> = jsonString.fromJson()
-
-        return parsedList.map { map ->
-            val uuid = map["uuid"] as String
-            val userJson = Gson().toJson(map.filterKeys { it != "uuid" })
-            val signedInUser: SignedInUser = userJson.fromJson()
-            val domainUri = Uri.parse(signedInUser.domain)
-            signedInUser.domain = domainUri.host.orEmpty()
-            signedInUser.protocol = domainUri.scheme.orEmpty()
-            uuid to signedInUser
-        }
-    }
-
-    private fun setCurrentLoginInfo(signedInUser: SignedInUser) = with(apiPrefs) {
+    private fun setCurrentLoginInfo(flutterSignedInUser: FlutterSignedInUser) = with(apiPrefs) {
+        val signedInUser = flutterSignedInUser.toSignedInUser()
         accessToken = signedInUser.accessToken.orEmpty()
         clientId = signedInUser.clientId.orEmpty()
         clientSecret = signedInUser.clientSecret.orEmpty()
-        domain = signedInUser.domain
         protocol = signedInUser.protocol
         refreshToken = signedInUser.refreshToken
-        user = signedInUser.user
+        canBecomeUser = flutterSignedInUser.canMasquerade
+        isMasquerading = flutterSignedInUser.masqueradeUser != null
+        isMasqueradingFromQRCode = flutterSignedInUser.isMasqueradingFromQRCode.orDefault()
+        masqueradeId = flutterSignedInUser.masqueradeUser?.id ?: -1
+        isFirstMasqueradingStart = true
+        domain = if (isMasquerading) Uri.parse(flutterSignedInUser.masqueradeDomain).host.orEmpty() else signedInUser.domain
+        user = if (isMasquerading) flutterSignedInUser.masqueradeUser else signedInUser.user
     }
 
-    private fun migrateReminders() {
+    private fun migrateDatabase() = try {
         val database = SQLiteDatabase.openDatabase(
             context.getDatabasePath("canvas_parent.db").path,
             null,
             SQLiteDatabase.OPEN_READONLY
         )
 
+        CoroutineScope(Dispatchers.IO).launch {
+            migrateCalendarFilters(database)
+            migrateReminders(database)
+            database.close()
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
+    private suspend fun migrateCalendarFilters(database: SQLiteDatabase) {
+        val cursor = database.rawQuery("SELECT * FROM calendar_filter", null)
+
+        while (cursor.moveToNext()) {
+            val userDomain = cursor.getString(cursor.getColumnIndexOrThrow("user_domain"))
+            val userIdString = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
+            val observeeIdString = cursor.getString(cursor.getColumnIndexOrThrow("observee_id"))
+            val filtersString = cursor.getString(cursor.getColumnIndexOrThrow("filters"))
+
+            val observeeId = observeeIdString.toLongOrNull() ?: continue
+            val filters = filtersString.split("|").toSet()
+
+            calendarFilterDao.insertOrUpdate(
+                CalendarFilterEntity(
+                    userDomain = userDomain,
+                    userId = userIdString,
+                    observeeId = observeeId,
+                    filters = filters
+                )
+            )
+        }
+
+        cursor.close()
+    }
+
+    private suspend fun migrateReminders(database: SQLiteDatabase) {
         val cursor = database.rawQuery("SELECT * FROM reminders", null)
 
         while (cursor.moveToNext()) {
@@ -198,36 +264,26 @@ class FlutterAppMigration(
             val itemId = itemIdString.toLongOrNull() ?: continue
             val courseId = courseIdString.toLongOrNull() ?: continue
             val date = Instant.parse(dateString) ?: continue
+            val contentHtmlUrl = if (type == "assignment") {
+                "$userDomain/courses/$courseId/assignments/$itemId"
+            } else {
+                "$userDomain/courses/$courseId/calendar_events/$itemId"
+            }
+            val messageParam = context.getString(if (type == "assignment") R.string.assignment else R.string.a11y_calendar_event)
+            val message = context.getString(R.string.reminderNotificationTitleFor, messageParam)
 
-
-            val contentHtmlUrl = "$userDomain/courses/$courseId/assignments/$itemId"
+            if (date.isAfter(Instant.now())) {
+                reminderRepository.createReminder(
+                    userId = userId,
+                    contentId = itemId,
+                    contentHtmlUrl = contentHtmlUrl,
+                    title = message,
+                    alarmText = message,
+                    alarmTimeInMillis = date.toEpochMilli()
+                )
+            }
         }
 
         cursor.close()
-        database.close()
-    }
-
-    private fun migrateCalendarFilters() {
-
-    }
-
-    private fun createReminder(
-        userId: Long,
-        itemId: Long,
-        contentHtmlUrl: String,
-        title: String,
-        alarmText: String,
-        dateMillis: Long
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            reminderRepository.createReminder(
-                userId = userId,
-                contentId = itemId,
-                contentHtmlUrl = contentHtmlUrl,
-                title = title,
-                alarmText = alarmText,
-                alarmTimeInMillis = dateMillis
-            )
-        }
     }
 }

@@ -47,6 +47,6 @@ class AppManager : BaseAppManager() {
     }
 
     override fun performFlutterAppMigration() {
-        flutterAppMigration.migratePreferencesIfNecessary()
+        flutterAppMigration.migrateIfNecessary()
     }
 }
