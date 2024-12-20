@@ -54,6 +54,7 @@ private const val LIST_IDENTIFIER = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIGxpc3Qu"
 private const val BIG_INTEGER_PREFIX = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBCaWdJbnRlZ2Vy"
 private const val DOUBLE_PREFIX = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBEb3VibGUu"
 
+private const val KEY_DARK_MODE = "flutter.dark_mode"
 private const val KEY_LOGINS = "flutter.logins"
 private const val KEY_CURRENT_LOGIN_UUID = "flutter.current_login_uuid"
 private const val KEY_CURRENT_STUDENT = "flutter.current_student"
@@ -116,7 +117,7 @@ class FlutterAppMigration(
     private fun migratePrefs() = try {
         val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
 
-        val isDarkMode = prefs.getBoolean("flutter.dark_mode", false)
+        val isDarkMode = prefs.getBoolean(KEY_DARK_MODE, false)
 
         themePrefs.appTheme = if (isDarkMode) 1 else 0
     } catch (e: Exception) {

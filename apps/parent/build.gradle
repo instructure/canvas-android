@@ -217,8 +217,7 @@ dependencies {
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
-    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.JOURNEY_ZXING_CORE
-
-    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+    implementation Libs.ENCRYPTED_SHARED_PREFERENCES
 }
