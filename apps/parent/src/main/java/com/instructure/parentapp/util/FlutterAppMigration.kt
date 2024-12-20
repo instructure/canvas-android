@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.ObjectInputStream
 import java.math.BigInteger
+import java.time.Clock
 import java.time.Instant
 
 private const val LIST_IDENTIFIER = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIGxpc3Qu"
@@ -100,7 +101,8 @@ class FlutterAppMigration(
     private val apiPrefs: ApiPrefs,
     private val ratingDialogPrefs: RatingDialog.Prefs,
     private val reminderRepository: ReminderRepository,
-    private val calendarFilterDao: CalendarFilterDao
+    private val calendarFilterDao: CalendarFilterDao,
+    private val clock: Clock
 ) {
     fun migrateIfNecessary() {
         if (!parentPrefs.hasMigrated) {
@@ -216,9 +218,10 @@ class FlutterAppMigration(
         )
 
         CoroutineScope(Dispatchers.IO).launch {
-            migrateCalendarFilters(database)
-            migrateReminders(database)
-            database.close()
+            database.use {
+                migrateCalendarFilters(it)
+                migrateReminders(it)
+            }
         }
     } catch (e: Exception) {
         e.printStackTrace()
@@ -227,63 +230,63 @@ class FlutterAppMigration(
     private suspend fun migrateCalendarFilters(database: SQLiteDatabase) {
         val cursor = database.rawQuery("SELECT * FROM calendar_filter", null)
 
-        while (cursor.moveToNext()) {
-            val userDomain = cursor.getString(cursor.getColumnIndexOrThrow("user_domain"))
-            val userIdString = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
-            val observeeIdString = cursor.getString(cursor.getColumnIndexOrThrow("observee_id"))
-            val filtersString = cursor.getString(cursor.getColumnIndexOrThrow("filters"))
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val userDomain = cursor.getString(cursor.getColumnIndexOrThrow("user_domain"))
+                val userIdString = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
+                val observeeIdString = cursor.getString(cursor.getColumnIndexOrThrow("observee_id"))
+                val filtersString = cursor.getString(cursor.getColumnIndexOrThrow("filters"))
 
-            val observeeId = observeeIdString.toLongOrNull() ?: continue
-            val filters = filtersString.split("|").toSet()
+                val observeeId = observeeIdString.toLongOrNull() ?: continue
+                val filters = filtersString.split("|").toSet()
 
-            calendarFilterDao.insertOrUpdate(
-                CalendarFilterEntity(
-                    userDomain = userDomain,
-                    userId = userIdString,
-                    observeeId = observeeId,
-                    filters = filters
+                calendarFilterDao.insertOrUpdate(
+                    CalendarFilterEntity(
+                        userDomain = userDomain,
+                        userId = userIdString,
+                        observeeId = observeeId,
+                        filters = filters
+                    )
                 )
-            )
+            }
         }
-
-        cursor.close()
     }
 
     private suspend fun migrateReminders(database: SQLiteDatabase) {
         val cursor = database.rawQuery("SELECT * FROM reminders", null)
 
-        while (cursor.moveToNext()) {
-            val userDomain = cursor.getString(cursor.getColumnIndexOrThrow("user_domain"))
-            val userIdString = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
-            val type = cursor.getString(cursor.getColumnIndexOrThrow("type"))
-            val itemIdString = cursor.getString(cursor.getColumnIndexOrThrow("item_id"))
-            val courseIdString = cursor.getString(cursor.getColumnIndexOrThrow("course_id"))
-            val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val userDomain = cursor.getString(cursor.getColumnIndexOrThrow("user_domain"))
+                val userIdString = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
+                val type = cursor.getString(cursor.getColumnIndexOrThrow("type"))
+                val itemIdString = cursor.getString(cursor.getColumnIndexOrThrow("item_id"))
+                val courseIdString = cursor.getString(cursor.getColumnIndexOrThrow("course_id"))
+                val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
 
-            val userId = userIdString.toLongOrNull() ?: continue
-            val itemId = itemIdString.toLongOrNull() ?: continue
-            val courseId = courseIdString.toLongOrNull() ?: continue
-            val date = Instant.parse(dateString) ?: continue
-            val contentHtmlUrl = if (type == "assignment") {
-                "$userDomain/courses/$courseId/assignments/$itemId"
-            } else {
-                "$userDomain/courses/$courseId/calendar_events/$itemId"
-            }
-            val messageParam = context.getString(if (type == "assignment") R.string.assignment else R.string.a11y_calendar_event)
-            val message = context.getString(R.string.reminderNotificationTitleFor, messageParam)
+                val userId = userIdString.toLongOrNull() ?: continue
+                val itemId = itemIdString.toLongOrNull() ?: continue
+                val courseId = courseIdString.toLongOrNull() ?: continue
+                val date = Instant.parse(dateString) ?: continue
+                val contentHtmlUrl = if (type == "assignment") {
+                    "$userDomain/courses/$courseId/assignments/$itemId"
+                } else {
+                    "$userDomain/courses/$courseId/calendar_events/$itemId"
+                }
+                val messageParam = context.getString(if (type == "assignment") R.string.assignment else R.string.a11y_calendar_event)
+                val message = context.getString(R.string.reminderNotificationTitleFor, messageParam)
 
-            if (date.isAfter(Instant.now())) {
-                reminderRepository.createReminder(
-                    userId = userId,
-                    contentId = itemId,
-                    contentHtmlUrl = contentHtmlUrl,
-                    title = message,
-                    alarmText = message,
-                    alarmTimeInMillis = date.toEpochMilli()
-                )
+                if (date.isAfter(Instant.now(clock))) {
+                    reminderRepository.createReminder(
+                        userId = userId,
+                        contentId = itemId,
+                        contentHtmlUrl = contentHtmlUrl,
+                        title = message,
+                        alarmText = message,
+                        alarmTimeInMillis = date.toEpochMilli()
+                    )
+                }
             }
         }
-
-        cursor.close()
     }
 }
