@@ -149,7 +149,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final missing = submission?.missing == true;
     final showStatus = missing || assignment.isSubmittable() || submission?.isGraded() == true;
     final submitted = submission?.submittedAt != null;
-    final submittedColor = submitted ? ParentTheme.of(context)?.successColor : textTheme.bodySmall?.color;
+    final graded = submission?.isGraded() == true;
+    final submittedColor = submitted || graded ? ParentTheme.of(context)?.successColor : textTheme.bodySmall?.color;
 
     final points = (assignment.pointsPossible.toInt() == assignment.pointsPossible)
         ? assignment.pointsPossible.toInt().toString()
@@ -173,13 +174,13 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                       semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
                       key: Key("assignment_details_total_points")),
                 if (showStatus && !restrictQuantitativeData) SizedBox(width: 16),
-                if (showStatus) _statusIcon(submitted, submittedColor!),
+                if (showStatus) _statusIcon(submitted || graded, submittedColor!),
                 if (showStatus) SizedBox(width: 8),
                 if (showStatus)
                   Text(
                       missing ? l10n.assignmentMissingSubmittedLabel :
-                      !submitted ? l10n.assignmentNotSubmittedLabel :
-                      submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
+                      graded ? l10n.assignmentGradedLabel :
+                      submitted ? l10n.assignmentSubmittedLabel : l10n.assignmentNotSubmittedLabel,
                       style: textTheme.bodySmall?.copyWith(
                         color: submittedColor,
                       ),
