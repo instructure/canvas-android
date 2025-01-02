@@ -18,6 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
@@ -28,6 +29,8 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.discussion.DiscussionSharedAction
+import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
@@ -38,6 +41,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -60,12 +64,15 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @PageView(url = "{canvasContext}/{type}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
+@AndroidEntryPoint
 open class DiscussionsListFragment : BaseExpandableSyncFragment<
         String,
         DiscussionTopicHeader,
@@ -78,6 +85,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+
+    @Inject
+    lateinit var discussionSharedEvents: DiscussionSharedEvents
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
@@ -116,6 +126,16 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         })
 
         setupViews()
+
+        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events, ::handleSharedAction)
+    }
+
+    private fun handleSharedAction(action: DiscussionSharedAction) {
+        when (action) {
+            is DiscussionSharedAction.RefreshListScreen -> {
+                presenter.refresh(true)
+            }
+        }
     }
 
     override fun onCreateView(view: View) {

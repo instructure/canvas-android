@@ -40,6 +40,8 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.discussion.DiscussionSharedAction
+import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.ColorUtils
@@ -50,6 +52,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -82,6 +85,9 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: DiscussionListRepository
+
+    @Inject
+    lateinit var discussionSharedEvents: DiscussionSharedEvents
 
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -195,6 +201,16 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                         RouteMatcher.route(requireActivity(), route)
                     }
                 }
+            }
+        }
+
+        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events, ::handleSharedAction)
+    }
+
+    private fun handleSharedAction(action: DiscussionSharedAction) {
+        when (action) {
+            is DiscussionSharedAction.RefreshListScreen -> {
+                recyclerAdapter?.refresh()
             }
         }
     }

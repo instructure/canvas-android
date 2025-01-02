@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
@@ -33,6 +34,8 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION_REDESI
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentDiscussionCreateWebViewBinding
+import com.instructure.pandautils.features.discussion.DiscussionSharedAction
+import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const.CANVAS_CONTEXT
@@ -56,6 +59,9 @@ class CreateDiscussionWebViewFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var webViewRouter: WebViewRouter
+
+    @Inject
+    lateinit var discussionSharedEvents: DiscussionSharedEvents
 
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = CANVAS_CONTEXT)
@@ -98,12 +104,8 @@ class CreateDiscussionWebViewFragment : BaseCanvasFragment() {
 
             override fun routeInternallyCallback(url: String) {
                 if (url.contains("discussion_topics") || url.contains("announcements")) {
-                    val lastSegment = url.substringAfterLast("/").substringBefore("?")
-                    if ((lastSegment == "discussion_topics" && !isAnnouncement) || (lastSegment == "announcements" && isAnnouncement)) {
-                        requireActivity().onBackPressed()
-                    } else {
-                        binding.discussionWebView.loadUrl("$url?embed=true")
-                    }
+                    discussionSharedEvents.sendEvent(lifecycleScope, DiscussionSharedAction.RefreshListScreen)
+                    requireActivity().onBackPressed()
                 } else if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
                     webViewRouter.routeExternally(url)
                 }
