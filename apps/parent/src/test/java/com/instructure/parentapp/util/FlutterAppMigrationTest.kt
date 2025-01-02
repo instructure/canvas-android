@@ -43,7 +43,6 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.time.Clock
@@ -323,10 +322,6 @@ class FlutterAppMigrationTest {
         } answers { call ->
             "Reminder for ${(call.invocation.args[1] as Array<*>)[0]}"
         }
-
-        assertEquals(1704412800000, Instant.now(clock).toEpochMilli())
-
-        assertEquals(1735689600000, Instant.parse("2025-01-01T00:00:00Z").toEpochMilli())
 
         flutterAppMigration.migrateIfNecessary()
 
