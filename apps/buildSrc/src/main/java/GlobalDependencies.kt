@@ -42,7 +42,7 @@ object Versions {
     const val MEDIA3 = "1.4.1"
     const val DATASTORE = "1.1.1"
     const val LOTTIE = "6.5.2"
-    const val ENCRYPTED_SHARED_PREFERENCES = "1.1.0-alpha06"
+    const val ENCRYPTED_SHARED_PREFERENCES = "1.0.0"
 }
 
 object Libs {

@@ -124,7 +124,6 @@ class FlutterAppMigration(
         e.printStackTrace()
     }
 
-    @Suppress("DEPRECATION")
     private fun migrateEncryptedSharedPrefs() = try {
         val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 

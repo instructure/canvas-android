@@ -43,7 +43,6 @@ import javax.inject.Singleton
 class ApplicationModule {
 
     @Provides
-    @Singleton
     fun provideLogoutHelper(): LogoutHelper {
         return ParentLogoutHelper()
     }
@@ -67,13 +66,11 @@ class ApplicationModule {
     }
 
     @Provides
-    @Singleton
     fun provideClock(): Clock {
         return Clock.systemDefaultZone()
     }
 
     @Provides
-    @Singleton
     fun provideFlutterAppMigration(
         @ApplicationContext context: Context,
         themePrefs: ThemePrefs,

@@ -50,7 +50,6 @@ import java.time.Instant
 import java.time.ZoneId
 
 
-@Suppress("DEPRECATION")
 class FlutterAppMigrationTest {
 
     private val context: Context = mockk(relaxed = true)
