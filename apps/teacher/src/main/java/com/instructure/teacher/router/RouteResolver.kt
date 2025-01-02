@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
@@ -160,7 +161,9 @@ object RouteResolver {
             fragment = DiscussionRouterFragment.newInstance(canvasContext!!, route)
         } else if(DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = DiscussionDetailsWebViewFragment.newInstance(route)
-        } else if (InboxFragment::class.java.isAssignableFrom(cls)) {
+        } else if(CreateDiscussionWebViewFragment::class.java.isAssignableFrom(cls)) {
+            fragment = CreateDiscussionWebViewFragment.newInstance(route)
+        }  else if (InboxFragment::class.java.isAssignableFrom(cls)) {
             fragment = InboxFragment.newInstance(route)
         } else if (InboxComposeFragment::class.java.isAssignableFrom(cls)) {
             fragment = InboxComposeFragment.newInstance(route)

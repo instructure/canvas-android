@@ -25,10 +25,10 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
-import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.BooleanArg
@@ -40,7 +40,6 @@ import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
-import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -233,11 +232,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewDiscussion.drawable))
         createNewDiscussion.onClickWithRequireNetwork {
             if(isAnnouncements) {
-                val args = CreateOrEditAnnouncementFragment.newInstanceCreate(canvasContext).nonNullArgs
-                RouteMatcher.route(requireActivity(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
+                val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, true)
+                RouteMatcher.route(requireActivity(), route)
             } else {
-                val args = CreateDiscussionFragment.makeBundle(canvasContext)
-                RouteMatcher.route(requireActivity(), Route(CreateDiscussionFragment::class.java, null, args))
+                val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, false)
+                RouteMatcher.route(requireActivity(), route)
             }
         }
     }

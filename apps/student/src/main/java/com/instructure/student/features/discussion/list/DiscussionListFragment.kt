@@ -40,8 +40,21 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.CourseDiscussionTopicBinding
 import com.instructure.student.events.DiscussionCreatedEvent
@@ -49,8 +62,6 @@ import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.features.discussion.list.adapter.DiscussionListRecyclerAdapter
-import com.instructure.student.fragment.CreateAnnouncementFragment
-import com.instructure.student.fragment.CreateDiscussionFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
@@ -177,10 +188,10 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, drawable))
                 onClickWithRequireNetwork {
                     if (isAnnouncement) {
-                        val route = CreateAnnouncementFragment.makeRoute(canvasContext, null)
+                        val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, true)
                         RouteMatcher.route(requireActivity(), route)
                     } else {
-                        val route = CreateDiscussionFragment.makeRoute(canvasContext)
+                        val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, false)
                         RouteMatcher.route(requireActivity(), route)
                     }
                 }

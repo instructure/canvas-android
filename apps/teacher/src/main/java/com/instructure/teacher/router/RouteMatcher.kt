@@ -47,6 +47,7 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
@@ -276,6 +277,7 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(DiscussionsUpdateFragment::class.java)
         bottomSheetFragments.add(ChooseRecipientsFragment::class.java)
         bottomSheetFragments.add(CreateDiscussionFragment::class.java)
+        bottomSheetFragments.add(CreateDiscussionWebViewFragment::class.java)
         bottomSheetFragments.add(CreateOrEditAnnouncementFragment::class.java)
         bottomSheetFragments.add(AnnotationCommentListFragment::class.java)
         bottomSheetFragments.add(ProfileFragment::class.java)
