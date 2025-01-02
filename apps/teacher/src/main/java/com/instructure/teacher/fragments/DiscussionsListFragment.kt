@@ -133,6 +133,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     private fun handleSharedAction(action: DiscussionSharedAction) {
         when (action) {
             is DiscussionSharedAction.RefreshListScreen -> {
+                needToForceNetwork = true
                 presenter.refresh(true)
             }
         }
