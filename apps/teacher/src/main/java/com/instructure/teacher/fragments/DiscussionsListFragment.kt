@@ -322,9 +322,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             if (discussionTopicHeader != null) {
                 adapter.removeItem(discussionTopicHeader, true)
                 needToForceNetwork = true
-                if (adapter.itemCount == 0) {
-                    presenter.refresh(true)
-                }
+                presenter.refresh(true)
             }
         }
     }
