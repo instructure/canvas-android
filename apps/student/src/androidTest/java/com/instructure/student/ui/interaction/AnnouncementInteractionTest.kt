@@ -163,6 +163,7 @@ class AnnouncementInteractionTest : StudentTest() {
     fun testSearchAnnouncement() {
         val data = getToAnnouncementList()
         val course = data.courses.values.first()
+        val student = data.students.first()
         val announcement = data.courseDiscussionTopicHeaders[course.id]!!.first()
         val testAnnouncementName = "searchTestAnnouncement"
         val testAnnouncementDescription = "description"
@@ -170,7 +171,7 @@ class AnnouncementInteractionTest : StudentTest() {
 
         data.addDiscussionTopicToCourse(
             course = course,
-            user = user,
+            user = student,
             topicTitle = testAnnouncementName,
             topicDescription = testAnnouncementDescription,
             isAnnouncement = true,
