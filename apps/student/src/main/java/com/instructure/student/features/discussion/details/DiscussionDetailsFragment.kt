@@ -102,8 +102,6 @@ import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
-import com.instructure.student.fragment.DiscussionsReplyFragment
-import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
@@ -279,14 +277,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showReplyView(discussionEntryId: Long) {
         if (repository.isOnline()) {
-            scrollPosition = binding.discussionsScrollView.scrollY
-            val route = DiscussionsReplyFragment.makeRoute(
-                canvasContext,
-                discussionTopicHeader.id,
-                discussionEntryId,
-                discussionTopicHeader.permissions!!.attach
-            )
-            RouteMatcher.route(requireActivity(), route)
+            // When user is online redesigned discussion is shown in a webview
+            throw IllegalArgumentException()
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -365,14 +357,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showUpdateReplyView(discussionEntryId: Long) {
         if (repository.isOnline()) {
-            discussionTopic?.let {
-                val route = DiscussionsUpdateFragment.makeRoute(
-                    canvasContext,
-                    discussionTopicHeader.id,
-                    DiscussionUtils.findEntry(discussionEntryId, it.views)
-                )
-                RouteMatcher.route(requireActivity(), route)
-            }
+            // When user is online redesigned discussion is shown in a webview
+            throw IllegalArgumentException()
         } else NoInternetConnectionDialog.show(requireFragmentManager())
     }
 

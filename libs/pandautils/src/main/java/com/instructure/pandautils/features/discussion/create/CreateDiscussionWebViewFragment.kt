@@ -39,6 +39,7 @@ import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const.CANVAS_CONTEXT
+import com.instructure.pandautils.utils.NLongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
@@ -67,6 +68,7 @@ class CreateDiscussionWebViewFragment : BaseCanvasFragment() {
     var canvasContext: CanvasContext by ParcelableArg(key = CANVAS_CONTEXT)
 
     var isAnnouncement: Boolean by BooleanArg(key = IS_ANNOUNCEMENT)
+    var editDiscussionTopicId: Long? by NLongArg(key = DISCUSSION_TOPIC_ID)
 
     private val viewModel: CreateDiscussionWebViewViewModel by viewModels()
 
@@ -78,7 +80,7 @@ class CreateDiscussionWebViewFragment : BaseCanvasFragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.loadData(canvasContext, isAnnouncement)
+        viewModel.loadData(canvasContext, isAnnouncement, editDiscussionTopicId)
         return binding.root
     }
 
@@ -165,15 +167,17 @@ class CreateDiscussionWebViewFragment : BaseCanvasFragment() {
 
     companion object {
         val IS_ANNOUNCEMENT = "isAnnouncement"
+        val DISCUSSION_TOPIC_ID = "discussionTopicId"
 
-        fun makeBundle(canvasContext: CanvasContext, isAnnouncement: Boolean = false): Bundle =
+        fun makeBundle(canvasContext: CanvasContext, isAnnouncement: Boolean = false, editDiscussionTopicId: Long? = null): Bundle =
             Bundle().apply {
                 putParcelable(CANVAS_CONTEXT, canvasContext)
                 putBoolean(IS_ANNOUNCEMENT, isAnnouncement)
+                editDiscussionTopicId?.let { putLong(DISCUSSION_TOPIC_ID, editDiscussionTopicId) }
             }
 
-        fun makeRoute(canvasContext: CanvasContext, isAnnouncement: Boolean = false): Route {
-            return Route(null, CreateDiscussionWebViewFragment::class.java, canvasContext, makeBundle(canvasContext, isAnnouncement))
+        fun makeRoute(canvasContext: CanvasContext, isAnnouncement: Boolean = false, editDiscussionTopicId: Long? = null): Route {
+            return Route(null, CreateDiscussionWebViewFragment::class.java, canvasContext, makeBundle(canvasContext, isAnnouncement, editDiscussionTopicId))
         }
 
         fun newInstance(route: Route) = CreateDiscussionWebViewFragment().apply {

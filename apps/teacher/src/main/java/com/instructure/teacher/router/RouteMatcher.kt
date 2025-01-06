@@ -86,12 +86,9 @@ import com.instructure.teacher.fragments.ChooseRecipientsFragment
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.CourseSettingsFragment
-import com.instructure.teacher.fragments.CreateDiscussionFragment
-import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
 import com.instructure.teacher.fragments.CreateOrEditPageDetailsFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.DiscussionsListFragment
-import com.instructure.teacher.fragments.DiscussionsUpdateFragment
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.fragments.EditFileFolderFragment
@@ -274,11 +271,8 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(EditQuizDetailsFragment::class.java)
         bottomSheetFragments.add(QuizPreviewWebviewFragment::class.java)
         bottomSheetFragments.add(InboxComposeFragment::class.java)
-        bottomSheetFragments.add(DiscussionsUpdateFragment::class.java)
         bottomSheetFragments.add(ChooseRecipientsFragment::class.java)
-        bottomSheetFragments.add(CreateDiscussionFragment::class.java)
         bottomSheetFragments.add(CreateDiscussionWebViewFragment::class.java)
-        bottomSheetFragments.add(CreateOrEditAnnouncementFragment::class.java)
         bottomSheetFragments.add(AnnotationCommentListFragment::class.java)
         bottomSheetFragments.add(ProfileFragment::class.java)
         bottomSheetFragments.add(ProfileEditFragment::class.java)
@@ -511,14 +505,10 @@ object RouteMatcher : BaseRouteMatcher() {
             ViewMediaFragment::class.java.isAssignableFrom(cls) -> fragment = ViewMediaFragment.newInstance(route.arguments)
             ViewHtmlFragment::class.java.isAssignableFrom(cls) -> fragment = ViewHtmlFragment.newInstance(route.arguments)
             ViewUnsupportedFileFragment::class.java.isAssignableFrom(cls) -> fragment = ViewUnsupportedFileFragment.newInstance(route.arguments)
-            cls.isAssignableFrom(DiscussionsUpdateFragment::class.java) -> fragment = DiscussionsUpdateFragment
-                .newInstance(canvasContext!!, route.arguments)
             ChooseRecipientsFragment::class.java.isAssignableFrom(cls) -> fragment = ChooseRecipientsFragment.newInstance(route.arguments)
             SpeedGraderQuizWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = SpeedGraderQuizWebViewFragment.newInstance(route.arguments)
             AnnotationCommentListFragment::class.java.isAssignableFrom(cls) -> fragment = AnnotationCommentListFragment.newInstance(route.arguments)
-            CreateDiscussionFragment::class.java.isAssignableFrom(cls) -> fragment = CreateDiscussionFragment.newInstance(route.arguments)
-            CreateOrEditAnnouncementFragment::class.java.isAssignableFrom(cls) -> fragment = CreateOrEditAnnouncementFragment
-                .newInstance(route.arguments)
+            CreateDiscussionWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = CreateDiscussionWebViewFragment.newInstance(route)
             SettingsFragment::class.java.isAssignableFrom(cls) -> fragment = SettingsFragment.newInstance(route)
             ProfileEditFragment::class.java.isAssignableFrom(cls) -> fragment = ProfileEditFragment.newInstance(route.arguments)
             LtiLaunchFragment::class.java.isAssignableFrom(cls) -> fragment = LtiLaunchFragment.newInstance(route)

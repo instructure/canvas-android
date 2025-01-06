@@ -50,8 +50,6 @@ import com.instructure.student.fragment.AssignmentBasicFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
 import com.instructure.student.fragment.DashboardFragment
-import com.instructure.student.fragment.DiscussionsReplyFragment
-import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.FeatureFlagsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
@@ -162,9 +160,6 @@ object RouteResolver {
             cls.isA<SubmissionRubricDescriptionFragment>() -> SubmissionRubricDescriptionFragment.newInstance(route)
             cls.isA<DiscussionListFragment>() -> DiscussionListFragment.newInstance(route)
             cls.isA<DiscussionDetailsFragment>() -> DiscussionDetailsFragment.newInstance(route)
-            cls.isA<DiscussionsReplyFragment>() -> DiscussionsReplyFragment.newInstance(route)
-            cls.isA<DiscussionsUpdateFragment>() -> DiscussionsUpdateFragment.newInstance(route)
-            cls.isA<DiscussionsUpdateFragment>() -> DiscussionsUpdateFragment.newInstance(route)
             cls.isA<CreateDiscussionWebViewFragment>() -> CreateDiscussionWebViewFragment.newInstance(route)
             cls.isA<StudioWebViewFragment>() -> StudioWebViewFragment.newInstance(route)
             cls.isA<TextSubmissionUploadFragment>() -> TextSubmissionUploadFragment.newInstance(route)

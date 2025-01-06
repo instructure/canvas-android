@@ -46,14 +46,18 @@ class CreateDiscussionWebViewViewModel @Inject constructor(
         get() = _state
     private val _state = MutableLiveData<ViewState>()
 
-    fun loadData(canvasContext: CanvasContext, isAnnouncement: Boolean) {
+    fun loadData(canvasContext: CanvasContext, isAnnouncement: Boolean, editDiscussionTopicId: Long?) {
         viewModelScope.launch {
             try {
                 _state.postValue(ViewState.Loading)
                 val locale = Locale.getDefault().language
                 val timezone = TimeZone.getDefault().id
                 val isAnnouncementString = if (isAnnouncement) "?is_announcement=true" else ""
-                val url = "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/new${isAnnouncementString}"
+                val url = if (editDiscussionTopicId != null) {
+                    "\"${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/${editDiscussionTopicId}/edit"
+                } else {
+                    "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/new${isAnnouncementString}"
+                }
                 val sessionUrl = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
                 val authenticatedUrl = "$sessionUrl&embed=true&session_locale=$locale&session_timezone=$timezone"
 
