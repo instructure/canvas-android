@@ -66,10 +66,12 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.DiscussionEntryEvent
 import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
@@ -129,6 +131,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     @Inject
     lateinit var repository: DiscussionDetailsRepository
 
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
     // Bundle args
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -169,6 +174,16 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             populateDiscussionData()
             // Send out bus events to trigger a refresh for discussion list
             DiscussionUpdatedEvent(discussionTopicHeader, javaClass.simpleName).post()
+        }
+
+        networkStateProvider.isOnlineLiveData.observe(viewLifecycleOwner) { isOnline ->
+            if (isOnline) {
+                val activity = requireActivity()
+                val route = DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeader)
+                route.apply { removePreviousScreen = true }
+
+                RouteMatcher.route(activity, route)
+            }
         }
     }
 
