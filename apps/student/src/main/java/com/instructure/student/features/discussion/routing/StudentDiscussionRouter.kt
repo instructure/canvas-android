@@ -44,4 +44,6 @@ class StudentDiscussionRouter(
 
         RouteMatcher.route(fragmentActivity, route)
     }
+
+    override fun routeToNativeSpeedGrader(courseId: Long, assignmentId: Long, submissionIds: List<Long>, selectedIdx: Int, anonymousGrading: Boolean?) = Unit
 }

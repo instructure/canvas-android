@@ -9,4 +9,6 @@ interface DiscussionRouter {
     fun routeToDiscussion(canvasContext: CanvasContext, isRedesign: Boolean, discussionTopicHeader: DiscussionTopicHeader, isAnnouncement: Boolean)
 
     fun routeToGroupDiscussion(group: Group, id: Long, header: DiscussionTopicHeader, isRedesign: Boolean)
+
+    fun routeToNativeSpeedGrader(courseId: Long, assignmentId: Long, submissionIds: List<Long>, selectedIdx: Int, anonymousGrading: Boolean?)
 }
