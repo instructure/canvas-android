@@ -60,17 +60,10 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.CourseDiscussionTopicBinding
-import com.instructure.student.events.DiscussionCreatedEvent
-import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
-import com.instructure.student.events.DiscussionTopicHeaderEvent
-import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.features.discussion.list.adapter.DiscussionListRecyclerAdapter
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
@@ -236,16 +229,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         featureFlagsJob?.cancel()
@@ -297,52 +280,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             if (view != null) binding.createNewDiscussion.hide()
         }
     }
-
-    //region Bus Events
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionUpdated(event: DiscussionUpdatedEvent) {
-        event.once(javaClass.simpleName) {
-            recyclerAdapter?.refresh()
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicHeaderDeleted(event: DiscussionTopicHeaderDeletedEvent) {
-        event.get {
-            // TODO - COMMS-868
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicCountChange(event: DiscussionTopicHeaderEvent) {
-        if (isAnnouncement) return
-        event.get {
-            // Gets written over on phones - added also to {@link #onRefreshFinished()}
-            when {
-                it.pinned -> {
-                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.PINNED, it)
-                }
-                it.locked -> {
-                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS, it)
-                }
-                else -> {
-                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
-                }
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionCreated(event: DiscussionCreatedEvent) {
-        event.once(javaClass.simpleName) {
-            recyclerAdapter?.refresh()
-        }
-    }
-    //endregion
 
     override fun handleBackPressed() = binding.discussionListToolbar.closeSearch()
 

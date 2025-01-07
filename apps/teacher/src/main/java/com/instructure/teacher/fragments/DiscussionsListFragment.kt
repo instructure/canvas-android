@@ -53,10 +53,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DiscussionListAdapter
 import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
-import com.instructure.teacher.events.DiscussionCreatedEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderEvent
-import com.instructure.teacher.events.DiscussionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
 import com.instructure.teacher.presenters.DiscussionListPresenter
@@ -66,8 +64,6 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @PageView(url = "{canvasContext}/{type}")
@@ -157,16 +153,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun onResume() {
         super.onResume()
         setupToolbar()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
     }
 
     override fun createAdapter(): DiscussionListAdapter {
@@ -282,50 +268,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionCreated(event: DiscussionCreatedEvent) {
-        event.once(javaClass.simpleName) {
-            // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
-            // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
-            // overwrite the data from the network if we refresh the presenter from here.
-            needToForceNetwork = true
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicCountChange(event: DiscussionTopicHeaderEvent) {
-        event.get {
-            //Gets written over on phones - added also to {@link #onRefreshFinished()}
-            adapter.addOrUpdateItem(it)
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionUpdated(event: DiscussionUpdatedEvent) {
-        event.once(javaClass.simpleName) {
-            // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
-            // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
-            // overwrite the data from the network if we refresh the presenter from here.
-            needToForceNetwork = true
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicHeaderDeleted(event: DiscussionTopicHeaderDeletedEvent) {
-        event.get {
-            val discussionTopicHeader = adapter.getItem(it)
-            if (discussionTopicHeader != null) {
-                adapter.removeItem(discussionTopicHeader, true)
-                needToForceNetwork = true
-                presenter.refresh(true)
-            }
-        }
-    }
 
     override fun onHandleBackPressed() = binding.discussionListToolbar.closeSearch()
 

@@ -130,13 +130,13 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
     fun launchCreateDiscussionThenClose() {
         createNewDiscussion.click()
         onView(withText(R.string.newDiscussion)).assertDisplayed()
-        onView(allOf(withContentDescription(R.string.abc_action_bar_up_description), hasSibling(withText(R.string.newDiscussion)))).click()
+        onView(allOf(withContentDescription(R.string.close), hasSibling(withText(R.string.newDiscussion)))).click()
     }
 
     fun launchCreateAnnouncementThenClose() {
         createNewDiscussion.click()
         onView(withText(R.string.newAnnouncement)).assertDisplayed()
-        onView(allOf(withContentDescription(R.string.abc_action_bar_up_description), hasSibling(withText(R.string.newAnnouncement)))).click()
+        onView(allOf(withContentDescription(R.string.close), hasSibling(withText(R.string.newAnnouncement)))).click()
     }
 
     fun verifyExitWithoutSavingDialog() {

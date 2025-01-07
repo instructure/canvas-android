@@ -46,7 +46,7 @@ import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.makeBundle
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
@@ -160,9 +160,9 @@ class CreateDiscussionWebViewFragment : BaseCanvasFragment() {
     private fun setupToolbar(title: String) = with(binding) {
         toolbar.title = title
 
-        toolbar.setupAsBackButton(this@CreateDiscussionWebViewFragment)
+        toolbar.setupAsCloseButton(this@CreateDiscussionWebViewFragment)
 
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
     }
 
     companion object {

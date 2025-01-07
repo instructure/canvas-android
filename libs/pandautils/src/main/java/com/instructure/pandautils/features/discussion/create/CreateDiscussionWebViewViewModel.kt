@@ -17,8 +17,6 @@
 package com.instructure.pandautils.features.discussion.create
 
 import android.content.res.Resources
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -27,6 +25,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 import java.util.TimeZone
@@ -38,18 +38,18 @@ class CreateDiscussionWebViewViewModel @Inject constructor(
     private val oauthManager: OAuthManager,
     private val resources: Resources,
 ): ViewModel() {
-    val data: LiveData<CreateDiscussionWebViewViewData>
+    val data: StateFlow<CreateDiscussionWebViewViewData>
         get() = _data
-    private val _data = MutableLiveData<CreateDiscussionWebViewViewData>()
+    private val _data = MutableStateFlow(CreateDiscussionWebViewViewData(""))
 
-    val state: LiveData<ViewState>
+    val state: StateFlow<ViewState>
         get() = _state
-    private val _state = MutableLiveData<ViewState>()
+    private val _state = MutableStateFlow<ViewState>(ViewState.Loading)
 
     fun loadData(canvasContext: CanvasContext, isAnnouncement: Boolean, editDiscussionTopicId: Long?) {
         viewModelScope.launch {
             try {
-                _state.postValue(ViewState.Loading)
+                _state.tryEmit(ViewState.Loading)
                 val locale = Locale.getDefault().language
                 val timezone = TimeZone.getDefault().id
                 val isAnnouncementString = if (isAnnouncement) "?is_announcement=true" else ""
@@ -61,15 +61,15 @@ class CreateDiscussionWebViewViewModel @Inject constructor(
                 val sessionUrl = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
                 val authenticatedUrl = "$sessionUrl&embed=true&session_locale=$locale&session_timezone=$timezone"
 
-                _data.postValue(CreateDiscussionWebViewViewData(authenticatedUrl))
+                _data.tryEmit(CreateDiscussionWebViewViewData(authenticatedUrl))
             } catch (e: Exception) {
                 e.printStackTrace()
-                _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))
+                _state.tryEmit(ViewState.Error(resources.getString(R.string.errorOccurred)))
             }
         }
     }
 
     fun setLoading(loading: Boolean) {
-        if (loading) _state.postValue(ViewState.Loading) else _state.postValue(ViewState.Success)
+        if (loading) _state.tryEmit(ViewState.Loading) else _state.tryEmit(ViewState.Success)
     }
 }
