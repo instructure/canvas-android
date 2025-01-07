@@ -1963,4 +1963,5 @@
     <string name="smartSearchDiscussionGroupTitle">Discussion topics (%d)</string>
     <string name="smartSearchAssignmentGroupTitle">Assignments (%d)</string>
     <string name="smartSearchPageGroupTitle">Pages (%d)</string>
+    <string name="a11y_avatarActionDescription">Open profile</string>
 </resources>
