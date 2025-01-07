@@ -154,7 +154,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
       return SubmissionStatus.LATE;
     } else if (_isMissingSubmission(studentId)) {
       return SubmissionStatus.MISSING;
-    } else if (submission?.submittedAt == null && submission?.isGraded() == false) {
+    } else if (submission?.submittedAt == null && (submission?.isGraded() ?? false) == false) {
       return SubmissionStatus.NOT_SUBMITTED;
     } else {
       return SubmissionStatus.SUBMITTED;
