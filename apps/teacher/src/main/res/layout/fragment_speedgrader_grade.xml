@@ -125,6 +125,7 @@
                     android:maxLines="1"
                     android:textSize="20sp"
                     android:visibility="gone"
+                    android:accessibilityLiveRegion="polite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/editGradeIcon"
                     app:layout_constraintTop_toTopOf="parent"
