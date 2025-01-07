@@ -37,8 +37,8 @@ class CreateDiscussionWebViewViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val oauthManager: OAuthManager,
     private val resources: Resources,
-    private val locale: Locale = Locale.getDefault(),
-    private val timezone: TimeZone = TimeZone.getDefault()
+    private val locale: Locale,
+    private val timezone: TimeZone
 ): ViewModel() {
     val data: LiveData<CreateDiscussionWebViewViewData>
         get() = _data
