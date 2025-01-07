@@ -30,7 +30,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +39,9 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
         private val oauthManager: OAuthManager,
         private val apiPrefs: ApiPrefs,
         private val discussionManager: DiscussionManager,
-        private val resources: Resources
+        private val resources: Resources,
+        private val locale: Locale = Locale.getDefault(),
+        private val timezone: TimeZone = TimeZone.getDefault()
 ) : ViewModel() {
 
     val data: LiveData<DiscussionDetailsWebViewViewData>
@@ -54,8 +57,8 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
             try {
                 val header = discussionTopicHeader ?: discussionManager.getDiscussionTopicHeaderAsync(canvasContext, id, false).await().dataOrNull
                 _state.postValue(ViewState.Loading)
-                val locale = Locale.getDefault().language
-                val timezone = TimeZone.getDefault().id
+                val locale = locale.language
+                val timezone = timezone.id
                 val url = "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/$id"
                 val sessionUrl = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
                 val authenticatedUrl = "$sessionUrl&embed=true&session_locale=$locale&session_timezone=$timezone"

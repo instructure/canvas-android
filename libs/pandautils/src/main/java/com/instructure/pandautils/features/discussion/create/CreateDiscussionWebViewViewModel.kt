@@ -37,6 +37,8 @@ class CreateDiscussionWebViewViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val oauthManager: OAuthManager,
     private val resources: Resources,
+    private val locale: Locale = Locale.getDefault(),
+    private val timezone: TimeZone = TimeZone.getDefault()
 ): ViewModel() {
     val data: LiveData<CreateDiscussionWebViewViewData>
         get() = _data
@@ -50,11 +52,11 @@ class CreateDiscussionWebViewViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _state.postValue(ViewState.Loading)
-                val locale = Locale.getDefault().language
-                val timezone = TimeZone.getDefault().id
+                val locale = locale.language
+                val timezone = timezone.id
                 val isAnnouncementString = if (isAnnouncement) "?is_announcement=true" else ""
                 val url = if (editDiscussionTopicId != null) {
-                    "\"${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/${editDiscussionTopicId}/edit"
+                    "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/${editDiscussionTopicId}/edit"
                 } else {
                     "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/discussion_topics/new${isAnnouncementString}"
                 }
