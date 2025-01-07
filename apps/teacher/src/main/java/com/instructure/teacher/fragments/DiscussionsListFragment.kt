@@ -32,7 +32,6 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.DiscussionSharedAction
 import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
-import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.ColorUtils
@@ -53,9 +52,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DiscussionListAdapter
 import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
-import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderEvent
-import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -264,7 +261,8 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun discussionDeletedSuccessfully(discussionTopicHeader: DiscussionTopicHeader) {
-        DiscussionTopicHeaderDeletedEvent(discussionTopicHeader.id, (DiscussionDetailsWebViewFragment::class.java.toString() + ".onPost()")).post()
+        needToForceNetwork = true
+        presenter.refresh(true)
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)
