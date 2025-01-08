@@ -12,7 +12,6 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -31,7 +30,7 @@ class ParentInboxComposeRepositoryTest {
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
 
-    private val inboxComposeRepository: InboxComposeRepository = ParentInboxComposeRepository(
+    private val inboxComposeRepository = ParentInboxComposeRepository(
         courseAPI,
         recipientAPI,
         inboxAPI,

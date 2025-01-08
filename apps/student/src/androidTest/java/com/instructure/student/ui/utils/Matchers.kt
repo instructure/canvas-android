@@ -16,7 +16,12 @@
 package com.instructure.student.ui.utils
 
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.UiController
@@ -26,6 +31,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import com.instructure.pandautils.utils.ColorUtils
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -123,5 +129,48 @@ class IntentActionMatcher(private val intentType: String, private val dataMatche
 
     override fun matchesSafely(item: Intent?): Boolean {
         return (intentType == item?.action) && (item?.dataString?.contains(dataMatcher) ?: false)
+    }
+}
+
+// Adapted from https://medium.com/@dbottillo/android-ui-test-espresso-matcher-for-imageview-1a28c832626f
+/**
+ * Matches ImageView (or ImageButton) with the drawable associated with [resourceId].  If [resourceId] < 0, will
+ * match against "no drawable" / "drawable is null".
+ *
+ * If the [color] param is non-null, then the drawable associated with [resourceId] will be colored
+ * prior to matching.
+ */
+class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : TypeSafeMatcher<View>(
+    ImageView::class.java) {
+    override fun describeTo(description: Description) {
+        description.appendText("with drawable from resource id: ")
+        description.appendValue(resourceId)
+    }
+
+    override fun matchesSafely(target: View?): Boolean {
+        if (target !is ImageView) {
+            return false
+        }
+        val imageView = target
+        if (resourceId < 0) {
+            return imageView.drawable == null
+        }
+        val resources: Resources = target.getContext().getResources()
+        val expectedDrawable: Drawable = resources.getDrawable(resourceId) ?: return false
+        if(color != null) {
+            ColorUtils.colorIt(color, expectedDrawable)
+        }
+        val bitmap: Bitmap = getBitmap(imageView.getDrawable())
+        val otherBitmap: Bitmap = getBitmap(expectedDrawable)
+        return bitmap.sameAs(otherBitmap)
+    }
+
+    private fun getBitmap(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
+            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+        drawable.draw(canvas)
+        return bitmap
     }
 }

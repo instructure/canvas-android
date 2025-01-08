@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -65,6 +66,7 @@ fun ContextValueRow(
             .padding(start = 16.dp, end = 16.dp)
             .padding(top = 8.dp, bottom = 8.dp)
             .alpha(if (enabled) 1f else 0.5f)
+            .testTag("contextValueRow")
     ) {
         Text(
             text = label,

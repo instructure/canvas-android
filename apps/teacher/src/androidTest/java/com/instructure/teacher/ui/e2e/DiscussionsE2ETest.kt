@@ -44,12 +44,13 @@ class DiscussionsE2ETest : TeacherTest() {
     fun testDiscussionE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, discussions = 2)
+        val data = seedData(students = 1, teachers = 1, courses = 1, discussions = 3)
         val teacher = data.teachersList[0]
         val student = data.studentsList[0]
         val course = data.coursesList[0]
         val discussion = data.discussionsList[0]
         val discussion2 = data.discussionsList[1]
+        val discussion3 = data.discussionsList[2]
 
         val discussionEntryMessage = "Discussion entry test message"
         val testDiscussionTopicEntry = DiscussionTopicsApi.createEntryToDiscussionTopic(student.token, course.id, discussion.id, discussionEntryMessage)
@@ -146,33 +147,13 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertDiscussionDoesNotExist(discussion.title)
         discussionsListPage.assertHasDiscussion(discussion2)
 
-        Log.d(STEP_TAG,"Click on '+' icon on the UI to create a new discussion.")
-        discussionsListPage.createNewDiscussion()
-
-        val newDiscussionTitle = "Test Discussion Mobile UI"
-        Log.d(STEP_TAG,"Set '$newDiscussionTitle' as the discussion's title and set some description as well.")
-        editDiscussionsDetailsPage.editDiscussionTitle(newDiscussionTitle)
-        editDiscussionsDetailsPage.editDiscussionDescription("Mobile UI Discussion description")
-
-        Log.d(STEP_TAG,"Toggle 'Publish' checkbox and save the page.")
-        editDiscussionsDetailsPage.togglePublished()
-        editDiscussionsDetailsPage.clickSendNewDiscussion()
-
-        Log.d(STEP_TAG,"Assert that '$newDiscussionTitle' discussion is displayed and published.")
-        discussionsListPage.assertHasDiscussion(newDiscussionTitle)
-        discussionsListPage.clickDiscussion(newDiscussionTitle)
-
-        Log.d(STEP_TAG, "Assert that the toolbar's title is the '$newDiscussionTitle' discussion's title.")
-        discussionDetailsPage.assertToolbarDiscussionTitle(newDiscussionTitle)
-        Espresso.pressBack()
-
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
         discussionsListPage.searchable.clickOnSearchButton()
-        discussionsListPage.searchable.typeToSearchBar("Test Discussion")
+        discussionsListPage.searchable.typeToSearchBar(discussion3.title.dropLast(3))
 
-        Log.d(STEP_TAG,"Assert that the '$newDiscussionTitle' discussion is displayed and it is the only one.")
+        Log.d(STEP_TAG,"Assert that the '${discussion3.title}' discussion is displayed and it is the only one.")
         discussionsListPage.assertDiscussionCount(1)
-        discussionsListPage.assertHasDiscussion(newDiscussionTitle)
+        discussionsListPage.assertHasDiscussion(discussion3.title)
         discussionsListPage.searchable.clickOnClearSearchButton()
 
         Log.d(STEP_TAG, "Quit from Searching mechanism.")
@@ -185,14 +166,14 @@ class DiscussionsE2ETest : TeacherTest() {
         sleep(2000) //Allow the deletion to propagate
         discussionsListPage.assertDiscussionDoesNotExist(discussion2.title)
 
-        Log.d(STEP_TAG,"Collapse the discussion list and assert that the '$newDiscussionTitle' discussion can NOT be seen.")
+        Log.d(STEP_TAG,"Collapse the discussion list and assert that the '${discussion3.title}' discussion can NOT be seen.")
         discussionsListPage.toggleCollapseExpandIcon()
         discussionsListPage.assertDiscussionCount(0) // header only
-        discussionsListPage.assertDiscussionDoesNotExist(newDiscussionTitle)
+        discussionsListPage.assertDiscussionDoesNotExist(discussion3.title)
 
-        Log.d(STEP_TAG,"Expand the discussion list and assert that the '$newDiscussionTitle' discussion can be seen.")
+        Log.d(STEP_TAG,"Expand the discussion list and assert that the '${discussion3.title}' discussion can be seen.")
         discussionsListPage.toggleCollapseExpandIcon()
         discussionsListPage.assertDiscussionCount(1)
-        discussionsListPage.assertHasDiscussion(newDiscussionTitle)
+        discussionsListPage.assertHasDiscussion(discussion3.title)
     }
 }

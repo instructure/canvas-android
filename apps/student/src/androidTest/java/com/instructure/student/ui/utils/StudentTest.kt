@@ -68,12 +68,10 @@ import com.instructure.student.ui.pages.GroupBrowserPage
 import com.instructure.student.ui.pages.HelpPage
 import com.instructure.student.ui.pages.HomeroomPage
 import com.instructure.student.ui.pages.ImportantDatesPage
-import com.instructure.student.ui.pages.InboxConversationPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
 import com.instructure.student.ui.pages.ModuleProgressionPage
 import com.instructure.student.ui.pages.ModulesPage
-import com.instructure.student.ui.pages.NewMessagePage
 import com.instructure.student.ui.pages.NotificationPage
 import com.instructure.student.ui.pages.PageDetailsPage
 import com.instructure.student.ui.pages.PageListPage
@@ -140,7 +138,6 @@ abstract class StudentTest : CanvasTest() {
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val fileChooserPage = FileChooserPage()
     val helpPage = HelpPage()
-    val inboxConversationPage = InboxConversationPage()
     val inboxPage = InboxPage()
     val legalPage = LegalPage()
     val aboutPage = AboutPage()
@@ -149,7 +146,6 @@ abstract class StudentTest : CanvasTest() {
     val loginSignInPage = LoginSignInPage()
     val moduleProgressionPage = ModuleProgressionPage()
     val modulesPage = ModulesPage()
-    val newMessagePage = NewMessagePage()
     val notificationPage = NotificationPage()
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val pageDetailsPage = PageDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))

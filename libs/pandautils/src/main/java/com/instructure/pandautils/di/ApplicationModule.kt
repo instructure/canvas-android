@@ -48,6 +48,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.threeten.bp.Clock
+import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Singleton
 
 /**
@@ -77,7 +79,11 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideHtmlContentFormatter(@ApplicationContext context: Context, oAuthManager: OAuthManager, firebaseCrashlytics: FirebaseCrashlytics): HtmlContentFormatter {
+    fun provideHtmlContentFormatter(
+        @ApplicationContext context: Context,
+        oAuthManager: OAuthManager,
+        firebaseCrashlytics: FirebaseCrashlytics
+    ): HtmlContentFormatter {
         return HtmlContentFormatter(context, firebaseCrashlytics, oAuthManager)
     }
 
@@ -160,6 +166,18 @@ class ApplicationModule {
         featureFlagProvider: FeatureFlagProvider
     ): OfflineAnalyticsManager {
         return OfflineAnalyticsManager(context, analytics, pageViewUtils, apiPrefs, dateTimeProvider, featureFlagProvider)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocale(): Locale {
+        return Locale.getDefault()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTimeZone(): TimeZone {
+        return TimeZone.getDefault()
     }
 
     @Provides

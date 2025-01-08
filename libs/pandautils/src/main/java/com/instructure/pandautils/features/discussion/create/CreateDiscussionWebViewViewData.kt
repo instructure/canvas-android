@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present  Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -12,17 +12,10 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-package com.instructure.teacher.viewinterface
+package com.instructure.pandautils.features.discussion.create
 
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
-import com.instructure.pandautils.blueprint.FragmentViewInterface
-import java.util.*
-
-interface AddMessageView : FragmentViewInterface {
-    fun messageSuccess()
-    fun messageFailure()
-    fun refreshAttachments()
-    fun addCoursesAndGroups(courses: ArrayList<Course>, groups: ArrayList<Group>)
-}
+data class CreateDiscussionWebViewViewData(
+    val url: String
+)

@@ -129,22 +129,29 @@ class HelpPage : BasePage(R.id.helpDialog) {
      * Asserts the content of the Help menu.
      */
     fun assertHelpMenuContent() {
-        onView(withId(R.id.title) + withText(R.string.searchGuides))
-        onView(withId(R.id.subtitle) + withText(R.string.searchGuidesDetails))
 
-        onView(withId(R.id.title) + withText(R.string.askInstructor))
-        onView(withId(R.id.subtitle) + withText(R.string.askInstructorDetails))
+        onView(withId(R.id.title) + withText("Search the Canvas Guides")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Find answers to common questions")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.reportProblem))
-        onView(withId(R.id.subtitle) + withText(R.string.reportProblemDetails))
+        onView(withId(R.id.title) + withText("CUSTOM LINK")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("This is a custom help link.")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.shareYourLove))
-        onView(withId(R.id.subtitle) + withText(R.string.shareYourLoveDetails))
+        onView(withId(R.id.title) + withText("Conference Guides for Remote Classrooms")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Get help on how to use and configure conferences in canvas.")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Submit a Feature Idea"))
-        onView(withId(R.id.subtitle) + withText("Have an idea to improveCanvas?"))
+        onView(withId(R.id.title) + withText("Report a Problem")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("If Canvas misbehaves, tell us about it")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("COVID-19 Canvas Resources"))
-        onView(withId(R.id.subtitle) + withText("Tips for teaching and learning online"))
+        onView(withId(R.id.title) + withText("Ask the Community")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Get help from a Canvas expert")).assertDisplayed()
+
+        onView(withId(R.id.title) + withText("Submit a Feature Idea")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?")).assertDisplayed()
+
+        onView(withId(R.id.title) + withText("Training Services Portal")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Access Canvas training videos and courses")).assertDisplayed()
+
+        onView(withId(R.id.title) + withText("Share Your Love for the App")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Tell us about your favorite parts of the app")).assertDisplayed()
     }
 }
