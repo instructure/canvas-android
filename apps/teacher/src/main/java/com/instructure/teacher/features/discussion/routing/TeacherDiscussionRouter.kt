@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.discussion.details.DiscussionDetailsW
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.teacher.activities.FullscreenActivity
 import com.instructure.teacher.activities.SpeedGraderActivity
+import com.instructure.teacher.activities.SpeedGraderActivity.Companion.DISCUSSION_ENTRY_ID
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherDiscussionRouter(private val activity: FragmentActivity) : DiscussionRouter {
@@ -37,7 +38,8 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
         assignmentId: Long,
         submissionIds: List<Long>,
         selectedIdx: Int,
-        anonymousGrading: Boolean?
+        anonymousGrading: Boolean?,
+        discussionTopicEntryId: Long?,
     ) {
         val bundle = SpeedGraderActivity.makeBundle(
             courseId = courseId,
@@ -45,7 +47,9 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
             selectedIdx = selectedIdx,
             anonymousGrading = anonymousGrading,
             filteredSubmissionIds = submissionIds.toLongArray(),
-        )
+        ).apply {
+            discussionTopicEntryId?.let { putLong(DISCUSSION_ENTRY_ID, it) }
+        }
         RouteMatcher.route(activity, Route(bundle, RouteContext.SPEED_GRADER))
     }
 }

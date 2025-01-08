@@ -118,12 +118,14 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
                 } else if (url.contains("speed_grader")) {
                     val uri = url.toUri()
                     val assignmentId = uri.getQueryParameter("assignment_id")?.toLongOrNull() ?: 0
+                    val entryId = uri.getQueryParameter("entry_id")?.toLongOrNull()
                     discussionRouter.routeToNativeSpeedGrader(
                         canvasContext.id,
                         assignmentId,
                         emptyList(),
                         0,
-                        null
+                        null,
+                        entryId
                     )
 
                 } else if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
