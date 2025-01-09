@@ -23,8 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -34,7 +34,10 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
+import com.instructure.pandautils.features.discussion.DiscussionSharedAction
+import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
@@ -62,6 +65,9 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     lateinit var webViewRouter: WebViewRouter
 
     @Inject
+    lateinit var discussionSharedEvents: DiscussionSharedEvents
+
+    @Inject
     lateinit var discussionDetailsWebViewFragmentBehavior: DiscussionDetailsWebViewFragmentBehavior
 
     @get:PageViewUrlParam("canvasContext")
@@ -84,6 +90,12 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
 
         viewModel.loadData(canvasContext, discussionTopicHeader, discussionTopicHeaderId)
         return binding.root
+    }
+
+    // We have to update the list screen every time because there is no way to track if new replies were added
+    override fun onStop() {
+        super.onStop()
+        discussionSharedEvents.sendEvent(lifecycleScope, DiscussionSharedAction.RefreshListScreen)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
