@@ -99,7 +99,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     val assignmentId: Long by lazy { intent.extras!!.getLong(Const.ASSIGNMENT_ID) }
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
-    private val discussionEntryId: Long? by lazy { intent.extras?.getLong(DISCUSSION_ENTRY_ID) }
+    private val discussionEntryId: Long? by lazy { intent.extras?.getLong(DISCUSSION_ENTRY_ID, -1) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
     private val filteredSubmissionIds: LongArray by lazy { intent.extras?.getLongArray(FILTERED_SUBMISSION_IDS) ?: longArrayOf() }
     private val filter: SubmissionListFilter by lazy {
@@ -181,7 +181,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         } else {
             assignment
         }
-        val selection = if (discussionEntryId != null) {
+        val selection = if (discussionEntryId != null && discussionEntryId != -1L) {
             submissions.indexOfFirst { it.submission?.discussionEntries?.map{ it.id }?.contains(discussionEntryId).orDefault() }
         } else { initialSelection }
         adapter = SubmissionContentAdapter(assignmentWithAnonymousGrading, presenter!!.course, submissions)
