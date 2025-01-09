@@ -73,6 +73,11 @@
     <color name="studentDocumentSharingColor">#780612</color>
     <color name="uploadFileDialogBackground">#00FFFFFF</color>
 
+    <!-- App theme colors -->
+    <color name="login_teacherAppTheme">#CE7BE7</color>
+    <color name="login_parentAppTheme">#8094FF</color>
+    <color name="login_studentAppTheme">#FF6B72</color>
+
     <!-- Course Colors for customization -->
     <color name="courseColor1">#F26BBF</color>
     <color name="courseColor2">#F7ABDB</color>

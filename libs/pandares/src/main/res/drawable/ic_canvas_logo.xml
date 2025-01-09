@@ -23,7 +23,7 @@
     android:viewportHeight="64">
 
     <path
-        android:fillColor="#FFC100"
+        android:fillColor="@color/login_studentAppTheme"
         android:fillType="evenOdd"
         android:pathData="M23.087,1.258 A9.002,9.002,0,0,0,40.913,1.258 A32.015,32.015,0,0,0,32,0
 C28.907,0,25.916,0.439,23.087,1.258 Z M47.434,3.96
