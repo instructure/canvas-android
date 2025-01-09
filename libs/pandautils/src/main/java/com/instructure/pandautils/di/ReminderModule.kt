@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.di
 
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.reminder.DateTimePicker
 import com.instructure.pandautils.features.reminder.ReminderManager
@@ -34,9 +35,10 @@ class ReminderModule {
     @Provides
     fun provideReminderManager(
         dateTimePicker: DateTimePicker,
-        reminderRepository: ReminderRepository
+        reminderRepository: ReminderRepository,
+        analytics: Analytics
     ): ReminderManager {
-        return ReminderManager(dateTimePicker, reminderRepository)
+        return ReminderManager(dateTimePicker, reminderRepository, analytics)
     }
 
     @Provides

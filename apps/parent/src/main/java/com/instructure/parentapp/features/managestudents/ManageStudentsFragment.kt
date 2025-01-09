@@ -24,11 +24,13 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.instructure.pandautils.analytics.SCREEN_VIEW_MANAGE_STUDENTS
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -42,6 +44,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_MANAGE_STUDENTS)
 @AndroidEntryPoint
 class ManageStudentsFragment : BaseCanvasFragment() {
 

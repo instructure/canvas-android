@@ -19,6 +19,8 @@ package com.instructure.parentapp.features.login
 import android.content.Intent
 import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
@@ -30,6 +32,7 @@ import com.instructure.parentapp.util.ParentLogoutTask
 class ParentAcceptableUsePolicyRouter(
     private val activity: FragmentActivity,
     private val alarmScheduler: AlarmScheduler,
+    private val analytics: Analytics
 ) : AcceptableUsePolicyRouter {
     override fun openPolicy(content: String) {
         val intent = HtmlContentActivity.createIntent(activity, activity.getString(R.string.acceptableUsePolicyTitle), content, true)
@@ -45,9 +48,10 @@ class ParentAcceptableUsePolicyRouter(
     }
 
     override fun logout() {
+        analytics.logEvent(AnalyticsEventConstants.LOGOUT)
         ParentLogoutTask(
             LogoutTask.Type.LOGOUT,
             alarmScheduler = alarmScheduler
-            ).execute()
+        ).execute()
     }
 }

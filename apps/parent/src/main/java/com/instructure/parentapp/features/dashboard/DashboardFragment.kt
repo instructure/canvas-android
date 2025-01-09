@@ -40,10 +40,14 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
@@ -81,6 +85,7 @@ import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_DASHBOARD)
 @AndroidEntryPoint
 class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
@@ -368,6 +373,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.logout_warning)
             .setPositiveButton(android.R.string.ok) { _, _ ->
+                Analytics.logEvent(AnalyticsEventConstants.LOGOUT)
                 ParentLogoutTask(
                     LogoutTask.Type.LOGOUT,
                     alarmScheduler = alarmScheduler
@@ -378,6 +384,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     private fun onSwitchUsers() {
+        Analytics.logEvent(AnalyticsEventConstants.SWITCH_USERS)
         ParentLogoutTask(
             LogoutTask.Type.SWITCH_USERS,
             alarmScheduler = alarmScheduler
