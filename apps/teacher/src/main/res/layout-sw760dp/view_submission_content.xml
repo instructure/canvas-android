@@ -64,6 +64,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/backgroundLightest"
+        android:accessibilityHeading="true"
         android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ToolBarPopupStyle">
 

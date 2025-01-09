@@ -34,9 +34,11 @@ import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -82,6 +84,8 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
             loadAuthenticatedSession()
             ApiPrefs.isFirstMasqueradingStart = false
         }
+
+        RatingDialog.showRatingDialog(this, AppType.PARENT)
     }
 
     private fun loadAuthenticatedSession() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,17 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.pandautils.features.discussion.create
 
-package com.instructure.parentapp.util
-
-import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.GsonPref
-import com.instructure.canvasapi2.utils.PrefManager
-
-
-object ParentPrefs : PrefManager("parentSP") {
-
-    var currentStudent: User? by GsonPref(User::class.java, null, "current_student", false)
-    var hasMigrated: Boolean by BooleanPref(false, "has_migrated_data_from_old_app")
-}
+data class CreateDiscussionWebViewViewData(
+    val url: String
+)
