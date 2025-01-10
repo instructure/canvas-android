@@ -18,6 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -120,7 +121,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
         setupViews()
 
-        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events, ::handleSharedAction)
+        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events.flowWithLifecycle(lifecycle)) { handleSharedAction(it) }
     }
 
     private fun handleSharedAction(action: DiscussionSharedAction) {
