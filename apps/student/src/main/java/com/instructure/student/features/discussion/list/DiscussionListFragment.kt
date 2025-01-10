@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -197,7 +198,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             }
         }
 
-        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events, ::handleSharedAction)
+        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events.flowWithLifecycle(lifecycle)) { handleSharedAction(it) }
     }
 
     private fun handleSharedAction(action: DiscussionSharedAction) {
