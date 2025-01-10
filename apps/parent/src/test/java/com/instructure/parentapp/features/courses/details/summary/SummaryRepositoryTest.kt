@@ -66,7 +66,7 @@ class SummaryRepositoryTest {
     fun `getCalendarEvents should filter out hidden elements`() = runTest {
         val calendarItems: List<ScheduleItem> = listOf(ScheduleItem(itemId = "1", isHidden = true), ScheduleItem(itemId = "2", isHidden = false))
         val assignmentItems: List<ScheduleItem> = listOf(ScheduleItem(itemId = "3", isHidden = true), ScheduleItem(itemId = "4", isHidden = false))
-        val expected = (assignmentItems + calendarItems).filterNot { it.isHidden }
+        val expected = (calendarItems + assignmentItems).filterNot { it.isHidden }
         coEvery { calendarEventApi.getCalendarEvents(any(), CalendarEventAPI.CalendarEventType.CALENDAR.apiName, any(), any(), any(), any()) } returns DataResult.Success(calendarItems)
         coEvery { calendarEventApi.getCalendarEvents(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName, any(), any(), any(), any()) } returns DataResult.Success(assignmentItems)
 

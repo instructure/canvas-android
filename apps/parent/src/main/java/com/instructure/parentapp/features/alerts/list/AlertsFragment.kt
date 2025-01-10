@@ -51,7 +51,7 @@ class AlertsFragment : BaseCanvasFragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                AlertsScreen(uiState = uiState, actionHandler = viewModel::handleAction)
+                AlertsScreen(uiState = uiState, actionHandler = viewModel::handleAction, lazyListState = viewModel.lazyListState)
             }
         }
     }

@@ -74,7 +74,7 @@ fun ReminderView(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = stringResource(id = R.string.a11y_addReminder),
-                        tint = viewState.themeColor
+                        tint = viewState.getThemeColor(LocalContext.current)
                     )
                 }
 
@@ -90,7 +90,7 @@ fun ReminderView(
                 RemindersGroupView(
                     title = null,
                     reminders = viewState.reminders.sortedBy { it.date },
-                    themeColor = viewState.themeColor,
+                    themeColor = viewState.getThemeColor(LocalContext.current),
                     onRemoveClick = onRemoveClick
                 )
             } else {
@@ -102,7 +102,7 @@ fun ReminderView(
                 RemindersGroupView(
                     title = null,
                     reminders = remindersBeforeDueDate.sortedBy { it.date },
-                    themeColor = viewState.themeColor,
+                    themeColor = viewState.getThemeColor(LocalContext.current),
                     onRemoveClick = onRemoveClick
                 )
 
@@ -112,7 +112,7 @@ fun ReminderView(
                         viewState.dueDate.toFormattedString()
                     ),
                     reminders = remindersAfterDueDate.sortedBy { it.date },
-                    themeColor = viewState.themeColor,
+                    themeColor = viewState.getThemeColor(LocalContext.current),
                     onRemoveClick = onRemoveClick
                 )
             }

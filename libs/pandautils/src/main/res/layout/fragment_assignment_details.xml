@@ -539,6 +539,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="2dp"
+                        android:paddingBottom="16dp"
                         android:text="@string/noAssignmentDescriptionStudent"
                         android:textColor="@color/textDarkest"
                         android:textSize="16sp"
