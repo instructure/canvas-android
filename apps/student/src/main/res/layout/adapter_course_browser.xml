@@ -31,7 +31,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:importantForAccessibility="no"
-        tools:srcCompat="@drawable/ic_canvas_logo_red"/>
+        tools:srcCompat="@drawable/ic_canvas_logo_student"/>
 
     <TextView
         android:id="@+id/label"

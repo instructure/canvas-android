@@ -104,9 +104,9 @@
 
 
     <!-- App theme colors -->
-    <color name="login_teacherAppTheme">#ffc100</color>
-    <color name="login_parentAppTheme">#008ee2</color>
-    <color name="login_studentAppTheme">#ee0612</color>
+    <color name="login_teacherAppTheme">#9E58BD</color>
+    <color name="login_parentAppTheme">#2573DF</color>
+    <color name="login_studentAppTheme">#E62429</color>
 
     <!-- Course Colors for customization -->
     <color name="courseColor1">#A31C73</color>
