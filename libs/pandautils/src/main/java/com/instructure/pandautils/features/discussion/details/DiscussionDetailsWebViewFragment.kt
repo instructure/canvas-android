@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -38,6 +39,7 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
 import com.instructure.pandautils.features.discussion.DiscussionSharedAction
 import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
+import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
@@ -66,6 +68,9 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var discussionSharedEvents: DiscussionSharedEvents
+
+    @Inject
+    lateinit var discussionRouter: DiscussionRouter
 
     @Inject
     lateinit var discussionDetailsWebViewFragmentBehavior: DiscussionDetailsWebViewFragmentBehavior
@@ -122,6 +127,19 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
             override fun routeInternallyCallback(url: String) {
                 if (url.contains("discussion_topics") || url.contains("announcements")) {
                     binding.discussionWebView.loadUrl(url)
+                } else if (url.contains("speed_grader")) {
+                    val uri = url.toUri()
+                    val assignmentId = uri.getQueryParameter("assignment_id")?.toLongOrNull() ?: 0
+                    val entryId = uri.getQueryParameter("entry_id")?.toLongOrNull()
+                    discussionRouter.routeToNativeSpeedGrader(
+                        canvasContext.id,
+                        assignmentId,
+                        emptyList(),
+                        0,
+                        null,
+                        entryId
+                    )
+
                 } else if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
                     webViewRouter.routeExternally(url)
                 }

@@ -199,6 +199,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
     override fun onDestroyView() {
         super.onDestroyView()
         bottomNavigationView.setOnItemSelectedListener(null)
+        bottomNavigationView.setOnItemReselectedListener(null)
         navController.removeOnDestinationChangedListener(onDestinationChangedListener)
     }
 
@@ -320,6 +321,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
     private fun setupBottomNavigationView() {
         bottomNavigationView = binding.bottomNav
         bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener)
+        bottomNavigationView.setOnItemReselectedListener { }
         navController.addOnDestinationChangedListener(onDestinationChangedListener)
     }
 

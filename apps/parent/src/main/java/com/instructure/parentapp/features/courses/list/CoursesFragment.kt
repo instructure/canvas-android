@@ -51,7 +51,7 @@ class CoursesFragment : BaseCanvasFragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CoursesScreen(uiState, viewModel::handleAction)
+                CoursesScreen(uiState, viewModel::handleAction, lazyListState = viewModel.lazyListState)
             }
         }
     }
