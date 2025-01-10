@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
@@ -44,8 +45,8 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(FragmentComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
-    fun provideAssignmentDetailsRouter(navigation: Navigation, parentPrefs: ParentPrefs, apiPrefs: ApiPrefs): AssignmentDetailsRouter {
-        return ParentAssignmentDetailsRouter(navigation, parentPrefs, apiPrefs)
+    fun provideAssignmentDetailsRouter(navigation: Navigation, parentPrefs: ParentPrefs, apiPrefs: ApiPrefs, analytics: Analytics): AssignmentDetailsRouter {
+        return ParentAssignmentDetailsRouter(navigation, parentPrefs, apiPrefs, analytics)
     }
 
     @Provides

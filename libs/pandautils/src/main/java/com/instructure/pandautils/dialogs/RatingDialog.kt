@@ -27,13 +27,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.base.BaseCanvasDialogFragment
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.BooleanPref
+import com.instructure.canvasapi2.utils.IntPref
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.LongPref
+import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_RATING
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.databinding.DialogRatingBinding
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
@@ -50,7 +59,7 @@ class RatingDialog : BaseCanvasDialogFragment() {
         var hasShown by BooleanPref(keyName = "has_shown")
     }
 
-    lateinit private var stars: List<ImageView>
+    private lateinit var stars: List<ImageView>
 
     private lateinit var binding: DialogRatingBinding
 
@@ -67,6 +76,9 @@ class RatingDialog : BaseCanvasDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Prefs.hasShown = true
+
+        Analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW)
+
         val appType = arguments?.getSerializable(APP_TYPE) as AppType
         val buttonText = if (Prefs.hasShown) getString(R.string.utils_dontShowAgain) else getString(R.string.done)
 
@@ -76,7 +88,10 @@ class RatingDialog : BaseCanvasDialogFragment() {
         val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.utils_howAreWeDoing)
                 .setView(binding.root)
-                .setPositiveButton(buttonText) { _, _ -> Prefs.dontShowAgain = true }
+                .setPositiveButton(buttonText) { _, _ ->
+                    Prefs.dontShowAgain = true
+                    Analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_DONT_SHOW_AGAIN)
+                }
                 .create()
         dialog.setCanceledOnTouchOutside(true)
         dialog.setCancelable(true)
@@ -84,6 +99,8 @@ class RatingDialog : BaseCanvasDialogFragment() {
     }
 
     private fun setupViews(appType: AppType) = with(binding) {
+        var selectedStars = 0
+
         stars = listOf(star1, star2, star3, star4, star5)
 
         send.setOnClickListener {
@@ -107,6 +124,10 @@ class RatingDialog : BaseCanvasDialogFragment() {
             }
             // Reset dateFirstLaunched to be right now
             Prefs.dateFirstLaunched = System.currentTimeMillis()
+            Analytics.logEvent(
+                AnalyticsEventConstants.RATING_DIALOG,
+                bundleOf(AnalyticsParamConstants.STAR_RATING to selectedStars)
+            )
             dismiss()
         }
 
@@ -115,7 +136,8 @@ class RatingDialog : BaseCanvasDialogFragment() {
                 it.setImageResource(R.drawable.ic_rating_star_outline)
             }
             val selectionIndex = stars.indexOf(v)
-            stars.take(selectionIndex + 1).forEach {
+            selectedStars = selectionIndex + 1
+            stars.take(selectedStars).forEach {
                 it.setImageResource(R.drawable.ic_rating_star)
             }
             val isFiveStars = selectionIndex >= 4
@@ -124,6 +146,10 @@ class RatingDialog : BaseCanvasDialogFragment() {
             if (isFiveStars) {
                 Utils.goToAppStore(appType, activity)
                 Prefs.dontShowAgain = true
+                Analytics.logEvent(
+                    AnalyticsEventConstants.RATING_DIALOG,
+                    bundleOf(AnalyticsParamConstants.STAR_RATING to selectedStars)
+                )
                 dismiss()
             }
         }
