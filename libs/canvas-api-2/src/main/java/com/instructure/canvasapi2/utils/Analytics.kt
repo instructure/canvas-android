@@ -123,6 +123,23 @@ object AnalyticsEventConstants {
     const val OFFLINE_COURSE_OPENED_OFFLINE_NOT_ENABLED = "offline_course_opened_offline_not_enabled"
     const val OFFLINE_DURATION_OFFLINE_ENABLED = "offline_duration_offline_enabled"
     const val OFFLINE_DURATION_OFFLINE_NOT_ENABLED = "offline_duration_offline_not_enabled"
+
+    /* Parent */
+    const val ADD_STUDENT_DASHBOARD = "add_student_dashboard"
+    const val ADD_STUDENT_FAILURE = "add_student_failure"
+    const val ADD_STUDENT_MANAGE_STUDENTS = "add_student_manage_students"
+    const val ADD_STUDENT_SUCCESS = "add_student_success"
+    const val DARK_MODE_OFF = "dark_mode_off"
+    const val DARK_MODE_ON = "dark_mode_on"
+    const val DARK_MODE_SYSTEM = "dark_mode_system"
+    const val LOGOUT = "logout"
+    const val SWITCH_USERS = "switch_users"
+    const val RATING_DIALOG = "rating_dialog"
+    const val RATING_DIALOG_SHOW = "rating_dialog_show"
+    const val RATING_DIALOG_DONT_SHOW_AGAIN = "rating_dialog_dont_show_again"
+    const val REMINDER_ASSIGNMENT_CREATE = "reminder_assignment"
+    const val REMINDER_EVENT_CREATE = "reminder_event"
+    const val SUBMISSION_AND_RUBRIC_INTERACTION = "submission_and_rubric_interaction"
 }
 
 /**
@@ -138,4 +155,5 @@ object AnalyticsParamConstants {
     //custom
     const val MANUAL_C4E_STATE = "manual_c4e_state"
     const val DURATION = "duration"
+    const val STAR_RATING = "star_rating"
 }

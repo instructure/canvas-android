@@ -125,14 +125,8 @@ class MessageAddedEvent(shouldUpdate: Boolean, skipId: String? = null) : Ratione
 /** A RationedBusEvent for choosing message recipients. @see [RationedBusEvent] */
 class ChooseRecipientsEvent(list: List<Recipient>, skipId: String? = null) : RationedBusEvent<List<Recipient>>(list, skipId)
 
-/** A RationedBusEvent for creating discussions. @see [RationedBusEvent] */
-class DiscussionCreatedEvent(shouldUpdate: Boolean, skipId: String? = null) : RationedBusEvent<Boolean>(shouldUpdate, skipId)
-
 /** A RationedBusEvent for updating discussions. @see [RationedBusEvent] */
 class DiscussionUpdatedEvent(discussionTopicHeader: DiscussionTopicHeader, skipId: String? = null) : RationedBusEvent<DiscussionTopicHeader>(discussionTopicHeader, skipId)
-
-/** A RationedBusEvent for Deleted DiscussionTopicHeader. @see [RationedBusEvent] */
-class DiscussionTopicHeaderDeletedEvent(discussionTopicHeaderId: Long, skipId: String? = null) : RationedBusEvent<Long>(discussionTopicHeaderId, skipId)
 
 /** A RationedBusEvent for DiscussionTopicHeader changes. @see [RationedBusEvent] */
 class DiscussionTopicHeaderEvent(discussionTopicHeader: DiscussionTopicHeader, skipId: String? = null) : RationedBusEvent<DiscussionTopicHeader>(discussionTopicHeader, skipId)

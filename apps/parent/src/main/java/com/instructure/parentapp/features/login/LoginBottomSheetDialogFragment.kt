@@ -25,6 +25,8 @@ import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.parentapp.features.login.createaccount.CreateAccountActivity
 import com.instructure.parentapp.util.navigation.Navigation
@@ -53,6 +55,7 @@ class LoginBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragment() {
     }
 
     private fun onHaveAccountClick() {
+        Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_CLICKED)
         requireActivity().startActivity(
             Intent(
                 requireActivity(),

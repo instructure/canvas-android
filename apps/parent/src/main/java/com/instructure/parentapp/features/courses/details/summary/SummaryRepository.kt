@@ -60,6 +60,6 @@ class SummaryRepository(
             .orEmpty()
             .filterNot { it.isHidden }
 
-        return assignmentEvents + calendarEvents
+        return (assignmentEvents + calendarEvents).sorted()
     }
 }

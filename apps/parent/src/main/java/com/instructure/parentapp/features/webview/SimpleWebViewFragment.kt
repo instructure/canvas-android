@@ -29,6 +29,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SIMPLE_WEB_VIEW
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -54,6 +56,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_SIMPLE_WEB_VIEW)
 @AndroidEntryPoint
 class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 

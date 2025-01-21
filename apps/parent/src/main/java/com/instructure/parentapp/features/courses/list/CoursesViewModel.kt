@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.courses.list
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
@@ -48,6 +49,8 @@ class CoursesViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private var selectedStudent: User? = null
+
+    val lazyListState = LazyListState()
 
     init {
         viewModelScope.launch {

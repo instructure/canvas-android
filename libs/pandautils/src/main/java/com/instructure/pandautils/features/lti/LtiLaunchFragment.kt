@@ -106,9 +106,9 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
         binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
-        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textDarkest))
         binding.toolbar.setupAsBackButton(this)
         binding.toolbar.title = title
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textLightest))
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         lifecycleScope.launch {

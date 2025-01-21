@@ -22,6 +22,8 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.showThemed
@@ -38,7 +40,8 @@ import java.util.Date
 
 class ReminderManager(
     private val dateTimePicker: DateTimePicker,
-    private val reminderRepository: ReminderRepository
+    private val reminderRepository: ReminderRepository,
+    private val analytics: Analytics
 ) {
     private var reminderLiveData: LiveData<List<ReminderEntity>>? = null
     private var reminderObserver: Observer<List<ReminderEntity>>? = null
@@ -204,6 +207,11 @@ class ReminderManager(
             )
         } else {
             context.getString(R.string.reminderNotificationMessageWithoutDueDate, contentName)
+        }
+
+        when {
+            contentHtmlUrl.contains("assignments") -> analytics.logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE)
+            contentHtmlUrl.contains("calendar_events") -> analytics.logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE)
         }
 
         reminderRepository.createReminder(

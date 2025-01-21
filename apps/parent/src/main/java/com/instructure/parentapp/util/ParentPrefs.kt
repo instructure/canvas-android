@@ -18,6 +18,7 @@
 package com.instructure.parentapp.util
 
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.BooleanPref
 import com.instructure.canvasapi2.utils.GsonPref
 import com.instructure.canvasapi2.utils.PrefManager
 
@@ -25,5 +26,5 @@ import com.instructure.canvasapi2.utils.PrefManager
 object ParentPrefs : PrefManager("parentSP") {
 
     var currentStudent: User? by GsonPref(User::class.java, null, "current_student", false)
-
+    var hasMigrated: Boolean by BooleanPref(false, "has_migrated_data_from_old_app")
 }
