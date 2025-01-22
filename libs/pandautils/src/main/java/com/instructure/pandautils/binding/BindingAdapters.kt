@@ -27,7 +27,6 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.webkit.JavascriptInterface
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
