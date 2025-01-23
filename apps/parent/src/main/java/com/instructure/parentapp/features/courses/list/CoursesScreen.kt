@@ -161,7 +161,8 @@ private fun CourseListItem(
             Text(
                 text = uiState.courseCode,
                 color = colorResource(id = R.color.textDark),
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                modifier = Modifier.testTag("courseCodeText")
             )
         }
         uiState.grade?.let {
