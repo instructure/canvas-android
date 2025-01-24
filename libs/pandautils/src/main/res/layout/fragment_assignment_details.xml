@@ -14,7 +14,8 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -25,14 +26,14 @@
 
         <import type="com.instructure.pandautils.utils.ThemePrefs" />
 
-        <import type="com.instructure.pandautils.mvvm.ViewState"/>
+        <import type="com.instructure.pandautils.mvvm.ViewState" />
 
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/assignmentDetailsPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -93,10 +94,10 @@
                         android:text="@{viewModel.data.points}"
                         android:textColor="@color/textDark"
                         android:textSize="16sp"
-                        app:visible="@{!viewModel.data.points.isEmpty()}"
                         app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
+                        app:visible="@{!viewModel.data.points.isEmpty()}"
                         tools:text="100 pts" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -142,6 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
+                        android:accessibilityLiveRegion="polite"
                         android:drawablePadding="6dp"
                         android:gravity="center_horizontal"
                         android:onClick="@{()->viewModel.onDraftClicked()}"
@@ -309,7 +311,7 @@
                         android:id="@+id/reminderComposeView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/reminderTopDivider"/>
+                        app:layout_constraintTop_toBottomOf="@id/reminderTopDivider" />
 
                     <View
                         android:id="@+id/reminderBottomDivider"
@@ -559,6 +561,13 @@
                         app:layout_constraintTop_toBottomOf="@id/authoredDate"
                         app:onLtiButtonPressed="@{(url) -> viewModel.onLtiButtonPressed(url)}" />
 
+                    <com.instructure.pandautils.views.EmptyView
+                        android:id="@+id/emptyView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:emptyViewState="@{viewModel.state}"
+                        tools:visibility="visible" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </ScrollView>
@@ -591,15 +600,6 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <com.instructure.pandautils.views.EmptyView
-            android:id="@+id/emptyView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:emptyViewState="@{viewModel.state}"
-            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -43,6 +43,7 @@ import java.io.File
 import java.util.Date
 
 class StudentAssignmentDetailsSubmissionHandler(
+    private val context: Context,
     private val submissionHelper: SubmissionHelper,
     private val studentDb: StudentDb
 ) : AssignmentDetailsSubmissionHandler {
@@ -148,6 +149,7 @@ class StudentAssignmentDetailsSubmissionHandler(
                     if (isUploading) {
                         isUploading = false
                         refreshAssignment()
+                        context.toast(R.string.submissionSuccessTitle)
                     }
                 }
         }
