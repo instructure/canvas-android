@@ -67,6 +67,7 @@ class ModuleListItemBinder :
             }
             moduleItemLoadingView.setVisible(item.isLoading)
 
+            publishActions.contentDescription = publishActions.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
             publishActions.onClickWithRequireNetwork {
                 if (item.type == ModuleItem.Type.File) {
                     item.contentId?.let {
@@ -159,8 +160,6 @@ class ModuleListItemBinder :
             }
         }
 
-        view.contentDescription =
-            view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
         popup.show()
     }
 }
