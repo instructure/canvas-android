@@ -16,15 +16,23 @@
  */
 package com.instructure.parentapp.ui.pages
 
+import android.app.Instrumentation
+import android.content.Intent
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.scrollTo
 import com.instructure.parentapp.R
+import org.hamcrest.CoreMatchers
 
 
 class HelpPage : BasePage(R.id.helpDialog) {
@@ -38,9 +46,30 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     private val shareLoveLabel by OnViewWithText(R.string.shareYourLove)
 
+    private fun clickSearchGuidesLabel() {
+        searchGuidesLabel.scrollTo().click()
+    }
+
+    fun clickReportProblemLabel() {
+        reportProblemLabel.scrollTo().click()
+    }
+
+    private fun clickSubmitFeatureLabel() {
+        submitFeatureLabel.scrollTo().click()
+    }
+
+    private fun clickShareLoveLabel() {
+        shareLoveLabel.scrollTo().click()
+    }
+
     fun assertHelpMenuDisplayed() {
         onView(withId(R.id.alertTitle) + withText(R.string.help)).assertDisplayed()
         onView(withId(R.id.helpDialog)).assertDisplayed()
+    }
+
+    fun assertReportProblemDialogDisplayed() {
+        waitForViewWithText("Report A Problem").assertDisplayed()
+        onView(withId(R.id.cancelButton)).click()
     }
 
     fun assertHelpMenuContent() {
@@ -59,5 +88,23 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
         onView(withId(R.id.title) + withText("Share Your Love for the App")).assertDisplayed()
         onView(withId(R.id.subtitle) + withText("Tell us about your favorite parts of the app")).assertDisplayed()
+    }
+
+    fun assertHelpMenuURL(helpMenuText: String, expectedURL: String) {
+        val expectedIntent = CoreMatchers.allOf(
+            IntentMatchers.hasAction(Intent.ACTION_VIEW),
+            CoreMatchers.anyOf(
+                IntentMatchers.hasData(expectedURL),
+            )
+        )
+        Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+
+        when (helpMenuText) {
+            "Search the Canvas Guides" -> clickSearchGuidesLabel()
+            "Submit a Feature Idea" -> clickSubmitFeatureLabel()
+            "Share Your Love for the App" -> clickShareLoveLabel()
+        }
+
+        Intents.intended(expectedIntent)
     }
 }

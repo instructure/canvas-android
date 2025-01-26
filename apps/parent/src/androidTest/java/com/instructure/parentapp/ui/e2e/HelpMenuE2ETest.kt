@@ -17,6 +17,7 @@
 package com.instructure.parentapp.ui.e2e
 
 import android.util.Log
+import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -59,6 +60,23 @@ class HelpMenuE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Assert that all the corresponding Help menu content are displayed.")
         helpPage.assertHelpMenuContent()
-    }
 
+        Log.d(STEP_TAG, "Click on the 'Report a Problem' help menu.")
+        helpPage.clickReportProblemLabel()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Report a Problem' dialog has displayed.")
+        helpPage.assertReportProblemDialogDisplayed()
+
+        Log.d(STEP_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
+        Intents.init()
+
+        try {
+            helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
+            helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
+            helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
+        }
+        finally {
+            Intents.release()
+        }
+    }
 }
