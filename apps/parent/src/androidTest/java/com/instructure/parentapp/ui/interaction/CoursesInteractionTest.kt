@@ -101,7 +101,7 @@ class CoursesInteractionTest : ParentComposeTest() {
 
         composeTestRule.waitForIdle()
         val course = data.courses.values.first()
-        coursesPage.tapCurseItem(course.name)
+        coursesPage.clickCourseItem(course.name)
         courseDetailsPage.assertCourseNameDisplayed(course)
     }
 

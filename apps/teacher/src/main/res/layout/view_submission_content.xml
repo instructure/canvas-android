@@ -63,6 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
         android:background="@color/backgroundLightest"
+        android:accessibilityHeading="true"
         android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ToolBarPopupStyle">
 

@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
@@ -41,12 +42,9 @@ import com.instructure.teacher.fragments.ChooseRecipientsFragment
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.CourseSettingsFragment
-import com.instructure.teacher.fragments.CreateDiscussionFragment
-import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
 import com.instructure.teacher.fragments.CreateOrEditPageDetailsFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.DiscussionsListFragment
-import com.instructure.teacher.fragments.DiscussionsUpdateFragment
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.fragments.EditFileFolderFragment
@@ -160,7 +158,9 @@ object RouteResolver {
             fragment = DiscussionRouterFragment.newInstance(canvasContext!!, route)
         } else if(DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = DiscussionDetailsWebViewFragment.newInstance(route)
-        } else if (InboxFragment::class.java.isAssignableFrom(cls)) {
+        } else if(CreateDiscussionWebViewFragment::class.java.isAssignableFrom(cls)) {
+            fragment = CreateDiscussionWebViewFragment.newInstance(route)
+        }  else if (InboxFragment::class.java.isAssignableFrom(cls)) {
             fragment = InboxFragment.newInstance(route)
         } else if (InboxComposeFragment::class.java.isAssignableFrom(cls)) {
             fragment = InboxComposeFragment.newInstance(route)
@@ -176,18 +176,12 @@ object RouteResolver {
             fragment = ViewHtmlFragment.newInstance(route.arguments)
         } else if (ViewUnsupportedFileFragment::class.java.isAssignableFrom(cls)) {
             fragment = ViewUnsupportedFileFragment.newInstance(route.arguments)
-        } else if (cls.isAssignableFrom(DiscussionsUpdateFragment::class.java)) {
-            fragment = DiscussionsUpdateFragment.newInstance(canvasContext!!, route.arguments)
         } else if (ChooseRecipientsFragment::class.java.isAssignableFrom(cls)) {
             fragment = ChooseRecipientsFragment.newInstance(route.arguments)
         } else if (SpeedGraderQuizWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = SpeedGraderQuizWebViewFragment.newInstance(route.arguments)
         } else if (AnnotationCommentListFragment::class.java.isAssignableFrom(cls)) {
             fragment = AnnotationCommentListFragment.newInstance(route.arguments)
-        } else if (CreateDiscussionFragment::class.java.isAssignableFrom(cls)) {
-            fragment = CreateDiscussionFragment.newInstance(route.arguments)
-        } else if (CreateOrEditAnnouncementFragment::class.java.isAssignableFrom(cls)) {
-            fragment = CreateOrEditAnnouncementFragment.newInstance(route.arguments)
         } else if (SettingsFragment::class.java.isAssignableFrom(cls)) {
             fragment = SettingsFragment.newInstance(route)
         } else if (ProfileEditFragment::class.java.isAssignableFrom(cls)) {

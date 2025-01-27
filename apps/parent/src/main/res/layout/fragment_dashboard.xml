@@ -165,7 +165,8 @@
                                 android:layout_gravity="end"
                                 android:layout_marginTop="16dp"
                                 android:src="@drawable/ic_calendar_day"
-                                android:importantForAccessibility="no"/>
+                                android:importantForAccessibility="no"
+                                app:tint="@color/textLightest"/>
 
                             <TextView
                                 android:id="@+id/todayButtonText"
@@ -175,7 +176,7 @@
                                 android:gravity="center"
                                 android:layout_marginTop="6dp"
                                 android:textSize="9sp"
-                                android:textColor="@color/white"
+                                android:textColor="@color/textLightest"
                                 android:importantForAccessibility="no"/>
 
                         </FrameLayout>

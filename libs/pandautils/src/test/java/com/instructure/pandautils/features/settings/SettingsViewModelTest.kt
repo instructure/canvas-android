@@ -22,6 +22,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
@@ -33,7 +35,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
@@ -68,6 +69,7 @@ class SettingsViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -132,6 +134,8 @@ class SettingsViewModelTest {
             themePrefs.appTheme = AppTheme.DARK.ordinal
         }
         assertEquals(AppTheme.DARK.ordinal, viewModel.uiState.value.appTheme)
+
+        verify { analytics.logEvent(AnalyticsEventConstants.DARK_MODE_ON) }
 
         val events = mutableListOf<SettingsViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -227,6 +231,6 @@ class SettingsViewModelTest {
 
 
     private fun createViewModel(): SettingsViewModel {
-        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs)
+        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs, analytics)
     }
 }

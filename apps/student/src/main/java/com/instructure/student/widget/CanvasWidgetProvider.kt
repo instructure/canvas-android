@@ -86,7 +86,7 @@ abstract class CanvasWidgetProvider : AppWidgetProvider() {
             val remoteViews = RemoteViews(context.packageName, R.layout.widget_homescreen)
             val textColor = BaseRemoteViewsService.getWidgetTextColor(appWidgetId, context)
             val logoColor = ContextCompat.getColor(context, R.color.login_studentAppTheme)
-            remoteViews.setImageViewResource(R.id.widget_logo, R.drawable.ic_canvas_logo_red)
+            remoteViews.setImageViewResource(R.id.widget_logo, R.drawable.ic_canvas_logo_student)
             remoteViews.setInt(R.id.widget_logo, "setColorFilter", logoColor)
             setWidgetDependentViews(context, remoteViews, appWidgetId, appWidgetManager, textColor)
 
