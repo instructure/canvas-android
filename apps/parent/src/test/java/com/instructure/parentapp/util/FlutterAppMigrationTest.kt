@@ -107,6 +107,7 @@ class FlutterAppMigrationTest {
             )
         } returns mockDatabase
         every { Uri.parse(any()) } returns mockUri
+        every { parentPrefs.hasMigrated } returns false
     }
 
     @After
