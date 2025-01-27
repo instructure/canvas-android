@@ -19,6 +19,8 @@ package com.instructure.student.holders
 
 import android.content.Context
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
@@ -109,6 +111,14 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             submissionState.setVisible()
         } else {
             submissionState.setGone()
+        }
+
+        root.accessibilityDelegate = object : View.AccessibilityDelegate() {
+            override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
+                super.onInitializeAccessibilityNodeInfo(host, info)
+
+                info.className = Button::class.java.name
+            }
         }
     }
 

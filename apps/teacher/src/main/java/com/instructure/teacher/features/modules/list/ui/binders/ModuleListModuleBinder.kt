@@ -44,6 +44,7 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
 
                 loadingView.setVisible(item.isLoading)
 
+                publishActions.contentDescription = publishActions.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
                 publishActions.onClickWithRequireNetwork {
                     val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
                     popup.inflate(R.menu.menu_module)
@@ -66,7 +67,6 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
                         }
                     }
 
-                    publishActions.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
                     popup.show()
                 }
             }
