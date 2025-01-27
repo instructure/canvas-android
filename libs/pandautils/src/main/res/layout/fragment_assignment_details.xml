@@ -14,7 +14,8 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -32,7 +33,7 @@
             type="com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/assignmentDetailsPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -41,6 +42,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:accessibilityHeading="true"
             app:layout_constraintTop_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:subtitle="@{viewModel.course.name}"
@@ -82,6 +84,7 @@
                         android:text="@{viewModel.data.assignmentName}"
                         android:textColor="@color/textDarkest"
                         android:textSize="22sp"
+                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Creative Machines and Innovative Instrumentation - ASTR 21400" />
 
@@ -283,6 +286,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
+                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/dueDivider" />
 
                     <TextView
@@ -328,6 +332,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.submissionTypes.empty ? View.GONE : View.VISIBLE}"
+                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/reminderComposeView" />
 
                     <TextView
@@ -352,6 +357,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.allowedFileTypes.empty ? View.GONE : View.VISIBLE}"
+                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/submissionTypesTextView" />
 
                     <TextView
@@ -376,6 +382,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
+                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/allowedFileTypesTextView" />
 
                     <TextView
@@ -423,6 +430,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
+                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/quizAllowedAttemptsTextView" />
 
                     <TextView
@@ -467,6 +475,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
+                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/descriptionDivider" />
 
                     <ImageView
@@ -559,6 +568,14 @@
                         app:layout_constraintTop_toBottomOf="@id/authoredDate"
                         app:onLtiButtonPressed="@{(url) -> viewModel.onLtiButtonPressed(url)}" />
 
+                    <com.instructure.pandautils.views.EmptyView
+                        android:id="@+id/emptyView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:emptyViewState="@{viewModel.state}"
+                        tools:layout_editor_absoluteX="2dp"
+                        tools:visibility="visible" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </ScrollView>
@@ -591,15 +608,6 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <com.instructure.pandautils.views.EmptyView
-            android:id="@+id/emptyView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:emptyViewState="@{viewModel.state}"
-            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
