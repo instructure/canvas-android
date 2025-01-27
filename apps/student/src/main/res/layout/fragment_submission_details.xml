@@ -169,7 +169,8 @@
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/drawerTabLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="12dp"
                         app:tabIndicatorHeight="2dp"
