@@ -17,7 +17,6 @@
 
 package com.instructure.student.di.feature
 
-import android.content.Context
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
@@ -47,7 +46,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -96,8 +94,8 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsSubmissionHandler(@ApplicationContext context: Context, submissionHandler: SubmissionHelper, studentDb: StudentDb): AssignmentDetailsSubmissionHandler {
-        return StudentAssignmentDetailsSubmissionHandler(context, submissionHandler, studentDb)
+    fun provideAssignmentDetailsSubmissionHandler(submissionHandler: SubmissionHelper, studentDb: StudentDb): AssignmentDetailsSubmissionHandler {
+        return StudentAssignmentDetailsSubmissionHandler(submissionHandler, studentDb)
     }
 
     @Provides

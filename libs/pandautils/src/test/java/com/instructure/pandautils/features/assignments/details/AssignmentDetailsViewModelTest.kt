@@ -82,6 +82,7 @@ class AssignmentDetailsViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
+    private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val assignmentDetailsRepository: AssignmentDetailsRepository = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -121,6 +122,7 @@ class AssignmentDetailsViewModelTest {
     }
 
     private fun getViewModel(manager: ReminderManager = reminderManager) = AssignmentDetailsViewModel(
+        context,
         savedStateHandle,
         assignmentDetailsRepository,
         resources,
