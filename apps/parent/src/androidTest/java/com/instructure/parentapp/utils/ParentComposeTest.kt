@@ -39,6 +39,7 @@ abstract class ParentComposeTest : ParentTest() {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
+    //Compose pages
     protected val alertsPage = AlertsPage(composeTestRule)
     protected val manageStudentsPage = ManageStudentsPage(composeTestRule)
     protected val alertSettingsPage = AlertSettingsPage(composeTestRule)
