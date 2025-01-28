@@ -26,7 +26,7 @@
 
         <import type="com.instructure.pandautils.utils.ThemePrefs" />
 
-        <import type="com.instructure.pandautils.mvvm.ViewState"/>
+        <import type="com.instructure.pandautils.mvvm.ViewState" />
 
         <variable
             name="viewModel"
@@ -96,10 +96,10 @@
                         android:text="@{viewModel.data.points}"
                         android:textColor="@color/textDark"
                         android:textSize="16sp"
-                        app:visible="@{!viewModel.data.points.isEmpty()}"
                         app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
+                        app:visible="@{!viewModel.data.points.isEmpty()}"
                         tools:text="100 pts" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -145,6 +145,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
+                        android:accessibilityLiveRegion="polite"
                         android:drawablePadding="6dp"
                         android:gravity="center_horizontal"
                         android:onClick="@{()->viewModel.onDraftClicked()}"
@@ -313,7 +314,7 @@
                         android:id="@+id/reminderComposeView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/reminderTopDivider"/>
+                        app:layout_constraintTop_toBottomOf="@id/reminderTopDivider" />
 
                     <View
                         android:id="@+id/reminderBottomDivider"

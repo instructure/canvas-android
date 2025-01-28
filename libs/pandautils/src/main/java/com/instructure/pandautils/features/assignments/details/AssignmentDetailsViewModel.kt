@@ -68,6 +68,7 @@ import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -80,6 +81,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val resources: Resources,
@@ -137,6 +139,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     init {
         markSubmissionAsRead()
         submissionHandler.addAssignmentSubmissionObserver(
+            context,
             assignmentId,
             apiPrefs.user?.id.orDefault(),
             resources,
