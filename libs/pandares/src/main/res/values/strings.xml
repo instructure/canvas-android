@@ -1966,5 +1966,6 @@
     <string name="smartSearchAssignmentGroupTitle">Assignments (%d)</string>
     <string name="smartSearchPageGroupTitle">Pages (%d)</string>
     <string name="a11y_commentSentSuccess">Comment sent successfully</string>
+    <string name="a11y_dragViewContentDescription">Expand Drawer</string>
     <string name="a11y_inboxRecyclerViewContentDescription">Conversations</string>
 </resources>
