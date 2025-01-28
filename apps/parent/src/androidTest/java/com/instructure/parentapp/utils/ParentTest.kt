@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.HelpPage
 import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
 
 
@@ -35,8 +36,9 @@ abstract class ParentTest : CanvasTest() {
 
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
+    val helpPage = HelpPage()
 
-    //Common pages
+    // Common pages
     val loginLandingPage = LoginLandingPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginSignInPage = LoginSignInPage()
