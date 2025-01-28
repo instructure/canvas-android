@@ -20,9 +20,11 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
@@ -42,6 +44,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isCourseOrGroup
+import com.instructure.pandautils.utils.toPx
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Analytics
@@ -62,7 +65,14 @@ class BookmarkCreationDialog : BaseCanvasAppCompatDialogFragment() {
         val view = View.inflate(ContextThemeWrapper(activity, 0), R.layout.dialog_bookmark, null)
         setupViews(view)
         builder.setView(view)
-        builder.setTitle(R.string.addBookmark)
+        val bookmarkDialogTitle = TextView(requireContext())
+        bookmarkDialogTitle.text = getString(R.string.addBookmark)
+        bookmarkDialogTitle.setTextAppearance(android.R.style.TextAppearance_Medium)
+        bookmarkDialogTitle.setPadding(24.toPx, 16.toPx, 24.toPx, 0.toPx)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            bookmarkDialogTitle.isAccessibilityHeading = true
+        }
+        builder.setCustomTitle(bookmarkDialogTitle)
         builder.setCancelable(true)
         builder.setPositiveButton(R.string.save, null)
         builder.setNegativeButton(android.R.string.cancel, null)
