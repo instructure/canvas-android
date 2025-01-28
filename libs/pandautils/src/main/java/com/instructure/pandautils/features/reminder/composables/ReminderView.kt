@@ -34,6 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,7 +63,8 @@ fun ReminderView(
             Text(
                 text = stringResource(id = R.string.reminderTitle),
                 fontSize = 14.sp,
-                color = colorResource(id = R.color.textDark)
+                color = colorResource(id = R.color.textDark),
+                modifier = Modifier.semantics { heading() }
             )
 
             Row(
