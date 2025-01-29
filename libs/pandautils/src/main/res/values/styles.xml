@@ -30,6 +30,7 @@
         <item name="colorAccent">@color/textDarkest</item>
         <item name="actionModeBackground">@color/textDarkest</item>
         <item name="background">@color/backgroundLightestElevated</item>
+        <item name="android:accessibilityHeading">true</item>
     </style>
 
     <style name="CustomViewAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
