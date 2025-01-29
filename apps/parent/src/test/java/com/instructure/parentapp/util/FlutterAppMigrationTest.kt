@@ -107,6 +107,7 @@ class FlutterAppMigrationTest {
             )
         } returns mockDatabase
         every { Uri.parse(any()) } returns mockUri
+        every { parentPrefs.hasMigrated } returns false
     }
 
     @After
@@ -308,11 +309,18 @@ class FlutterAppMigrationTest {
     fun `Migrate reminders`() {
         val cursor: Cursor = mockk(relaxed = true)
         every { mockDatabase.rawQuery("SELECT * FROM reminders", null) } returns cursor
-        every { cursor.getString(any()) } returnsMany listOf(
-            "domain.com", "1", "assignment", "101", "202", "2025-01-01T00:00:00Z",
-            "domain2.com", "2", "event", "102", "203", "2025-01-01T00:00:00Z",
-            "domain2.com", "2", "event", "102", "203", "2024-01-01T00:00:00Z",
-        )
+        every { cursor.getColumnIndexOrThrow("user_domain") } returns 0
+        every { cursor.getString(0) } returnsMany listOf("domain.com", "domain2.com", "domain2.com")
+        every { cursor.getColumnIndexOrThrow("user_id") } returns 1
+        every { cursor.getString(1) } returnsMany listOf("1", "2", "2")
+        every { cursor.getColumnIndexOrThrow("type") } returns 2
+        every { cursor.getString(2) } returnsMany listOf("assignment", "event", "event")
+        every { cursor.getColumnIndexOrThrow("item_id") } returns 3
+        every { cursor.getString(3) } returnsMany listOf("101", "102", "102")
+        every { cursor.getColumnIndexOrThrow("course_id") } returns 4
+        every { cursor.getString(4) } returnsMany listOf("202", "203", "203")
+        every { cursor.getColumnIndexOrThrow("date") } returns 5
+        every { cursor.getString(5) } returnsMany listOf("2025-01-01T00:00:00Z", "2025-01-01T00:00:00Z", "2024-01-01T00:00:00Z")
         every { cursor.moveToNext() } returnsMany listOf(true, true, false)
         every { context.getString(R.string.assignment) } returns "Assignment"
         every { context.getString(R.string.a11y_calendar_event) } returns "Event"
