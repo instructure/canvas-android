@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:elevation="6dp"
+        android:accessibilityHeading="true"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
         tools:ignore="UnusedAttribute" />
@@ -51,6 +52,7 @@
             android:maxLines="1"
             android:text="@string/all_submissions"
             android:textSize="20sp"
+            android:accessibilityHeading="true"
             tools:text="All Submissions" />
 
         <TextView

@@ -1968,4 +1968,5 @@
     <string name="a11y_commentSentSuccess">Comment sent successfully</string>
     <string name="a11y_dragViewContentDescription">Expand Drawer</string>
     <string name="a11y_inboxRecyclerViewContentDescription">Conversations</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
 </resources>
