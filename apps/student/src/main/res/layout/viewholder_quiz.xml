@@ -14,84 +14,87 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AdapterItem"
-    android:orientation="horizontal">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/AdapterItem"
+        android:orientation="horizontal"
+        app:accessibilityClassName='@{"android.widget.Button"}'>
 
-    <ImageView
-        android:id="@+id/icon"
-        style="@style/AdapterItemIcon"
-        android:importantForAccessibility="no"
-        tools:srcCompat="@drawable/ic_assignment" />
-
-    <LinearLayout
-        android:id="@+id/textContainer"
-        style="@style/AdapterItemTextContainer"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/AdapterItemTitleText"
-            tools:text="Quiz Title" />
-
-        <TextView
-            android:id="@+id/description"
-            style="@style/AdapterItemDescriptionText"
-            tools:text="An assignment description with some length so we can ensure it looks amazing on every device!" />
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/AdapterItemIcon"
+            android:importantForAccessibility="no"
+            tools:srcCompat="@drawable/ic_assignment" />
 
         <LinearLayout
-            android:id="@+id/dateContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:id="@+id/textContainer"
+            style="@style/AdapterItemTextContainer"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/status"
+                android:id="@+id/title"
+                style="@style/AdapterItemTitleText"
+                tools:text="Quiz Title" />
+
+            <TextView
+                android:id="@+id/description"
                 style="@style/AdapterItemDescriptionText"
-                android:layout_width="wrap_content"
+                tools:text="An assignment description with some length so we can ensure it looks amazing on every device!" />
+
+            <LinearLayout
+                android:id="@+id/dateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/status"
+                    style="@style/AdapterItemDescriptionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Closed" />
+
+                <TextView
+                    android:id="@+id/bulletStatusAndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/utils_dotWithSpaces" />
+
+                <TextView
+                    android:id="@+id/date"
+                    style="@style/AdapterItemDescriptionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="No Due Date" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pointsContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="Closed"/>
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/bulletStatusAndDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/utils_dotWithSpaces"/>
+                <TextView
+                    android:id="@+id/points"
+                    style="@style/AdapterItemDescriptionText"
+                    tools:text="-/100" />
 
-            <TextView
-                android:id="@+id/date"
-                style="@style/AdapterItemDescriptionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="No Due Date"/>
+                <TextView
+                    android:id="@+id/bulletPointsAndQuestions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/utils_dotWithSpaces" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/questions"
+                    style="@style/AdapterItemDescriptionText"
+                    tools:text="10 Questions" />
 
-        <LinearLayout
-            android:id="@+id/pointsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/points"
-                style="@style/AdapterItemDescriptionText"
-                tools:text="-/100"/>
-
-            <TextView
-                android:id="@+id/bulletPointsAndQuestions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/utils_dotWithSpaces"/>
-
-            <TextView
-                android:id="@+id/questions"
-                style="@style/AdapterItemDescriptionText"
-                tools:text="10 Questions"/>
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</layout>

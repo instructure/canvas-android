@@ -18,7 +18,6 @@
 package com.instructure.student.holders
 
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DateHelper
@@ -34,7 +33,7 @@ import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.util.BinderUtils
 import java.util.Date
 
-class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class QuizViewHolder(private val binding: ViewholderQuizBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
         item: Quiz,
@@ -42,7 +41,7 @@ class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         context: Context,
         iconAndTextColor: Int,
         restrictQuantitativeData: Boolean
-    ) = with(ViewholderQuizBinding.bind(itemView)) {
+    ) = with(binding) {
         root.onClickWithRequireNetwork { adapterToFragmentCallback?.onRowClicked(item, adapterPosition, true) }
 
         // Title
