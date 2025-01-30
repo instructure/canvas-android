@@ -86,14 +86,16 @@ import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.requestAccessibilityFocusOnFirstChild
+import com.instructure.pandautils.utils.sendAccessibilityFocusedEvent
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.viewExternally
+import com.instructure.pandautils.views.ExpandCollapseAnimation
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.pandautils.views.RecordingMediaType
-import com.instructure.pandautils.views.ExpandCollapseAnimation
 import com.instructure.pandautils.views.ViewPagerNonSwipeable
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
@@ -820,7 +822,9 @@ class SubmissionContentView(
         mBottomViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
-            override fun onPageSelected(position: Int) {}
+            override fun onPageSelected(position: Int) {
+                accessibilityHandleTabSelected(position)
+            }
 
             override fun onPageScrollStateChanged(state: Int) {
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
@@ -858,6 +862,16 @@ class SubmissionContentView(
         }
 
         mBottomViewPager.currentItem = initialTabIndex
+    }
+
+    private fun accessibilityHandleTabSelected(position: Int) {
+        if (isAccessibilityEnabled(context)) {
+            if (position == 0) {
+                (mBottomViewPager.adapter as? BottomSheetPagerAdapter)?.getItem(mBottomViewPager.currentItem)?.view?.requestAccessibilityFocusOnFirstChild()
+            } else {
+                mBottomViewPager.sendAccessibilityFocusedEvent(100)
+            }
+        }
     }
 
     private fun showVideoCommentDialog() = with(binding) {

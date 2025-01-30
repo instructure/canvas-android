@@ -368,6 +368,31 @@ fun View.requestAccessibilityFocus(delay: Long = 500) {
     }
 }
 
+fun View.sendAccessibilityFocusedEvent(delay: Long = 500) {
+    if (context.a11yManager.hasSpokenFeedback) {
+        postDelayed({ sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED) }, delay)
+    }
+}
+
+fun View.isAccessibilityFocusable(): Boolean =
+    (this.isVisible && this.isImportantForAccessibility)
+
+fun View.getFirstAccessibilityFocusableChild(): View? {
+    for (child in children) {
+        if (child.isAccessibilityFocusable()) {
+            return child
+        } else if (child.children.isNotEmpty()) {
+            val view = child.getFirstAccessibilityFocusableChild()
+            if (view != null) return view
+        }
+    }
+    return null
+}
+
+fun View.requestAccessibilityFocusOnFirstChild() {
+    this.getFirstAccessibilityFocusableChild()?.sendAccessibilityFocusedEvent(100)
+}
+
 /**
  * OnClickListener for checking internet connection first. If connection exits allow click,
  * otherwise show no internet dialog.
