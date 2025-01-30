@@ -1,7 +1,6 @@
 package com.instructure.parentapp.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.models.Conversation
@@ -9,10 +8,13 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
@@ -21,20 +23,32 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ParentInboxComposeRepositoryTest {
 
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
 
+    private val studentId = 1L
+
     private val inboxComposeRepository = ParentInboxComposeRepository(
         courseAPI,
+        parentPrefs,
         recipientAPI,
         inboxAPI,
     )
+
+    @Before
+    fun setup() {
+        val currentStudent: User = mockk(relaxed = true)
+        every { currentStudent.id } returns studentId
+        every { parentPrefs.currentStudent } returns currentStudent
+    }
 
     @After
     fun tearDown() {
@@ -45,11 +59,11 @@ class ParentInboxComposeRepositoryTest {
     @Test
     fun `Get courses successfully`() = runTest {
         val expected = listOf(
-            Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
-            Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE)))
+            Course(id = 1, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer, userId = studentId))),
+            Course(id = 2, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer, userId = studentId)))
         )
 
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(expected)
+        coEvery { courseAPI.firstPageObserveeCourses(any()) } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
 
@@ -59,11 +73,12 @@ class ParentInboxComposeRepositoryTest {
     @Test
     fun `Test course filtering`() = runTest {
         val expected = listOf(
-            Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
-            Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_COMPLETED)))
+            Course(id = 1, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer, userId = studentId))),
+            Course(id = 2, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student, userId = studentId))),
+            Course(id = 3, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer)))
         )
 
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(expected)
+        coEvery { courseAPI.firstPageObserveeCourses(any()) } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
 
@@ -72,11 +87,11 @@ class ParentInboxComposeRepositoryTest {
 
     @Test
     fun `Test courses paging`() = runTest {
-        val list1 = listOf(Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),)
-        val list2 = listOf(Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),)
+        val list1 = listOf(Course(id = 1, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer, userId = studentId))),)
+        val list2 = listOf(Course(id = 2, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer, userId = studentId))),)
         val expected = list1 + list2
 
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
+        coEvery { courseAPI.firstPageObserveeCourses(any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
         coEvery { courseAPI.next(any(), any()) } returns DataResult.Success(list2)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
@@ -86,7 +101,7 @@ class ParentInboxComposeRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Get courses with error`() = runTest {
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Fail()
+        coEvery { courseAPI.firstPageObserveeCourses(any()) } returns DataResult.Fail()
 
         inboxComposeRepository.getCourses().dataOrThrow
     }
