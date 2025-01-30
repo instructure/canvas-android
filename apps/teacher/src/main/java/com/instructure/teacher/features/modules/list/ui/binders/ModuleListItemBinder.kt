@@ -54,10 +54,17 @@ class ModuleListItemBinder :
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
             moduleItemSubtitle2.setTextForVisibility(item.subtitle2)
 
-            root.setOnClickListener { callback.moduleItemClicked(item.id) }
-            root.isEnabled = item.enabled
-
             val statusIcon = getStatusIcon(item)
+            root.apply {
+                setOnClickListener { callback.moduleItemClicked(item.id) }
+                contentDescription = context.getString(
+                    R.string.a11y_contentDescription_moduleItem,
+                    item.title,
+                    context.getString(statusIcon.contentDescription)
+                )
+                isEnabled = item.enabled
+            }
+
             moduleItemStatusIcon.apply {
                 contentDescription = context.getString(statusIcon.contentDescription)
                 setImageResource(statusIcon.icon)
@@ -65,8 +72,10 @@ class ModuleListItemBinder :
                 setVisible(!item.isLoading)
                 alpha = if (item.unpublishable || item.type == ModuleItem.Type.File) 1f else 0.5f
             }
+
             moduleItemLoadingView.setVisible(item.isLoading)
 
+            publishActions.contentDescription = publishActions.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
             publishActions.onClickWithRequireNetwork {
                 if (item.type == ModuleItem.Type.File) {
                     item.contentId?.let {
@@ -159,8 +168,6 @@ class ModuleListItemBinder :
             }
         }
 
-        view.contentDescription =
-            view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
         popup.show()
     }
 }

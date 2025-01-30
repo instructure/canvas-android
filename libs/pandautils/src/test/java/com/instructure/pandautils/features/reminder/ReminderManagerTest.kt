@@ -17,12 +17,15 @@
 package com.instructure.pandautils.features.reminder
 
 import android.content.Context
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.R
 import io.mockk.Called
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -31,8 +34,9 @@ import java.util.Calendar
 class ReminderManagerTest {
     private val dateTimePicker: DateTimePicker = mockk(relaxed = true)
     private val reminderRepository: ReminderRepository = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
 
-    private val reminderManager = ReminderManager(dateTimePicker, reminderRepository)
+    private val reminderManager = ReminderManager(dateTimePicker, reminderRepository, analytics)
 
     @Test
     fun `Test set custom reminder not creates reminder if no values was selected`() = runTest {
@@ -49,7 +53,7 @@ class ReminderManagerTest {
         val userId = 1L
         val contentId = 1L
         val contentName = "Assignment 1"
-        val contentHtmlUrl = "path1"
+        val contentHtmlUrl = "https://test.com/assignments/1"
         val calendar = Calendar.getInstance().apply {
             add(Calendar.DAY_OF_MONTH, 1)
         }
@@ -64,6 +68,7 @@ class ReminderManagerTest {
 
         reminderManager.showCustomReminderDialog(context, userId, contentId, contentName, contentHtmlUrl, null)
 
+        verify { analytics.logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE) }
         coVerify { reminderRepository.createReminder(userId, contentId, contentHtmlUrl, title, message, calendar.timeInMillis) }
     }
 }

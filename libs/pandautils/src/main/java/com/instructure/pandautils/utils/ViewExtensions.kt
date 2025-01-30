@@ -456,8 +456,8 @@ private class CourseImageTransformation(val overlayColor: Int) : CenterCrop() {
         with(Canvas(cropped)) {
             // Draw image in grayscale
             drawBitmap(cropped, 0f, 0f, grayscalePaint)
-            // Draw color overlay at 75% (0xBF) opacity
-            drawColor(overlayColor and 0xBFFFFFFF.toInt())
+            // Draw color overlay at 84% (0xBF) opacity
+            drawColor(overlayColor and 0xDFFFFFFF.toInt())
         }
         return cropped
     }

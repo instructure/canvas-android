@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
+import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
@@ -78,7 +79,11 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideHtmlContentFormatter(@ApplicationContext context: Context, oAuthManager: OAuthManager, firebaseCrashlytics: FirebaseCrashlytics): HtmlContentFormatter {
+    fun provideHtmlContentFormatter(
+        @ApplicationContext context: Context,
+        oAuthManager: OAuthManager,
+        firebaseCrashlytics: FirebaseCrashlytics
+    ): HtmlContentFormatter {
         return HtmlContentFormatter(context, firebaseCrashlytics, oAuthManager)
     }
 
@@ -173,5 +178,11 @@ class ApplicationModule {
     @Singleton
     fun provideTimeZone(): TimeZone {
         return TimeZone.getDefault()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRatingDialogPrefs(): RatingDialog.Prefs {
+        return RatingDialog.Prefs
     }
 }

@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
@@ -81,6 +82,7 @@ class AssignmentDetailsViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
+    private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val assignmentDetailsRepository: AssignmentDetailsRepository = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -92,6 +94,7 @@ class AssignmentDetailsViewModelTest {
     private val colorProvider: AssignmentDetailsColorProvider = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val reminderManager: ReminderManager = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -119,6 +122,7 @@ class AssignmentDetailsViewModelTest {
     }
 
     private fun getViewModel(manager: ReminderManager = reminderManager) = AssignmentDetailsViewModel(
+        context,
         savedStateHandle,
         assignmentDetailsRepository,
         resources,
@@ -743,7 +747,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         val dateTimePicker: DateTimePicker = mockk(relaxed = true)
         val reminderRepository: ReminderRepository = mockk(relaxed = true)
-        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository, analytics)
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
         every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
         every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
@@ -769,7 +773,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         val dateTimePicker: DateTimePicker = mockk(relaxed = true)
         val reminderRepository: ReminderRepository = mockk(relaxed = true)
-        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository, analytics)
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
         every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns remindersLiveData
         every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }

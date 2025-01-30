@@ -45,11 +45,20 @@
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@android:color/white"
                 android:elevation="2dp"
+                android:accessibilityHeading="true"
                 app:layout_constraintTop_toTopOf="parent"
                 app:popupTheme="@style/ToolBarPopupStyle"
                 app:theme="@style/ToolBarStyle"
-                app:title="@{title}"
-                tools:ignore="UnusedAttribute" />
+                tools:ignore="UnusedAttribute">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:text="@{title}"
+                    android:accessibilityHeading="true" />
+
+            </androidx.appcompat.widget.Toolbar>
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"

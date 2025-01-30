@@ -70,6 +70,10 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
         onViewWithContentDescription(R.string.a11y_addStudentContentDescription).click()
     }
 
+    fun assertAddStudentDisplayed() {
+        onView(withText(R.string.a11y_addStudentContentDescription) + withAncestor(R.id.student_list)).assertDisplayed()
+    }
+
     fun clickInbox() {
         onViewWithText(R.string.inbox).click()
     }

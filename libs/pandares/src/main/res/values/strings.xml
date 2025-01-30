@@ -1182,6 +1182,7 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
     <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Click here to view Submission &amp; Rubric details</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Grade: %s</string>
 
     <plurals name="minutes">
@@ -1451,6 +1452,7 @@
     <string name="inboxContextSelectorTitle">Select Course or Group</string>
     <string name="inboxClearFilter">Clear</string>
     <string name="a11y_courseFilterContentDescription">Course filter: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Mailbox selection: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">select</string>
     <string name="a11y_itemSelectedSwipeForActions">Conversation selected. Selection mode activated. Navigate for actions.</string>
     <string name="a11y_conversationSelected">Conversation selected</string>
@@ -1964,4 +1966,7 @@
     <string name="smartSearchAssignmentGroupTitle">Assignments (%d)</string>
     <string name="smartSearchPageGroupTitle">Pages (%d)</string>
     <string name="a11y_commentSentSuccess">Comment sent successfully</string>
+    <string name="a11y_dragViewContentDescription">Expand Drawer</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Conversations</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
 </resources>

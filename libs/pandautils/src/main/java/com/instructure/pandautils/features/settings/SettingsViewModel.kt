@@ -24,6 +24,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
@@ -51,7 +53,8 @@ class SettingsViewModel @Inject constructor(
     private val syncSettingsFacade: SyncSettingsFacade,
     private val colorKeeper: ColorKeeper,
     private val themePrefs: ThemePrefs,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val analytics: Analytics
 ) :
     ViewModel() {
 
@@ -115,6 +118,11 @@ class SettingsViewModel @Inject constructor(
                     )
                 }
                 setAppTheme(action.appTheme)
+                when (action.appTheme) {
+                    AppTheme.LIGHT -> analytics.logEvent(AnalyticsEventConstants.DARK_MODE_OFF)
+                    AppTheme.DARK -> analytics.logEvent(AnalyticsEventConstants.DARK_MODE_ON)
+                    AppTheme.SYSTEM -> analytics.logEvent(AnalyticsEventConstants.DARK_MODE_SYSTEM)
+                }
             }
 
             is SettingsAction.SetHomeroomView -> {

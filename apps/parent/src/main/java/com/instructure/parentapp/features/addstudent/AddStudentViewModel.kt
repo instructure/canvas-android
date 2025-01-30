@@ -19,7 +19,8 @@ package com.instructure.parentapp.features.addstudent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,8 @@ import javax.inject.Inject
 class AddStudentViewModel @Inject constructor(
     selectedStudentHolder: SelectedStudentHolder,
     private val repository: AddStudentRepository,
-    private val crashlytics: FirebaseCrashlytics
+    private val crashlytics: FirebaseCrashlytics,
+    private val analytics: Analytics
 ) : ViewModel() {
 
     private val _uiState =
@@ -74,9 +76,11 @@ class AddStudentViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(isLoading = true, isError = false)
                 repository.pairStudent(pairingCode).dataOrThrow
                 _events.emit(AddStudentViewModelAction.PairStudentSuccess)
+                analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS)
                 _uiState.value = _uiState.value.copy(isLoading = false)
             } catch (e: Exception) {
                 crashlytics.recordException(e)
+                analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_FAILURE)
                 _uiState.value = _uiState.value.copy(isLoading = false, isError = true)
             }
         }

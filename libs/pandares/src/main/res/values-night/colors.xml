@@ -18,51 +18,39 @@
 <resources>
 
     <!-- InstUI colors - We should use these colors to build standard UI elements -->
-    <color name="ash">#6A7883</color>
-    <color name="backgroundMasquerade">#E16BF1</color>
-    <color name="backgroundDanger">#FF6B72</color>
-    <color name="backgroundDark">#919CA8</color>
+    <color name="backgroundMasquerade">#D852BE</color>
+    <color name="backgroundDanger">#FF3653</color>
+    <color name="backgroundDark">#818991</color>
     <color name="backgroundDarkest">#FFFFFF</color>
     <color name="backgroundGrouped">#1C242E</color>
-    <color name="backgroundGroupedCell">#0F1A21</color>
-    <color name="backgroundInfo">#6F9DE4</color>
-    <color name="backgroundLight">#1C242E</color>
-    <color name="backgroundLightest">#0F1A21</color>
-    <color name="backgroundLightestElevated">#151D24</color>
-    <color name="backgroundMedium">#616F7C</color>
-    <color name="backgroundSuccess">#36B15F</color>
-    <color name="backgroundWarning">#FB7430</color>
-    <color name="barney">#FB7430</color>
-    <color name="borderMasquerade">#E16BF1</color>
-    <color name="borderDanger">#FF6B72</color>
-    <color name="borderDark">#919CA8</color>
+    <color name="backgroundGroupedCell">#191C1F</color>
+    <color name="backgroundInfo">#5089D6</color>
+    <color name="backgroundLight">#1F2124</color>
+    <color name="backgroundLightest">#0F1316</color>
+    <color name="backgroundLightestElevated">#191C1F</color>
+    <color name="backgroundMedium">#565D64</color>
+    <color name="backgroundSuccess">#139C4C</color>
+    <color name="backgroundWarning">#E06123</color>
+    <color name="borderMasquerade">#D852BE</color>
+    <color name="borderDanger">#FF3653</color>
+    <color name="borderDark">#818991</color>
     <color name="borderDarkest">#FFFFFF</color>
-    <color name="borderInfo">#127CB9</color>
-    <color name="borderLight">#1C242E</color>
-    <color name="borderLightest">#0F1A21</color>
-    <color name="borderMedium">#616F7C</color>
-    <color name="borderSuccess">#36B15F</color>
-    <color name="borderWarning">#FB7430</color>
-    <color name="crimson">#FF6B72</color>
-    <color name="electric">#6F9DE4</color>
-    <color name="fire">#FB7430</color>
-    <color name="licorice">#273540</color>
-    <color name="oxford">#394B58</color>
-    <color name="porcelain">#FFFFFF</color>
-    <color name="shamrock">#36B15F</color>
-    <color name="textMasquerade">#E16BF1</color>
-    <color name="textDanger">#FF6B72</color>
-    <color name="textDark">#919CA8</color>
+    <color name="borderInfo">#5089D6</color>
+    <color name="borderLight">#1F2124</color>
+    <color name="borderLightest">#0F1316</color>
+    <color name="borderMedium">#565D64</color>
+    <color name="borderSuccess">#139C4C</color>
+    <color name="borderWarning">#E06123</color>
+    <color name="textMasquerade">#D852BE</color>
+    <color name="textDanger">#FF3653</color>
+    <color name="textDark">#818991</color>
     <color name="textDarkest">#FFFFFF</color>
-    <color name="textPlaceholder">#616F7C</color>
-    <color name="textInfo">#6F9DE4</color>
-    <color name="textLight">#273540</color>
-    <color name="textLightest">#273540</color>
-    <color name="textSuccess">#36B15F</color>
-    <color name="textWarning">#FB7430</color>
-    <color name="tiara">#919CA8</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="textPlaceholder">#565D64</color>
+    <color name="textInfo">#5089D6</color>
+    <color name="textLight">#0F1316</color>
+    <color name="textLightest">#0F1316</color>
+    <color name="textSuccess">#139C4C</color>
+    <color name="textWarning">#E06123</color>
     <color name="shadowColor">#66FFFFFF</color>
 
     <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
@@ -73,19 +61,24 @@
     <color name="studentDocumentSharingColor">#780612</color>
     <color name="uploadFileDialogBackground">#00FFFFFF</color>
 
+    <!-- App theme colors -->
+    <color name="login_teacherAppTheme">#CE7BE7</color>
+    <color name="login_parentAppTheme">#8094FF</color>
+    <color name="login_studentAppTheme">#FF6B72</color>
+
     <!-- Course Colors for customization -->
-    <color name="courseColor1">#F26BBF</color>
-    <color name="courseColor2">#F7ABDB</color>
-    <color name="courseColor3">#CE7BE7</color>
-    <color name="courseColor4">#8094FF</color>
-    <color name="courseColor5">#61A2D2</color>
-    <color name="courseColor6">#4EA9AF</color>
-    <color name="courseColor7">#40AE84</color>
-    <color name="courseColor8">#4CB04C</color>
-    <color name="courseColor9">#BC972E</color>
-    <color name="courseColor10">#EA8039</color>
-    <color name="courseColor11">#FF6E4F</color>
-    <color name="courseColor12">#9C9C9C</color>
+    <color name="courseColor1">#DA54A9</color>
+    <color name="courseColor2">#FF7FCD</color>
+    <color name="courseColor3">#B966D1</color>
+    <color name="courseColor4">#6B80EA</color>
+    <color name="courseColor5">#498EBE</color>
+    <color name="courseColor6">#34959B</color>
+    <color name="courseColor7">#229A71</color>
+    <color name="courseColor8">#339B38</color>
+    <color name="courseColor9">#A78315</color>
+    <color name="courseColor10">#D26C26</color>
+    <color name="courseColor11">#E8593C</color>
+    <color name="courseColor12">#888888</color>
 
     <!-- Override these colors to change the text colors of the date picker -->
     <color name="blue">@color/textDarkest</color>

@@ -28,6 +28,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ALERT_SETTINGS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.R
@@ -38,6 +40,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+
+@ScreenView(SCREEN_VIEW_ALERT_SETTINGS)
 @AndroidEntryPoint
 class AlertSettingsFragment : BaseCanvasFragment() {
 
