@@ -72,7 +72,7 @@
             android:id="@+id/arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@{itemViewModel.collapsed ? @string/content_description_expand_content : @string/content_description_collapse_content}"
+            android:contentDescription="@{(itemViewModel.collapsed ? @string/content_description_expand_content : @string/content_description_collapse_content) + itemViewModel.data.title}"
             android:onClick="@{() -> itemViewModel.toggleItems()}"
             android:padding="16dp"
             android:rotation="@{itemViewModel.collapsed ? 0 : 180}"
