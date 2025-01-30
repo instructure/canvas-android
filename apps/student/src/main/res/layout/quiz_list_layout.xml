@@ -32,7 +32,8 @@
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
-        tools:targetApi="lollipop" />
+        tools:targetApi="lollipop"
+        android:accessibilityHeading="true"/>
 
         <FrameLayout
             android:layout_width="match_parent"
