@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Cancel·la l\'edició del comentari</string>
     <string name="skip">Omet</string>
 
+    <string name="collapseGradePanel">Contrau el tauler de notes</string>
+    <string name="expandGradePanel">Desplega el tauler de notes</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Puntuació personalitzada %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">S\'ha produït un error en actualitzar aquest fitxer</string>
     <string name="errorUpdatingFolder">S\'ha produït un error en actualitzar aquesta carpeta</string>
 
+    <string name="errorEmptyTitle">El títol no pot quedar en blanc</string>
     <string name="toDoEmpty">Ja no s\'ha de fer res més.\n Que tingueu bon dia.</string>
     <string name="toDoNoSubmissions">No hi ha cap entrega que s\'hagi de qualificar per a aquesta activitat.</string>
     <string name="errorToDoRouteFailed">S\'ha produït un error en provar de veure aquest element de tasques pendents.</string>

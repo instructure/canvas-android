@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">ยกเลิกการแก้ไขความเห็น</string>
     <string name="skip">ข้าม</string>
 
+    <string name="collapseGradePanel">ย่อแผงข้อมูลเกรด</string>
+    <string name="expandGradePanel">ขยายแผงข้อมูลเกรด</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">คะแนนกำหนดเอง %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">เกิดข้อผิดพลาดขณะอัพเดตไฟล์นี้</string>
     <string name="errorUpdatingFolder">เกิดข้อผิดพลาดขณะอัพเดตโฟลเดอร์นี้</string>
 
+    <string name="errorEmptyTitle">ชื่อปล่อยว่างไม่ได้</string>
     <string name="toDoEmpty">ไม่มีการดำเนินการใด ๆ อีก!\n ขอให้มีความสุข</string>
     <string name="toDoNoSubmissions">ไม่มีผลงานจัดส่งที่จะให้คะแนนสำหรับภารกิจนี้</string>
     <string name="errorToDoRouteFailed">เกิดข้อผิดพลาดขณะพยายามดูรายการที่ต้องทำนี้</string>
