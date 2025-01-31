@@ -1632,6 +1632,7 @@
     <string name="discussionMenuRefresh">Refresh</string>
 
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Jump to Today, selected day is %s, today is %s</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
     <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
     <string name="calendarNoEvents">No Events Today!</string>

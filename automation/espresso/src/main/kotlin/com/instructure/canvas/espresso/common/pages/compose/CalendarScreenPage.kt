@@ -122,7 +122,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun clickTodayButton() {
-        composeTestRule.onNodeWithContentDescription("Jump to Today").performClick()
+        composeTestRule.onNodeWithContentDescription("Jump to Today", true).performClick()
         composeTestRule.waitForIdle()
     }
 
