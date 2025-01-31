@@ -52,4 +52,8 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
     fun assertTabSelected(tabName: String) {
         composeTestRule.onNodeWithText(tabName).assertIsSelected()
     }
+
+    fun clickAssignment(assignmentName: String) {
+        composeTestRule.onNodeWithText(assignmentName).performClick()
+    }
 }

@@ -17,7 +17,6 @@
 package com.instructure.parentapp.ui.interaction
 
 import androidx.test.core.app.ApplicationProvider
-import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -28,7 +27,6 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
@@ -38,7 +36,6 @@ import java.util.Calendar
 
 @HiltAndroidTest
 class SummaryInteractionTest: ParentComposeTest() {
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
     private val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
 
     @Test
