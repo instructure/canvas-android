@@ -26,6 +26,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -33,8 +34,11 @@ import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -61,6 +65,9 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     lateinit var inboxCountUpdater: InboxCountUpdater
 
     @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
     lateinit var oAuthApi: OAuthAPI.OAuthInterface
 
     private lateinit var navController: NavController
@@ -71,11 +78,14 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         setupTheme()
         setupNavigation()
         handleQrMasquerading()
+        scheduleAlarms()
 
         if (ApiPrefs.isFirstMasqueradingStart) {
             loadAuthenticatedSession()
             ApiPrefs.isFirstMasqueradingStart = false
         }
+
+        RatingDialog.showRatingDialog(this, AppType.PARENT)
     }
 
     private fun loadAuthenticatedSession() {
@@ -106,6 +116,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleDeeplink(intent.data)
+        showMessageExtra(intent)
     }
 
     private fun setupNavigation() {
@@ -124,6 +135,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
             navController.graph.setStartDestination(navigation.courses)
 
             handleDeeplink(deeplinkUri)
+            showMessageExtra(intent)
         }
     }
 
@@ -132,6 +144,13 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
             navController.navigate(uri ?: return)
         } catch (e: Exception) {
             Log.e(this.javaClass.simpleName, e.message.orEmpty())
+        }
+    }
+
+    private fun showMessageExtra(intent: Intent) {
+        val message = intent.getStringExtra(Const.MESSAGE)
+        if (!message.isNullOrBlank()) {
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -159,6 +178,12 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         MasqueradeHelper.stopMasquerading(MainActivity::class.java)
     }
 
+    private fun scheduleAlarms() {
+        lifecycleScope.launch {
+            alarmScheduler.scheduleAllAlarmsForCurrentUser()
+        }
+    }
+
     companion object {
         fun createIntent(context: Context, uri: Uri): Intent {
             val intent = Intent(context, MainActivity::class.java)
@@ -168,7 +193,6 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
 
         fun createIntent(context: Context, masqueradingUserId: Long): Intent {
             val intent = Intent(context, MainActivity::class.java)
-            // TODO: Implement masquerading
             intent.putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
             return intent
         }

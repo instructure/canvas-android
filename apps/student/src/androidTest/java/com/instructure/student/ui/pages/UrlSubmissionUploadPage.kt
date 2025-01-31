@@ -20,7 +20,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import org.hamcrest.Matcher

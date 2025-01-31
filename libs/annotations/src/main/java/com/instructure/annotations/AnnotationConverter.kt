@@ -129,6 +129,7 @@ private fun convertFreeTextType(canvaDocAnnotation: CanvaDocAnnotation, context:
     freeTextAnnotation.name = canvaDocAnnotation.annotationId
     freeTextAnnotation.textSize = getTextSizeFromFont(canvaDocAnnotation.font)
     freeTextAnnotation.fillColor = Color.TRANSPARENT
+    freeTextAnnotation.flags.remove(AnnotationFlags.NOZOOM)
 
     return freeTextAnnotation
 }

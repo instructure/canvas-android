@@ -38,7 +38,8 @@
             android:background="@color/textDarkest"
             app:popupTheme="@style/ToolBarPopupStyle"
             app:theme="@style/ToolBarStyle"
-            tools:targetApi="lollipop" />
+            tools:targetApi="lollipop"
+            android:accessibilityHeading="true"/>
 
         <RelativeLayout
             android:id="@+id/termSpinnerLayout"

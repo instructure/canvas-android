@@ -23,6 +23,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
     id 'org.jetbrains.kotlin.plugin.compose'
+    id 'io.heap.gradle'
 }
 
 configurations {
@@ -40,8 +41,8 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode 52
-        versionName "3.12.0"
+        versionCode 55
+        versionName "4.0.0"
 
         buildConfigField "boolean", "IS_TESTING", "false"
         testInstrumentationRunner 'com.instructure.parentapp.ui.espresso.ParentHiltTestRunner'
@@ -97,6 +98,8 @@ android {
                 // you can speed up your build by disabling mapping file uploading.
                 mappingFileUploadEnabled false
             }
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
         }
 
         debugMinify {
@@ -111,6 +114,8 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
         }
     }
 
@@ -135,11 +140,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding true
@@ -217,6 +222,10 @@ dependencies {
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
-    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.JOURNEY_ZXING_CORE
+
+    implementation Libs.ENCRYPTED_SHARED_PREFERENCES
+
+    implementation Libs.HEAP_CORE
 }

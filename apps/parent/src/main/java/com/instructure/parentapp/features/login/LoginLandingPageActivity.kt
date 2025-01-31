@@ -55,6 +55,13 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return Intent(this, ParentLoginWithQRActivity::class.java)
     }
 
+    override fun qrLoginClicked() {
+        LoginBottomSheetDialogFragment().show(
+            supportFragmentManager,
+            LoginBottomSheetDialogFragment::class.java.simpleName
+        )
+    }
+
     companion object {
         fun createIntent(context: Context): Intent {
             return Intent(context, LoginLandingPageActivity::class.java)

@@ -19,12 +19,13 @@
 package com.instructure.student.util
 
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentLogoutHelper : LogoutHelper {
-    override fun logout(databaseProvider: DatabaseProvider) {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
+    override fun logout(databaseProvider: DatabaseProvider, alarmScheduler: AlarmScheduler) {
+        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
     }
 }

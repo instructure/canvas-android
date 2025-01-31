@@ -1,13 +1,16 @@
 package com.instructure.pandautils.features.calendarevent.details
 
+import android.content.Context
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.features.reminder.ReminderViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import org.threeten.bp.LocalDate
 
 
 data class EventUiState(
     val toolbarUiState: ToolbarUiState = ToolbarUiState(),
+    val reminderUiState: ReminderViewState = ReminderViewState(),
     val loading: Boolean = false,
     val loadError: String? = null,
     val title: String = "",
@@ -36,6 +39,9 @@ sealed class EventAction {
     data object EditEvent : EventAction()
 
     data object SnackbarDismissed : EventAction()
+
+    data object OnReminderAddClicked : EventAction()
+    data class OnReminderDeleteClicked(val context: Context, val reminderId: Long) : EventAction()
 }
 
 sealed class EventViewModelAction {
@@ -43,4 +49,5 @@ sealed class EventViewModelAction {
     data class RefreshCalendarDays(val days: List<LocalDate>) : EventViewModelAction()
     data object RefreshCalendar : EventViewModelAction()
     data class OpenEditEvent(val scheduleItem: ScheduleItem) : EventViewModelAction()
+    data object OnReminderAddClicked : EventViewModelAction()
 }

@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:text="@string/error_sending_message"
             android:textColor="@color/textDanger"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:accessibilityLiveRegion="polite"/>
 
     </LinearLayout>
 
@@ -76,7 +77,8 @@
             android:layout_height="wrap_content"
             android:text="@string/sending"
             android:textColor="@color/textDarkest"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:accessibilityLiveRegion="polite"/>
 
     </LinearLayout>
 

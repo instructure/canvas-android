@@ -252,3 +252,7 @@
 -dontwarn kotlinx.atomicfu.AtomicBoolean
 
 -keepattributes Exceptions, Signature, InnerClasses, LineNumberTable, SourceFile, EnclosingMethod
+
+# AGP 8 update
+-dontwarn java.beans.MethodDescriptor
+-dontwarn java.beans.SimpleBeanInfo

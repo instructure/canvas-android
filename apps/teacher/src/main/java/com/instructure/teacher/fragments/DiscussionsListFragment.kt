@@ -18,6 +18,8 @@ package com.instructure.teacher.fragments
 
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
@@ -25,11 +27,12 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
-import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.features.discussion.DiscussionSharedAction
+import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.ColorUtils
@@ -38,9 +41,9 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
-import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -50,23 +53,20 @@ import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DiscussionListAdapter
 import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
-import com.instructure.teacher.events.DiscussionCreatedEvent
-import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderEvent
-import com.instructure.teacher.events.DiscussionUpdatedEvent
-import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @PageView(url = "{canvasContext}/{type}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
+@AndroidEntryPoint
 open class DiscussionsListFragment : BaseExpandableSyncFragment<
         String,
         DiscussionTopicHeader,
@@ -79,6 +79,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+
+    @Inject
+    lateinit var discussionSharedEvents: DiscussionSharedEvents
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
@@ -117,6 +120,17 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         })
 
         setupViews()
+
+        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events.flowWithLifecycle(lifecycle)) { handleSharedAction(it) }
+    }
+
+    private fun handleSharedAction(action: DiscussionSharedAction) {
+        when (action) {
+            is DiscussionSharedAction.RefreshListScreen -> {
+                needToForceNetwork = true
+                presenter.refresh(true)
+            }
+        }
     }
 
     override fun onCreateView(view: View) {
@@ -137,16 +151,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun onResume() {
         super.onResume()
         setupToolbar()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
     }
 
     override fun createAdapter(): DiscussionListAdapter {
@@ -233,11 +237,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewDiscussion.drawable))
         createNewDiscussion.onClickWithRequireNetwork {
             if(isAnnouncements) {
-                val args = CreateOrEditAnnouncementFragment.newInstanceCreate(canvasContext).nonNullArgs
-                RouteMatcher.route(requireActivity(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
+                val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, true)
+                RouteMatcher.route(requireActivity(), route)
             } else {
-                val args = CreateDiscussionFragment.makeBundle(canvasContext)
-                RouteMatcher.route(requireActivity(), Route(CreateDiscussionFragment::class.java, null, args))
+                val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, false)
+                RouteMatcher.route(requireActivity(), route)
             }
         }
     }
@@ -258,56 +262,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun discussionDeletedSuccessfully(discussionTopicHeader: DiscussionTopicHeader) {
-        DiscussionTopicHeaderDeletedEvent(discussionTopicHeader.id, (DiscussionDetailsWebViewFragment::class.java.toString() + ".onPost()")).post()
+        needToForceNetwork = true
+        presenter.refresh(true)
     }
 
     override fun displayLoadingError() = toast(R.string.errorOccurred)
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionCreated(event: DiscussionCreatedEvent) {
-        event.once(javaClass.simpleName) {
-            // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
-            // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
-            // overwrite the data from the network if we refresh the presenter from here.
-            needToForceNetwork = true
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicCountChange(event: DiscussionTopicHeaderEvent) {
-        event.get {
-            //Gets written over on phones - added also to {@link #onRefreshFinished()}
-            adapter.addOrUpdateItem(it)
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionUpdated(event: DiscussionUpdatedEvent) {
-        event.once(javaClass.simpleName) {
-            // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
-            // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
-            // overwrite the data from the network if we refresh the presenter from here.
-            needToForceNetwork = true
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicHeaderDeleted(event: DiscussionTopicHeaderDeletedEvent) {
-        event.get {
-            val discussionTopicHeader = adapter.getItem(it)
-            if (discussionTopicHeader != null) {
-                adapter.removeItem(discussionTopicHeader, true)
-                needToForceNetwork = true
-                if (adapter.itemCount == 0) {
-                    presenter.refresh(true)
-                }
-            }
-        }
-    }
 
     override fun onHandleBackPressed() = binding.discussionListToolbar.closeSearch()
 

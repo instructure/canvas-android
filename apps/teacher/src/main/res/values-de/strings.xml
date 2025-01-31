@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Ändern des Kommentars abbrechen</string>
     <string name="skip">Überspringen</string>
 
+    <string name="collapseGradePanel">Noten-Panel reduzieren</string>
+    <string name="expandGradePanel">Noten-Panel erweitern</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Benutzerdefinierte Punktzahl %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Fehler bei der Aktualisierung dieser Datei</string>
     <string name="errorUpdatingFolder">Fehler bei der Aktualisierung dieses Ordners</string>
 
+    <string name="errorEmptyTitle">Der Titel darf nicht leer sein</string>
     <string name="toDoEmpty">Nichts weiter zu tun.\n Genießen Sie Ihren Tag!</string>
     <string name="toDoNoSubmissions">Für diese Aufgabe sind keine Abgaben zu benoten.</string>
     <string name="errorToDoRouteFailed">Fehler beim Anzeigen dieser Aufgabe.</string>

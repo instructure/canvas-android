@@ -21,9 +21,9 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.scrollTo
-import com.instructure.espresso.pages.waitForViewWithText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.scrollTo
+import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.teacher.R
 
 /**

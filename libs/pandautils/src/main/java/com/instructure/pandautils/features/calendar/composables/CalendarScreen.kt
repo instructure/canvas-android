@@ -113,7 +113,11 @@ fun CalendarScreen(
                                     }) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_calendar_day),
-                                        contentDescription = stringResource(id = R.string.a11y_contentDescriptionCalendarJumpToToday),
+                                        contentDescription = stringResource(
+                                            id = R.string.a11y_contentDescriptionCalendarJumpToTodayWithDates,
+                                            calendarScreenUiState.calendarUiState.selectedDay,
+                                            LocalDate.now()
+                                        ),
                                         tint = Color(ThemePrefs.primaryTextColor)
                                     )
                                     Text(

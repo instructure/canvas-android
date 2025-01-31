@@ -27,9 +27,9 @@ import android.widget.CompoundButton
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.utils.Const
@@ -41,13 +41,15 @@ import com.instructure.teacher.databinding.FragmentDialogUpdateFileBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UpdateFileDialogFragment : BottomSheetDialogFragment() {
+class UpdateFileDialogFragment : BaseCanvasBottomSheetDialogFragment() {
 
     private val canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var binding: FragmentDialogUpdateFileBinding
 
     private val viewModel: UpdateFileViewModel by viewModels()
+
+    override fun isFullScreen() = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentDialogUpdateFileBinding.inflate(inflater, container, false)

@@ -37,35 +37,50 @@
         android:contentDescription="@{viewData.gradeCellContentDescription}"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="16dp">
-
-        <TextView
-            android:id="@+id/gradeLabel"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/gradeCellHeaderLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/grade"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="@{viewData.state == viewData.State.SUBMITTED || viewData.state == viewData.State.GRADED  ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/submissionAndRubricLabel"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/submissionAndRubricLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="7dp"
-            android:text="@string/submissionAndRubric"
-            android:textColor="@{viewData.submissionAndRubricLabelColor}"
-            android:textSize="16sp"
-            android:visibility="@{viewData.state == viewData.State.UPLOADING || viewData.state == viewData.State.FAILED ? View.GONE : View.VISIBLE}"
-            app:drawableEndCompat="@drawable/arrow_right"
-            app:drawableTint="@{viewData.submissionAndRubricLabelColor}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/gradeLabel"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="gradeLabel,submissionAndRubricLabel"
+                app:flow_horizontalStyle="spread_inside"
+                app:flow_wrapMode="aligned"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gradeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/grade"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="@{viewData.state == viewData.State.SUBMITTED || viewData.state == viewData.State.GRADED  ? View.VISIBLE : View.GONE}"
+                tools:ignore="MissingConstraints"
+                />
+
+            <TextView
+                android:id="@+id/submissionAndRubricLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="7dp"
+                android:text="@string/submissionAndRubric"
+                android:textColor="@{viewData.submissionAndRubricLabelColor}"
+                android:textSize="16sp"
+                android:visibility="@{viewData.state == viewData.State.UPLOADING || viewData.state == viewData.State.FAILED ? View.GONE : View.VISIBLE}"
+                app:drawableEndCompat="@drawable/arrow_right"
+                app:drawableTint="@{viewData.submissionAndRubricLabelColor}"
+                tools:ignore="MissingConstraints" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/uploadingTitle"
@@ -77,6 +92,7 @@
             android:textColor="@color/textDarkest"
             android:textSize="22sp"
             android:visibility="@{viewData.state == viewData.State.UPLOADING ? View.VISIBLE : View.GONE}"
+            android:accessibilityLiveRegion="polite"
             app:layout_constraintBottom_toTopOf="@id/uploadingSubtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,6 +124,7 @@
             android:textColor="@color/textDarkest"
             android:textSize="22sp"
             android:visibility="@{viewData.state == viewData.State.FAILED ? View.VISIBLE : View.GONE}"
+            android:accessibilityLiveRegion="polite"
             app:layout_constraintBottom_toTopOf="@id/uploadingSubtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,12 +156,13 @@
             android:textColor="@color/textDarkest"
             android:textSize="22sp"
             android:visibility="@{viewData.state == viewData.State.SUBMITTED ? View.VISIBLE : View.GONE}"
+            android:accessibilityLiveRegion="polite"
             app:drawableStartCompat="@drawable/ic_complete_solid"
             app:drawableTint="@color/backgroundSuccess"
             app:layout_constraintBottom_toTopOf="@id/submittedSubtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gradeLabel"
+            app:layout_constraintTop_toBottomOf="@id/gradeCellHeaderLayout"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -174,7 +192,7 @@
             app:color="@{viewData.showIncompleteIcon ? @color/textDark : viewData.courseColor.color()}"
             app:layout_constraintBottom_toTopOf="@id/statisticsView"
             app:layout_constraintEnd_toStartOf="@id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/gradeLabel"
+            app:layout_constraintTop_toBottomOf="@id/gradeCellHeaderLayout"
             app:layout_goneMarginBottom="20dp"
             app:progress="@{viewData.chartPercent}"
             app:trackColor="@{viewData.backgroundColorWithAlpha}" />

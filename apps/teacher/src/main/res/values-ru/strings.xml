@@ -453,6 +453,8 @@
     <string name="cancel_editing_comment">Отменить редактирование комментария</string>
     <string name="skip">Пропустить</string>
 
+    <string name="collapseGradePanel">Свернуть панель оценок</string>
+    <string name="expandGradePanel">Развернуть панель оценок</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Персонализированная оценка %1$s</string>
 
@@ -860,6 +862,7 @@
     <string name="errorUpdatingFile">При обновлении этого файла произошла ошибка</string>
     <string name="errorUpdatingFolder">При обновлении этой папки произошла ошибка</string>
 
+    <string name="errorEmptyTitle">Поле названия не может быть пустым</string>
     <string name="toDoEmpty">Все задания выполнены!\n Хорошего дня.</string>
     <string name="toDoNoSubmissions">Для этого задания отсутствуют объекты для оценки.</string>
     <string name="errorToDoRouteFailed">Произошла ошибка при попытке просмотра этого элемента списка текущих дел.</string>

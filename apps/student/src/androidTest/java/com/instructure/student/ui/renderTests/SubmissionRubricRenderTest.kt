@@ -32,7 +32,7 @@ import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.page.onViewWithText
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RatingData

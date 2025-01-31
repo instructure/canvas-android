@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle" />
-    
+
     <com.instructure.pandautils.views.CanvasWebView
         android:id="@+id/webView"
         android:layout_width="0dp"
@@ -38,8 +38,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <ProgressBar
         android:id="@+id/webViewProgress"
@@ -50,7 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    
+
     <LinearLayout
         android:id="@+id/loadingLayout"
         android:layout_width="0dp"
@@ -85,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="@string/launchingExternalTool"
             android:textSize="12sp" />
-        
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

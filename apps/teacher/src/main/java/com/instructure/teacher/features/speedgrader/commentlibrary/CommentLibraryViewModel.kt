@@ -20,7 +20,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.CommentLibraryQuery
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -37,7 +37,8 @@ class CommentLibraryViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val commentLibraryManager: CommentLibraryManager,
     private val userManager: UserManager,
-    private val teacherPrefs: TeacherPrefs
+    private val teacherPrefs: TeacherPrefs,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     val data: LiveData<CommentLibraryViewData>
@@ -78,20 +79,14 @@ class CommentLibraryViewModel @Inject constructor(
                     loadCommentLibraryContent()
                 }
             } catch (e: Exception) {
-                // Silently fail if we don't have info about the comment library, and just don't show anything.
-                e.printStackTrace()
+                firebaseCrashlytics.recordException(e)
             }
         }
     }
 
     private suspend fun loadCommentLibraryContent() {
         val userId = apiPrefs.user?.id ?: -1
-        val data = commentLibraryManager.getCommentLibraryItems(userId)
-
-        val user = data.user as CommentLibraryQuery.AsUser
-        allSuggestions = user.commentBankItems?.nodes?.map {
-            it.comment
-        } ?: emptyList()
+        allSuggestions = commentLibraryManager.getCommentLibraryItems(userId)
 
         val suggestions = allSuggestions.map {
             SuggestionItemViewModel(it, "") { comment: String -> replaceCommentWithSuggestion(comment) }

@@ -17,23 +17,22 @@ package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsBehaviour
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsColorProvider
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRepository
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRouter
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsSubmissionHandler
-import com.instructure.parentapp.features.assignment.details.receiver.ParentAlarmReceiverNotificationHandler
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
@@ -41,14 +40,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
-    fun provideAssignmentDetailsRouter(navigation: Navigation): AssignmentDetailsRouter {
-        return ParentAssignmentDetailsRouter(navigation)
+    fun provideAssignmentDetailsRouter(navigation: Navigation, parentPrefs: ParentPrefs, apiPrefs: ApiPrefs, analytics: Analytics): AssignmentDetailsRouter {
+        return ParentAssignmentDetailsRouter(navigation, parentPrefs, apiPrefs, analytics)
     }
 
     @Provides
@@ -66,9 +64,10 @@ class AssignmentDetailsModule {
         assignmentApi: AssignmentAPI.AssignmentInterface,
         quizApi: QuizAPI.QuizInterface,
         submissionApi: SubmissionAPI.SubmissionInterface,
-        reminderDao: ReminderDao
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        parentPrefs: ParentPrefs
     ): AssignmentDetailsRepository {
-        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi, reminderDao)
+        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi, featuresApi, parentPrefs)
     }
 
     @Provides
@@ -79,14 +78,5 @@ class AssignmentDetailsModule {
     @Provides
     fun provideAssignmentDetailsColorProvider(parentPrefs: ParentPrefs, colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
         return ParentAssignmentDetailsColorProvider(parentPrefs, colorKeeper)
-    }
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-class AssignmentDetailsSingletonModule {
-    @Provides
-    fun provideAssignmentDetailsNotificationHandler(): AlarmReceiverNotificationHandler {
-        return ParentAlarmReceiverNotificationHandler()
     }
 }

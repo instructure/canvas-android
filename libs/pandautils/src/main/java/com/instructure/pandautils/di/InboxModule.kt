@@ -22,11 +22,14 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.inbox.details.InboxDetailsRepository
 import com.instructure.pandautils.features.inbox.details.InboxDetailsRepositoryImpl
 import com.instructure.pandautils.features.inbox.list.InboxEntryItemCreator
+import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -40,5 +43,15 @@ class InboxModule {
     @Provides
     fun provideInboxDetailsRepository(inboxAPI: InboxApi.InboxInterface): InboxDetailsRepository {
         return InboxDetailsRepositoryImpl(inboxAPI)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class InboxSingletonModule {
+    @Provides
+    @Singleton
+    fun provideInboxSharedEvents(): InboxSharedEvents {
+        return InboxSharedEvents()
     }
 }

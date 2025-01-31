@@ -18,20 +18,31 @@ package com.instructure.pandautils.features.calendartodo.details
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
+import com.instructure.canvasapi2.utils.toSimpleDate
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNABLE_ID
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment.Companion.PLANNER_ITEM
+import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
+import io.mockk.Called
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -55,6 +66,9 @@ class ToDoViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val toDoRepository: ToDoRepository = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val reminderManager: ReminderManager = mockk(relaxed = true)
 
     private val plannerItem = PlannerItem(
         courseId = null,
@@ -92,6 +106,7 @@ class ToDoViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
+        every { savedStateHandle.get<PlannerItem>(PLANNABLE_ID) } returns null
 
         every { context.getString(eq(R.string.calendarAtDateTime), any(), any()) } answers {
             val args = secondArg<Array<Any>>()
@@ -101,7 +116,10 @@ class ToDoViewModelTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository)
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.fullDomain } returns "https://canvas.instructure.com"
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
     }
 
     @After
@@ -166,5 +184,178 @@ class ToDoViewModelTest {
 
         val expectedEvent = ToDoViewModelAction.OpenEditToDo(plannerItem)
         Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Custom DatePicker opens to set reminder if Due Date is in past`() {
+        val plannerItem = plannerItem.copy(plannableDate = LocalDate.now().minusDays(1).toApiString().toDate() ?: Date())
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
+        every { apiPrefs.user } returns User(1)
+        every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coVerify(exactly = 1) {
+            reminderManager.showCustomReminderDialog(
+                context,
+                1,
+                1,
+                "Title",
+                "https://canvas.instructure.com/todos/1",
+                plannerItem.plannableDate,
+            )
+        }
+    }
+
+    @Test
+    fun `Before due date dialog opens to set reminder if Due Date is in the future`() {
+        val plannerItem = plannerItem.copy(plannableDate = LocalDate.now().plusDays(1).toString().toSimpleDate() ?: Date())
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
+        every { apiPrefs.user } returns User(1)
+        every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coVerify(exactly = 1) {
+            reminderManager.showBeforeDueDateReminderDialog(
+                context,
+                1,
+                1,
+                "Title",
+                "https://canvas.instructure.com/todos/1",
+                plannerItem.plannableDate,
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `Planner item gets initialised without network calls if plannerItem is passed`() {
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
+        every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns null
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+
+        val state = viewModel.uiState.value
+
+        val expectedState = ToDoUiState(
+            title = "Title",
+            contextName = "Context name",
+            contextColor = ThemedColor(0).light,
+            date = "Feb 12 at 12:00 PM",
+            description = "Description"
+        )
+
+        coVerify { toDoRepository wasNot Called }
+
+        assertEquals(expectedState, state)
+    }
+
+    @Test
+    fun `Planner item gets initialised when opened with id only`() {
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
+        every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coEvery { toDoRepository.getPlannerNote(1) } returns plannerItem.plannable
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+
+        val state = viewModel.uiState.value
+
+        val expectedState = ToDoUiState(
+            title = "Title",
+            contextName = null,
+            contextColor = ThemedColor(0).light,
+            date = "Feb 12 at 12:00 PM",
+            description = "Description"
+        )
+
+        assertEquals(expectedState, state)
+    }
+
+    @Test
+    fun `Course Planner item gets initialised when opened with id only`() {
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
+        every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        val plannable = plannerItem.plannable.copy(courseId = 1)
+        coEvery { toDoRepository.getPlannerNote(1) } returns plannable
+        coEvery { toDoRepository.getCourse(1) } returns Course(1, "Course")
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+
+        val state = viewModel.uiState.value
+
+        val expectedState = ToDoUiState(
+            title = "Title",
+            contextName = "Course",
+            contextColor = ThemedColor(0).light,
+            date = "Feb 12 at 12:00 PM",
+            description = "Description"
+        )
+
+        assertEquals(expectedState, state)
+    }
+
+    @Test
+    fun `Group Planner item gets initialised when opened with id only`() {
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
+        every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        val plannable = plannerItem.plannable.copy(groupId = 1)
+        coEvery { toDoRepository.getPlannerNote(1) } returns plannable
+        coEvery { toDoRepository.getGroup(1) } returns Group(1, "Group")
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+
+        val state = viewModel.uiState.value
+
+        val expectedState = ToDoUiState(
+            title = "Title",
+            contextName = "Group",
+            contextColor = ThemedColor(0).light,
+            date = "Feb 12 at 12:00 PM",
+            description = "Description"
+        )
+
+        assertEquals(expectedState, state)
+    }
+
+    @Test
+    fun `User Planner item gets initialised when opened with id only`() {
+        every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
+        every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        viewModel.showCreateReminderDialog(context, 1)
+
+        val plannable = plannerItem.plannable.copy(userId = 1)
+        coEvery { toDoRepository.getPlannerNote(1) } returns plannable
+        coEvery { toDoRepository.getUser(1) } returns User(1, "User")
+
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+
+        val state = viewModel.uiState.value
+
+        val expectedState = ToDoUiState(
+            title = "Title",
+            contextName = "User",
+            contextColor = ThemedColor(0).light,
+            date = "Feb 12 at 12:00 PM",
+            description = "Description"
+        )
+
+        assertEquals(expectedState, state)
     }
 }

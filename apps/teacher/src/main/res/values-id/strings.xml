@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Batalkan pengeditan komentar</string>
     <string name="skip">Lewati</string>
 
+    <string name="collapseGradePanel">Tutup Panel Nilai</string>
+    <string name="expandGradePanel">Perbesar Panel Nilai</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Skor khusus %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">Kesalahan terjadi saat memperbarui file ini</string>
     <string name="errorUpdatingFolder">Kesalahan terjadi saat memperbarui folder ini</string>
 
+    <string name="errorEmptyTitle">Judul tidak boleh kosong</string>
     <string name="toDoEmpty">Tidak ada lagi hal yang harus dilakukan!\n Semoga harimu menyenangkan.</string>
     <string name="toDoNoSubmissions">Tidak ada penyerahan untuk dinilai untuk tugas ini.</string>
     <string name="errorToDoRouteFailed">Kesalahan terjadi saat mencoba melihat item To Do ini.</string>

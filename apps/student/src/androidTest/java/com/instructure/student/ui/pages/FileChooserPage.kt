@@ -28,12 +28,12 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForViewToBeClickable
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withDescendant
-import com.instructure.espresso.pages.withId
-import com.instructure.espresso.pages.withParent
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 

@@ -51,6 +51,7 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
         <item name="android:fontFamily">@font/lato_font_family</item>
+        <item name="android:accessibilityHeading">true</item>
     </style>
 
     <style name="ToolBarStyleDark" parent="ThemeOverlay.AppCompat.DayNight">
@@ -59,6 +60,7 @@
         <item name="android:textColorSecondary">@color/textDarkest</item>
         <item name="actionMenuTextColor">@color/textDarkest</item>
         <item name="android:fontFamily">@font/lato_font_family</item>
+        <item name="android:accessibilityHeading">true</item>
     </style>
 
     <!--Text Styles-->

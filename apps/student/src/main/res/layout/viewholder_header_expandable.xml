@@ -25,7 +25,8 @@
     android:paddingStart="16dp"
     android:paddingTop="6dp"
     android:background="?android:selectableItemBackground"
-    tools:ignore="UseCompoundDrawables">
+    tools:ignore="UseCompoundDrawables"
+    android:accessibilityHeading="true">
 
     <TextView
         android:id="@+id/title"
@@ -33,6 +34,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:accessibilityHeading="true"
         tools:text="Expandable Header Title"/>
 
     <ImageView

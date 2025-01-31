@@ -17,18 +17,28 @@
 
 package com.instructure.parentapp.di
 
+import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.QRLogin
+import com.instructure.pandautils.dialogs.RatingDialog
+import com.instructure.pandautils.features.reminder.ReminderRepository
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.utils.LogoutHelper
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.parentapp.util.FlutterAppMigration
 import com.instructure.parentapp.util.ParentLogoutHelper
 import com.instructure.parentapp.util.ParentPrefs
-import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.time.Clock
 import javax.inject.Singleton
+import io.heap.autocapture.ViewAutocaptureSDK
+import io.heap.core.Heap
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -40,23 +50,62 @@ class ApplicationModule {
     }
 
     @Provides
+    @Singleton
     fun provideQRLogin(): QRLogin {
         return QRLogin
     }
 
     @Provides
+    @Singleton
     fun providePreviousUsersUtils(): PreviousUsersUtils {
         return PreviousUsersUtils
     }
 
     @Provides
+    @Singleton
     fun provideParentPrefs(): ParentPrefs {
         return ParentPrefs
     }
 
     @Provides
-    @Singleton
-    fun provideNavigation(apiPrefs: ApiPrefs): Navigation {
-        return Navigation(apiPrefs)
+    fun provideClock(): Clock {
+        return Clock.systemDefaultZone()
+    }
+
+    @Provides
+    fun provideFlutterAppMigration(
+        @ApplicationContext context: Context,
+        themePrefs: ThemePrefs,
+        parentPrefs: ParentPrefs,
+        loginPrefs: LoginPrefs,
+        previousUsersUtils: PreviousUsersUtils,
+        apiPrefs: ApiPrefs,
+        ratingDialogPrefs: RatingDialog.Prefs,
+        reminderRepository: ReminderRepository,
+        calendarFilterDao: CalendarFilterDao,
+        clock: Clock
+    ): FlutterAppMigration {
+        return FlutterAppMigration(
+            context,
+            themePrefs,
+            parentPrefs,
+            loginPrefs,
+            previousUsersUtils,
+            apiPrefs,
+            ratingDialogPrefs,
+            reminderRepository,
+            calendarFilterDao,
+            clock
+        )
+    }
+
+    @Provides
+    fun provideHeap(): Heap {
+        return Heap
+    }
+
+    @Provides
+    fun provideViewAutocaptureSDK(): ViewAutocaptureSDK {
+        return ViewAutocaptureSDK
     }
 }

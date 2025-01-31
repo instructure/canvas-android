@@ -453,6 +453,8 @@
     <string name="cancel_editing_comment">Anuluj komentarz dotyczący edycji</string>
     <string name="skip">Pomiń</string>
 
+    <string name="collapseGradePanel">Zwiń panel ocen</string>
+    <string name="expandGradePanel">Rozwiń panel ocen</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Niestandardowa ocena %1$s</string>
 
@@ -860,6 +862,7 @@
     <string name="errorUpdatingFile">Podczas aktualizowania tego pliku wystąpił błąd</string>
     <string name="errorUpdatingFolder">Podczas aktualizowania tego folderu wystąpił błąd</string>
 
+    <string name="errorEmptyTitle">Tytuł nie może być pusty</string>
     <string name="toDoEmpty">Nic więcej do zrobienia!\n Korzystaj z dnia.</string>
     <string name="toDoNoSubmissions">Brak zgłoszeń do oceny dla tego zadania.</string>
     <string name="errorToDoRouteFailed">Podczas wyświetlania tego elementu listy zadań wystąpił błąd.</string>

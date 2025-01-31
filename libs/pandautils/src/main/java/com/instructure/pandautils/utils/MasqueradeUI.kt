@@ -20,7 +20,9 @@ package com.instructure.pandautils.utils
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -30,6 +32,7 @@ import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.R
 import com.instructure.pandautils.base.AppConfigProvider
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.databinding.LayoutMasqueradeNotificationBinding
 
 /**
@@ -45,7 +48,13 @@ fun Activity.showMasqueradeNotification() {
  */
 @Suppress("unused") // Added at compile time via MasqueradeUIInjector
 fun DialogFragment.showMasqueradeNotification() {
-    dialog?.window?.showMasqueradeNotification()
+    if (this is BaseCanvasBottomSheetDialogFragment && !isFullScreen()) return
+
+    (dialog?.window?.decorView?.layoutParams as? WindowManager.LayoutParams)?.let {
+        if (it.height == ViewGroup.LayoutParams.MATCH_PARENT) {
+            dialog?.window?.showMasqueradeNotification()
+        }
+    }
 }
 
 private fun Window.showMasqueradeNotification() {

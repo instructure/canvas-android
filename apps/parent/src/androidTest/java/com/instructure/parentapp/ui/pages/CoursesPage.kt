@@ -28,6 +28,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import com.instructure.canvasapi2.models.Course
 import com.instructure.composeTest.hasSiblingWithText
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.pandares.R
 
 
@@ -38,6 +39,17 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
             .performScrollTo()
             .assertIsDisplayed()
         course.courseCode?.let {
+            composeTestRule.onNode(hasSiblingWithText(course.name).and(hasText(it)), true)
+                .performScrollTo()
+                .assertIsDisplayed()
+        }
+    }
+
+    fun assertCourseItemDisplayed(course: CourseApiModel) {
+        composeTestRule.onNodeWithText(course.name)
+            .performScrollTo()
+            .assertIsDisplayed()
+        course.courseCode.let {
             composeTestRule.onNode(hasSiblingWithText(course.name).and(hasText(it)), true)
                 .performScrollTo()
                 .assertIsDisplayed()
@@ -59,12 +71,20 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
+    fun assertCourseCodeTextDisplayed(courseName: String, courseCode: String) {
+        composeTestRule.onNode(hasSiblingWithText(courseName).and(hasText(courseCode)).and(
+            hasTestTag("courseCodeText")
+        ), true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
     fun assertGradeTextIsNotDisplayed(courseName: String) {
         composeTestRule.onNode(hasSiblingWithText(courseName).and(hasTestTag("gradeText")), true)
             .assertIsNotDisplayed()
     }
 
-    fun tapCurseItem(courseName: String) {
+    fun clickCourseItem(courseName: String) {
         composeTestRule.onNodeWithText(courseName)
             .performScrollTo()
             .assertIsDisplayed()

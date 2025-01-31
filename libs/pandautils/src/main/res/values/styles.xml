@@ -36,6 +36,14 @@
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 
+    <style name="AccessibleAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowTitleStyle">@style/AccessibleAlertDialogTitle</item>
+    </style>
+
+    <style name="AccessibleAlertDialogTitle" parent="@style/RtlOverlay.DialogWindowTitle.AppCompat">
+        <item name="android:accessibilityHeading">true</item>
+    </style>
+
     <!--Text Styles-->
     <style name="TextStyle" parent="CanvasMaterialTheme_Default">
         <item name="android:ellipsize">end</item>

@@ -27,12 +27,15 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.dueAt
+import com.instructure.pandautils.utils.eventHtmlUrl
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -52,6 +55,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.LocalDate
+import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -64,6 +68,8 @@ class EventViewModelTest {
     private val eventRepository: EventRepository = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val reminderManager: ReminderManager = mockk(relaxed = true)
 
     private lateinit var viewModel: EventViewModel
 
@@ -462,7 +468,74 @@ class EventViewModelTest {
         Assert.assertFalse(viewModel.uiState.value.toolbarUiState.deleteAllowed)
     }
 
+    @Test
+    fun `Custom DatePicker opens to set reminder if Date is null`() {
+        val scheduleItem = scheduleItem.copy(startAt = null, endAt = null)
+        val context: Context = mockk(relaxed = true)
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { apiPrefs.user } returns User(1)
+        createViewModel()
+
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coVerify(exactly = 1) {
+            reminderManager.showCustomReminderDialog(
+                context,
+                1,
+                scheduleItem.id,
+                scheduleItem.title.orEmpty(),
+                scheduleItem.eventHtmlUrl.orEmpty(),
+                scheduleItem.dueAt,
+            )
+        }
+    }
+
+    @Test
+    fun `Custom DatePicker opens to set reminder if Due Date is in past`() {
+        val scheduleItem = scheduleItem.copy(startAt = LocalDateTime.now().minusDays(2).toString(), endAt = LocalDateTime.now().minusDays(1).toString())
+        val context: Context = mockk(relaxed = true)
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { apiPrefs.user } returns User(1)
+        createViewModel()
+
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coVerify(exactly = 1) {
+            reminderManager.showCustomReminderDialog(
+                context,
+                1,
+                scheduleItem.id,
+                scheduleItem.title.orEmpty(),
+                scheduleItem.eventHtmlUrl.orEmpty(),
+                scheduleItem.dueAt,
+            )
+        }
+    }
+
+    @Test
+    fun `Before due date dialog opens to set reminder if Due Date is in the future`() {
+        val scheduleItem = scheduleItem.copy(startAt = LocalDateTime.now().plusDays(1).toString(), endAt = LocalDateTime.now().plusDays(2).toString())
+        val context: Context = mockk(relaxed = true)
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { apiPrefs.user } returns User(1)
+        createViewModel()
+
+        viewModel.showCreateReminderDialog(context, 1)
+
+        coVerify(exactly = 1) {
+            reminderManager.showBeforeDueDateReminderDialog(
+                context,
+                1,
+                scheduleItem.id,
+                scheduleItem.title.orEmpty(),
+                scheduleItem.eventHtmlUrl.orEmpty(),
+                scheduleItem.dueAt!!,
+                any()
+            )
+        }
+    }
+
     private fun createViewModel() {
-        viewModel = EventViewModel(savedStateHandle, context, eventRepository, htmlContentFormatter, apiPrefs)
+        viewModel = EventViewModel(savedStateHandle, context, eventRepository, htmlContentFormatter, apiPrefs, themePrefs, reminderManager)
     }
 }

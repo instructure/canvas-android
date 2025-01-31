@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.mockCanvas.addConversation
 import com.instructure.canvas.espresso.mockCanvas.addConversations
 import com.instructure.canvas.espresso.mockCanvas.addConversationsToCourseMap
 import com.instructure.canvas.espresso.mockCanvas.createBasicConversation
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
 import org.junit.Test
@@ -72,6 +73,7 @@ abstract class InboxListInteractionTest : CanvasTest() {
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
 
+        refresh()
         inboxPage.filterInbox("Archived")
         inboxPage.assertConversationDisplayed(conversation1.subject!!)
         inboxPage.assertConversationDisplayed(conversation2.subject!!)

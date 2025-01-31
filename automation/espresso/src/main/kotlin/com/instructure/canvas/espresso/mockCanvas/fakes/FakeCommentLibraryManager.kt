@@ -17,23 +17,11 @@
 package com.instructure.canvas.espresso.mockCanvas.fakes
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvasapi2.CommentLibraryQuery
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 
-class FakeCommentLibraryManager() : CommentLibraryManager {
+class FakeCommentLibraryManager : CommentLibraryManager {
 
-    override suspend fun getCommentLibraryItems(userId: Long): CommentLibraryQuery.Data {
-        return createCommentLibraryResponse(userId)
-    }
-
-    private fun createCommentLibraryResponse(userId: Long): CommentLibraryQuery.Data {
-        val commentLibraryItems = MockCanvas.data.commentLibraryItems[userId]
-
-        val commentBankItems = commentLibraryItems?.map { CommentLibraryQuery.Node("commentBankItem", it, it) } ?: emptyList()
-        return CommentLibraryQuery.Data(
-            CommentLibraryQuery.AsUser("", "",
-                CommentLibraryQuery.CommentBankItems("", commentBankItems)
-            )
-        )
+    override suspend fun getCommentLibraryItems(userId: Long): List<String> {
+        return MockCanvas.data.commentLibraryItems[userId] ?: emptyList()
     }
 }

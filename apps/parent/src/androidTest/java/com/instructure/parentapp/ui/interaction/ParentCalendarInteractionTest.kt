@@ -20,9 +20,11 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.CalendarInteractionTest
+import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.User
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
@@ -39,6 +41,7 @@ class ParentCalendarInteractionTest : CalendarInteractionTest() {
     override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
 
     private val dashboardPage = DashboardPage()
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
 
     override fun goToCalendar(data: MockCanvas) {
         val parent = data.parents.first()
@@ -65,11 +68,11 @@ class ParentCalendarInteractionTest : CalendarInteractionTest() {
     }
 
     override fun assertAssignmentDetailsTitle(title: String) {
-        // TODO No assertion here, this should be implemented when the Assignment Details page is created
+        assignmentDetailsPage.assertAssignmentTitle(title)
     }
 
     override fun assertDiscussionDetailsTitle(title: String) {
-        // TODO No assertion here, this should be implemented when the Assignment Details page is created
+        assignmentDetailsPage.assertAssignmentTitle("Discussion assignment")
     }
 
     override fun clickTodayButton() {

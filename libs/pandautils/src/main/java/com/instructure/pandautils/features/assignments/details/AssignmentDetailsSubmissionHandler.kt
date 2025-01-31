@@ -32,7 +32,7 @@ interface AssignmentDetailsSubmissionHandler {
     var lastSubmissionIsDraft: Boolean
     var lastSubmissionEntry: String?
 
-    fun addAssignmentSubmissionObserver(assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit)
+    fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit)
 
     fun removeAssignmentSubmissionObserver()
 

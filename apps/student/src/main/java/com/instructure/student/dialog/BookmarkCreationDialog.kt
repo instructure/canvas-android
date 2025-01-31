@@ -58,7 +58,7 @@ class BookmarkCreationDialog : BaseCanvasAppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         val view = View.inflate(ContextThemeWrapper(activity, 0), R.layout.dialog_bookmark, null)
         setupViews(view)
         builder.setView(view)

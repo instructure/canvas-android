@@ -34,12 +34,12 @@ class ParentCalendarRouter(
         navigation.navigate(activity, navigation.assignmentDetailsRoute(canvasContext.id, assignmentId))
     }
 
-    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long) {
-        // TODO Implement in the assignment details ticket
+    override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long, assignmentId: Long?) {
+        assignmentId?.let { navigation.navigate(activity, navigation.assignmentDetailsRoute(canvasContext.id, it)) }
     }
 
     override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) {
-        // TODO Implement in the assignment details ticket
+        navigation.navigate(activity, navigation.internalWebViewRoute(htmlUrl, htmlUrl))
     }
 
     override fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long) {
