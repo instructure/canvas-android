@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -258,7 +259,7 @@ fun CalendarHeader(
                         text = headerUiState.monthTitle,
                         fontSize = 22.sp,
                         color = colorResource(id = R.color.textDarkest),
-                        modifier = Modifier.height(30.dp)
+                        modifier = Modifier.defaultMinSize(minHeight = 30.dp)
                     )
                     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
                         Icon(

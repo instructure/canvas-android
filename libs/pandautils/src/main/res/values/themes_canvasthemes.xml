@@ -88,6 +88,10 @@
         <item name="android:colorAccent">@color/textInfo</item>
     </style>
 
+    <style name="AccessibleAccentDialogTheme" parent="AccentDialogTheme">
+        <item name="android:windowTitleStyle">@style/AccessibleAlertDialogTitle</item>
+    </style>
+
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
         <item name="android:editTextStyle">@style/NoGifEditText</item>

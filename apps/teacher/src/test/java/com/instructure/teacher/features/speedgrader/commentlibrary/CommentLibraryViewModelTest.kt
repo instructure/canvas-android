@@ -20,7 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
-import com.instructure.canvasapi2.CommentLibraryQuery
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.UserSettings
@@ -29,7 +29,12 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.HighlightedTextData
 import com.instructure.pandautils.utils.Normalizer
 import com.instructure.teacher.utils.TeacherPrefs
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -57,6 +62,7 @@ class CommentLibraryViewModelTest {
     private val commentLibraryManager: CommentLibraryManager = mockk(relaxed = true)
     private val userManager: UserManager = mockk(relaxed = true)
     private val teacherPrefs: TeacherPrefs = mockk(relaxed = true)
+    private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: CommentLibraryViewModel
 
@@ -127,7 +133,7 @@ class CommentLibraryViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
         every { teacherPrefs.commentLibraryEnabled } returns true
-        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns createMockDataWithSuggestions(emptyList())
+        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns emptyList()
 
         // When
         viewModel = createViewModel()
@@ -144,10 +150,10 @@ class CommentLibraryViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
         every { teacherPrefs.commentLibraryEnabled } returns true
-        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns createMockDataWithSuggestions(
-            listOf(
-                "Great", "Fantastic", "Super"
-            ))
+        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns
+                listOf(
+                    "Great", "Fantastic", "Super"
+                )
 
         // When
         viewModel = createViewModel()
@@ -175,10 +181,10 @@ class CommentLibraryViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
         every { teacherPrefs.commentLibraryEnabled } returns true
-        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns createMockDataWithSuggestions(
-            listOf(
-                "Great", "Fantastic", "Super", "Great job"
-            ))
+        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns
+                listOf(
+                    "Great", "Fantastic", "Super", "Great job"
+                )
 
         // When
         viewModel = createViewModel()
@@ -205,10 +211,10 @@ class CommentLibraryViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
         every { teacherPrefs.commentLibraryEnabled } returns true
-        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns createMockDataWithSuggestions(
-            listOf(
-                "Great", "Fantastic", "Super", "This is great", "gReAt", "GrEaT"
-            ))
+        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns
+                listOf(
+                    "Great", "Fantastic", "Super", "This is great", "gReAt", "GrEaT"
+                )
 
         // When
         viewModel = createViewModel()
@@ -241,10 +247,10 @@ class CommentLibraryViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
         every { teacherPrefs.commentLibraryEnabled } returns true
-        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns createMockDataWithSuggestions(
-            listOf(
-                "Great", "Fantastic", "Super", "Great job"
-            ))
+        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns
+                listOf(
+                    "Great", "Fantastic", "Super", "Great job"
+                )
 
         // When
         viewModel = createViewModel()
@@ -264,10 +270,10 @@ class CommentLibraryViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
         every { teacherPrefs.commentLibraryEnabled } returns true
-        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns createMockDataWithSuggestions(
-            listOf(
-                "Great", "Fantastic", "Super", "Great job"
-            ))
+        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns
+                listOf(
+                    "Great", "Fantastic", "Super", "Great job"
+                )
 
         // When
         viewModel = createViewModel()
@@ -292,10 +298,10 @@ class CommentLibraryViewModelTest {
             coEvery { await() } returns DataResult.Fail()
         }
         every { teacherPrefs.commentLibraryEnabled } returns true
-        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns createMockDataWithSuggestions(
-            listOf(
-                "Great", "Fantastic", "Super"
-            ))
+        coEvery { commentLibraryManager.getCommentLibraryItems(any()) } returns
+                listOf(
+                    "Great", "Fantastic", "Super"
+                )
 
         // When
         viewModel = createViewModel()
@@ -316,14 +322,6 @@ class CommentLibraryViewModelTest {
         assertEquals(newExpectedItem, viewModel.data.value!!.suggestions[0].commentItemData)
     }
 
-    private fun createViewModel(): CommentLibraryViewModel = CommentLibraryViewModel(apiPrefs, commentLibraryManager, userManager, teacherPrefs)
-
-    private fun createMockDataWithSuggestions(suggestions: List<String>): CommentLibraryQuery.Data {
-        val commentBankItems = suggestions.map { CommentLibraryQuery.Node("commentBankItem", it, it) }
-        return CommentLibraryQuery.Data(
-            CommentLibraryQuery.AsUser("", "",
-                CommentLibraryQuery.CommentBankItems("", commentBankItems)
-            )
-        )
-    }
+    private fun createViewModel(): CommentLibraryViewModel =
+        CommentLibraryViewModel(apiPrefs, commentLibraryManager, userManager, teacherPrefs, firebaseCrashlytics)
 }

@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">टिप्पणी संपादित करना रद्द करें</string>
     <string name="skip">छोड़ें</string>
 
+    <string name="collapseGradePanel">ग्रेड पैनल को संक्षिप्त करें</string>
+    <string name="expandGradePanel">ग्रेड पैनल को बढ़ाएं</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">कस्टम अंक %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">इस फ़ाइल को अपडेट करने के दौरान त्रुटि उत्पन्न हुई</string>
     <string name="errorUpdatingFolder">इस फ़ोल्डर को अपडेट करने के दौरान त्रुटि उत्पन्न हुई</string>
 
+    <string name="errorEmptyTitle">शीर्षक खाली नहीं हो सकता</string>
     <string name="toDoEmpty">करके के लिए और कुछ नहीं है!\n अपने दिन का आनंद लें।</string>
     <string name="toDoNoSubmissions">इस असाइनमेंट को ग्रेड करने के लिए कोई सबमिशन नहीं है।</string>
     <string name="errorToDoRouteFailed">इस करने के लिए आइटम को देखने की कोशिश करने के दौरान त्रुटि उत्पन्न हुई।</string>

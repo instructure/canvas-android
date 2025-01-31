@@ -25,7 +25,7 @@ sealed class RouteValidatorAction {
 
     data object Finish : RouteValidatorAction()
     data class LoadWebViewUrl(val url: String) : RouteValidatorAction()
-    data class StartMainActivity(val masqueradeId: Long? = null, val data: Uri? = null) : RouteValidatorAction()
+    data class StartMainActivity(val masqueradeId: Long? = null, val data: Uri? = null, val message: String? = null) : RouteValidatorAction()
     data class ShowToast(val message: String) : RouteValidatorAction()
     data class StartSignInActivity(val accountDomain: AccountDomain) : RouteValidatorAction()
     data object StartLoginActivity : RouteValidatorAction()

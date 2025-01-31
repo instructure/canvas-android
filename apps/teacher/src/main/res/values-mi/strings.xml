@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Whakakore korero whakatika</string>
     <string name="skip">Tīpoka</string>
 
+    <string name="collapseGradePanel">Tiango Paepae Koeke</string>
+    <string name="expandGradePanel">Roha Paepae Kōeke</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Tikanga kaute %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">He hapa i puta i te wa e whakahou ana i tēnei kōnae</string>
     <string name="errorUpdatingFolder">He hapa i puta i te wa e whakahou ana i tēnei kōpaki</string>
 
+    <string name="errorEmptyTitle">Ko te taitara kaore e taea te waatea</string>
     <string name="toDoEmpty">Kaore atu anō he mahi!\n Kia pai tō rā.</string>
     <string name="toDoNoSubmissions">Kaore he tukunga hei kōeke mo tēnei whakataunga.</string>
     <string name="errorToDoRouteFailed">He hapa i puta i te wā e tiro ana i tēnei Hei Mahi tuemi.</string>

@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.filterHiddenAssignments
+import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -192,11 +193,7 @@ class GradesViewModel @Inject constructor(
     }
 
     private fun mapAssignments(assignments: List<Assignment>) = assignments.sortedBy { it.position }.map { assignment ->
-        val iconRes = when {
-            assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> R.drawable.ic_quiz
-            assignment.getSubmissionTypes().contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> R.drawable.ic_discussion
-            else -> R.drawable.ic_assignment
-        }
+        val iconRes = assignment.getAssignmentIcon()
 
         val dateText = assignment.dueDate?.let {
             val dateText = DateHelper.monthDayYearDateFormatUniversalShort.format(it)

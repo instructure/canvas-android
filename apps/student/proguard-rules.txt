@@ -262,3 +262,7 @@
 -dontwarn okio.**
 -keep class retrofit2.** { *; }
 -dontwarn retrofit2.**
+
+# AGP 8 update
+-dontwarn java.beans.MethodDescriptor
+-dontwarn java.beans.SimpleBeanInfo

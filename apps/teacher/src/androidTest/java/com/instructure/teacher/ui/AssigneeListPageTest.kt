@@ -22,7 +22,7 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.pages.onViewWithId
+import com.instructure.espresso.page.onViewWithId
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin

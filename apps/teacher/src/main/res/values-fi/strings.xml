@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Peruuta kommentin muokkaus</string>
     <string name="skip">Ohita</string>
 
+    <string name="collapseGradePanel">Kutista arvosanan anto -paneeli</string>
+    <string name="expandGradePanel">Laajenna arvosanan anto -paneeli</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Mukautettu pistemäärä %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Virhe päivitettäessä tätä tiedostoa</string>
     <string name="errorUpdatingFolder">Tätä kansiota päivitettäessä ilmeni virhe</string>
 
+    <string name="errorEmptyTitle">Otsikko ei voi olla tyhjä</string>
     <string name="toDoEmpty">Ei enempää tehtävänä!\n Nauti päivästäsi.</string>
     <string name="toDoNoSubmissions">Ei ole lähetyksiä tämän tehtävän arvosteluun.</string>
     <string name="errorToDoRouteFailed">Tämän Tehtävä-kohteen näyttämisen yhteydessä ilmeni virhe.</string>

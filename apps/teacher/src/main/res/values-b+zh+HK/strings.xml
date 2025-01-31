@@ -441,6 +441,8 @@
     <string name="cancel_editing_comment">關閉編輯評論</string>
     <string name="skip">跳過</string>
 
+    <string name="collapseGradePanel">收起評分面板</string>
+    <string name="expandGradePanel">展開評分面板</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">自訂分數 %1$s</string>
 
@@ -824,6 +826,7 @@
     <string name="errorUpdatingFile">更新此檔案時發生錯誤。</string>
     <string name="errorUpdatingFolder">更新此資料夾時發生錯誤。</string>
 
+    <string name="errorEmptyTitle">標題不可空白</string>
     <string name="toDoEmpty">沒有待辦事項！\n祝您愉快。</string>
     <string name="toDoNoSubmissions">沒有針對該作業的提交項目可供評分。</string>
     <string name="errorToDoRouteFailed">嘗試檢視此待辦事項時發生錯誤。</string>

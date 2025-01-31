@@ -66,10 +66,12 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.DiscussionEntryEvent
 import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
@@ -100,8 +102,6 @@ import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
-import com.instructure.student.fragment.DiscussionsReplyFragment
-import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
@@ -128,6 +128,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: DiscussionDetailsRepository
+
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
 
     // Bundle args
     @get:PageViewUrlParam("canvasContext")
@@ -169,6 +172,16 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             populateDiscussionData()
             // Send out bus events to trigger a refresh for discussion list
             DiscussionUpdatedEvent(discussionTopicHeader, javaClass.simpleName).post()
+        }
+
+        networkStateProvider.isOnlineLiveData.observe(viewLifecycleOwner) { isOnline ->
+            if (isOnline) {
+                val activity = requireActivity()
+                val route = DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeader)
+                route.apply { removePreviousScreen = true }
+
+                RouteMatcher.route(activity, route)
+            }
         }
     }
 
@@ -264,14 +277,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showReplyView(discussionEntryId: Long) {
         if (repository.isOnline()) {
-            scrollPosition = binding.discussionsScrollView.scrollY
-            val route = DiscussionsReplyFragment.makeRoute(
-                canvasContext,
-                discussionTopicHeader.id,
-                discussionEntryId,
-                discussionTopicHeader.permissions!!.attach
-            )
-            RouteMatcher.route(requireActivity(), route)
+            // When user is online redesigned discussion is shown in a webview
+            throw IllegalArgumentException()
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -350,14 +357,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showUpdateReplyView(discussionEntryId: Long) {
         if (repository.isOnline()) {
-            discussionTopic?.let {
-                val route = DiscussionsUpdateFragment.makeRoute(
-                    canvasContext,
-                    discussionTopicHeader.id,
-                    DiscussionUtils.findEntry(discussionEntryId, it.views)
-                )
-                RouteMatcher.route(requireActivity(), route)
-            }
+            // When user is online redesigned discussion is shown in a webview
+            throw IllegalArgumentException()
         } else NoInternetConnectionDialog.show(requireFragmentManager())
     }
 

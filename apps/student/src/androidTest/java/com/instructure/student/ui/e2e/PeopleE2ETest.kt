@@ -22,7 +22,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -30,7 +30,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class PeopleE2ETest : StudentTest() {
+class PeopleE2ETest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -76,14 +76,19 @@ class PeopleE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Compose a new message for ${student2.name} student.")
         personDetailsPage.clickCompose()
-        newMessagePage.populateMessage(course,student2,"Yo!", "Hello from a fellow student", recipientPopulated = true)
+        inboxComposePage.typeSubject("Yo!")
+        inboxComposePage.typeBody("Hello from a fellow student")
 
         Log.d(STEP_TAG,"Send the message and assert if we are landing on the Person Details Page.")
-        newMessagePage.clickSend()
+        inboxComposePage.pressSendButton()
         personDetailsPage.assertPageObjects()
+
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Navigate back to the Dashboard (Course List) Page.")
         ViewUtils.pressBackButton(3)
+
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Sign out with ${student1.name} student.")
         leftSideNavigationDrawerPage.logout()

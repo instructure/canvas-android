@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
@@ -53,7 +54,8 @@ class RouteValidatorViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val oAuthApi: OAuthAPI.OAuthInterface,
     private val qrLogin: QRLogin,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     private val _events = Channel<RouteValidatorAction>()
@@ -76,7 +78,11 @@ class RouteValidatorViewModel @Inject constructor(
                 // This is an App Link from a QR code, let's try to login the user and launch MainActivity
                 try {
                     if (signedIn) { // If the user is already signed in, use the QR Switch
-                        ParentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
+                        ParentLogoutTask(
+                            type = LogoutTask.Type.QR_CODE_SWITCH,
+                            uri = data,
+                            alarmScheduler = alarmScheduler
+                        ).execute()
                         _events.send(RouteValidatorAction.Finish)
                         return@tryLaunch
                     }
@@ -130,8 +136,7 @@ class RouteValidatorViewModel @Inject constructor(
             }
 
             if (!domain.contains(host)) {
-                // TODO: Handle different domain
-                _events.send(RouteValidatorAction.Finish)
+                postActionWithDelay(RouteValidatorAction.StartMainActivity(message = context.getString(R.string.differentDomainFromLink)))
             } else {
                 postActionWithDelay(RouteValidatorAction.StartMainActivity(data = data))
             }

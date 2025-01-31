@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.isTablet
@@ -129,7 +130,8 @@ class ViewUnsupportedFileFragment : BaseCanvasFragment() {
             }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
         } else if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
+            val textColor = if (mToolbarColor == ThemePrefs.primaryColor) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.textLightest)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, textColor)
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()

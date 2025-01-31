@@ -20,7 +20,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 
 class PickerSubmissionUploadRenderPage : BasePage(R.id.pickerSubmissionUploadPage) {

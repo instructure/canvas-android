@@ -25,11 +25,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CANVAS_CONTEXT_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.databinding.FragmentContextFilterBinding
 import com.instructure.pandautils.features.inbox.list.InboxSharedViewModel
 import com.instructure.pandautils.utils.ParcelableArrayListArg
@@ -43,7 +43,7 @@ private const val CANVAS_CONTEXTS = "canvasContexts"
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CANVAS_CONTEXT_LIST)
-class ContextFilterFragment : BottomSheetDialogFragment() {
+class ContextFilterFragment : BaseCanvasBottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentContextFilterBinding
 
@@ -52,6 +52,8 @@ class ContextFilterFragment : BottomSheetDialogFragment() {
     private val sharedViewModel: InboxSharedViewModel by activityViewModels()
 
     private val canvasContexts by ParcelableArrayListArg<CanvasContext>(key = CANVAS_CONTEXTS)
+
+    override fun isFullScreen() = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentContextFilterBinding.inflate(inflater, container, false)

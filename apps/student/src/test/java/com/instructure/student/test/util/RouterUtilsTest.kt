@@ -24,10 +24,11 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.student.activity.BaseRouterActivity
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.grades.GradesListFragment
@@ -37,7 +38,10 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.AnnouncementListFragment
+import com.instructure.student.fragment.CourseSettingsFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
@@ -46,7 +50,6 @@ import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class RouterUtilsTest : TestCase() {
@@ -198,7 +201,7 @@ class RouterUtilsTest : TestCase() {
         // Detailed Conversation
         route = callGetInternalRoute("https://mobiledev.instructure.com/conversations/1078680")
         assertNotNull(route)
-        assertEquals(InboxConversationFragment::class.java, route!!.primaryClass)
+        assertEquals(InboxDetailsFragment::class.java, route!!.primaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.CONVERSATION_ID] = "1078680"

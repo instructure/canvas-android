@@ -158,79 +158,25 @@ class AnnouncementInteractionTest : StudentTest() {
         nativeDiscussionDetailsPage.assertReplyDisplayed(reply)
     }
 
-    // Tests that we can create an announcement (as teacher).
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
-    fun testAnnouncementCreate_base() {
-        val data = getToAnnouncementList()
-
-        val course = data.courses.values.first()
-        val announcement = data.courseDiscussionTopicHeaders[course.id]!!.first()
-        discussionListPage.assertTopicDisplayed(announcement.title!!)
-        val newAnnouncementName = "Announcement Topic"
-        discussionListPage.createAnnouncement(newAnnouncementName, "Awesome announcement topic")
-        discussionListPage.assertAnnouncementCreated(newAnnouncementName)
-    }
-
-    // Tests code around closing / aborting announcement creation (as a teacher)
-    @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
-    fun testAnnouncementCreate_abort() {
-        val data = getToAnnouncementList()
-        val course = data.courses.values.first()
-        val announcement =
-            data.courseDiscussionTopicHeaders[course.id]!!.filter { th -> th.announcement }.first()
-
-        discussionListPage.assertHasAnnouncement(announcement)
-        discussionListPage.assertAnnouncementCount(2) // header + the one test announcement
-        discussionListPage.launchCreateAnnouncementThenClose()
-        discussionListPage.verifyExitWithoutSavingDialog()
-        discussionListPage.acceptExitWithoutSaveDialog()
-        discussionListPage.assertHasAnnouncement(announcement)
-        discussionListPage.assertAnnouncementCount(2) // header + the one test announcement
-    }
-
-    // Tests code around creating an announcement with no description (as a teacher)
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
-    fun testAnnouncementCreate_missingDescription() {
-        getToAnnouncementList()
-
-        discussionListPage.createAnnouncement("title", "")
-        discussionListPage.assertOnNewAnnouncementPage() // easier than looking for the "A description is required" toast message
-    }
-
-    // Tests code around creating an announcement with no title (as a teacher)
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
-    fun testAnnouncementCreate_missingTitle() {
-        getToAnnouncementList()
-        discussionListPage.createAnnouncement("", "description")
-        discussionListPage.assertAnnouncementCreated("")
-    }
-
-    @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
-    fun testGroupAnnouncementCreateAsStudent() {
-        getToGroup()
-
-        courseBrowserPage.selectAnnouncements()
-        val newAnnouncementName = "Student created Group Announcement"
-        discussionListPage.createAnnouncement(newAnnouncementName, "Cool group announcement")
-        discussionListPage.assertAnnouncementCreated(newAnnouncementName)
-    }
-
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
     fun testSearchAnnouncement() {
         val data = getToAnnouncementList()
         val course = data.courses.values.first()
+        val student = data.students.first()
         val announcement = data.courseDiscussionTopicHeaders[course.id]!!.first()
         val testAnnouncementName = "searchTestAnnouncement"
+        val testAnnouncementDescription = "description"
         val existingAnnouncementName = announcement.title
 
-        discussionListPage.createAnnouncement(testAnnouncementName, "description")
-        discussionListPage.assertAnnouncementCreated(testAnnouncementName)
+        data.addDiscussionTopicToCourse(
+            course = course,
+            user = student,
+            topicTitle = testAnnouncementName,
+            topicDescription = testAnnouncementDescription,
+            isAnnouncement = true,
+        )
+        discussionListPage.pullToUpdate()
 
         discussionListPage.searchable.clickOnSearchButton()
         discussionListPage.searchable.typeToSearchBar(testAnnouncementName)

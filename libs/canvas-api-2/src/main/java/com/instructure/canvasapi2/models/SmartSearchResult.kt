@@ -40,3 +40,10 @@ enum class SmartSearchContentType {
     @SerializedName("WikiPage")
     WIKI_PAGE
 }
+
+enum class SmartSearchFilter {
+    ASSIGNMENTS,
+    PAGES,
+    ANNOUNCEMENTS,
+    DISCUSSION_TOPICS
+}

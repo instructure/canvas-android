@@ -28,7 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.features.inbox.coursepicker.composables.ParentInboxCoursePickerScreen
 import com.instructure.parentapp.util.navigation.Navigation
@@ -37,7 +37,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class ParentInboxCoursePickerBottomSheetDialog: BottomSheetDialogFragment() {
+class ParentInboxCoursePickerBottomSheetDialog: BaseCanvasBottomSheetDialogFragment() {
     @Inject
     lateinit var navigation: Navigation
 

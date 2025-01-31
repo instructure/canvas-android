@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
@@ -30,6 +29,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,7 +76,7 @@ class EmailNotificationPreferencesFragment : BaseCanvasFragment() {
     private fun showFrequencySelectionDialog(categoryName: String, selectedFrequency: NotificationPreferencesFrequency) {
         val items = NotificationPreferencesFrequency.values().map { resources.getString(it.stringRes) }.toTypedArray()
         val selectedIndex = NotificationPreferencesFrequency.values().indexOf(selectedFrequency)
-        AlertDialog.Builder(requireContext(), R.style.AccentDialogTheme)
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAccentDialogTheme)
             .setTitle(R.string.selectFrequency)
             .setSingleChoiceItems(items, selectedIndex) { dialog, index -> frequencySelected(dialog, index, categoryName) }
             .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }

@@ -22,10 +22,13 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.teacher.features.inbox.compose.TeacherInboxComposeRepository
+import com.instructure.teacher.features.inbox.details.TeacherInboxDetailsBehavior
 import com.instructure.teacher.features.inbox.list.TeacherInboxRepository
 import com.instructure.teacher.features.inbox.list.TeacherInboxRouter
 import dagger.Module
@@ -59,8 +62,17 @@ class InboxModule {
     }
 
     @Provides
-    fun provideInboxComposeRepository(): InboxComposeRepository {
-        return TeacherInboxComposeRepository()
+    fun provideInboxComposeRepository(
+        coursesApi: CourseAPI.CoursesInterface,
+        recipientApi: RecipientAPI.RecipientInterface,
+        inboxApi: InboxApi.InboxInterface
+    ): InboxComposeRepository {
+        return TeacherInboxComposeRepository(coursesApi, recipientApi, inboxApi)
+    }
+
+    @Provides
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return TeacherInboxDetailsBehavior()
     }
 
 }

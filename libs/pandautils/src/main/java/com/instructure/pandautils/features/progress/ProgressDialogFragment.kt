@@ -20,7 +20,6 @@ package com.instructure.pandautils.features.progress
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +29,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.features.progress.composables.ProgressScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -38,9 +37,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class ProgressDialogFragment : BottomSheetDialogFragment() {
+class ProgressDialogFragment : BaseCanvasBottomSheetDialogFragment() {
 
     private val viewModel: ProgressViewModel by viewModels()
+
+    override fun isFullScreen() = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return ComposeView(requireContext()).apply {

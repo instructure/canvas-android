@@ -24,11 +24,13 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.viewpager.widget.ViewPager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -97,6 +99,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     val assignmentId: Long by lazy { intent.extras!!.getLong(Const.ASSIGNMENT_ID) }
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
+    private val discussionEntryId: Long? by lazy { intent.extras?.getLong(DISCUSSION_ENTRY_ID, -1) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
     private val filteredSubmissionIds: LongArray by lazy { intent.extras?.getLongArray(FILTERED_SUBMISSION_IDS) ?: longArrayOf() }
     private val filter: SubmissionListFilter by lazy {
@@ -178,12 +181,15 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         } else {
             assignment
         }
+        val selection = if (discussionEntryId != null && discussionEntryId != -1L) {
+            submissions.indexOfFirst { it.submission?.discussionEntries?.map{ it.id }?.contains(discussionEntryId).orDefault() }
+        } else { initialSelection }
         adapter = SubmissionContentAdapter(assignmentWithAnonymousGrading, presenter!!.course, submissions)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
         submissionContentPager.setPageMarginDrawable(R.color.backgroundMedium)
         submissionContentPager.adapter = adapter
-        submissionContentPager.setCurrentItem(initialSelection, false)
+        submissionContentPager.setCurrentItem(selection, false)
         submissionContentPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -384,6 +390,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         const val FILTER = "filter"
         const val FILTER_VALUE = "filter_value"
         const val FILTERED_SUBMISSION_IDS = "filtered_submission_ids"
+        const val DISCUSSION_ENTRY_ID = "discussion_entry_id"
 
         fun makeBundle(
             courseId: Long,

@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Prekliči urejanje komentarja</string>
     <string name="skip">Preskoči</string>
 
+    <string name="collapseGradePanel">Zloži ploščo z ocenami</string>
+    <string name="expandGradePanel">Razširi ploščo z ocenami</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Po meri prilagojen rezultat %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Pri posodabljanju te datoteke je prišlo do napake.</string>
     <string name="errorUpdatingFolder">Pri posodabljanju te mape je prišlo do napake.</string>
 
+    <string name="errorEmptyTitle">Naslov ne sme biti prazen</string>
     <string name="toDoEmpty">Ničesar ni več treba opraviti.\n Uživajte v dnevu.</string>
     <string name="toDoNoSubmissions">Za to nalogo ni oddaj, ki bi jih bilo treba oceniti.</string>
     <string name="errorToDoRouteFailed">Pri ogledu tega elementa seznama opravil je prišlo do napake.</string>

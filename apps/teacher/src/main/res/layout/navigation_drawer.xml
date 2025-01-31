@@ -201,6 +201,7 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/options"
+                android:importantForAccessibility="no"
                 android:textAllCaps="true"
                 android:letterSpacing="0.14"
                 android:layout_marginBottom="16dp"/>

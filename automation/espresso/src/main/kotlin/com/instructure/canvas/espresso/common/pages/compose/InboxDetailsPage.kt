@@ -15,8 +15,10 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import androidx.compose.ui.semantics.SemanticsProperties.Text
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.filter
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
@@ -24,6 +26,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -31,7 +34,6 @@ import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.models.Message
 
 class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
@@ -47,14 +49,19 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
             .isDisplayed()
     }
 
-    fun assertMessageDisplayed(message: Message) {
+    fun assertMessageDisplayed(messageBody: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(message.body ?: "").performScrollTo()
+        composeTestRule.onNodeWithText(messageBody).performScrollTo()
+    }
+
+    fun assertMessageNotDisplayed(messageBody: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(messageBody).assertIsNotDisplayed()
     }
 
     fun assertAllMessagesDisplayed(conversation: Conversation) {
         conversation.messages.forEach { message ->
-            assertMessageDisplayed(message)
+            assertMessageDisplayed(message.body ?: "")
         }
     }
 
@@ -85,13 +92,13 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun pressBackButton() {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithContentDescription("Go Back").performClick()
+        composeTestRule.onNodeWithContentDescription("Back").performClick()
     }
 
-    fun pressReplyTextButtonForMessage(message: Message) {
+    fun pressReplyTextButtonForMessage(messageBody: String) {
         composeTestRule.waitForIdle()
 
-        val replyButton = composeTestRule.onNodeWithText(message.body ?: "")
+        val replyButton = composeTestRule.onNodeWithText(messageBody)
             .onParent() // SelectionContainer
             .onParent() // Column
             .onChildren()
@@ -102,10 +109,10 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         replyButton.performClick()
     }
 
-    fun pressReplyIconButtonForMessage(message: Message) {
+    fun pressReplyIconButtonForMessage(messageBody: String) {
         composeTestRule.waitForIdle()
 
-        val replyButton = composeTestRule.onNodeWithText(message.body ?: "")
+        val replyButton = composeTestRule.onNodeWithText(messageBody ?: "")
             .onParent() // SelectionContainer
             .onParent() // Column
             .onChildren()
@@ -129,8 +136,8 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText(buttonLabel).performClick()
     }
 
-    fun pressOverflowMenuItemForMessage(conversation: Conversation, message: Message, buttonLabel: String) {
-        pressOverflowIconButtonForMessage(conversation, message)
+    fun pressOverflowMenuItemForMessage(messageBody: String, buttonLabel: String) {
+        pressOverflowIconButtonForMessage(messageBody)
 
         composeTestRule.onNode(hasTestTag("messageMenuItem").and(hasText(buttonLabel)), true)
             .performClick()
@@ -143,15 +150,18 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 
-    private fun pressOverflowIconButtonForMessage(conversation: Conversation, message: Message) {
+    private fun pressOverflowIconButtonForMessage(messageBody: String) {
         composeTestRule.waitForIdle()
 
-        val overflowButton = composeTestRule.onNodeWithText(message.body ?: "")
-            .onParent() // SelectionContainer
-            .onParent() // Column
-            .onChildren()
-            .filter(hasContentDescription("More options"))
-            .get(conversation.messages.indexOf(message))
+        var messageId = 0
+        composeTestRule
+            .onAllNodes(hasTestTag("messageBodyText")).fetchSemanticsNodes().forEachIndexed() { index, node ->
+                if (node.config.getOrNull(Text)?.first()?.text == messageBody) {
+                    messageId = index
+                }
+            }
+        val overflowButton = composeTestRule
+            .onAllNodesWithContentDescription("More options")[messageId]
 
         overflowButton.performScrollTo()
         composeTestRule.waitForIdle()

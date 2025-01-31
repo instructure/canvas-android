@@ -10,8 +10,11 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
@@ -32,7 +35,6 @@ import com.instructure.teacher.features.modules.progression.ModuleProgressionFra
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
-import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.fragments.AnnouncementListFragment
 import com.instructure.teacher.fragments.AssigneeListFragment
 import com.instructure.teacher.fragments.AttendanceListFragment
@@ -40,12 +42,9 @@ import com.instructure.teacher.fragments.ChooseRecipientsFragment
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.CourseSettingsFragment
-import com.instructure.teacher.fragments.CreateDiscussionFragment
-import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
 import com.instructure.teacher.fragments.CreateOrEditPageDetailsFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.DiscussionsListFragment
-import com.instructure.teacher.fragments.DiscussionsUpdateFragment
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.fragments.EditFileFolderFragment
@@ -54,7 +53,6 @@ import com.instructure.teacher.fragments.FeatureFlagsFragment
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
-import com.instructure.teacher.fragments.MessageThreadFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.PageListFragment
 import com.instructure.teacher.fragments.PeopleListFragment
@@ -160,12 +158,14 @@ object RouteResolver {
             fragment = DiscussionRouterFragment.newInstance(canvasContext!!, route)
         } else if(DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = DiscussionDetailsWebViewFragment.newInstance(route)
-        } else if (InboxFragment::class.java.isAssignableFrom(cls)) {
+        } else if(CreateDiscussionWebViewFragment::class.java.isAssignableFrom(cls)) {
+            fragment = CreateDiscussionWebViewFragment.newInstance(route)
+        }  else if (InboxFragment::class.java.isAssignableFrom(cls)) {
             fragment = InboxFragment.newInstance(route)
-        } else if (AddMessageFragment::class.java.isAssignableFrom(cls)) {
-            fragment = AddMessageFragment.newInstance(route.arguments)
-        } else if (MessageThreadFragment::class.java.isAssignableFrom(cls)) {
-            fragment = getMessageThreadFragment(route)
+        } else if (InboxComposeFragment::class.java.isAssignableFrom(cls)) {
+            fragment = InboxComposeFragment.newInstance(route)
+        } else if (InboxDetailsFragment::class.java.isAssignableFrom(cls)) {
+            fragment = InboxDetailsFragment.newInstance(route)
         } else if (ViewPdfFragment::class.java.isAssignableFrom(cls)) {
             fragment = ViewPdfFragment.newInstance(route.arguments)
         } else if (ViewImageFragment::class.java.isAssignableFrom(cls)) {
@@ -176,18 +176,12 @@ object RouteResolver {
             fragment = ViewHtmlFragment.newInstance(route.arguments)
         } else if (ViewUnsupportedFileFragment::class.java.isAssignableFrom(cls)) {
             fragment = ViewUnsupportedFileFragment.newInstance(route.arguments)
-        } else if (cls.isAssignableFrom(DiscussionsUpdateFragment::class.java)) {
-            fragment = DiscussionsUpdateFragment.newInstance(canvasContext!!, route.arguments)
         } else if (ChooseRecipientsFragment::class.java.isAssignableFrom(cls)) {
             fragment = ChooseRecipientsFragment.newInstance(route.arguments)
         } else if (SpeedGraderQuizWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = SpeedGraderQuizWebViewFragment.newInstance(route.arguments)
         } else if (AnnotationCommentListFragment::class.java.isAssignableFrom(cls)) {
             fragment = AnnotationCommentListFragment.newInstance(route.arguments)
-        } else if (CreateDiscussionFragment::class.java.isAssignableFrom(cls)) {
-            fragment = CreateDiscussionFragment.newInstance(route.arguments)
-        } else if (CreateOrEditAnnouncementFragment::class.java.isAssignableFrom(cls)) {
-            fragment = CreateOrEditAnnouncementFragment.newInstance(route.arguments)
         } else if (SettingsFragment::class.java.isAssignableFrom(cls)) {
             fragment = SettingsFragment.newInstance(route)
         } else if (ProfileEditFragment::class.java.isAssignableFrom(cls)) {
@@ -243,16 +237,6 @@ object RouteResolver {
         }//NOTE: These should remain at or near the bottom to give fragments that extend InternalWebViewFragment the chance first
 
         return fragment as Type?
-    }
-
-    private fun getMessageThreadFragment(route: Route): Fragment? {
-        return if (route.paramsHash.containsKey(Const.CONVERSATION_ID)) {
-            val args = MessageThreadFragment.createBundle(route.paramsHash[Const.CONVERSATION_ID]?.toLong()
-                    ?: 0L)
-            MessageThreadFragment.newInstance(args)
-        } else {
-            MessageThreadFragment.newInstance(route.arguments)
-        }
     }
 
     private fun getAssignmentDetailsFragment(canvasContext: CanvasContext?, route: Route): AssignmentDetailsFragment {

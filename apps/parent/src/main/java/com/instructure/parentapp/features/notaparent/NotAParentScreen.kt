@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.notaparent
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -133,6 +134,7 @@ private fun AppOptions(
             stringResource(id = R.string.studentApp),
             stringResource(id = R.string.canvasStudentApp),
             colorResource(id = R.color.login_studentAppTheme),
+            R.drawable.ic_canvas_logo_student,
             { onStudentClick() }
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -140,6 +142,7 @@ private fun AppOptions(
             stringResource(id = R.string.teacherApp),
             stringResource(id = R.string.canvasTeacherApp),
             colorResource(id = R.color.login_teacherAppTheme),
+            R.drawable.ic_canvas_logo_teacher,
             { onTeacherClick() }
         )
     }
@@ -150,6 +153,7 @@ private fun AppOption(
     name: String,
     label: String,
     color: Color,
+    @DrawableRes iconRes: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -162,7 +166,7 @@ private fun AppOption(
             }
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_canvas_logo),
+            painter = painterResource(id = iconRes),
             tint = color,
             contentDescription = null,
             modifier = Modifier.size(48.dp)

@@ -2,8 +2,8 @@ apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'com.apollographql.apollo'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 buildscript {
     repositories {
@@ -58,8 +58,13 @@ task addPrivateData {
     }
 }
 
-compileKotlin.dependsOn(addPrivateData)
-
+tasks.named('compileKotlin') {
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    dependsOn addPrivateData
+    dependsOn generateTestServiceApolloSources
+}
 
 task customClean {
     finalizedBy {

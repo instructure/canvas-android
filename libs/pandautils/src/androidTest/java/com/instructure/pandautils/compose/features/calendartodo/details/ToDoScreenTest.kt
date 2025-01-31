@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.assertTextColor
 import com.instructure.pandautils.features.calendartodo.details.ToDoUiState
 import com.instructure.pandautils.features.calendartodo.details.composables.ToDoScreen
+import com.instructure.pandautils.features.reminder.ReminderItem
+import com.instructure.pandautils.features.reminder.ReminderViewState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -207,5 +209,32 @@ class ToDoScreenTest {
         }
 
         composeTestRule.onNode(hasText("Error message")).assertIsDisplayed()
+    }
+
+    @Test
+    fun assertReminder() {
+        composeTestRule.setContent {
+            ToDoScreen(
+                title = "Todo",
+                toDoUiState = ToDoUiState(
+                    title = "Todo title",
+                    reminderUiState = ReminderViewState(
+                        reminders = listOf(
+                            ReminderItem(
+                                id = 1,
+                                title = "Reminder title",
+                                date = Date()
+                            )
+                        )
+                    )
+                ),
+                actionHandler = {},
+                navigationActionClick = {},
+            )
+        }
+
+        composeTestRule.onNode(hasText("Reminder")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Reminder title")).assertIsDisplayed()
+        composeTestRule.onNode(hasContentDescription("Add reminder")).assertIsDisplayed()
     }
 }

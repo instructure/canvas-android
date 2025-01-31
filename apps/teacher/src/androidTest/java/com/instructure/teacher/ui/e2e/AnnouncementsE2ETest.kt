@@ -17,7 +17,6 @@
 package com.instructure.teacher.ui.e2e
 
 import android.util.Log
-import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -91,16 +90,5 @@ class AnnouncementsE2ETest : TeacherTest() {
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Send To...")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Copy To...")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Share to Commons")
-
-        Log.d(STEP_TAG, "Navigate back to the Announcement List Page.")
-        Espresso.pressBack()
-
-        Log.d(STEP_TAG, "Create a new valid announcement.")
-        announcementsListPage.createAnnouncement(announcementName = "I am an announcement", announcementDetails = "I am the detail")
-
-        Log.d(STEP_TAG, "Refresh the Announcements Page and assert that the previously created announcement is displayed. Assert that there are 3 announcements displayed on the Announcement List Page.")
-        announcementsListPage.refresh()
-        announcementsListPage.assertHasAnnouncement("I am an announcement")
-        announcementsListPage.assertSearchResultCount(3)
     }
 }

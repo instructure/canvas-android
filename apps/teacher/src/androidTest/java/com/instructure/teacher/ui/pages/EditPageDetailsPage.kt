@@ -15,8 +15,8 @@ import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.click
 import com.instructure.espresso.extractInnerTextById
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R

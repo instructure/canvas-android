@@ -10,8 +10,11 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
@@ -46,16 +49,9 @@ import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.AssignmentBasicFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.CreateAnnouncementFragment
-import com.instructure.student.fragment.CreateDiscussionFragment
 import com.instructure.student.fragment.DashboardFragment
-import com.instructure.student.fragment.DiscussionsReplyFragment
-import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.FeatureFlagsFragment
-import com.instructure.student.fragment.InboxComposeMessageFragment
-import com.instructure.student.fragment.InboxConversationFragment
-import com.instructure.student.fragment.InboxRecipientsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
@@ -124,16 +120,14 @@ object RouteResolver {
             cls.isA<EditDashboardFragment>() -> EditDashboardFragment.newInstance(route)
             cls.isA<ModuleQuizDecider>() -> ModuleQuizDecider.newInstance(route)
             cls.isA<EditPageDetailsFragment>() -> EditPageDetailsFragment.newInstance(route)
-            cls.isA<InboxConversationFragment>() -> InboxConversationFragment.newInstance(route)
-            cls.isA<InboxRecipientsFragment>() -> InboxRecipientsFragment.newInstance(route)
-            cls.isA<InboxComposeMessageFragment>() -> InboxComposeMessageFragment.newInstance(route)
+            cls.isA<InboxDetailsFragment>() -> InboxDetailsFragment.newInstance(route)
+            cls.isA<InboxComposeFragment>() -> InboxComposeFragment.newInstance(route)
             cls.isA<QuizListFragment>() -> QuizListFragment.newInstance(route)
             cls.isA<BasicQuizViewFragment>() -> BasicQuizViewFragment.newInstance(route)
             cls.isA<AssignmentListFragment>() -> AssignmentListFragment.newInstance(route)
             cls.isA<AssignmentBasicFragment>() -> AssignmentBasicFragment.newInstance(route)
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
             cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
-            cls.isA<CreateAnnouncementFragment>() -> CreateAnnouncementFragment.newInstance(route)
             cls.isA<SyllabusRepositoryFragment>() -> SyllabusRepositoryFragment.newInstance(route)
             cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
@@ -166,9 +160,7 @@ object RouteResolver {
             cls.isA<SubmissionRubricDescriptionFragment>() -> SubmissionRubricDescriptionFragment.newInstance(route)
             cls.isA<DiscussionListFragment>() -> DiscussionListFragment.newInstance(route)
             cls.isA<DiscussionDetailsFragment>() -> DiscussionDetailsFragment.newInstance(route)
-            cls.isA<DiscussionsReplyFragment>() -> DiscussionsReplyFragment.newInstance(route)
-            cls.isA<CreateDiscussionFragment>() -> CreateDiscussionFragment.newInstance(route)
-            cls.isA<DiscussionsUpdateFragment>() -> DiscussionsUpdateFragment.newInstance(route)
+            cls.isA<CreateDiscussionWebViewFragment>() -> CreateDiscussionWebViewFragment.newInstance(route)
             cls.isA<StudioWebViewFragment>() -> StudioWebViewFragment.newInstance(route)
             cls.isA<TextSubmissionUploadFragment>() -> TextSubmissionUploadFragment.newInstance(route)
             cls.isA<UrlSubmissionUploadFragment>() -> UrlSubmissionUploadFragment.newInstance(route)

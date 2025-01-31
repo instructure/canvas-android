@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/editOptions"
         android:padding="4dp"
-        android:layout_below="@id/toolbarWrapper">
+        android:layout_below="@id/toolbar">
         <LinearLayout
             android:id="@+id/pandaImages"
             android:layout_width="match_parent"

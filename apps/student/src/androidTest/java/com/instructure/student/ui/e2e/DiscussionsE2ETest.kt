@@ -123,15 +123,7 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
         Espresso.pressBack()
 
-        val newTopicName = "Do we really need discussions?"
-        val newTopicDescription = "Let's discuss"
-        Log.d(STEP_TAG,"Create a new discussion topic with '$newTopicName' topic name and '$newTopicDescription' topic description.")
-        discussionListPage.createDiscussionTopic(newTopicName, newTopicDescription)
-        sleep(2000) // Allow some time for creation to propagate
-
-        Log.d(STEP_TAG,"Assert that '$newTopicName' topic has been created successfully with 0 reply count.")
-        discussionListPage.assertTopicDisplayed(newTopicName)
-        discussionListPage.assertReplyCount(newTopicName, 0)
+        discussionListPage.launchCreateDiscussionThenClose()
 
         val replyMessage = "My reply"
         Log.d(PREPARATION_TAG, "Seed a discussion topic (message) entry for the '${topic1.title}' discussion with the '$replyMessage' message as a student.")

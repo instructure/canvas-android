@@ -16,6 +16,7 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
+import android.webkit.CookieManager
 import com.instructure.pandautils.utils.FileDownloader
 import dagger.Module
 import dagger.Provides
@@ -27,7 +28,7 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 class FileDownloaderModule {
     @Provides
-    fun provideFileDownloader(@ApplicationContext context: Context): FileDownloader {
-        return FileDownloader(context)
+    fun provideFileDownloader(@ApplicationContext context: Context, cookieManager: CookieManager): FileDownloader {
+        return FileDownloader(context, cookieManager)
     }
 }

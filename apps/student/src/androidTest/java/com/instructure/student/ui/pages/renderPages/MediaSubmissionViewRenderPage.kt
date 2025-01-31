@@ -18,7 +18,7 @@ package com.instructure.student.ui.pages.renderPages
 
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 
 class MediaSubmissionViewRenderPage : BasePage(R.id.mediaSubmissionView) {

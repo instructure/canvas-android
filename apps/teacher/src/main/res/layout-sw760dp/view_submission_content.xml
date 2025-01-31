@@ -64,6 +64,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/backgroundLightest"
+        android:accessibilityHeading="true"
         android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ToolBarPopupStyle">
 
@@ -120,7 +121,7 @@
 
     <LinearLayout
         android:id="@+id/panelContent"
-        android:layout_width="360dp"
+        android:layout_width="@dimen/speedgraderPanelWidth"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/speedGraderToolbar"
@@ -132,7 +133,8 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/bottomTabLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:layout_marginEnd="12dp"
             android:layout_marginStart="12dp"
             app:tabIndicatorHeight="2dp"
@@ -159,19 +161,38 @@
         android:layout_toStartOf="@+id/panelContent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/submissionVersionsSpinner"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="14dp"
-            android:background="@drawable/bg_spinner"
-            android:backgroundTint="@color/textDark"
-            android:dropDownWidth="10000dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:prompt="@string/submissionVersions"
-            android:spinnerMode="dropdown"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/toggleImageView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/ic_collapse_horizontal"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                app:tint="@color/textDark" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/submissionVersionsSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/toggleImageView"
+                android:layout_marginEnd="14dp"
+                android:background="@drawable/bg_spinner"
+                android:backgroundTint="@color/textDark"
+                android:dropDownWidth="10000dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:prompt="@string/submissionVersions"
+                android:spinnerMode="dropdown"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"

@@ -23,13 +23,20 @@ import android.net.Uri
 import com.google.firebase.messaging.FirebaseMessaging
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.features.login.LoginActivity
+import io.heap.core.Heap
 
 
-class ParentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
+class ParentLogoutTask(
+    type: Type,
+    uri: Uri? = null,
+    private val alarmScheduler: AlarmScheduler?
+) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
         ParentPrefs.safeClearPrefs()
+        Heap.stopRecording()
     }
 
     override fun createLoginIntent(context: Context): Intent {
@@ -52,5 +59,9 @@ class ParentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
 
     override fun removeOfflineData(userId: Long?) {
         // No-op
+    }
+
+    override suspend fun cancelAlarms() {
+        alarmScheduler?.cancelAllAlarmsForCurrentUser()
     }
 }

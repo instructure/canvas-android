@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -118,7 +119,8 @@ private fun InboxMessageDetailsView(
                 },
                 style = MaterialTheme.typography.body1.copy(
                     color = colorResource(id = R.color.textDarkest)
-                )
+                ),
+                modifier = Modifier.testTag("messageBodyText")
             )
         }
 

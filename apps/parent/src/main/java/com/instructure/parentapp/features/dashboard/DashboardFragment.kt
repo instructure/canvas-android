@@ -28,7 +28,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -41,18 +40,25 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collectDistinctUntilChanged
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.isTablet
@@ -79,6 +85,7 @@ import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_DASHBOARD)
 @AndroidEntryPoint
 class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
@@ -94,6 +101,9 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     @Inject
     lateinit var firebaseCrashlytics: FirebaseCrashlytics
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
@@ -114,8 +124,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
         navHostFragment?.let {
             navController = it.navController
             navController.graph = navigation.createDashboardNavGraph(navController)
@@ -173,15 +182,19 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupLaunchDefinitions(it.launchDefinitionViewData)
-                setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.data.collectDistinctUntilChanged(lifecycle, { it.selectedStudent }) { selectedStudent ->
+                setupAppColors(selectedStudent)
             }
         }
 
@@ -191,6 +204,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
     override fun onDestroyView() {
         super.onDestroyView()
         bottomNavigationView.setOnItemSelectedListener(null)
+        bottomNavigationView.setOnItemReselectedListener(null)
         navController.removeOnDestinationChangedListener(onDestinationChangedListener)
     }
 
@@ -239,8 +253,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private fun setupNavigation() {
         if (!this::navController.isInitialized) {
-            val navHostFragment =
-                childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
             navController.graph = navigation.createDashboardNavGraph(navController)
         }
@@ -313,6 +326,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
     private fun setupBottomNavigationView() {
         bottomNavigationView = binding.bottomNav
         bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener)
+        bottomNavigationView.setOnItemReselectedListener { }
         navController.addOnDestinationChangedListener(onDestinationChangedListener)
     }
 
@@ -361,14 +375,22 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.logout_warning)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                Analytics.logEvent(AnalyticsEventConstants.LOGOUT)
+                ParentLogoutTask(
+                    LogoutTask.Type.LOGOUT,
+                    alarmScheduler = alarmScheduler
+                ).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .showThemed(ParentPrefs.currentStudent.studentColor)
     }
 
     private fun onSwitchUsers() {
-        ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+        Analytics.logEvent(AnalyticsEventConstants.SWITCH_USERS)
+        ParentLogoutTask(
+            LogoutTask.Type.SWITCH_USERS,
+            alarmScheduler = alarmScheduler
+        ).execute()
     }
 
     private fun setupLaunchDefinitions(launchDefinitionViewData: List<LaunchDefinitionViewData>) {

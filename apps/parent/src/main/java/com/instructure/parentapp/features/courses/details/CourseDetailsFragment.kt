@@ -25,10 +25,12 @@ import android.webkit.WebView
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -41,6 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_COURSE_DETAILS)
 @AndroidEntryPoint
 class CourseDetailsFragment : BaseCanvasFragment() {
 

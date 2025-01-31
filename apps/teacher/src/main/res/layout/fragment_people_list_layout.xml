@@ -26,7 +26,8 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/peopleListToolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"

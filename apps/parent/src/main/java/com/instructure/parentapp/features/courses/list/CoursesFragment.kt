@@ -24,15 +24,18 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSES
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_COURSES)
 @AndroidEntryPoint
 class CoursesFragment : BaseCanvasFragment() {
 
@@ -51,7 +54,7 @@ class CoursesFragment : BaseCanvasFragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CoursesScreen(uiState, viewModel::handleAction)
+                CoursesScreen(uiState, viewModel::handleAction, lazyListState = viewModel.lazyListState)
             }
         }
     }
