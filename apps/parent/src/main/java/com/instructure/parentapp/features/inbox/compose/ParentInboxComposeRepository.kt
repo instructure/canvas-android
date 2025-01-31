@@ -20,29 +20,31 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.parentapp.util.ParentPrefs
 
 class ParentInboxComposeRepository(
     private val courseAPI: CourseAPI.CoursesInterface,
+    private val parentPrefs: ParentPrefs,
     recipientAPI: RecipientAPI.RecipientInterface,
-    inboxAPI: InboxApi.InboxInterface,
+    inboxAPI: InboxApi.InboxInterface
 ): InboxComposeRepository(courseAPI, recipientAPI, inboxAPI) {
 
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
 
-        val coursesResult = courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, params)
+        val coursesResult = courseAPI.firstPageObserveeCourses(params)
             .depaginate { nextUrl -> courseAPI.next(nextUrl, params) }
+
+        val currentStudent = parentPrefs.currentStudent
 
         val courses = coursesResult.dataOrNull ?: return coursesResult
 
-        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
+        val validCourses = courses.filter { it.isObserver && it.enrollments?.any { enrollment -> enrollment.userId == currentStudent?.id }.orDefault() }
 
         return DataResult.Success(validCourses)
     }

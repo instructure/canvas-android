@@ -441,6 +441,8 @@
     <string name="cancel_editing_comment">コメント編集をキャンセル</string>
     <string name="skip">スキップ</string>
 
+    <string name="collapseGradePanel">評定パネルを折りたたむ</string>
+    <string name="expandGradePanel">評定パネルを展開する</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">カスタムスコア %1$s</string>
 
@@ -824,6 +826,7 @@
     <string name="errorUpdatingFile">このファイルをアップデートする際にエラーが発生しました</string>
     <string name="errorUpdatingFolder">このフォルダをアップデートする際にエラーが発生しました</string>
 
+    <string name="errorEmptyTitle">タイトルは空白にできません。</string>
     <string name="toDoEmpty">他にすることはありません！\nよい一日を。</string>
     <string name="toDoNoSubmissions">この課題を採点するための提出物はありません。</string>
     <string name="errorToDoRouteFailed">このやるべきことの項目を表示しようとしてエラーが発生しました。</string>

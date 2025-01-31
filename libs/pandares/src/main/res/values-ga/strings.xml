@@ -40,6 +40,7 @@
     <string name="dueLabel">Dlite</string>
     <string name="submissionStatusSuccessTitle">Curtha isteach go rathúil!</string>
     <string name="submissionStatusSuccessSubtitle">Tá d\'uaslódáil ag fanacht anois le marcáil</string>
+    <string name="submissionStatusWaitingSubtitle">Tá an aighneacht ag fanacht le bheith marcáilte anois</string>
     <string name="submissionStatusUploadingTitle">Uaslódáil á huaslódáil&#8230;</string>
     <string name="submissionStatusUploadingSubtitle">Tapáil chun dul chun cinn a fheiceáil</string>
     <string name="submissionStatusFailedTitle">Theip ar Uaslódáil</string>
@@ -72,6 +73,7 @@
     <string name="reminderDescription">Cuir fógraí meabhrúcháin dáta dlite faoin tasc seo leis ar an ngléas seo.</string>
     <string name="a11y_addReminder">Cuir meabhrúchán leis</string>
     <string name="a11y_removeReminder">Bain meabhrúchán</string>
+    <string name="a11y_remove">Bain</string>
     <string name="reminderBefore">%s Roimh</string>
     <plurals name="reminderMinute">
         <item quantity="one">Nóiméad 1</item>
@@ -99,7 +101,7 @@
     <string name="reminderNotificationChannelName">Fógraí Meabhrúcháin</string>
     <string name="reminderNotificationChannelDescription">Fógraí Canvas le haghaidh meabhrúcháin tascanna.</string>
     <string name="reminderNotificationTitle">Meabhrúchán Dáta Dlite</string>
-    <string name="reminderNotificationDescription">Tá an tasc seo dlite i %s: %s</string>
+    <string name="reminderNotificationDueAtDescription">Tá an tasc seo dlite ag %s: %s</string>
     <string name="reminderInPast">Roghnaigh am amach anseo le haghaidh do mheabhrúchán!</string>
     <string name="reminderAlreadySet">Tá meabhrúchán socraithe agat don am seo cheana féin</string>
     <string name="deleteReminderTitle">Scrios Meabhrúchán</string>
@@ -271,7 +273,7 @@
     <string name="discussionUploadDialog">Uaslódáil Fóraim</string>
     <string name="totalScore">Iomlán:</string>
     <string name="noGradeText">N/A</string>
-    <string name="checkBoxFinalGradeOption">Bunús ar thascanna grádaithe</string>
+    <string name="checkBoxFinalGradeOption">Bunaithe ar thascanna marcáilte</string>
     <string name="checkBoxWhatIfGradeOption">Taispeáin an Scór dá mba rud é</string>
     <string name="whatIfDialogText">Scór dá mba rud é</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
@@ -1330,6 +1332,7 @@
     <string name="appThemeDark">Dorcha</string>
     <string name="appThemeSystem">Mar an gcéanna le gléas</string>
 
+    <string name="appThemeAuto">Córas</string>
     <string name="themeSelectorTitle">Tá Canvas ar fáil anois i dtéama dorcha</string>
     <string name="themeSelectorDescription">Roghnaigh téama aipe</string>
     <string name="themeSelectorLightTheme">Téama geall</string>
@@ -1785,7 +1788,7 @@
     <string name="courseGradeHighAlertTitle">Marc an Chúrsa Thar %s</string>
     <string name="courseGradeLowAlertTitle">Marc an Chúrsa Faoi %s</string>
     <string name="courseAnnouncementAlertTitle">Fógra an Chúrsa</string>
-    <string name="institutionAnnouncementAlertTitle">Fógra Institiúide</string>
+    <string name="institutionAnnouncementAlertTitle">Fógra Uilíoch</string>
     <string name="a11y_contentDescription_observerAlertDelete">Scrios Foláireamh</string>
     <string name="alertDateTime">%s ag %s</string>
     <string name="alertDismissMessage">Dúnadh an foláireamh</string>
@@ -1832,7 +1835,7 @@
     <string name="alertSettingsAssignmentGradeLow">Marc an taisc faoi</string>
     <string name="alertSettingsCourseGradeHigh">Marc an chúrsa faoi</string>
     <string name="alertSettingsCourseGradeLow">Marc an chúrsa thar</string>
-    <string name="alertSettingsInstitutionAnnouncement">Fógraí na hInstitiúide</string>
+    <string name="alertSettingsGlobalAnnouncement">Fógra Uilíoch</string>
     <string name="alertSettingsCourseAnnouncement">Fógraí an Chúrsa</string>
     <string name="alertSettingsPercentage">%1$s\%%</string>
     <string name="alertSettingsThresholdNever">Riamh</string>
@@ -1875,4 +1878,44 @@
     <string name="courseDetailsMessageContentDescription">Seol teachtaireacht faoin gcúrsa seo</string>
     <string name="gradeLockedContentDescription">Marc faoi ghlas</string>
     <string name="gradesRefreshFailed">Theip ar na marcanna a athnuachan</string>
+    <string name="chooseACourseToMessage">Roghnaigh cúrsa chun teachtaireacht a dhéanamh</string>
+    <string name="regardingHiddenMessage">Maidir le: %1$s, %2$s</string>
+    <string name="regardingHiddenMessageWithAssignmentPrefix">Maidir le: %1$s, Tasc - %2$s</string>
+    <string name="sendMessageAboutAssignment">"Seol teachtaireacht faoin tasc seo"</string>
+    <string name="forStudentLabel">le haghaidh %1$s</string>
+    <string name="view_description">Amharc ar Chur síos</string>
+    <string name="a11y_contentDescription_viewDescription">Amharc ar Chur síos</string>
+    <string name="errorLoadingAnnouncement">Tharla earráid agus an fógra seo á lódáil</string>
+    <string name="announcementPageTitle">Fógra</string>
+    <string name="globalAnnouncementPageTitle">Fógra Uilíoch</string>
+    <string name="openTheQuizButton">Oscail an Tráth na gCeist</string>
+    <string name="newQuizSubmissionTitle">Uaslódáil Quiz</string>
+    <string name="newQuizSubmissionSubtitle">Osclaítear an tráth na gceist seo i mbrabhsálaí gréasáin. Roghnaigh "Oscail an Tráth na gCeist" chun dul ar aghaidh.</string>
+    <string name="route_not_available">Díchumasaíodh an leathanach sin don chúrsa seo</string>
+    <string name="reminderTitleAfterDueDate">Tar éis Dáta Dlite (%1$s)</string>
+    <string name="reminderNotificationTitleFor">Meabhrúchán don tasc: %1$s</string>
+    <string name="reminderNotificationMessageWithDueDate">Meabhrúchán don tasc, %1$s, atá dlite ag %2$s</string>
+    <string name="reminderNotificationMessageWithoutDueDate">Meabhrúchán don tasc, %1$s, atá gan aon dáta dlite</string>
+    <string name="courseRefreshFailed">Theip ar athnuachan an chúrsa</string>
+    <string name="frontPageRefreshFailed">Theip ar athnuachan an leathanach tosaigh</string>
+    <string name="failed_to_load_summary">Theip ar lódáil an achoimre</string>
+    <string name="no_summary_items_to_display">Níl aon mhíreanna achoimre le taispeáint</string>
+    <string name="scheduleItemNoDueDate">Níl aon Dáta Dlite</string>
+    <string name="a11y_refresh">Athnuaigh</string>
+    <string name="masqueradingAs">Tá tú ag gníomhú mar %s</string>
+    <string name="stopActingAsTitle">Stop ag gníomhú mar&#8230;</string>
+    <string name="stopActingAsMessage">Stopfaidh tú ag gníomhú mar %s agus filleadh tú ar do chuntas.</string>
+    <string name="smartSearchPlaceholder">Déan cuardach sa chúrsa seo</string>
+    <string name="a11y_searchBarCloseButton">Dún an barra cuardaigh</string>
+    <string name="a11y_searchBarClearButton">Glan an cheist</string>
+    <string name="a11y_searchBarSearchButton">Cuardaigh</string>
+    <string name="smartSearchCourseHeaderTitle">Torthaí sa chúrsa</string>
+    <string name="smartSearchAnnouncementTitle">Fógra</string>
+    <string name="smartSearchDiscussionTitle">Fóram</string>
+    <string name="smartSearchAssignmentTitle">Tasc</string>
+    <string name="smartSearchPageTitle">Leathanach</string>
+    <string name="smartSearchLoadingTitle">Fan go Fóill, Táimid Do Thorthaí á bhFáil againn!</string>
+    <string name="smartSearchLoadingSubtitle">Táimid ag obair go dian chun na meaitseanna is fearr a aimsiú do do chuardach. Ní bheidh sé seo i bhfad! Go raibh maith agat as d’fhoighne.</string>
+    <string name="smartSearchEmptyTitle">Níl Meaitseáil Foirfe ann</string>
+    <string name="smartSearchEmptyMessage">Ní thángamar go díreach ar an méid atá á lorg agat. B\'fhéidir déan iarracht rud éigin eile a chuardach?</string>
 </resources>

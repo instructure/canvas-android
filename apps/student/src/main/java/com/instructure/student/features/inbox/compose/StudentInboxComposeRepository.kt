@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 
 class StudentInboxComposeRepository(
@@ -38,12 +37,12 @@ class StudentInboxComposeRepository(
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
 
-        val coursesResult = courseAPI.getFirstPageCourses(params)
+        val coursesResult = courseAPI.getFirstPageCoursesInbox(params)
             .depaginate { nextUrl -> courseAPI.next(nextUrl, params) }
 
         val courses = coursesResult.dataOrNull ?: return coursesResult
 
-        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
+        val validCourses = courses.filter { !it.accessRestrictedByDate && it.hasActiveEnrollment() }
 
         return DataResult.Success(validCourses)
     }

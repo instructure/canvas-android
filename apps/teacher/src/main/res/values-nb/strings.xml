@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Avbryte redigering av kommentar</string>
     <string name="skip">Hopp over</string>
 
+    <string name="collapseGradePanel">Skjul vurderingspanel</string>
+    <string name="expandGradePanel">Vis vurderingspanel</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Egendefinert vurdering %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">En feil oppsto under oppdateringen av denne filen</string>
     <string name="errorUpdatingFolder">En feil oppsto under oppdateringen av denne mappen</string>
 
+    <string name="errorEmptyTitle">Tittelen kan ikke være tom</string>
     <string name="toDoEmpty">Ingen flere oppgaver!\n Ha en fin dag.</string>
     <string name="toDoNoSubmissions">Det finnes ingen innleveringer å gi vurderinger til for denne oppgaven.</string>
     <string name="errorToDoRouteFailed">En feil oppsto under visning av dette gjøremålselementet.</string>

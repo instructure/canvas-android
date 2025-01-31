@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Cancel editing comment</string>
     <string name="skip">Skip</string>
 
+    <string name="collapseGradePanel">Collapse Grade Panel</string>
+    <string name="expandGradePanel">Expand Grade Panel</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Custom score %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">An error occurred updating this file</string>
     <string name="errorUpdatingFolder">An error occurred updating this folder</string>
 
+    <string name="errorEmptyTitle">The title cannot be blank</string>
     <string name="toDoEmpty">Nothing more to do!\n Enjoy your day.</string>
     <string name="toDoNoSubmissions">There are no submissions to grade for this assignment.</string>
     <string name="errorToDoRouteFailed">An error occurred trying to view this To Do item.</string>

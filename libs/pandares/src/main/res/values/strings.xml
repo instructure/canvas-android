@@ -1500,7 +1500,9 @@
     <string name="offline_content_sync_loading_title">Loading...</string>
     <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
     <string name="content_description_expand_content">Expand content</string>
+    <string name="content_description_expand_content_with_param">Expand content, %s</string>
     <string name="content_description_collapse_content">Collapse content</string>
+    <string name="content_description_collapse_content_with_param">Collapse content, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off then no synchronization will happen. The already downloaded content will not be deleted.</string>
     <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
     <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
@@ -1630,6 +1632,7 @@
     <string name="discussionMenuRefresh">Refresh</string>
 
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Jump to Today, selected day is %s, today is %s</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
     <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
     <string name="calendarNoEvents">No Events Today!</string>
