@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -68,6 +69,7 @@ import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -83,6 +85,9 @@ fun CalendarScreen(
     navigationActionClick: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
+    val todayFocusRequester = remember { FocusRequester() }
+    val todayPressed = remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -110,6 +115,7 @@ fun CalendarScreen(
                                     .semantics(mergeDescendants = true) { }
                                     .clickable {
                                         actionHandler(CalendarAction.TodayTapped)
+                                        todayPressed.value = true
                                     }) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_calendar_day),
@@ -142,6 +148,15 @@ fun CalendarScreen(
                     LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
                         focusRequester.requestFocus()
                     })
+
+                    LaunchedEffect(todayPressed.value) {
+                        if (todayPressed.value) {
+                            focusManager.clearFocus(true)
+                            delay(200)
+                            todayFocusRequester.requestFocus()
+                            todayPressed.value = false
+                        }
+                    }
                 }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
@@ -154,7 +169,7 @@ fun CalendarScreen(
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
                     Column {
-                        Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth())
+                        Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth(), todayFocusRequester)
                         CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler, Modifier.testTag("calendarEvents"))
                     }
                 }
