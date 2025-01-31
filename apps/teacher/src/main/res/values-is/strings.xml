@@ -446,6 +446,8 @@
     <string name="cancel_editing_comment">Hætta við að breyta athugasemd</string>
     <string name="skip">Sleppa</string>
 
+    <string name="collapseGradePanel">Fella saman einkunnaborð</string>
+    <string name="expandGradePanel">Stækka einkunnaborð</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Sérsniðin einkunn %1$s</string>
 
@@ -837,6 +839,7 @@
     <string name="errorUpdatingFile">Villa kom upp við uppfærslu skráarinnar</string>
     <string name="errorUpdatingFolder">Villa kom upp við uppfærslu möppunnar</string>
 
+    <string name="errorEmptyTitle">Titill getur ekki verið auður</string>
     <string name="toDoEmpty">Ekkert annað á dagskrá!\n Njóttu dagsins.</string>
     <string name="toDoNoSubmissions">Þetta verkefni er ekki með nein skil sem bíða mats.</string>
     <string name="errorToDoRouteFailed">Villa kom upp við að skoða þetta verkefni á verkefnalista.</string>
