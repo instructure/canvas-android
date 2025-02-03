@@ -78,8 +78,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
@@ -229,7 +231,9 @@ fun CalendarHeader(
     }
 
     var monthRowModifier = Modifier
-        .semantics(mergeDescendants = true) {}
+        .semantics(mergeDescendants = true) {
+            role = Role.Button
+        }
         .testTag("yearMonthTitle")
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
         monthRowModifier = monthRowModifier
