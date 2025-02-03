@@ -316,7 +316,9 @@ private fun RoleRow(
 
         Spacer(Modifier.width(8.dp))
 
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = name,
                 fontSize = 16.sp,
@@ -330,8 +332,6 @@ private fun RoleRow(
                 color = colorResource(id = R.color.textDark),
             )
         }
-
-        Spacer(Modifier.weight(1f))
 
         if (isSelected) {
             Icon(
@@ -369,9 +369,8 @@ private fun RecipientRow(
             text = recipient.name ?: "",
             fontSize = 16.sp,
             color = colorResource(id = R.color.textDarkest),
+            modifier = Modifier.weight(1f)
         )
-        
-        Spacer(Modifier.weight(1f))
 
         if (isSelected) {
             Icon(
