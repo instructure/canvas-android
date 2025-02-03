@@ -28,7 +28,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
-import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.ReminderPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -41,7 +40,6 @@ import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
@@ -58,7 +56,6 @@ import java.util.Date
 class AssignmentDetailsInteractionTest : ParentComposeTest() {
     override fun displaysPageObjects() = Unit
 
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
     private val reminderPage = ReminderPage(composeTestRule)
 
     @Test

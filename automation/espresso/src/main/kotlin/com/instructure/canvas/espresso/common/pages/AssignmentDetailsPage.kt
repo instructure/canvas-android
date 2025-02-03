@@ -35,6 +35,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
@@ -60,6 +61,7 @@ import com.instructure.espresso.waitForCheck
 import com.instructure.pandautils.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 
@@ -89,6 +91,12 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.assignmentName)).assertHasText(assignment.name!!)
         onView(allOf(withId(R.id.points), isDisplayed()))
                 .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
+    }
+
+    fun assertAssignmentDetails(assignment: AssignmentApiModel) {
+        onView(withId(R.id.assignmentName)).assertHasText(assignment.name)
+        onView(allOf(withId(R.id.points), isDisplayed()))
+            .check(matches(containsTextCaseInsensitive(assignment.pointsPossible?.toInt().toString())))
     }
 
     fun assertAssignmentTitle(assignmentName: String) {
@@ -203,8 +211,14 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSelectedAttempt(attemptNumber: Int) {
-        assertAttemptInformation()
-        onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)), withText("Attempt $attemptNumber"))).assertDisplayed()
+        if(attemptNumber != 1) {
+            assertAttemptInformation()
+            onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)), withText("Attempt $attemptNumber"))).assertDisplayed()
+        }
+        else {
+            assertNoAttemptSpinner()
+            onView(allOf(withId(R.id.attemptTitle), withParent(withId(R.id.attemptView)), withText("Attempt $attemptNumber"))).assertDisplayed()
+        }
     }
 
     fun assertNoAttemptSpinner() {
@@ -227,7 +241,15 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
-        onView(withText(submissionType) + withAncestor(R.id.customPanel)).assertDisplayed()
+        onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).assertDisplayed()
+    }
+
+    fun assertReminderViewDisplayed() {
+        onView(withId(R.id.reminderComposeView)).assertDisplayed()
+    }
+
+    fun assertNoDescriptionViewDisplayed() {
+        onView(withId(R.id.noDescriptionTextView) + withText("No Content")).scrollTo().assertDisplayed()
     }
 
     fun clickCustom() {
