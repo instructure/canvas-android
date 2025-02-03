@@ -25,6 +25,7 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,6 +70,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
@@ -114,7 +117,12 @@ private const val CALENDAR_ROW_HEIGHT = 46
 private const val PAGE_COUNT = 1000
 
 @Composable
-fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
+fun Calendar(
+    calendarUiState: CalendarUiState,
+    actionHandler: (CalendarAction) -> Unit,
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
+) {
     Column(modifier = modifier) {
         var centerIndex by remember { mutableIntStateOf(PAGE_COUNT / 2) }
         val pagerState = rememberPagerState(
@@ -197,6 +205,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                         calendarUiState.pendingSelectedDay ?: calendarUiState.selectedDay,
                         scaleRatio = rowsScaleRatio,
                         selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) },
+                        todayFocusRequester = todayFocusRequester,
                         modifier = Modifier
                             .height(height.dp)
                             .testTag("calendarBody$monthOffset")
@@ -305,7 +314,8 @@ fun CalendarBody(
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
     scaleRatio: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
 ) {
     Column(
         modifier
@@ -317,7 +327,7 @@ fun CalendarBody(
                 .padding(start = 16.dp, end = 16.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio)
+        CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio, todayFocusRequester = todayFocusRequester)
     }
 }
 
@@ -353,7 +363,8 @@ fun CalendarPage(
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
     scaleRatio: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
 ) {
     Column(modifier = modifier) {
         calendarRows.forEachIndexed { index, it ->
@@ -361,7 +372,7 @@ fun CalendarPage(
             // to be able to see the neighbouring pages
             val scale = if (it.days.any { day -> day.date == selectedDay } || calendarRows.size == 1) 1.0f else scaleRatio
             DaysOfWeekRow(
-                days = it.days, selectedDay, selectedDayChanged, modifier = Modifier
+                days = it.days, selectedDay, selectedDayChanged, todayFocusRequester = todayFocusRequester, modifier = Modifier
                     .height(CALENDAR_ROW_HEIGHT.dp * scale)
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
@@ -378,13 +389,14 @@ fun DaysOfWeekRow(
     days: List<CalendarDayUiState>,
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
 ) {
     Row(
         modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         days.forEach { dayState ->
-            val textColor = when {
+            var textColor = when {
                 dayState.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
                 dayState.today -> Color(ThemePrefs.textButtonColor)
                 dayState.enabled -> colorResource(id = R.color.textDarkest)
@@ -393,8 +405,7 @@ fun DaysOfWeekRow(
             var dayModifier = Modifier
                 .width(32.dp)
                 .height(32.dp)
-                .clip(RoundedCornerShape(32.dp))
-                .clickable { selectedDayChanged(dayState.date) }
+
             if (dayState.date == selectedDay) {
                 dayModifier = dayModifier
                     .background(
@@ -402,7 +413,16 @@ fun DaysOfWeekRow(
                         shape = RoundedCornerShape(500.dp),
                     )
             }
-            dayModifier = dayModifier.wrapContentHeight(align = Alignment.CenterVertically)
+
+            if (dayState.today && dayState.enabled && todayFocusRequester != null) {
+                dayModifier = dayModifier.focusRequester(todayFocusRequester).focusable()
+            }
+
+            dayModifier = dayModifier
+                .clip(RoundedCornerShape(32.dp))
+                .clickable { selectedDayChanged(dayState.date) }
+                .wrapContentHeight(align = Alignment.CenterVertically)
+
             Column(
                 Modifier
                     .width(32.dp)
