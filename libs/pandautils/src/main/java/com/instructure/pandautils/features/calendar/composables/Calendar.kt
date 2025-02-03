@@ -84,6 +84,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -165,15 +166,19 @@ fun Calendar(
             expanded = calendarUiState.expanded
         )
         HorizontalPager(
-            modifier = Modifier.swipeable(
-                state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
-                    actionHandler(CalendarAction.ExpandChanged(it == 1f))
-                    true
-                }),
-                orientation = Orientation.Vertical,
-                anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
-                thresholds = { _, _ -> FractionalThreshold(0.5f) },
-            ).testTag("calendarPager"),
+            modifier = Modifier
+                .swipeable(
+                    state = rememberSwipeableState(
+                        initialValue = if (calendarUiState.expanded) 1f else 0f,
+                        confirmStateChange = {
+                            actionHandler(CalendarAction.ExpandChanged(it == 1f))
+                            true
+                        }),
+                    orientation = Orientation.Vertical,
+                    anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
+                    thresholds = { _, _ -> FractionalThreshold(0.5f) },
+                )
+                .testTag("calendarPager"),
             state = pagerState,
             beyondViewportPageCount = 2,
             reverseLayout = false,
@@ -396,51 +401,57 @@ fun DaysOfWeekRow(
         modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         days.forEach { dayState ->
-            var textColor = when {
+            val textColor = when {
                 dayState.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
                 dayState.today -> Color(ThemePrefs.textButtonColor)
                 dayState.enabled -> colorResource(id = R.color.textDarkest)
                 else -> colorResource(id = R.color.textDark)
             }
-            var dayModifier = Modifier
-                .width(32.dp)
-                .height(32.dp)
+            val dayContentDescription =
+                dayState.contentDescription + " " + pluralStringResource(
+                    id = R.plurals.a11y_calendar_day_event_count,
+                    dayState.indicatorCount,
+                    dayState.indicatorCount
+                )
 
-            if (dayState.date == selectedDay) {
-                dayModifier = dayModifier
-                    .background(
-                        color = Color(ThemePrefs.buttonColor),
-                        shape = RoundedCornerShape(500.dp),
-                    )
-            }
+            var columnModifier = Modifier
+                .width(32.dp)
+                .wrapContentHeight()
 
             if (dayState.today && dayState.enabled && todayFocusRequester != null) {
-                dayModifier = dayModifier.focusRequester(todayFocusRequester).focusable()
+                columnModifier = columnModifier
+                    .focusRequester(todayFocusRequester)
+                    .focusable()
             }
 
-            dayModifier = dayModifier
-                .clip(RoundedCornerShape(32.dp))
-                .clickable { selectedDayChanged(dayState.date) }
-                .wrapContentHeight(align = Alignment.CenterVertically)
-
             Column(
-                Modifier
-                    .width(32.dp)
-                    .wrapContentHeight()
+                columnModifier
+                    .clickable { selectedDayChanged(dayState.date) }
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = dayContentDescription
+                        role = Role.Button
+                    }
             ) {
-                val dayContentDescription =
-                    dayState.contentDescription + " " + pluralStringResource(
-                        id = R.plurals.a11y_calendar_day_event_count,
-                        dayState.indicatorCount,
-                        dayState.indicatorCount
-                    )
+                var dayModifier = Modifier
+                    .width(32.dp)
+                    .height(32.dp)
+                    .clip(RoundedCornerShape(32.dp))
+
+                if (dayState.date == selectedDay) {
+                    dayModifier = dayModifier
+                        .background(
+                            color = Color(ThemePrefs.buttonColor),
+                            shape = RoundedCornerShape(500.dp),
+                        )
+                }
+
                 Text(
                     text = dayState.dayNumber.toString(),
                     fontSize = 16.sp,
                     color = textColor,
-                    modifier = dayModifier.semantics {
-                        contentDescription = dayContentDescription
-                    },
+                    modifier = dayModifier
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                        .clearAndSetSemantics { },
                     textAlign = TextAlign.Center,
                 )
                 Row(
@@ -451,7 +462,9 @@ fun DaysOfWeekRow(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     repeat(dayState.indicatorCount) {
-                        EventIndicator(modifier = Modifier.clearAndSetSemantics { testTag = "eventIndicator$it" })
+                        EventIndicator(modifier = Modifier.clearAndSetSemantics {
+                            testTag = "eventIndicator$it"
+                        })
                     }
                 }
             }
