@@ -357,6 +357,7 @@ class InboxComposeViewModel @Inject constructor(
         ) }
 
         resetSearchFieldValue()
+        resetSearchFieldResults()
     }
 
     fun recipientPickerDone() {
@@ -365,10 +366,12 @@ class InboxComposeViewModel @Inject constructor(
             recipientPickerUiState = it.recipientPickerUiState.copy(
                 screenOption = RecipientPickerScreenOption.Roles,
                 selectedRole = null,
-            )
+                searchValue = TextFieldValue(""),
+            ),
         ) }
 
         resetSearchFieldValue()
+        resetSearchFieldResults()
     }
 
     private fun loadContexts(forceRefresh: Boolean = false) {
@@ -585,6 +588,10 @@ class InboxComposeViewModel @Inject constructor(
                 searchValue = TextFieldValue("")
             )
         ) }
+    }
+
+    private fun resetSearchFieldResults() {
+        loadRecipients("", uiState.value.selectContextUiState.selectedCanvasContext ?: return)
     }
 
     private fun updateSelectedRecipients(newRecipientList: List<Recipient>) {
