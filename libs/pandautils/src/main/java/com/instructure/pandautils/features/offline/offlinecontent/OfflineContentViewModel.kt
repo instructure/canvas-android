@@ -454,14 +454,21 @@ class OfflineContentViewModel @Inject constructor(
         val usedSpace = totalSpace - (storageUtils.getFreeSpace() - appSizeModifier)
         val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
-        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
-        val storageInfoText = context.getString(
-            R.string.offline_content_storage_info,
-            Formatter.formatShortFileSize(context, usedSpace),
-            Formatter.formatShortFileSize(context, totalSpace),
+        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) else 0
+        val allAppsPercent = canvasPercent + otherPercent
+        val usedSpaceText = Formatter.formatShortFileSize(context, usedSpace)
+        val totalSpaceText = Formatter.formatShortFileSize(context, totalSpace)
+        val storageInfoText = context.getString(R.string.offline_content_storage_info, usedSpaceText, totalSpaceText)
+        val contentDescription = context.getString(
+            R.string.offline_content_storage_info_a11y_description,
+            usedSpaceText,
+            totalSpaceText,
+            otherPercent,
+            canvasPercent,
+            100 - allAppsPercent
         )
 
-        return StorageInfo(otherPercent, canvasPercent, storageInfoText)
+        return StorageInfo(otherPercent, allAppsPercent, storageInfoText, contentDescription)
     }
 
     private suspend fun getAppSizeModifier(): Long {

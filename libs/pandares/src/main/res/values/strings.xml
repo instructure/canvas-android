@@ -1480,6 +1480,7 @@
     <string name="offline_content_other">Other Apps</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">Remaining</string>
+    <string name="offline_content_storage_info_a11y_description">Storage Info: %s of %s Used, Other Apps %d%%, Canvas Student %d%%, Remaining %d%%</string>
     <string name="offline_content_all_courses">All Courses</string>
     <string name="offline_content_sync">Sync</string>
     <string name="offline_content_selected">%d Selected</string>
