@@ -23,7 +23,6 @@ import android.content.res.Resources
 import android.view.View
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Button
 import com.instructure.pandautils.R
 
 val Context.a11yManager get() = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
