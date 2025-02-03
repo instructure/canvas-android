@@ -465,7 +465,7 @@ class InboxComposeViewModel @Inject constructor(
                         message = getMessageBody(),
                         context = canvasContext,
                         attachments = uiState.value.attachments.map { it.attachment },
-                        isIndividual = uiState.value.sendIndividual
+                        isIndividual = uiState.value.isSendIndividualEnabled
                     ).dataOrThrow
 
                     _uiState.update { it.copy(enableCustomBackHandler = false) }
