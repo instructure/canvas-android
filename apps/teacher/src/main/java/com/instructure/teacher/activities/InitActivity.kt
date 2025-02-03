@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
@@ -437,6 +438,28 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItemHelp.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStartMasquerading.setOnClickListener(navDrawerOnClick)
+        listOf(
+            navigationDrawerItemFiles,
+            navigationDrawerItemGauge,
+            navigationDrawerItemArc,
+            navigationDrawerItemMastery,
+            navigationDrawerItemChangeUser,
+            navigationDrawerItemHelp,
+            navigationDrawerItemLogout,
+            navigationDrawerSettings,
+            navigationDrawerItemStartMasquerading,
+            navigationDrawerItemStopMasquerading
+        ).forEach {
+            it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfo
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    info.className = "android.widget.Button"
+                }
+            }
+        }
 
         // Set up Color Overlay setting
         setUpColorOverlaySwitch()
