@@ -306,29 +306,26 @@ class FlutterAppMigrationTest {
     }
 
     @Test
-    fun `Migrate reminders`() {
+    fun `Migrate assignment reminder`() {
         val cursor: Cursor = mockk(relaxed = true)
         every { mockDatabase.rawQuery("SELECT * FROM reminders", null) } returns cursor
         every { cursor.getColumnIndexOrThrow("user_domain") } returns 0
-        every { cursor.getString(0) } returnsMany listOf("domain.com", "domain2.com", "domain2.com")
+        every { cursor.getString(0) } returns "domain.com"
         every { cursor.getColumnIndexOrThrow("user_id") } returns 1
-        every { cursor.getString(1) } returnsMany listOf("1", "2", "2")
+        every { cursor.getString(1) } returns "1"
         every { cursor.getColumnIndexOrThrow("type") } returns 2
-        every { cursor.getString(2) } returnsMany listOf("assignment", "event", "event")
+        every { cursor.getString(2) } returns "assignment"
         every { cursor.getColumnIndexOrThrow("item_id") } returns 3
-        every { cursor.getString(3) } returnsMany listOf("101", "102", "102")
+        every { cursor.getString(3) } returns "101"
         every { cursor.getColumnIndexOrThrow("course_id") } returns 4
-        every { cursor.getString(4) } returnsMany listOf("202", "203", "203")
+        every { cursor.getString(4) } returns "202"
         every { cursor.getColumnIndexOrThrow("date") } returns 5
-        every { cursor.getString(5) } returnsMany listOf("2025-01-01T00:00:00Z", "2025-01-01T00:00:00Z", "2024-01-01T00:00:00Z")
-        every { cursor.moveToNext() } returnsMany listOf(true, true, false)
+        every { cursor.getString(5) } returns "2025-01-01T00:00:00Z"
+        every { cursor.moveToNext() } returnsMany listOf(true, false)
         every { context.getString(R.string.assignment) } returns "Assignment"
-        every { context.getString(R.string.a11y_calendar_event) } returns "Event"
         every {
             context.getString(eq(R.string.reminderNotificationTitleFor), any())
-        } answers { call ->
-            "Reminder for ${(call.invocation.args[1] as Array<*>)[0]}"
-        }
+        } returns "Reminder for Assignment"
 
         flutterAppMigration.migrateIfNecessary()
 
@@ -342,10 +339,35 @@ class FlutterAppMigrationTest {
                 alarmTimeInMillis = Instant.parse("2025-01-01T00:00:00Z").toEpochMilli()
             )
         }
+    }
+
+    @Test
+    fun `Migrate event reminder`() {
+        val cursor: Cursor = mockk(relaxed = true)
+        every { mockDatabase.rawQuery("SELECT * FROM reminders", null) } returns cursor
+        every { cursor.getColumnIndexOrThrow("user_domain") } returns 0
+        every { cursor.getString(0) } returns "domain2.com"
+        every { cursor.getColumnIndexOrThrow("user_id") } returns 1
+        every { cursor.getString(1) } returns "1"
+        every { cursor.getColumnIndexOrThrow("type") } returns 2
+        every { cursor.getString(2) } returns "event"
+        every { cursor.getColumnIndexOrThrow("item_id") } returns 3
+        every { cursor.getString(3) } returns "102"
+        every { cursor.getColumnIndexOrThrow("course_id") } returns 4
+        every { cursor.getString(4) } returns "203"
+        every { cursor.getColumnIndexOrThrow("date") } returns 5
+        every { cursor.getString(5) } returns "2025-01-01T00:00:00Z"
+        every { cursor.moveToNext() } returnsMany listOf(true, false)
+        every { context.getString(R.string.a11y_calendar_event) } returns "Event"
+        every {
+            context.getString(eq(R.string.reminderNotificationTitleFor), any())
+        } returns "Reminder for Event"
+
+        flutterAppMigration.migrateIfNecessary()
 
         coVerify(exactly = 1) {
             reminderRepository.createReminder(
-                userId = 2,
+                userId = 1,
                 contentId = 102,
                 contentHtmlUrl = "domain2.com/courses/203/calendar_events/102",
                 title = "Reminder for Event",
@@ -353,8 +375,29 @@ class FlutterAppMigrationTest {
                 alarmTimeInMillis = Instant.parse("2025-01-01T00:00:00Z").toEpochMilli()
             )
         }
+    }
 
-        coVerify(exactly = 2) {
+    @Test
+    fun `Ignore past date reminder`() {
+        val cursor: Cursor = mockk(relaxed = true)
+        every { mockDatabase.rawQuery("SELECT * FROM reminders", null) } returns cursor
+        every { cursor.getColumnIndexOrThrow("user_domain") } returns 0
+        every { cursor.getString(0) } returns "domain2.com"
+        every { cursor.getColumnIndexOrThrow("user_id") } returns 1
+        every { cursor.getString(1) } returns "1"
+        every { cursor.getColumnIndexOrThrow("type") } returns 2
+        every { cursor.getString(2) } returns "event"
+        every { cursor.getColumnIndexOrThrow("item_id") } returns 3
+        every { cursor.getString(3) } returns "102"
+        every { cursor.getColumnIndexOrThrow("course_id") } returns 4
+        every { cursor.getString(4) } returns "203"
+        every { cursor.getColumnIndexOrThrow("date") } returns 5
+        every { cursor.getString(5) } returns "2024-01-01T00:00:00Z"
+        every { cursor.moveToNext() } returnsMany listOf(true, false)
+
+        flutterAppMigration.migrateIfNecessary()
+
+        coVerify(exactly = 0) {
             reminderRepository.createReminder(any(), any(), any(), any(), any(), any())
         }
     }
