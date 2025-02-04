@@ -206,6 +206,15 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
     private fun updateToolbarVisibility() = with(binding) {
         val useOverlay = !StudentPrefs.hideCourseColorOverlay
+        if (!useOverlay) {
+            overlayToolbar.removeView(searchBar)
+            noOverlayToolbar.addView(searchBar)
+        } else {
+            if (searchBar.parent == noOverlayToolbar) {
+                noOverlayToolbar.removeView(searchBar)
+                overlayToolbar.addView(searchBar)
+            }
+        }
         noOverlayToolbar.setVisible(!useOverlay)
         overlayToolbar.setVisible(useOverlay)
         courseHeader.setVisible(useOverlay)
