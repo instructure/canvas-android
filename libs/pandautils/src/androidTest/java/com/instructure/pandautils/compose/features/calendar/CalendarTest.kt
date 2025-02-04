@@ -22,7 +22,6 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -118,24 +117,24 @@ class CalendarTest {
         val calendarRowMatcher = hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))
         val calendarRow = composeTestRule.onNode(calendarRowMatcher)
         calendarRow.assertIsDisplayed()
-        composeTestRule.onNode((hasText("26")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("27")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("28")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("29")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("30")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("31")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("1")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("26")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("27")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("28")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("29")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("30")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("31")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("1")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
 
         val calendarRowMatcher2 = hasTestTag("calendarRow1").and(hasAnyAncestor(hasTestTag("calendarBody0")))
         val calendarRow2 = composeTestRule.onNode(calendarRowMatcher2)
         calendarRow2.assertIsDisplayed()
-        composeTestRule.onNode((hasText("2")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("3")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("4")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("5")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("6")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("7")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("8")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("2")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("3")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("4")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("5")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("6")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("7")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("8")).and(hasAnyAncestor(calendarRowMatcher2))).assertIsDisplayed().assertHasClickAction()
     }
 
     @Test
@@ -157,13 +156,13 @@ class CalendarTest {
         val calendarRowMatcher = hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))
         val calendarRow = composeTestRule.onNode(calendarRowMatcher)
         calendarRow.assertIsDisplayed()
-        composeTestRule.onNode((hasText("16")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("17")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("18")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("19")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("20")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("21")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNode((hasText("22")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("16")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("17")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("18")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("19")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("20")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("21")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNode((hasTestTag("22")).and(hasAnyAncestor(calendarRowMatcher))).assertIsDisplayed().assertHasClickAction()
 
         composeTestRule.onNode(hasTestTag("calendarRow1").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsNotDisplayed()
         composeTestRule.onNode(hasTestTag("calendarRow2").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsNotDisplayed()
@@ -192,9 +191,9 @@ class CalendarTest {
         val calendarRowMatcher = hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))
         val calendarRow = composeTestRule.onNode(calendarRowMatcher)
         calendarRow.assertIsDisplayed()
-        composeTestRule.onNode((hasTestTag("eventIndicator0"))).assertIsDisplayed()
-        composeTestRule.onNode((hasTestTag("eventIndicator1"))).assertIsDisplayed()
-        composeTestRule.onNode((hasTestTag("eventIndicator2"))).assertIsNotDisplayed()
+        composeTestRule.onNode((hasTestTag("eventIndicator0")), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode((hasTestTag("eventIndicator1")), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode((hasTestTag("eventIndicator2")), useUnmergedTree = true).assertIsNotDisplayed()
     }
 
     @Test
@@ -263,7 +262,7 @@ class CalendarTest {
         }
 
         val calendarRowMatcher = hasTestTag("calendarRow3").and(hasAnyAncestor(hasTestTag("calendarBody0")))
-        composeTestRule.onNode((hasText("16")).and(hasAnyAncestor(calendarRowMatcher))).performClick()
+        composeTestRule.onNode((hasTestTag("16")).and(hasAnyAncestor(calendarRowMatcher))).performClick()
 
         assertEquals(CalendarAction.DaySelected(LocalDate.of(2023, 4, 16)), actions.last())
     }
