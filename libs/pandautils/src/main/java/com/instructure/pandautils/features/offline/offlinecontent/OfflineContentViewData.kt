@@ -30,7 +30,12 @@ data class OfflineContentViewData(
     val selectedCount: Int
 ) : BaseObservable()
 
-data class StorageInfo(val otherAppsReservedPercent: Int, val allAppsReservedPercent: Int, val storageInfoText: String)
+data class StorageInfo(
+    val otherAppsReservedPercent: Int,
+    val allAppsReservedPercent: Int,
+    val storageInfoText: String,
+    val contentDescription: String
+)
 
 data class CourseItemViewData(
     var fullContentSync: Boolean,
