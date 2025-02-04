@@ -16,10 +16,15 @@
  */
 package com.instructure.teacher.features.lti
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
 import com.instructure.pandautils.utils.color
 
 class TeacherLtiLaunchFragmentBehavior(canvasContext: CanvasContext) : LtiLaunchFragmentBehavior {
     override val toolbarColor: Int = canvasContext.color
+
+    override fun closeLtiLaunchFragment(activity: FragmentActivity) {
+        activity.finish()
+    }
 }
