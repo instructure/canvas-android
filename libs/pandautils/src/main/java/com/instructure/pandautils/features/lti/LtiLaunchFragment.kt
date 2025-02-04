@@ -106,7 +106,9 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
         binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
-        binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.setupAsBackButton {
+            ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
+        }
         binding.toolbar.title = title
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textLightest))
 
@@ -180,7 +182,7 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
             override fun routeInternallyCallback(url: String) {
                 // Handle return button in external tools. Links to course homepage should close the tool.
                 if (url == contextLink()) {
-                    requireActivity().onBackPressed()
+                    ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
                 } else {
                     webViewRouter.routeInternally(url)
                 }
