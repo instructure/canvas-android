@@ -54,7 +54,7 @@ class ParentAssignmentDetailsRouter(
             assignmentUrl
         } else {
             "$assignmentUrl/submissions/$currentStudentId"
-        }
+        }.plus("?embedded=true")
 
         analytics.logEvent(AnalyticsEventConstants.SUBMISSION_AND_RUBRIC_INTERACTION)
 
