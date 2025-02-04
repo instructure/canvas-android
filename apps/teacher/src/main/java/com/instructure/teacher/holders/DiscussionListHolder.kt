@@ -18,12 +18,12 @@ package com.instructure.teacher.holders
 
 import android.content.Context
 import android.view.View
-import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
@@ -97,15 +97,7 @@ class DiscussionListHolder(private val binding: AdapterDiscussionBinding) : Recy
             context.getString(R.string.discussions_unread, unreadDisplayCount)
         )
 
-        discussionLayout.accessibilityDelegate = object : View.AccessibilityDelegate() {
-            override fun onInitializeAccessibilityNodeInfo(
-                host: View,
-                info: AccessibilityNodeInfo
-            ) {
-                super.onInitializeAccessibilityNodeInfo(host, info)
-                info.className = Button::class.java.name
-            }
-        }
+        discussionLayout.accessibilityClassName(Button::class.java.name)
     }
 
     private fun getFormattedLastPost(context: Context, date: Date?): String {
