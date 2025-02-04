@@ -20,7 +20,9 @@ package com.instructure.pandautils.utils
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.content.res.Resources
+import android.view.View
 import android.view.accessibility.AccessibilityManager
+import android.view.accessibility.AccessibilityNodeInfo
 import com.instructure.pandautils.R
 
 val Context.a11yManager get() = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -58,6 +60,16 @@ fun getContentDescriptionForMinusGradeString(grade: String, resources: Resources
 fun isAccessibilityEnabled(context: Context): Boolean {
     val am: AccessibilityManager? = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
     return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
+}
+
+fun View.accessibilityClassName(accessibilityClassName: String) {
+    accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+
+            info.className = accessibilityClassName
+        }
+    }
 }
 
 

@@ -43,6 +43,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -426,7 +427,9 @@ fun DaysOfWeekRow(
             Column(
                 columnModifier
                     .testTag(dayState.dayNumber.toString())
-                    .clickable { selectedDayChanged(dayState.date) }
+                    .selectable(dayState.date == selectedDay) {
+                        selectedDayChanged(dayState.date)
+                    }
                     .semantics(mergeDescendants = true) {
                         contentDescription = dayContentDescription
                         role = Role.Button
@@ -452,7 +455,7 @@ fun DaysOfWeekRow(
                     modifier = dayModifier
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .clearAndSetSemantics { },
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center
                 )
                 Row(
                     Modifier
