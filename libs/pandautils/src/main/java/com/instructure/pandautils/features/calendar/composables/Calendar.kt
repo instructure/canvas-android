@@ -43,6 +43,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -392,12 +393,13 @@ fun DaysOfWeekRow(
         modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         days.forEach { dayState ->
-            var textColor = when {
+            val textColor = when {
                 dayState.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
                 dayState.today -> Color(ThemePrefs.textButtonColor)
                 dayState.enabled -> colorResource(id = R.color.textDarkest)
                 else -> colorResource(id = R.color.textDark)
             }
+
             var dayModifier = Modifier
                 .width(32.dp)
                 .height(32.dp)
@@ -411,12 +413,16 @@ fun DaysOfWeekRow(
             }
 
             if (dayState.today && dayState.enabled && todayFocusRequester != null) {
-                dayModifier = dayModifier.focusRequester(todayFocusRequester).focusable()
+                dayModifier = dayModifier
+                    .focusRequester(todayFocusRequester)
+                    .focusable()
             }
 
             dayModifier = dayModifier
                 .clip(RoundedCornerShape(32.dp))
-                .clickable { selectedDayChanged(dayState.date) }
+                .selectable(dayState.date == selectedDay) {
+                    selectedDayChanged(dayState.date)
+                }
                 .wrapContentHeight(align = Alignment.CenterVertically)
 
             Column(
@@ -437,7 +443,7 @@ fun DaysOfWeekRow(
                     modifier = dayModifier.semantics {
                         contentDescription = dayContentDescription
                     },
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center
                 )
                 Row(
                     Modifier
