@@ -164,17 +164,15 @@ fun Calendar(
             expanded = calendarUiState.expanded
         )
         HorizontalPager(
-            modifier = Modifier
-                .swipeable(
-                    state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
-                        actionHandler(CalendarAction.ExpandChanged(it == 1f))
-                        true
-                    }),
-                    orientation = Orientation.Vertical,
-                    anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
-                    thresholds = { _, _ -> FractionalThreshold(0.5f) },
-                )
-                .testTag("calendarPager"),
+            modifier = Modifier.swipeable(
+                state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
+                    actionHandler(CalendarAction.ExpandChanged(it == 1f))
+                    true
+                }),
+                orientation = Orientation.Vertical,
+                anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
+                thresholds = { _, _ -> FractionalThreshold(0.5f) },
+            ).testTag("calendarPager"),
             state = pagerState,
             beyondViewportPageCount = 2,
             reverseLayout = false,
