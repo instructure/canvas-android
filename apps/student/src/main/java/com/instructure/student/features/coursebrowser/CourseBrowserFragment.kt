@@ -49,6 +49,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
@@ -84,6 +85,9 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     @Inject
     lateinit var repository: CourseBrowserRepository
 
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
     private var apiCalls: Job? = null
@@ -104,6 +108,10 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
+
+        networkStateProvider.isOnlineLiveData.observe(viewLifecycleOwner) { isOnline ->
+            searchBar.setVisible(isOnline)
+        }
 
         searchBar.apply {
             setContent {
@@ -276,7 +284,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
             val tabs = repository.getTabs(canvasContext, isRefresh)
 
-            binding.searchBar.setVisible(tabs.find { it.tabId == Tab.SEARCH_ID } != null)
+            binding.searchBar.setVisible(networkStateProvider.isOnline() && tabs.find { it.tabId == Tab.SEARCH_ID } != null)
 
             // Finds the home tab so we can reorder them if necessary
             val sortedTabs = tabs.filter { it.tabId != Tab.SEARCH_ID }.toMutableList()
