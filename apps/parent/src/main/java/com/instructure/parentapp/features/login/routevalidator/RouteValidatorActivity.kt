@@ -23,10 +23,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.databinding.ActivityRouteValidatorBinding
 import com.instructure.parentapp.features.login.LoginActivity
@@ -55,14 +56,14 @@ class RouteValidatorActivity : BaseCanvasActivity() {
         when (action) {
             is RouteValidatorAction.Finish -> finish()
             is RouteValidatorAction.LoadWebViewUrl -> binding.dummyWebView.loadUrl(action.url)
-            is RouteValidatorAction.StartMainActivity -> startMainActivity(action.masqueradeId, action.data)
+            is RouteValidatorAction.StartMainActivity -> startMainActivity(action.masqueradeId, action.data, action.message)
             is RouteValidatorAction.ShowToast -> Toast.makeText(this, action.message, Toast.LENGTH_LONG).show()
             is RouteValidatorAction.StartSignInActivity -> startSignInActivity(action.accountDomain)
             is RouteValidatorAction.StartLoginActivity -> startLoginActivity()
         }
     }
 
-    private fun startMainActivity(masqueradeId: Long?, data: Uri?) {
+    private fun startMainActivity(masqueradeId: Long?, data: Uri?, message: String?) {
         if (data != null) {
             val intent = MainActivity.createIntent(this, data)
             startActivity(intent)
@@ -72,6 +73,7 @@ class RouteValidatorActivity : BaseCanvasActivity() {
             } else {
                 Intent(this, MainActivity::class.java)
             }
+            message?.let { intent.putExtra(Const.MESSAGE, it) }
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }

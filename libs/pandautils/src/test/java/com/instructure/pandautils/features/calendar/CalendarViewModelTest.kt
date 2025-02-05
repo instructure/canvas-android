@@ -727,7 +727,7 @@ class CalendarViewModelTest {
             viewModel.events.toList(events)
         }
 
-        val expectedAction = CalendarViewModelAction.OpenDiscussion(Course(1), 1)
+        val expectedAction = CalendarViewModelAction.OpenDiscussion(Course(1), 1, 1)
         assertEquals(expectedAction, events.last())
     }
 

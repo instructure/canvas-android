@@ -17,12 +17,12 @@
 
 package com.instructure.parentapp.features.courses.list
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,6 +50,8 @@ class CoursesViewModel @Inject constructor(
 
     private var selectedStudent: User? = null
 
+    val lazyListState = LazyListState()
+
     init {
         viewModelScope.launch {
             selectedStudentHolder.selectedStudentState.collect {
@@ -73,19 +75,19 @@ class CoursesViewModel @Inject constructor(
     }
 
     private fun loadCourses(forceRefresh: Boolean = false) {
-        viewModelScope.tryLaunch {
-            val color = selectedStudent.studentColor
+        selectedStudent?.let { student ->
+            viewModelScope.tryLaunch {
+                val color = student.studentColor
 
-            _uiState.update {
-                it.copy(
-                    isLoading = true,
-                    isError = false,
-                    studentColor = color
-                )
-            }
+                _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        isError = false,
+                        studentColor = color
+                    )
+                }
 
-            selectedStudent?.id?.let {
-                val courses = repository.getCourses(it, forceRefresh)
+                val courses = repository.getCourses(student.id, forceRefresh)
                 _uiState.update { state ->
                     state.copy(
                         isLoading = false,
@@ -94,25 +96,19 @@ class CoursesViewModel @Inject constructor(
                                 course.id,
                                 course.name,
                                 course.courseCode,
-                                courseGradeFormatter.getGradeText(course, it)
+                                courseGradeFormatter.getGradeText(course, student.id)
                             )
                         }
                     )
                 }
-            } ?: run {
-                setErrorState()
+            } catch {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isError = true
+                    )
+                }
             }
-        } catch {
-            setErrorState()
-        }
-    }
-
-    private fun setErrorState() {
-        _uiState.update {
-            it.copy(
-                isLoading = false,
-                isError = true
-            )
         }
     }
 

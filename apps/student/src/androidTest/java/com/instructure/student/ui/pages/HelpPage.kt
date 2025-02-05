@@ -31,8 +31,8 @@ import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.plus
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
@@ -99,22 +99,22 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     fun assertHelpMenuContent() {
 
-        onView(withId(R.id.title) + withText(R.string.searchGuides))
-        onView(withId(R.id.subtitle) + withText(R.string.searchGuidesDetails))
+        onView(withId(R.id.title) + withText("Search the Canvas Guides")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Find answers to common questions")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.askInstructor))
-        onView(withId(R.id.subtitle) + withText(R.string.askInstructorDetails))
+        onView(withId(R.id.title) + withText("CUSTOM LINK")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("This is a custom help link.")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.reportProblem))
-        onView(withId(R.id.subtitle) + withText(R.string.reportProblemDetails))
+        onView(withId(R.id.title) + withText("Ask Your Instructor a Question")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Questions are submitted to your instructor")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.shareYourLove))
-        onView(withId(R.id.subtitle) + withText(R.string.shareYourLoveDetails))
+        onView(withId(R.id.title) + withText("Report a Problem")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("If Canvas misbehaves, tell us about it")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Submit a Feature Idea"))
-        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?"))
+        onView(withId(R.id.title) + withText("Submit a Feature Idea")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("COVID-19 Canvas Resources"))
-        onView(withId(R.id.subtitle) + withText("Tips for teaching and learning online"))
+        onView(withId(R.id.title) + withText("Share Your Love for the App")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Tell us about your favorite parts of the app")).assertDisplayed()
     }
 }

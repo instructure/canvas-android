@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.model.SignedInUser
-import java.util.ArrayList
 
 object PreviousUsersUtils {
 
@@ -83,14 +82,19 @@ object PreviousUsersUtils {
         return editor.commit()
     }
 
-    fun add(context: Context, signedInUser: SignedInUser): Boolean {
+    fun add(
+        context: Context,
+        signedInUser: SignedInUser,
+        domain: String = ApiPrefs.domain,
+        user: User? = ApiPrefs.user
+    ): Boolean {
 
         val signedInUserJSON = Gson().toJson(signedInUser)
 
         //Save Signed In User to sharedPreferences
         val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putString(getGlobalUserId(ApiPrefs.domain, ApiPrefs.user), signedInUserJSON)
+        editor.putString(getGlobalUserId(domain, user), signedInUserJSON)
         return editor.commit()
     }
 

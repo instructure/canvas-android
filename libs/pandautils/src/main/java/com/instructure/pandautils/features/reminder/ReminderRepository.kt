@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.reminder
 
+import androidx.lifecycle.LiveData
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.toFormattedString
@@ -64,5 +65,9 @@ class ReminderRepository(
 
     private suspend fun getExistingReminders(userId: Long, contentId: Long): List<ReminderEntity> {
         return reminderDao.findByAssignmentId(userId, contentId)
+    }
+
+    fun findByAssignmentIdLiveData(userId: Long, contentId: Long): LiveData<List<ReminderEntity>> {
+        return reminderDao.findByAssignmentIdLiveData(userId, contentId)
     }
 }

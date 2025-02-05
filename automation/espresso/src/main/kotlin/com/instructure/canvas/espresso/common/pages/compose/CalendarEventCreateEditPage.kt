@@ -33,9 +33,9 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import androidx.test.espresso.contrib.PickerActions
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onViewWithId
-import com.instructure.espresso.pages.waitForViewWithClassName
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.waitForViewWithClassName
 import org.hamcrest.Matchers
 import java.util.Calendar
 

@@ -27,7 +27,7 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.containsString

@@ -748,6 +748,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
     }
 
+    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)

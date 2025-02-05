@@ -30,8 +30,8 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.waitForView
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf

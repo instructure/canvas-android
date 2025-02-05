@@ -131,7 +131,7 @@ class SummaryInteractionTest: ParentComposeTest() {
         val parent = data.parents.first()
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
-        coursesPage.tapCurseItem(courseName)
+        coursesPage.clickCourseItem(courseName)
         courseDetailsPage.selectTab("SUMMARY")
     }
 }

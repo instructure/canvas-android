@@ -76,6 +76,9 @@ fun RecipientChip(
                 text = recipient.name ?: "",
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 14.sp,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .padding(vertical = 4.dp)
             )
 
             Spacer(Modifier.width(4.dp))

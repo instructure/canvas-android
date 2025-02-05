@@ -28,6 +28,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHidden
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import java.util.EnumMap
+import kotlin.math.max
 
 data class InboxComposeUiState(
     val inboxComposeMode: InboxComposeOptionsMode = InboxComposeOptionsMode.NEW_MESSAGE,
@@ -45,12 +46,17 @@ data class InboxComposeUiState(
     val screenState: ScreenState = ScreenState.Data,
     val showConfirmationDialog: Boolean = false,
     val hiddenBodyMessage: String? = null,
+    val enableCustomBackHandler: Boolean = true,
 ) {
     val isSendButtonEnabled: Boolean
         get() = selectContextUiState.selectedCanvasContext != null &&
                 recipientPickerUiState.selectedRecipients.isNotEmpty() &&
                 subject.text.isNotEmpty() && body.text.isNotEmpty() &&
                 attachments.all { it.status == AttachmentStatus.UPLOADED }
+    val isSendIndividualMandatory: Boolean
+        get() = recipientPickerUiState.selectedRecipients.sumOf { max(it.userCount, 1) } >= 100
+    val isSendIndividualEnabled: Boolean
+        get() = sendIndividual || isSendIndividualMandatory
 }
 
 sealed class InboxComposeViewModelAction {

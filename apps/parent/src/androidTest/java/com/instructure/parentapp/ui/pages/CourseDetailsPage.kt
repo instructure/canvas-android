@@ -23,17 +23,26 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvasapi2.models.Course
+import com.instructure.dataseeding.model.CourseApiModel
 
 
 class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertCourseDetailsDisplayed(course: Course) {
-        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
+        assertCourseNameDisplayed(course)
         composeTestRule.onNodeWithText("GRADES")
             .assertIsDisplayed()
             .assertIsSelected()
         composeTestRule.onNodeWithText("SYLLABUS").assertIsDisplayed()
         composeTestRule.onNodeWithText("SUMMARY").assertIsDisplayed()
+    }
+
+    fun assertCourseNameDisplayed(course: Course) {
+        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
+    }
+
+    fun assertCourseNameDisplayed(course: CourseApiModel) {
+        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
     }
 
     fun selectTab(tabName: String) {

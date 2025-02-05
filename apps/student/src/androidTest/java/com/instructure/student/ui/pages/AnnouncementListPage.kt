@@ -20,10 +20,10 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.matchers.WaitForViewMatcher
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withParent
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 
 class AnnouncementListPage(searchable: Searchable) : DiscussionListPage(searchable) {

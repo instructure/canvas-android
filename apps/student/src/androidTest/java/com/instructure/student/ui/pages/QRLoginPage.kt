@@ -18,7 +18,7 @@
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 
 class QRLoginPage : BasePage() {

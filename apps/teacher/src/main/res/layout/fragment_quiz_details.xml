@@ -38,13 +38,13 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/scrollInstructions"
             android:clipToPadding="false"
             android:paddingBottom="36dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/scrollInstructions"
                 android:orientation="vertical">
 
                 <!-- Title, points, publish status -->
@@ -59,7 +59,6 @@
                         style="@style/TextFont.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:importantForAccessibility="yes"
                         android:textSize="20sp"
                         tools:text="Beginning of the Biological Existence of Mankind in the Jungles of South America"/>
 
@@ -75,7 +74,6 @@
                             style="@style/TextFont.Medium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:importantForAccessibility="yes"
                             android:textColor="@color/textDark"
                             tools:text="30 pts"/>
 
@@ -93,7 +91,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:importantForAccessibility="yes"
                             tools:text="Published"
                             tools:textColor="#00ac18"/>
 

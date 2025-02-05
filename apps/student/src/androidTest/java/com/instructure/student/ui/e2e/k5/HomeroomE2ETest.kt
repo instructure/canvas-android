@@ -31,7 +31,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.pages.getStringFromResource
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest

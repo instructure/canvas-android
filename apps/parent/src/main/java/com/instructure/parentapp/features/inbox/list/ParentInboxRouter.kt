@@ -20,16 +20,21 @@ package com.instructure.parentapp.features.inbox.list
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerBottomSheetDialog
 import com.instructure.parentapp.util.navigation.Navigation
-import org.greenrobot.eventbus.Subscribe
 
 
-class ParentInboxRouter(private val activity: FragmentActivity, private val navigation: Navigation) : InboxRouter {
+class ParentInboxRouter(
+    private val activity: FragmentActivity,
+    private val navigation: Navigation,
+    private val fileDownloader: FileDownloader
+) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
         navigation.navigate(activity, navigation.inboxDetailsRoute(conversation.id))
@@ -51,12 +56,14 @@ class ParentInboxRouter(private val activity: FragmentActivity, private val navi
     }
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {
-        // TODO: Implement
+        openConversation(conversation, scope)
     }
 
-    @Suppress("unused")
-    @Subscribe(sticky = true)
-    fun onUpdateConversation(event: Any) {
-        // TODO: Implement
+    override fun routeToAttachment(attachment: Attachment) {
+        fileDownloader.downloadFileToDevice(attachment)
+    }
+
+    override fun popDetailsScreen(activity: FragmentActivity?) {
+        activity?.onBackPressed()
     }
 }

@@ -16,6 +16,7 @@
 package com.instructure.student.features.assignments.details
 
 import android.util.Log
+import android.widget.Toast
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.models.CanvasContext
@@ -55,6 +56,8 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
         every { Log.e(any(), any()) } returns 0
 
         ContextKeeper.appContext = mockk(relaxed = true)
+        mockkStatic(Toast::class)
+        every { Toast.makeText(any(), any<Int>(), any()) } returns mockk(relaxed = true)
     }
 
     @After
@@ -94,7 +97,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
             studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
         } returns liveData
 
-        submissionHandler.addAssignmentSubmissionObserver(0, 0, mockk(relaxed = true), data, {})
+        submissionHandler.addAssignmentSubmissionObserver(mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {})
 
         liveData.postValue(listOf(getDbSubmission()))
 
@@ -126,7 +129,8 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
             studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
         } returns liveData
 
-        submissionHandler.addAssignmentSubmissionObserver(0, 0, mockk(relaxed = true), data, {})
+        submissionHandler.addAssignmentSubmissionObserver(
+            mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {})
 
         liveData.postValue(listOf(getDbSubmission()))
         assertTrue(submissionHandler.isUploading)

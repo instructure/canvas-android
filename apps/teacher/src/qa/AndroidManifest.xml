@@ -16,8 +16,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.instructure.teacher">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!--
      tests break if maxSdkVersion is used when requesting WRITE_EXTERNAL_STORAGE

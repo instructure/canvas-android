@@ -17,6 +17,8 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.view.Gravity
+import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.appcompat.widget.PopupMenu
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
@@ -44,6 +46,7 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
 
                 loadingView.setVisible(item.isLoading)
 
+                publishActions.contentDescription = publishActions.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
                 publishActions.onClickWithRequireNetwork {
                     val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
                     popup.inflate(R.menu.menu_module)
@@ -66,8 +69,21 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
                         }
                     }
 
-                    publishActions.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
                     popup.show()
+                }
+
+                //Can't use the binding adapter due to how the view holder is set up
+                publishActions.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                    override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
+                        super.onInitializeAccessibilityNodeInfo(host, info)
+                        info.className = "android.widget.Button"
+                    }
+                }
+                root.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                    override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
+                        super.onInitializeAccessibilityNodeInfo(host, info)
+                        info.className = "android.widget.Button"
+                    }
                 }
             }
         }

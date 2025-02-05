@@ -25,13 +25,13 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotHasText
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.onViewWithId
-import com.instructure.espresso.pages.onViewWithText
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withId
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 
 /**

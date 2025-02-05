@@ -40,10 +40,10 @@ class ParentColors {
   static const parentApp = Color(0xFF007BC2);
 
   /// Core color for the student app
-  static const studentApp = Color(0xFFEE0612);
+  static const studentApp = Color(0xFFE62429);
 
   /// Core color for the teacher app
-  static const teacherApp = Color(0xFFFFC100);
+  static const teacherApp = Color(0xFF9E58BD);
 
   /// Color for light mode divider under the app bar
   static const appBarDividerLight = Color(0x1F000000);

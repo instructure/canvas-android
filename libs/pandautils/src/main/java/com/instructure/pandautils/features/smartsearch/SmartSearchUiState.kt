@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.smartsearch
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.SmartSearchContentType
+import com.instructure.canvasapi2.models.SmartSearchFilter
 
 data class SmartSearchUiState(
     val query: String,
@@ -24,6 +25,7 @@ data class SmartSearchUiState(
     val results: List<SmartSearchResultUiState>,
     val loading: Boolean = true,
     val error: Boolean = false,
+    val filters: List<SmartSearchFilter> = SmartSearchFilter.entries,
     val actionHandler: (SmartSearchAction) -> Unit
 )
 
@@ -32,12 +34,16 @@ data class SmartSearchResultUiState(
     val body: String,
     val relevance: Int,
     val url: String,
-    val type: SmartSearchContentType
+    val type: SmartSearchContentType,
+    val visited: Boolean,
+    val lastVisited: Boolean
 )
 
 sealed class SmartSearchAction {
     data class Search(val query: String) : SmartSearchAction()
     data class Route(val url: String) : SmartSearchAction()
+    data class Filter(val filters: List<SmartSearchFilter>) :
+        SmartSearchAction()
 }
 
 sealed class SmartSearchViewModelAction {
