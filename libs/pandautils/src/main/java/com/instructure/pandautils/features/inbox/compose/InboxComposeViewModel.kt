@@ -177,9 +177,7 @@ class InboxComposeViewModel @Inject constructor(
     fun handleAction(action: InboxComposeActionHandler) {
         when (action) {
             is InboxComposeActionHandler.CancelDismissDialog -> {
-                _uiState.update { it.copy(
-                    showConfirmationDialog = action.isShow
-                ) }
+                cancelDismissDialog(action.isShow)
             }
             is InboxComposeActionHandler.Close -> {
                 viewModelScope.launch {
@@ -268,7 +266,7 @@ class InboxComposeViewModel @Inject constructor(
     fun handleAction(action: ContextPickerActionHandler) {
         when (action) {
             is ContextPickerActionHandler.DoneClicked -> {
-                _uiState.update { it.copy(screenOption = InboxComposeScreenOptions.None) }
+                closeContextPicker()
             }
             is ContextPickerActionHandler.RefreshCalled -> {
                 loadContexts(forceRefresh = true)
@@ -281,7 +279,10 @@ class InboxComposeViewModel @Inject constructor(
                         selectedRole = null,
                         selectedRecipients = emptyList()
                     ),
-                    screenOption = InboxComposeScreenOptions.None
+                    screenOption = InboxComposeScreenOptions.None,
+                    inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                        selectedValues = emptyList(),
+                    )
                 ) }
 
                 loadRecipients("", action.context)
@@ -295,26 +296,10 @@ class InboxComposeViewModel @Inject constructor(
                 loadRecipients(uiState.value.recipientPickerUiState.searchValue.text, uiState.value.selectContextUiState.selectedCanvasContext ?: return, forceRefresh = true)
             }
             is RecipientPickerActionHandler.DoneClicked -> {
-                _uiState.update { uiState.value.copy(
-                    screenOption = InboxComposeScreenOptions.None,
-                    recipientPickerUiState = it.recipientPickerUiState.copy(
-                        screenOption = RecipientPickerScreenOption.Roles,
-                        selectedRole = null
-                    )
-                ) }
-
-                handleAction(RecipientPickerActionHandler.SearchValueChanged(TextFieldValue("")))
+                recipientPickerDone()
             }
             is RecipientPickerActionHandler.RecipientBackClicked -> {
-                _uiState.update { uiState.value.copy(
-                    recipientPickerUiState = it.recipientPickerUiState.copy(
-                        screenOption = RecipientPickerScreenOption.Roles,
-                        selectedRole = null,
-                        allRecipientsToShow = getAllRecipients()
-                    )
-                ) }
-
-                handleAction(RecipientPickerActionHandler.SearchValueChanged(TextFieldValue("")))
+                recipientPickerBackToRoles()
             }
             is RecipientPickerActionHandler.RoleClicked -> {
                 _uiState.update {
@@ -347,6 +332,49 @@ class InboxComposeViewModel @Inject constructor(
                 debouncedRecipientScreenSearch(action.searchText.text)
             }
         }
+    }
+
+    fun cancelDismissDialog(isShow: Boolean) {
+        _uiState.update { it.copy(
+            enableCustomBackHandler = isShow.not(),
+            showConfirmationDialog = isShow
+        ) }
+    }
+
+    fun closeContextPicker() {
+        _uiState.update { it.copy(screenOption = InboxComposeScreenOptions.None) }
+    }
+
+    fun recipientPickerBackToRoles() {
+        _uiState.update { uiState.value.copy(
+            recipientPickerUiState = it.recipientPickerUiState.copy(
+                selectedRole = null,
+            )
+        ) }
+        _uiState.update { uiState.value.copy(
+            recipientPickerUiState = it.recipientPickerUiState.copy(
+                screenOption = RecipientPickerScreenOption.Roles,
+                selectedRole = null,
+                allRecipientsToShow = getAllRecipients()
+            )
+        ) }
+
+        resetSearchFieldValue()
+        resetSearchFieldResults()
+    }
+
+    fun recipientPickerDone() {
+        _uiState.update { uiState.value.copy(
+            screenOption = InboxComposeScreenOptions.None,
+            recipientPickerUiState = it.recipientPickerUiState.copy(
+                screenOption = RecipientPickerScreenOption.Roles,
+                selectedRole = null,
+                searchValue = TextFieldValue(""),
+            ),
+        ) }
+
+        resetSearchFieldValue()
+        resetSearchFieldResults()
     }
 
     private fun loadContexts(forceRefresh: Boolean = false) {
@@ -440,14 +468,15 @@ class InboxComposeViewModel @Inject constructor(
                         message = getMessageBody(),
                         context = canvasContext,
                         attachments = uiState.value.attachments.map { it.attachment },
-                        isIndividual = uiState.value.sendIndividual
+                        isIndividual = uiState.value.isSendIndividualEnabled
                     ).dataOrThrow
 
+                    _uiState.update { it.copy(enableCustomBackHandler = false) }
                     _events.send(InboxComposeViewModelAction.UpdateParentFragment)
 
                     sendScreenResult(context.getString(R.string.messageSentSuccessfully))
 
-                    handleAction(InboxComposeActionHandler.Close)
+                    closeFragment()
 
                 } catch (e: IllegalStateException) {
                     sendScreenResult(context.getString(R.string.failed_to_send_message))
@@ -473,11 +502,12 @@ class InboxComposeViewModel @Inject constructor(
                         context = canvasContext
                     ).dataOrThrow
 
+                    _uiState.update { it.copy(enableCustomBackHandler = false) }
                     _events.send(InboxComposeViewModelAction.UpdateParentFragment)
 
                     sendScreenResult(context.getString(R.string.messageSentSuccessfully))
 
-                    handleAction(InboxComposeActionHandler.Close)
+                    closeFragment()
 
                 } catch (e: IllegalStateException) {
                     sendScreenResult(context.getString(R.string.failed_to_send_message))
@@ -547,6 +577,24 @@ class InboxComposeViewModel @Inject constructor(
         viewModelScope.launch {
             _events.send(InboxComposeViewModelAction.ShowScreenResult(message))
         }
+    }
+
+    private fun closeFragment() {
+        viewModelScope.launch {
+            _events.send(InboxComposeViewModelAction.NavigateBack)
+        }
+    }
+
+    private fun resetSearchFieldValue() {
+        _uiState.update { it.copy(
+            recipientPickerUiState = it.recipientPickerUiState.copy(
+                searchValue = TextFieldValue("")
+            )
+        ) }
+    }
+
+    private fun resetSearchFieldResults() {
+        loadRecipients("", uiState.value.selectContextUiState.selectedCanvasContext ?: return)
     }
 
     private fun updateSelectedRecipients(newRecipientList: List<Recipient>) {

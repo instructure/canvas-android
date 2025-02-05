@@ -57,6 +57,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -111,12 +113,14 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
             val (sectionTitle, items) = entry
             item {
                 Text(
-                    modifier = Modifier.padding(
-                        top = 24.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 8.dp
-                    ),
+                    modifier = Modifier
+                        .padding(
+                            top = 24.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 8.dp
+                        )
+                        .semantics { heading() },
                     text = stringResource(sectionTitle),
                     color = colorResource(id = R.color.textDark)
                 )

@@ -82,6 +82,7 @@ class QLClientConfig {
 
         /** Default GraphQL endpoint */
         internal const val GRAPHQL_ENDPOINT = "/api/graphql/"
+        internal const val GRAPHQL_PAGE_SIZE = 20
 
         /** Cache configuration */
         private const val CACHE_SIZE = 10L * 1024 * 1024 // 10MB disk cache

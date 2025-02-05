@@ -93,6 +93,7 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.viewExternally
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.pandautils.views.RecordingMediaType
+import com.instructure.pandautils.views.ExpandCollapseAnimation
 import com.instructure.pandautils.views.ViewPagerNonSwipeable
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
@@ -250,6 +251,42 @@ class SubmissionContentView(
 
         if (isAccessibilityEnabled(context)) {
             binding.slidingUpPanelLayout?.anchorPoint = 1.0f
+        }
+        setupExpandCollapseToggle()
+    }
+
+    private fun setupExpandCollapseToggle() {
+        binding.toggleImageView?.let { toggle ->
+            binding.panelContent?.let { panel ->
+                val panelWidth = resources.getDimensionPixelOffset(R.dimen.speedgraderPanelWidth)
+                val animation = ExpandCollapseAnimation(
+                    panel,
+                    panelWidth,
+                    0
+                ) {
+                    if (panel.width > 50) {
+                        binding.toggleImageView.setImageResource(R.drawable.ic_collapse_horizontal)
+                        binding.toggleImageView.contentDescription =
+                            context.getString(R.string.collapseGradePanel)
+                    } else {
+                        binding.toggleImageView.setImageResource(R.drawable.ic_expand_horizontal)
+                        binding.toggleImageView.contentDescription =
+                            context.getString(R.string.expandGradePanel)
+                    }
+                }
+                animation.duration = 500
+                toggle.onClick {
+                    if (!animation.hasStarted() || animation.hasEnded()) {
+                        panel.clearAnimation()
+                        if (panel.width > 0) {
+                            animation.updateValues(panelWidth, 0)
+                        } else {
+                            animation.updateValues(0, panelWidth)
+                        }
+                        panel.startAnimation(animation)
+                    }
+                }
+            }
         }
     }
 

@@ -14,14 +14,22 @@
 #     limitations under the License.
 #
 
-query CommentLibraryQuery($userId: ID!) {
+query CommentLibraryQuery($userId: ID!, $pageSize: Int!, $nextCursor: String) {
     user: legacyNode(_id: $userId, type: User) {
         ... on User {
             id: _id
-            commentBankItems: commentBankItemsConnection(query: "") {
-                nodes {
-                    comment: comment
-                    id: _id
+            commentBankItems: commentBankItemsConnection(query: "", first: $pageSize, after: $nextCursor) {
+                pageInfo {
+                  endCursor
+                  startCursor
+                  hasNextPage
+                  hasPreviousPage
+                }
+                edges {
+                    node {
+                        comment: comment
+                        id: _id
+                    }
                 }
             }
         }

@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -73,7 +74,8 @@ import java.util.Date
 fun AlertsScreen(
     uiState: AlertsUiState,
     actionHandler: (AlertsAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = LazyListState()
 ) {
     CanvasTheme {
         Scaffold(
@@ -121,6 +123,7 @@ fun AlertsScreen(
                             AlertsListContent(
                                 uiState = uiState,
                                 actionHandler = actionHandler,
+                                lazyListState = lazyListState,
                                 modifier = Modifier
                                     .padding(padding)
                                     .fillMaxSize()
@@ -147,9 +150,11 @@ fun AlertsScreen(
 fun AlertsListContent(
     uiState: AlertsUiState,
     actionHandler: (AlertsAction) -> Unit,
+    lazyListState: LazyListState,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
+        state = lazyListState,
         modifier = modifier
     ) {
         items(uiState.alerts, key = { it.alertId }) { alert ->

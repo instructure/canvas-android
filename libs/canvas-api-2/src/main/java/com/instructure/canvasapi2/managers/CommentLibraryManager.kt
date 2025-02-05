@@ -16,9 +16,7 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.instructure.canvasapi2.CommentLibraryQuery
-
 interface CommentLibraryManager {
 
-    suspend fun getCommentLibraryItems(userId: Long): CommentLibraryQuery.Data
+    suspend fun getCommentLibraryItems(userId: Long): List<String>
 }

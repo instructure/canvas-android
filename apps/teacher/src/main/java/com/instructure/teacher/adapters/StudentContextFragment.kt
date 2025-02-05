@@ -38,6 +38,11 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.blueprint.PresenterFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ProfileUtils
@@ -57,7 +62,6 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentStudentContextBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.StudentContextPresenterFactory
-import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.holders.StudentContextSubmissionView
 import com.instructure.teacher.presenters.StudentContextPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -66,7 +70,6 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.StudentContextView
-import com.instructure.pandautils.blueprint.PresenterFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -164,8 +167,18 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                 pronouns = student.pronouns,
                 avatarURL = student.avatarUrl,
             )
-            val args = AddMessageFragment.createBundle(listOf(recipient), "", "course_${course.id}", true)
-            RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
+            val options = InboxComposeOptions.buildNewMessage().copy(
+                defaultValues = InboxComposeOptionsDefaultValues(
+                    contextName = course.name,
+                    contextCode = "course_${course.id}",
+                    recipients = listOf(recipient)
+                ),
+                disabledFields = InboxComposeOptionsDisabledFields(
+                    isContextDisabled = true
+                )
+            )
+            val route = InboxComposeFragment.makeRoute(options)
+            RouteMatcher.route(requireActivity(), route)
         }
 
         studentNameView.text = Pronouns.span(student.shortName, student.pronouns)

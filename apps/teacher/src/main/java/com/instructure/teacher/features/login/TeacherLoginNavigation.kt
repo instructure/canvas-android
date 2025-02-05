@@ -22,15 +22,22 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.teacher.activities.SplashActivity
 import com.instructure.teacher.tasks.TeacherLogoutTask
 
-class TeacherLoginNavigation(private val activity: FragmentActivity) : LoginNavigation(activity) {
+class TeacherLoginNavigation(
+    private val activity: FragmentActivity,
+    private val alarmScheduler: AlarmScheduler
+) : LoginNavigation(activity) {
     override val checkElementary: Boolean = false
 
     override fun logout() {
-        TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
+        TeacherLogoutTask(
+            LogoutTask.Type.LOGOUT,
+            alarmScheduler = alarmScheduler
+        ).execute()
     }
 
     override fun initMainActivityIntent(): Intent {

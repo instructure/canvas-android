@@ -18,6 +18,8 @@ package com.instructure.teacher.holders
 
 import android.content.Context
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -92,5 +94,13 @@ class AssignmentViewHolder(private val binding: AdapterAssignmentBinding) : Recy
         assignmentLayout.contentDescription = assignment.name + " " + dueDate.text + " " + ungradedCount.text + " " + if (assignment.published) context.getString(R.string.published) else context.getString(
                 R.string.not_published
             )
+
+        assignmentLayout.accessibilityDelegate = object : View.AccessibilityDelegate() {
+            override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
+                super.onInitializeAccessibilityNodeInfo(host, info)
+
+                info.className = Button::class.java.name
+            }
+        }
     }
 }

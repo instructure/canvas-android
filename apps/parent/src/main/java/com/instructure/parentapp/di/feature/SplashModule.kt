@@ -18,6 +18,7 @@
 package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.parentapp.features.splash.SplashRepository
@@ -35,8 +36,9 @@ class SplashModule {
     fun provideSplashRepository(
         userApi: UserAPI.UsersInterface,
         themeApi: ThemeAPI.ThemeInterface,
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface
+        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface
     ): SplashRepository {
-        return SplashRepository(userApi, themeApi, enrollmentApi)
+        return SplashRepository(userApi, themeApi, enrollmentApi, featuresApi)
     }
 }

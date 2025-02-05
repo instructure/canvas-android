@@ -42,6 +42,7 @@
         android:onClick="@{(view) -> itemViewModel.onClick(view)}"
         android:onLongClick="@{(view) -> itemViewModel.onLongClick(view)}"
         android:longClickable="true"
+        app:accessibilityClassName='@{"android.widget.Button"}'
         app:accessibilityLongClickDescription="@{@string/a11y_inboxEntryLongClickDescription}">
 
         <ImageView

@@ -143,7 +143,7 @@ data class GradeCellViewData(
                 val contentDescription = resources.getString(
                     R.string.a11y_gradeCellContentDescriptionLetterGradeOnly,
                     accessibleGradeString
-                ) + System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHint)
+                ) + System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHintUpdated)
 
                 GradeCellViewData(
                     courseColor = courseColor,
@@ -176,7 +176,7 @@ data class GradeCellViewData(
                         grade
                     )
                     else -> resources.getString(R.string.a11y_gradeCellContentDescription, score, outOfContentDescriptionText)
-                } + System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHint)
+                } + System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHintUpdated)
 
                 var latePenalty = ""
                 var finalGrade = ""
@@ -233,7 +233,7 @@ data class GradeCellViewData(
         }
 
         private fun getContentDescriptionText(resources: Resources, vararg texts: String) = texts.joinToString(" ") +
-                System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHint)
+                System.lineSeparator() + resources.getString(R.string.a11y_gradeCellContentDescriptionHintUpdated)
 
         private val Submission.isSubmitted
             get() = submittedAt != null && !isGraded && !excused

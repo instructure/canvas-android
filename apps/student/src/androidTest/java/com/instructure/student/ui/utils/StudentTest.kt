@@ -32,13 +32,14 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
+import com.instructure.canvas.espresso.common.pages.LoginLandingPage
+import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
-import com.instructure.espresso.pages.common.LoginFindSchoolPage
-import com.instructure.espresso.pages.common.LoginLandingPage
-import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
@@ -67,12 +68,10 @@ import com.instructure.student.ui.pages.GroupBrowserPage
 import com.instructure.student.ui.pages.HelpPage
 import com.instructure.student.ui.pages.HomeroomPage
 import com.instructure.student.ui.pages.ImportantDatesPage
-import com.instructure.student.ui.pages.InboxConversationPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
 import com.instructure.student.ui.pages.ModuleProgressionPage
 import com.instructure.student.ui.pages.ModulesPage
-import com.instructure.student.ui.pages.NewMessagePage
 import com.instructure.student.ui.pages.NotificationPage
 import com.instructure.student.ui.pages.PageDetailsPage
 import com.instructure.student.ui.pages.PageListPage
@@ -139,7 +138,6 @@ abstract class StudentTest : CanvasTest() {
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val fileChooserPage = FileChooserPage()
     val helpPage = HelpPage()
-    val inboxConversationPage = InboxConversationPage()
     val inboxPage = InboxPage()
     val legalPage = LegalPage()
     val aboutPage = AboutPage()
@@ -148,7 +146,6 @@ abstract class StudentTest : CanvasTest() {
     val loginSignInPage = LoginSignInPage()
     val moduleProgressionPage = ModuleProgressionPage()
     val modulesPage = ModulesPage()
-    val newMessagePage = NewMessagePage()
     val notificationPage = NotificationPage()
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val pageDetailsPage = PageDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
@@ -164,6 +161,7 @@ abstract class StudentTest : CanvasTest() {
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val pushNotificationsPage = PushNotificationsPage()
+    val emailNotificationsPage = EmailNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()

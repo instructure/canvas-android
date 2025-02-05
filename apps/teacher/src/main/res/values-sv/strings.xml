@@ -446,6 +446,8 @@
     <string name="cancel_editing_comment">Avbryt redigering av kommentar</string>
     <string name="skip">Hoppa över</string>
 
+    <string name="collapseGradePanel">Dölj omdömespanel</string>
+    <string name="expandGradePanel">Visa omdömespanel</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Anpassat resultat %1$s</string>
 
@@ -837,6 +839,7 @@
     <string name="errorUpdatingFile">Ett fel uppstod vid uppdatering av den här filen</string>
     <string name="errorUpdatingFolder">Ett fel uppstod vid uppdatering av den här mappen</string>
 
+    <string name="errorEmptyTitle">Titeln får inte vara tom</string>
     <string name="toDoEmpty">Inget mer att göra!\n Ha en bra dag.</string>
     <string name="toDoNoSubmissions">Det finns inga inlämningar att bedöma för denna uppgift.</string>
     <string name="errorToDoRouteFailed">Ett fel uppstod när du försökte visa detta att göra-objekt.</string>

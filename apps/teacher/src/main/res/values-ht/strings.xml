@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Anile modifikasyon kòmantè</string>
     <string name="skip">Sote</string>
 
+    <string name="collapseGradePanel">Redui Pano Nòt yo</string>
+    <string name="expandGradePanel">Elaji Pano Nòt yo</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Nòt pèsonalize %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Yon erè fèt pandan aktyalizasyon fichye sa a</string>
     <string name="errorUpdatingFolder">Yon erè fèt pandan aktyalizasyon dosye sa a</string>
 
+    <string name="errorEmptyTitle">Tit la pa dwe vid</string>
     <string name="toDoEmpty">Pa gen anyen ki pou fèt ankò!\n Pwofite jounen an.</string>
     <string name="toDoNoSubmissions">Pa gen soumisyon pou evalye pou sesyon sa a.</string>
     <string name="errorToDoRouteFailed">Gen yon erè ki fèt pandan w ap eseye afiche eleman Tach sa a.</string>

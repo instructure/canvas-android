@@ -16,6 +16,7 @@
  */
 package com.instructure.parentapp.features.alerts.list
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Alert
@@ -52,6 +53,8 @@ class AlertsViewModel @Inject constructor(
 
     private var selectedStudent: User? = null
     private var thresholds: Map<Long, AlertThreshold> = emptyMap()
+
+    val lazyListState = LazyListState()
 
     init {
         viewModelScope.launch {
@@ -177,8 +180,8 @@ class AlertsViewModel @Inject constructor(
             val alerts = _uiState.value.alerts.toMutableList()
             alerts.add(alert)
             alerts.sortByDescending { it.date }
-            _uiState.update { it.copy(alerts = alerts) }
             viewModelScope.launch {
+                _uiState.update { it.copy(alerts = alerts) }
                 alertCountUpdater.updateShouldRefreshAlertCount(true)
             }
         }

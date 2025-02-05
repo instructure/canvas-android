@@ -24,12 +24,16 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOUNCEMENT_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
 
+
+@ScreenView(SCREEN_VIEW_ANNOUNCEMENT_DETAILS)
 @AndroidEntryPoint
 class AnnouncementDetailsFragment : BaseCanvasFragment() {
 

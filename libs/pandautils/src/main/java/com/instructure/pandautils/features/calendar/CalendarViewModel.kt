@@ -534,7 +534,7 @@ class CalendarViewModel @Inject constructor(
                 }
 
                 PlannableType.DISCUSSION_TOPIC -> {
-                    CalendarViewModelAction.OpenDiscussion(plannerItem.canvasContext, plannerItem.plannable.id)
+                    CalendarViewModelAction.OpenDiscussion(plannerItem.canvasContext, plannerItem.plannable.id, plannerItem.plannable.assignmentId)
                 }
 
                 PlannableType.QUIZ -> {

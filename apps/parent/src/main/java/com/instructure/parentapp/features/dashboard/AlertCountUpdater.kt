@@ -15,6 +15,7 @@
  *
  */    package com.instructure.parentapp.features.dashboard
 
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,7 +26,7 @@ interface AlertCountUpdater {
 }
 
 class AlertCountUpdaterImpl : AlertCountUpdater {
-    private val _shouldRefreshAlertCountFlow = MutableSharedFlow<Boolean>(replay = 1)
+    private val _shouldRefreshAlertCountFlow = MutableSharedFlow<Boolean>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val shouldRefreshAlertCountFlow = _shouldRefreshAlertCountFlow.asSharedFlow()
 
     override suspend fun updateShouldRefreshAlertCount(shouldRefresh: Boolean) {

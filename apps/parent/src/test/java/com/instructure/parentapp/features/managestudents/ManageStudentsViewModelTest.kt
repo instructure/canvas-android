@@ -24,6 +24,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
@@ -37,6 +39,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.spyk
 import io.mockk.unmockkObject
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -65,6 +68,7 @@ class ManageStudentsViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: ManageStudentsRepository = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = spyk()
+    private val analytics: Analytics = mockk(relaxed = true)
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
 
     private lateinit var viewModel: ManageStudentViewModel
@@ -265,7 +269,24 @@ class ManageStudentsViewModelTest {
         Assert.assertEquals(expectedUiState, viewModel.uiState.value)
     }
 
+    @Test
+    fun `Add student`() = runTest {
+        coEvery { repository.getStudents(any()) } returns listOf(User(id = 1))
+
+        createViewModel()
+
+        val events = mutableListOf<ManageStudentsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(ManageStudentsAction.AddStudent)
+
+        Assert.assertEquals(ManageStudentsViewModelAction.AddStudent, events.last())
+        verify { analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS) }
+    }
+
     private fun createViewModel() {
-        viewModel = ManageStudentViewModel(context, colorKeeper, repository, selectedStudentHolder)
+        viewModel = ManageStudentViewModel(context, colorKeeper, repository, selectedStudentHolder, analytics)
     }
 }

@@ -18,27 +18,25 @@
 package com.instructure.pandautils.room.offline
 
 import android.content.Context
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.room.Room
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.pandautils.R
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.utils.LogoutHelper
-import com.instructure.pandautils.utils.toast
 
 private const val OFFLINE_DB_PREFIX = "offline-db-"
 
 class OfflineDatabaseProvider(
     private val context: Context,
     private val logoutHelper: LogoutHelper,
-    private val firebaseCrashlytics: FirebaseCrashlytics
+    private val firebaseCrashlytics: FirebaseCrashlytics,
+    private val alarmScheduler: AlarmScheduler
 ) : DatabaseProvider {
 
     private val dbMap = mutableMapOf<Long, OfflineDatabase>()
 
     override fun getDatabase(userId: Long?): OfflineDatabase {
         if (userId == null) {
-            logoutHelper.logout(this)
+            logoutHelper.logout(this, alarmScheduler)
             firebaseCrashlytics.recordException(IllegalStateException("You can't access the database while logged out"))
             return Room.databaseBuilder(context, OfflineDatabase::class.java, "dummy-db")
                 .addMigrations(*offlineDatabaseMigrations)

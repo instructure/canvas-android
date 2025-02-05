@@ -24,25 +24,24 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
+import com.instructure.canvas.espresso.common.pages.LoginLandingPage
+import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
-import com.instructure.espresso.pages.common.LoginFindSchoolPage
-import com.instructure.espresso.pages.common.LoginLandingPage
-import com.instructure.espresso.pages.common.LoginSignInPage
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.AboutPage
-import com.instructure.teacher.ui.pages.AddMessagePage
 import com.instructure.teacher.ui.pages.AnnouncementsListPage
 import com.instructure.teacher.ui.pages.AssigneeListPage
 import com.instructure.teacher.ui.pages.AssignmentDetailsPage
 import com.instructure.teacher.ui.pages.AssignmentDueDatesPage
 import com.instructure.teacher.ui.pages.AssignmentListPage
 import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
-import com.instructure.teacher.ui.pages.ChooseRecipientsPage
 import com.instructure.teacher.ui.pages.CommentLibraryPage
 import com.instructure.teacher.ui.pages.CourseBrowserPage
 import com.instructure.teacher.ui.pages.CourseSettingsPage
@@ -59,7 +58,6 @@ import com.instructure.teacher.ui.pages.EditQuizDetailsPage
 import com.instructure.teacher.ui.pages.EditSyllabusPage
 import com.instructure.teacher.ui.pages.FileListPage
 import com.instructure.teacher.ui.pages.HelpPage
-import com.instructure.teacher.ui.pages.InboxMessagePage
 import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.teacher.ui.pages.LegalPage
 import com.instructure.teacher.ui.pages.ModulesPage
@@ -100,7 +98,6 @@ abstract class TeacherTest : CanvasTest() {
     /**
      * Required for auto complete of page objects within tests
      */
-    val addMessagePage = AddMessagePage()
     val announcementsListPage = AnnouncementsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assigneeListPage = AssigneeListPage()
     val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
@@ -108,7 +105,6 @@ abstract class TeacherTest : CanvasTest() {
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assignmentSubmissionListPage = AssignmentSubmissionListPage()
     val postSettingsPage = PostSettingsPage()
-    val chooseRecipientsPage = ChooseRecipientsPage()
     val commentLibraryPage = CommentLibraryPage()
     val courseBrowserPage = CourseBrowserPage()
     val courseSettingsPage = CourseSettingsPage()
@@ -116,6 +112,7 @@ abstract class TeacherTest : CanvasTest() {
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val editDashboardPage = EditDashboardPage()
     val pushNotificationsPage = PushNotificationsPage()
+    val emailNotificationsPage = EmailNotificationsPage()
     val legalPage = LegalPage()
     val helpPage = HelpPage()
     val aboutPage = AboutPage()
@@ -130,7 +127,6 @@ abstract class TeacherTest : CanvasTest() {
     val editPageDetailsPage = EditPageDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val editQuizDetailsPage = EditQuizDetailsPage()
     val editSyllabusPage = EditSyllabusPage()
-    val inboxMessagePage = InboxMessagePage()
     val inboxPage = InboxPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()

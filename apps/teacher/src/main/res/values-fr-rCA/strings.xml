@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Annuler le commentaire de la modification</string>
     <string name="skip">Omettre</string>
 
+    <string name="collapseGradePanel">Réduire le panneau de classement</string>
+    <string name="expandGradePanel">Développer le panneau de classement</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Score personnalisé %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Une erreur s\'est produite pendant la mise à jour de ce fichier</string>
     <string name="errorUpdatingFolder">Une erreur s\'est produite pendant la mise à jour de ce dossier</string>
 
+    <string name="errorEmptyTitle">Le titre ne peut pas être vierge.</string>
     <string name="toDoEmpty">Rien de plus à faire!\n Profitez de votre journée.</string>
     <string name="toDoNoSubmissions">Il n\'y a aucun envoi à noter pour cette tâche.</string>
     <string name="errorToDoRouteFailed">Une erreur s\'est produite en essayant de voir cet élément À faire.</string>

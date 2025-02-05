@@ -15,14 +15,14 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.retry
 import com.instructure.espresso.retryWithIncreasingDelay
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class InboxE2ETest : TeacherTest() {
+class InboxE2ETest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -55,8 +55,9 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
-        val seedConversation = ConversationsApi.createConversation(
+        val seedConversation = ConversationsApi.createConversationForCourse(
             token = student1.token,
+            courseId = course.id,
             recipients = listOf(teacher.id.toString())
         )
 
@@ -68,26 +69,32 @@ class InboxE2ETest : TeacherTest() {
         val replyMessage = "Hello there"
         Log.d(STEP_TAG,"Click on the conversation. Write a reply with the message: '$replyMessage'.")
         inboxPage.openConversation(seedConversation[0].subject)
-        inboxMessagePage.clickReply()
-        addMessagePage.addReply(replyMessage)
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Reply")
+        inboxComposePage.typeBody(replyMessage)
+        inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG,"Assert that the reply has successfully sent and it's displayed.")
-        inboxMessagePage.assertHasReply()
+        inboxDetailsPage.assertMessageDisplayed(replyMessage)
+        composeTestRule.waitForIdle()
+        Espresso.pressBack()
 
         Log.d(STEP_TAG,"Navigate back to Inbox Page. Assert that the message is not unread anymore.")
-        Espresso.pressBack()
         inboxPage.assertThereIsAnUnreadMessage(false)
 
         Log.d(STEP_TAG,"Add a new conversation message manually via UI. Click on 'New Message' ('+') button.")
         inboxPage.pressNewMessageButton()
 
         Log.d(STEP_TAG,"Select '${course.name}' from course spinner. Click on the '+' icon next to the recipients input field. Select the two students: '${student1.name}' and '${student2.name}'. Click on 'Done'.")
-        addNewMessage(course,data.studentsList)
+        addNewMessage(course, data.studentsList)
+        composeTestRule.waitForIdle()
 
         val subject = "Hello there"
+        val body = "General Kenobi"
         Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
-        addMessagePage.composeMessageWithSubject(subject, "General Kenobi")
-        addMessagePage.clickSendButton()
+        inboxComposePage.typeSubject(subject)
+        inboxComposePage.typeBody(body)
+        inboxComposePage.pressSendButton()
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
         inboxPage.filterInbox("Sent")
@@ -100,13 +107,16 @@ class InboxE2ETest : TeacherTest() {
 
         val replyMessageTwo = "Test Reply 2"
         Log.d(STEP_TAG,"Click on 'Reply' button. Write a reply with the message: '$replyMessageTwo'.")
-        inboxMessagePage.clickReply()
-        addMessagePage.addReply(replyMessageTwo)
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Reply")
+        inboxComposePage.typeBody(replyMessageTwo)
+        inboxComposePage.pressSendButton()
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Assert that the reply has successfully sent and it's displayed.")
-        inboxMessagePage.assertHasReply()
+        inboxDetailsPage.assertMessageDisplayed(replyMessageTwo)
 
         Log.d(STEP_TAG,"Navigate back after it has opened. Assert that the conversation is still displayed on the Inbox Page after opening it.")
+        composeTestRule.waitForIdle()
         Espresso.pressBack()
         inboxPage.assertHasConversation()
 
@@ -121,7 +131,8 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.openConversation(seedConversation[0].subject)
 
         Log.d(STEP_TAG, "Star the conversation and navigate back to Inbox Page.")
-        inboxMessagePage.clickOnStarConversation()
+        inboxDetailsPage.pressStarButton(true)
+        composeTestRule.waitForIdle()
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Assert that the '${seedConversation[0].subject}' conversation has been starred.")
@@ -132,7 +143,10 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Archive the '${seedConversation[0]}' conversation and assert that it has disappeared from the list," +
                 "because archived conversations does not displayed within the 'Inbox' section.")
-        inboxMessagePage.archive()
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
+        composeTestRule.waitForIdle()
+        Espresso.pressBack()
+
         dashboardPage.assertPageObjects()
         inboxPage.assertInboxEmpty()
 
@@ -150,7 +164,8 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.openConversation(seedConversation[0].subject)
 
         Log.d(STEP_TAG, "Remove star from the conversation and navigate back to Inbox Page.")
-        inboxMessagePage.clickOnStarConversation()
+        inboxDetailsPage.pressStarButton(false)
+        composeTestRule.waitForIdle()
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Assert that the '${seedConversation[0]}' conversation is disappeared because it's not starred yet.")
@@ -236,13 +251,15 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Select '${seedConversation2[0].subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
         inboxPage.openConversation(seedConversation2[0].subject)
-        inboxMessagePage.archive() //After select 'Archive', we will be navigated back to Inbox Page
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
+        Espresso.pressBack()
 
         Log.d(STEP_TAG,"Assert that '${seedConversation2[0].subject}' conversation has removed from 'Inbox' tab.")
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
         inboxPage.filterInbox("Archived")
+        refresh()
 
         Log.d(STEP_TAG,"Assert that '${seedConversation2[0].subject}' conversation is displayed by the 'Archived' filter.")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
@@ -456,7 +473,8 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.openConversation(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Delete the '${seedConversation3[0]}' conversation and assert that it has disappeared from the list.")
-        inboxMessagePage.deleteConversation()
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Delete")
+        inboxDetailsPage.pressAlertButton("Delete")
 
         Log.d(STEP_TAG, "Assert that the empty view is displayed.")
         inboxPage.assertInboxEmpty()
@@ -556,16 +574,16 @@ class InboxE2ETest : TeacherTest() {
     }
 
     private fun addNewMessage(course: CourseApiModel, userRecipientList: MutableList<CanvasUserApiModel>) {
-        addMessagePage.clickCourseSpinner()
-        addMessagePage.selectCourseFromSpinner(course.name)
+        inboxComposePage.pressCourseSelector()
+        selectContextPage.selectContext(course.name)
 
-        addMessagePage.clickAddContacts()
-        chooseRecipientsPage.clickStudentCategory()
+        inboxComposePage.pressAddRecipient()
+        recipientPickerPage.pressLabel("Students")
         for(recipient in userRecipientList) {
-            chooseRecipientsPage.clickStudent(recipient)
+            recipientPickerPage.pressLabel(recipient.shortName)
         }
 
-        chooseRecipientsPage.clickDone()
+        recipientPickerPage.pressDone()
     }
 
 }

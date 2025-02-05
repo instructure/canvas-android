@@ -27,11 +27,19 @@ import android.view.ViewGroup
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.FragmentManager
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
+import com.instructure.pandautils.utils.BlindSerializableArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.IntArg
+import com.instructure.pandautils.utils.SerializableListArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
 import java.util.Locale
@@ -101,7 +109,7 @@ class RadioButtonDialog : BaseCanvasAppCompatDialogFragment() {
         // Setting it afterwards so the onCheckChangedListener get triggered after all the radio buttons are added
         radioGroup.check(currentSelectionIdx + 1)
 
-        val dialog = AlertDialog.Builder(requireActivity())
+        val dialog = AlertDialog.Builder(requireActivity(), R.style.AccessibleAlertDialog)
                 .setCancelable(true)
                 .setTitle(mTitle)
                 .setView(view)

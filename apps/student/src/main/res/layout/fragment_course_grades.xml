@@ -32,7 +32,8 @@
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
-        tools:targetApi="lollipop" />
+        tools:targetApi="lollipop"
+        android:accessibilityHeading="true"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"

@@ -27,9 +27,11 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.parentapp.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.heap.autocapture.ViewAutocaptureSDK
+import io.heap.core.Heap
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -42,6 +44,8 @@ class SplashViewModel @Inject constructor(
     private val repository: SplashRepository,
     private val apiPrefs: ApiPrefs,
     private val colorKeeper: ColorKeeper,
+    private val heap: Heap,
+    private val viewAutocaptureSDK: ViewAutocaptureSDK,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -71,6 +75,15 @@ class SplashViewModel @Inject constructor(
                 } else {
                     apiPrefs.canBecomeUser = repository.getBecomeUserPermission()
                 }
+            }
+
+            val sendUsageMetrics = repository.getSendUsageMetrics()
+            if (sendUsageMetrics) {
+                heap.startRecording(context, BuildConfig.HEAP_APP_ID)
+                viewAutocaptureSDK.register()
+            } else {
+                heap.stopRecording()
+                viewAutocaptureSDK.deregister()
             }
 
             val students = repository.getStudents()

@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.filter.composables.CalendarFiltersScreen
 import com.instructure.pandautils.utils.ViewStyler
@@ -21,12 +22,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CalendarFilterFragment : BottomSheetDialogFragment() {
+class CalendarFilterFragment : BaseCanvasBottomSheetDialogFragment() {
 
     private val viewModel: CalendarFilterViewModel by viewModels()
 
     @Inject
     lateinit var sharedEvents: CalendarSharedEvents
+
+    override fun isFullScreen() = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)

@@ -35,7 +35,7 @@ class ParentAssignmentDetailsSubmissionHandler(
     override var lastSubmissionAssignmentId: Long? = null
     override var lastSubmissionSubmissionType: String? = null
 
-    override fun addAssignmentSubmissionObserver(assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit) = Unit
+    override fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit) = Unit
 
     override fun removeAssignmentSubmissionObserver() = Unit
 

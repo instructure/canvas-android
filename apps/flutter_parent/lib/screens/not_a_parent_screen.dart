@@ -71,10 +71,10 @@ class NotAParentScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall,
           ),
           SizedBox(height: 24),
-          _appButton(context, L10n(context).studentApp, L10n(context).canvasStudentApp, ParentColors.studentApp, () {
+          _appButton(context, L10n(context).studentApp, L10n(context).canvasStudentApp, ParentColors.studentApp, 'assets/svg/canvas-logo-student.svg', () {
             locator<UrlLauncher>().launch('market://details?id=com.instructure.candroid');
           }),
-          _appButton(context, L10n(context).teacherApp, L10n(context).canvasTeacherApp, ParentColors.teacherApp, () {
+          _appButton(context, L10n(context).teacherApp, L10n(context).canvasTeacherApp, ParentColors.teacherApp, 'assets/svg/canvas-logo-teacher.svg', () {
             locator<UrlLauncher>().launch('market://details?id=com.instructure.teacher');
           }),
           SizedBox(height: 24),
@@ -83,7 +83,7 @@ class NotAParentScreen extends StatelessWidget {
     );
   }
 
-  Widget _appButton(BuildContext context, String name, String label, Color color, GestureTapCallback onTap) {
+  Widget _appButton(BuildContext context, String name, String label, Color color, String logo, GestureTapCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Semantics(
@@ -95,7 +95,7 @@ class NotAParentScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SvgPicture.asset(
-                'assets/svg/canvas-logo.svg',
+                logo,
                 height: 48,
                 color: color,
               ),
