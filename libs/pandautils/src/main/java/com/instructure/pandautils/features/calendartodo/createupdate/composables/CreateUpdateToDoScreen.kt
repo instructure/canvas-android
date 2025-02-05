@@ -63,6 +63,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -344,9 +347,12 @@ private fun CreateUpdateToDoContent(
                         detailsFocusRequester.requestFocus()
                     }
             ) {
+                val detailsText = stringResource(id = R.string.createToDoDetailsLabel)
                 Text(
-                    text = stringResource(id = R.string.createToDoDetailsLabel),
-                    modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+                    text = detailsText,
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 12.dp)
+                        .clearAndSetSemantics {},
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )
@@ -361,7 +367,10 @@ private fun CreateUpdateToDoContent(
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
                         .focusRequester(detailsFocusRequester)
-                        .testTag("todoDetailsTextField"),
+                        .testTag("todoDetailsTextField")
+                        .semantics {
+                            contentDescription = detailsText
+                        },
                     cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                     textStyle = MaterialTheme.typography.body1.copy(
                         color = colorResource(id = R.color.textDarkest),
@@ -378,27 +387,33 @@ private fun TitleInput(
     modifier: Modifier = Modifier,
     onTitleUpdate: (String) -> Unit
 ) {
-
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .defaultMinSize(minHeight = 48.dp)
             .padding(vertical = 16.dp, horizontal = 16.dp)
     ) {
-
         Text(
             text = stringResource(id = R.string.createToDoTitleLabel),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp,
-            modifier = Modifier.padding(end = 12.dp)
+            modifier = Modifier
+                .padding(end = 12.dp)
+                .clearAndSetSemantics {}
         )
+
+        val hintText = stringResource(id = R.string.createToDoTitleHint)
 
         BasicTextField(
             value = title,
             decorationBox = {
-                Box(contentAlignment = Alignment.CenterStart) {
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                    modifier = Modifier.clearAndSetSemantics {}
+                ) {
                     if (title.isEmpty()) {
                         Text(
-                            text = stringResource(id = R.string.createEventTitleHint),
+                            text = stringResource(id = R.string.createToDoTitleHint),
                             color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
                             fontSize = 16.sp
                         )
@@ -411,7 +426,10 @@ private fun TitleInput(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag("addTitleField"),
+                .testTag("addTitleField")
+                .semantics {
+                    contentDescription = hintText
+                },
             cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
             textStyle = MaterialTheme.typography.body1.copy(
                 color = colorResource(id = R.color.textDark),

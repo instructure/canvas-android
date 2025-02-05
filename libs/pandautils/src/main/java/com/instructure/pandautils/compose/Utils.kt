@@ -20,7 +20,13 @@ package com.instructure.pandautils.compose
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import androidx.appcompat.app.AppCompatDialog
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import com.instructure.pandautils.utils.ThemePrefs
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -95,4 +101,16 @@ fun getTimePickerDialog(
             onCancel()
         }
     }
+}
+
+@Composable
+fun isScreenReaderEnabled(): Boolean {
+    val context = LocalContext.current
+    val accessibilityManager = remember {
+        context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    }
+    val isScreenReaderEnabled by remember {
+        mutableStateOf(accessibilityManager.isEnabled && accessibilityManager.isTouchExplorationEnabled)
+    }
+    return isScreenReaderEnabled
 }
