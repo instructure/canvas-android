@@ -1636,6 +1636,12 @@
     <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Jump to Today, selected day is %s, today is %s</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
     <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Switch between month and week view</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Calendar is in month view</string>
+    <string name="a11y_calendarWeekView">Calendar is in week view</string>
+    <string name="a11y_calendarSwitchedToWeekView">Calendar switched to week view</string>
+    <string name="a11y_calendarSwitchedToMonthView">Calendar switched to month view</string>
     <string name="calendarNoEvents">No Events Today!</string>
     <string name="calendarNoEventsDescription">It looks like a great day to rest, relax, and recharge.</string>
     <string name="userCalendarToDo">To Do</string>
