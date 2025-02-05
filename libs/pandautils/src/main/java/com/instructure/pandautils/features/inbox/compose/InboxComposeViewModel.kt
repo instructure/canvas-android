@@ -279,7 +279,10 @@ class InboxComposeViewModel @Inject constructor(
                         selectedRole = null,
                         selectedRecipients = emptyList()
                     ),
-                    screenOption = InboxComposeScreenOptions.None
+                    screenOption = InboxComposeScreenOptions.None,
+                    inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                        selectedValues = emptyList(),
+                    )
                 ) }
 
                 loadRecipients("", action.context)
