@@ -16,10 +16,10 @@
 package com.instructure.pandautils.compose.features.calendar
 
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -65,11 +65,10 @@ class CalendarTest {
             )
         }
 
-        val yearMonthTitle = composeTestRule.onNodeWithTag("yearMonthTitle")
+        val yearMonthTitle = composeTestRule.onNodeWithTag("yearMonthTitle", useUnmergedTree = true)
         yearMonthTitle
             .assertIsDisplayed()
-            .assertTextContains("2023")
-            .assertTextContains("April")
+            .assertContentDescriptionEquals("2023, April, Calendar is in month view")
             .assertHasClickAction()
         val calendarsButton = composeTestRule.onNodeWithText("Calendars")
         calendarsButton

@@ -82,9 +82,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -102,6 +104,7 @@ import com.instructure.pandautils.features.calendar.CalendarRowUiState
 import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
@@ -244,18 +247,35 @@ fun CalendarHeader(
         actionHandler(CalendarAction.ExpandEnabled)
     }
 
+    val context = LocalContext.current
+
     var monthRowModifier = Modifier
-        .semantics(mergeDescendants = true) {
-            role = Role.Button
-        }
         .testTag("yearMonthTitle")
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+        val announcementText = stringResource(if (calendarOpen) R.string.a11y_calendarSwitchedToWeekView else R.string.a11y_calendarSwitchedToMonthView)
         monthRowModifier = monthRowModifier
             .clickable(
-                onClick = { actionHandler(CalendarAction.ExpandChanged(!calendarOpen)) },
-                onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
+                onClick = {
+                    actionHandler(CalendarAction.ExpandChanged(!calendarOpen))
+                    announceAccessibilityText(context, announcementText)
+                },
+                onClickLabel = stringResource(id = R.string.a11y_calendarSwitchBetweenMonthAndWeekView)
             )
             .padding(8.dp)
+    }
+
+    val calendarExpandedStateTExt =
+        stringResource(id = if (calendarOpen) R.string.a11y_calendarMonthView else R.string.a11y_calendarWeekView)
+    val calendarHeadingButtonContentDescription = stringResource(
+        id = R.string.a11y_calendarMonthButtonContentDescription,
+        headerUiState.yearTitle,
+        headerUiState.monthTitle,
+        calendarExpandedStateTExt
+    )
+    monthRowModifier = monthRowModifier.clearAndSetSemantics {
+        contentDescription = calendarHeadingButtonContentDescription
+        role = Role.Button
+        liveRegion = LiveRegionMode.Polite
     }
 
     Column(modifier = modifier) {

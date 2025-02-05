@@ -21,8 +21,10 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.content.res.Resources
 import android.view.View
+import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.core.content.ContextCompat
 import com.instructure.pandautils.R
 
 val Context.a11yManager get() = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -72,4 +74,13 @@ fun View.accessibilityClassName(accessibilityClassName: String) {
     }
 }
 
-
+fun announceAccessibilityText(context: Context, textToAnnounce: String) {
+    val accessibilityManager =
+        ContextCompat.getSystemService(context, AccessibilityManager::class.java)
+    if (accessibilityManager != null && accessibilityManager.isEnabled) {
+        accessibilityManager.sendAccessibilityEvent(AccessibilityEvent.obtain().apply {
+            eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+            text.add(textToAnnounce)
+        })
+    }
+}
