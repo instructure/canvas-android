@@ -77,8 +77,8 @@ fun View.accessibilityClassName(accessibilityClassName: String) {
 fun announceAccessibilityText(context: Context, textToAnnounce: String) {
     val accessibilityManager =
         ContextCompat.getSystemService(context, AccessibilityManager::class.java)
-    accessibilityManager?.let {
-        it.sendAccessibilityEvent(AccessibilityEvent.obtain().apply {
+    if (accessibilityManager != null && accessibilityManager.isEnabled) {
+        accessibilityManager.sendAccessibilityEvent(AccessibilityEvent.obtain().apply {
             eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
             text.add(textToAnnounce)
         })
