@@ -1665,6 +1665,10 @@
     <string name="calendarFilterLimitSnackbar">You can only select up to %d calendars.</string>
     <string name="calendarFilterTitle">Calendars</string>
     <string name="calendarFiltersFailed">Failed to load filters</string>
+    <string name="a11y_eventCreatedAnnouncement">Event %s successfully created.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Event %s successfully updated.</string>
+    <string name="a11y_toDoCreatedAnnouncement">To do %s successfully created.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">To do %s successfully updated.</string>
 
     <string name="todoScreenTitle">To Do</string>
     <string name="todoDateLabel">Date</string>
