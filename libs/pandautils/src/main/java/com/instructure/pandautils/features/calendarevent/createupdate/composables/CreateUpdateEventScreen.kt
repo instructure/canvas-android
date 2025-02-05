@@ -66,6 +66,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,6 +87,7 @@ import com.instructure.pandautils.compose.composables.SingleChoiceAlertDialog
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.getDatePickerDialog
 import com.instructure.pandautils.compose.getTimePickerDialog
+import com.instructure.pandautils.compose.isScreenReaderEnabled
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventAction
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventUiState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -503,19 +507,24 @@ private fun CreateUpdateEventContent(
                 modifier = Modifier
                     .defaultMinSize(minHeight = 80.dp)
             ) {
+                val labelText = stringResource(id = R.string.createEventDetailsLabel)
+
                 Text(
-                    text = stringResource(id = R.string.createEventDetailsLabel),
-                    modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+                    text = labelText,
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 12.dp)
+                        .clearAndSetSemantics {},
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 ComposeRCE(
                     html = uiState.details,
+                    hint = labelText.takeIf { isScreenReaderEnabled() }.orEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .testTag("detailsComposeRCE"),
+                        .testTag("detailsComposeRCE")
                 ) {
                     actionHandler(CreateUpdateEventAction.UpdateDetails(it))
                 }
@@ -542,7 +551,9 @@ private fun LabeledTextField(
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, top = 12.dp)
+                .clearAndSetSemantics {},
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
         )
@@ -554,7 +565,10 @@ private fun LabeledTextField(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .semantics {
+                    contentDescription = label
+                },
             cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
             textStyle = MaterialTheme.typography.body1.copy(
                 color = colorResource(id = R.color.textDarkest),
@@ -571,25 +585,32 @@ private fun TitleInput(
     onTitleUpdate: (String) -> Unit
 ) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .defaultMinSize(minHeight = 48.dp)
             .padding(vertical = 16.dp, horizontal = 16.dp)
     ) {
-
         Text(
             text = stringResource(id = R.string.createEventTitleLabel),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp,
-            modifier = Modifier.padding(end = 12.dp)
+            modifier = Modifier
+                .padding(end = 12.dp)
+                .clearAndSetSemantics {}
         )
+
+        val hintText = stringResource(id = R.string.createEventTitleHint)
 
         BasicTextField(
             value = title,
             decorationBox = {
-                Box(contentAlignment = Alignment.CenterStart) {
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                    modifier = Modifier.clearAndSetSemantics {}
+                ) {
                     if (title.isEmpty()) {
                         Text(
-                            text = stringResource(id = R.string.createEventTitleHint),
+                            text = hintText,
                             color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
                             fontSize = 16.sp
                         )
@@ -605,7 +626,10 @@ private fun TitleInput(
                 .onFocusChanged {
                     onFocusChanged(it)
                 }
-                .testTag("addTitleField"),
+                .testTag("addTitleField")
+                .semantics {
+                    contentDescription = hintText
+                },
             cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
             textStyle = MaterialTheme.typography.body1.copy(
                 color = colorResource(id = R.color.textDark),
