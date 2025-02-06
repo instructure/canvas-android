@@ -1500,6 +1500,7 @@
     <string name="offline_content_sync_dialog_positive">Sync</string>
     <string name="offline_content_sync_loading_title">Loading...</string>
     <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Offline sync settings have been saved. Sync will start shortly in the background.</string>
     <string name="content_description_expand_content">Expand content</string>
     <string name="content_description_expand_content_with_param">Expand content, %s</string>
     <string name="content_description_collapse_content">Collapse content</string>
