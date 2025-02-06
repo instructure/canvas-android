@@ -52,6 +52,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
@@ -68,6 +69,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -295,6 +297,7 @@ private fun ActionsSegment(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun CreateUpdateEventContent(
     uiState: CreateUpdateEventUiState,
@@ -513,7 +516,7 @@ private fun CreateUpdateEventContent(
                     text = labelText,
                     modifier = Modifier
                         .padding(start = 16.dp, top = 12.dp)
-                        .clearAndSetSemantics {},
+                        .semantics { invisibleToUser() },
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )
@@ -533,6 +536,7 @@ private fun CreateUpdateEventContent(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun LabeledTextField(
     label: String,
@@ -553,7 +557,7 @@ private fun LabeledTextField(
             text = label,
             modifier = Modifier
                 .padding(start = 16.dp, top = 12.dp)
-                .clearAndSetSemantics {},
+                .semantics { invisibleToUser() },
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
         )
@@ -577,6 +581,7 @@ private fun LabeledTextField(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun TitleInput(
     title: String,
@@ -596,7 +601,7 @@ private fun TitleInput(
             fontSize = 16.sp,
             modifier = Modifier
                 .padding(end = 12.dp)
-                .clearAndSetSemantics {}
+                .semantics { invisibleToUser() }
         )
 
         val hintText = stringResource(id = R.string.createEventTitleHint)
