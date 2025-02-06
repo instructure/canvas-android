@@ -56,7 +56,6 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:hint="@string/comment"
-            android:labelFor="@id/commentInput"
             app:boxBackgroundColor="@color/transparent"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp">
