@@ -1979,4 +1979,8 @@
     <string name="a11y_dragViewContentDescription">Expand Drawer</string>
     <string name="a11y_inboxRecyclerViewContentDescription">Conversations</string>
     <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Checked</string>
+    <string name="a11y_unchecked">Unchecked</string>
+    <string name="a11y_indeterminate">Partially checked</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
 </resources>

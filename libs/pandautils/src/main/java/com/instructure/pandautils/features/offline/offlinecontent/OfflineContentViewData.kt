@@ -20,9 +20,13 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import androidx.databinding.BaseObservable
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.FileViewModel
+import com.instructure.pandautils.utils.getCheckedStateStringFromCheckbox
+import com.instructure.pandautils.utils.getCheckedStateStringFromMaterialCheckbox
 
 data class OfflineContentViewData(
     val storageInfo: StorageInfo,
@@ -52,6 +56,16 @@ data class CourseItemViewData(
             else -> MaterialCheckBox.STATE_UNCHECKED
         }
     }
+
+    val contentDescription: String
+        get() {
+            return ContextKeeper.appContext.getString(
+                R.string.a11y_offlineContentItemContentDescription,
+                title,
+                size,
+                getCheckedStateStringFromMaterialCheckbox(checkedState())
+            )
+        }
 }
 
 data class CourseTabViewData(
@@ -69,13 +83,34 @@ data class CourseTabViewData(
             else -> MaterialCheckBox.STATE_UNCHECKED
         }
     }
+
+    val contentDescription: String
+        get() {
+            return ContextKeeper.appContext.getString(
+                R.string.a11y_offlineContentItemContentDescription,
+                title,
+                size,
+                getCheckedStateStringFromMaterialCheckbox(checkedState())
+            )
+        }
 }
 
 data class FileViewData(
     var checked: Boolean,
     val title: String,
     val size: String
-) : BaseObservable()
+) : BaseObservable() {
+
+    val contentDescription: String
+        get() {
+            return ContextKeeper.appContext.getString(
+                R.string.a11y_offlineContentItemContentDescription,
+                title,
+                size,
+                getCheckedStateStringFromCheckbox(checked)
+            )
+        }
+}
 
 enum class OfflineItemViewModelType(val viewType: Int) {
     COURSE(1),
