@@ -20,10 +20,11 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:background="@color/textDarkest"
             android:elevation="6dp"
+            android:minHeight="?android:attr/actionBarSize"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ToolBarPopupStyle"
             app:theme="@style/ToolBarStyle"
@@ -53,6 +54,17 @@
                         android:layout_margin="16dp"
                         android:background="@drawable/bg_rounded_outline_6dp"
                         android:padding="16dp">
+
+                        <androidx.constraintlayout.helper.widget.Flow
+                            android:id="@+id/storageInfoFlow"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:constraint_referenced_ids="storageLabel,storageInfo"
+                            app:flow_horizontalStyle="spread_inside"
+                            app:flow_wrapMode="aligned"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/storageLabel"
@@ -84,7 +96,19 @@
                             android:progress="@{viewModel.data.storageInfo.otherAppsReservedPercent}"
                             android:progressDrawable="@drawable/storage_progress_bar_background"
                             android:secondaryProgress="@{viewModel.data.storageInfo.allAppsReservedPercent}"
-                            app:layout_constraintTop_toBottomOf="@id/storageLabel" />
+                            app:layout_constraintTop_toBottomOf="@id/storageInfoFlow" />
+
+                        <androidx.constraintlayout.helper.widget.Flow
+                            android:id="@+id/storageCategoryFlow"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            app:constraint_referenced_ids="otherContainer,canvasContainer,remainingContainer"
+                            app:flow_horizontalStyle="spread_inside"
+                            app:flow_wrapMode="chain"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/progress" />
 
                         <LinearLayout
                             android:id="@+id/otherContainer"

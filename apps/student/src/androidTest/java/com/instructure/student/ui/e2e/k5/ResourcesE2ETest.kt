@@ -26,14 +26,14 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class ResourcesE2ETest : StudentTest() {
+class ResourcesE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -75,6 +75,7 @@ class ResourcesE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to K5 Resources Page and assert that is displayed.")
         Espresso.pressBack()
+        inboxComposePage.pressExitConfirmationButton()
         resourcesPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Assert that the important links, LTI tools and contacts are still displayed correctly, after the navigation.")
@@ -95,12 +96,7 @@ class ResourcesE2ETest : StudentTest() {
     }
 
     private fun assertNewMessagePageDisplayed() {
-        newMessagePage.assertToolbarTitleNewMessage()
-        newMessagePage.assertCourseSelectorNotShown()
-        newMessagePage.assertRecipientsNotShown()
-        newMessagePage.assertSendIndividualMessagesNotShown()
-        newMessagePage.assertSubjectViewShown()
-        newMessagePage.assertMessageViewShown()
+        inboxComposePage.assertTitle("New Message")
     }
 }
 

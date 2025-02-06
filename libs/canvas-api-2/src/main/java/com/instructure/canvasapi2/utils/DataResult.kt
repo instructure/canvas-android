@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2.utils
 
 import okhttp3.Response
+import okhttp3.ResponseBody
 import retrofit2.Call
 
 sealed class DataResult<out A> {
@@ -27,6 +28,7 @@ sealed class DataResult<out A> {
     data class Fail(
         val failure: Failure? = null,
         val response: Response? = null,
+        val errorBody: ResponseBody? = null,
     ) : DataResult<Nothing>()
 
     val isSuccess get() = this is Success<A>

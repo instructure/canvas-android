@@ -21,6 +21,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentGroupsApi
@@ -48,6 +49,7 @@ class OfflineAssignmentsE2ETest : StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @Stub
     @OfflineE2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)

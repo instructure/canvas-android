@@ -78,25 +78,18 @@ class HelpDialogFragment : BaseCanvasDialogFragment() {
             is HelpDialogAction.ReportProblem -> helpDialogFragmentBehavior.reportProblem()
             is HelpDialogAction.RateTheApp -> helpDialogFragmentBehavior.rateTheApp()
             is HelpDialogAction.AskInstructor -> helpDialogFragmentBehavior.askInstructor()
-            // External URL, but we handle within the app
-            is HelpDialogAction.SubmitFeatureIdea -> {
-                // Before custom help links, we were handling request a feature ourselves and
-                // we decided to keep that functionality instead of loading up the URL
-
-                // Let the user open their favorite mail client
-                val intent = populateMailIntent(action)
-                startActivity(Intent.createChooser(intent, getString(R.string.sendMail)))
-            }
             is HelpDialogAction.Phone -> {
                 // Support phone links: https://community.canvaslms.com/docs/DOC-12664-4214610054
                 val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse(action.url) }
                 startActivity(intent)
             }
+
             is HelpDialogAction.SendMail -> {
                 // Support mailto links: https://community.canvaslms.com/docs/DOC-12664-4214610054
                 val intent = Intent(Intent.ACTION_SENDTO).apply { data = Uri.parse(action.url) }
                 startActivity(intent)
             }
+
             is HelpDialogAction.OpenExternalBrowser -> {
                 // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
                 // to the external browser
@@ -106,18 +99,6 @@ class HelpDialogFragment : BaseCanvasDialogFragment() {
             // External URL
             is HelpDialogAction.OpenWebView -> helpDialogFragmentBehavior.openWebView(action.url, action.title)
         }
-    }
-
-    private fun populateMailIntent(action: HelpDialogAction.SubmitFeatureIdea): Intent {
-        // Let the user open their favorite mail client
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "message/rfc822"
-
-        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(action.recipient))
-        intent.putExtra(Intent.EXTRA_SUBJECT, action.subject)
-        intent.putExtra(Intent.EXTRA_TEXT, action.emailBody)
-
-        return intent
     }
 
     override fun onDestroyView() {

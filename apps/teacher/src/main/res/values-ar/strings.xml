@@ -461,6 +461,8 @@
     <string name="cancel_editing_comment">إلغاء تحرير التعليق</string>
     <string name="skip">تخطي</string>
 
+    <string name="collapseGradePanel">طي لوحة الدرجات</string>
+    <string name="expandGradePanel">توسيع لوحة الدرجات</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">تخصيص الدرجات %1$s</string>
 
@@ -884,6 +886,7 @@
     <string name="errorUpdatingFile">حدث خطأ أثناء تحديث هذا الملف</string>
     <string name="errorUpdatingFolder">حدث خطأ أثناء تحديث هذا المجلد</string>
 
+    <string name="errorEmptyTitle">لا يمكن ترك العنوان فارغًا</string>
     <string name="toDoEmpty">لا يوجد شيء آخر يمكن فعله!\n طاب يومك.</string>
     <string name="toDoNoSubmissions">لا توجد مهام مرسلة لتقييمها لهذه المهمة.</string>
     <string name="errorToDoRouteFailed">حدث خطأ أثناء محاولة عرض عنصر المهام هذا.</string>

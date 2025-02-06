@@ -17,18 +17,27 @@
 
 package com.instructure.pandautils.features.calendarevent.details
 
+import android.Manifest
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.interactions.FragmentInteractions
@@ -37,15 +46,18 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.details.composables.EventScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,6 +95,8 @@ class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
 
         override fun routeInternallyCallback(url: String) = webViewRouter.routeInternally(url)
     }
+
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -145,7 +159,54 @@ class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
                 navigateBack()
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshCalendar)
             }
+            is EventViewModelAction.OnReminderAddClicked -> checkAlarmPermission()
         }
+    }
+
+    private fun checkAlarmPermission() {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && requireActivity().checkSelfPermission(
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            viewModel.checkingNotificationPermission = true
+            notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
+            } else {
+                viewModel.checkingReminderPermission = true
+                startActivity(
+                    Intent(
+                        Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                        Uri.parse("package:" + requireContext().packageName)
+                    )
+                )
+            }
+        } else {
+            viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
+        }
+    }
+
+    private fun checkAlarmPermissionResult() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && viewModel.checkingNotificationPermission) {
+            if (requireActivity().checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                checkAlarmPermission()
+            } else {
+                Snackbar.make(requireView(), getString(R.string.notificationPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
+            }
+            viewModel.checkingNotificationPermission = false
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
+            if ((requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
+                viewModel.showCreateReminderDialog(requireContext(), ThemePrefs.textButtonColor)
+            } else {
+                Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
+            }
+            viewModel.checkingReminderPermission = false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkAlarmPermissionResult()
     }
 
     private fun handleSharedViewModelAction(action: SharedCalendarAction) {
@@ -161,7 +222,21 @@ class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         const val CONTEXT_TYPE = "context_type"
         const val CONTEXT_ID = "context_id"
 
-        fun newInstance(route: Route) = EventFragment().withArgs(route.arguments)
+        fun newInstance(route: Route): EventFragment {
+            return EventFragment().withArgs(
+                route.arguments.apply { // Handle external navigation, like notifications
+                    if (route.paramsHash.containsKey(CONTEXT_TYPE)) {
+                        putString(CONTEXT_TYPE, route.paramsHash[CONTEXT_TYPE])
+                    }
+                    if (route.paramsHash.containsKey(CONTEXT_ID)) {
+                        putLong(CONTEXT_ID, route.paramsHash[CONTEXT_ID]?.toLongOrNull().orDefault())
+                    }
+                    if (route.paramsHash.containsKey(SCHEDULE_ITEM_ID)) {
+                        putLong(SCHEDULE_ITEM_ID, route.paramsHash[SCHEDULE_ITEM_ID]?.toLongOrNull().orDefault())
+                    }
+                }
+            )
+        }
 
         fun makeRoute(canvasContext: CanvasContext, scheduleItem: ScheduleItem) = Route(
             EventFragment::class.java, canvasContext, canvasContext.makeBundle {

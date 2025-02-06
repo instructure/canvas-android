@@ -441,6 +441,8 @@
     <string name="cancel_editing_comment">取消编辑评论</string>
     <string name="skip">略过</string>
 
+    <string name="collapseGradePanel">折叠年级面板</string>
+    <string name="expandGradePanel">展开年级面板</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">自定义分数%1$s</string>
 
@@ -824,6 +826,7 @@
     <string name="errorUpdatingFile">更新此文件时出错</string>
     <string name="errorUpdatingFolder">更新此文件夹时出错</string>
 
+    <string name="errorEmptyTitle">标题不能为空</string>
     <string name="toDoEmpty">无需再执行其他操作！\n祝您度过愉快的一天。</string>
     <string name="toDoNoSubmissions">此作业没有要评分的提交项。</string>
     <string name="errorToDoRouteFailed">尝试查看此待办事项时出错。</string>

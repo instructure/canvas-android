@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -118,7 +119,8 @@ private fun InboxMessageDetailsView(
                 },
                 style = MaterialTheme.typography.body1.copy(
                     color = colorResource(id = R.color.textDarkest)
-                )
+                ),
+                modifier = Modifier.testTag("messageBodyText")
             )
         }
 
@@ -194,16 +196,16 @@ private fun InboxMessageAuthorView(
                         messageState.recipients.size - 1
                     )
                 } else {
-                    messageState.recipients[0].name
+                    messageState.recipients.firstOrNull()?.name
                 }
             }
 
             Text(
-                text = stringResource(
+                text = if (recipientText != null) stringResource(
                     R.string.inboxMessageAuthorAndRecipientsLabel,
                     author?.name ?: "",
-                    recipientText ?:""
-                ),
+                    recipientText
+                ) else author?.name ?: "",
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest)
             )

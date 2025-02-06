@@ -76,7 +76,18 @@ abstract class PageViewUploadService : JobService() {
                 val orphanDate = Date(System.currentTimeMillis() - MAX_ORPHAN_AGE)
                 val maxAgeDate = Date(System.currentTimeMillis() - MAX_EVENT_AGE)
                 book.allKeys.asSequence()
-                    .mapNotNull { book.read<PageViewEvent>(it) }
+                    .mapNotNull {
+                        try {
+                            book.read<PageViewEvent>(it)
+                        } catch (e: Exception) {
+                            // This is a known issue in PaperDB that some deserializaton randomly fails due to Kyro
+                            // https://github.com/pilgr/Paper/issues/4#issuecomment-740185776
+                            // Suggested workaround is to try reading the object again
+                            // They won't fix it because the library is not maintained anymore. Long term fix is to migrate to Room.
+                            onException(Throwable("Failed to read PageViewEvent for the first try", e))
+                            book.read<PageViewEvent>(it)
+                        }
+                    }
                     .filter { it.eventDuration > 0 || it.timestamp.before(orphanDate) }
                     .partition { it.timestamp.after(maxAgeDate) }
             }

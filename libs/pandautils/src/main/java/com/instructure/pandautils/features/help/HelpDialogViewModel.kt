@@ -44,8 +44,6 @@ class HelpDialogViewModel @Inject constructor(
     private val helpLinksManager: HelpLinksManager,
     private val courseManager: CourseManager,
     @ApplicationContext private val context: Context,
-    private val apiPrefs: ApiPrefs,
-    private val packageInfoProvider: PackageInfoProvider,
     private val helpLinkFilter: HelpLinkFilter) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -106,55 +104,17 @@ class HelpDialogViewModel @Inject constructor(
             .plus(HelpLinkItemViewModel(rateLink, ::onLinkClicked))
     }
 
-    private fun filterLinks(link: HelpLink, favoriteCourses: List<Course>): Boolean {
-        return ((link.availableTo.contains("student") || link.availableTo.contains("user"))
-            && (link.url != "#teacher_feedback" || favoriteCourses.filter { !it.isTeacher }.count() > 0))
-    }
-
     private fun mapAction(link: HelpLink): HelpDialogAction {
         return when {
             // Internal routes
             link.url == "#create_ticket" -> HelpDialogAction.ReportProblem
             link.url == "#teacher_feedback" -> HelpDialogAction.AskInstructor
-            // External URL, but we handle within the app
-            link.id.contains("submit_feature_idea") -> createSubmitFeatureIdea()
             link.url.orEmpty().startsWith("tel:") -> HelpDialogAction.Phone(link.url.orEmpty())
             link.url.orEmpty().startsWith("mailto:") -> HelpDialogAction.SendMail(link.url.orEmpty())
             link.url.orEmpty().contains("cases.canvaslms.com/liveagentchat") -> HelpDialogAction.OpenExternalBrowser(link.url.orEmpty())
             // External URL
             else -> HelpDialogAction.OpenWebView(link.url.orEmpty(), link.text.orEmpty())
         }
-    }
-
-    private fun createSubmitFeatureIdea(): HelpDialogAction.SubmitFeatureIdea {
-        val recipient = context.getString(R.string.utils_mobileSupportEmailAddress)
-
-        // Try to get the version number and version code
-        val packageInfo = packageInfoProvider.getPackageInfo()
-        val versionName = packageInfo?.versionName
-        val versionCode = packageInfo?.versionCode
-
-        val subject = "[${context.getString(R.string.featureSubject)}] Issue with Canvas [Android] $versionName"
-
-        val installDateString = if (packageInfo != null) {
-            DateHelper.dayMonthYearFormat.format(Date(packageInfo.firstInstallTime))
-        } else {
-            ""
-        }
-
-        val user = apiPrefs.user
-        // Populate the email body with information about the user
-        var emailBody = ""
-        emailBody += context.getString(R.string.understandRequest) + "\n"
-        emailBody += context.getString(R.string.help_userId) + " " + user?.id + "\n"
-        emailBody += context.getString(R.string.help_email) + " " + user?.email + "\n"
-        emailBody += context.getString(R.string.help_domain) + " " + apiPrefs.domain + "\n"
-        emailBody += context.getString(R.string.help_versionNum) + " " + versionName + " " + versionCode + "\n"
-        emailBody += context.getString(R.string.help_locale) + " " + Locale.getDefault() + "\n"
-        emailBody += context.getString(R.string.installDate) + " " + installDateString + "\n"
-        emailBody += "----------------------------------------------\n"
-
-        return HelpDialogAction.SubmitFeatureIdea(recipient, subject, emailBody)
     }
 
     private fun onLinkClicked(action: HelpDialogAction) {

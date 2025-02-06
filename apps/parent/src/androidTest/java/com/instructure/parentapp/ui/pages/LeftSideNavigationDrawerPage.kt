@@ -23,10 +23,10 @@ import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.getStringFromResource
-import com.instructure.espresso.pages.onViewWithId
-import com.instructure.espresso.pages.onViewWithText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
 import com.instructure.parentapp.R
 import org.hamcrest.Matchers
 
@@ -38,6 +38,10 @@ class LeftSideNavigationDrawerPage: BasePage(R.id.drawer_layout) {
 
     fun clickSettings() {
         onViewWithText(R.string.settings).click()
+    }
+
+    fun clickHelpMenu() {
+        onViewWithText(R.string.help).click()
     }
 
     fun clickLogout() {

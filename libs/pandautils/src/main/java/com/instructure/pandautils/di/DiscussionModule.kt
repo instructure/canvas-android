@@ -2,6 +2,7 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperLocalDataSource
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperNetworkDataSource
@@ -12,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -38,5 +40,11 @@ class DiscussionModule {
         groupFacade: GroupFacade
     ): DiscussionRouteHelperLocalDataSource {
         return DiscussionRouteHelperLocalDataSource(discussionTopicHeaderFacade, groupFacade)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDiscussionSharedEvents(): DiscussionSharedEvents {
+        return DiscussionSharedEvents()
     }
 }

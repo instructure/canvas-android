@@ -15,7 +15,6 @@
  */
 package com.instructure.student.util
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.models.Assignment
@@ -25,14 +24,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.getShortMonthAndDay
 import com.instructure.pandautils.utils.getTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
 import java.util.Locale
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 suspend fun Long.isStudioEnabled(): Boolean {
     val context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this)
@@ -58,19 +51,4 @@ fun LTITool.getResourceSelectorUrl(canvasContext: CanvasContext, assignment: Ass
 fun String.toDueAtString(context: Context): String {
     val dueDateTime = OffsetDateTime.parse(this).withOffsetSameInstant(OffsetDateTime.now().offset)
     return context.getString(com.instructure.pandares.R.string.submissionDetailsDueAt, dueDateTime.getShortMonthAndDay(), dueDateTime.getTime())
-}
-
-fun BroadcastReceiver.goAsync(
-    context: CoroutineContext = EmptyCoroutineContext,
-    block: suspend CoroutineScope.() -> Unit
-) {
-    val pendingResult = goAsync()
-    @OptIn(DelicateCoroutinesApi::class)
-    GlobalScope.launch(context) {
-        try {
-            block()
-        } finally {
-            pendingResult.finish()
-        }
-    }
 }

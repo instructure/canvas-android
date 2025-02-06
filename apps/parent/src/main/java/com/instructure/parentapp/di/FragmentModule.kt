@@ -19,6 +19,7 @@ package com.instructure.parentapp.di
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import com.instructure.parentapp.util.navigation.ParentWebViewRouter
 import dagger.Module
 import dagger.Provides
@@ -33,7 +34,7 @@ import dagger.hilt.android.components.FragmentComponent
 class FragmentModule {
 
     @Provides
-    fun provideWebViewRouter(activity: FragmentActivity): WebViewRouter {
-        return ParentWebViewRouter(activity)
+    fun provideWebViewRouter(activity: FragmentActivity, navigation: Navigation): WebViewRouter {
+        return ParentWebViewRouter(activity, navigation)
     }
 }

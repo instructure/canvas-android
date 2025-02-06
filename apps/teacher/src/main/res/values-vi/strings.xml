@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Hủy chỉnh sửa bình luận</string>
     <string name="skip">Bỏ Qua</string>
 
+    <string name="collapseGradePanel">Thu Gọn Bảng Điểm</string>
+    <string name="expandGradePanel">Mở Rộng Bảng Điểm</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Điểm tùy chỉnh %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">Đã xảy ra lỗi khi tải lên tập tin này</string>
     <string name="errorUpdatingFolder">Đã xảy ra lỗi khi cập nhật thư mục này</string>
 
+    <string name="errorEmptyTitle">Không được để trống tiêu đề</string>
     <string name="toDoEmpty">Không còn gì thêm cần làm!\n Hãy tận hưởng thời gian còn lại trong ngày nhé.</string>
     <string name="toDoNoSubmissions">Không có bài nộp để chấm điểm cho bài tập này.</string>
     <string name="errorToDoRouteFailed">Đã xảy ra lỗi khi thử xem mục Việc Cần Làm.</string>

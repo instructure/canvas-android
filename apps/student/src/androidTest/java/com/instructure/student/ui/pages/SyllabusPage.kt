@@ -29,10 +29,10 @@ import com.instructure.canvas.espresso.matchToolbarText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.getStringFromResource
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withAncestor
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 import org.hamcrest.Matchers

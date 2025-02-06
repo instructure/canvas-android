@@ -15,9 +15,15 @@
  */
 package com.instructure.pandautils.utils
 
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -29,4 +35,17 @@ fun <T> LifecycleCoroutineScope.collectOneOffEvents(eventFlow: Flow<T>, onEvent:
             }
         }
     }
+}
+
+suspend fun <DATA, FIELD> StateFlow<DATA>.collectDistinctUntilChanged(
+    lifecycle: Lifecycle,
+    selector: (DATA) -> FIELD,
+    onChanged: (FIELD) -> Unit
+) {
+    this.map(selector)
+        .distinctUntilChanged()
+        .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+        .collectLatest { value ->
+            onChanged(value)
+        }
 }

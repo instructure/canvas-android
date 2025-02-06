@@ -20,8 +20,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,12 +60,13 @@ fun ContextValueRow(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .height(52.dp)
+            .defaultMinSize(minHeight = 52.dp)
             .clickable(enabled = enabled) { onClick() }
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp)
             .padding(top = 8.dp, bottom = 8.dp)
             .alpha(if (enabled) 1f else 0.5f)
+            .testTag("contextValueRow")
     ) {
         Text(
             text = label,

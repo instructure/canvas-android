@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Batalkan mengedit komen.</string>
     <string name="skip">Langkau</string>
 
+    <string name="collapseGradePanel">Runtuhkan Panel Gred</string>
+    <string name="expandGradePanel">Kembangkan Panel Gred</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Sesuaikan skor %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">Ralat berlaku semasa mengemas kini fail ini.</string>
     <string name="errorUpdatingFolder">Ralat berlaku semasa mengemas kini folder ini</string>
 
+    <string name="errorEmptyTitle">Tajuk tidak boleh kosong</string>
     <string name="toDoEmpty">Tiada apa-apa lagi untuk dilakukan!\n Nikmati hari anda</string>
     <string name="toDoNoSubmissions">Tiada serahan untuk digredkan untuk tugasan ini.</string>
     <string name="errorToDoRouteFailed">Ralat berlaku semasa cuba melihat Item Untuk Dilakukan</string>

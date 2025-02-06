@@ -20,7 +20,7 @@ class PushNotificationsE2ETest : StudentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testPushNotificationsUIE2E() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")

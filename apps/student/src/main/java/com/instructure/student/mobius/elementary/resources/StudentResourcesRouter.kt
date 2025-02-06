@@ -22,8 +22,10 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
-import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentResourcesRouter(private val activity: FragmentActivity) : ResourcesRouter {
@@ -43,7 +45,15 @@ class StudentResourcesRouter(private val activity: FragmentActivity) : Resources
     override fun openComposeMessage(user: User) {
         val recipient = Recipient.from(user)
         val context = Course(id = user.enrollments[0].courseId, homeroomCourse = true)
-        val route = InboxComposeMessageFragment.makeRoute(context, arrayListOf(recipient), homeroomMessage = true)
+        val options = InboxComposeOptions.buildNewMessage().copy(
+            defaultValues = InboxComposeOptionsDefaultValues(
+                contextName = context.name,
+                contextCode = context.contextId,
+                recipients = arrayListOf(recipient)
+            )
+
+        )
+        val route = InboxComposeFragment.makeRoute(options)
         RouteMatcher.route(activity, route)
     }
 }
