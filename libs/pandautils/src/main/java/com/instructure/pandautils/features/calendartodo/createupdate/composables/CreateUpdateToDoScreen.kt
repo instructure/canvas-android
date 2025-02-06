@@ -64,7 +64,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.semantics
@@ -413,7 +412,7 @@ private fun TitleInput(
             decorationBox = {
                 Box(
                     contentAlignment = Alignment.CenterStart,
-                    modifier = Modifier.clearAndSetSemantics {}
+                    modifier = Modifier.semantics { invisibleToUser() }
                 ) {
                     if (title.isEmpty()) {
                         Text(
