@@ -201,7 +201,7 @@ class ToDoListFragment : ParentFragment() {
         val choices = arrayOf(getString(R.string.favoritedCoursesLabel))
         var checkedItem = choices.indexOf(getString(recyclerAdapter?.getFilterMode()?.titleId ?: NoFilter.titleId))
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAccentDialogTheme)
                 .setTitle(R.string.filterByEllipsis)
                 .setSingleChoiceItems(choices, checkedItem) { _, index ->
                     checkedItem = index
