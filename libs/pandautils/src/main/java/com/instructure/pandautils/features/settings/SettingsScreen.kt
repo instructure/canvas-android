@@ -58,8 +58,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -155,6 +157,9 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
                     else -> {
                         LabelValueVerticalItem(
                             modifier = Modifier
+                                .semantics {
+                                    role = Role.Button
+                                }
                                 .clickable {
                                     uiState.actionHandler(SettingsAction.ItemClicked(settingsItem))
                                 }
