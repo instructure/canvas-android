@@ -85,11 +85,12 @@ enum class OfflineItemViewModelType(val viewType: Int) {
 }
 
 sealed class OfflineContentAction {
-    object Back : OfflineContentAction()
+    data object Back : OfflineContentAction()
     data class Dialog(
         val title: String,
         val message: String,
         val positive: String,
         val positiveCallback: () -> Unit
     ) : OfflineContentAction()
+    data object AnnounceSyncStarted : OfflineContentAction()
 }
