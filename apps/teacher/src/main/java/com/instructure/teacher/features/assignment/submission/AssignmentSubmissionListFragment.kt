@@ -319,6 +319,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 val (keys, values) = submissionFilters.toList().unzip()
                 val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.filter_submissions), values as ArrayList<String>, keys.indexOf(presenter.getFilter().ordinal)) { idx ->
                     EventBus.getDefault().post(SubmissionFilterChangedEvent(keys[idx]))
+                    binding.root.announceForAccessibility(getString(R.string.a11ySubmissionFiltersHaveBeenUpdated))
                 }
                 dialog.show(requireActivity().supportFragmentManager, RadioButtonDialog::class.java.simpleName)
 

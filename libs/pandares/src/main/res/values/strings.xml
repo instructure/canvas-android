@@ -1979,4 +1979,5 @@
     <string name="a11y_dragViewContentDescription">Expand Drawer</string>
     <string name="a11y_inboxRecyclerViewContentDescription">Conversations</string>
     <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11ySubmissionFiltersHaveBeenUpdated">Filters have been updated</string>
 </resources>
