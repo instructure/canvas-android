@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.reminder.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,18 +63,21 @@ fun ReminderView(
             Text(
                 text = stringResource(id = R.string.reminderTitle),
                 fontSize = 14.sp,
-                color = colorResource(id = R.color.textDark)
+                color = colorResource(id = R.color.textDark),
+                modifier = Modifier.semantics { heading() }
             )
 
             Row(
-                modifier = Modifier.padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .clickable { onAddClick() }
             ) {
                 IconButton(onClick = { onAddClick() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = stringResource(id = R.string.a11y_addReminder),
-                        tint = viewState.themeColor
+                        tint = viewState.getThemeColor(LocalContext.current)
                     )
                 }
 
@@ -87,7 +93,7 @@ fun ReminderView(
                 RemindersGroupView(
                     title = null,
                     reminders = viewState.reminders.sortedBy { it.date },
-                    themeColor = viewState.themeColor,
+                    themeColor = viewState.getThemeColor(LocalContext.current),
                     onRemoveClick = onRemoveClick
                 )
             } else {
@@ -99,7 +105,7 @@ fun ReminderView(
                 RemindersGroupView(
                     title = null,
                     reminders = remindersBeforeDueDate.sortedBy { it.date },
-                    themeColor = viewState.themeColor,
+                    themeColor = viewState.getThemeColor(LocalContext.current),
                     onRemoveClick = onRemoveClick
                 )
 
@@ -109,7 +115,7 @@ fun ReminderView(
                         viewState.dueDate.toFormattedString()
                     ),
                     reminders = remindersAfterDueDate.sortedBy { it.date },
-                    themeColor = viewState.themeColor,
+                    themeColor = viewState.getThemeColor(LocalContext.current),
                     onRemoveClick = onRemoveClick
                 )
             }

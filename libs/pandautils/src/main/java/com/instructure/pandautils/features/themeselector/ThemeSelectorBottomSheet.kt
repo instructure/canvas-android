@@ -25,8 +25,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.CompoundButtonCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.BottomSheetThemeSelectorBinding
 import com.instructure.pandautils.utils.AppTheme
@@ -35,7 +35,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
 
-class ThemeSelectorBottomSheet : BottomSheetDialogFragment() {
+class ThemeSelectorBottomSheet : BaseCanvasBottomSheetDialogFragment() {
 
     private val binding by viewBinding(BottomSheetThemeSelectorBinding::bind)
 

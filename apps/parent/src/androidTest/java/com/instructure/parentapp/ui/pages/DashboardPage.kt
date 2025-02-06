@@ -23,14 +23,14 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.onViewWithContentDescription
-import com.instructure.espresso.pages.onViewWithId
-import com.instructure.espresso.pages.onViewWithText
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withAncestor
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithContentDescription
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.waitForCheck
 import com.instructure.parentapp.R
 
@@ -68,6 +68,10 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
 
     fun clickAddStudent() {
         onViewWithContentDescription(R.string.a11y_addStudentContentDescription).click()
+    }
+
+    fun assertAddStudentDisplayed() {
+        onView(withText(R.string.a11y_addStudentContentDescription) + withAncestor(R.id.student_list)).assertDisplayed()
     }
 
     fun clickInbox() {

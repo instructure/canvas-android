@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Canslo’r broses o olygu sylw</string>
     <string name="skip">Anwybyddu</string>
 
+    <string name="collapseGradePanel">Cau\'r Panel Gradd</string>
+    <string name="expandGradePanel">Ehangu’r Panel Gradd</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Sgôr personol %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Gwall wrth ddiweddaru’r ffeil hon</string>
     <string name="errorUpdatingFolder">Gwall wrth ddiweddaru’r ffolder hon</string>
 
+    <string name="errorEmptyTitle">Does dim modd i’r teitl fod yn wag</string>
     <string name="toDoEmpty">Dim byd arall i\'w wneud!\n Mwynhewch eich diwrnod.</string>
     <string name="toDoNoSubmissions">Does dim cyflwyniadau i’w graddio ar gyfer yr aseiniad hwn.</string>
     <string name="errorToDoRouteFailed">Gwall wrth geisio gweld yr eitem i’w gwneud.</string>

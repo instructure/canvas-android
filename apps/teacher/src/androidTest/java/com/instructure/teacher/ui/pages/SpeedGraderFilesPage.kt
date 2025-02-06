@@ -29,7 +29,7 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.RecyclerViewMatcher
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 

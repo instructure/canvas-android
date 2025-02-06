@@ -30,6 +30,10 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.SerializableArg
@@ -52,7 +56,6 @@ import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.factory.AssignmentSubmissionListPresenterFactory
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
-import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
@@ -214,13 +217,20 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         }
 
         addMessage.setOnClickListener {
-            val args = AddMessageFragment.createBundle(
-                presenter.getRecipients(),
-                filterTitle.text.toString() + " " + getString(R.string.on) + " " + assignment.name,
-                course.contextId,
-                false
+            val options = InboxComposeOptions.buildNewMessage().copy(
+                defaultValues = InboxComposeOptionsDefaultValues(
+                    contextCode = course.contextId,
+                    contextName = course.name,
+                    recipients = presenter.getRecipients(),
+                    subject = filterTitle.text.toString() + " " + getString(R.string.on) + " " + assignment.name
+                ),
+                disabledFields = InboxComposeOptionsDisabledFields(
+                    isContextDisabled = true,
+                    isSubjectDisabled = true
+                )
             )
-            RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
+            val route = InboxComposeFragment.makeRoute(options)
+            RouteMatcher.route(requireActivity(), route)
         }
     }
 

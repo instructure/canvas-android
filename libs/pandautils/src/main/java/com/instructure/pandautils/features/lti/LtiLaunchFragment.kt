@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.lti
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,10 +25,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
@@ -47,6 +46,7 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentLtiLaunchBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
@@ -56,9 +56,9 @@ import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.argsWithContext
-import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
@@ -67,6 +67,8 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
@@ -104,11 +106,30 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
         binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
-        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textDarkest))
-        binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.setupAsBackButton {
+            ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
+        }
         binding.toolbar.title = title
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textLightest))
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
+                when (it) {
+                    is ViewState.Loading -> binding.loadingLayout.setVisible()
+                    else -> binding.loadingLayout.setGone()
+                }
+            }
+        }
+
+        savedInstanceState?.let {
+            binding.webView.restoreState(it)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.webView.saveState(outState)
     }
 
     private fun handleAction(action: LtiLaunchAction) {
@@ -126,32 +147,12 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     private fun launchCustomTab(url: String) {
-        val uri = Uri.parse(url)
-            .buildUpon()
-            .appendQueryParameter("display", "borderless")
-            .appendQueryParameter("platform", "android")
-            .build()
-
-        val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ltiLaunchFragmentBehavior.toolbarColor)
-            .build()
-
-        var intent = CustomTabsIntent.Builder()
-            .setDefaultColorSchemeParams(colorSchemeParams)
-            .setShowTitle(true)
-            .build()
-            .intent
-
-        intent.data = uri
-
-        // Exclude Instructure apps from chooser options
-        intent = intent.asChooserExcludingInstructure()
-
-        requireContext().startActivity(intent)
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (activity == null) return@postDelayed
-            requireActivity().onBackPressed()
-        }, 500)
+        activity?.let {
+            it.launchCustomTab(url, ltiLaunchFragmentBehavior.toolbarColor)
+            Handler(Looper.getMainLooper()).postDelayed({
+                it.onBackPressed()
+            }, 500)
+        }
     }
 
     private fun loadLtiToolIntoWebView(url: String) {
@@ -181,7 +182,7 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
             override fun routeInternallyCallback(url: String) {
                 // Handle return button in external tools. Links to course homepage should close the tool.
                 if (url == contextLink()) {
-                    requireActivity().onBackPressed()
+                    ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
                 } else {
                     webViewRouter.routeInternally(url)
                 }

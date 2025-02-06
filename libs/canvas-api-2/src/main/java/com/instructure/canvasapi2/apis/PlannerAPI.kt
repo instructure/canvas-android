@@ -9,7 +9,17 @@ import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Tag
+import retrofit2.http.Url
 
 object PlannerAPI {
 
@@ -44,6 +54,9 @@ object PlannerAPI {
 
         @PUT("planner_notes/{noteId}")
         suspend fun updatePlannerNote(@Path("noteId") noteId: Long, @Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
+
+        @GET("planner_notes/{noteId}")
+        suspend fun getPlannerNote(@Path("noteId") noteId: Long, @Tag params: RestParams): DataResult<Plannable>
 
         @GET("planner_notes")
         suspend fun getPlannerNotes(

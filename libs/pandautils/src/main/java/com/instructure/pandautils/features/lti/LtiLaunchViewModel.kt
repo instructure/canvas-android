@@ -28,11 +28,14 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.replaceWithURLQueryParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -54,6 +57,9 @@ class LtiLaunchViewModel @Inject constructor(
 
     private val _events = Channel<LtiLaunchAction>()
     val events = _events.receiveAsFlow()
+
+    private val _state = MutableStateFlow<ViewState>(ViewState.Loading)
+    val state = _state.asStateFlow()
 
     init {
         handleLtiInput()
@@ -121,6 +127,7 @@ class LtiLaunchViewModel @Inject constructor(
             } else {
                 _events.send(LtiLaunchAction.LaunchCustomTab(url))
             }
+            _state.value = ViewState.Success
         }
     }
 

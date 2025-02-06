@@ -658,6 +658,104 @@ class InboxComposeViewModelTest {
 
     // endregion
 
+    // region External state modification
+
+    @Test
+    fun `Test dismiss dialog logic`() {
+        val viewmodel = getViewModel()
+
+        assertEquals(false, viewmodel.uiState.value.showConfirmationDialog)
+        assertEquals(true, viewmodel.uiState.value.enableCustomBackHandler)
+
+        viewmodel.cancelDismissDialog(true)
+
+        assertEquals(true, viewmodel.uiState.value.showConfirmationDialog)
+        assertEquals(false, viewmodel.uiState.value.enableCustomBackHandler)
+
+        viewmodel.cancelDismissDialog(false)
+
+        assertEquals(false, viewmodel.uiState.value.showConfirmationDialog)
+        assertEquals(true, viewmodel.uiState.value.enableCustomBackHandler)
+
+    }
+
+    @Test
+    fun `Test dismissing context picker screen`() {
+        val viewmodel = getViewModel()
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
+
+        viewmodel.handleAction(InboxComposeActionHandler.OpenContextPicker)
+        assertEquals(InboxComposeScreenOptions.ContextPicker, viewmodel.uiState.value.screenOption)
+
+        viewmodel.closeContextPicker()
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
+    }
+
+    @Test
+    fun `Test back to roles on recipient picker screen`() {
+        val viewmodel = getViewModel()
+        val role: EnrollmentType = mockk(relaxed = true)
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
+
+        viewmodel.handleAction(InboxComposeActionHandler.OpenRecipientPicker)
+        assertEquals(InboxComposeScreenOptions.RecipientPicker, viewmodel.uiState.value.screenOption)
+        assertEquals(RecipientPickerScreenOption.Roles, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+        viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(role))
+        assertEquals(RecipientPickerScreenOption.Recipients, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+
+        viewmodel.recipientPickerBackToRoles()
+        assertEquals(InboxComposeScreenOptions.RecipientPicker, viewmodel.uiState.value.screenOption)
+        assertEquals(RecipientPickerScreenOption.Roles, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+    }
+
+    @Test
+    fun `Test done button on recipient screen`() {
+        val viewmodel = getViewModel()
+        val role: EnrollmentType = mockk(relaxed = true)
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
+
+        viewmodel.handleAction(InboxComposeActionHandler.OpenRecipientPicker)
+        assertEquals(InboxComposeScreenOptions.RecipientPicker, viewmodel.uiState.value.screenOption)
+        assertEquals(RecipientPickerScreenOption.Roles, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+        viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(role))
+        assertEquals(RecipientPickerScreenOption.Recipients, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+
+        viewmodel.recipientPickerDone()
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
+        assertEquals(RecipientPickerScreenOption.Roles, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+    }
+
+    // endregion
+
+    // region SendIndividual
+
+    @Test
+    fun `Test Send individual over 100 recipients`() {
+        val viewmodel = getViewModel()
+        val over100RecipientGroup = Recipient(stringId = "all", name = "Test", userCount = 110)
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(over100RecipientGroup))
+
+        assertEquals(true, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(false, viewmodel.uiState.value.sendIndividual)
+
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(over100RecipientGroup))
+
+        assertEquals(false, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(false, viewmodel.uiState.value.sendIndividual)
+
+        viewmodel.handleAction(InboxComposeActionHandler.SendIndividualChanged(true))
+
+        assertEquals(true, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
+
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(over100RecipientGroup))
+
+        assertEquals(true, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
+    }
+
+    // endregion
+
     private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
         return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao)
     }

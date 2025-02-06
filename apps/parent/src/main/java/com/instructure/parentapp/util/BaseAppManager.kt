@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.base.AppConfig
 import com.instructure.pandautils.base.AppConfigProvider
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
@@ -42,8 +43,11 @@ abstract class BaseAppManager : AppManager() {
 
     override fun onCreate() {
         super.onCreate()
+
+        performFlutterAppMigration()
+
         AppConfigProvider.appConfig = AppConfig(AppType.PARENT, MainActivity::class.java)
-        MasqueradeHelper.masqueradeLogoutTask = Runnable { ParentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+        MasqueradeHelper.masqueradeLogoutTask = Runnable { ParentLogoutTask(LogoutTask.Type.LOGOUT, alarmScheduler = getScheduler()).execute() }
 
         val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
@@ -54,9 +58,9 @@ abstract class BaseAppManager : AppManager() {
         RemoteConfigUtils.initialize()
 
         if (BuildConfig.DEBUG) {
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+            FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = false
         } else {
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+            FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = true
         }
 
         ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.textDarkest)
@@ -69,4 +73,8 @@ abstract class BaseAppManager : AppManager() {
     }
 
     override fun performLogoutOnAuthError() = Unit
+
+    abstract fun getScheduler(): AlarmScheduler?
+
+    abstract fun performFlutterAppMigration()
 }

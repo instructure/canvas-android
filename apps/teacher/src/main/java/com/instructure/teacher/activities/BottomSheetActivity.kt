@@ -40,12 +40,12 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.BottomSheetInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityBottomSheetBinding
-import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.utils.getColorCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -147,9 +147,9 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
 
     private fun animateBottomSheetGoneAndFinish() {
         //don't want to finish if there are unsaved changes
-        if (supportFragmentManager.findFragmentById(R.id.bottom) is AddMessageFragment) {
-            if(!(supportFragmentManager.findFragmentById(R.id.bottom) as AddMessageFragment).shouldAllowExit()) {
-                (supportFragmentManager.findFragmentById(R.id.bottom) as AddMessageFragment).handleExit()
+        if (supportFragmentManager.findFragmentById(R.id.bottom) is InboxComposeFragment) {
+            if(!(supportFragmentManager.findFragmentById(R.id.bottom) as InboxComposeFragment).shouldAllowExit()) {
+                (supportFragmentManager.findFragmentById(R.id.bottom) as InboxComposeFragment).handleExit()
                 return
             }
         }

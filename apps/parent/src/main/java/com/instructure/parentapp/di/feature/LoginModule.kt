@@ -18,8 +18,10 @@
 package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.features.login.ParentAcceptableUsePolicyRouter
 import com.instructure.parentapp.features.login.ParentLoginNavigation
 import dagger.Module
@@ -32,12 +34,12 @@ import dagger.hilt.android.components.ActivityComponent
 class LoginModule {
 
     @Provides
-    fun provideAcceptableUsePolicyRouter(activity: FragmentActivity): AcceptableUsePolicyRouter {
-        return ParentAcceptableUsePolicyRouter(activity)
+    fun provideAcceptableUsePolicyRouter(activity: FragmentActivity, alarmScheduler: AlarmScheduler, analytics: Analytics): AcceptableUsePolicyRouter {
+        return ParentAcceptableUsePolicyRouter(activity, alarmScheduler, analytics)
     }
 
     @Provides
-    fun provideLoginNavigation(activity: FragmentActivity): LoginNavigation {
-        return ParentLoginNavigation(activity)
+    fun provideLoginNavigation(activity: FragmentActivity, alarmScheduler: AlarmScheduler): LoginNavigation {
+        return ParentLoginNavigation(activity, alarmScheduler)
     }
 }

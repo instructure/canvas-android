@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Erro ao editar comentário.</string>
     <string name="skip">Saltar</string>
 
+    <string name="collapseGradePanel">Recolher o Painel de notas</string>
+    <string name="expandGradePanel">Expandir o Painel de notas</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Pontuação padrão %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Ocorreu um erro ao atualizar este ficheiro</string>
     <string name="errorUpdatingFolder">Ocorreu um erro ao atualizar esta pasta</string>
 
+    <string name="errorEmptyTitle">O título não pode estar em branco</string>
     <string name="toDoEmpty">Nada mais a fazer!\n Aproveite seu dia.</string>
     <string name="toDoNoSubmissions">Não há envios para classificação para esta tarefa.</string>
     <string name="errorToDoRouteFailed">Ocorreu um erro ao tentar exibir este item para fazer.</string>

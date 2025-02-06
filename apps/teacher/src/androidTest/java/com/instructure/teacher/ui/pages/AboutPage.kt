@@ -20,9 +20,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 

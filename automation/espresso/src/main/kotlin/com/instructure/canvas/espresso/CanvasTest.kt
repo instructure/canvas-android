@@ -43,7 +43,7 @@ import com.instructure.espresso.AccessibilityChecker
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.UiControllerSingleton
-import com.instructure.espresso.pages.InstructureTestingContract
+import com.instructure.espresso.page.InstructureTestingContract
 import dagger.hilt.android.testing.HiltAndroidRule
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description

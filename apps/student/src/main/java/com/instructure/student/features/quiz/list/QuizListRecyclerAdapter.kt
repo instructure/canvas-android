@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
+import com.instructure.student.databinding.ViewholderQuizBinding
 import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.holders.QuizViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
@@ -108,7 +109,7 @@ class QuizListRecyclerAdapter(
 
     override fun createViewHolder(v: View, viewType: Int) = when (viewType) {
         Types.TYPE_HEADER -> ExpandableViewHolder(v)
-        else -> QuizViewHolder(v)
+        else -> QuizViewHolder(ViewholderQuizBinding.bind(v))
     }
 
     override fun itemLayoutResId(viewType: Int) = when (viewType) {

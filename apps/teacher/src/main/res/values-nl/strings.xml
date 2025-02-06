@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Bewerken van opmerking annuleren</string>
     <string name="skip">Overslaan</string>
 
+    <string name="collapseGradePanel">Cijfervenster samenvouwen</string>
+    <string name="expandGradePanel">Cijfervenster uitvouwen</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Aangepaste score %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Er is een fout opgetreden bij het bijwerken van dit bestand</string>
     <string name="errorUpdatingFolder">Er is een fout opgetreden bij het bijwerken van deze map</string>
 
+    <string name="errorEmptyTitle">De titel mag niet leeg zijn</string>
     <string name="toDoEmpty">Dat was alles!\n Een fijne dag gewenst.</string>
     <string name="toDoNoSubmissions">Er zijn geen inzendingen die voor deze opdracht moeten worden beoordeeld.</string>
     <string name="errorToDoRouteFailed">Er is een fout opgetreden bij het weergeven van dit To-do-item.</string>

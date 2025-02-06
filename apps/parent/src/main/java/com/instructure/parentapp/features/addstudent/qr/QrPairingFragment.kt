@@ -25,22 +25,32 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.loginapi.login.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_QR_PAIRING
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
+import com.instructure.parentapp.features.login.createaccount.CreateAccountActivity
+import com.instructure.parentapp.util.navigation.Navigation
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+
+@ScreenView(SCREEN_VIEW_QR_PAIRING)
 @AndroidEntryPoint
 class QrPairingFragment : BaseCanvasFragment() {
+
+    @Inject
+    lateinit var navigation: Navigation
 
     private val viewModel: AddStudentViewModel by activityViewModels()
 
@@ -51,8 +61,19 @@ class QrPairingFragment : BaseCanvasFragment() {
             val uri = Uri.parse(it.contents)
             val code = uri.getQueryParameter("code")
             if (code != null) {
-                lifecycleScope.launch {
-                    viewModel.handleAction(AddStudentAction.PairStudent(code))
+                if (requireActivity() is CreateAccountActivity) {
+                    val domain = uri.host
+                    val accountId = uri.getQueryParameter("account_id")
+                    if (!domain.isNullOrBlank() && !accountId.isNullOrBlank()) {
+                        navigation.navigate(
+                            requireActivity(),
+                            navigation.createAccount(domain, accountId, code)
+                        )
+                    }
+                } else {
+                    lifecycleScope.launch {
+                        viewModel.handleAction(AddStudentAction.PairStudent(code))
+                    }
                 }
             }
         }

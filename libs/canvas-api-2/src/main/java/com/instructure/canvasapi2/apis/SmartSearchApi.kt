@@ -29,6 +29,7 @@ interface SmartSearchApi {
     suspend fun smartSearch(
         @Path("courseId") courseId: Long,
         @Query("q") query: String,
+        @Query("filter[]") filters: List<String> = emptyList(),
         @Tag restParams: RestParams
     ): DataResult<SmartSearchResultWrapper>
 }
