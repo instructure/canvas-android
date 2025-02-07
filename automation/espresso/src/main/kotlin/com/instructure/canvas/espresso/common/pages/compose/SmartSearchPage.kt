@@ -90,7 +90,7 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
             .performClick()
     }
 
-    fun openFilters() {
+    fun clickOnFilters() {
         composeTestRule.onNode(
             hasTestTag("filterButton"),
             useUnmergedTree = true

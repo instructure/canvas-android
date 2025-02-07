@@ -35,6 +35,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
@@ -89,6 +90,12 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.assignmentName)).assertHasText(assignment.name!!)
         onView(allOf(withId(R.id.points), isDisplayed()))
                 .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
+    }
+
+    fun assertAssignmentDetails(assignment: AssignmentApiModel) {
+        onView(withId(R.id.assignmentName)).assertHasText(assignment.name)
+        onView(allOf(withId(R.id.points), isDisplayed()))
+            .check(matches(containsTextCaseInsensitive(assignment.pointsPossible?.toInt().toString())))
     }
 
     fun assertAssignmentTitle(assignmentName: String) {
