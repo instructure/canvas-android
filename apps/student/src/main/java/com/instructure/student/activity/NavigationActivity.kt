@@ -114,6 +114,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -290,6 +291,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     val route = SettingsFragment.makeRoute(featureFlagProvider.offlineEnabled())
                     val fragment = SettingsFragment.newInstance(route)
                     addFragment(fragment, route)
+                }
+                R.id.navigationDrawerItem_closeDrawer -> {
+                    closeNavigationDrawer()
                 }
             }
         }
@@ -636,6 +640,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemCloseDrawer.setOnClickListener(mNavigationDrawerItemClickListener)
             listOf(
                 navigationDrawerItemFiles,
                 navigationDrawerItemGauge,
@@ -647,7 +652,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 navigationDrawerItemLogout,
                 navigationDrawerSettings,
                 navigationDrawerItemStartMasquerading,
-                navigationDrawerItemStopMasquerading
+                navigationDrawerItemStopMasquerading,
+                navigationDrawerItemCloseDrawer
             ).forEach {
                 it.accessibilityDelegate = object : View.AccessibilityDelegate() {
                     override fun onInitializeAccessibilityNodeInfo(
@@ -698,6 +704,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 invalidateOptionsMenu()
+                setCloseDrawerVisibility()
             }
 
             override fun onDrawerClosed(drawerView: View) {
@@ -1337,6 +1344,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
+    }
+
+    private fun setCloseDrawerVisibility() {
+        navigationDrawerBinding.navigationDrawerItemCloseDrawer.setVisible(isAccessibilityEnabled(this))
     }
 
     companion object {
