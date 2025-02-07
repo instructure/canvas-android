@@ -28,6 +28,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -61,6 +62,7 @@ import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectDistinctUntilChanged
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -293,7 +295,6 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         inboxBadge?.setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
         inboxBadge?.visibility = View.GONE
 
-
         navView.setNavigationItemSelectedListener {
             closeNavigationDrawer()
             when (it.itemId) {
@@ -316,6 +317,14 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
         val stopActAsUserItem = binding.navView.menu.findItem(R.id.stop_act_as_user)
         stopActAsUserItem.isVisible = ApiPrefs.isMasquerading
+
+        val closeNavigationDrawerItem = binding.navView.menu.findItem(R.id.close_navigation_drawer)
+        binding.drawerLayout.addDrawerListener(object : SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                closeNavigationDrawerItem.isVisible = isAccessibilityEnabled(requireContext())
+                super.onDrawerOpened(drawerView)
+            }
+        })
     }
 
     private fun menuItemSelected(action: () -> Unit): Boolean {
