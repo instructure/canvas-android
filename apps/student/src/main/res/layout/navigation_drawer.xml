@@ -380,6 +380,25 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_closeDrawer"
+                style="@style/NavigationDrawerItem"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/ic_close" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_drawer_close"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"

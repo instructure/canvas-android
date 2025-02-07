@@ -40,7 +40,8 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingEnd="16dp"
+        app:accessibilityClassName='@{"android.widget.Button"}'>
 
         <TextView
             android:id="@+id/appThemeTitle"

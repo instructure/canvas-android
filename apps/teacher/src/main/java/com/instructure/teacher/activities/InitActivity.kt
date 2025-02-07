@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
@@ -33,6 +34,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.isVisible
+import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -93,6 +95,7 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.setGone
@@ -402,6 +405,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 R.id.navigationDrawerSettings -> {
                     RouteMatcher.route(this@InitActivity, Route(SettingsFragment::class.java, ApiPrefs.user))
                 }
+                R.id.navigationDrawerItem_closeDrawer -> {
+                    closeNavigationDrawer()
+                }
             }
         }
     }
@@ -437,6 +443,36 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItemHelp.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStartMasquerading.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItemCloseDrawer.setOnClickListener(navDrawerOnClick)
+        listOf(
+            navigationDrawerItemFiles,
+            navigationDrawerItemGauge,
+            navigationDrawerItemArc,
+            navigationDrawerItemMastery,
+            navigationDrawerItemChangeUser,
+            navigationDrawerItemHelp,
+            navigationDrawerItemLogout,
+            navigationDrawerSettings,
+            navigationDrawerItemStartMasquerading,
+            navigationDrawerItemStopMasquerading,
+            navigationDrawerItemCloseDrawer
+        ).forEach {
+            it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfo
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    info.className = "android.widget.Button"
+                }
+            }
+        }
+
+        binding.drawerLayout.addDrawerListener(object : SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                setCloseDrawerVisibility()
+            }
+        })
 
         // Set up Color Overlay setting
         setUpColorOverlaySwitch()
@@ -740,6 +776,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
+    }
+
+    private fun setCloseDrawerVisibility() {
+        navigationDrawerBinding.navigationDrawerItemCloseDrawer.setVisible(isAccessibilityEnabled(this))
     }
 
     //endregion

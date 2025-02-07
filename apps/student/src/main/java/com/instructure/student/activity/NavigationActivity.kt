@@ -28,6 +28,7 @@ import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -113,6 +114,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -289,6 +291,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     val route = SettingsFragment.makeRoute(featureFlagProvider.offlineEnabled())
                     val fragment = SettingsFragment.newInstance(route)
                     addFragment(fragment, route)
+                }
+                R.id.navigationDrawerItem_closeDrawer -> {
+                    closeNavigationDrawer()
                 }
             }
         }
@@ -623,17 +628,45 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar?) where F : Fragment, F : FragmentInteractions {
         //Navigation items
-        navigationDrawerBinding.navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+        with(navigationDrawerBinding) {
+            navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemCloseDrawer.setOnClickListener(mNavigationDrawerItemClickListener)
+            listOf(
+                navigationDrawerItemFiles,
+                navigationDrawerItemGauge,
+                navigationDrawerItemStudio,
+                navigationDrawerItemMastery,
+                navigationDrawerItemBookmarks,
+                navigationDrawerItemChangeUser,
+                navigationDrawerItemHelp,
+                navigationDrawerItemLogout,
+                navigationDrawerSettings,
+                navigationDrawerItemStartMasquerading,
+                navigationDrawerItemStopMasquerading,
+                navigationDrawerItemCloseDrawer
+            ).forEach {
+                it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                    override fun onInitializeAccessibilityNodeInfo(
+                        host: View,
+                        info: AccessibilityNodeInfo
+                    ) {
+                        super.onInitializeAccessibilityNodeInfo(host, info)
+                        info.className = "android.widget.Button"
+                    }
+                }
+            }
+        }
+
 
         //Load Show Grades
         navigationDrawerBinding.navigationDrawerShowGradesSwitch.isChecked = StudentPrefs.showGradesOnCard
@@ -671,6 +704,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 invalidateOptionsMenu()
+                setCloseDrawerVisibility()
             }
 
             override fun onDrawerClosed(drawerView: View) {
@@ -1310,6 +1344,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
+    }
+
+    private fun setCloseDrawerVisibility() {
+        navigationDrawerBinding.navigationDrawerItemCloseDrawer.setVisible(isAccessibilityEnabled(this))
     }
 
     companion object {

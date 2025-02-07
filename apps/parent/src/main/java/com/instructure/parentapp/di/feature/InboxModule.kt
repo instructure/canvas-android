@@ -33,6 +33,7 @@ import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeReposi
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
+import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
@@ -69,8 +70,9 @@ class InboxModule {
         courseAPI: CourseAPI.CoursesInterface,
         recipientAPI: RecipientAPI.RecipientInterface,
         inboxAPI: InboxApi.InboxInterface,
+        parentPrefs: ParentPrefs
     ): InboxComposeRepository {
-        return ParentInboxComposeRepository(courseAPI, recipientAPI, inboxAPI)
+        return ParentInboxComposeRepository(courseAPI, parentPrefs, recipientAPI, inboxAPI)
     }
 
     @Provides

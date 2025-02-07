@@ -49,7 +49,7 @@ class TeacherInboxComposeRepositoryTest {
             Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE)))
         )
 
-        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Success(expected)
+        coEvery { courseAPI.getFirstPageCoursesInbox(any()) } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
 
@@ -60,14 +60,15 @@ class TeacherInboxComposeRepositoryTest {
     fun `Test course filtering`() = runTest {
         val expected = listOf(
             Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
-            Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_COMPLETED)))
+            Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_COMPLETED))),
+            Course(id = 3, accessRestrictedByDate = true, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_COMPLETED)))
         )
 
-        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Success(expected)
+        coEvery { courseAPI.getFirstPageCoursesInbox(any()) } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
 
-        assertEquals(listOf(expected.first()), result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -76,7 +77,7 @@ class TeacherInboxComposeRepositoryTest {
         val list2 = listOf(Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),)
         val expected = list1 + list2
 
-        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
+        coEvery { courseAPI.getFirstPageCoursesInbox(any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
         coEvery { courseAPI.next(any(), any()) } returns DataResult.Success(list2)
 
         val result = inboxComposeRepository.getCourses().dataOrThrow
@@ -86,7 +87,7 @@ class TeacherInboxComposeRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Get courses with error`() = runTest {
-        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Fail()
+        coEvery { courseAPI.getFirstPageCoursesInbox(any()) } returns DataResult.Fail()
 
         inboxComposeRepository.getCourses().dataOrThrow
     }

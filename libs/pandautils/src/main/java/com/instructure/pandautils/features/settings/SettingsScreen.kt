@@ -47,6 +47,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -57,7 +58,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -153,6 +157,9 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
                     else -> {
                         LabelValueVerticalItem(
                             modifier = Modifier
+                                .semantics {
+                                    role = Role.Button
+                                }
                                 .clickable {
                                     uiState.actionHandler(SettingsAction.ItemClicked(settingsItem))
                                 }
@@ -237,6 +244,7 @@ private fun AppThemeItem(appTheme: Int, appThemeSelected: (AppTheme, Int, Int) -
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun AppThemeButton(
     @DrawableRes icon: Int,
@@ -273,7 +281,8 @@ private fun AppThemeButton(
         }
         Text(
             modifier = Modifier
-                .padding(top = 8.dp),
+                .padding(top = 8.dp)
+                .semantics { this.invisibleToUser() },
             text = stringResource(title),
             fontSize = 12.sp,
             color = colorResource(id = R.color.textDarkest),

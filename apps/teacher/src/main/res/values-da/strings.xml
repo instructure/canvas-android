@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Annuller redigering af kommentar</string>
     <string name="skip">Spring over</string>
 
+    <string name="collapseGradePanel">Skjul karakterpanelet</string>
+    <string name="expandGradePanel">Udvid karakterpanelet</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Brugerdefineret resultat %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Der opstod en fejl under opdatering af denne fil</string>
     <string name="errorUpdatingFolder">Der opstod en fejl under opdatering af denne mappe</string>
 
+    <string name="errorEmptyTitle">Titlen kan ikke være tom</string>
     <string name="toDoEmpty">Ikke mere at gøre!\n Hav en god dag.</string>
     <string name="toDoNoSubmissions">Der er ingen afleveringer til bedømmelse for denne opgave.</string>
     <string name="errorToDoRouteFailed">Der opstod en fejl ved forsøg på at vise dette element på opgavelisten.</string>
