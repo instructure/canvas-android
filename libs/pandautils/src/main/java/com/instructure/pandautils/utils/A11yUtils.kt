@@ -25,6 +25,8 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.content.ContextCompat
+import com.google.android.material.checkbox.MaterialCheckBox
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 
 val Context.a11yManager get() = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -83,4 +85,17 @@ fun announceAccessibilityText(context: Context, textToAnnounce: String) {
             text.add(textToAnnounce)
         })
     }
+}
+
+fun getCheckedStateStringFromMaterialCheckbox(int: Int): String {
+    return when (int) {
+        MaterialCheckBox.STATE_CHECKED -> ContextKeeper.appContext.getString(R.string.a11y_checked)
+        MaterialCheckBox.STATE_UNCHECKED -> ContextKeeper.appContext.getString(R.string.a11y_unchecked)
+        MaterialCheckBox.STATE_INDETERMINATE -> ContextKeeper.appContext.getString(R.string.a11y_indeterminate)
+        else -> ""
+    }
+}
+
+fun getCheckedStateStringFromCheckbox(checked: Boolean): String {
+    return if (checked) ContextKeeper.appContext.getString(R.string.a11y_checked) else ContextKeeper.appContext.getString(R.string.a11y_unchecked)
 }

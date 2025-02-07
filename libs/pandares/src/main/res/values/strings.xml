@@ -1500,6 +1500,7 @@
     <string name="offline_content_sync_dialog_positive">Sync</string>
     <string name="offline_content_sync_loading_title">Loading...</string>
     <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Offline sync settings have been saved. Sync will start shortly in the background.</string>
     <string name="content_description_expand_content">Expand content</string>
     <string name="content_description_expand_content_with_param">Expand content, %s</string>
     <string name="content_description_collapse_content">Collapse content</string>
@@ -1979,5 +1980,9 @@
     <string name="a11y_dragViewContentDescription">Expand Drawer</string>
     <string name="a11y_inboxRecyclerViewContentDescription">Conversations</string>
     <string name="a11y_contentDescription_moduleItem">%s, %s</string>
-    <string name="a11ySubmissionFiltersHaveBeenUpdated">Filters have been updated</string>
+    <string name="a11y_checked">Checked</string>
+    <string name="a11y_unchecked">Unchecked</string>
+    <string name="a11y_indeterminate">Partially checked</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
 </resources>

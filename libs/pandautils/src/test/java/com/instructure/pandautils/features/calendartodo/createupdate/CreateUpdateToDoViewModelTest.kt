@@ -181,6 +181,7 @@ class CreateUpdateToDoViewModelTest {
 
         val expectedEvent = CreateUpdateToDoViewModelAction.RefreshCalendarDays(listOf(LocalDate.of(2024, 2, 22)))
         Assert.assertEquals(expectedEvent, events.last())
+        Assert.assertEquals(CreateUpdateToDoViewModelAction.AnnounceToDoCreation("Title"), events[events.size - 2])
     }
 
     @Test
@@ -209,6 +210,7 @@ class CreateUpdateToDoViewModelTest {
             )
         )
         Assert.assertEquals(expectedEvent, events.last())
+        Assert.assertEquals(CreateUpdateToDoViewModelAction.AnnounceToDoUpdate("Updated Title"), events[events.size - 2])
     }
 
     @Test

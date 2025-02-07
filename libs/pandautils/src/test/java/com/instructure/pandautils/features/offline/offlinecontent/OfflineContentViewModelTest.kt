@@ -33,6 +33,7 @@ import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.EmptyCourseContentViewModel
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
@@ -440,14 +441,22 @@ class OfflineContentViewModelTest {
     }
 
     @Test
-    fun `Move back on sync`() {
+    fun `Announce sync started and move back on sync`() {
         createViewModel()
+
+        val events = mutableListOf<Event<OfflineContentAction>>()
+        viewModel.events.observeForever {
+            events.add(it)
+        }
 
         viewModel.onSyncClicked()
 
         (viewModel.events.value?.getContentIfNotHandled() as OfflineContentAction.Dialog).positiveCallback.invoke()
 
-        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Back)
+        Assert.assertEquals(
+            listOf(OfflineContentAction.AnnounceSyncStarted, OfflineContentAction.Back),
+            events.takeLast(2).map { it.peekContent() }
+        )
     }
 
     @Test
