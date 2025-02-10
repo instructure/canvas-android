@@ -115,12 +115,10 @@ private fun SelectContextContent(
                 val selected = user.contextId == uiState.selectedCanvasContext?.contextId
                 SelectContextItem(user, selected, onContextSelected, Modifier.fillMaxWidth())
             }
-            if (uiState.courses.isNotEmpty()) {
-                val favoriteCourses = uiState.courses.filter { (it as Course).isFavorite }
-                val moreCourses = uiState.courses.filter { !(it as Course).isFavorite }
-                if (favoriteCourses.isNotEmpty()) {
+            if (uiState.moreCourses.isNotEmpty() || uiState.favoriteCourses.isNotEmpty()) {
+                if (uiState.favoriteCourses.isNotEmpty()) {
                     item(key = FAVORITE_COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
-                        val titleResource = if (moreCourses.isNotEmpty()) {
+                        val titleResource = if (uiState.moreCourses.isNotEmpty()) {
                             stringResource(id = R.string.calendarFilterFavoriteCourse)
                         } else {
                             stringResource(id = R.string.calendarFilterCourse)
@@ -128,7 +126,7 @@ private fun SelectContextContent(
                         ListHeaderItem(text = titleResource)
                     }
                     items(
-                        favoriteCourses,
+                        uiState.favoriteCourses,
                         key = { it.contextId },
                         contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
                         val selected = course.contextId == uiState.selectedCanvasContext?.contextId
@@ -140,9 +138,9 @@ private fun SelectContextContent(
                         )
                     }
                 }
-                if (moreCourses.isNotEmpty()) {
+                if (uiState.moreCourses.isNotEmpty()) {
                     item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
-                        val titleResource = if (favoriteCourses.isNotEmpty()) {
+                        val titleResource = if (uiState.favoriteCourses.isNotEmpty()) {
                             stringResource(id = R.string.calendarFilterMoreCourse)
                         } else {
                             stringResource(id = R.string.calendarFilterCourse)
@@ -150,7 +148,7 @@ private fun SelectContextContent(
                         ListHeaderItem(text = titleResource)
                     }
                     items(
-                        moreCourses,
+                        uiState.moreCourses,
                         key = { it.contextId },
                         contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
                         val selected = course.contextId == uiState.selectedCanvasContext?.contextId
@@ -245,8 +243,10 @@ data class SelectContextUiState(
 ) {
     val users: List<CanvasContext>
         get() = canvasContexts.filter { it.isUser }
-    val courses: List<CanvasContext>
-        get() = canvasContexts.filter { it.isCourse }
+    val favoriteCourses: List<CanvasContext>
+        get() = canvasContexts.filter { it.isCourse && (it as Course).isFavorite }
+    val moreCourses: List<CanvasContext>
+        get() = canvasContexts.filter { it.isCourse && !(it as Course).isFavorite}
     val groups: List<CanvasContext>
         get() = canvasContexts.filter { it.isGroup }
 
