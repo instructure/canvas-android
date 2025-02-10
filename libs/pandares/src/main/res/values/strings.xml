@@ -1989,4 +1989,8 @@
     <string name="a11y_indeterminate">Partially checked</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
+    <string name="a11y_studentSelectorExpand">expand</string>
+    <string name="a11y_studentSelectorCollapse">collapse</string>
+    <string name="a11y_studentSelectorContentDescription">Tap to %s student selector, selected student is: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Select student %s</string>
 </resources>

@@ -30,20 +30,20 @@
     <LinearLayout
         android:layout_width="120dp"
         android:layout_height="90dp"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:onClick="@{() -> itemViewModel.onAddStudentClicked.invoke()}"
+        android:orientation="vertical">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fabCustomSize="50dp"
-            app:backgroundTint="@color/white"
             android:contentDescription="@string/a11y_addStudentContentDescription"
             android:padding="10dp"
             android:src="@drawable/ic_add"
-            android:onClick="@{() -> itemViewModel.onAddStudentClicked.invoke()}"
             android:tint="@{itemViewModel.color}"
+            app:backgroundTint="@color/white"
+            app:fabCustomSize="50dp"
             app:layout_constraintBottom_toTopOf="@+id/addTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,9 +60,9 @@
             android:textColor="@color/textDarkest"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addTitle" />
 
     </LinearLayout>
 </layout>

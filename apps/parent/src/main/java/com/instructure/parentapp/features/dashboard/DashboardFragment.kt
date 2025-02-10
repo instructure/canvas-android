@@ -24,6 +24,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -197,6 +198,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         lifecycleScope.launch {
             viewModel.data.collectDistinctUntilChanged(lifecycle, { it.selectedStudent }) { selectedStudent ->
                 setupAppColors(selectedStudent)
+                binding.studentSelector.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
             }
         }
 
@@ -241,6 +243,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         val unreadCountText = if (unreadCount <= 99) unreadCount.toString() else requireContext().getString(R.string.inboxUnreadCountMoreThan99)
         inboxBadge?.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
         inboxBadge?.text = unreadCountText
+        inboxBadge?.contentDescription = resources.getQuantityString(R.plurals.a11y_inboxUnreadCount, unreadCount, unreadCount)
         binding.unreadCountBadge.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
         binding.unreadCountBadge.text = unreadCountText
 
@@ -286,14 +289,15 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
         inboxBadge = TextView(requireContext())
         actionView.addView(inboxBadge)
-
-        inboxBadge?.width = 24.toPx
-        inboxBadge?.height = 24.toPx
-        inboxBadge?.gravity = Gravity.CENTER
-        inboxBadge?.textSize = 10f
-        inboxBadge?.setTextColor(requireContext().getColor(R.color.textLightest))
-        inboxBadge?.setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
-        inboxBadge?.visibility = View.GONE
+        inboxBadge?.apply {
+            width = 24.toPx
+            height = 24.toPx
+            gravity = Gravity.CENTER
+            textSize = 10f
+            setTextColor(requireContext().getColor(R.color.textLightest))
+            setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
+            visibility = View.GONE
+        }
 
         navView.setNavigationItemSelectedListener {
             closeNavigationDrawer()
