@@ -32,7 +32,7 @@ import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.ViewUtils
 import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
 import com.instructure.teacher.ui.utils.seedAssignments
 import com.instructure.teacher.ui.utils.seedData
@@ -42,7 +42,7 @@ import org.junit.Test
 import java.lang.Thread.sleep
 
 @HiltAndroidTest
-class PeopleE2ETest: TeacherTest() {
+class PeopleE2ETest: TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -143,9 +143,12 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.clickOnNewMessageButton()
 
         val subject = "Test Subject"
+        val body = "This a test message from student context page."
         Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
-        addMessagePage.composeMessageWithSubject(subject, "This a test message from student context page.")
-        addMessagePage.clickSendButton()
+
+        inboxComposePage.typeSubject(subject)
+        inboxComposePage.typeBody(body)
+        inboxComposePage.pressSendButton()
 
         Log.d(STEP_TAG, "Navigate back to People List Page.")
         Espresso.pressBack()

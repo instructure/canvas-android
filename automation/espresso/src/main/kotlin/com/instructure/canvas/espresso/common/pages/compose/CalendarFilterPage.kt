@@ -15,17 +15,17 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import com.instructure.espresso.pages.BasePage
+import com.instructure.espresso.page.BasePage
 
 class CalendarFilterPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun clickOnFilterItem(name: String) {
-        composeTestRule.onNode(hasText(name).and(hasTestTag("calendarFilter"))).performClick()
+        composeTestRule.onNode(hasContentDescription(name).and(hasTestTag("calendarFilter"))).performClick()
         composeTestRule.waitForIdle()
     }
 

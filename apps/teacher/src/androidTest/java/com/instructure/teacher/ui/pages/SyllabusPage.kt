@@ -27,7 +27,7 @@ import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.*
-import com.instructure.espresso.pages.*
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.comparesEqualTo

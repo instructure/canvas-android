@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Cancelar la edición del comentario</string>
     <string name="skip">Saltar</string>
 
+    <string name="collapseGradePanel">Colapsar panel de notas</string>
+    <string name="expandGradePanel">Expandir panel de notas</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Puntuación personalizada %1$s</string>
 
@@ -838,6 +840,7 @@
     <string name="errorUpdatingFile">Ha habido un error al actualizar este archivo</string>
     <string name="errorUpdatingFolder">Ha habido un error al actualizar esta carpeta</string>
 
+    <string name="errorEmptyTitle">El título no puede estar en blanco</string>
     <string name="toDoEmpty">Nada más pendiente.\n Que tengas un buen día.</string>
     <string name="toDoNoSubmissions">No hay entregas para evaluar para esta actividad.</string>
     <string name="errorToDoRouteFailed">Ha habido un error al intentar ver este ítem de tareas pendientes.</string>

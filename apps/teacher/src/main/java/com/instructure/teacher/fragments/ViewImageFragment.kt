@@ -111,7 +111,8 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
             }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
         } else if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
+            val textColor = if (mToolbarColor == ThemePrefs.primaryColor) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.textLightest)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, textColor)
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()

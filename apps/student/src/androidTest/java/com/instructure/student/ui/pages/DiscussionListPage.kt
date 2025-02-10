@@ -23,8 +23,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.DirectlyPopulateEditText
-import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -35,20 +33,19 @@ import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.onView
-import com.instructure.espresso.pages.onViewWithText
-import com.instructure.espresso.pages.plus
-import com.instructure.espresso.pages.waitForView
-import com.instructure.espresso.pages.withAncestor
-import com.instructure.espresso.pages.withDescendant
-import com.instructure.espresso.pages.withId
-import com.instructure.espresso.pages.withText
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
-import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.containsString
@@ -122,23 +119,6 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
 
     }
 
-    fun createDiscussionTopic(name: String, description: String) {
-        createNewDiscussion.click()
-        // Directly populate the EditView, otherwise it might pop up a system dialog when
-        // short-screen/landscape conditions are present.
-        onView(withId(R.id.editDiscussionName)).perform(DirectlyPopulateEditText(name))
-        onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(description))
-        onView(withId(R.id.menuSaveDiscussion)).perform(explicitClick()) // Can be mis-interpreted as a long press
-        waitForDiscussionTopicToDisplay(name)
-    }
-
-    fun createAnnouncement(name: String, description: String) {
-        createNewDiscussion.click()
-        onView(withId(R.id.announcementNameEditText)).perform(DirectlyPopulateEditText(name))
-        onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(description))
-        onView(withId(R.id.menuSaveAnnouncement)).perform(explicitClick())
-    }
-
     fun assertAnnouncementCreated(inputTitle: String) {
             var expectedTitle = inputTitle
             if (inputTitle.isNullOrEmpty()) {
@@ -147,9 +127,16 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
             waitForDiscussionTopicToDisplay(expectedTitle)
     }
 
+    fun launchCreateDiscussionThenClose() {
+        createNewDiscussion.click()
+        onView(withText(R.string.newDiscussion)).assertDisplayed()
+        onView(allOf(withContentDescription(R.string.close), hasSibling(withText(R.string.newDiscussion)))).click()
+    }
+
     fun launchCreateAnnouncementThenClose() {
         createNewDiscussion.click()
-        onView(withContentDescription("Close")).click()
+        onView(withText(R.string.newAnnouncement)).assertDisplayed()
+        onView(allOf(withContentDescription(R.string.close), hasSibling(withText(R.string.newAnnouncement)))).click()
     }
 
     fun verifyExitWithoutSavingDialog() {

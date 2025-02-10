@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.smartsearch
 import com.instructure.canvasapi2.apis.SmartSearchApi
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.SmartSearchContentType
+import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.canvasapi2.models.SmartSearchResult
 import com.instructure.canvasapi2.models.SmartSearchResultWrapper
 import com.instructure.canvasapi2.utils.DataResult
@@ -56,15 +57,15 @@ class SmartSearchRepositoryTest {
                 )
             )
         )
-        coEvery { smartSearchApi.smartSearch(any(), any(), any()) } returns DataResult.Success(
+        coEvery { smartSearchApi.smartSearch(any(), any(), any(), any()) } returns DataResult.Success(
             result
         )
 
         val repository = createRepository()
-        val response = repository.smartSearch(1L, "query")
+        val response = repository.smartSearch(1L, "query", filter = listOf(SmartSearchFilter.PAGES, SmartSearchFilter.ANNOUNCEMENTS))
 
         coVerify {
-            smartSearchApi.smartSearch(1L, "query", RestParams(isForceReadFromNetwork = true))
+            smartSearchApi.smartSearch(1L, "query", listOf("pages", "announcements"), RestParams(isForceReadFromNetwork = true))
         }
 
         assertEquals(result.results, response)
@@ -72,7 +73,7 @@ class SmartSearchRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Smart Search error`() = runTest {
-        coEvery { smartSearchApi.smartSearch(any(), any(), any()) } returns DataResult.Fail()
+        coEvery { smartSearchApi.smartSearch(any(), any(), any(), any()) } returns DataResult.Fail()
 
         val repository = createRepository()
 
@@ -125,7 +126,7 @@ class SmartSearchRepositoryTest {
                 )
             )
         )
-        coEvery { smartSearchApi.smartSearch(any(), any(), any()) } returns DataResult.Success(
+        coEvery { smartSearchApi.smartSearch(any(), any(), any(), any()) } returns DataResult.Success(
             result
         )
 
@@ -135,7 +136,7 @@ class SmartSearchRepositoryTest {
         val expected = listOf(result.results[0], result.results[1], result.results[3])
 
         coVerify {
-            smartSearchApi.smartSearch(1L, "query", RestParams(isForceReadFromNetwork = true))
+            smartSearchApi.smartSearch(1L, "query", any(), RestParams(isForceReadFromNetwork = true))
         }
 
         assertEquals(expected, response)

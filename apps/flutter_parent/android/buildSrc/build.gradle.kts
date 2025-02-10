@@ -24,8 +24,6 @@ val agpVersion = "7.4.2"
 dependencies {
     implementation("com.android.tools.build:gradle:$agpVersion")
     implementation("com.android.tools.build:gradle-api:$agpVersion")
-    implementation("org.javassist:javassist:3.24.1-GA")
-    implementation("com.google.code.gson:gson:2.8.8")
 }
 
 plugins {

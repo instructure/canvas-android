@@ -16,9 +16,12 @@
  */
 package com.instructure.teacher.ui.pages
 
+import android.app.Instrumentation
+import android.content.Intent
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -30,11 +33,14 @@ import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
-import com.instructure.espresso.pages.BasePage
-import com.instructure.espresso.pages.plus
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers
 
 /**
  * A page representing the Help menu in the application.
@@ -82,9 +88,9 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     /**
-     * Launches the guides page.
+     * Clicks on the 'Search the Canvas Guides' help menu.
      */
-    fun launchGuides() {
+    fun clickSearchGuidesLabel() {
         searchGuidesLabel.scrollTo().click()
     }
 
@@ -104,16 +110,45 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     /**
-     * Launches the share your love page.
+     * Assert that the 'Report A Problem' dialog is displayed and then dismiss the dialog.
      */
-    fun shareYourLove() {
+    fun assertReportProblemDialogDisplayed() {
+        waitForViewWithText("Report A Problem").assertDisplayed()
+        onView(withId(R.id.cancelButton)).click()
+    }
+
+    /**
+     * Clicks on the 'Conference Guides for Remote Classrooms' help menu.
+     */
+    private fun clickConferenceGuidesForRemoteClassroomsLabel() {
+        onView(withText("Conference Guides for Remote Classrooms")).scrollTo().click()
+    }
+
+    /**
+     * Clicks on the 'Ask the Community' help menu.
+     */
+    private fun clickAskTheCommunityLabel() {
+        onView(withText("Ask the Community")).scrollTo().click()
+    }
+
+    /**
+     * Clicks on the 'Training Services Portal' help menu.
+     */
+    private fun clickTrainingServicesPortalLabel() {
+        onView(withText("Training Services Portal")).scrollTo().click()
+    }
+
+    /**
+     * Clicks on the 'Share Your Love for the App' help menu.
+     */
+    private fun clickShareLoveLabel() {
         shareLoveLabel.scrollTo().click()
     }
 
     /**
-     * Submits a feature idea.
+     * Clicks on the 'Submit a Feature Idea' help menu.
      */
-    fun submitFeature() {
+    private fun clickSubmitFeatureLabel() {
         submitFeatureLabel.scrollTo().click()
     }
 
@@ -129,22 +164,50 @@ class HelpPage : BasePage(R.id.helpDialog) {
      * Asserts the content of the Help menu.
      */
     fun assertHelpMenuContent() {
-        onView(withId(R.id.title) + withText(R.string.searchGuides))
-        onView(withId(R.id.subtitle) + withText(R.string.searchGuidesDetails))
 
-        onView(withId(R.id.title) + withText(R.string.askInstructor))
-        onView(withId(R.id.subtitle) + withText(R.string.askInstructorDetails))
+        onView(withId(R.id.title) + withText("Search the Canvas Guides")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Find answers to common questions")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.reportProblem))
-        onView(withId(R.id.subtitle) + withText(R.string.reportProblemDetails))
+        onView(withId(R.id.title) + withText("CUSTOM LINK")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("This is a custom help link.")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.shareYourLove))
-        onView(withId(R.id.subtitle) + withText(R.string.shareYourLoveDetails))
+        onView(withId(R.id.title) + withText("Conference Guides for Remote Classrooms")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Get help on how to use and configure conferences in canvas.")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Submit a Feature Idea"))
-        onView(withId(R.id.subtitle) + withText("Have an idea to improveCanvas?"))
+        onView(withId(R.id.title) + withText("Report a Problem")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("If Canvas misbehaves, tell us about it")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("COVID-19 Canvas Resources"))
-        onView(withId(R.id.subtitle) + withText("Tips for teaching and learning online"))
+        onView(withId(R.id.title) + withText("Ask the Community")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Get help from a Canvas expert")).assertDisplayed()
+
+        onView(withId(R.id.title) + withText("Submit a Feature Idea")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?")).assertDisplayed()
+
+        onView(withId(R.id.title) + withText("Training Services Portal")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Access Canvas training videos and courses")).assertDisplayed()
+
+        onView(withId(R.id.title) + withText("Share Your Love for the App")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Tell us about your favorite parts of the app")).assertDisplayed()
+    }
+
+    fun assertHelpMenuURL(helpMenuText: String, expectedURL: String) {
+        val expectedIntent = CoreMatchers.allOf(
+            IntentMatchers.hasAction(Intent.ACTION_VIEW),
+            CoreMatchers.anyOf(
+                IntentMatchers.hasData(expectedURL),
+            )
+        )
+        Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+
+        when (helpMenuText) {
+            "Search the Canvas Guides" -> clickSearchGuidesLabel()
+            "Submit a Feature Idea" -> clickSubmitFeatureLabel()
+            "Share Your Love for the App" -> clickShareLoveLabel()
+            "Conference Guides for Remote Classrooms" -> clickConferenceGuidesForRemoteClassroomsLabel()
+            "Ask the Community" -> clickAskTheCommunityLabel()
+            "Training Services Portal" -> clickTrainingServicesPortalLabel()
+        }
+
+        Intents.intended(expectedIntent)
     }
 }

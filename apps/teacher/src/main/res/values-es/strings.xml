@@ -446,6 +446,8 @@
     <string name="cancel_editing_comment">Cancelar la edición del comentario</string>
     <string name="skip">Saltar</string>
 
+    <string name="collapseGradePanel">Colapsar panel de calificaciones</string>
+    <string name="expandGradePanel">Expandir panel de calificaciones</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Puntaje personalizado %1$s</string>
 
@@ -837,6 +839,7 @@
     <string name="errorUpdatingFile">Se produjo un error al actualizar este archivo</string>
     <string name="errorUpdatingFolder">Se produjo un error al actualizar esta carpeta</string>
 
+    <string name="errorEmptyTitle">Este título no puede quedar en blanco</string>
     <string name="toDoEmpty">¡Nada más que hacer!\n Disfrute su día.</string>
     <string name="toDoNoSubmissions">No hay entregas para calificar para esta tarea.</string>
     <string name="errorToDoRouteFailed">Se produjo un error al intentar ver este item por hacer.</string>

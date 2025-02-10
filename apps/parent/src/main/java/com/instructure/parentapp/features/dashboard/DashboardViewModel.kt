@@ -27,6 +27,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -61,6 +63,7 @@ class DashboardViewModel @Inject constructor(
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
     private val alertCountUpdater: AlertCountUpdater,
+    private val analytics: Analytics,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -174,6 +177,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadStudents(forceNetwork: Boolean) {
+        selectedStudentHolder.updateSelectedStudent(null)
         val students = repository.getStudents(forceNetwork)
         val selectedStudent = if (this.students.isEmpty()) {
             students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
@@ -183,9 +187,7 @@ class DashboardViewModel @Inject constructor(
         this.students = students.toMutableList()
 
         parentPrefs.currentStudent = selectedStudent
-        selectedStudent?.let {
-            selectedStudentHolder.updateSelectedStudent(it)
-        }
+        selectedStudentHolder.updateSelectedStudent(selectedStudent)
 
         val studentItems = students.map { user ->
             StudentItemViewModel(
@@ -228,6 +230,7 @@ class DashboardViewModel @Inject constructor(
 
     private fun addStudent() {
         viewModelScope.launch {
+            analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD)
             _events.send(DashboardViewModelAction.AddStudent)
         }
     }

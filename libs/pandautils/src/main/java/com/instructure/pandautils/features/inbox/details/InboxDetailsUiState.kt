@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.inbox.details
 
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
@@ -25,7 +26,8 @@ data class InboxDetailsUiState(
     val conversation: Conversation? = null,
     val messageStates: List<InboxMessageUiState> = emptyList(),
     val state: ScreenState = ScreenState.Loading,
-    val confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState()
+    val confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState(),
+    val showBackButton: Boolean = true,
 )
 
 data class ConfirmationDialogState(
@@ -43,6 +45,7 @@ sealed class InboxDetailsFragmentAction {
     data object CloseFragment : InboxDetailsFragmentAction()
     data class ShowScreenResult(val message: String) : InboxDetailsFragmentAction()
     data class UrlSelected(val url: String) : InboxDetailsFragmentAction()
+    data class OpenAttachment(val attachment: Attachment) : InboxDetailsFragmentAction()
     data object UpdateParentFragment : InboxDetailsFragmentAction()
     data class NavigateToCompose(val options: InboxComposeOptions) : InboxDetailsFragmentAction()
 }

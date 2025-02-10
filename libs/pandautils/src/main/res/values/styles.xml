@@ -22,6 +22,7 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
         <item name="actionModeBackground">@color/licorice</item>
+        <item name="android:accessibilityHeading">true</item>
     </style>
 
     <style name="ToolBarPopupStyle" parent="Theme.AppCompat.DayNight">
@@ -30,10 +31,19 @@
         <item name="colorAccent">@color/textDarkest</item>
         <item name="actionModeBackground">@color/textDarkest</item>
         <item name="background">@color/backgroundLightestElevated</item>
+        <item name="android:accessibilityHeading">true</item>
     </style>
 
     <style name="CustomViewAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="AccessibleAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowTitleStyle">@style/AccessibleAlertDialogTitle</item>
+    </style>
+
+    <style name="AccessibleAlertDialogTitle" parent="@style/RtlOverlay.DialogWindowTitle.AppCompat">
+        <item name="android:accessibilityHeading">true</item>
     </style>
 
     <!--Text Styles-->

@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
@@ -67,7 +68,6 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.pandautils.dialogs.RatingDialog
@@ -76,6 +76,7 @@ import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -88,6 +89,7 @@ import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -148,6 +150,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     @Inject
     lateinit var oAuthApi: OAuthAPI.OAuthInterface
 
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
 
@@ -207,6 +212,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        scheduleAlarms()
 
         if (!ThemePrefs.isThemeApplied) {
             // This will be only called when we change dark/light mode, because the Theme is already applied before in the SplashActivity.
@@ -374,11 +381,17 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                     launchLti(launchDefinition)
                 }
                 R.id.navigationDrawerItem_help -> HelpDialogFragment.show(this@InitActivity)
-                R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(
+                    LogoutTask.Type.SWITCH_USERS,
+                    alarmScheduler = alarmScheduler
+                ).execute()
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@InitActivity)
                         .setTitle(R.string.logout_warning)
-                        .setPositiveButton(android.R.string.ok) { _, _ -> TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+                        .setPositiveButton(android.R.string.ok) { _, _ -> TeacherLogoutTask(
+                            LogoutTask.Type.LOGOUT,
+                            alarmScheduler = alarmScheduler
+                        ).execute() }
                         .setNegativeButton(android.R.string.cancel, null)
                         .create()
                         .show()
@@ -425,6 +438,28 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItemHelp.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStartMasquerading.setOnClickListener(navDrawerOnClick)
+        listOf(
+            navigationDrawerItemFiles,
+            navigationDrawerItemGauge,
+            navigationDrawerItemArc,
+            navigationDrawerItemMastery,
+            navigationDrawerItemChangeUser,
+            navigationDrawerItemHelp,
+            navigationDrawerItemLogout,
+            navigationDrawerSettings,
+            navigationDrawerItemStartMasquerading,
+            navigationDrawerItemStopMasquerading
+        ).forEach {
+            it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfo
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    info.className = "android.widget.Button"
+                }
+            }
+        }
 
         // Set up Color Overlay setting
         setUpColorOverlaySwitch()
@@ -722,6 +757,12 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private fun setPushNotificationAsRead() {
         intent.putExtra(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false)
         PushNotification.remove(intent)
+    }
+
+    private fun scheduleAlarms() {
+        lifecycleScope.launch {
+            alarmScheduler.scheduleAllAlarmsForCurrentUser()
+        }
     }
 
     //endregion

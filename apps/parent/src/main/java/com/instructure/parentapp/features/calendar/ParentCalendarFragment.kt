@@ -19,6 +19,8 @@ package com.instructure.parentapp.features.calendar
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.calendar.BaseCalendarFragment
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.studentColor
@@ -30,6 +32,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+@ScreenView(SCREEN_VIEW_CALENDAR)
 @AndroidEntryPoint
 class ParentCalendarFragment : BaseCalendarFragment() {
 

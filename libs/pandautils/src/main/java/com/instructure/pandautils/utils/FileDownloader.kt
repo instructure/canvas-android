@@ -19,9 +19,13 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.webkit.CookieManager
 import com.instructure.canvasapi2.models.Attachment
 
-class FileDownloader(private val context: Context) {
+class FileDownloader(
+    private val context: Context,
+    private val cookieManager: CookieManager
+) {
     fun downloadFileToDevice(attachment: Attachment) {
         downloadFileToDevice(attachment.url, attachment.filename, attachment.contentType)
     }
@@ -34,12 +38,13 @@ class FileDownloader(private val context: Context) {
         downloadFileToDevice(Uri.parse(downloadURL), filename, contentType)
     }
 
-    fun downloadFileToDevice(
+    private fun downloadFileToDevice(
         downloadURI: Uri,
         filename: String?,
         contentType: String?
     ) {
         val downloadManager = context.getSystemService(DownloadManager::class.java)
+        val cookie = cookieManager.getCookie(downloadURI.toString())
 
         val request = DownloadManager.Request(downloadURI)
         request
@@ -47,6 +52,10 @@ class FileDownloader(private val context: Context) {
             .setTitle(filename)
             .setMimeType(contentType)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$filename")
+
+        if (cookie.isNotEmpty()) {
+            request.addRequestHeader("Cookie", cookie)
+        }
 
         downloadManager.enqueue(request)
     }

@@ -258,8 +258,8 @@ class CreateUpdateEventScreenTest {
         composeTestRule.onNode(matcher.and(hasText("Cancel")))
             .assertIsDisplayed()
             .assertHasClickAction()
-        composeTestRule.onNode(matcher.and(hasText("Does Not Repeat"))).assertIsDisplayed()
-        composeTestRule.onNode(matcher.and(hasText("Daily"))).assertIsDisplayed()
+        composeTestRule.onNode(matcher.and(hasText("Does Not Repeat")), true).assertIsDisplayed()
+        composeTestRule.onNode(matcher.and(hasText("Daily")), true).assertIsDisplayed()
     }
 
     @Test

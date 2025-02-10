@@ -31,15 +31,31 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.viewModels
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
 import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.IntArg
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NLongArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.SerializableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isGroup
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -145,7 +161,7 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
             }
         }
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(title)
                 .setView(binding.root)
                 .setPositiveButton(positiveText, null)

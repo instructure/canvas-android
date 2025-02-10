@@ -260,6 +260,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         }
     }
 
+    @Suppress("unused")
+    @Subscribe
+    fun onCommentsUpdated(event: SubmissionCommentsUpdated) {
+        view?.announceForAccessibility(getString(R.string.a11y_commentSentSuccess))
+    }
+
     private fun showFileUploadDialog() {
         val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
             presenter.courseId,

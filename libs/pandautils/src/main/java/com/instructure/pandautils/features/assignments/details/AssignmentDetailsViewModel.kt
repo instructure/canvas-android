@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -56,7 +55,6 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
-import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.reminder.ReminderItem
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.ReminderViewState
@@ -70,6 +68,7 @@ import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -82,6 +81,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     savedStateHandle: SavedStateHandle,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val resources: Resources,
@@ -89,7 +89,6 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val application: Application,
     private val apiPrefs: ApiPrefs,
     private val submissionHandler: AssignmentDetailsSubmissionHandler,
-    private val alarmScheduler: AlarmScheduler,
     private val assignmentDetailsColorProvider: AssignmentDetailsColorProvider,
     private val reminderManager: ReminderManager,
 ) : ViewModel() {
@@ -109,7 +108,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val courseId = savedStateHandle.get<Long>(Const.COURSE_ID).orDefault()
     val course: LiveData<Course>
         get() = _course
-    private val _course = MutableLiveData<Course>(Course(id = courseId))
+    private val _course = MutableLiveData(Course(id = courseId))
 
     private val assignmentId = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID).orDefault()
 
@@ -124,34 +123,23 @@ class AssignmentDetailsViewModel @Inject constructor(
     private var restrictQuantitativeData = false
     private var gradingScheme = emptyList<GradingSchemeRow>()
 
+    private var isAssignmentEnhancementEnabled = false
+
     var assignment: Assignment? = null
         private set
 
     private var selectedSubmission: Submission? = null
 
-    private val remindersObserver = Observer<List<ReminderEntity>> { reminderEntities ->
-        _data.value?.reminders = mapReminders(reminderEntities)
-        _reminderViewState.update { it.copy(
-            reminders = reminderEntities.map { ReminderItem(it.id, it.text, Date(it.time)) },
-            dueDate = assignment?.dueDate
-        ) }
-        _data.value?.notifyPropertyChanged(BR.reminders)
-    }
-
     private val _reminderViewState = MutableStateFlow(ReminderViewState())
     val reminderViewState = _reminderViewState.asStateFlow()
 
-    private val remindersLiveData = assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(
-        apiPrefs.user?.id.orDefault(), assignmentId
-    ).apply {
-        observeForever(remindersObserver)
-    }
-
     var checkingReminderPermission = false
+    var checkingNotificationPermission = false
 
     init {
         markSubmissionAsRead()
         submissionHandler.addAssignmentSubmissionObserver(
+            context,
             assignmentId,
             apiPrefs.user?.id.orDefault(),
             resources,
@@ -160,13 +148,22 @@ class AssignmentDetailsViewModel @Inject constructor(
         )
         _state.postValue(ViewState.Loading)
         loadData()
+
+        reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), assignmentId) { reminderEntities ->
+            _data.value?.reminders = mapReminders(reminderEntities)
+            _reminderViewState.update { it.copy(
+                reminders = reminderEntities.map { ReminderItem(it.id, it.text, Date(it.time)) },
+                dueDate = assignment?.dueDate
+            ) }
+            _data.value?.notifyPropertyChanged(BR.reminders)
+        }
     }
 
     fun getVideoUri(fragment: FragmentActivity): Uri? = submissionHandler.getVideoUri(fragment)
 
     override fun onCleared() {
         super.onCleared()
-        remindersLiveData.removeObserver(remindersObserver)
+        reminderManager.removeLiveDataObserver()
         submissionHandler.removeAssignmentSubmissionObserver()
     }
 
@@ -218,6 +215,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
                 val hasDraft = submissionHandler.lastSubmissionIsDraft
+
+                isAssignmentEnhancementEnabled = assignmentDetailsRepository.isAssignmentEnhancementEnabled(courseId.orDefault(), forceNetwork)
 
                 assignment = assignmentResult
                 _reminderViewState.update { it.copy(
@@ -470,7 +469,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
             hasDraft = hasDraft,
-            reminders = mapReminders(remindersLiveData.value.orEmpty())
+            reminders = _data.value?.reminders.orEmpty(),
         )
     }
 
@@ -487,13 +486,6 @@ class AssignmentDetailsViewModel @Inject constructor(
                 postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog(it))
             }
         }
-
-    private fun deleteReminderById(id: Long) {
-        alarmScheduler.cancelAlarm(id)
-        viewModelScope.launch {
-            assignmentDetailsRepository.deleteReminderById(id)
-        }
-    }
 
     fun refresh() {
         _state.postValue(ViewState.Refresh)
@@ -540,7 +532,14 @@ class AssignmentDetailsViewModel @Inject constructor(
             }
         } else {
             Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
-            postAction(AssignmentDetailAction.NavigateToSubmissionScreen(isObserver, selectedSubmission?.attempt))
+            postAction(
+                AssignmentDetailAction.NavigateToSubmissionScreen(
+                    isObserver,
+                    selectedSubmission?.attempt,
+                    assignment?.htmlUrl,
+                    isAssignmentEnhancementEnabled
+                )
+            )
         }
     }
 

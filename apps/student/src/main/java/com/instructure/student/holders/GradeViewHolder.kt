@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.setGone
@@ -110,6 +111,8 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         } else {
             submissionState.setGone()
         }
+
+        root.accessibilityClassName("android.widget.Button")
     }
 
     companion object {

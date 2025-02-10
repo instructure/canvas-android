@@ -28,6 +28,7 @@ import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -79,15 +80,16 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.features.reminder.AlarmScheduler
-import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -99,6 +101,7 @@ import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
@@ -135,9 +138,6 @@ import com.instructure.student.features.modules.progression.CourseModuleProgress
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.fragment.DashboardFragment
-import com.instructure.student.fragment.InboxComposeMessageFragment
-import com.instructure.student.fragment.InboxConversationFragment
-import com.instructure.student.fragment.InboxRecipientsFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -624,17 +624,43 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar?) where F : Fragment, F : FragmentInteractions {
         //Navigation items
-        navigationDrawerBinding.navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+        with(navigationDrawerBinding) {
+            navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            listOf(
+                navigationDrawerItemFiles,
+                navigationDrawerItemGauge,
+                navigationDrawerItemStudio,
+                navigationDrawerItemMastery,
+                navigationDrawerItemBookmarks,
+                navigationDrawerItemChangeUser,
+                navigationDrawerItemHelp,
+                navigationDrawerItemLogout,
+                navigationDrawerSettings,
+                navigationDrawerItemStartMasquerading,
+                navigationDrawerItemStopMasquerading
+            ).forEach {
+                it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                    override fun onInitializeAccessibilityNodeInfo(
+                        host: View,
+                        info: AccessibilityNodeInfo
+                    ) {
+                        super.onInitializeAccessibilityNodeInfo(host, info)
+                        info.className = "android.widget.Button"
+                    }
+                }
+            }
+        }
+
 
         //Load Show Grades
         navigationDrawerBinding.navigationDrawerShowGradesSwitch.isChecked = StudentPrefs.showGradesOnCard
@@ -870,9 +896,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
             //Inbox
             is InboxFragment,
-            is InboxConversationFragment,
-            is InboxComposeMessageFragment,
-            is InboxRecipientsFragment -> setBottomBarItemSelected(R.id.bottomNavigationInbox)
+            is InboxDetailsFragment,
+            is InboxComposeFragment -> setBottomBarItemSelected(R.id.bottomNavigationInbox)
             //courses
             else -> setBottomBarItemSelected(R.id.bottomNavigationHome)
         }

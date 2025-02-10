@@ -15,8 +15,12 @@
  */
 package com.instructure.parentapp.ui.interaction
 
+import android.webkit.CookieManager
 import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.model.Atoms.getCurrentUrl
+import androidx.test.espresso.web.sugar.Web.onWebView
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
@@ -24,7 +28,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
-import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.ReminderPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -37,12 +40,13 @@ import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import junit.framework.Assert.assertTrue
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matchers
 import org.junit.Test
 import java.util.Calendar
@@ -52,7 +56,6 @@ import java.util.Date
 class AssignmentDetailsInteractionTest : ParentComposeTest() {
     override fun displaysPageObjects() = Unit
 
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
     private val reminderPage = ReminderPage(composeTestRule)
 
     @Test
@@ -377,6 +380,39 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         reminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+    }
+
+    @Test
+    fun testSubmissionOpensInWebViewWhenAssigmentEnhancementsEnabled() {
+        val data = setupData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", htmlUrl = "https://www.instructure.com")
+        gotoAssignment(data, assignment)
+
+        assignmentDetailsPage.clickSubmissionAndRubric()
+
+        val cookieManager = CookieManager.getInstance()
+        val cookies = cookieManager.getCookie("https://www.instructure.com/")
+        assertTrue(cookies.contains("k5_observed_user_for_${data.parents.first().id}=${data.students.first().id}"))
+        onWebView().check(webMatches(getCurrentUrl(), containsString("https://www.instructure.com/")))
+    }
+
+    @Test
+    fun testSubmissionOpensInWebViewWhenAssigmentEnhancementsDisabled() {
+        val data = setupData()
+        data.assignmentEnhancementsEnabled = false
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", htmlUrl = "https://www.instructure.com")
+        gotoAssignment(data, assignment)
+
+        assignmentDetailsPage.clickSubmissionAndRubric()
+
+        val currentStudentId = data.students.first().id
+        val expectedUrl = "https://www.instructure.com/submissions/$currentStudentId"
+        val cookieManager = CookieManager.getInstance()
+        val cookies = cookieManager.getCookie(expectedUrl)
+        assertTrue(cookies.contains("k5_observed_user_for_${data.parents.first().id}=$currentStudentId"))
+        onWebView().check(webMatches(getCurrentUrl(), containsString(expectedUrl)))
     }
 
     private fun setupData(restrictQuantitativeData: Boolean = false): MockCanvas {

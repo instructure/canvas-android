@@ -32,11 +32,12 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:accessibilityHeading="true"
             android:elevation="6dp"
             app:title="@string/submission"
             tools:background="#00bcd5"
             tools:navigationIcon="@drawable/ic_back_arrow"
-            tools:titleTextColor="@color/white"/>
+            tools:titleTextColor="@color/white" />
 
         <FrameLayout
             android:id="@+id/loadingView"
@@ -169,7 +170,8 @@
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/drawerTabLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="12dp"
                         app:tabIndicatorHeight="2dp"
@@ -181,7 +183,9 @@
                         android:layout_height="4dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="4dp"
-                        android:background="@drawable/handle_bar_drag_view"/>
+                        android:background="@drawable/handle_bar_drag_view"
+                        android:importantForAccessibility="yes"
+                        android:contentDescription="@string/a11y_dragViewContentDescription"/>
 
                 </FrameLayout>
 

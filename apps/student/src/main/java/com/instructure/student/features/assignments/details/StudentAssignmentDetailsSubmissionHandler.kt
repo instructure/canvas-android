@@ -57,6 +57,7 @@ class StudentAssignmentDetailsSubmissionHandler(
     private var submissionObserver: Observer<List<CreateSubmissionEntity>>? = null
 
     override fun addAssignmentSubmissionObserver(
+        context: Context,
         assignmentId: Long,
         userId: Long,
         resources: Resources,
@@ -65,7 +66,7 @@ class StudentAssignmentDetailsSubmissionHandler(
     ) {
         submissionLiveData = studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(assignmentId, userId)
 
-        setupObserver(resources, data, refreshAssignment)
+        setupObserver(context, resources, data, refreshAssignment)
 
         submissionObserver?.let { observer ->
             submissionLiveData?.observeForever(observer)
@@ -97,6 +98,7 @@ class StudentAssignmentDetailsSubmissionHandler(
     }
 
     private fun setupObserver(
+        context: Context,
         resources: Resources,
         data: MutableLiveData<AssignmentDetailsViewData>,
         refreshAssignment: () -> Unit,
@@ -148,6 +150,7 @@ class StudentAssignmentDetailsSubmissionHandler(
                     if (isUploading) {
                         isUploading = false
                         refreshAssignment()
+                        context.toast(R.string.submissionSuccessTitle)
                     }
                 }
         }

@@ -19,9 +19,16 @@
 package com.instructure.teacher.events
 
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
-import com.instructure.teacher.fragments.DiscussionBottomSheetChoice
 import com.instructure.teacher.utils.EditDateGroups
 import org.greenrobot.eventbus.EventBus
 
@@ -155,9 +162,6 @@ class MessageAddedEvent(shouldUpdate: Boolean, skipId: String? = null) : Ratione
 /** A RationedBusEvent for choosing message recipients. @see [RationedBusEvent] */
 class ChooseMessageEvent(list: ArrayList<Recipient>, skipId: String? = null) : RationedBusEvent<ArrayList<Recipient>>(list, skipId)
 
-/** A RationedBusEvent for creating discussions. @see [RationedBusEvent] */
-class DiscussionCreatedEvent(shouldUpdate: Boolean, skipId: String? = null) : RationedBusEvent<Boolean>(shouldUpdate, skipId)
-
 /** A RationedBusEvent for updating discussions. @see [RationedBusEvent] */
 class DiscussionUpdatedEvent(discussionTopicHeader: DiscussionTopicHeader, skipId: String? = null) : RationedBusEvent<DiscussionTopicHeader>(discussionTopicHeader, skipId)
 
@@ -196,7 +200,5 @@ class SectionsUpdatedEvent
 class SubmissionFilterChangedEvent(val filterIndex: Int = -1, val canvasContext: ArrayList<CanvasContext>? = null)
 
 class CourseColorOverlayToggledEvent
-
-class DiscussionOverflowMenuClickedEvent(val type: DiscussionBottomSheetChoice, val entryId: Long)
 
 class SyllabusUpdatedEvent(val content: String, val summaryAllowed: Boolean, skipId: String? = null) : RationedBusEvent<String>(content, skipId)

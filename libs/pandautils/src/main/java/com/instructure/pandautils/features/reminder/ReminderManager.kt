@@ -20,7 +20,12 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.R
+import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.pandautils.utils.toast
@@ -35,8 +40,12 @@ import java.util.Date
 
 class ReminderManager(
     private val dateTimePicker: DateTimePicker,
-    private val reminderRepository: ReminderRepository
+    private val reminderRepository: ReminderRepository,
+    private val analytics: Analytics
 ) {
+    private var reminderLiveData: LiveData<List<ReminderEntity>>? = null
+    private var reminderObserver: Observer<List<ReminderEntity>>? = null
+
     suspend fun showBeforeDueDateReminderDialog(
         context: Context,
         userId: Long,
@@ -149,6 +158,22 @@ class ReminderManager(
         awaitClose()
     }
 
+    fun observeRemindersLiveData(userId: Long, contentId: Long, onUpdate: (List<ReminderEntity>) -> Unit) {
+        val liveData = reminderRepository.findByAssignmentIdLiveData(userId, contentId)
+        val observer: Observer<List<ReminderEntity>> = Observer {
+            onUpdate(it)
+        }
+        liveData.observeForever(observer)
+        reminderLiveData = liveData
+        reminderObserver = observer
+    }
+
+    fun removeLiveDataObserver() {
+        if (reminderObserver != null && reminderLiveData != null) {
+            reminderLiveData?.removeObserver(reminderObserver!!)
+        }
+    }
+
     suspend fun deleteReminder(reminderId: Long) {
         reminderRepository.deleteReminder(reminderId)
     }
@@ -182,6 +207,11 @@ class ReminderManager(
             )
         } else {
             context.getString(R.string.reminderNotificationMessageWithoutDueDate, contentName)
+        }
+
+        when {
+            contentHtmlUrl.contains("assignments") -> analytics.logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE)
+            contentHtmlUrl.contains("calendar_events") -> analytics.logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE)
         }
 
         reminderRepository.createReminder(

@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Annuler l’édition de commentaire</string>
     <string name="skip">Omettre</string>
 
+    <string name="collapseGradePanel">Réduire le volet Note</string>
+    <string name="expandGradePanel">Développer le volet Note</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Score personnalisé %1$s</string>
 
@@ -836,6 +838,7 @@
     <string name="errorUpdatingFile">Une erreur est survenue lors de la mise à jour de ce fichier</string>
     <string name="errorUpdatingFolder">Une erreur est survenue lors de la mise à jour de ce dossier</string>
 
+    <string name="errorEmptyTitle">Le titre ne peut pas être vide.</string>
     <string name="toDoEmpty">Rien d’autre à faire !\n Bonne journée.</string>
     <string name="toDoNoSubmissions">Il n’y a aucune soumission à noter pour ce devoir.</string>
     <string name="errorToDoRouteFailed">Une erreur est survenue lors de la tentative d’affichage de cet élément de la liste des choses à faire.</string>

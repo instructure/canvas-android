@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -92,5 +93,7 @@ class AssignmentViewHolder(private val binding: AdapterAssignmentBinding) : Recy
         assignmentLayout.contentDescription = assignment.name + " " + dueDate.text + " " + ungradedCount.text + " " + if (assignment.published) context.getString(R.string.published) else context.getString(
                 R.string.not_published
             )
+
+        assignmentLayout.accessibilityClassName("android.widget.Button")
     }
 }
