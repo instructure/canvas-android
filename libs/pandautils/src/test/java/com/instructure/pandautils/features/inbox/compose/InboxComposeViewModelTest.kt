@@ -98,6 +98,15 @@ class InboxComposeViewModelTest {
     }
 
     @Test
+    fun `Test signature loaded`() {
+        coEvery { inboxComposeRepository.getInboxSignature() } returns "Signature"
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals("\n\n---\nSignature", uiState.body.text)
+    }
+
+    @Test
     fun `Load available contexts on init`() {
         val viewmodel = getViewModel()
 
