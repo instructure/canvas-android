@@ -41,13 +41,13 @@ abstract class InboxComposeRepository(
 
     open suspend fun getRecipients(
         searchQuery: String,
-        context: CanvasContext,
+        contextId: String,
         forceRefresh: Boolean
     ): DataResult<List<Recipient>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return recipientAPI.getFirstPageRecipientListNoSyntheticContexts(
             searchQuery = searchQuery,
-            context = context.contextId,
+            context = contextId,
             restParams = params,
         ).depaginate {
             recipientAPI.getNextPageRecipientList(it, params)
