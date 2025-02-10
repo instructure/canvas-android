@@ -1660,6 +1660,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Add new calendar item</string>
     <string name="calendarFilterCalendars">Calendars</string>
     <string name="calendarFilterUser">User</string>
+    <string name="calendarFilterFavoriteCourse">Favorite Courses</string>
+    <string name="calendarFilterMoreCourse">More Courses</string>
     <string name="calendarFilterCourse">Courses</string>
     <string name="calendarFilterGroup">Groups</string>
     <string name="calendarFilterExplanationLimited">Select the calendars you want to see, up to %d.</string>

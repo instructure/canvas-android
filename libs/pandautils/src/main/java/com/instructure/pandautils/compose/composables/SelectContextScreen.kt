@@ -58,6 +58,7 @@ import com.instructure.pandautils.utils.isGroup
 import com.instructure.pandautils.utils.isUser
 import com.jakewharton.threetenabp.AndroidThreeTen
 
+private const val FAVORITE_COURSES_KEY = "favorite_courses"
 private const val COURSES_KEY = "courses"
 private const val GROUPS_KEY = "groups"
 private const val HEADER_CONTENT_TYPE = "header"
@@ -115,20 +116,51 @@ private fun SelectContextContent(
                 SelectContextItem(user, selected, onContextSelected, Modifier.fillMaxWidth())
             }
             if (uiState.courses.isNotEmpty()) {
-                item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
-                    ListHeaderItem(text = stringResource(id = R.string.calendarFilterCourse))
+                val favoriteCourses = uiState.courses.filter { (it as Course).isFavorite }
+                val moreCourses = uiState.courses.filter { !(it as Course).isFavorite }
+                if (favoriteCourses.isNotEmpty()) {
+                    item(key = FAVORITE_COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
+                        val titleResource = if (moreCourses.isNotEmpty()) {
+                            stringResource(id = R.string.calendarFilterFavoriteCourse)
+                        } else {
+                            stringResource(id = R.string.calendarFilterCourse)
+                        }
+                        ListHeaderItem(text = titleResource)
+                    }
+                    items(
+                        favoriteCourses,
+                        key = { it.contextId },
+                        contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
+                        val selected = course.contextId == uiState.selectedCanvasContext?.contextId
+                        SelectContextItem(
+                            course,
+                            selected,
+                            onContextSelected,
+                            Modifier.fillMaxWidth()
+                        )
+                    }
                 }
-                items(
-                    uiState.courses,
-                    key = { it.contextId },
-                    contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
-                    val selected = course.contextId == uiState.selectedCanvasContext?.contextId
-                    SelectContextItem(
-                        course,
-                        selected,
-                        onContextSelected,
-                        Modifier.fillMaxWidth()
-                    )
+                if (moreCourses.isNotEmpty()) {
+                    item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
+                        val titleResource = if (favoriteCourses.isNotEmpty()) {
+                            stringResource(id = R.string.calendarFilterMoreCourse)
+                        } else {
+                            stringResource(id = R.string.calendarFilterCourse)
+                        }
+                        ListHeaderItem(text = titleResource)
+                    }
+                    items(
+                        moreCourses,
+                        key = { it.contextId },
+                        contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
+                        val selected = course.contextId == uiState.selectedCanvasContext?.contextId
+                        SelectContextItem(
+                            course,
+                            selected,
+                            onContextSelected,
+                            Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
             if (uiState.groups.isNotEmpty()) {
