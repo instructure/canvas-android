@@ -283,23 +283,32 @@ private fun InboxComposeScreenContent(
         }
 
         if (uiState.hiddenFields.isBodyHidden.not()) {
-            TextFieldWithHeader(
-                label = stringResource(R.string.message),
-                value = uiState.body,
-                enabled = uiState.disabledFields.isBodyDisabled.not(),
-                headerEnabled = uiState.disabledFields.isAttachmentDisabled.not(),
-                headerIconResource = if (uiState.hiddenFields.isBodyHidden) null else R.drawable.ic_attachment,
-                iconContentDescription = if (uiState.hiddenFields.isBodyHidden) null else stringResource(id = R.string.a11y_addAttachment),
-                onValueChange = {
-                    actionHandler(InboxComposeActionHandler.BodyChanged(it))
-                },
-                onIconClick = {
-                    actionHandler(InboxComposeActionHandler.AddAttachmentSelected)
-                },
-                focusRequester = bodyFocusRequester,
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 100.dp)
-            )
+            if (uiState.signatureLoading) {
+                Loading(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                        .testTag("SignatureLoading"),
+                )
+            } else {
+                TextFieldWithHeader(
+                    label = stringResource(R.string.message),
+                    value = uiState.body,
+                    enabled = uiState.disabledFields.isBodyDisabled.not(),
+                    headerEnabled = uiState.disabledFields.isAttachmentDisabled.not(),
+                    headerIconResource = if (uiState.hiddenFields.isBodyHidden) null else R.drawable.ic_attachment,
+                    iconContentDescription = if (uiState.hiddenFields.isBodyHidden) null else stringResource(id = R.string.a11y_addAttachment),
+                    onValueChange = {
+                        actionHandler(InboxComposeActionHandler.BodyChanged(it))
+                    },
+                    onIconClick = {
+                        actionHandler(InboxComposeActionHandler.AddAttachmentSelected)
+                    },
+                    focusRequester = bodyFocusRequester,
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 100.dp)
+                )
+            }
         }
 
         Column {

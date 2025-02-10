@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
@@ -56,18 +57,20 @@ class InboxModule {
         inboxApi: InboxApi.InboxInterface,
         coursesApi: CourseAPI.CoursesInterface,
         groupsApi: GroupAPI.GroupInterface,
-        progressApi: ProgressAPI.ProgressInterface
+        progressApi: ProgressAPI.ProgressInterface,
+        inboxSettingsManager: InboxSettingsManager
     ): InboxRepository {
-        return TeacherInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+        return TeacherInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager)
     }
 
     @Provides
     fun provideInboxComposeRepository(
         coursesApi: CourseAPI.CoursesInterface,
         recipientApi: RecipientAPI.RecipientInterface,
-        inboxApi: InboxApi.InboxInterface
+        inboxApi: InboxApi.InboxInterface,
+        inboxSettingsManager: InboxSettingsManager
     ): InboxComposeRepository {
-        return TeacherInboxComposeRepository(coursesApi, recipientApi, inboxApi)
+        return TeacherInboxComposeRepository(coursesApi, recipientApi, inboxApi, inboxSettingsManager)
     }
 
     @Provides

@@ -35,6 +35,7 @@ import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.launchWithLoadingDelay
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -93,6 +94,7 @@ class InboxComposeViewModel @Inject constructor(
         if (options != null) {
             initFromOptions(options)
         }
+        loadSignature()
     }
 
     private fun initFromOptions(options: InboxComposeOptions?) {
@@ -381,6 +383,20 @@ class InboxComposeViewModel @Inject constructor(
                 selectContextUiState = it.selectContextUiState.copy(
                     canvasContexts = courses + groups
                 )
+            ) }
+        }
+    }
+
+    private fun loadSignature() {
+        viewModelScope.launchWithLoadingDelay(onLoadingStart = {
+            _uiState.update { it.copy(signatureLoading = true) }
+        }, onLoadingEnd = {
+            _uiState.update { it.copy(signatureLoading = false) }
+        }) {
+            val signature = inboxComposeRepository.getInboxSignature()
+            val signatureFooter = "\n\n---\n$signature"
+            _uiState.update { it.copy(
+                body = TextFieldValue(it.body.text.plus(signatureFooter))
             ) }
         }
     }
