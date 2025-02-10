@@ -394,10 +394,12 @@ class InboxComposeViewModel @Inject constructor(
             _uiState.update { it.copy(signatureLoading = false) }
         }) {
             val signature = inboxComposeRepository.getInboxSignature()
-            val signatureFooter = "\n\n---\n$signature"
-            _uiState.update { it.copy(
-                body = TextFieldValue(it.body.text.plus(signatureFooter))
-            ) }
+            if (signature.isNotBlank()) {
+                val signatureFooter = "\n\n---\n$signature"
+                _uiState.update { it.copy(
+                    body = TextFieldValue(it.body.text.plus(signatureFooter))
+                ) }
+            }
         }
     }
 

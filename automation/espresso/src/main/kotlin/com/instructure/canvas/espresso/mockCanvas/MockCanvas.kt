@@ -309,6 +309,8 @@ class MockCanvas {
 
     val pairingCodes = mutableMapOf<String, User>()
 
+    var inboxSignature = ""
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */

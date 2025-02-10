@@ -98,12 +98,21 @@ class InboxComposeViewModelTest {
     }
 
     @Test
-    fun `Test signature loaded`() {
+    fun `Signature footer added on init`() {
         coEvery { inboxComposeRepository.getInboxSignature() } returns "Signature"
         val viewmodel = getViewModel()
         val uiState = viewmodel.uiState.value
 
         assertEquals("\n\n---\nSignature", uiState.body.text)
+    }
+
+    @Test
+    fun `Signature footer not added on init when it is blank`() {
+        coEvery { inboxComposeRepository.getInboxSignature() } returns ""
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals("", uiState.body.text)
     }
 
     @Test

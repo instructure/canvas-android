@@ -25,7 +25,10 @@ import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -35,10 +38,13 @@ import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 
 @HiltAndroidTest
+@UninstallModules(GraphQlApiModule::class)
 class StudentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     override val isTesting = BuildConfig.IS_TESTING
 
@@ -46,6 +52,10 @@ class StudentInboxComposeInteractionTest: InboxComposeInteractionTest() {
 
     private val dashboardPage = DashboardPage()
     private val inboxPage = InboxPage()
+
+    @BindValue
+    @JvmField
+    val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
 
     override fun goToInboxCompose(data: MockCanvas) {
         val parent = data.parents.first()
