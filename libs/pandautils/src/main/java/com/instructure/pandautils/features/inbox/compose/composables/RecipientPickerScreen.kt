@@ -106,10 +106,15 @@ fun RecipientPickerScreen(
                                 .padding(padding)
                         ) {
                             if (uiState.screenState != ScreenState.Loading && uiState.screenState != ScreenState.Error) {
-                                val searchContext = if (uiState.selectedRole == null) "All Recipients" else uiState.selectedRole.displayText
+                                val searchContext = if (uiState.selectedRole == null) stringResource(
+                                    R.string.inboxAllRecipients
+                                ) else uiState.selectedRole.displayText
                                 SearchField(
                                     value = uiState.searchValue,
-                                    placeholder = "Search in $searchContext",
+                                    placeholder = stringResource(
+                                        R.string.inboxSearchIn,
+                                        searchContext
+                                    ),
                                     actionHandler = actionHandler
                                 )
                             }

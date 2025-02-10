@@ -1989,4 +1989,6 @@
     <string name="a11y_indeterminate">Partially checked</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
+    <string name="inboxAllRecipients">All Recipients</string>
+    <string name="inboxSearchIn">Search in %1$s</string>
 </resources>
