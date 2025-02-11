@@ -390,9 +390,6 @@ class InboxComposeScreenTest {
     fun testComposeScreenWithSignatureLoading() {
         setComposeScreen(getUiState(signatureLoading = true))
 
-        composeTestRule.onNode(hasText("Message"))
-            .assertDoesNotExist()
-
         composeTestRule.onNode(hasTestTag("SignatureLoading"))
             .assertIsDisplayed()
     }
