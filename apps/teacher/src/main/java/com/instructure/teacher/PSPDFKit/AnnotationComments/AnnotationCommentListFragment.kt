@@ -59,7 +59,7 @@ class AnnotationCommentListFragment : BaseListFragment<
                 }
             }.show(requireFragmentManager(), AnnotationCommentDialog::class.java.simpleName)
         }, { annotation, position ->
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             //we want to show a different title for the head annotation
             builder.setTitle(if(position == 0) R.string.deleteAnnotation else R.string.deleteComment)
             builder.setMessage(if(position == 0) R.string.deleteHeadCommentConfirmation else R.string.deleteCommentConfirmation)

@@ -42,7 +42,7 @@ class SGAddMediaCommentDialog : BaseCanvasAppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogSgAddAttachmentCommentBinding.inflate(layoutInflater)
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setView(binding.root)
                 .create()
 

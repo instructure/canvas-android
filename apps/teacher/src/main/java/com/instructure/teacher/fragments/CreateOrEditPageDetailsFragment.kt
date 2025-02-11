@@ -278,7 +278,7 @@ class CreateOrEditPageDetailsFragment : BasePresenterFragment<
     private fun setupDelete() {
         binding.deleteWrapper.setVisible((page != null && !(page as Page).frontPage))
         binding.deleteWrapper.onClickWithRequireNetwork {
-            AlertDialog.Builder(requireContext())
+            AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                     .setTitle(R.string.pageDeleteTitle)
                     .setMessage(R.string.pageDeleteMessage)
                     .setPositiveButton(R.string.delete) { _, _ ->

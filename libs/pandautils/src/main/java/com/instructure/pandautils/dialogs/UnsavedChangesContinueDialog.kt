@@ -35,7 +35,7 @@ class UnsavedChangesContinueDialog : BaseCanvasAppCompatDialogFragment() {
     init { retainInstance = true }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(R.string.utils_continueWithoutSavingTitle)
                 .setMessage(R.string.utils_continueWithoutSavingMessage)
                 .setPositiveButton(R.string.utils_continueUnsaved, null)

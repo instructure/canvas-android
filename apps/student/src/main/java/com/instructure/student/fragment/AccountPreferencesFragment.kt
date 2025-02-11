@@ -123,7 +123,7 @@ class AccountPreferencesFragment : ParentFragment() {
     }
 
     private fun restartAppForLocale(position: Int) {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(R.string.restartingCanvas)
                 .setMessage(if (position == 0) R.string.defaultLanguageWarning else R.string.languageDialogText)
                 .setPositiveButton(R.string.yes) { _, _ ->

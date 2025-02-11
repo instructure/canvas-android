@@ -48,7 +48,7 @@ class WhatIfDialogStyled : BaseCanvasDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(getString(R.string.whatIfDialogText))
                 .setPositiveButton(R.string.done) { _, _ ->
                     try {

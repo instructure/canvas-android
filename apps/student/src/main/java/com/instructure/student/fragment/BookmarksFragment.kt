@@ -185,7 +185,7 @@ class BookmarksFragment : ParentFragment() {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_bookmark, null)
         val editText = view.findViewById<AppCompatEditText>(R.id.bookmarkEditText)
 
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         builder.setTitle(R.string.bookmarkEdit)
         builder.setView(view)
         builder.setPositiveButton(R.string.done) { _, _ ->
@@ -219,7 +219,7 @@ class BookmarksFragment : ParentFragment() {
     }
 
     private fun deleteBookmark(bookmark: Bookmark) {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         builder.setTitle(R.string.bookmarkDelete)
         builder.setMessage(bookmark.name)
         builder.setPositiveButton(android.R.string.ok) { _, _ ->

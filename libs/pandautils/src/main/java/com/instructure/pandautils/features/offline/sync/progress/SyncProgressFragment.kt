@@ -118,7 +118,7 @@ class SyncProgressFragment : BaseCanvasFragment() {
     }
 
     private fun showCancelConfirmation() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setTitle(R.string.syncProgress_cancelConfirmationTitle)
             .setMessage(R.string.syncProgress_cancelConfirmationMessage)
             .setPositiveButton(R.string.yes) { _, _ ->

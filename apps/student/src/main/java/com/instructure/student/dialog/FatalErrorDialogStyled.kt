@@ -35,7 +35,7 @@ class FatalErrorDialogStyled : BaseCanvasDialogFragment() {
         val activity = activity
         val args = nonNullArgs
 
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(args.getInt(TITLE))
                 .setPositiveButton(requireContext().getString(R.string.okay)) { dialog, _ ->
                     val shouldDismiss = args.getBoolean(SHOULD_DISMISS, false)

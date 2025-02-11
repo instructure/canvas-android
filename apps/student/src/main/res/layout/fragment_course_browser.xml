@@ -22,7 +22,7 @@
     android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/noOverlayToolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"

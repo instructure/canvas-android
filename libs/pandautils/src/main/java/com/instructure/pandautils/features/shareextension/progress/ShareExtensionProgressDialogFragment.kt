@@ -88,7 +88,7 @@ class ShareExtensionProgressDialogFragment : BaseCanvasDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentShareExtensionProgressDialogBinding.inflate(layoutInflater, null, false)
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setView(binding.root)
             .setCancelable(false)
             .create()
@@ -106,7 +106,7 @@ class ShareExtensionProgressDialogFragment : BaseCanvasDialogFragment() {
     }
 
     private fun cancelClicked(title: String, message: String) {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setTitle(title)
             .setMessage(message)
             .setNegativeButton(R.string.no) { _, _ -> }

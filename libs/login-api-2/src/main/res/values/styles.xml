@@ -18,7 +18,7 @@
 
 <resources>
 
-    <style name="LoginFlowTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="LoginFlowTheme" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/textLightest</item>
         <item name="colorPrimaryDark">@color/textLightest</item>
         <item name="colorAccent">@color/backgroundDark</item>
@@ -46,7 +46,7 @@
         <item name="android:windowBackground">@drawable/splash_background_parent</item>
     </style>
 
-    <style name="ToolBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="ToolBarStyle" parent="Theme.Material3.DayNight">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
@@ -54,7 +54,7 @@
         <item name="android:accessibilityHeading">true</item>
     </style>
 
-    <style name="ToolBarStyleDark" parent="ThemeOverlay.AppCompat.DayNight">
+    <style name="ToolBarStyleDark" parent="ThemeOverlay.Material3.DynamicColors.DayNight">
         <item name="colorControlNormal">@color/textDarkest</item>
         <item name="android:textColorPrimary">@color/textDarkest</item>
         <item name="android:textColorSecondary">@color/textDarkest</item>
@@ -90,7 +90,7 @@
     </style>
 
     <!--Button Styles-->
-    <style name="ButtonStyle">
+    <style name="ButtonStyle" parent="Theme.Material3.DayNight">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/textLightest</item>
@@ -104,7 +104,7 @@
     </style>
 
     <!-- Currently we only use these for the login buttons, but might be reused and renamed to a more general style if we adopt the new design system. -->
-    <style name="LoginButtonStyle">
+    <style name="LoginButtonStyle" parent="Theme.Material3.DayNight">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:minHeight">48dp</item>
@@ -116,12 +116,12 @@
         <item name="android:foreground">?selectableItemBackground</item>
     </style>
 
-    <style name="LoginButtonStyle.Filled">
+    <style name="LoginButtonStyle.Filled" parent="Theme.Material3.DayNight">
         <item name="android:background">@drawable/bg_button_rounded</item>
         <item name="android:textColor">@color/textLightest</item>
     </style>
 
-    <style name="LoginButtonStyle.Outline">
+    <style name="LoginButtonStyle.Outline" parent="Theme.Material3.DayNight">
         <item name="android:background">@drawable/bg_button_rounded_outline</item>
         <item name="android:textColor">@color/textDarkest</item>
     </style>

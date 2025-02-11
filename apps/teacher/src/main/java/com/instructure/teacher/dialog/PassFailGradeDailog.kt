@@ -85,7 +85,7 @@ class PassFailGradeDailog : BaseCanvasAppCompatDialogFragment() {
             else -> passFailSpinner.setSelection(0)
         }
 
-        val passFailDialog = AlertDialog.Builder(requireContext())
+        val passFailDialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setCancelable(true)
                 .setTitle(getString(R.string.customize_grade))
                 .setView(view)

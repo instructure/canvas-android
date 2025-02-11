@@ -208,7 +208,7 @@
         <activity
             android:name="com.instructure.teacher.activities.ViewMediaActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"/>
         <activity android:name=".activities.TeacherLoginWithQRActivity"
             android:theme="@style/LoginFlowTheme.NoActionBar"/>
 

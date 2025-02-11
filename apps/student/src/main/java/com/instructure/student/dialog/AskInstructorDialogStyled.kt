@@ -86,7 +86,7 @@ class AskInstructorDialogStyled : BaseCanvasDialogFragment() {
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setTitle(getString(R.string.instructor_question))
             .setPositiveButton(getString(R.string.send)) { _, _ ->
                 if (!canClickSend) return@setPositiveButton

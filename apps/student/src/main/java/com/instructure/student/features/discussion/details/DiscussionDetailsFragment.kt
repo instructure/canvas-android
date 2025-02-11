@@ -313,7 +313,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun askToDeleteDiscussionEntry(discussionEntryId: Long) {
         if (repository.isOnline()) {
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             builder.setMessage(R.string.utils_discussionsDeleteWarning)
             builder.setPositiveButton(android.R.string.ok) { _, _ ->
                 deleteDiscussionEntry(discussionEntryId)

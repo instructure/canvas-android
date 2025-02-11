@@ -16,7 +16,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
+    <style name="AppTheme" parent="Theme.Material3.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
@@ -105,7 +105,7 @@
         <item name="android:src">@drawable/ic_overflow</item>
     </style>
 
-    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <style name="Theme.BottomSheet" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/textDark</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDark</item>
@@ -122,7 +122,7 @@
         <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
-    <style name="RoundedContextDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="RoundedContextDialog" parent="Theme.Material3.DayNight.Dialog.Alert">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTitleStyle">@null</item>
@@ -196,7 +196,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Theme.AppCompat.DayNight.Translucent">
+    <style name="Theme.Material3.DayNight.Translucent">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>

@@ -50,7 +50,7 @@ class AuthenticationDialog : BaseCanvasDialogFragment() {
             bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, requireArguments().getString(DOMAIN))
             logEvent(AnalyticsEventConstants.AUTHENTICATION_DIALOG, bundle)
         }
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         builder.setTitle(R.string.authenticationRequired)
         val root = LayoutInflater.from(context).inflate(R.layout.dialog_auth, null)
         username = root.findViewById(R.id.username)

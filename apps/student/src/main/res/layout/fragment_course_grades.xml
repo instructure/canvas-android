@@ -95,7 +95,7 @@
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp">
 
-                    <CheckBox
+                    <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/showTotalCheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                     android:paddingRight="12dp"
                     android:visibility="gone">
 
-                    <CheckBox
+                    <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/showWhatIfCheckBox"
                         style="@style/TextStyle.Tertiary.Dark"
                         android:layout_width="wrap_content"

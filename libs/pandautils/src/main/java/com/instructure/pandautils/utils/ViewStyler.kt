@@ -40,7 +40,7 @@ import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
-import androidx.appcompat.widget.SwitchCompat
+import com.google.android.material.materialswitch.MaterialSwitch
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -87,20 +87,20 @@ object ViewStyler {
         spinner.supportBackgroundTintList = makeColorStateList(defaultColor, brand)
     }
 
-    fun themeSwitch(context: Context, switch: SwitchCompat, @ColorInt brand: Int = ThemePrefs.brandColor) {
+    fun themeSwitch(context: Context, switch: MaterialSwitch, @ColorInt brand: Int = ThemePrefs.brandColor) {
         val thumbColor = brand
 
         // trackColor is the thumbColor with 30% transparency (77)
         val trackColor = Color.argb(77, Color.red(thumbColor), Color.green(thumbColor), Color.blue(thumbColor))
 
         // setting the thumb color
-        switch.thumbDrawable.setTintList(ColorStateList(
+        switch.thumbDrawable?.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                 intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.switchThumbColor)))
         )
 
         // setting the track color
-        switch.trackDrawable.setTintList(ColorStateList(
+        switch.trackDrawable?.setTintList(ColorStateList(
                 arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
                 intArrayOf(trackColor, ContextCompat.getColor(context, R.color.switchTrackColor))))
     }
@@ -254,7 +254,7 @@ fun AppCompatCheckBox.applyTheme(@ColorInt brand: Int) {
     highlightColor = ThemePrefs.increaseAlpha(defaultColor)
 }
 
-fun SwitchCompat.applyTheme(@ColorInt color: Int = ThemePrefs.brandColor) {
+fun MaterialSwitch.applyTheme(@ColorInt color: Int = ThemePrefs.brandColor) {
     ViewStyler.themeSwitch(context, this, color)
 }
 

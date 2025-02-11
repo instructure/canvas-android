@@ -64,7 +64,7 @@ class EditCourseNicknameDialog : BaseCanvasAppCompatDialogFragment() {
         editCourseNicknameEditText.inputType = EditorInfo.TYPE_TEXT_FLAG_CAP_WORDS
         editCourseNicknameEditText.selectAll()
 
-        val nameDialog = AlertDialog.Builder(requireContext())
+        val nameDialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setCancelable(true)
                 .setTitle(getString(R.string.edit_course_nickname))
                 .setView(view)

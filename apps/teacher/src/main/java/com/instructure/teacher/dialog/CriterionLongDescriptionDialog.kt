@@ -95,7 +95,7 @@ class CriterionLongDescriptionDialog : BaseCanvasDialogFragment() {
             webView.loadHtml(mLongDescription, mDescription, htmlFormatColors = HtmlFormatColors(backgroundColorRes = R.color.backgroundLightestElevated))
         }
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setCancelable(true)
                 .setTitle(mDescription)
                 .setView(binding.root)

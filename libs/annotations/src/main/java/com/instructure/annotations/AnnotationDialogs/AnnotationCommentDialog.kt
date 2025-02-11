@@ -63,7 +63,7 @@ class AnnotationCommentDialog : BaseCanvasAppCompatDialogFragment() {
         freeTextEditText.inputType = EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES
         freeTextEditText.hint = requireContext().getString(R.string.comment)
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(mTitle)
                 .setView(view)
                 .setPositiveButton(requireContext().getString(android.R.string.ok)) { _, _ ->

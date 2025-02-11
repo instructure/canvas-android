@@ -97,7 +97,7 @@ class DiscussionsMoveToDialog : BaseCanvasDialogFragment() {
         setupRadioButton(view.findViewById(R.id.rb_delete),
                 getString(R.string.delete), false, DiscussionListPresenter.DELETE)
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setCancelable(true)
                 .setTitle(getString(R.string.discussions_options))
                 .setView(view)

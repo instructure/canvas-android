@@ -27,6 +27,7 @@ import androidx.appcompat.app.AlertDialog
 import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentShareExtensionStatusDialogBinding
 import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.features.shareextension.ShareExtensionViewModel
@@ -58,7 +59,7 @@ class ShareExtensionStatusDialogFragment : BaseCanvasDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentShareExtensionStatusDialogBinding.inflate(layoutInflater, null, false)
 
-        val alertDialog = AlertDialog.Builder(requireContext())
+        val alertDialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setView(binding.root)
             .setCancelable(true)
             .create()

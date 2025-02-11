@@ -56,7 +56,7 @@ class AboutFragment : BaseCanvasDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentAboutBinding.inflate(layoutInflater, null, false)
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setView(binding.root)
             .setCancelable(true)
             .setTitle(R.string.about)

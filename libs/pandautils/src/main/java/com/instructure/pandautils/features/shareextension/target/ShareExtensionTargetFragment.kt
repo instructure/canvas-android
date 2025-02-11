@@ -83,7 +83,7 @@ class ShareExtensionTargetFragment : BaseCanvasDialogFragment() {
         binding.studentCourseSpinner.isEnabled = !isAccessibilityEnabled(requireContext())
         binding.assignmentSpinner.isEnabled = !isAccessibilityEnabled(requireContext())
 
-        val alertDialog = AlertDialog.Builder(requireContext())
+        val alertDialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setView(binding.root)
                 .setPositiveButton(R.string.next, null)
                 .setNegativeButton(R.string.cancel, null)

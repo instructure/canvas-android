@@ -85,7 +85,7 @@ class RatingDialog : BaseCanvasDialogFragment() {
         binding = DialogRatingBinding.inflate(LayoutInflater.from(context))
         setupViews(appType)
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(R.string.utils_howAreWeDoing)
                 .setView(binding.root)
                 .setPositiveButton(buttonText) { _, _ ->

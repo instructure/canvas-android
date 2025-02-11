@@ -127,7 +127,7 @@
         <activity
             android:name=".activity.ViewMediaActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"/>
 
         <activity android:name=".activity.VideoViewActivity"
             android:label="@string/student_app_name"
@@ -235,7 +235,7 @@
         <!-- Widget Items -->
         <activity
             android:name=".activity.NotificationWidgetRouter"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.Material3.DayNight"
             android:label=""
             android:configChanges="keyboardHidden|orientation|screenSize" />
 

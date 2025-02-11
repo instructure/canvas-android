@@ -35,7 +35,7 @@ class UnsavedChangesExitDialog : BaseCanvasAppCompatDialogFragment() {
     init { retainInstance = true }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(R.string.utils_exitWithoutSavingTitle)
                 .setMessage(R.string.utils_exitWithoutSavingMessage)
                 .setPositiveButton(R.string.utils_exitUnsaved) { _, _ -> mListener?.invoke() }

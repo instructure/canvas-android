@@ -17,7 +17,7 @@
   -->
 <resources>
 
-    <style name="ToolBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="ToolBarStyle" parent="Theme.Material3.DayNight">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
@@ -25,7 +25,7 @@
         <item name="android:accessibilityHeading">true</item>
     </style>
 
-    <style name="ToolBarPopupStyle" parent="Theme.AppCompat.DayNight">
+    <style name="ToolBarPopupStyle" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/textDarkest</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>
@@ -34,11 +34,11 @@
         <item name="android:accessibilityHeading">true</item>
     </style>
 
-    <style name="CustomViewAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="CustomViewAlertDialog" parent="Theme.Material3.DayNight.Dialog.Alert">
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 
-    <style name="AccessibleAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="AccessibleAlertDialog" parent="Theme.Material3.DayNight.Dialog.Alert">
         <item name="android:windowTitleStyle">@style/AccessibleAlertDialogTitle</item>
     </style>
 

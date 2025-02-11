@@ -30,7 +30,7 @@ import com.instructure.teacher.R
 class NoInternetConnectionDialog : BaseCanvasAppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         builder.setTitle(R.string.noInternetConnectionTitle)
         builder.setMessage(R.string.noInternetConnectionMessage)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }

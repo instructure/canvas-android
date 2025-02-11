@@ -19,7 +19,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CanvasMaterialTheme_Default" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
+    <style name="CanvasMaterialTheme_Default" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/textDarkest</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>

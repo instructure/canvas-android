@@ -470,7 +470,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             }
         }
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(R.string.confirm)
                 .setMessage(message)
                 .setPositiveButton(R.string.delete) { _, _ -> deleteItem(item) }

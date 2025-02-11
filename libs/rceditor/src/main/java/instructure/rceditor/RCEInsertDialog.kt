@@ -49,7 +49,7 @@ class RCEInsertDialog : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val root = LayoutInflater.from(context).inflate(R.layout.rce_dialog_insert, null)
         val errorText = root.findViewById<TextView>(R.id.errorMessage)
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.MaterialAlertDialog_Material3)
         builder.setView(root)
         builder.setTitle(arguments?.getString(TITLE))
         builder.setPositiveButton(R.string.rce_dialogDone, null) // Override listener in onShow

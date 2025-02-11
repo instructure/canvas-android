@@ -163,7 +163,7 @@
                     android:text="@string/publish"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/publishSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -195,7 +195,7 @@
                     android:text="@string/requireAccessCode"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/accessCodeSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

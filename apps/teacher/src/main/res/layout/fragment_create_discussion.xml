@@ -196,7 +196,7 @@
                     android:text="@string/publish"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/publishSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -228,7 +228,7 @@
                     android:text="@string/subscribe"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/subscribeSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -260,7 +260,7 @@
                     android:text="@string/allowThreadedReplies"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/threadedSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -292,7 +292,7 @@
                     android:text="@string/usersMustPost"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/usersMustPostSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

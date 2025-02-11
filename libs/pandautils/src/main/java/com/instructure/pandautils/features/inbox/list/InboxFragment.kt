@@ -283,7 +283,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
 
     private fun deleteSelected(count: Int) {
         val message = resources.getQuantityString(R.plurals.inboxConfirmDelete, count)
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setMessage(message)
             .setPositiveButton(R.string.delete) { _, _ -> viewModel.deleteSelected() }
             .setNegativeButton(R.string.cancel, null)

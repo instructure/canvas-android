@@ -22,7 +22,7 @@
     <application>
         <activity
             android:name="com.instructure.pandautils.utils.AvatarCropActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"/>
 
         <!--Push Notifications-->
 

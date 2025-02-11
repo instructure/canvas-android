@@ -247,7 +247,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun askToDeleteDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader) {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         builder.setTitle(R.string.discussions_delete_title)
         builder.setMessage(R.string.discussions_delete_message)
         builder.setPositiveButton(R.string.delete) { _, _ ->

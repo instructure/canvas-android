@@ -279,7 +279,7 @@
                     android:textSize="16sp"
                     android:textColor="@color/textDarkest"/>
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/navigationDrawerShowGradesSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -310,7 +310,7 @@
                     android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/navigationDrawerColorOverlaySwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -27,6 +27,7 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.dismissExisting
+import com.instructure.student.R
 import com.instructure.student.databinding.DialogEditTextBinding
 import java.util.*
 import kotlin.properties.Delegates
@@ -75,7 +76,7 @@ class EditTextDialog : BaseCanvasAppCompatDialogFragment() {
         }
         binding.textInput.requestFocus()
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setCancelable(true)
             .setTitle(mTitle)
             .setView(binding.root)

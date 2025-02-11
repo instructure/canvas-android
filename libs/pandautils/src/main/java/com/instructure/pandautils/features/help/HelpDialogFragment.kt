@@ -53,7 +53,7 @@ class HelpDialogFragment : BaseCanvasDialogFragment() {
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext()).setTitle(requireContext().getString(R.string.help))
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog).setTitle(requireContext().getString(R.string.help))
 
         val binding = HelpDialogBinding.inflate(LayoutInflater.from(context))
         binding.lifecycleOwner = this

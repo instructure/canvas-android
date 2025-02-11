@@ -19,7 +19,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CanvasMaterialTheme_Default" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="CanvasMaterialTheme_Default" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/textDarkest</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>
@@ -42,7 +42,7 @@
         <item name="android:privateImeOptions">disableSticker=true;disableGifKeyboard=true</item>
     </style>
 
-    <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/textDarkest</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>
@@ -69,7 +69,7 @@
         <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
-    <style name="CanvasDialogTheme_Default" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="CanvasDialogTheme_Default" parent="Theme.Material3.DayNight.Dialog.Alert">
         <item name="colorPrimary">@color/textDarkest</item>
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>
@@ -92,7 +92,7 @@
         <item name="android:windowTitleStyle">@style/AccessibleAlertDialogTitle</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
         <item name="android:editTextStyle">@style/NoGifEditText</item>
         <item name="editTextStyle">@style/NoGifEditText</item>

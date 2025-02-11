@@ -38,7 +38,7 @@
     </style>
 
     <!-- Used for stand alone PSPDFKit activity, pdf fragment uses values in CanvasMaterialTheme_Default-->
-    <style name="PSPDFKitTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <style name="PSPDFKitTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/ash</item>
         <item name="colorAccent">@color/ash</item>
         <item name="colorPrimaryDark">@color/ash</item>

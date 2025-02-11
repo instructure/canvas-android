@@ -48,7 +48,7 @@ class MobileDataWarningDialog : BaseCanvasAppCompatDialogFragment() {
             addView(checkBox)
         }
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(R.string.utils_dataUsageWarningTitle)
                 .setMessage(R.string.utils_dataUsageWarningMessage)
                 .setView(checkBoxContainer)

@@ -76,7 +76,7 @@ class SyncSettingsFragment : BaseCanvasFragment(), FragmentInteractions {
     }
 
     private fun showWifiConfirmation(confirmationCallback: (Boolean) -> Unit) {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setTitle(R.string.syncSettings_wifiConfirmationTitle)
             .setMessage(R.string.synySettings_wifiConfirmationMessage)
             .setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -94,7 +94,7 @@ class SyncSettingsFragment : BaseCanvasFragment(), FragmentInteractions {
     }
 
     private fun showFrequencySelector(items: List<String>, selectedItemPosition: Int, onItemSelected: (Int) -> Unit) {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setTitle(R.string.syncSettings_syncFrequencyDialogTitle)
             .setSingleChoiceItems(items.toTypedArray(), selectedItemPosition) { dialog, selected ->
                 onItemSelected(selected)

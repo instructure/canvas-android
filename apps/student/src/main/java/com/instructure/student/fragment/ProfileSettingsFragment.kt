@@ -170,7 +170,7 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
     @SuppressLint("InflateParams")
     private fun pickAvatar() {
         val dialogBinding = DialogPhotoSourceBinding.inflate(layoutInflater)
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setView(dialogBinding.root)
                 .show()
                 .apply {

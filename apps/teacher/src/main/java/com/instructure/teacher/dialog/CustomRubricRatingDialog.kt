@@ -80,7 +80,7 @@ class CustomRubricRatingDialog : BaseCanvasAppCompatDialogFragment() {
             EventBus.getDefault().post(RatingSelectedEvent(newScore, mCriterionId, null, mStudentId))
         }
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setCancelable(true)
                 .setTitle(getString(R.string.criterion_rating_customize_score))
                 .setView(container)

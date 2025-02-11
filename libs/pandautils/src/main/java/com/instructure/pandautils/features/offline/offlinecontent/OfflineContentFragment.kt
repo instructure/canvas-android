@@ -144,7 +144,7 @@ class OfflineContentFragment : BaseCanvasFragment(), FragmentInteractions {
     override fun getFragment(): Fragment = this
 
     private fun showDialog(title: String, message: String, positive: String, positiveCallback: () -> Unit) {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setTitle(title)
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)

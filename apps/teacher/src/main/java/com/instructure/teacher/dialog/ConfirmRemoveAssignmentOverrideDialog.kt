@@ -35,7 +35,7 @@ class ConfirmRemoveAssignmentOverrideDialog : BaseCanvasAppCompatDialogFragment(
     init { retainInstance = true }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(R.string.removeDueDate)
                 .setMessage(R.string.removeDueDateMessage)
                 .setPositiveButton(R.string.remove, { _, _ -> mListener?.invoke() })

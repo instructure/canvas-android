@@ -39,7 +39,7 @@ class ConfirmDeleteFileFolderDialog : BaseCanvasAppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(if (isFile) R.string.deleteFile else R.string.deleteFolder)
                 .setMessage(if (isFile) R.string.deleteFileMessage else R.string.deleteFolderMessage)
                 .setPositiveButton(R.string.delete, { _, _ -> deleteCallback?.invoke() })

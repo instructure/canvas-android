@@ -104,7 +104,7 @@
                 android:paddingEnd="16dp"
                 android:minHeight="48dp">
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/acceptSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -64,7 +64,7 @@ class FreeTextDialog : BaseCanvasAppCompatDialogFragment() {
         ViewStyler.themeEditText(requireContext(), freeTextEditText, ThemePrefs.brandColor)
         freeTextEditText.inputType = EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                 .setTitle(requireContext().getString(R.string.inputText))
                 .setView(view)
                 .setPositiveButton(requireContext().getString(android.R.string.ok)) { _, _ ->

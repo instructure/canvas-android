@@ -192,7 +192,7 @@ class SettingsFragment : BaseCanvasFragment() {
 
             SettingsItem.SUBSCRIBE_TO_CALENDAR -> {
                 ApiPrefs.user?.calendar?.ics?.let { calendarFeed ->
-                    AlertDialog.Builder(requireContext())
+                    AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
                         .setMessage(R.string.subscribeToCalendarMessage)
                         .setPositiveButton(R.string.subscribeButton) { dialog, _ ->
                             dialog.dismiss()

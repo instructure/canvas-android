@@ -372,7 +372,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     private fun onLogout() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setTitle(R.string.logout_warning)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 Analytics.logEvent(AnalyticsEventConstants.LOGOUT)

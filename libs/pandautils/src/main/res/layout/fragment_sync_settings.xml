@@ -45,7 +45,7 @@
             app:theme="@style/ToolBarStyle"
             app:title="@string/syncSettings_toolbarTitle" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/autoSyncSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <androidx.appcompat.widget.SwitchCompat
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/wifiOnlySwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

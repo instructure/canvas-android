@@ -65,7 +65,7 @@ class PairingCodeDialogFragment : BaseCanvasDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         builder.setTitle(R.string.pairingCodeDialogTitle)
         builder.setMessage(R.string.pairingCodeDialogMessage)
         builder.setView(ComposeView(requireContext()).apply {

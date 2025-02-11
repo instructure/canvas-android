@@ -59,7 +59,7 @@ class ColorPickerDialog: BaseCanvasAppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         val binding = DialogColorPickerBinding.inflate(LayoutInflater.from(ContextThemeWrapper(requireActivity(), 0)))
         setupViews(binding)
         builder.setView(binding.root)

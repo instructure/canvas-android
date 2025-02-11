@@ -37,7 +37,7 @@ class PickerBadExtensionDialog : BaseCanvasDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
             .setCancelable(true)
             .setTitle(R.string.fileTypeNotSupported)
             .setMessage(getString(R.string.fileTypeNotSupportedBody, extensions.joinToString(", ")))

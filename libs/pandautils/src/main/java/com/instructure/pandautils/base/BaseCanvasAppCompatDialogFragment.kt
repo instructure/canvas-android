@@ -19,6 +19,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialDialogs
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
@@ -26,7 +28,7 @@ import com.instructure.pandautils.utils.showMasqueradeNotification
  * Base class for all Canvas AppCompatDialogFragments that contains cross-cutting concerns like analytics, locale and masquerading.
  * All classes should extend this that would normally extend [AppCompatDialogFragment] to ensure that these concerns are handled consistently across the app.
  */
-open class BaseCanvasAppCompatDialogFragment : AppCompatDialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
+open class BaseCanvasAppCompatDialogFragment : DialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
 
     override fun onStart() {
         super.onStart()
