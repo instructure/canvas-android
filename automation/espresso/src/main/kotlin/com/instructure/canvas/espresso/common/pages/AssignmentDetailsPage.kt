@@ -18,8 +18,10 @@ package com.instructure.canvas.espresso.common.pages
 
 import android.view.View
 import android.widget.ScrollView
+import androidx.test.espresso.AmbiguousViewMatcherException
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
@@ -211,13 +213,16 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSelectedAttempt(attemptNumber: Int) {
-        if(attemptNumber != 1) {
-            assertAttemptInformation()
+        try {
             onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)), withText("Attempt $attemptNumber"))).assertDisplayed()
         }
-        else {
-            assertNoAttemptSpinner()
-            onView(allOf(withId(R.id.attemptTitle), withParent(withId(R.id.attemptView)), withText("Attempt $attemptNumber"))).assertDisplayed()
+        catch(e: Exception) { // We need to check 'attemptView' if we don't find 'attemptTitle' under 'attemptSpinner' because if no 'attemptSpinner', the 'attemptTitle' will be placed under 'attemptView'.
+            when (e) {
+                is AmbiguousViewMatcherException, is NoMatchingViewException ->
+                    onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptView)), withText("Attempt $attemptNumber"))).assertDisplayed()
+                else -> throw e  // Re-throw other exceptions to avoid absorption of valid expections
+            }
+
         }
     }
 
@@ -235,7 +240,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(allOf(withId(R.id.attemptTitle), withText("Attempt $attemptNumber"))).click()
     }
 
-    private fun assertAttemptInformation() {
+    fun assertAttemptInformation() {
         waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
         waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
     }
