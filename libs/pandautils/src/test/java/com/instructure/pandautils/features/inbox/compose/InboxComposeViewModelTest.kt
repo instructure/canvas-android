@@ -416,14 +416,15 @@ class InboxComposeViewModelTest {
     fun `Inline search value changed`() = runTest {
         val viewmodel = getViewModel()
         val searchValue = TextFieldValue("searchValue")
-        val canvasContext: CanvasContext = mockk(relaxed = true)
+        val courseId = 1L
+        val canvasContext: CanvasContext = Course(id = courseId)
         val recipients = listOf(
             Recipient(stringId = "1"),
             Recipient(stringId = "2"),
             Recipient(stringId = "3"),
         )
 
-        coEvery { inboxComposeRepository.getRecipients(searchValue.text, canvasContext, any()) } returns DataResult.Success(recipients)
+        coEvery { inboxComposeRepository.getRecipients(searchValue.text, canvasContext.contextId, any()) } returns DataResult.Success(recipients)
 
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(canvasContext))
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(recipients.first()))
@@ -444,14 +445,15 @@ class InboxComposeViewModelTest {
     fun `Hide search results`() = runTest {
         val viewmodel = getViewModel()
         val searchValue = TextFieldValue("searchValue")
-        val canvasContext: CanvasContext = mockk(relaxed = true)
+        val courseId = 1L
+        val canvasContext: CanvasContext = Course(id = courseId)
         val recipients = listOf(
             Recipient(stringId = "1"),
             Recipient(stringId = "2"),
             Recipient(stringId = "3"),
         )
 
-        coEvery { inboxComposeRepository.getRecipients(searchValue.text, canvasContext, any()) } returns DataResult.Success(recipients)
+        coEvery { inboxComposeRepository.getRecipients(searchValue.text, canvasContext.contextId, any()) } returns DataResult.Success(recipients)
 
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(canvasContext))
         viewmodel.handleAction(InboxComposeActionHandler.SearchRecipientQueryChanged(searchValue))
@@ -489,14 +491,15 @@ class InboxComposeViewModelTest {
     @Test
     fun `Context Clicked action handler`() {
         val viewmodel = getViewModel()
-        val context = Course()
+        val courseId = 1L
+        val context = Course(id = courseId)
         coEvery { inboxComposeRepository.canSendToAll(any()) } returns DataResult.Success(false)
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(context))
 
         assertEquals(context, viewmodel.uiState.value.selectContextUiState.selectedCanvasContext)
         assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
 
-        coVerify(exactly = 1) { inboxComposeRepository.getRecipients(any(), context, any()) }
+        coVerify(exactly = 1) { inboxComposeRepository.getRecipients(any(), context.contextId, any()) }
     }
     //endregion
 
@@ -550,7 +553,7 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(course))
         viewmodel.handleAction(RecipientPickerActionHandler.RefreshCalled)
 
-        coVerify(exactly = 1) { inboxComposeRepository.getRecipients("", course, true) }
+        coVerify(exactly = 1) { inboxComposeRepository.getRecipients("", course.contextId, true) }
     }
 
     @Test
