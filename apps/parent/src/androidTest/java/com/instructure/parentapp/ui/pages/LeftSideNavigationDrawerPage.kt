@@ -40,6 +40,10 @@ class LeftSideNavigationDrawerPage: BasePage(R.id.drawer_layout) {
         onViewWithText(R.string.settings).click()
     }
 
+    fun clickInbox() {
+        onViewWithText(R.string.inbox).click()
+    }
+
     fun clickHelpMenu() {
         onViewWithText(R.string.help).click()
     }
