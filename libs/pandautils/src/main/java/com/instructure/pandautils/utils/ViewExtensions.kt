@@ -945,16 +945,20 @@ fun View.animateCircularBackgroundColorChange(endColor: Int, image: ImageView, d
 
 fun View.showSnackbar(
     @StringRes message: Int,
-    @StringRes actionTextRes: Int = R.string.retry,
-    @ColorRes actionTextColor: Int = R.color.white,
+    @StringRes actionTextRes: Int? = R.string.retry,
+    @ColorRes actionTextColor: Int? = R.color.white,
     actionCallback: (() -> Unit)? = null
 ) {
-    val snackbar = Snackbar.make(this, message, Snackbar.LENGTH_SHORT).apply {
+    val snackbar = Snackbar.make(this, message, Snackbar.LENGTH_SHORT)
+
+    actionTextColor?.let { snackbar.setActionTextColor(context.getColor(it)) }
+
+    actionTextRes?.let { textRes ->
         actionCallback?.let {
-            setAction(actionTextRes) { it() }
-            setActionTextColor(context.getColor(actionTextColor))
+            snackbar.setAction(textRes) { it() }
         }
     }
+
     snackbar.show()
     snackbar.view.requestAccessibilityFocus(1000)
 }
