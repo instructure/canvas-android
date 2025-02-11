@@ -233,7 +233,7 @@ class ModuleListView(
         negativeButton: Int,
         onConfirmed: () -> Unit
     ) {
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(context, R.style.AccessibleAlertDialog)
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(positiveButton) { _, _ ->
