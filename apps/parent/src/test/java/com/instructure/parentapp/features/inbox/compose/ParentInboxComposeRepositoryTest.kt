@@ -125,7 +125,7 @@ class ParentInboxComposeRepositoryTest {
 
         coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Success(expected)
 
-        val result = inboxComposeRepository.getRecipients("", course, true).dataOrThrow
+        val result = inboxComposeRepository.getRecipients("", course.contextId, true).dataOrThrow
 
         assertEquals(expected, result)
     }
@@ -134,7 +134,7 @@ class ParentInboxComposeRepositoryTest {
     fun `Get recipients with error`() = runTest {
         coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Fail()
 
-        inboxComposeRepository.getRecipients("", Course(), true).dataOrThrow
+        inboxComposeRepository.getRecipients("", Course(id = 1L).contextId, true).dataOrThrow
     }
 
     @Test
