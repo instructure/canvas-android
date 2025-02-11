@@ -1826,6 +1826,7 @@
     <string name="addNewStudent">Add new student</string>
     <string name="selectStudentColor">Select Student Color</string>
     <string name="errorSavingColor">An error occurred while saving your selection. Please try again.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Color saved successfully</string>
     <string name="changeStudentColorLabel">Change color for %s</string>
     <string name="studentColorContentDescriptionBlue">Electric, Blue</string>
     <string name="studentColorContentDescriptionPurple">Plum, Purple</string>

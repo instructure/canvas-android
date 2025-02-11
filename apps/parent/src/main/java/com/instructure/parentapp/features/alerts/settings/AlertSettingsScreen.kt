@@ -96,6 +96,7 @@ fun AlertSettingsScreen(
                 CanvasAppBar(
                     title = stringResource(id = R.string.alertSettingsTitle),
                     navIconRes = R.drawable.ic_back_arrow,
+                    navIconContentDescription = stringResource(id = R.string.back),
                     navigationActionClick = navigationActionClick,
                     backgroundColor = Color(uiState.userColor),
                     textColor = colorResource(id = R.color.textLightest),
