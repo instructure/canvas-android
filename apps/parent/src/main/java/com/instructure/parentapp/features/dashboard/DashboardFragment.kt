@@ -59,6 +59,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectDistinctUntilChanged
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -168,9 +169,11 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         when (action) {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.reloadData()
+                context?.let { announceAccessibilityText(it, getString(R.string.addStudentSuccessfull)) }
             }
             is AddStudentViewModelAction.UnpairStudentSuccess -> {
                 viewModel.reloadData()
+                context?.let { announceAccessibilityText(it, getString(R.string.unpairStudentSuccessfull)) }
             }
         }
     }

@@ -1836,6 +1836,7 @@
     <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
     <string name="featureFlags">Feature Flags</string>
     <string name="addStudent">Add Student</string>
+    <string name="addStudentSuccessfull">Student added successfully</string>
     <string name="addStudentTitle">Add student with…</string>
     <string name="addStudentQrCodeTitle">QR Code</string>
     <string name="addStudentQrCodeExplanation">Students can generate a QR code using the Canvas Student app on their mobile device</string>
@@ -1883,6 +1884,7 @@
     <string name="alertSettingsThresholdLabel">Grade percentage</string>
     <string name="unpairStudentTitle">Delete</string>
     <string name="unpairStudentMessage">This will unpair and remove all enrollments for this student from you account.</string>
+    <string name="unpairStudentSuccessfull">Student deleted successfully</string>
     <string name="alertSettingsMinThresholdError">Must be above %d</string>
     <string name="alertSettingsMaxThresholdError">Must be below %d</string>
     <string name="alertSettingsErrorMessage">An error occurred while fetching the alert settings.</string>

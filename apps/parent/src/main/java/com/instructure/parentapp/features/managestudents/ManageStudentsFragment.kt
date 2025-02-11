@@ -35,6 +35,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
@@ -85,10 +86,12 @@ class ManageStudentsFragment : BaseCanvasFragment() {
         when (action) {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.handleAction(ManageStudentsAction.Refresh)
+                context?.let { announceAccessibilityText(it, getString(R.string.addStudentSuccessfull)) }
             }
 
             is AddStudentViewModelAction.UnpairStudentSuccess -> {
                 viewModel.handleAction(ManageStudentsAction.Refresh)
+                context?.let { announceAccessibilityText(it, getString(R.string.unpairStudentSuccessfull)) }
             }
         }
     }
