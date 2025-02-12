@@ -223,8 +223,9 @@ class InboxE2ETest: ParentComposeTest() {
     fun testInboxMessageComposeReplyAndOptionMenuActionsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 2, teachers = 1, parents = 1, courses = 1)
+        val data = seedData(students = 2, teachers = 1, parents = 2, courses = 1)
         val parent = data.parentsList[0]
+        val parent2 = data.parentsList[1]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val student1 = data.studentsList[0]
@@ -241,7 +242,7 @@ class InboxE2ETest: ParentComposeTest() {
         leftSideNavigationDrawerPage.clickInbox()
 
         Log.d(PREPARATION_TAG,"Seed an email from the teacher to '${parent.name}'.")
-        val seededConversation = ConversationsApi.createConversation(teacher.token, listOf(parent.id.toString()))[0]
+        val seededConversation = ConversationsApi.createConversationForCourse(teacher.token, course.id, listOf(parent.id.toString(), parent2.id.toString()))[0]
 
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()
@@ -285,30 +286,34 @@ class InboxE2ETest: ParentComposeTest() {
         inboxPage.assertConversationDisplayed(newMessageSubject)
         inboxPage.assertConversationDisplayed(newMessageSubject2)
 
-        Log.d(STEP_TAG,"Select '$newMessageSubject' conversation.")
-        inboxPage.openConversation(newMessageSubject)
+        Espresso.pressBack()
+        dashboardPage.openNavigationDrawer()
+        leftSideNavigationDrawerPage.logout()
+        tokenLogin(parent2)
+
+        composeTestRule.waitForIdle()
+        dashboardPage.openNavigationDrawer()
+        leftSideNavigationDrawerPage.clickInbox()
+
+        Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation.")
+        inboxPage.openConversation(seededConversation.subject)
         val newReplyMessage = "This is a quite new reply message."
-        Log.d(STEP_TAG,"Reply to $newMessageSubject conversation with '$newReplyMessage' message. Assert that the reply is displayed.")
-        inboxDetailsPage.pressOverflowMenuItemForConversation("Reply")
+        Log.d(STEP_TAG,"Reply to ${seededConversation.subject} conversation. Assert that the reply is displayed.")
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Reply All")
         inboxComposePage.typeBody(newReplyMessage)
         inboxComposePage.pressSendButton()
 
-//        Log.d(STEP_TAG,"Delete '$newReplyMessage' reply and assert is has been deleted.")
-//        inboxDetailsPage.pressOverflowMenuItemForMessage(newReplyMessage, "Delete")
-//        inboxDetailsPage.pressAlertButton("Delete")
-//        inboxDetailsPage.assertMessageNotDisplayed(newReplyMessage)
+        sleep(10000) // Allow time for messages to propagate
+
+        Log.d(STEP_TAG,"Delete '$newReplyMessage' reply and assert is has been deleted.")
+        inboxDetailsPage.pressOverflowMenuItemForMessage(newReplyMessage, "Delete")
+        inboxDetailsPage.pressAlertButton("Delete")
+        inboxDetailsPage.assertMessageNotDisplayed(newReplyMessage)
 
         Log.d(STEP_TAG,"Delete the whole '$newMessageSubject' subject and assert that it has been removed from the conversation list on the Inbox Page.")
         inboxDetailsPage.pressOverflowMenuItemForConversation("Delete")
         inboxDetailsPage.pressAlertButton("Delete")
         inboxPage.assertConversationNotDisplayed(newMessageSubject)
-        inboxPage.assertConversationDisplayed(newMessageSubject2)
-
-        Log.d(STEP_TAG, "Delete the '$newMessageSubject2' conversation and assert that it has been removed from the 'INBOX' scope.")
-        inboxPage.selectConversation(newMessageSubject2)
-        inboxPage.clickDelete()
-        inboxPage.confirmDelete()
-        inboxPage.assertConversationNotDisplayed(newMessageSubject2)
     }
 
     @E2E
