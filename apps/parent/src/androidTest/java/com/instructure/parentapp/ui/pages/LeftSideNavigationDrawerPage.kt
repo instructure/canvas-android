@@ -17,6 +17,7 @@
 package com.instructure.parentapp.ui.pages
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
@@ -49,6 +50,7 @@ class LeftSideNavigationDrawerPage: BasePage(R.id.drawer_layout) {
     }
 
     fun clickLogout() {
+        onViewWithId(R.id.nav_view).perform(ViewActions.swipeUp())
         onViewWithText(R.string.logout).click()
     }
 
@@ -57,6 +59,7 @@ class LeftSideNavigationDrawerPage: BasePage(R.id.drawer_layout) {
     }
 
     fun clickSwitchUsers() {
+        onViewWithId(R.id.nav_view).perform(ViewActions.swipeUp())
         onViewWithText(R.string.navigationDrawerSwitchUsers).click()
     }
 

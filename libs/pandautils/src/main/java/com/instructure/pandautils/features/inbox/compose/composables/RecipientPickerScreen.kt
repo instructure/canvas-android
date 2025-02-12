@@ -106,8 +106,15 @@ fun RecipientPickerScreen(
                                 .padding(padding)
                         ) {
                             if (uiState.screenState != ScreenState.Loading && uiState.screenState != ScreenState.Error) {
+                                val searchContext = if (uiState.selectedRole == null) stringResource(
+                                    R.string.inboxAllRecipients
+                                ) else uiState.selectedRole.displayText
                                 SearchField(
                                     value = uiState.searchValue,
+                                    placeholder = stringResource(
+                                        R.string.inboxSearchIn,
+                                        searchContext
+                                    ),
                                     actionHandler = actionHandler
                                 )
                             }
@@ -386,6 +393,7 @@ private fun RecipientRow(
 @Composable
 private fun SearchField(
     value: TextFieldValue,
+    placeholder: String?,
     actionHandler: (RecipientPickerActionHandler) -> Unit
 ) {
     Column {
@@ -409,7 +417,7 @@ private fun SearchField(
                 value = value,
                 onValueChange = { actionHandler(RecipientPickerActionHandler.SearchValueChanged(it)) },
                 singleLine = true,
-                placeholder = stringResource(id = R.string.search),
+                placeholder = placeholder,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -613,6 +621,7 @@ fun RecipientPickerEmptyScreenPreview() {
 fun SearchFieldPreview() {
     SearchField(
         value = TextFieldValue(""),
+        placeholder = "Search",
         actionHandler = {}
     )
 }
