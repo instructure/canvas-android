@@ -4,6 +4,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -29,11 +30,13 @@ class TeacherInboxComposeRepositoryTest {
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
+    private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
 
     private val inboxComposeRepository = TeacherInboxComposeRepository(
         courseAPI,
         recipientAPI,
         inboxAPI,
+        inboxSettingsManager
     )
 
     @After
@@ -139,5 +142,16 @@ class TeacherInboxComposeRepositoryTest {
         coEvery { inboxAPI.createConversation(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
         inboxComposeRepository.createConversation(emptyList(), "", "", Course(), emptyList(), false).dataOrThrow
+    }
+
+    @Test
+    fun `Get signature successfully`() = runTest {
+        val expected = "signature"
+
+        coEvery { inboxSettingsManager.getInboxSignature() } returns expected
+
+        val result = inboxComposeRepository.getInboxSignature()
+
+        assertEquals(expected, result)
     }
 }
