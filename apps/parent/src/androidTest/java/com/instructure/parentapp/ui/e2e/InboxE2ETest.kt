@@ -256,11 +256,11 @@ class InboxE2ETest: ParentComposeTest() {
         val newMessage = "Just checking in"
         Log.d(STEP_TAG,"Create a new message with subject: '$newMessageSubject', and message: '$newMessage'")
         inboxCoursePickerPage.selectCourseWithUser(course.name, student1.shortName)
-        inboxComposePage.typeSubject(newMessageSubject)
-        inboxComposePage.typeBody(newMessage)
+        inboxComposeMessagePage.typeSubject(newMessageSubject)
+        inboxComposeMessagePage.typeBody(newMessage)
 
         Log.d(STEP_TAG,"Click on 'Send' button.")
-        inboxComposePage.pressSendButton()
+        inboxComposeMessagePage.pressSendButton()
 
         composeTestRule.waitForIdle()
         sleep(1000) // Allow time for messages to propagate
@@ -272,11 +272,11 @@ class InboxE2ETest: ParentComposeTest() {
         val newMessage2 = "Testing body for second message"
         Log.d(STEP_TAG,"Create a new message with subject: '$newMessageSubject2', and message: '$newMessage2'")
         inboxCoursePickerPage.selectCourseWithUser(course.name, student2.shortName)
-        inboxComposePage.typeSubject(newMessageSubject2)
-        inboxComposePage.typeBody(newMessage2)
+        inboxComposeMessagePage.typeSubject(newMessageSubject2)
+        inboxComposeMessagePage.typeBody(newMessage2)
 
         Log.d(STEP_TAG,"Click on 'Send' button.")
-        inboxComposePage.pressSendButton()
+        inboxComposeMessagePage.pressSendButton()
 
         sleep(2000) // Allow time for messages to propagate
 
@@ -286,12 +286,20 @@ class InboxE2ETest: ParentComposeTest() {
         inboxPage.assertConversationDisplayed(newMessageSubject)
         inboxPage.assertConversationDisplayed(newMessageSubject2)
 
+        Log.d(STEP_TAG, "Log out from ${parent.name} account.")
         Espresso.pressBack()
         dashboardPage.openNavigationDrawer()
-        leftSideNavigationDrawerPage.logout()
-        tokenLogin(parent2)
-
         composeTestRule.waitForIdle()
+        leftSideNavigationDrawerPage.clickLogout()
+        composeTestRule.waitForIdle()
+        leftSideNavigationDrawerPage.clickOk()
+        composeTestRule.waitForIdle()
+
+        Log.d(STEP_TAG, "Log in to ${parent2.name} account.")
+        tokenLogin(parent2)
+        composeTestRule.waitForIdle()
+
+        Log.d(STEP_TAG, "Open Inbox")
         dashboardPage.openNavigationDrawer()
         leftSideNavigationDrawerPage.clickInbox()
 
@@ -300,10 +308,8 @@ class InboxE2ETest: ParentComposeTest() {
         val newReplyMessage = "This is a quite new reply message."
         Log.d(STEP_TAG,"Reply to ${seededConversation.subject} conversation. Assert that the reply is displayed.")
         inboxDetailsPage.pressOverflowMenuItemForConversation("Reply All")
-        inboxComposePage.typeBody(newReplyMessage)
-        inboxComposePage.pressSendButton()
-
-        sleep(10000) // Allow time for messages to propagate
+        inboxComposeMessagePage.typeBody(newReplyMessage)
+        inboxComposeMessagePage.pressSendButton()
 
         Log.d(STEP_TAG,"Delete '$newReplyMessage' reply and assert is has been deleted.")
         inboxDetailsPage.pressOverflowMenuItemForMessage(newReplyMessage, "Delete")
