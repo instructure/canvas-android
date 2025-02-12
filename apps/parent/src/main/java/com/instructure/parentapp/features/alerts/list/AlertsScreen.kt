@@ -155,7 +155,7 @@ fun AlertsListContent(
 ) {
     LazyColumn(
         state = lazyListState,
-        modifier = modifier
+        modifier = modifier.testTag("alertsList")
     ) {
         items(uiState.alerts, key = { it.alertId }) { alert ->
             AlertsListItem(

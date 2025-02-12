@@ -18,6 +18,7 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
+import com.instructure.canvas.espresso.StubLandscape
 import com.instructure.canvas.espresso.common.pages.compose.GradesPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addGradingPeriod
@@ -86,6 +87,7 @@ abstract class GradesInteractionTest : CanvasComposeTest() {
     }
 
     @Test
+    @StubLandscape //Landscape works differently
     fun cardTextChangesWhenScrolled() {
         val data = initData()
         val course = data.courses.values.first()
