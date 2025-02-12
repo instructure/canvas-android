@@ -27,11 +27,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,7 +74,7 @@ fun SelectContextScreen(
     @DrawableRes navIconRes: Int = R.drawable.ic_close,
 ) {
     Scaffold(
-        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        containerColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CanvasAppBar(
                 title = title,

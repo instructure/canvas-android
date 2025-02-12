@@ -23,13 +23,13 @@ import androidx.annotation.FontRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LocalRippleConfiguration
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RippleConfiguration
-import androidx.compose.material.Typography
 import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalRippleConfiguration
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RippleConfiguration
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
@@ -42,13 +42,27 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import com.instructure.pandautils.R
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CanvasTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         typography = typography.copy(
-            button = typography.button.copy(letterSpacing = TextUnit(0.5f, TextUnitType.Sp)),
-            body1 = typography.body1.copy(letterSpacing = TextUnit(0.0f, TextUnitType.Sp))
+            displayLarge = typography.displayLarge.copy(fontFamily = lato),
+            displayMedium = typography.displayMedium.copy(fontFamily = lato),
+            displaySmall = typography.displaySmall.copy(fontFamily = lato),
+            headlineLarge = typography.headlineLarge.copy(fontFamily = lato),
+            headlineMedium = typography.headlineMedium.copy(fontFamily = lato),
+            headlineSmall = typography.headlineSmall.copy(fontFamily = lato),
+            titleLarge = typography.titleLarge.copy(fontFamily = lato),
+            titleMedium = typography.titleMedium.copy(fontFamily = lato),
+            titleSmall = typography.titleSmall.copy(fontFamily = lato),
+            bodyLarge = typography.bodyLarge.copy(fontFamily = lato),
+            bodyMedium = typography.bodyMedium.copy(letterSpacing = TextUnit(0.0f, TextUnitType.Sp), fontFamily = lato),
+            bodySmall = typography.bodySmall.copy(fontFamily = lato),
+            labelLarge = typography.labelLarge.copy(fontFamily = lato),
+            labelMedium = typography.labelMedium.copy(letterSpacing = TextUnit(0.5f, TextUnitType.Sp), fontFamily = lato),
+            labelSmall = typography.labelSmall.copy(fontFamily = lato),
+
         )
     ) {
         CompositionLocalProvider(
@@ -67,18 +81,31 @@ private val lato = FontFamily(
     Font(R.font.lato_regular)
 )
 
-private var typography = Typography(
-    defaultFontFamily = lato,
-)
+private var typography = Typography()
 
 fun overrideComposeFonts(@FontRes fontResource: Int) {
     val newFont = FontFamily(
         Font(fontResource)
     )
 
-    typography = Typography(
-        defaultFontFamily = newFont,
-    )
+    typography = typography.copy(
+        displayLarge = typography.displayLarge.copy(fontFamily = newFont),
+        displayMedium = typography.displayMedium.copy(fontFamily = newFont),
+        displaySmall = typography.displaySmall.copy(fontFamily = newFont),
+        headlineLarge = typography.headlineLarge.copy(fontFamily = newFont),
+        headlineMedium = typography.headlineMedium.copy(fontFamily = newFont),
+        headlineSmall = typography.headlineSmall.copy(fontFamily = newFont),
+        titleLarge = typography.titleLarge.copy(fontFamily = newFont),
+        titleMedium = typography.titleMedium.copy(fontFamily = newFont),
+        titleSmall = typography.titleSmall.copy(fontFamily = newFont),
+        bodyLarge = typography.bodyLarge.copy(fontFamily = newFont),
+        bodyMedium = typography.bodyMedium.copy(letterSpacing = TextUnit(0.0f, TextUnitType.Sp), fontFamily = newFont),
+        bodySmall = typography.bodySmall.copy(fontFamily = newFont),
+        labelLarge = typography.labelLarge.copy(fontFamily = newFont),
+        labelMedium = typography.labelMedium.copy(letterSpacing = TextUnit(0.5f, TextUnitType.Sp), fontFamily = newFont),
+        labelSmall = typography.labelSmall.copy(fontFamily = newFont),
+
+        )
 }
 
 private fun getRippleAlpha(isSystemInDarkTheme: Boolean): RippleAlpha {

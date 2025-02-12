@@ -16,7 +16,7 @@
 package com.instructure.parentapp.ui.compose.alerts.list
 
 import android.graphics.Color
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterialApi
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyDescendant

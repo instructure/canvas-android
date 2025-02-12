@@ -13,7 +13,6 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 
 package com.instructure.pandautils.features.calendar.composables
 
@@ -26,7 +25,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,15 +44,11 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.material.rememberSwipeableState
-import androidx.compose.material.swipeable
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -170,17 +164,6 @@ fun Calendar(
         )
         HorizontalPager(
             modifier = Modifier
-                .swipeable(
-                    state = rememberSwipeableState(
-                        initialValue = if (calendarUiState.expanded) 1f else 0f,
-                        confirmStateChange = {
-                            actionHandler(CalendarAction.ExpandChanged(it == 1f))
-                            true
-                        }),
-                    orientation = Orientation.Vertical,
-                    anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
-                    thresholds = { _, _ -> FractionalThreshold(0.5f) },
-                )
                 .testTag("calendarPager"),
             state = pagerState,
             beyondViewportPageCount = 2,
@@ -325,7 +308,7 @@ fun CalendarHeader(
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(4.dp), color = Color(ThemePrefs.buttonColor), backgroundColor = colorResource(id = R.color.backgroundLightest)
+                    .height(4.dp), color = Color(ThemePrefs.buttonColor), trackColor = colorResource(id = R.color.backgroundLightest)
             )
         } else {
             Spacer(modifier = Modifier.height(4.dp))

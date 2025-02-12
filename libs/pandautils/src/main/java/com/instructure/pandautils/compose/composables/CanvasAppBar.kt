@@ -17,10 +17,12 @@ package com.instructure.pandautils.compose.composables
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,7 @@ import com.instructure.pandautils.R
 /**
  * App bar for edit screens/modal screens, the colors are always the same and has smaller elevation.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CanvasAppBar(
     title: String,
@@ -55,9 +58,13 @@ fun CanvasAppBar(
                 modifier = Modifier.semantics { heading() },
             )
         },
-        elevation = 2.dp,
-        backgroundColor = backgroundColor,
-        contentColor = textColor,
+        colors = TopAppBarColors(
+            containerColor = backgroundColor,
+            titleContentColor = textColor,
+            scrolledContainerColor = backgroundColor,
+            navigationIconContentColor = textColor,
+            actionIconContentColor = textColor
+        ),
         navigationIcon = {
             IconButton(
                 modifier = Modifier.testTag("navigationButton"),

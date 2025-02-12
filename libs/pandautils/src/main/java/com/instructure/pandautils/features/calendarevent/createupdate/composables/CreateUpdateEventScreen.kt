@@ -32,16 +32,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -178,7 +178,7 @@ internal fun CreateUpdateEventScreen(
     }
 
     Scaffold(
-        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        containerColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CreateUpdateEventTopAppBar(
                 title = title,
@@ -573,7 +573,7 @@ private fun LabeledTextField(
                     contentDescription = label
                 },
             cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-            textStyle = MaterialTheme.typography.body1.copy(
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
                 color = colorResource(id = R.color.textDarkest),
             )
         )
@@ -635,7 +635,7 @@ private fun TitleInput(
                     contentDescription = hintText
                 },
             cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
-            textStyle = MaterialTheme.typography.body1.copy(
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
                 color = colorResource(id = R.color.textDark),
             ),
             maxLines = 2

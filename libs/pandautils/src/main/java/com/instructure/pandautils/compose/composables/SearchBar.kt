@@ -23,12 +23,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -117,21 +117,20 @@ fun SearchBar(
                         }
                     }
                 ),
-                textStyle = MaterialTheme.typography.body1,
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
+                textStyle = MaterialTheme.typography.bodyMedium,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
                     focusedIndicatorColor = tintColor,
                     cursorColor = tintColor,
                     focusedLabelColor = tintColor,
-                    leadingIconColor = tintColor,
-                    trailingIconColor = tintColor,
-                    textColor = tintColor,
-                    disabledTextColor = tintColor.copy(alpha = 0.5f),
+                    focusedLeadingIconColor = tintColor,
+                    focusedTrailingIconColor = tintColor,
+                    focusedTextColor = tintColor,
+                    disabledTextColor = tintColor,
                     unfocusedLabelColor = tintColor.copy(alpha = 0.5f),
                     unfocusedIndicatorColor = tintColor.copy(alpha = 0.5f),
                     disabledLeadingIconColor = tintColor.copy(alpha = 0.5f),
                     disabledTrailingIconColor = tintColor.copy(alpha = 0.5f),
-                    placeholderColor = tintColor.copy(alpha = 0.5f),
                 ),
                 leadingIcon = {
                     Icon(

@@ -30,17 +30,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,7 +89,7 @@ fun InboxDetailsScreen(
 ) {
     CanvasTheme {
         Scaffold(
-            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            containerColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 AppBar(title, uiState, actionHandler)
             },
@@ -100,6 +100,7 @@ fun InboxDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppBar(
     title: String,
@@ -114,8 +115,8 @@ private fun AppBar(
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        navigationIcon = if (uiState.showBackButton) {
-            {
+        navigationIcon = {
+            if (uiState.showBackButton) {
                 IconButton(onClick = { actionHandler(InboxDetailsAction.CloseFragment) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_back_arrow),
@@ -123,19 +124,21 @@ private fun AppBar(
                     )
                 }
             }
-        } else null,
+        },
         actions = {
             AppBarMenu(uiState.conversation, actionHandler)
         },
-        backgroundColor = Color(color = ThemePrefs.primaryColor),
-        contentColor = Color(color = ThemePrefs.primaryTextColor),
-        elevation = 0.dp,
+        colors = TopAppBarDefaults.topAppBarColors().copy(
+            containerColor = Color(color = ThemePrefs.primaryColor),
+            titleContentColor = Color(color = ThemePrefs.primaryTextColor),
+        ),
         modifier = Modifier
             .height(64.dp)
             .testTag("toolbar"),
     )
 }
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InboxDetailsScreenContent(
     padding: PaddingValues,
@@ -143,14 +146,16 @@ private fun InboxDetailsScreenContent(
     messageActionHandler: (MessageAction) -> Unit,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
-    val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
-        actionHandler(InboxDetailsAction.RefreshCalled)
-    })
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    Box(
+    PullToRefreshBox(
+        state = pullToRefreshState,
+        isRefreshing = false,
+        onRefresh = {
+            actionHandler(InboxDetailsAction.RefreshCalled)
+        },
         modifier = Modifier
             .fillMaxSize()
-            .pullRefresh(pullToRefreshState)
             .padding(padding)
     ) {
         when (uiState.state) {
@@ -170,14 +175,6 @@ private fun InboxDetailsScreenContent(
                 InboxDetailsContentView(uiState, actionHandler, messageActionHandler)
             }
         }
-
-        PullRefreshIndicator(
-            refreshing = uiState.state == ScreenState.Loading,
-            state = pullToRefreshState,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .testTag("pullRefreshIndicator"),
-        )
     }
 }
 
@@ -262,11 +259,22 @@ private fun InboxDetailsContentView(
 
             Spacer(Modifier.width(8.dp))
 
-            IconButton(onClick = { actionHandler(InboxDetailsAction.UpdateStarred(conversation.id, !conversation.isStarred)) }) {
+            IconButton(onClick = {
+                actionHandler(
+                    InboxDetailsAction.UpdateStarred(
+                        conversation.id,
+                        !conversation.isStarred
+                    )
+                )
+            }) {
                 Icon(
-                    painter = if (conversation.isStarred) painterResource(id = R.drawable.ic_star_filled) else painterResource(id = R.drawable.ic_star_outline),
+                    painter = if (conversation.isStarred) painterResource(id = R.drawable.ic_star_filled) else painterResource(
+                        id = R.drawable.ic_star_outline
+                    ),
                     tint = colorResource(id = R.color.textDarkest),
-                    contentDescription = if (conversation.isStarred) stringResource(id = R.string.unstarSelected) else stringResource(id = R.string.starSelected),
+                    contentDescription = if (conversation.isStarred) stringResource(id = R.string.unstarSelected) else stringResource(
+                        id = R.string.starSelected
+                    ),
                     modifier = Modifier
                         .padding(vertical = 16.dp)
                 )
@@ -302,37 +310,87 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
         }
     ) {
         conversation?.messages?.sortedBy { it.createdAt }?.last()?.let { message ->
-            if (!conversation.cannotReply){
+            if (!conversation.cannotReply) {
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.reply),
+                            color = colorResource(id = R.color.textDarkest),
+                            fontSize = 16.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_reply),
+                            contentDescription = stringResource(id = R.string.reply),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(InboxDetailsAction.Reply(message))
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
-                }
+                )
 
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.replyAll),
+                            color = colorResource(id = R.color.textDarkest),
+                            fontSize = 16.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_reply_all),
+                            contentDescription = stringResource(id = R.string.replyAll),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(InboxDetailsAction.ReplyAll(message))
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
-                }
+                )
             }
 
             DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.forward),
+                        color = colorResource(id = R.color.textDarkest),
+                        fontSize = 16.sp
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_forward),
+                        contentDescription = stringResource(id = R.string.forward),
+                        tint = colorResource(id = R.color.textDarkest)
+                    )
+                },
                 onClick = {
                     showMenu = !showMenu
                     actionHandler(InboxDetailsAction.Forward(message))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
-            }
+            )
 
             if (conversation.workflowState == Conversation.WorkflowState.READ) {
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.markAsUnread),
+                            color = colorResource(id = R.color.textDarkest),
+                            fontSize = 16.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_mark_as_unread),
+                            contentDescription = stringResource(id = R.string.markAsUnread),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(
@@ -342,16 +400,25 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
                             )
                         )
                     }
-                ) {
-                    MessageMenuItem(
-                        R.drawable.ic_mark_as_unread,
-                        stringResource(id = R.string.markAsUnread)
-                    )
-                }
+                )
             }
 
             if (conversation.workflowState == Conversation.WorkflowState.UNREAD) {
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.markAsRead),
+                            color = colorResource(id = R.color.textDarkest),
+                            fontSize = 16.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_mark_as_read),
+                            contentDescription = stringResource(id = R.string.markAsRead),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(
@@ -361,16 +428,25 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
                             )
                         )
                     }
-                ) {
-                    MessageMenuItem(
-                        R.drawable.ic_mark_as_read,
-                        stringResource(id = R.string.markAsRead)
-                    )
-                }
+                )
             }
 
             if (conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.archive),
+                            color = colorResource(id = R.color.textDarkest),
+                            fontSize = 16.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_archive),
+                            contentDescription = stringResource(id = R.string.archive),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(
@@ -380,11 +456,23 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
                             )
                         )
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
-                }
+                )
             } else {
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(id = R.string.unarchive),
+                            color = colorResource(id = R.color.textDarkest),
+                            fontSize = 16.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_unarchive),
+                            contentDescription = stringResource(id = R.string.unarchive),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(
@@ -394,22 +482,29 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
                             )
                         )
                     }
-                ) {
-                    MessageMenuItem(
-                        R.drawable.ic_unarchive,
-                        stringResource(id = R.string.unarchive)
-                    )
-                }
+                )
             }
 
             DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.delete),
+                        color = colorResource(id = R.color.textDarkest),
+                        fontSize = 16.sp
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_trash),
+                        contentDescription = stringResource(id = R.string.delete),
+                        tint = colorResource(id = R.color.textDarkest)
+                    )
+                },
                 onClick = {
                     showMenu = !showMenu
                     actionHandler(InboxDetailsAction.DeleteConversation(conversation.id))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
-            }
+            )
         }
 
     }
@@ -420,12 +515,16 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
 fun InboxDetailsScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
 
-    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
-        conversationId = 1,
-        conversation = null,
-        messageStates = emptyList(),
-        state = ScreenState.Loading
-    ))
+    InboxDetailsScreen(title = "Message",
+        actionHandler = {},
+        messageActionHandler = {},
+        uiState = InboxDetailsUiState(
+            conversationId = 1,
+            conversation = null,
+            messageStates = emptyList(),
+            state = ScreenState.Loading
+        )
+    )
 }
 
 @Composable
@@ -433,12 +532,16 @@ fun InboxDetailsScreenLoadingPreview() {
 fun InboxDetailsScreenErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
 
-    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
-        conversationId = 1,
-        conversation = null,
-        messageStates = emptyList(),
-        state = ScreenState.Error
-    ))
+    InboxDetailsScreen(title = "Message",
+        actionHandler = {},
+        messageActionHandler = {},
+        uiState = InboxDetailsUiState(
+            conversationId = 1,
+            conversation = null,
+            messageStates = emptyList(),
+            state = ScreenState.Error
+        )
+    )
 }
 
 @Composable
@@ -446,12 +549,16 @@ fun InboxDetailsScreenErrorPreview() {
 fun InboxDetailsScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
 
-    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
-        conversationId = 1,
-        conversation = Conversation(),
-        messageStates = emptyList(),
-        state = ScreenState.Empty
-    ))
+    InboxDetailsScreen(title = "Message",
+        actionHandler = {},
+        messageActionHandler = {},
+        uiState = InboxDetailsUiState(
+            conversationId = 1,
+            conversation = Conversation(),
+            messageStates = emptyList(),
+            state = ScreenState.Empty
+        )
+    )
 }
 
 @Composable
@@ -494,7 +601,9 @@ fun InboxDetailsScreenContentPreview() {
 
     val messageStates = messages.map { message ->
         val author = conversation.participants.find { it.id == message.authorId }
-        val recipients = conversation.participants.filter { message.participatingUserIds.filter { it != message.authorId }.contains(it.id) }
+        val recipients = conversation.participants.filter {
+            message.participatingUserIds.filter { it != message.authorId }.contains(it.id)
+        }
         InboxMessageUiState(
             message = message,
             author = author,
@@ -503,10 +612,14 @@ fun InboxDetailsScreenContentPreview() {
         )
     }
 
-    InboxDetailsScreen(title = "Message", actionHandler = {}, messageActionHandler = {}, uiState = InboxDetailsUiState(
-        conversationId = 1,
-        conversation = conversation,
-        messageStates = messageStates,
-        state = ScreenState.Success
-    ))
+    InboxDetailsScreen(title = "Message",
+        actionHandler = {},
+        messageActionHandler = {},
+        uiState = InboxDetailsUiState(
+            conversationId = 1,
+            conversation = conversation,
+            messageStates = messageStates,
+            state = ScreenState.Success
+        )
+    )
 }

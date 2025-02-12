@@ -36,12 +36,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -101,6 +105,7 @@ fun SmartSearchScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SmartSearchScreenContent(
     uiState: SmartSearchUiState,
@@ -111,7 +116,7 @@ private fun SmartSearchScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                backgroundColor = Color(uiState.canvasContext.color),
+                colors = TopAppBarDefaults.topAppBarColors(Color(uiState.canvasContext.color)),
                 navigationIcon = {
                     IconButton(onClick = { navigationItemClick() }) {
                         Icon(
@@ -349,7 +354,7 @@ private fun CourseHeader(title: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            backgroundColor = colorResource(R.color.backgroundLightestElevated)
+            colors = CardDefaults.cardColors(colorResource(R.color.backgroundLightestElevated))
         ) {
             Column(
                 modifier = Modifier.padding(

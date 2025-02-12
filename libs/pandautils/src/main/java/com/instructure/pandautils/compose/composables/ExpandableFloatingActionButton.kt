@@ -36,9 +36,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -104,8 +104,7 @@ fun ExpandableFloatingActionButton(
         val onClickAnnounce = stringResource(announceRes)
         val localView = LocalView.current
         FloatingActionButton(
-            shape = shape,
-            backgroundColor = backgroundColor,
+            containerColor = backgroundColor,
             contentColor = contentColor,
             onClick = { expanded.value = !expanded.value },
             modifier = Modifier

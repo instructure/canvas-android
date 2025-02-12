@@ -35,15 +35,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -89,7 +89,7 @@ internal fun CustomFrequencyScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
-        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        containerColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CanvasAppBar(
                 title = stringResource(id = R.string.eventCustomFrequencyScreenTitle),
@@ -194,11 +194,11 @@ private fun CustomFrequencyContent(
                         .padding(horizontal = 16.dp),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = colorResource(id = R.color.borderMedium),
-                        focusedBorderColor = colorResource(id = R.color.borderInfo),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = colorResource(id = R.color.borderMedium),
+                        focusedContainerColor = colorResource(id = R.color.borderInfo),
                         cursorColor = colorResource(id = R.color.textDarkest),
-                        textColor = colorResource(id = R.color.textDark)
+                        focusedTextColor = colorResource(id = R.color.textDark)
                     )
                 )
                 Dropdown(

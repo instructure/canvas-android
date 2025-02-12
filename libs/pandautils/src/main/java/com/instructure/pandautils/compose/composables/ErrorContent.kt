@@ -23,10 +23,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,14 +66,12 @@ fun ErrorContent(errorMessage: String, modifier: Modifier = Modifier, retryClick
                 onClick = { retryClick() },
                 border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
                 shape = RoundedCornerShape(4.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundLightest))
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.backgroundLightest),
+                    contentColor = colorResource(id = R.color.textDark))
             ) {
                 Text(
                     text = stringResource(id = R.string.errorContentRetryButton),
                     fontSize = 16.sp,
-                    color = colorResource(
-                        id = R.color.textDark
-                    ),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )

@@ -35,13 +35,13 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshDefaults
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -134,24 +134,27 @@ fun CalendarEvents(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarEventsPage(
     calendarEventsPageUiState: CalendarEventsPageUiState,
     actionHandler: (CalendarAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = calendarEventsPageUiState.refreshing,
-        onRefresh = { actionHandler(CalendarAction.PullToRefresh) },
-        refreshThreshold = PullRefreshDefaults.RefreshingOffset
-    )
+    val pullRefreshState = rememberPullToRefreshState()
 
-    Box(modifier.pullRefresh(pullRefreshState).testTag("calendarEventItemsBox")) {
+    PullToRefreshBox(
+        isRefreshing = calendarEventsPageUiState.refreshing,
+        state = pullRefreshState,
+        onRefresh = { actionHandler(CalendarAction.PullToRefresh) },
+        modifier = modifier
+            .testTag("calendarEventItemsBox")
+    ) {
         if (calendarEventsPageUiState.events.isNotEmpty()) {
             LazyColumn(
                 Modifier
-                    .fillMaxSize().testTag("calendarEventsList"), verticalArrangement = Arrangement.Top
+                    .fillMaxSize()
+                    .testTag("calendarEventsList"), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
                     CalendarEventItem(eventUiState = it, { id ->
@@ -169,16 +172,10 @@ fun CalendarEventsPage(
         } else {
             CalendarEventsEmpty(
                 Modifier
-                    .fillMaxSize().testTag("calendarEventsEmpty")
+                    .fillMaxSize()
+                    .testTag("calendarEventsEmpty")
             )
         }
-
-        PullRefreshIndicator(
-            refreshing = calendarEventsPageUiState.refreshing,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
-            backgroundColor = colorResource(id = R.color.white),
-        )
     }
 }
 
@@ -211,25 +208,33 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
                 text = eventUiState.contextName,
                 fontSize = 14.sp,
                 color = contextColor,
-                modifier = Modifier.padding(vertical = 1.dp).testTag("contextName")
+                modifier = Modifier
+                    .padding(vertical = 1.dp)
+                    .testTag("contextName")
             )
             Text(
                 text = eventUiState.name,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest),
-                modifier = Modifier.padding(vertical = 1.dp).testTag("eventTitle")
+                modifier = Modifier
+                    .padding(vertical = 1.dp)
+                    .testTag("eventTitle")
             )
             if (eventUiState.date != null) Text(
                 text = eventUiState.date,
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.textDark),
-                modifier = Modifier.padding(vertical = 1.dp).testTag("eventDate")
+                modifier = Modifier
+                    .padding(vertical = 1.dp)
+                    .testTag("eventDate")
             )
             if (eventUiState.status != null) Text(
                 text = eventUiState.status,
                 fontSize = 14.sp,
                 color = Color(ThemePrefs.brandColor),
-                modifier = Modifier.padding(vertical = 1.dp).testTag("eventStatus")
+                modifier = Modifier
+                    .padding(vertical = 1.dp)
+                    .testTag("eventStatus")
             )
         }
     }

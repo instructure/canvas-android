@@ -43,20 +43,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -92,7 +92,7 @@ import com.instructure.pandautils.utils.drawableId
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GradesScreen(
     uiState: GradesUiState,
@@ -112,7 +112,7 @@ fun GradesScreen(
             }
         }
         Scaffold(
-            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            containerColor = colorResource(id = R.color.backgroundLightest),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
         ) { padding ->
             if (uiState.gradePreferencesUiState.show) {
@@ -122,16 +122,15 @@ fun GradesScreen(
                 )
             }
 
-            val pullRefreshState = rememberPullRefreshState(
-                refreshing = uiState.isRefreshing,
+            val pullRefreshState = rememberPullToRefreshState()
+            PullToRefreshBox(
+                isRefreshing = uiState.isRefreshing,
                 onRefresh = {
                     actionHandler(GradesAction.Refresh())
-                }
-            )
-            Box(
+                },
                 modifier = Modifier
-                    .padding(padding)
-                    .pullRefresh(pullRefreshState)
+                    .padding(padding),
+                state = pullRefreshState
             ) {
                 when {
                     uiState.isError -> {
@@ -160,14 +159,6 @@ fun GradesScreen(
                         )
                     }
                 }
-                PullRefreshIndicator(
-                    refreshing = uiState.isRefreshing,
-                    state = pullRefreshState,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .testTag("pullRefreshIndicator"),
-                    contentColor = Color(uiState.canvasContextColor)
-                )
             }
         }
     }
@@ -340,8 +331,8 @@ private fun GradesCard(
                 .semantics(true) {}
                 .weight(1f),
             shape = RoundedCornerShape(6.dp),
-            backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-            elevation = 8.dp
+            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.backgroundLightestElevated)),
+            elevation = CardDefaults.cardElevation(8.dp)
         ) {
             Row(
                 modifier = Modifier

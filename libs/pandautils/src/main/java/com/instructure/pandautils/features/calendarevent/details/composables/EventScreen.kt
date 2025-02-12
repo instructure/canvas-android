@@ -27,15 +27,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -104,7 +104,7 @@ internal fun EventScreen(
         }
 
         Scaffold(
-            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            containerColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasThemedAppBar(
                     title = title,
@@ -211,18 +211,25 @@ private fun OverFlowMenuSegment(
     ) {
         if (eventUiState.toolbarUiState.editAllowed) {
             DropdownMenuItem(
+                text = {
+                    Text(
+                        color = colorResource(id = R.color.textDarkest),
+                        text = stringResource(id = R.string.edit),
+                    )
+                },
                 onClick = {
                     showMenu = !showMenu
                     actionHandler(EventAction.EditEvent)
                 }
-            ) {
-                Text(
-                    color = colorResource(id = R.color.textDarkest),
-                    text = stringResource(id = R.string.edit),
-                )
-            }
+            )
         }
         DropdownMenuItem(
+            text =  {
+                Text(
+                    color = colorResource(id = R.color.textDarkest),
+                    text = stringResource(id = R.string.delete),
+                )
+            },
             onClick = {
                 showMenu = !showMenu
                 if (eventUiState.isSeriesEvent) {
@@ -231,12 +238,7 @@ private fun OverFlowMenuSegment(
                     showDeleteConfirmationDialog = true
                 }
             }
-        ) {
-            Text(
-                color = colorResource(id = R.color.textDarkest),
-                text = stringResource(id = R.string.delete),
-            )
-        }
+        )
     }
 }
 

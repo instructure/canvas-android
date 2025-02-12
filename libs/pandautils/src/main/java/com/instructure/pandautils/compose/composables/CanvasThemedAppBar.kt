@@ -18,10 +18,12 @@ package com.instructure.pandautils.compose.composables
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +44,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 /**
  * App bar for main screens, colors are defined by the Canvas theme.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CanvasThemedAppBar(
     title: String,
@@ -76,15 +79,16 @@ fun CanvasThemedAppBar(
             }
         },
         actions = actions,
-        backgroundColor = backgroundColor,
-        contentColor = contentColor,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+            titleContentColor = contentColor
+        ),
         navigationIcon = {
             IconButton(onClick = navigationActionClick) {
                 Icon(painterResource(id = navIconRes), contentDescription = navIconContentDescription)
             }
         },
         modifier = modifier.testTag("toolbar"),
-        elevation = 0.dp
     )
 }
 

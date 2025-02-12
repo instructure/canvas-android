@@ -38,11 +38,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -108,7 +108,7 @@ fun InboxComposeScreen(
 
     CanvasTheme {
         Scaffold(
-            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            containerColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasAppBar(
                     title = title,
@@ -130,7 +130,7 @@ fun InboxComposeScreen(
                                     if (uiState.isSendButtonEnabled)
                                         colorResource(id = R.color.textDarkest)
                                     else
-                                        colorResource(id = R.color.textDarkest).copy(alpha = LocalContentAlpha.current),
+                                        colorResource(id = R.color.textDarkest),
                                 )
                             }
                         }

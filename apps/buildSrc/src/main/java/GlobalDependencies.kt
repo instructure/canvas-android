@@ -179,7 +179,7 @@ object Libs {
 
     // Compose
     const val COMPOSE_BOM = "androidx.compose:compose-bom:2024.09.02"
-    const val COMPOSE_MATERIAL = "androidx.compose.material:material"
+    const val COMPOSE_MATERIAL = "androidx.compose.material3:material3"
     const val COMPOSE_MATERIAL_ICONS = "androidx.compose.material:material-icons-core"
     const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
     const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"

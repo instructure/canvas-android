@@ -33,14 +33,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,7 +73,7 @@ import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 import com.instructure.pandautils.features.inbox.compose.ScreenState
 import java.util.EnumMap
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipientPickerScreen(
     title: String,
@@ -85,20 +84,22 @@ fun RecipientPickerScreen(
     AnimatedContent(
         label = animationLabel,
         targetState = uiState.screenOption
-    ){ screenOption ->
-        val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
-            actionHandler(RecipientPickerActionHandler.RefreshCalled)
-        })
+    ) { screenOption ->
+        val pullToRefreshState = rememberPullToRefreshState()
 
         CanvasTheme {
             Scaffold(
-                backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
+                containerColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
                 topBar = { TopBar(title, uiState, actionHandler) },
                 content = { padding ->
-                    Box(
+                    PullToRefreshBox(
+                        state = pullToRefreshState,
+                        isRefreshing = false,
+                        onRefresh = {
+                            actionHandler(RecipientPickerActionHandler.RefreshCalled)
+                        },
                         modifier = Modifier
                             .fillMaxSize()
-                            .pullRefresh(pullToRefreshState)
                     ) {
                         Column(
                             modifier = Modifier
@@ -132,14 +133,6 @@ fun RecipientPickerScreen(
                                 }
                             }
                         }
-
-                        PullRefreshIndicator(
-                            refreshing = uiState.screenState == ScreenState.Loading,
-                            state = pullToRefreshState,
-                            modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .testTag("pullRefreshIndicator"),
-                        )
                     }
                 }
             )
@@ -370,7 +363,7 @@ private fun RecipientRow(
             fontSize = 16.sp,
             color = colorResource(id = R.color.textDarkest),
         )
-        
+
         Spacer(Modifier.weight(1f))
 
         if (isSelected) {
@@ -459,7 +452,8 @@ private fun TopBar(
 fun RecipientPickerRolesScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
 
-    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> =
+        EnumMap(EnrollmentType::class.java)
     roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
         Recipient(name = "John Doe 1"),
         Recipient(name = "John Smith 1"),
@@ -490,7 +484,8 @@ fun RecipientPickerRolesScreenPreview() {
 fun RecipientPickerRecipientsScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
 
-    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> =
+        EnumMap(EnrollmentType::class.java)
     roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
         Recipient(name = "John Doe 1"),
         Recipient(name = "John Smith 1"),
@@ -522,7 +517,8 @@ fun RecipientPickerRecipientsScreenPreview() {
 fun RecipientPickerSearchScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
 
-    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> =
+        EnumMap(EnrollmentType::class.java)
     roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
         Recipient(name = "John Doe 1"),
         Recipient(name = "John Smith 1"),

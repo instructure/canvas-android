@@ -32,13 +32,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -117,7 +117,7 @@ private fun InboxMessageDetailsView(
                         actionHandler(MessageAction.UrlSelected(it))
                     }
                 },
-                style = MaterialTheme.typography.body1.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     color = colorResource(id = R.color.textDarkest)
                 ),
                 modifier = Modifier.testTag("messageBodyText")
@@ -140,7 +140,7 @@ private fun InboxMessageDetailsView(
             TextButton(
                 onClick = { messageState.message?.let { actionHandler( MessageAction.Reply(it) ) } },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.backgroundLightest),
+                    containerColor = colorResource(id = R.color.backgroundLightest),
                     contentColor = Color(ThemePrefs.textButtonColor)
                 ),
                 contentPadding = PaddingValues(start = 0.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
@@ -254,44 +254,67 @@ private fun MessageMenu(message: Message, cannotReply: Boolean, actionHandler: (
         ) {
             if (!cannotReply) {
                 DropdownMenuItem(
+                    text = { Text(stringResource(id = R.string.reply)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_reply),
+                            contentDescription = stringResource(id = R.string.reply),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(MessageAction.Reply(message))
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
-                }
+                )
             }
 
             if (!cannotReply){
                 DropdownMenuItem(
+                    text = { Text(stringResource(id = R.string.replyAll)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_reply_all),
+                            contentDescription = stringResource(id = R.string.replyAll),
+                            tint = colorResource(id = R.color.textDarkest)
+                        )
+                    },
                     onClick = {
                         showMenu = !showMenu
                         actionHandler(MessageAction.ReplyAll(message))
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
-                }
+                )
             }
 
             DropdownMenuItem(
+                text = { Text(stringResource(id = R.string.forward)) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_forward),
+                        contentDescription = stringResource(id = R.string.forward),
+                        tint = colorResource(id = R.color.textDarkest)
+                    )
+                },
                 onClick = {
                     showMenu = !showMenu
                     actionHandler(MessageAction.Forward(message))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
-            }
+            )
 
             DropdownMenuItem(
+                text = { Text(stringResource(id = R.string.delete)) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_trash),
+                        contentDescription = stringResource(id = R.string.delete),
+                        tint = colorResource(id = R.color.textDarkest)
+                    )
+                },
                 onClick = {
                     showMenu = !showMenu
                     actionHandler(MessageAction.DeleteMessage(message))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
-            }
-
+            )
         }
     }
 }
