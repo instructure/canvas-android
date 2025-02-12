@@ -147,6 +147,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     val showElementaryView
         get() = canvasForElementary && elementaryDashboardEnabledOverride
 
+    var webViewAuthenticationTimestamp by LongPref(0)
+
     /**
      * clearAllData is required for logout.
      * Clears all data including credentials and cache.
