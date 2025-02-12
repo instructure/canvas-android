@@ -184,6 +184,7 @@ private fun InboxComposeScreenContent(
             .verticalScroll(rememberScrollState())
             .padding(padding)
             .fillMaxSize()
+            .testTag("InboxComposeScreenContent")
     ) {
         if (uiState.hiddenFields.isContextHidden.not()) {
             ContextValueRow(

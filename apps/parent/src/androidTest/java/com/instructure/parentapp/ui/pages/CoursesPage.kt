@@ -57,9 +57,11 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertEmptyContentDisplayed() {
-        composeTestRule.onNodeWithText("No Courses")
+        composeTestRule.onNodeWithText("No Courses", useUnmergedTree = true)
+            .performScrollTo()
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText("Your student’s courses might not be published yet.")
+        composeTestRule.onNodeWithText("Your student’s courses might not be published yet.", useUnmergedTree = true)
+            .performScrollTo()
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag(R.drawable.ic_panda_book.toString())
             .assertIsDisplayed()
