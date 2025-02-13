@@ -36,6 +36,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 
@@ -110,6 +112,8 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     fun assertPreviousMessagesDisplayed(conversation: Conversation, includedMessages: List<Message>) {
         composeTestRule.waitForIdle()
 
+        composeTestRule.onNodeWithTag("InboxComposeScreenContent")
+            .performTouchInput { swipeUp() }
         composeTestRule.onNodeWithText("Previous Messages")
             .assertIsDisplayed()
 

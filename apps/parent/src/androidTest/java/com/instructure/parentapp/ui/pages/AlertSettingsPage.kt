@@ -21,9 +21,11 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import com.instructure.canvasapi2.models.AlertType
@@ -41,6 +43,8 @@ class AlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage
     }
 
     fun assertSwitchThreshold(alertType: AlertType, isOn: Boolean) {
+        composeTestRule.onNodeWithTag("alertSettingsContent")
+            .performScrollToNode(hasTestTag("${alertType.name}_thresholdItem"))
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdItem", useUnmergedTree = true)
             .assertHasClickAction()
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdTitle", useUnmergedTree = true)

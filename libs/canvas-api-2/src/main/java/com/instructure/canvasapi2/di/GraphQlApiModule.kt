@@ -18,6 +18,8 @@ package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.CommentLibraryManagerImpl
+import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.InboxSettingsManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,5 +36,10 @@ class GraphQlApiModule {
     @Provides
     fun provideCommentLibraryManager(): CommentLibraryManager {
         return CommentLibraryManagerImpl()
+    }
+
+    @Provides
+    fun provideInboxSettingsManager(): InboxSettingsManager {
+        return InboxSettingsManagerImpl()
     }
 }
