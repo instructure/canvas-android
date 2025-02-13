@@ -1905,6 +1905,7 @@
     <string name="errorLoadingGrades">We\'re having trouble loading your student\'s grades. Please try reloading the page or check back later.</string>
     <string name="errorLoadingCourse">We\'re having trouble loading your student\'s course details. Please try reloading the page or check back later.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Grade preferences updated successfully. The list has been refreshed.</string>
     <string name="courseDetailsMessageContentDescription">Send a message about this course</string>
     <string name="gradeLockedContentDescription">Grade locked</string>
     <string name="gradesRefreshFailed">Failed to refresh grades</string>

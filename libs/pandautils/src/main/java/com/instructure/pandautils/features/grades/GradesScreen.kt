@@ -72,6 +72,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -95,6 +96,7 @@ import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.drawableId
 import kotlinx.coroutines.launch
 
@@ -190,11 +192,14 @@ private fun GradePreferencesDialog(
             actionHandler(GradesAction.HideGradePreferences)
         }
     ) {
+        val context = LocalContext.current
+        val gradePreferencesUpdatedAnnouncement = stringResource(R.string.a11y_gradesFilterUpdatedAnnouncement)
         GradePreferencesScreen(
             uiState = uiState.gradePreferencesUiState,
             onPreferenceChangeSaved = { gradingPeriod, sortBy ->
                 actionHandler(GradesAction.GradePreferencesUpdated(gradingPeriod, sortBy))
                 actionHandler(GradesAction.HideGradePreferences)
+                announceAccessibilityText(context, gradePreferencesUpdatedAnnouncement)
             },
             navigationActionClick = {
                 actionHandler(GradesAction.HideGradePreferences)
