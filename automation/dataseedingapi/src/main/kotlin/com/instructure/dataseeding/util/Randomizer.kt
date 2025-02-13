@@ -27,7 +27,9 @@ import com.instructure.dataseeding.model.CreateSubmissionComment
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.SubmitCourseAssignmentSubmission
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 object Randomizer {
     private val faker = Faker()
@@ -56,9 +58,9 @@ object Randomizer {
     fun randomImageUrlSmall(): String = faker.internet().image(64, 64, false, null)
 
 
-    fun randomDiscussion(isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false): CreateDiscussionTopic =
+    fun randomDiscussion(discussionTitle: String?, isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false): CreateDiscussionTopic =
             CreateDiscussionTopic(
-                    title = faker.lorem().sentence(),
+                    title = discussionTitle ?: faker.lorem().sentence(),
                     message = faker.lorem().paragraph(),
                     isAnnouncement = isAnnouncement,
                     lockedForUser = lockedForUser,
@@ -77,9 +79,9 @@ object Randomizer {
     fun randomGradingPeriodSetTitle(): String = "${faker.pokemon().location()} Set"
     fun randomGradingPeriodName(): String = "${faker.pokemon().name()} Grading Period"
 
-    fun randomAssignment(withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?, importantDate: Boolean?, assignmentGroupId: Long? = null): CreateAssignment =
+    fun randomAssignment(assignmentName: String?, withDescription: Boolean = false, lockAt: String, unlockAt: String, dueAt: String, submissionTypes: List<SubmissionType>, gradingType: GradingType?, groupCategoryId: Long?, pointsPossible: Double?, allowedExtensions: List<String>?, importantDate: Boolean?, assignmentGroupId: Long? = null): CreateAssignment =
             CreateAssignment(
-                    name = faker.lorem().sentence(),
+                    name = assignmentName ?: faker.lorem().sentence(),
                     description = if (withDescription) faker.lorem().paragraph() else null,
                     lockAt = if (lockAt.isNotBlank()) lockAt else null,
                     unlockAt = if (unlockAt.isNotBlank()) unlockAt else null,
@@ -87,7 +89,7 @@ object Randomizer {
                     submissionTypes = if (submissionTypes.isEmpty()) null else submissionTypes.map {
                         if (it.name == "NO_TYPE") "none" else it.name.lowercase(Locale.getDefault())
                     },
-                    gradingType = if (gradingType != null) gradingType.toString().lowercase(Locale.getDefault()) else "points",
+                    gradingType = gradingType?.toString()?.lowercase(Locale.getDefault()) ?: "points",
                     groupCategoryId = groupCategoryId,
                     pointsPossible = pointsPossible,
                     allowedExtensions = allowedExtensions,
