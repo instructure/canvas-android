@@ -114,17 +114,15 @@ class FlutterAppMigration(
         }
     }
 
-    private fun migratePrefs() = try {
+    private fun migratePrefs() {
         val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
 
         val isDarkMode = prefs.getBoolean(KEY_DARK_MODE, false)
 
         themePrefs.appTheme = if (isDarkMode) 1 else 0
-    } catch (e: Exception) {
-        e.printStackTrace()
     }
 
-    private fun migrateEncryptedSharedPrefs() = try {
+    private fun migrateEncryptedSharedPrefs() {
         val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
         val encryptedPrefs = EncryptedSharedPreferences.create(
@@ -165,8 +163,6 @@ class FlutterAppMigration(
             val currentStudent: User = it.toString().fromJson()
             parentPrefs.currentStudent = currentStudent
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
     }
 
     private fun getAllPrefs(allPrefs: Map<String, *>) = allPrefs
@@ -209,7 +205,7 @@ class FlutterAppMigration(
         user = if (isMasquerading) flutterSignedInUser.masqueradeUser else signedInUser.user
     }
 
-    private fun migrateDatabase() = try {
+    private fun migrateDatabase() {
         val database = SQLiteDatabase.openDatabase(
             context.getDatabasePath("canvas_parent.db").path,
             null,
@@ -222,8 +218,6 @@ class FlutterAppMigration(
                 migrateReminders(it)
             }
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
     }
 
     private suspend fun migrateCalendarFilters(database: SQLiteDatabase) {
