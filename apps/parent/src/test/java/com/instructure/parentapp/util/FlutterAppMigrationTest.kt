@@ -42,6 +42,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -61,7 +63,7 @@ class FlutterAppMigrationTest {
     private val ratingDialogPrefs: RatingDialog.Prefs = mockk(relaxed = true)
     private val reminderRepository: ReminderRepository = mockk(relaxed = true)
     private val calendarFilterDao: CalendarFilterDao = mockk(relaxed = true)
-    private val clock = Clock.fixed(Instant.parse("2024-01-05T00:00:00.00Z"), ZoneId.systemDefault())
+    private val clock = Clock.fixed(Instant.parse("2024-01-05T00:00:00.00Z"), ZoneId.of("UTC"))
     private val mockUri: Uri = mockk(relaxed = true)
 
     private lateinit var mockSharedPreferences: SharedPreferences

@@ -21,6 +21,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.google.common.reflect.TypeToken
@@ -269,6 +270,7 @@ class FlutterAppMigration(
                 val messageParam = context.getString(if (type == "assignment") R.string.assignment else R.string.a11y_calendar_event)
                 val message = context.getString(R.string.reminderNotificationTitleFor, messageParam)
 
+                println("FlutterAppMigration date: $date, now: ${Instant.now(clock)}")
                 if (date.isAfter(Instant.now(clock))) {
                     reminderRepository.createReminder(
                         userId = userId,
