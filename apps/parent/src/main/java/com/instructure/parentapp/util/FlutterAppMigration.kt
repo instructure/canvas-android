@@ -272,6 +272,7 @@ class FlutterAppMigration(
 
                 println("FlutterAppMigration date: $date, now: ${Instant.now(clock)}")
                 if (date.isAfter(Instant.now(clock))) {
+                    println("FlutterAppMigration date is after now, creating reminder")
                     reminderRepository.createReminder(
                         userId = userId,
                         contentId = itemId,
