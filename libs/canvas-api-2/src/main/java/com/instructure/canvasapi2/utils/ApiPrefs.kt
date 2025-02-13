@@ -83,7 +83,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var isStudentView by BooleanPref()
     var isMasqueradingFromQRCode by BooleanPref()
     var masqueradeId by LongPref(-1L)
-    var isFirstMasqueradingStart by BooleanPref()
     internal var masqueradeDomain by StringPref()
     internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user", false)
 
