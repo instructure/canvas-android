@@ -1951,6 +1951,11 @@
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
     <string name="failed_to_load_summary">Failed to load summary</string>
     <string name="no_summary_items_to_display">No summary items to display</string>
+    <string name="a11y_summaryEventContentDescription">Event</string>
+    <string name="a11y_summaryLockedContentDescription">Locked</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Discussion</string>
+    <string name="a11y_summaryAssignmentContentDescription">Assignment</string>
     <string name="scheduleItemNoDueDate">No Due Date</string>
     <string name="a11y_refresh">Refresh</string>
     <string name="masqueradingAs">You are acting as %s</string>
