@@ -26,6 +26,8 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
+import com.instructure.espresso.retry
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.waitForNetworkToGoOffline
 import com.instructure.student.ui.utils.StudentTest
@@ -119,7 +121,9 @@ class OfflineDashboardE2ETest : StudentTest() {
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
-        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+        retry(times = 10, delay = 2000, catchBlock = { refresh() }) {
+            dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+        }
         device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
