@@ -41,6 +41,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -64,6 +66,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
@@ -73,7 +76,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -196,7 +203,7 @@ private fun GradePreferencesDialog(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun GradesScreenContent(
     uiState: GradesUiState,
@@ -242,11 +249,15 @@ private fun GradesScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 32.dp, end = 32.dp, bottom = 16.dp)
-                        .clickable(
+                        .toggleable(
+                            value = uiState.onlyGradedAssignmentsSwitchEnabled,
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
                             actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(!uiState.onlyGradedAssignmentsSwitchEnabled))
+                        }
+                        .semantics {
+                            role = Role.Switch
                         },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -266,7 +277,11 @@ private fun GradesScreenContent(
                             checkedThumbColor = Color(uiState.canvasContextColor),
                             uncheckedTrackColor = colorResource(id = R.color.textDark)
                         ),
-                        modifier = Modifier.height(24.dp)
+                        modifier = Modifier
+                            .height(24.dp)
+                            .semantics {
+                                invisibleToUser()
+                            }
                     )
                 }
 
@@ -277,11 +292,23 @@ private fun GradesScreenContent(
 
             uiState.items.forEach {
                 stickyHeader {
+                    val headerContentDescription = stringResource(
+                        if (it.expanded) {
+                            R.string.content_description_collapse_content_with_param
+                        } else {
+                            R.string.content_description_expand_content_with_param
+                        }, it.name
+                    )
                     Column(
                         modifier = Modifier
                             .background(colorResource(id = R.color.backgroundLightest))
                             .clickable {
                                 actionHandler(GradesAction.GroupHeaderClick(it.id))
+                            }
+                            .semantics {
+                                heading()
+                                contentDescription = headerContentDescription
+                                role = Role.Button
                             }
                     ) {
                         Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
@@ -296,7 +323,10 @@ private fun GradesScreenContent(
                             Text(
                                 text = it.name,
                                 color = colorResource(id = R.color.textDark),
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
+                                modifier = Modifier.semantics {
+                                    invisibleToUser()
+                                }
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Icon(
@@ -401,8 +431,11 @@ private fun GradesCard(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .clickable {
+                .selectable(!uiState.gradePreferencesUiState.isDefault) {
                     actionHandler(GradesAction.ShowGradePreferences)
+                }
+                .semantics {
+                    role = Role.Button
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -448,6 +481,9 @@ fun AssignmentItem(
                 actionHandler(GradesAction.AssignmentClick(uiState.id))
             }
             .padding(12.dp)
+            .semantics {
+                role = Role.Button
+            }
     ) {
         Spacer(modifier = Modifier.width(12.dp))
         Icon(
