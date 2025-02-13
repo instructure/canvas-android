@@ -174,7 +174,7 @@ fun AlertSettingsScreen(
 
 @Composable
 fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState()).testTag("alertSettingsContent")) {
         StudentDetails(
             avatarUrl = uiState.avatarUrl,
             studentName = uiState.studentName,

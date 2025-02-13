@@ -15,7 +15,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.type.EnrollmentType
 import org.junit.Test
 
-abstract class InboxComposeInteractionTest: CanvasComposeTest() {
+abstract class InboxComposeInteractionTest : CanvasComposeTest() {
 
     private val inboxPage = InboxPage()
     private val inboxComposePage = InboxComposePage(composeTestRule)
@@ -324,6 +324,16 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
 
         inboxComposePage.pressBackButton()
         inboxComposePage.assertAlertDialog()
+    }
+
+    @Test
+    fun assertInboxSignatureIsPopulated() {
+        val data = initData()
+        data.inboxSignature = "Test Signature"
+        goToInboxCompose(data)
+        composeTestRule.waitForIdle()
+
+        inboxComposePage.assertBodyText("\n\n---\nTest Signature")
     }
 
     private fun addAttachmentToConversation(attachmentName: String, conversation: Conversation, mockCanvas: MockCanvas) {

@@ -35,6 +35,7 @@ import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.launchWithLoadingDelay
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -68,10 +69,10 @@ class InboxComposeViewModel @Inject constructor(
     private val options = savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS)
 
     private val debouncedInnerSearch = debounce<String>(waitMs = 200, coroutineScope = viewModelScope) { searchQuery ->
+        val contextId = uiState.value.selectContextUiState.selectedCanvasContext?.contextId ?: return@debounce
         val recipients = getRecipientList(
             searchQuery,
-            uiState.value.selectContextUiState.selectedCanvasContext
-                ?: return@debounce
+            contextId
         ).dataOrNull.orEmpty().filterNot { uiState.value.recipientPickerUiState.selectedRecipients.contains(it) }
 
         _uiState.update {
@@ -85,7 +86,11 @@ class InboxComposeViewModel @Inject constructor(
     }
 
     private val debouncedRecipientScreenSearch = debounce<String>(waitMs = 200, coroutineScope = viewModelScope) { searchQuery ->
-        loadRecipients(searchQuery, uiState.value.selectContextUiState.selectedCanvasContext ?: return@debounce)
+        loadRecipients(
+            searchQuery,
+            uiState.value.selectContextUiState.selectedCanvasContext ?: return@debounce,
+            uiState.value.recipientPickerUiState.selectedRole
+        )
     }
 
     init {
@@ -93,12 +98,18 @@ class InboxComposeViewModel @Inject constructor(
         if (options != null) {
             initFromOptions(options)
         }
+        loadSignature()
     }
 
     private fun initFromOptions(options: InboxComposeOptions?) {
         options?.let {
             val context = CanvasContext.fromContextCode(options.defaultValues.contextCode, options.defaultValues.contextName)
-            context?.let { loadRecipients("", it, false) }
+            context?.let { loadRecipients(
+                "",
+                it,
+                uiState.value.recipientPickerUiState.selectedRole,
+                false
+            ) }
             _uiState.update {
                 it.copy(
                     inboxComposeMode = options.mode,
@@ -133,7 +144,7 @@ class InboxComposeViewModel @Inject constructor(
                             )
                         }
 
-                        val recipients = getRecipientList("", context, false).dataOrNull.orEmpty()
+                        val recipients = getRecipientList("", context.contextId, false).dataOrNull.orEmpty()
                         val roleRecipients = groupRecipientList(context, recipients)
                         val selectedRecipients = mutableListOf<Recipient>()
                         options.autoSelectRecipientsFromRoles?.forEach { role ->
@@ -282,7 +293,7 @@ class InboxComposeViewModel @Inject constructor(
                     screenOption = InboxComposeScreenOptions.None
                 ) }
 
-                loadRecipients("", action.context)
+                loadRecipients("", action.context, uiState.value.recipientPickerUiState.selectedRole)
             }
         }
     }
@@ -290,7 +301,12 @@ class InboxComposeViewModel @Inject constructor(
     fun handleAction(action: RecipientPickerActionHandler) {
         when (action) {
             is RecipientPickerActionHandler.RefreshCalled -> {
-                loadRecipients(uiState.value.recipientPickerUiState.searchValue.text, uiState.value.selectContextUiState.selectedCanvasContext ?: return, forceRefresh = true)
+                loadRecipients(
+                    uiState.value.recipientPickerUiState.searchValue.text,
+                    uiState.value.selectContextUiState.selectedCanvasContext ?: return,
+                    uiState.value.recipientPickerUiState.selectedRole,
+                    forceRefresh = true
+                )
             }
             is RecipientPickerActionHandler.DoneClicked -> {
                 recipientPickerDone()
@@ -385,7 +401,23 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    private fun loadRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false) {
+    private fun loadSignature() {
+        viewModelScope.launchWithLoadingDelay(onLoadingStart = {
+            _uiState.update { it.copy(signatureLoading = true) }
+        }, onLoadingEnd = {
+            _uiState.update { it.copy(signatureLoading = false) }
+        }) {
+            val signature = inboxComposeRepository.getInboxSignature()
+            if (signature.isNotBlank()) {
+                val signatureFooter = "\n\n---\n$signature"
+                _uiState.update { it.copy(
+                    body = TextFieldValue(it.body.text.plus(signatureFooter))
+                ) }
+            }
+        }
+    }
+
+    private fun loadRecipients(searchQuery: String, context: CanvasContext, selectedRole: EnrollmentType?, forceRefresh: Boolean = false) {
         viewModelScope.launch {
 
             canSendToAll = inboxComposeRepository.canSendToAll(context).dataOrNull.orDefault()
@@ -393,7 +425,8 @@ class InboxComposeViewModel @Inject constructor(
             var recipients: List<Recipient> = emptyList()
             var newState: ScreenState = ScreenState.Empty
             try {
-                recipients = getRecipientList(searchQuery, context, forceRefresh).dataOrThrow
+                val contextId = context.contextId + getEnrollmentTypeString(selectedRole)
+                recipients = getRecipientList(searchQuery, contextId, forceRefresh).dataOrThrow
                 if (recipients.isEmpty().not()) { newState = ScreenState.Data }
             } catch (e: Exception) {
                 newState = ScreenState.Error
@@ -402,17 +435,18 @@ class InboxComposeViewModel @Inject constructor(
             val roleRecipients = groupRecipientList(context, recipients)
 
             val recipientsToShow =
-                if (uiState.value.recipientPickerUiState.searchValue.text.isEmpty() && uiState.value.recipientPickerUiState.selectedRole != null) {
-                    roleRecipients[uiState.value.recipientPickerUiState.selectedRole] ?: emptyList()
+                if (searchQuery.isEmpty() && selectedRole != null) {
+                    roleRecipients[selectedRole] ?: emptyList()
                 } else {
                     recipients
                 }
+            val allRecipient = if (searchQuery.isEmpty()) getAllRecipients(roleRecipients = roleRecipients) else null
             _uiState.update { it.copy(
                 recipientPickerUiState = it.recipientPickerUiState.copy(
                     recipientsByRole = roleRecipients,
                     screenState = newState,
                     recipientsToShow = recipientsToShow,
-                    allRecipientsToShow = getAllRecipients(roleRecipients = roleRecipients)
+                    allRecipientsToShow = allRecipient
                 )
             ) }
         }
@@ -446,8 +480,8 @@ class InboxComposeViewModel @Inject constructor(
         return roleRecipients
     }
 
-    private suspend fun getRecipientList(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false): DataResult<List<Recipient>> {
-        return inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh)
+    private suspend fun getRecipientList(searchQuery: String, contextId: String, forceRefresh: Boolean = false): DataResult<List<Recipient>> {
+        return inboxComposeRepository.getRecipients(searchQuery, contextId, forceRefresh)
     }
 
     private fun createConversation() {

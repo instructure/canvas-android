@@ -1660,6 +1660,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Add new calendar item</string>
     <string name="calendarFilterCalendars">Calendars</string>
     <string name="calendarFilterUser">User</string>
+    <string name="calendarFilterFavoriteCourse">Favorite Courses</string>
+    <string name="calendarFilterMoreCourse">More Courses</string>
     <string name="calendarFilterCourse">Courses</string>
     <string name="calendarFilterGroup">Groups</string>
     <string name="calendarFilterExplanationLimited">Select the calendars you want to see, up to %d.</string>
@@ -1998,6 +2000,8 @@
     <string name="a11y_indeterminate">Partially checked</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
+    <string name="inboxAllRecipients">All Recipients</string>
+    <string name="inboxSearchIn">Search in %1$s</string>
     <string name="a11y_studentSelectorExpand">expand</string>
     <string name="a11y_studentSelectorCollapse">collapse</string>
     <string name="a11y_studentSelectorContentDescription">Tap to %s student selector, selected student is: %s</string>
