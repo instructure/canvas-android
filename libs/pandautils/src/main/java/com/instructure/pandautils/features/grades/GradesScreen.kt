@@ -29,6 +29,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -472,6 +474,7 @@ private fun EmptyContent() {
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AssignmentItem(
     uiState: AssignmentUiState,
@@ -508,9 +511,7 @@ fun AssignmentItem(
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            FlowRow {
                 Text(
                     text = uiState.dueDate,
                     color = colorResource(id = R.color.textDark),
@@ -524,6 +525,7 @@ fun AssignmentItem(
                             .width(1.dp)
                             .clip(RoundedCornerShape(1.dp))
                             .background(colorResource(id = R.color.borderMedium))
+                            .align(Alignment.CenterVertically)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
@@ -532,6 +534,7 @@ fun AssignmentItem(
                         tint = colorResource(id = uiState.submissionStateLabel.colorRes),
                         modifier = Modifier
                             .size(16.dp)
+                            .align(Alignment.CenterVertically)
                             .semantics {
                                 drawableId = uiState.submissionStateLabel.iconRes
                             }

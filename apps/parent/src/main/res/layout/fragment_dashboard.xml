@@ -263,6 +263,7 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="false"
             app:headerLayout="@layout/navigation_drawer_header_layout"
+            app:itemMaxLines="2"
             app:menu="@menu/nav_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
