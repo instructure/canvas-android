@@ -21,7 +21,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.util.Base64
-import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.google.common.reflect.TypeToken
@@ -115,15 +114,17 @@ class FlutterAppMigration(
         }
     }
 
-    private fun migratePrefs() {
+    private fun migratePrefs() = try {
         val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
 
         val isDarkMode = prefs.getBoolean(KEY_DARK_MODE, false)
 
         themePrefs.appTheme = if (isDarkMode) 1 else 0
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 
-    private fun migrateEncryptedSharedPrefs() {
+    private fun migrateEncryptedSharedPrefs() = try {
         val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
         val encryptedPrefs = EncryptedSharedPreferences.create(
@@ -164,6 +165,8 @@ class FlutterAppMigration(
             val currentStudent: User = it.toString().fromJson()
             parentPrefs.currentStudent = currentStudent
         }
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 
     private fun getAllPrefs(allPrefs: Map<String, *>) = allPrefs
@@ -206,7 +209,7 @@ class FlutterAppMigration(
         user = if (isMasquerading) flutterSignedInUser.masqueradeUser else signedInUser.user
     }
 
-    private fun migrateDatabase() {
+    private fun migrateDatabase() = try {
         val database = SQLiteDatabase.openDatabase(
             context.getDatabasePath("canvas_parent.db").path,
             null,
@@ -219,6 +222,8 @@ class FlutterAppMigration(
                 migrateReminders(it)
             }
         }
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 
     private suspend fun migrateCalendarFilters(database: SQLiteDatabase) {
@@ -270,10 +275,7 @@ class FlutterAppMigration(
                 val messageParam = context.getString(if (type == "assignment") R.string.assignment else R.string.a11y_calendar_event)
                 val message = context.getString(R.string.reminderNotificationTitleFor, messageParam)
 
-                println("FlutterAppMigration date: $date, now: ${Instant.now(clock)}")
                 if (date.isAfter(Instant.now(clock))) {
-                    println("FlutterAppMigration date is after now, creating reminder")
-                    println("Calling this with: userId: $userId, itemId: $itemId, contentHtmlUrl: $contentHtmlUrl, message: $message, date: ${date.toEpochMilli()}")
                     reminderRepository.createReminder(
                         userId = userId,
                         contentId = itemId,
