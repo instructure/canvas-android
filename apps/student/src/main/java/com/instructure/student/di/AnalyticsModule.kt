@@ -12,29 +12,25 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.pandautils.analytics.pageview.db
+ */
+package com.instructure.student.di
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import com.instructure.student.BuildConfig
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-@Dao
-interface PageViewDao {
+@Module
+@InstallIn(SingletonComponent::class)
+class AnalyticsModule {
 
-    @Insert
-    suspend fun insert(pageViewEvent: PageViewEvent)
-
-    @Update
-    suspend fun update(pageViewEvent: PageViewEvent)
-
-    @Delete
-    suspend fun delete(events: List<PageViewEvent>)
-
-    @Delete
-    suspend fun delete(event: PageViewEvent)
-
-    @Query("SELECT * FROM PageViewEvent")
-    suspend fun getAllPageViewEvents(): List<PageViewEvent>
+    @Provides
+    fun provideAppInfo(): PandataInfo.AppKey {
+        return PandataInfo.AppKey(
+            "CANVAS_STUDENT_ANDROID",
+            "Canvas Student for Android - ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+        )
+    }
 }

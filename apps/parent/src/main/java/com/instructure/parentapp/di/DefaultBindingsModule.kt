@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.di
 
+import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
@@ -114,6 +115,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideSmartSearchRouter(): SmartSearchRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideAppInfo(): PandataInfo.AppKey {
         throw NotImplementedError()
     }
 }
