@@ -17,5 +17,12 @@ package com.instructure.canvasapi2.managers
 
 interface InboxSettingsManager {
 
-    suspend fun getInboxSignature(): String
+    suspend fun getInboxSignatureSettings(forceNetwork: Boolean = false): InboxSignatureSettings
+
+    suspend fun updateInboxSignatureSettings(signature: String, useSignature: Boolean): Boolean
 }
+
+data class InboxSignatureSettings(
+    val signature: String,
+    val useSignature: Boolean
+)

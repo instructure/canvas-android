@@ -32,6 +32,7 @@ enum class SettingsItem(val res: Int) {
     EMAIL_NOTIFICATIONS(R.string.emailNotifications),
     PAIR_WITH_OBSERVER(R.string.pairWithObserver),
     SUBSCRIBE_TO_CALENDAR(R.string.subscribeToCalendar),
+    INBOX_SIGNATURE(R.string.inboxSettingsInboxSignature),
     OFFLINE_SYNCHRONIZATION(R.string.offlineSyncSettingsTitle),
     ABOUT(R.string.about),
     LEGAL(R.string.legal),

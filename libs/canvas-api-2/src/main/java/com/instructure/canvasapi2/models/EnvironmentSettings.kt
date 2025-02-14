@@ -22,4 +22,6 @@ import kotlinx.parcelize.Parcelize
 data class EnvironmentSettings(
     @SerializedName("calendar_contexts_limit")
     val calendarContextsLimit: Int = 10,
+    @SerializedName("enable_inbox_signature_block")
+    val enableInboxSignatureBlock: Boolean = false,
 ) : CanvasModel<EnvironmentSettings>()

@@ -1993,4 +1993,8 @@
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
     <string name="inboxAllRecipients">All Recipients</string>
     <string name="inboxSearchIn">Search in %1$s</string>
+    <string name="inboxSettingsTitle">Inbox</string>
+    <string name="inboxSettingsInboxSignature">Inbox Signature</string>
+    <string name="inboxSignatureNotSet">Not Set</string>
+    <string name="inboxSignatureEnabled">Enabled</string>
 </resources>

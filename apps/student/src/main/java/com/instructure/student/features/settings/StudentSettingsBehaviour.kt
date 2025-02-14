@@ -49,6 +49,7 @@ class StudentSettingsBehaviour(
 
             return mapOf(
                 R.string.preferences to preferencesList,
+                R.string.inboxSettingsTitle to listOf(SettingsItem.INBOX_SIGNATURE),
                 R.string.offlineContent to listOf(SettingsItem.OFFLINE_SYNCHRONIZATION),
                 R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
             )

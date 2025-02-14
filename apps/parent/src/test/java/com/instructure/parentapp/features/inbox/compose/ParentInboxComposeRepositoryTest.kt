@@ -162,7 +162,7 @@ class ParentInboxComposeRepositoryTest {
     fun `Get signature successfully`() = runTest {
         val expected = "signature"
 
-        coEvery { inboxSettingsManager.getInboxSignature() } returns expected
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns expected
 
         val result = inboxComposeRepository.getInboxSignature()
 

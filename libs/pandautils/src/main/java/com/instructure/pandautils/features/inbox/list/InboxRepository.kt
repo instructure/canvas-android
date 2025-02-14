@@ -118,7 +118,7 @@ abstract class InboxRepository(
         return inboxApi.updateConversation(id, workflowState?.apiString, starred, RestParams(isForceReadFromNetwork = true))
     }
 
-    suspend fun getInboxSignature(): String {
-        return inboxSettingsManager.getInboxSignature()
+    suspend fun getInboxSignature() {
+        inboxSettingsManager.getInboxSignatureSettings()
     }
 }

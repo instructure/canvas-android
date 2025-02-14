@@ -13,15 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvas.espresso.mockCanvas.fakes
+package com.instructure.pandautils.di
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
-import com.instructure.canvasapi2.managers.InboxSignatureSettings
+import com.instructure.pandautils.features.settings.SettingsRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-class FakeInboxSettingsManager : InboxSettingsManager {
-    override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): InboxSignatureSettings = InboxSignatureSettings(MockCanvas.data.inboxSignature, true)
-    override suspend fun updateInboxSignatureSettings(signature: String, useSignature: Boolean): Boolean {
-        TODO("Not yet implemented")
+@Module
+@InstallIn(ViewModelComponent::class)
+class SettingsModule {
+
+    @Provides
+    fun provideSettingsRepository(featuresApi: FeaturesAPI.FeaturesInterface, inboxSettingsManager: InboxSettingsManager): SettingsRepository {
+        return SettingsRepository(featuresApi, inboxSettingsManager)
     }
 }

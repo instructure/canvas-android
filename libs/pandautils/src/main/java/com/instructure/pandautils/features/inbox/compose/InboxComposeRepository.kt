@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 
 abstract class InboxComposeRepository(
@@ -112,6 +111,13 @@ abstract class InboxComposeRepository(
 
     suspend fun getInboxSignature(): String {
         // Just to ensure we won't show the loading forever if there is an issue with the network connection
-        return withTimeoutOrNull(3000) { inboxSettingsManager.getInboxSignature() } ?: ""
+        val inboxSignatureSettings = withTimeoutOrNull(3000) { inboxSettingsManager.getInboxSignatureSettings() }
+        if (inboxSignatureSettings == null) return ""
+
+        return if (inboxSignatureSettings.useSignature && inboxSignatureSettings.signature.isNotBlank()) {
+            inboxSignatureSettings.signature
+        } else {
+            ""
+        }
     }
 }

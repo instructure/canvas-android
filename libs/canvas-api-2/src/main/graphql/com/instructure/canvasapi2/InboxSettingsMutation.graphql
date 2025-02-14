@@ -1,0 +1,8 @@
+mutation UpdateInboxSettings($useSignature: Boolean!, $signature: String) {
+    updateMyInboxSettings(input: {useSignature: $useSignature, signature: $signature}) {
+        myInboxSettings {
+            signature
+            useSignature
+        }
+    }
+}

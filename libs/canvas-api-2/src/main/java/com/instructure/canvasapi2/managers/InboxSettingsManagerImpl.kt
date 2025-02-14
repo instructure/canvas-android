@@ -15,27 +15,55 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.instructure.canvasapi2.InboxSettingsQuery
 import com.instructure.canvasapi2.QLCallback
+import com.instructure.canvasapi2.UpdateInboxSettingsMutation
+import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.weave.awaitQL
 
 class InboxSettingsManagerImpl : InboxSettingsManager {
 
-    override suspend fun getInboxSignature(): String {
+    override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): InboxSignatureSettings {
         return try {
-            val inboxSettingsData = awaitQL { getInboxSignature(it) }
-            inboxSettingsData.myInboxSettings?.signature ?: ""
+            val inboxSettingsData = awaitQL { getInboxSignature(it, forceNetwork) }
+            InboxSignatureSettings(
+                inboxSettingsData.myInboxSettings?.signature ?: "",
+                inboxSettingsData.myInboxSettings?.isUseSignature ?: false
+            )
         } catch (e: Exception) {
-            ""
+            InboxSignatureSettings("", false)
         }
     }
 
     private fun getInboxSignature(
-        callback: QLCallback<InboxSettingsQuery.Data>
+        callback: QLCallback<InboxSettingsQuery.Data>,
+        forceNetwork: Boolean
     ) {
         val query = InboxSettingsQuery.builder().build()
 
-        callback.enqueueQuery(query)
+        callback.enqueueQuery(query) {
+            if (forceNetwork) {
+                cachePolicy = HttpCachePolicy.NETWORK_FIRST
+            }
+        }
+    }
+
+    override suspend fun updateInboxSignatureSettings(signature: String, useSignature: Boolean): Boolean {
+        try {
+            val mutationResult = awaitQL<UpdateInboxSettingsMutation.Data> {
+                val mutation = UpdateInboxSettingsMutation.builder()
+                    .signature(signature)
+                    .useSignature(useSignature)
+                    .build()
+
+                it.enqueueMutation(mutation)
+            }
+
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
 }

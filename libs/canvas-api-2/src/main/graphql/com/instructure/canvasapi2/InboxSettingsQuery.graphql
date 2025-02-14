@@ -16,5 +16,6 @@
 query InboxSettingsQuery {
     myInboxSettings {
         signature
+        useSignature
     }
 }
