@@ -112,11 +112,11 @@ import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
-import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.post
 import com.instructure.pandautils.utils.postSticky
@@ -213,13 +213,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     lateinit var alarmScheduler: AlarmScheduler
 
     @Inject
-    lateinit var oAuthApi: OAuthAPI.OAuthInterface
-
-    @Inject
     lateinit var offlineAnalyticsManager: OfflineAnalyticsManager
 
     @Inject
     lateinit var enabledCourseTabs: EnabledTabs
+
+    @Inject
+    lateinit var webViewAuthenticator: WebViewAuthenticator
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -329,6 +329,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 
     private fun checkAppUpdates() {
@@ -406,11 +407,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         scheduleAlarms()
-
-        if (ApiPrefs.isFirstMasqueradingStart) {
-            loadAuthenticatedSession()
-            ApiPrefs.isFirstMasqueradingStart = false
-        }
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {
@@ -419,17 +415,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 offlineAnalyticsManager.offlineModeEnded()
             } else {
                 offlineAnalyticsManager.offlineModeStarted()
-            }
-        }
-    }
-
-    private fun loadAuthenticatedSession() {
-        lifecycleScope.launch {
-            oAuthApi.getAuthenticatedSession(
-                ApiPrefs.fullDomain,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull?.sessionUrl?.let {
-                loadUrlIntoHeadlessWebView(this@NavigationActivity, it)
             }
         }
     }
