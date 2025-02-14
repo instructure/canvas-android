@@ -16,6 +16,7 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -29,7 +30,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
@@ -50,10 +53,15 @@ fun CanvasAppBar(
 ) {
     TopAppBar(
         title = {
-            Text(
-                text = title,
-                modifier = Modifier.semantics { heading() },
-            )
+            Row(
+                modifier = Modifier.semantics(mergeDescendants = true) {
+                    isTraversalGroup = true
+                    traversalIndex = -1f
+                    heading()
+                }
+            ) {
+                Text(text = title)
+            }
         },
         elevation = 2.dp,
         backgroundColor = backgroundColor,
@@ -61,7 +69,8 @@ fun CanvasAppBar(
         navigationIcon = {
             IconButton(
                 modifier = Modifier.testTag("navigationButton"),
-                onClick = navigationActionClick) {
+                onClick = navigationActionClick
+            ) {
                 Icon(
                     painter = painterResource(id = navIconRes),
                     contentDescription = navIconContentDescription

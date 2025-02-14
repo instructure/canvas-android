@@ -54,6 +54,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -238,8 +240,12 @@ fun AlertsListItem(
             )
         }
         .padding(8.dp)
-        .testTag("alertItem"),
-        verticalAlignment = Alignment.CenterVertically) {
+        .testTag("alertItem")
+        .semantics {
+            role = Role.Button
+        },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Row(modifier = Modifier.align(Alignment.Top)) {
             if (alert.unread) {
                 Box(

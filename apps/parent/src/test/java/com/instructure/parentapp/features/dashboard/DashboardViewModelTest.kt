@@ -96,6 +96,11 @@ class DashboardViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
+        every { context.getString(R.string.a11y_studentSelectorExpand) } returns "expand"
+        every { context.getString(R.string.a11y_studentSelectorCollapse) } returns "collapse"
+        every { context.getString(R.string.a11y_studentSelectorContentDescription, any(), any()) } answers {
+            "Tap to ${secondArg<Array<Any>>()[0]} student selector, selected student is: ${secondArg<Array<Any>>()[1]}"
+        }
     }
 
     @After
@@ -234,13 +239,23 @@ class DashboardViewModelTest {
 
     @Test
     fun `Toggle student selector`() {
+        coEvery { repository.getStudents(any()) } returns listOf(User(shortName = "Short Name"))
+
         createViewModel()
 
         viewModel.toggleStudentSelector()
         assertTrue(viewModel.data.value.studentSelectorExpanded)
+        assertEquals(
+            "Tap to collapse student selector, selected student is: Short Name",
+            viewModel.data.value.studentSelectorContentDescription
+        )
 
         viewModel.toggleStudentSelector()
         assertFalse(viewModel.data.value.studentSelectorExpanded)
+        assertEquals(
+            "Tap to expand student selector, selected student is: Short Name",
+            viewModel.data.value.studentSelectorContentDescription
+        )
     }
 
     @Test

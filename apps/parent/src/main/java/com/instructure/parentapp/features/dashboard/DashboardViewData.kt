@@ -25,6 +25,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 data class DashboardViewData(
     val userViewData: UserViewData? = null,
     val studentSelectorExpanded: Boolean = false,
+    val studentSelectorContentDescription: String = "",
     val studentItems: List<ItemViewModel> = emptyList(),
     val selectedStudent: User? = null,
     val unreadCount: Int = 0,

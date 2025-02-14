@@ -21,7 +21,7 @@
             android:contentDescription=""
             android:icon="@drawable/ic_mail"
             android:title="@string/screenTitleInbox"
-            app:actionViewClass="android.widget.LinearLayout"/>
+            app:actionViewClass="android.widget.LinearLayout" />
         <item
             android:id="@+id/manage_students"
             android:contentDescription=""
@@ -32,13 +32,13 @@
             android:contentDescription=""
             android:icon="@drawable/ic_navigation_studio"
             android:title="@string/studio"
-            android:visible="false"/>
+            android:visible="false" />
         <item
             android:id="@+id/mastery"
             android:contentDescription=""
             android:icon="@drawable/ic_navigation_mastery"
             android:title="@string/masteryConnect"
-            android:visible="false"/>
+            android:visible="false" />
         <item
             android:id="@+id/settings"
             android:contentDescription=""
@@ -62,16 +62,22 @@
             android:icon="@drawable/ic_navigation_logout"
             android:title="@string/navigationDrawerLogOut" />
         <item
+            android:id="@+id/close_navigation_drawer"
+            android:contentDescription=""
+            android:icon="@drawable/ic_close"
+            android:title="@string/navigation_drawer_close"
+            android:visible="false" />
+        <item
             android:id="@+id/act_as_user"
             android:contentDescription=""
             android:icon="@drawable/ic_masquerade"
             android:title="@string/actAsUser"
-            android:visible="false"/>
+            android:visible="false" />
         <item
             android:id="@+id/stop_act_as_user"
             android:contentDescription=""
             android:icon="@drawable/ic_masquerade"
             android:title="@string/stopMasquerading"
-            android:visible="false"/>
+            android:visible="false" />
     </group>
 </menu>

@@ -16,6 +16,7 @@
  */
 package com.instructure.parentapp.features.addstudent.pairingcode
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,13 +28,17 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -45,13 +50,13 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentUiState
+import kotlinx.coroutines.delay
 
 @Composable
 fun PairingCodeScreen(
     uiState: AddStudentUiState,
     onCancelClick: () -> Unit
 ) {
-
     CanvasTheme {
         when {
             uiState.isLoading -> {
@@ -75,6 +80,8 @@ private fun PairingScreenContent(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+    val errorFocusRequester = remember { FocusRequester() }
     var pairingCode by remember { mutableStateOf("") }
     CanvasTheme {
         Column(modifier = modifier) {
@@ -110,8 +117,16 @@ private fun PairingScreenContent(
                     )
                 })
             if (uiState.isError) {
+                LaunchedEffect(Unit) {
+                    focusManager.clearFocus()
+                    delay(100)
+                    errorFocusRequester.requestFocus()
+                }
                 Text(
-                    modifier = Modifier.testTag("errorText"),
+                    modifier = Modifier
+                        .testTag("errorText")
+                        .focusRequester(errorFocusRequester)
+                        .focusable(),
                     text = stringResource(id = R.string.pairingCodeDialogError),
                     color = colorResource(id = R.color.textDanger)
                 )

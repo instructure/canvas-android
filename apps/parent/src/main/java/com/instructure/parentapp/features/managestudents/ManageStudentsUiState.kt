@@ -64,5 +64,6 @@ sealed class ManageStudentsAction {
 
 sealed class ManageStudentsViewModelAction {
     data class NavigateToAlertSettings(val student: User) : ManageStudentsViewModelAction()
-    data object AddStudent: ManageStudentsViewModelAction()
+    data object AddStudent : ManageStudentsViewModelAction()
+    data class AccessibilityAnnouncement(val announcement: String) : ManageStudentsViewModelAction()
 }
