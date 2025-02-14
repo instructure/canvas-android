@@ -31,8 +31,10 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.zonedDateTime
+import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**
@@ -43,6 +45,7 @@ import java.util.concurrent.TimeUnit
  * To test this service, launch the app on a device running Android 7.1+ and run a command in the following format:
  *     adb shell cmd jobscheduler run -f <app_package_name> <service_id>
  */
+@AndroidEntryPoint
 abstract class PageViewUploadService : JobService() {
 
     /**

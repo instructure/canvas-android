@@ -21,9 +21,16 @@ import android.os.Bundle
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.utils.showMasqueradeNotification
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 open class BaseCanvasBottomSheetDialogFragment : BottomSheetDialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
+
+    @Inject
+    lateinit var pageViewUtils: PageViewUtils
 
     open fun isFullScreen() = false
 
@@ -32,7 +39,7 @@ open class BaseCanvasBottomSheetDialogFragment : BottomSheetDialogFragment(), Pa
         showMasqueradeNotification()
     }
 
-    private val delegate by lazy { PageViewFragmentDelegate(this) }
+    private val delegate by lazy { PageViewFragmentDelegate(this, pageViewUtils) }
 
     override fun beforePageViewPrerequisites(): List<String> = emptyList()
 

@@ -22,16 +22,18 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.pageview.PageViewVisibilityTracker
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocusListener
-import com.instructure.pandautils.analytics.PageViewAnnotationProcessor
+import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.utils.AppType
 
 class PageViewFragmentDelegate<T>(
-    private val fragment: T
+    private val fragment: T,
+    pageViewUtils: PageViewUtils
 ) where T : Fragment, T : PageViewWindowFocus, T : PageViewPrerequisites {
 
     private val visibilityTracker = PageViewVisibilityTracker()
-    private val pageViewAnnotationProcessor = PageViewAnnotationProcessor(fragment::class.java, fragment)
+    private val pageViewAnnotationProcessor by lazy { PageViewAnnotationProcessor(fragment::class.java, fragment, pageViewUtils) }
 
     fun completePageViewPrerequisite(prerequisite: String) {
         if (visibilityTracker.trackCustom(prerequisite, true, fragment)) {
