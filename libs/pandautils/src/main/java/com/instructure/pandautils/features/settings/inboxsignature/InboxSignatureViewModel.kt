@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,28 +13,17 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.settings
+package com.instructure.pandautils.features.settings.inboxsignature
 
-interface SettingsRouter {
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-    fun navigateToProfileSettings() = Unit
+@HiltViewModel
+class InboxSignatureViewModel @Inject constructor() : ViewModel() {
 
-    fun navigateToPushNotificationsSettings() = Unit
-
-    fun navigateToEmailNotificationsSettings() = Unit
-
-    fun navigateToPairWithObserver() = Unit
-
-    fun navigateToSyncSettings() = Unit
-
-    fun navigateToAccountPreferences() = Unit
-
-    fun navigateToRemoteConfig() = Unit
-
-    fun navigateToFeatureFlags() = Unit
-
-    fun navigateToRateApp() = Unit
-
-    fun navigateToInboxSignature() = Unit
-
+    private val _uiState = MutableStateFlow(InboxSignatureUiState("valami"))
+    val uiState = _uiState.asStateFlow()
 }

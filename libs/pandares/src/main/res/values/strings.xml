@@ -1997,4 +1997,5 @@
     <string name="inboxSettingsInboxSignature">Inbox Signature</string>
     <string name="inboxSignatureNotSet">Not Set</string>
     <string name="inboxSignatureEnabled">Enabled</string>
+    <string name="inboxSignatureScreenTitle">Inbox Signature</string>
 </resources>

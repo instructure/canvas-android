@@ -219,6 +219,10 @@ class SettingsFragment : BaseCanvasFragment() {
                 settingsRouter.navigateToRateApp()
             }
 
+            SettingsItem.INBOX_SIGNATURE -> {
+                settingsRouter.navigateToInboxSignature()
+            }
+
             else -> {
 
             }
