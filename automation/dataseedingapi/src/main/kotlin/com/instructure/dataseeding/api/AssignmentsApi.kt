@@ -17,7 +17,13 @@
 
 package com.instructure.dataseeding.api
 
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AssignmentOverrideApiModel
+import com.instructure.dataseeding.model.CreateAssignmentOverrideForStudents
+import com.instructure.dataseeding.model.CreateAssignmentOverrideForStudentsWrapper
+import com.instructure.dataseeding.model.CreateAssignmentWrapper
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
@@ -48,6 +54,7 @@ object AssignmentsApi {
         val gradingType: GradingType = GradingType.POINTS,
         val allowedExtensions: List<String>? = null,
         val teacherToken: String,
+        val assignmentName: String? = null,
         val groupCategoryId: Long? = null,
         val pointsPossible: Double? = null,
         val importantDate: Boolean? = null,
@@ -64,6 +71,7 @@ object AssignmentsApi {
                 request.submissionTypes,
                 request.gradingType,
                 request.allowedExtensions,
+                request.assignmentName,
                 request.groupCategoryId,
                 request.pointsPossible,
                 request.importantDate,
@@ -81,11 +89,13 @@ object AssignmentsApi {
         submissionTypes: List<SubmissionType> = emptyList(),
         gradingType: GradingType = GradingType.POINTS,
         allowedExtensions: List<String>? = null,
+        assignmentName: String? = null,
         groupCategoryId: Long? = null,
         pointsPossible: Double? = null,
         importantDate: Boolean? = null,
         assignmentGroupId: Long? = null): AssignmentApiModel {
         val assignment = CreateAssignmentWrapper(Randomizer.randomAssignment(
+                assignmentName,
                 withDescription,
                 lockAt,
                 unlockAt,

@@ -44,8 +44,9 @@ object PagesApi {
             frontPage: Boolean = false,
             body: String = Randomizer.randomPageBody(),
             editingRoles: String? = null,
+            pageTitle: String? = null
             ): PageApiModel {
-        val page = CreatePageWrapper(CreatePage(Randomizer.randomPageTitle(), body, published, frontPage, editingRoles))
+        val page = CreatePageWrapper(CreatePage(pageTitle ?: Randomizer.randomPageTitle(), body, published, frontPage, editingRoles))
 
         return pagesService(token)
                 .createCoursePage(courseId, page)
