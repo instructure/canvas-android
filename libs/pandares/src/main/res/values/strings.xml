@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Failed to delete conversation</string>
     <string name="conversationUpdateFailed">Failed to update conversation</string>
     <string name="sendIndividualMessage">Send individual message to each recipient</string>
+    <string name="sendIndividualMessageIsMandatory">You can only send individual messages over 100 recipients</string>
     <string name="invalidRecipients">You are not allowed to send messages to one or more of the selected recipients.</string>
     <string name="newMessage">New Message</string>
     <string name="forwardMessage">Forward Message</string>

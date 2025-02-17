@@ -28,6 +28,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHidden
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import java.util.EnumMap
+import kotlin.math.max
 
 data class InboxComposeUiState(
     val inboxComposeMode: InboxComposeOptionsMode = InboxComposeOptionsMode.NEW_MESSAGE,
@@ -53,6 +54,10 @@ data class InboxComposeUiState(
                 recipientPickerUiState.selectedRecipients.isNotEmpty() &&
                 subject.text.isNotEmpty() && body.text.isNotEmpty() &&
                 attachments.all { it.status == AttachmentStatus.UPLOADED }
+    val isSendIndividualMandatory: Boolean
+        get() = recipientPickerUiState.selectedRecipients.sumOf { max(it.userCount, 1) } >= 100
+    val isSendIndividualEnabled: Boolean
+        get() = sendIndividual || isSendIndividualMandatory
 }
 
 sealed class InboxComposeViewModelAction {
