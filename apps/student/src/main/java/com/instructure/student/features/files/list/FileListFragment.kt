@@ -33,6 +33,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.FileFolderManager
@@ -47,6 +48,7 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
@@ -185,7 +187,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         if (folder != null) {
             configureViews()
         } else {
-            tryWeave {
+            lifecycleScope.tryLaunch {
                 folder = if (folderId != 0L) {
                     // If folderId is valid, get folder by ID
                     fileListRepository.getFolder(folderId, true)
