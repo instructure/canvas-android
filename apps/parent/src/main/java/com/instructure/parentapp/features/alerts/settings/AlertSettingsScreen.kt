@@ -34,6 +34,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
@@ -489,7 +490,10 @@ private fun ThresholdDialog(
                 TextButton(
                     modifier = Modifier.testTag("thresholdDialogSaveButton"),
                     enabled = enabled,
-                    colors = ButtonDefaults.textButtonColors(contentColor = color),
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = color,
+                        disabledContentColor = color.copy(alpha = ContentAlpha.disabled)
+                    ),
                     onClick = {
                         actionHandler(
                             AlertSettingsAction.CreateThreshold(
