@@ -22,13 +22,16 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.instructure.parentapp.utils.ParentComposeWaitMatchers
 
 
 class NotAParentPage(private val composeTestRule: ComposeTestRule) {
 
     fun expandAppOptions() {
-        composeTestRule.onNodeWithText("Are you a student or teacher?").performClick()
+        composeTestRule.onNodeWithText("Are you a student or teacher?", useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
     }
 
     fun clickReturnToLogin() {
@@ -36,7 +39,9 @@ class NotAParentPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickApp(appName: String) {
-        composeTestRule.onNodeWithText(appName).performClick()
+        composeTestRule.onNodeWithText(appName, useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
     }
 
     fun assertStudentAppDisplayed() {

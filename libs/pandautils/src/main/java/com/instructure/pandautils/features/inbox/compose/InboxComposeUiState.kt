@@ -46,6 +46,7 @@ data class InboxComposeUiState(
     val showConfirmationDialog: Boolean = false,
     val hiddenBodyMessage: String? = null,
     val enableCustomBackHandler: Boolean = true,
+    val signatureLoading: Boolean = false,
 ) {
     val isSendButtonEnabled: Boolean
         get() = selectContextUiState.selectedCanvasContext != null &&

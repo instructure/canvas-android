@@ -101,6 +101,7 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         assignmentDetailsPage.assertAssignmentTitle(testAssignment.name)
         assignmentDetailsPage.assertAssignmentDetails(testAssignment)
         assignmentDetailsPage.assertAssignmentGraded("13")
+        assignmentDetailsPage.assertNoAttemptSpinner()
         assignmentDetailsPage.assertSelectedAttempt(1)
 
         Log.d(STEP_TAG, "Navigate back to the course list page of the selected student.")

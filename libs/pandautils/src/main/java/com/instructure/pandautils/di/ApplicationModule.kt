@@ -25,6 +25,7 @@ import androidx.work.WorkManager
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.FileFolderAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -41,6 +42,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.Module
 import dagger.Provides
@@ -184,5 +186,13 @@ class ApplicationModule {
     @Singleton
     fun provideRatingDialogPrefs(): RatingDialog.Prefs {
         return RatingDialog.Prefs
+    }
+
+    @Provides
+    fun provideWebViewAuthenticator(
+        oAuthApi: OAuthAPI.OAuthInterface,
+        apiPrefs: ApiPrefs
+    ): WebViewAuthenticator {
+        return WebViewAuthenticator(oAuthApi, apiPrefs)
     }
 }
