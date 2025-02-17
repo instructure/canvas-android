@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.ui.pages
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasTestTag
@@ -29,6 +30,7 @@ import androidx.compose.ui.test.performScrollTo
 import com.instructure.canvasapi2.models.Course
 import com.instructure.composeTest.hasSiblingWithText
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.espresso.assertTextColor
 import com.instructure.pandares.R
 
 
@@ -65,6 +67,10 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag(R.drawable.ic_panda_book.toString())
             .assertIsDisplayed()
+    }
+
+    fun assertCourseLabelTextColor(course: CourseApiModel, expectedTextColor: Long) {
+        composeTestRule.onNodeWithText(course.name).assertTextColor(Color(expectedTextColor))
     }
 
     fun assertGradeTextDisplayed(courseName: String, gradeText: String) {

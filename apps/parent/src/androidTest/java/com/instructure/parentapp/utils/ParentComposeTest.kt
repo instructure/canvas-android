@@ -21,6 +21,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
+import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.AddStudentPage
 import com.instructure.parentapp.ui.pages.AlertSettingsPage
@@ -60,6 +61,7 @@ abstract class ParentComposeTest : ParentTest() {
     protected val inboxComposeMessagePage = InboxComposePage(composeTestRule)
     protected val inboxRecipientPickerPage = RecipientPickerPage(composeTestRule)
     protected val inboxCoursePickerPage = ParentInboxCoursePickerPage(composeTestRule)
+    protected val settingsPage = SettingsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }
