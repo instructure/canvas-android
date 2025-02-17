@@ -25,13 +25,19 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
-import android.webkit.*
+import android.webkit.CookieManager
+import android.webkit.HttpAuthHandler
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
@@ -41,8 +47,10 @@ import com.instructure.canvasapi2.managers.UserManager.getSelf
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.Analytics.logEvent
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiPrefs.accessToken
 import com.instructure.canvasapi2.utils.ApiPrefs.clientId
 import com.instructure.canvasapi2.utils.ApiPrefs.clientSecret
@@ -50,7 +58,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs.domain
 import com.instructure.canvasapi2.utils.ApiPrefs.protocol
 import com.instructure.canvasapi2.utils.ApiPrefs.refreshToken
 import com.instructure.canvasapi2.utils.ApiPrefs.user
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger.d
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.api.MobileVerifyAPI.mobileVerify
@@ -70,12 +81,16 @@ import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationSet {
@@ -169,19 +184,22 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
         private fun handleShouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if (overrideUrlLoading(view, url)) return true
-            when {
+            return when {
                 url.contains(SUCCESS_URL) -> {
                     domain = accountDomain.domain!!
                     val oAuthRequest = url.substring(url.indexOf(SUCCESS_URL) + SUCCESS_URL.length)
                     getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback)
+                    true
                 }
                 url.contains(ERROR_URL) -> {
                     clearCookies()
                     loadUrl(view, authenticationURL, headers)
+                    true
                 }
-                else -> loadUrl(view, url, headers)
+                else -> {
+                    false
+                }
             }
-            return true // then it is not handled by default action
         }
 
         @Suppress("DEPRECATION")
