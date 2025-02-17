@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
@@ -157,7 +156,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
     }
 
     override fun fileClicked(file: FileFolder) {
-        PageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
+        pageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
         openMedia(file.contentType, file.url, file.displayName, file.id.toString(), canvasContext, file.isLocalFile)
     }
 

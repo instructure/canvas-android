@@ -69,6 +69,8 @@ class PageViewUploadWorker @AssistedInject constructor(
                 pageViewDao.delete(oldEvents)
             }
 
+            if (localEvents.isEmpty()) return Result.success()
+
             val uploadGroups = localEvents.groupBy({ it.postUrl }) {
                 val properties = mutableMapOf(
                     "app_name" to appKey.appName,

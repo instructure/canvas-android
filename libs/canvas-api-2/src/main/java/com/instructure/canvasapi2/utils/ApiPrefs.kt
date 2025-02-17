@@ -21,7 +21,6 @@ import androidx.core.os.ConfigurationCompat
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import java.io.File
 
@@ -156,8 +155,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
         // Clear preferences
         clearPrefs()
 
-        // Clear PageView session ID
-        PageViewUtils.session.clear()
         pandataInfo = null
 
         // Clear http cache

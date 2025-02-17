@@ -23,17 +23,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import io.mockk.verify
-import io.paperdb.Paper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -43,7 +40,7 @@ import org.junit.Test
 class OfflineAnalyticsManagerTest {
     private lateinit var context: Context
     private lateinit var analytics: Analytics
-    private lateinit var pageViewUtils: PageViewUtils
+    private lateinit var pageViewUtils: com.instructure.pandautils.analytics.pageview.PageViewUtils
     private lateinit var apiPrefs: ApiPrefs
     private lateinit var dateTimeProvider: DateTimeProvider
     private lateinit var featureFlagProvider: FeatureFlagProvider
@@ -53,7 +50,6 @@ class OfflineAnalyticsManagerTest {
     @Before
     fun setup() {
         context = mockk(relaxed = true)
-        Paper.init(context)
         analytics = mockk(relaxed = true)
         pageViewUtils = mockk(relaxed = true)
         apiPrefs = mockk(relaxed = true)
@@ -73,7 +69,7 @@ class OfflineAnalyticsManagerTest {
     fun `reportOfflineAutoSyncSwitchChanged should log on event`() = runTest {
         every { apiPrefs.fullDomain } returns "https://example.com"
         coEvery { featureFlagProvider.offlineEnabled() } returns true
-        mockkObject(PageViewUtils)
+        every { pageViewUtils.saveSingleEvent(any(), any()) } returns mockk()
         offlineAnalyticsManager.reportOfflineAutoSyncSwitchChanged(true)
 
         coVerify {
@@ -86,7 +82,7 @@ class OfflineAnalyticsManagerTest {
     fun `reportOfflineAutoSyncSwitchChanged should log off event`() = runTest {
         every { apiPrefs.fullDomain } returns "https://example.com"
         coEvery { featureFlagProvider.offlineEnabled() } returns true
-        mockkObject(PageViewUtils)
+        every { pageViewUtils.saveSingleEvent(any(), any()) } returns mockk()
         offlineAnalyticsManager.reportOfflineAutoSyncSwitchChanged(false)
 
         coVerify {
@@ -99,7 +95,7 @@ class OfflineAnalyticsManagerTest {
     fun `reportOfflineSyncStarted should log event`() = runTest {
         every { apiPrefs.fullDomain } returns "https://example.com"
         coEvery { featureFlagProvider.offlineEnabled() } returns true
-        mockkObject(PageViewUtils)
+        every { pageViewUtils.saveSingleEvent(any(), any()) } returns mockk()
         offlineAnalyticsManager.reportOfflineSyncStarted()
 
         coVerify {
@@ -112,7 +108,7 @@ class OfflineAnalyticsManagerTest {
     fun `reportCourseOpenedInOfflineMode should log event if feature flag is enabled`() = runTest {
         every { apiPrefs.fullDomain } returns "https://example.com"
         coEvery { featureFlagProvider.offlineEnabled() } returns true
-        mockkObject(PageViewUtils)
+        every { pageViewUtils.saveSingleEvent(any(), any()) } returns mockk()
         offlineAnalyticsManager.reportCourseOpenedInOfflineMode()
 
         coVerify {
@@ -125,7 +121,7 @@ class OfflineAnalyticsManagerTest {
     fun `reportCourseOpenedInOfflineMode should log event if feature flag is disabled`() = runTest {
         every { apiPrefs.fullDomain } returns "https://example.com"
         coEvery { featureFlagProvider.offlineEnabled() } returns false
-        mockkObject(PageViewUtils)
+        every { pageViewUtils.saveSingleEvent(any(), any()) } returns mockk()
         offlineAnalyticsManager.reportCourseOpenedInOfflineMode()
 
         coVerify {
@@ -140,6 +136,7 @@ class OfflineAnalyticsManagerTest {
         every { apiPrefs.fullDomain } returns "https://example.com"
 
         every { dateTimeProvider.getCalendar().timeInMillis } returns 2000L
+        every { pageViewUtils.saveSingleEvent(any(), any()) } returns mockk()
 
         val expectedDuration = 1000L
 
@@ -160,6 +157,7 @@ class OfflineAnalyticsManagerTest {
     fun `offlineModeEnded should clear datastore and calculates duration if feature flag is disabled`() = runTest {
         coEvery { featureFlagProvider.offlineEnabled() } returns false
         every { apiPrefs.fullDomain } returns "https://example.com"
+        every { pageViewUtils.saveSingleEvent(any(), any()) } returns mockk()
 
         every { dateTimeProvider.getCalendar().timeInMillis } returns 2000L
 

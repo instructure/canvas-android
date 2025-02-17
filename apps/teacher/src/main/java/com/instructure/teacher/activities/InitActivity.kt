@@ -116,7 +116,6 @@ import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
-import com.instructure.teacher.services.TeacherPageViewService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
@@ -154,6 +153,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
+    lateinit var pandataAppKey: PandataInfo.AppKey
 
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
@@ -256,7 +258,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             if (ApiPrefs.pandataInfo?.isValid != true) {
                 try {
                     ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
-                        PandataManager.getToken(TeacherPageViewService.pandataAppKey, it)
+                        PandataManager.getToken(pandataAppKey, it)
                     }
                 } catch (ignore: Throwable) {
                     Logger.w("Unable to refresh pandata info")
