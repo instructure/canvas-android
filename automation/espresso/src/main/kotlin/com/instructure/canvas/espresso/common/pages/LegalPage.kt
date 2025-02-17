@@ -14,39 +14,55 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.pages
+package com.instructure.canvas.espresso.common.pages
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
+import com.instructure.pandautils.R
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
+/**
+ * Represents the Legal Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the legal
+ * page. It contains various view elements such as privacy policy label, terms of use label,
+ * and open source label.
+ */
 class LegalPage : BasePage(R.id.legalPage) {
+
     private val privacyPolicyLabel by OnViewWithId(R.id.privacyPolicyLabel)
     private val termsOfUseLabel by OnViewWithId(R.id.termsOfUseLabel)
     private val openSourceLabel by OnViewWithId(R.id.openSourceLabel)
 
+    /**
+     * Opens the privacy policy.
+     */
     fun openPrivacyPolicy() {
         privacyPolicyLabel.click()
     }
 
+    /**
+     * Opens the terms of use.
+     */
     fun openTermsOfUse() {
         termsOfUseLabel.click()
+    }
+
+    /**
+     * Opens the Canvas on GitHub.
+     */
+    fun openCanvasOnGithub() {
+        openSourceLabel.click()
     }
 
     fun assertTermsOfUseDisplayed() {
         // This is the safest thing to assert on.  The content of the page could be dicey.
         onView(allOf(withParent(withId(R.id.toolbar)), containsTextCaseInsensitive("Terms of Use"))).assertDisplayed()
     }
-
-    fun openCanvasOnGithub() {
-        openSourceLabel.click()
-    }
-
 }
