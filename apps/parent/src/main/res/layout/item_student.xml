@@ -26,6 +26,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="120dp"
         android:layout_height="90dp"
+        android:contentDescription="@{@string/a11y_studentSelectorSelectStudent(itemViewModel.studentItemViewData.studentName)}"
         android:onClick="@{() -> itemViewModel.onStudentClick()}">
 
         <ImageView
