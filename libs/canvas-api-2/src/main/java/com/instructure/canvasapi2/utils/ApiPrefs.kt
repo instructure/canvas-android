@@ -82,7 +82,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var isStudentView by BooleanPref()
     var isMasqueradingFromQRCode by BooleanPref()
     var masqueradeId by LongPref(-1L)
-    var isFirstMasqueradingStart by BooleanPref()
     internal var masqueradeDomain by StringPref()
     internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user", false)
 
@@ -145,6 +144,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     val showElementaryView
         get() = canvasForElementary && elementaryDashboardEnabledOverride
+
+    var webViewAuthenticationTimestamp by LongPref(0)
 
     /**
      * clearAllData is required for logout.

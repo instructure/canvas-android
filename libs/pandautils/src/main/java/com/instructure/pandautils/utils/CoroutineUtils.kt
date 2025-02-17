@@ -34,3 +34,24 @@ fun <T> debounce(
         }
     }
 }
+
+fun <T> CoroutineScope.launchWithLoadingDelay(
+    loadingThresholdMs: Long = 200L,
+    onLoadingStart: () -> Unit,
+    onLoadingEnd: () -> Unit,
+    block: suspend () -> T
+) {
+    this.launch {
+        val loadingJob = launch {
+            delay(loadingThresholdMs)
+            onLoadingStart()
+        }
+
+        try {
+            block()
+        } finally {
+            loadingJob.cancel()
+            onLoadingEnd()
+        }
+    }
+}

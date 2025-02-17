@@ -246,7 +246,6 @@ class FlutterAppMigrationTest {
             apiPrefs.isMasquerading = false
             apiPrefs.isMasqueradingFromQRCode = false
             apiPrefs.masqueradeId = -1
-            apiPrefs.isFirstMasqueradingStart = true
             apiPrefs.domain = "domain2.com"
             apiPrefs.user = expectedUsers[1]
         }
