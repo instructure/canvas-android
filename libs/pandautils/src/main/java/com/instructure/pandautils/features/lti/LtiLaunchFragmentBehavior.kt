@@ -16,8 +16,11 @@
 package com.instructure.pandautils.features.lti
 
 import androidx.annotation.ColorInt
+import androidx.fragment.app.FragmentActivity
 
 interface LtiLaunchFragmentBehavior {
     @get:ColorInt
     val toolbarColor: Int
+
+    fun closeLtiLaunchFragment(activity: FragmentActivity)
 }

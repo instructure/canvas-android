@@ -20,8 +20,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -60,7 +60,7 @@ fun ContextValueRow(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .height(52.dp)
+            .defaultMinSize(minHeight = 52.dp)
             .clickable(enabled = enabled) { onClick() }
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp)
