@@ -13,32 +13,37 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.analytics
+package com.instructure.pandautils.analytics.pageview
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.canvasapi2.utils.pageview.PageViewEvent
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
+import com.instructure.pandautils.analytics.pageview.db.PageViewEvent
 import java.lang.ref.WeakReference
 
-class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, enclosingObject: Any) {
+class PageViewAnnotationProcessor(
+    private val enclosingClass: Class<*>,
+    enclosingObject: Any,
+    private val pageViewUtils: PageViewUtils
+) {
 
     private val enclosingObjectRef = WeakReference(enclosingObject)
 
     private val enclosingObject: Any
-        get() = enclosingObjectRef.get() ?: throw IllegalStateException("Enclosing object has been garbage collected")
+        get() = enclosingObjectRef.get()
+            ?: throw IllegalStateException("Enclosing object has been garbage collected")
 
     fun startEvent() {
         if (pageViewEvent == null && hasPageViewAnnotation) {
             try {
-                pageViewEvent = PageViewUtils.startEvent(pageViewEventName, getPageViewUrl())
+                pageViewEvent = pageViewUtils.startEvent(pageViewEventName, getPageViewUrl())
             } catch (e: Exception) {
-                val pageViewException = PageViewException("Failed to start page view event for: $pageViewEventName", e)
+                val pageViewException =
+                    PageViewException("Failed to start page view event for: $pageViewEventName", e)
                 FirebaseCrashlytics.getInstance().recordException(pageViewException)
             }
         }
@@ -46,12 +51,13 @@ class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, enclosin
 
     fun stopEvent() {
         if (hasPageViewAnnotation) {
-            PageViewUtils.stopEvent(pageViewEvent)
+            pageViewUtils.stopEvent(pageViewEvent)
             pageViewEvent = null
         }
     }
 
-    private val hasPageViewAnnotation: Boolean = enclosingClass.isAnnotationPresent(PageView::class.java)
+    private val hasPageViewAnnotation: Boolean =
+        enclosingClass.isAnnotationPresent(PageView::class.java)
 
     private var pageViewEvent: PageViewEvent? = null
 
@@ -65,34 +71,39 @@ class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, enclosin
         }
 
     private fun getPageViewUrl(): String {
-        enclosingClass.declaredMethods.find { it.isAnnotationPresent(PageViewUrl::class.java) }?.let {
-            return it.invoke(enclosingObject) as String
-        }
+        enclosingClass.declaredMethods.find { it.isAnnotationPresent(PageViewUrl::class.java) }
+            ?.let {
+                return it.invoke(enclosingObject) as String
+            }
 
         var rawUrl = enclosingClass.getAnnotation(PageView::class.java)?.url.orEmpty()
 
         if (rawUrl.isEmpty()) return ApiPrefs.fullDomain
 
         val regex = Regex("\\{([^}]+)\\}")
-        val urlParams =  regex.findAll(rawUrl).map { matchResult ->
+        val urlParams = regex.findAll(rawUrl).map { matchResult ->
             matchResult.groupValues[1]
         }.toSet()
 
-        val paramFields = enclosingClass.fields.filter { it.isAnnotationPresent(PageViewUrlParam::class.java) }
-            .associate {
-                val key = it.getAnnotation(PageViewUrlParam::class.java).name
-                val valueObject = it.get(enclosingObject)
-                val value = if (valueObject is CanvasContext) valueObject.toAPIString().drop(1) else valueObject.toString()
-                key to value
-            }
+        val paramFields =
+            enclosingClass.fields.filter { it.isAnnotationPresent(PageViewUrlParam::class.java) }
+                .associate {
+                    val key = it.getAnnotation(PageViewUrlParam::class.java).name
+                    val valueObject = it.get(enclosingObject)
+                    val value = if (valueObject is CanvasContext) valueObject.toAPIString()
+                        .drop(1) else valueObject.toString()
+                    key to value
+                }
 
-        val paramMethods = enclosingClass.methods.filter { it.isAnnotationPresent(PageViewUrlParam::class.java) }
-            .associate {
-                val key = it.getAnnotation(PageViewUrlParam::class.java).name
-                val valueObject = it.invoke(enclosingObject)
-                val value = if (valueObject is CanvasContext) valueObject.toAPIString().drop(1) else valueObject.toString()
-                key to value
-            }
+        val paramMethods =
+            enclosingClass.methods.filter { it.isAnnotationPresent(PageViewUrlParam::class.java) }
+                .associate {
+                    val key = it.getAnnotation(PageViewUrlParam::class.java).name
+                    val valueObject = it.invoke(enclosingObject)
+                    val value = if (valueObject is CanvasContext) valueObject.toAPIString()
+                        .drop(1) else valueObject.toString()
+                    key to value
+                }
 
         val params = paramFields + paramMethods
 
@@ -101,12 +112,13 @@ class PageViewAnnotationProcessor(private val enclosingClass: Class<*>, enclosin
             rawUrl = rawUrl.replace("{$param}", value.orEmpty())
         }
 
-        val queryParams = enclosingClass.methods.filter { it.isAnnotationPresent(PageViewUrlQuery::class.java) }
-            .map {
-                val key = it.getAnnotation(PageViewUrlQuery::class.java).name
-                val value = it.invoke(enclosingObject).toString()
-                key to value
-            }
+        val queryParams =
+            enclosingClass.methods.filter { it.isAnnotationPresent(PageViewUrlQuery::class.java) }
+                .map {
+                    val key = it.getAnnotation(PageViewUrlQuery::class.java).name
+                    val value = it.invoke(enclosingObject).toString()
+                    key to value
+                }
 
         queryParams.forEachIndexed { index, (key, value) ->
             rawUrl += if (index == 0) "?" else "&"

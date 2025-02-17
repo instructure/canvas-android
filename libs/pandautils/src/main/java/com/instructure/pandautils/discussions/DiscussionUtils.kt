@@ -68,79 +68,24 @@ object DiscussionUtils {
 
     private const val MAX_DISPLAY_DEPTH_TABLET = 4
 
-    //region Cache Cleaning
-
-    private fun cleanDiscussionCache(discussionTopicHeaderId: Long, discussionEntries: List<DiscussionEntry>) {
-        // Cleans up any duplicate entries in the discussion tree
-        val cachingManager = DiscussionCaching(discussionTopicHeaderId)
-        val mutableDiscussionEntries = discussionEntries.toMutableList()
-
-        mutableDiscussionEntries.forEach {
-            recursivelyClean(cachingManager, it, it.replies)
-        }
-    }
-
-    private fun recursivelyClean(cachingManager: DiscussionCaching, parentEntry: DiscussionEntry, discussionEntries: MutableList<DiscussionEntry>?) {
-
-        var cachedEntries = cachingManager.loadEntries()
-
-        // Clean up the parent if necessary
-        cachedEntries.firstOrNull { it.id == parentEntry.id }?.let {
-            cachingManager.removeEntry(it.id)
-            cachedEntries = cachingManager.loadEntries()
-        }
-
-        discussionEntries?.forEach { discussionEntry ->
-            cachedEntries.firstOrNull { it.id == discussionEntry.id }?.let {
-                cachingManager.removeEntry(it.id)
-                cachedEntries = cachingManager.loadEntries()
-            }
-            recursivelyClean(cachingManager, discussionEntry, discussionEntry.replies)
-        }
-    }
-
-    //endregion
-
     //region Cache and Discussion Unification
 
-    private fun unifyDiscussionEntries(discussionTopicHeaderId: Long, discussionEntries: MutableList<DiscussionEntry>): List<DiscussionEntry> {
-        val cachingManager = DiscussionCaching(discussionTopicHeaderId)
-        val cachedEntries = cachingManager.loadEntries()
-
-        if (cachedEntries.isEmpty()) return discussionEntries // Nothing in the cache
-
-        // Situation where the first set of replies is cached. We setup the parent ID as -1
-        discussionEntries.addAll(cachedEntries.filter { it.parentId == -1L })
-
+    private fun unifyDiscussionEntries(discussionEntries: MutableList<DiscussionEntry>): List<DiscussionEntry> {
         // Sort the discussion entries
         discussionEntries.sortBy { it.createdAt }
 
         // Loop through the highest level entries and add cached items where necessary for all children of parent
         discussionEntries.forEach { parentEntry ->
-            parentEntry.replies = recursiveUnify(cachingManager, parentEntry, parentEntry.replies)
+            parentEntry.replies = recursiveUnify(parentEntry.replies)
         }
 
         return discussionEntries
     }
 
-    private fun recursiveUnify(cachingManager: DiscussionCaching, parentEntry: DiscussionEntry, discussionEntries: MutableList<DiscussionEntry>?): MutableList<DiscussionEntry>? {
-        val cachedEntries = cachingManager.loadEntries()
-
-        // Cached entries may not get added to the parent...
-        if (cachedEntries.isNotEmpty()) {
-
-            // Add cached items belonging to this entry
-            cachedEntries.filter { cachedEntry -> cachedEntry.parentId == parentEntry.id }.let { entries ->
-                discussionEntries?.addAll(entries)
-                parentEntry.totalChildren += entries.size
-                if (entries.isNotEmpty()) discussionEntries?.sortBy { entry -> entry.createdAt }
-            }
-
-            discussionEntries?.forEach { discussionEntry ->
-                discussionEntry.replies = recursiveUnify(cachingManager, discussionEntry, discussionEntry.replies)
-            }
+    private fun recursiveUnify(discussionEntries: MutableList<DiscussionEntry>?): MutableList<DiscussionEntry>? {
+        discussionEntries?.forEach { discussionEntry ->
+            discussionEntry.replies = recursiveUnify(discussionEntry.replies)
         }
-
         return discussionEntries
     }
     //endregion
@@ -261,11 +206,10 @@ object DiscussionUtils {
 
         builder.append(DiscussionHtmlTemplates.getHeader(context))
 
-        cleanDiscussionCache(discussionTopicHeader.id, discussionEntries)
 
-        val discussionEntryList: List<DiscussionEntry> = if (startEntryId == 0L) unifyDiscussionEntries(discussionTopicHeader.id, discussionEntries.toMutableList())
+        val discussionEntryList: List<DiscussionEntry> = if (startEntryId == 0L) unifyDiscussionEntries(discussionEntries.toMutableList())
         else { // We are looking for a subentry of discussions to display. This finds a subentry, and uses that as the initial entry for display.
-            findSubEntry(startEntryId, unifyDiscussionEntries(discussionTopicHeader.id, discussionEntries.toMutableList()))
+            findSubEntry(startEntryId, unifyDiscussionEntries(discussionEntries.toMutableList()))
         }
 
         // This loops through each of the direct replies and for each child up to 3 or 5 based on if tablet or phone.

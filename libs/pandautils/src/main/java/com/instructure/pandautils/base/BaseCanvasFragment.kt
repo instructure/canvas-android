@@ -15,11 +15,12 @@
  */
 package com.instructure.pandautils.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
+import javax.inject.Inject
 
 /**
  * Base class for all Canvas Fragments that contains cross-cutting concerns like analytics.
@@ -27,7 +28,10 @@ import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
  */
 open class BaseCanvasFragment : Fragment(), PageViewWindowFocus, PageViewPrerequisites {
 
-    private val delegate by lazy { PageViewFragmentDelegate(this) }
+    @Inject
+    lateinit var pageViewUtils: PageViewUtils
+
+    private val delegate by lazy { PageViewFragmentDelegate(this, pageViewUtils) }
 
     override fun beforePageViewPrerequisites(): List<String> = emptyList()
 
@@ -35,9 +39,9 @@ open class BaseCanvasFragment : Fragment(), PageViewWindowFocus, PageViewPrerequ
         delegate.completePageViewPrerequisite(prerequisite)
     }
 
-    override fun onAttach(context: Context) {
-        delegate.onAttach(context)
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        delegate.onCreate()
+        super.onCreate(savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

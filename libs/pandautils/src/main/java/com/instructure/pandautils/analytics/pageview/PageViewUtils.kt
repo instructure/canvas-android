@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,32 +13,27 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-@file:Suppress("unused")
-
-package com.instructure.canvasapi2.utils.pageview
+package com.instructure.pandautils.analytics.pageview
 
 import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.weave
-import io.paperdb.Book
-import io.paperdb.Paper
+import com.instructure.pandautils.analytics.pageview.db.PageViewDao
+import com.instructure.pandautils.analytics.pageview.db.PageViewEvent
 import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-object PageViewUtils {
-
-    private const val MIN_INTERACTION_SECONDS = 1.0
-
+class PageViewUtils(
+    private val pageViewDao: PageViewDao,
+) {
     private val contextRegex = """/(courses|groups)/([^/]+)""".toRegex()
 
-    val book: Book = Paper.book("pageViewEvents")
+    private val session = PageViewSession()
 
-    val session = PageViewSession()
-
-    @Suppress("EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate")
+    @Suppress("MemberVisibilityCanBePrivate")
     fun startEvent(eventName: String, url: String): PageViewEvent? {
         if (ApiPrefs.getValidToken().isBlank()) return null
         val loginId = ApiPrefs.user?.id ?: return null
@@ -58,31 +53,29 @@ object PageViewUtils {
             realUserId = realUserId
         )
         Logger.d("PageView: Event STARTED $url ($eventName)")
-        weave { inBackground { book.write(event.key, event) } }
+        weave { pageViewDao.insert(event) }
         return event
     }
 
-    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun stopEvent(event: PageViewEvent?) {
         if (event == null || event.eventDuration > 0) return
-        event.eventDuration = (System.currentTimeMillis() - event.timestamp.time) / 1000.0
-        Logger.d("PageView: Event STOPPED ${event.url} (${event.eventName}) - ${event.eventDuration} seconds")
+        val updated =
+            event.copy(eventDuration = (System.currentTimeMillis() - event.timestamp.time) / 1000.0)
+        Logger.d("PageView: Event STOPPED ${updated.url} (${updated.eventName}) - ${updated.eventDuration} seconds")
         weave {
             inBackground {
-                if (event.eventDuration < MIN_INTERACTION_SECONDS) {
-                    book.delete(event.key)
-                    Logger.d("PageView: Event DROPPED ${event.url} (${event.eventName}) - ${event.eventDuration} seconds, TOO SHORT")
+                if (updated.eventDuration < MIN_INTERACTION_SECONDS) {
+                    pageViewDao.delete(event)
                 } else {
-                    book.write(event.key, event)
+                    pageViewDao.update(updated)
                 }
             }
         }
     }
 
-    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun saveSingleEvent(eventName: String, url: String) {
         startEvent(eventName, url)?.let {
-            weave { inBackground { book.write(it.key, it) } }
+            weave { pageViewDao.update(it) }
             Logger.d("PageView: Single event SAVED ${it.url} (${it.eventName})")
         }
     }
@@ -97,6 +90,9 @@ object PageViewUtils {
             } to id
         }
 
+    companion object {
+        private const val MIN_INTERACTION_SECONDS = 1.0
+    }
 }
 
 class PageViewVisibilityTracker() {

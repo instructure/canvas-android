@@ -149,9 +149,6 @@ dependencies {
     implementation Libs.ANDROIDX_APPCOMPAT
     implementation Libs.ANDROIDX_ANNOTATION
 
-    /* Paper No SQl Storage */
-    api Libs.PAPERDB
-
     // Firebase
     implementation platform(Libs.FIREBASE_BOM) {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
