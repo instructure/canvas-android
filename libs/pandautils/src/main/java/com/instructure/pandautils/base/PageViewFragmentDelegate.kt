@@ -15,16 +15,15 @@
  */
 package com.instructure.pandautils.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.pageview.PageViewVisibilityTracker
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocusListener
-import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
+import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.pageview.PageViewUtils
+import com.instructure.pandautils.analytics.pageview.PageViewVisibilityTracker
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocusListener
 import com.instructure.pandautils.utils.AppType
 
 class PageViewFragmentDelegate<T>(
@@ -41,7 +40,7 @@ class PageViewFragmentDelegate<T>(
         }
     }
 
-    fun onAttach(context: Context) {
+    fun onCreate() {
         visibilityTracker.addCustomConditions(fragment.beforePageViewPrerequisites())
         if (AppConfigProvider.appConfig?.appType == AppType.TEACHER) {
             ScreenViewAnnotationProcessor.processScreenView(fragment::class.java)

@@ -23,6 +23,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import io.mockk.coEvery
@@ -40,7 +41,7 @@ import org.junit.Test
 class OfflineAnalyticsManagerTest {
     private lateinit var context: Context
     private lateinit var analytics: Analytics
-    private lateinit var pageViewUtils: com.instructure.pandautils.analytics.pageview.PageViewUtils
+    private lateinit var pageViewUtils: PageViewUtils
     private lateinit var apiPrefs: ApiPrefs
     private lateinit var dateTimeProvider: DateTimeProvider
     private lateinit var featureFlagProvider: FeatureFlagProvider

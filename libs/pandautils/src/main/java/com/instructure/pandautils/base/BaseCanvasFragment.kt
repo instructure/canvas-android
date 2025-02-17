@@ -18,8 +18,8 @@ package com.instructure.pandautils.base
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
 import com.instructure.pandautils.analytics.pageview.PageViewUtils
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
 import javax.inject.Inject
 
 /**
@@ -37,6 +37,11 @@ open class BaseCanvasFragment : Fragment(), PageViewWindowFocus, PageViewPrerequ
 
     protected fun completePageViewPrerequisite(prerequisite: String) {
         delegate.completePageViewPrerequisite(prerequisite)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        delegate.onCreate()
+        super.onCreate(savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

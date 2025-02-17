@@ -15,12 +15,16 @@
  */
 package com.instructure.pandautils.analytics.pageview
 
+import android.view.ViewTreeObserver
+import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.pageview.PageViewSession
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.analytics.pageview.db.PageViewDao
 import com.instructure.pandautils.analytics.pageview.db.PageViewEvent
+import java.lang.ref.WeakReference
+import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 class PageViewUtils(
     private val pageViewDao: PageViewDao,
@@ -55,9 +59,18 @@ class PageViewUtils(
 
     fun stopEvent(event: PageViewEvent?) {
         if (event == null || event.eventDuration > 0) return
-        val updated = event.copy(eventDuration = (System.currentTimeMillis() - event.timestamp.time) / 1000.0)
+        val updated =
+            event.copy(eventDuration = (System.currentTimeMillis() - event.timestamp.time) / 1000.0)
         Logger.d("PageView: Event STOPPED ${updated.url} (${updated.eventName}) - ${updated.eventDuration} seconds")
-        weave { inBackground { pageViewDao.update(updated) } }
+        weave {
+            inBackground {
+                if (updated.eventDuration < MIN_INTERACTION_SECONDS) {
+                    pageViewDao.delete(event)
+                } else {
+                    pageViewDao.update(updated)
+                }
+            }
+        }
     }
 
     fun saveSingleEvent(eventName: String, url: String) {
@@ -80,4 +93,77 @@ class PageViewUtils(
     companion object {
         private const val MIN_INTERACTION_SECONDS = 1.0
     }
+}
+
+class PageViewVisibilityTracker() {
+
+    private var isResumed = true
+    private var isUserHint = true
+    private var isShowing = true
+    private val customConditions = mutableMapOf<String, Boolean>()
+
+    fun addCustomConditions(conditions: List<String>) {
+        conditions.forEach { customConditions[it] = false }
+    }
+
+    fun isVisible(fragment: Fragment) = isResumed && isUserHint && isShowing && customConditions.values.all { it == true } && fragment.isVisible
+
+    fun trackResume(resumed: Boolean, fragment: Fragment): Boolean {
+        isResumed = resumed
+        return isVisible(fragment)
+    }
+
+    fun trackUserHint(userHint: Boolean, fragment: Fragment): Boolean {
+        isUserHint = userHint
+        return isVisible(fragment)
+    }
+
+    fun trackHidden(hidden: Boolean, fragment: Fragment): Boolean {
+        isShowing = !hidden
+        return isVisible(fragment)
+    }
+
+    fun trackCustom(name: String, value: Boolean, fragment: Fragment): Boolean {
+        customConditions[name] = value
+        return isVisible(fragment)
+    }
+
+}
+
+interface PageViewWindowFocus {
+    fun onPageViewWindowFocusChanged(hasFocus: Boolean)
+}
+
+class PageViewWindowFocusListener(focusInterface: PageViewWindowFocus) : ViewTreeObserver.OnWindowFocusChangeListener {
+
+    private val ref: WeakReference<PageViewWindowFocus> = WeakReference(focusInterface)
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        ref.get()?.onPageViewWindowFocusChanged(hasFocus)
+    }
+
+}
+
+class PageViewSession {
+
+    private var lastCheck: Long = System.currentTimeMillis()
+
+    private var _id: String? = null
+
+    val id: String
+        get() {
+            val now = System.currentTimeMillis()
+            if (_id == null || now > lastCheck + SESSION_TIMEOUT) _id = UUID.randomUUID().toString()
+            lastCheck = now
+            return _id!!
+        }
+
+    fun clear() {
+        _id = null
+    }
+
+    companion object {
+        val SESSION_TIMEOUT = TimeUnit.MINUTES.toMillis(30)
+    }
+
 }
