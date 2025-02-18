@@ -21,11 +21,16 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.R
 
-class SettingsRepository(private val featuresApi: FeaturesAPI.FeaturesInterface, private val inboxSettingsManager: InboxSettingsManager) {
+class SettingsRepository(
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
+    private val inboxSettingsManager: InboxSettingsManager,
+    private val settingsBehaviour: SettingsBehaviour
+) {
 
     suspend fun getInboxSignatureState(): InboxSignatureState {
-        val inboxSignatureEnabled = featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull?.enableInboxSignatureBlock ?: false
-        if (inboxSignatureEnabled) {
+        val environmentSettings = featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull
+        val inboxSignatureEnabled = environmentSettings?.enableInboxSignatureBlock ?: false
+        if (inboxSignatureEnabled && settingsBehaviour.isInboxSignatureEnabledForRole(environmentSettings)) {
             val inboxSignatureResult = inboxSettingsManager.getInboxSignatureSettings(forceNetwork = true)
             if (inboxSignatureResult.isFail) return InboxSignatureState.UNKNOWN
 

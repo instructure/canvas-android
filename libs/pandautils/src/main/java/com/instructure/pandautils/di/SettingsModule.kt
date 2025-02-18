@@ -17,6 +17,7 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRepository
 import com.instructure.pandautils.features.settings.SettingsSharedEvents
 import dagger.Module
@@ -31,8 +32,8 @@ import javax.inject.Singleton
 class SettingsModule {
 
     @Provides
-    fun provideSettingsRepository(featuresApi: FeaturesAPI.FeaturesInterface, inboxSettingsManager: InboxSettingsManager): SettingsRepository {
-        return SettingsRepository(featuresApi, inboxSettingsManager)
+    fun provideSettingsRepository(featuresApi: FeaturesAPI.FeaturesInterface, inboxSettingsManager: InboxSettingsManager, settingsBehaviour: SettingsBehaviour): SettingsRepository {
+        return SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour)
     }
 }
 
