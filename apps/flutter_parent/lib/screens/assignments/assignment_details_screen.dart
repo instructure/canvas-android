@@ -368,10 +368,23 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         initialDate: initialDate,
         firstDate: now,
         lastDate: initialDate.add(Duration(days: 365)),
+        builder: (context, child) {
+          return Theme(
+            data: ParentTheme.of(context)?.defaultLightTheme ?? ThemeData.light(),
+            child: child!,
+          );
+        },
       );
 
       if (date != null) {
-        time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(initialDate));
+        time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(initialDate),
+          builder: (context, child) {
+            return Theme(
+              data: ParentTheme.of(context)?.defaultLightTheme ?? ThemeData.light(),
+              child: child!,
+            );
+          },
+        );
       }
 
       if (date != null && time != null) {
