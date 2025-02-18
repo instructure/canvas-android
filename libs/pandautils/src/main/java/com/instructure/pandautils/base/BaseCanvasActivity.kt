@@ -20,13 +20,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
 import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
-import com.instructure.pandautils.analytics.pageview.PageViewUtils
+import com.instructure.pandautils.di.PageViewEntryPoint
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.showMasqueradeNotification
-import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 
 /**
  * Base activity for all Canvas activities that contains cross-cutting concerns like analytics, locale and masquerading.
@@ -34,16 +31,10 @@ import dagger.hilt.components.SingletonComponent
  */
 open class BaseCanvasActivity : AppCompatActivity() {
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface PageViewFragmentDelegateEntryPoint {
-        fun pageViewUtils(): PageViewUtils
-    }
-
     private val pageViewAnnotationProcessor by lazy {
         val pageViewUtils = EntryPoints.get(
             applicationContext,
-            PageViewFragmentDelegateEntryPoint::class.java
+            PageViewEntryPoint::class.java
         ).pageViewUtils()
         PageViewAnnotationProcessor(this::class.java, this, pageViewUtils)
     }
