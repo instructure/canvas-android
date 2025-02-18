@@ -190,4 +190,11 @@ class SettingsViewModel @Inject constructor(
             )
         }
     }
+
+    fun updateSignatureSettings(enabled: Boolean) {
+        viewModelScope.launch {
+            val state = if (enabled) InboxSignatureState.ENABLED else InboxSignatureState.DISABLED
+            changeSettingsItemSubtitle(SettingsItem.INBOX_SIGNATURE, state.textRes!!)
+        }
+    }
 }

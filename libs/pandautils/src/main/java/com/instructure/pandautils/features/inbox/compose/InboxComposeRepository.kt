@@ -111,7 +111,7 @@ abstract class InboxComposeRepository(
 
     suspend fun getInboxSignature(): String {
         // Just to ensure we won't show the loading forever if there is an issue with the network connection
-        val inboxSignatureSettings = withTimeoutOrNull(3000) { inboxSettingsManager.getInboxSignatureSettings() }
+        val inboxSignatureSettings = withTimeoutOrNull(3000) { inboxSettingsManager.getInboxSignatureSettings() }?.dataOrNull
         if (inboxSignatureSettings == null) return ""
 
         return if (inboxSignatureSettings.useSignature && inboxSignatureSettings.signature.isNotBlank()) {

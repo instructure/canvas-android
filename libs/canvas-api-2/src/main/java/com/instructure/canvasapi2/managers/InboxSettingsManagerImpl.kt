@@ -21,19 +21,22 @@ import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.UpdateInboxSettingsMutation
 import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.awaitQL
 
 class InboxSettingsManagerImpl : InboxSettingsManager {
 
-    override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): InboxSignatureSettings {
+    override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): DataResult<InboxSignatureSettings> {
         return try {
             val inboxSettingsData = awaitQL { getInboxSignature(it, forceNetwork) }
-            InboxSignatureSettings(
+            val inboxSignatureSettings = InboxSignatureSettings(
                 inboxSettingsData.myInboxSettings?.signature ?: "",
                 inboxSettingsData.myInboxSettings?.isUseSignature ?: false
             )
+            return DataResult.Success(inboxSignatureSettings)
         } catch (e: Exception) {
-            InboxSignatureSettings("", false)
+            DataResult.Fail(Failure.Exception(e))
         }
     }
 
@@ -50,20 +53,25 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
         }
     }
 
-    override suspend fun updateInboxSignatureSettings(signature: String, useSignature: Boolean): Boolean {
+    override suspend fun updateInboxSignatureSettings(inboxSignatureSettings: InboxSignatureSettings): DataResult<InboxSignatureSettings> {
         try {
             val mutationResult = awaitQL<UpdateInboxSettingsMutation.Data> {
                 val mutation = UpdateInboxSettingsMutation.builder()
-                    .signature(signature)
-                    .useSignature(useSignature)
+                    .signature(inboxSignatureSettings.signature)
+                    .useSignature(inboxSignatureSettings.useSignature)
                     .build()
 
                 it.enqueueMutation(mutation)
             }
 
-            return true
+            return DataResult.Success(
+                InboxSignatureSettings(
+                    mutationResult.updateMyInboxSettings?.myInboxSettings?.signature ?: "",
+                    mutationResult.updateMyInboxSettings?.myInboxSettings?.isUseSignature ?: false
+                )
+            )
         } catch (e: Exception) {
-            return false
+            return DataResult.Fail(Failure.Exception(e))
         }
     }
 }

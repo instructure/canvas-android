@@ -13,18 +13,25 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvasapi2.managers
+package com.instructure.pandautils.features.settings
 
-import com.instructure.canvasapi2.utils.DataResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
-interface InboxSettingsManager {
+class SettingsSharedEvents {
 
-    suspend fun getInboxSignatureSettings(forceNetwork: Boolean = false): DataResult<InboxSignatureSettings>
+    private val _events = MutableSharedFlow<SettingsSharedAction>()
+    val events = _events.asSharedFlow()
 
-    suspend fun updateInboxSignatureSettings(inboxSignatureSettings: InboxSignatureSettings): DataResult<InboxSignatureSettings>
+    fun sendEvent(coroutineScope: CoroutineScope, event: SettingsSharedAction) {
+        coroutineScope.launch {
+            _events.emit(event)
+        }
+    }
 }
 
-data class InboxSignatureSettings(
-    val signature: String,
-    val useSignature: Boolean
-)
+sealed class SettingsSharedAction {
+    data class UpdateSignatureSettings(val enabled: Boolean) : SettingsSharedAction()
+}

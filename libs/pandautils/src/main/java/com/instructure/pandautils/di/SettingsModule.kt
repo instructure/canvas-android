@@ -18,10 +18,13 @@ package com.instructure.pandautils.di
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.settings.SettingsRepository
+import com.instructure.pandautils.features.settings.SettingsSharedEvents
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -30,5 +33,16 @@ class SettingsModule {
     @Provides
     fun provideSettingsRepository(featuresApi: FeaturesAPI.FeaturesInterface, inboxSettingsManager: InboxSettingsManager): SettingsRepository {
         return SettingsRepository(featuresApi, inboxSettingsManager)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class SettingsSingletonModule {
+
+    @Provides
+    @Singleton
+    fun provideSettingsSharedEvents(): SettingsSharedEvents {
+        return SettingsSharedEvents()
     }
 }

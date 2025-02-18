@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,9 +43,10 @@ import com.instructure.pandautils.utils.ThemePrefs
 fun LabelSwitchRow(
     label: String,
     checked: Boolean,
-    enabled: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    fontWeight: FontWeight? = null,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -57,7 +59,8 @@ fun LabelSwitchRow(
         Text(
             text = label,
             color = colorResource(id = R.color.textDarkest),
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            fontWeight = fontWeight,
         )
 
         Spacer(modifier = Modifier.weight(1f))

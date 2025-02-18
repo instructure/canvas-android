@@ -56,6 +56,9 @@ class SettingsFragment : BaseCanvasFragment() {
     @Inject
     lateinit var settingsRouter: SettingsRouter
 
+    @Inject
+    lateinit var sharedEvents: SettingsSharedEvents
+
     private val viewModel: SettingsViewModel by viewModels()
 
     private val binding: FragmentSettingsBinding by viewBinding(FragmentSettingsBinding::bind)
@@ -135,6 +138,7 @@ class SettingsFragment : BaseCanvasFragment() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         binding.settingsComposeView.apply {
             setContent {
@@ -235,6 +239,14 @@ class SettingsFragment : BaseCanvasFragment() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setData(Uri.parse(googleCalendarLink))
         startActivity(intent)
+    }
+
+    private fun handleSharedViewModelAction(action: SettingsSharedAction) {
+        when (action) {
+            is SettingsSharedAction.UpdateSignatureSettings -> {
+                viewModel.updateSignatureSettings(action.enabled)
+            }
+        }
     }
 
     companion object {

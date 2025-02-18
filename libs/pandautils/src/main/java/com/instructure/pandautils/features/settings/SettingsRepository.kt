@@ -26,8 +26,8 @@ class SettingsRepository(private val featuresApi: FeaturesAPI.FeaturesInterface,
     suspend fun getInboxSignatureState(): InboxSignatureState {
         val inboxSignatureEnabled = featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull?.enableInboxSignatureBlock ?: false
         if (inboxSignatureEnabled) {
-            val inboxSignature = inboxSettingsManager.getInboxSignatureSettings(forceNetwork = true)
-            return if (inboxSignature.useSignature) InboxSignatureState.ENABLED else InboxSignatureState.DISABLED
+            val inboxSignature = inboxSettingsManager.getInboxSignatureSettings(forceNetwork = true).dataOrNull
+            return if (inboxSignature?.useSignature == true) InboxSignatureState.ENABLED else InboxSignatureState.DISABLED // TODO proper error handling
         } else {
             return InboxSignatureState.HIDDEN
         }

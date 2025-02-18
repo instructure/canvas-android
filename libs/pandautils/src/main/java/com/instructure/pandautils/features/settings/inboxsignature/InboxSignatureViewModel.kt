@@ -15,15 +15,80 @@
  */
 package com.instructure.pandautils.features.settings.inboxsignature
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InboxSignatureViewModel @Inject constructor() : ViewModel() {
+class InboxSignatureViewModel @Inject constructor(
+    private val repository: InboxSignatureRepository
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(InboxSignatureUiState("valami"))
+    private val _uiState = MutableStateFlow(InboxSignatureUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _events = Channel<InboxSignatureViewModelAction>()
+    val events = _events.receiveAsFlow()
+
+    init {
+        getInboxSignature()
+    }
+
+    private fun getInboxSignature() {
+        _uiState.update { it.copy(loading = true) }
+        viewModelScope.launch {
+            val signatureResult = repository.getInboxSignature()
+            _uiState.update { it.copy(loading = false)}
+            if (signatureResult.isSuccess) {
+                val result = signatureResult.dataOrThrow
+                _uiState.update {
+                    it.copy(signatureText = TextFieldValue(result.signature), signatureEnabled = result.useSignature)
+                }
+            }
+        }
+    }
+
+    fun handleAction(action: InboxSignatureAction) {
+        when (action) {
+            is InboxSignatureAction.Save -> {
+                saveInboxSignature()
+            }
+
+            is InboxSignatureAction.UpdateSignature -> _uiState.update {
+                it.copy(
+                    signatureText = action.signature,
+                    saveEnabled = isSaveEnabled(action.signature.text, it.signatureEnabled)
+                )
+            }
+            is InboxSignatureAction.UpdateSignatureEnabled -> _uiState.update {
+                it.copy(
+                    signatureEnabled = action.enabled,
+                    saveEnabled = isSaveEnabled(it.signatureText.text, action.enabled)
+                )
+            }
+        }
+    }
+
+    private fun saveInboxSignature() {
+        _uiState.update { it.copy(saving = true) }
+        viewModelScope.launch {
+            val result = repository.updateInboxSignature(_uiState.value.signatureText.text, _uiState.value.signatureEnabled)
+            _uiState.update { it.copy(saving = false) }
+            if (result.isSuccess) {
+                _events.send(InboxSignatureViewModelAction.CloseAndUpdateSettings(result.dataOrNull?.useSignature ?: false))
+            }
+        }
+    }
+
+    private fun isSaveEnabled(signatureText: String, signatureEnabled: Boolean): Boolean {
+        return signatureText.isNotBlank() || !signatureEnabled
+    }
 }

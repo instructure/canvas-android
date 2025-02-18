@@ -260,10 +260,10 @@ private fun InboxComposeScreenContent(
             LabelSwitchRow(
                 label = stringResource(R.string.sendIndividualMessage),
                 checked = uiState.sendIndividual,
-                enabled = uiState.disabledFields.isSendIndividualDisabled.not(),
                 onCheckedChange = {
                     actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
                 },
+                enabled = uiState.disabledFields.isSendIndividualDisabled.not()
             )
 
             CanvasDivider()

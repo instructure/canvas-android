@@ -15,5 +15,19 @@
  */
 package com.instructure.pandautils.features.settings.inboxsignature
 
-class InboxSignatureRepository() {
+import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.InboxSignatureSettings
+import com.instructure.canvasapi2.utils.DataResult
+import javax.inject.Inject
+
+class InboxSignatureRepository @Inject constructor(
+    private val inboxSettingsManager: InboxSettingsManager
+) {
+    suspend fun getInboxSignature(): DataResult<InboxSignatureSettings> {
+        return inboxSettingsManager.getInboxSignatureSettings(forceNetwork = true)
+    }
+
+    suspend fun updateInboxSignature(signature: String, useSignature: Boolean): DataResult<InboxSignatureSettings> {
+        return inboxSettingsManager.updateInboxSignatureSettings(InboxSignatureSettings(signature, useSignature))
+    }
 }

@@ -1,5 +1,5 @@
 mutation UpdateInboxSettings($useSignature: Boolean!, $signature: String) {
-    updateMyInboxSettings(input: {useSignature: $useSignature, signature: $signature}) {
+    updateMyInboxSettings(input: {useSignature: $useSignature, signature: $signature, useOutOfOffice: false, outOfOfficeSubject: "", outOfOfficeMessage: ""}) {
         myInboxSettings {
             signature
             useSignature

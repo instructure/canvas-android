@@ -1998,4 +1998,7 @@
     <string name="inboxSignatureNotSet">Not Set</string>
     <string name="inboxSignatureEnabled">Enabled</string>
     <string name="inboxSignatureScreenTitle">Inbox Signature</string>
+    <string name="inboxSignatureScreenSubtitle">Signature will be added to the end of all messaging.</string>
+    <string name="inboxSignatureSwitchLabel">Signature</string>
+    <string name="inboxSignatureTextfieldHeader">Signature text</string>
 </resources>
