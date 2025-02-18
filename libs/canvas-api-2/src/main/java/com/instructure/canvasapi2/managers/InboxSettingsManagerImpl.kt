@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.weave.awaitQL
 
 class InboxSettingsManagerImpl : InboxSettingsManager {
@@ -32,7 +33,12 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
             val inboxSettingsData = awaitQL { getInboxSignature(it, forceNetwork) }
             val inboxSignatureSettings = InboxSignatureSettings(
                 inboxSettingsData.myInboxSettings?.signature ?: "",
-                inboxSettingsData.myInboxSettings?.isUseSignature ?: false
+                inboxSettingsData.myInboxSettings?.isUseSignature ?: false,
+                inboxSettingsData.myInboxSettings?.isUseOutOfOffice ?: false,
+                inboxSettingsData.myInboxSettings?.outOfOfficeMessage ?: "",
+                inboxSettingsData.myInboxSettings?.outOfOfficeSubject ?: "",
+                inboxSettingsData.myInboxSettings?.outOfOfficeFirstDate.toApiString(),
+                inboxSettingsData.myInboxSettings?.outOfOfficeLastDate.toApiString()
             )
             return DataResult.Success(inboxSignatureSettings)
         } catch (e: Exception) {
@@ -59,6 +65,11 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
                 val mutation = UpdateInboxSettingsMutation.builder()
                     .signature(inboxSignatureSettings.signature)
                     .useSignature(inboxSignatureSettings.useSignature)
+                    .useOutOfOffice(inboxSignatureSettings.useOutOfOffice)
+                    .outOfOfficeMessage(inboxSignatureSettings.outOfOfficeMessage)
+                    .outOfOfficeSubject(inboxSignatureSettings.outOfOfficeSubject)
+                    .outOfOfficeFirstDate(inboxSignatureSettings.outOfOfficeFirstDate)
+                    .outOfOfficeLastDate(inboxSignatureSettings.outOfOfficeLastDate)
                     .build()
 
                 it.enqueueMutation(mutation)

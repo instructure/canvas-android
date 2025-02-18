@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.settings.inboxsignature
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +39,10 @@ class InboxSignatureViewModel @Inject constructor(
     private val _events = Channel<InboxSignatureViewModelAction>()
     val events = _events.receiveAsFlow()
 
+    // We need to store, because the API doesn't allow updating only the signature,
+    // so we have to store the out of office settings and send back the same settings so it wouldn't be overwritten.
+    private var inboxSignatureSettings: InboxSignatureSettings? = null
+
     init {
         getInboxSignature()
     }
@@ -49,6 +54,7 @@ class InboxSignatureViewModel @Inject constructor(
             _uiState.update { it.copy(loading = false)}
             if (signatureResult.isSuccess) {
                 val result = signatureResult.dataOrThrow
+                inboxSignatureSettings = result
                 _uiState.update {
                     it.copy(signatureText = TextFieldValue(result.signature), signatureEnabled = result.useSignature)
                 }
@@ -80,7 +86,12 @@ class InboxSignatureViewModel @Inject constructor(
     private fun saveInboxSignature() {
         _uiState.update { it.copy(saving = true) }
         viewModelScope.launch {
-            val result = repository.updateInboxSignature(_uiState.value.signatureText.text, _uiState.value.signatureEnabled)
+            val result = repository.updateInboxSignature(
+                inboxSignatureSettings?.copy(
+                    signature = _uiState.value.signatureText.text,
+                    useSignature = _uiState.value.signatureEnabled
+                ) ?: InboxSignatureSettings(_uiState.value.signatureText.text, _uiState.value.signatureEnabled)
+            )
             _uiState.update { it.copy(saving = false) }
             if (result.isSuccess) {
                 _events.send(InboxSignatureViewModelAction.CloseAndUpdateSettings(result.dataOrNull?.useSignature ?: false))

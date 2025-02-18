@@ -26,5 +26,10 @@ interface InboxSettingsManager {
 
 data class InboxSignatureSettings(
     val signature: String,
-    val useSignature: Boolean
+    val useSignature: Boolean,
+    val useOutOfOffice: Boolean = false,
+    val outOfOfficeMessage: String = "",
+    val outOfOfficeSubject: String = "",
+    val outOfOfficeFirstDate: String = "",
+    val outOfOfficeLastDate: String = ""
 )

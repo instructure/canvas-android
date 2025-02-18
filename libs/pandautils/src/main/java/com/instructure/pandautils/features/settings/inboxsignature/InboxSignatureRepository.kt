@@ -27,7 +27,7 @@ class InboxSignatureRepository @Inject constructor(
         return inboxSettingsManager.getInboxSignatureSettings(forceNetwork = true)
     }
 
-    suspend fun updateInboxSignature(signature: String, useSignature: Boolean): DataResult<InboxSignatureSettings> {
-        return inboxSettingsManager.updateInboxSignatureSettings(InboxSignatureSettings(signature, useSignature))
+    suspend fun updateInboxSignature(inboxSignatureSettings: InboxSignatureSettings): DataResult<InboxSignatureSettings> {
+        return inboxSettingsManager.updateInboxSignatureSettings(inboxSignatureSettings)
     }
 }
