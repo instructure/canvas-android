@@ -165,7 +165,8 @@ class AlertsViewModel @Inject constructor(
                 uiState.copy(
                     alerts = uiState.alerts.map { alertItem ->
                         if (alertItem.alertId == alertId) alertItem.copy(unread = false) else alertItem
-                    }
+                    },
+                    scrollToTop = false
                 )
             }
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
