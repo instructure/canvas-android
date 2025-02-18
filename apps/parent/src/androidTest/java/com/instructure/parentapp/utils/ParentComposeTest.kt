@@ -23,7 +23,7 @@ import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.AddStudentPage
+import com.instructure.parentapp.ui.pages.AddStudentBottomPage
 import com.instructure.parentapp.ui.pages.AlertSettingsPage
 import com.instructure.parentapp.ui.pages.AlertsPage
 import com.instructure.parentapp.ui.pages.AnnouncementDetailsPage
@@ -48,7 +48,7 @@ abstract class ParentComposeTest : ParentTest() {
     protected val alertsPage = AlertsPage(composeTestRule)
     protected val manageStudentsPage = ManageStudentsPage(composeTestRule)
     protected val alertSettingsPage = AlertSettingsPage(composeTestRule)
-    protected val addStudentPage = AddStudentPage(composeTestRule)
+    protected val addStudentBottomPage = AddStudentBottomPage(composeTestRule)
     protected val pairingCodePage = PairingCodePage(composeTestRule)
     protected val qrPairingPage = QrPairingPage(composeTestRule)
     protected val coursesPage = CoursesPage(composeTestRule)

@@ -30,10 +30,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
@@ -43,17 +45,25 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -74,6 +84,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 
@@ -96,12 +107,13 @@ fun AlertSettingsScreen(
                 CanvasAppBar(
                     title = stringResource(id = R.string.alertSettingsTitle),
                     navIconRes = R.drawable.ic_back_arrow,
+                    navIconContentDescription = stringResource(id = R.string.back),
                     navigationActionClick = navigationActionClick,
                     backgroundColor = Color(uiState.userColor),
                     textColor = colorResource(id = R.color.textLightest),
                     actions = {
-                        var showMenu by remember { mutableStateOf(false) }
-                        var showConfirmationDialog by remember { mutableStateOf(false) }
+                        var showMenu by rememberSaveable { mutableStateOf(false) }
+                        var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }
                         if (showConfirmationDialog) {
                             UnpairStudentDialog(
                                 uiState.student.id,
@@ -325,7 +337,10 @@ private fun PercentageItem(
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(56.dp)
-            .testTag("${alertType.name}_thresholdItem"),
+            .testTag("${alertType.name}_thresholdItem")
+            .semantics {
+                role = Role.Button
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -347,6 +362,7 @@ private fun PercentageItem(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SwitchItem(
     title: String,
@@ -366,10 +382,14 @@ private fun SwitchItem(
     var switchState by remember { mutableStateOf(active) }
     Row(
         modifier = Modifier
-            .clickable {
-                switchState = !switchState
-                toggleAlert(switchState)
-            }
+            .toggleable(
+                value = switchState,
+                onValueChange = {
+                    switchState = !switchState
+                    toggleAlert(switchState)
+                },
+                role = Role.Switch
+            )
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(56.dp)
@@ -384,7 +404,9 @@ private fun SwitchItem(
             color = colorResource(id = R.color.textDarkest)
         )
         Switch(
-            modifier = Modifier.testTag("${alertType.name}_thresholdSwitch"),
+            modifier = Modifier
+                .testTag("${alertType.name}_thresholdSwitch")
+                .semantics { invisibleToUser() },
             checked = switchState,
             onCheckedChange = {
                 switchState = it
@@ -408,6 +430,7 @@ private fun ThresholdDialog(
     actionHandler: (AlertSettingsAction) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = LocalContext.current
     var percentage by remember { mutableStateOf(threshold.orEmpty()) }
     val enabled = percentage.toIntOrNull().orDefault() in (min + 1)..<max
     Dialog(onDismissRequest = { onDismiss() }) {
@@ -419,7 +442,10 @@ private fun ThresholdDialog(
             Text(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
-                    .testTag("thresholdDialogTitle"),
+                    .testTag("thresholdDialogTitle")
+                    .semantics {
+                        heading()
+                    },
                 text = stringResource(id = getTitle(alertType)),
                 fontSize = 18.sp,
                 color = colorResource(id = R.color.textDarkest)
@@ -454,6 +480,9 @@ private fun ThresholdDialog(
                 else -> null
             }
             if (errorText != null) {
+                LaunchedEffect(Unit) {
+                    announceAccessibilityText(context, errorText)
+                }
                 Text(
                     modifier = Modifier
                         .padding(top = 8.dp)
@@ -489,7 +518,10 @@ private fun ThresholdDialog(
                 TextButton(
                     modifier = Modifier.testTag("thresholdDialogSaveButton"),
                     enabled = enabled,
-                    colors = ButtonDefaults.textButtonColors(contentColor = color),
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = color,
+                        disabledContentColor = color.copy(alpha = ContentAlpha.disabled)
+                    ),
                     onClick = {
                         actionHandler(
                             AlertSettingsAction.CreateThreshold(
@@ -518,7 +550,11 @@ private fun UnpairStudentDialog(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         title = {
             Text(
-                modifier = Modifier.testTag("deleteDialogTitle"),
+                modifier = Modifier
+                    .testTag("deleteDialogTitle")
+                    .semantics {
+                        heading()
+                    },
                 text = stringResource(id = R.string.unpairStudentTitle),
                 color = colorResource(id = R.color.textDarkest)
             )
