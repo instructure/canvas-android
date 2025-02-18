@@ -17,9 +17,8 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.view.Gravity
-import android.view.View
-import android.view.accessibility.AccessibilityNodeInfo
 import androidx.appcompat.widget.PopupMenu
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -73,18 +72,9 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
                 }
 
                 //Can't use the binding adapter due to how the view holder is set up
-                publishActions.accessibilityDelegate = object : View.AccessibilityDelegate() {
-                    override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
-                        super.onInitializeAccessibilityNodeInfo(host, info)
-                        info.className = "android.widget.Button"
-                    }
-                }
-                root.accessibilityDelegate = object : View.AccessibilityDelegate() {
-                    override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
-                        super.onInitializeAccessibilityNodeInfo(host, info)
-                        info.className = "android.widget.Button"
-                    }
-                }
+                publishActions.accessibilityClassName("android.widget.Button")
+                root.accessibilityClassName("android.widget.Button")
+
             }
         }
     )

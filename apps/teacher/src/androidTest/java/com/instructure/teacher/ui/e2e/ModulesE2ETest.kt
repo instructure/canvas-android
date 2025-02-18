@@ -31,7 +31,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class   ModulesE2ETest : TeacherComposeTest() {
+class ModulesE2ETest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 

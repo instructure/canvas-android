@@ -18,8 +18,11 @@
 package com.instructure.parentapp.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
+import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.AddStudentPage
+import com.instructure.parentapp.ui.pages.AddStudentBottomPage
 import com.instructure.parentapp.ui.pages.AlertSettingsPage
 import com.instructure.parentapp.ui.pages.AlertsPage
 import com.instructure.parentapp.ui.pages.AnnouncementDetailsPage
@@ -28,6 +31,7 @@ import com.instructure.parentapp.ui.pages.CoursesPage
 import com.instructure.parentapp.ui.pages.CreateAccountPage
 import com.instructure.parentapp.ui.pages.ManageStudentsPage
 import com.instructure.parentapp.ui.pages.PairingCodePage
+import com.instructure.parentapp.ui.pages.ParentInboxCoursePickerPage
 import com.instructure.parentapp.ui.pages.QrPairingPage
 import com.instructure.parentapp.ui.pages.SummaryPage
 import com.instructure.parentapp.ui.pages.compose.NotAParentPage
@@ -39,10 +43,11 @@ abstract class ParentComposeTest : ParentTest() {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
+    //Compose pages
     protected val alertsPage = AlertsPage(composeTestRule)
     protected val manageStudentsPage = ManageStudentsPage(composeTestRule)
     protected val alertSettingsPage = AlertSettingsPage(composeTestRule)
-    protected val addStudentPage = AddStudentPage(composeTestRule)
+    protected val addStudentBottomPage = AddStudentBottomPage(composeTestRule)
     protected val pairingCodePage = PairingCodePage(composeTestRule)
     protected val qrPairingPage = QrPairingPage(composeTestRule)
     protected val coursesPage = CoursesPage(composeTestRule)
@@ -51,6 +56,10 @@ abstract class ParentComposeTest : ParentTest() {
     protected val summaryPage = SummaryPage(composeTestRule)
     protected val announcementDetailsPage = AnnouncementDetailsPage(composeTestRule)
     protected val createAccountPage = CreateAccountPage(composeTestRule)
+    protected val inboxDetailsPage = InboxDetailsPage(composeTestRule)
+    protected val inboxComposeMessagePage = InboxComposePage(composeTestRule)
+    protected val inboxRecipientPickerPage = RecipientPickerPage(composeTestRule)
+    protected val inboxCoursePickerPage = ParentInboxCoursePickerPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }

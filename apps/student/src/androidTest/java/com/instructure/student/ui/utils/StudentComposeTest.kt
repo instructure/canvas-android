@@ -31,6 +31,8 @@ import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SelectContextPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
+import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPage
+import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPreferencesPage
 import com.instructure.student.activity.LoginActivity
 import org.junit.Rule
 
@@ -51,4 +53,6 @@ abstract class StudentComposeTest : StudentTest() {
     val inboxComposePage = InboxComposePage(composeTestRule)
     val recipientPickerPage = RecipientPickerPage(composeTestRule)
     val selectContextPage = SelectContextPage(composeTestRule)
+    val smartSearchPage = SmartSearchPage(composeTestRule)
+    val smartSearchPreferencesPage = SmartSearchPreferencesPage(composeTestRule)
 }

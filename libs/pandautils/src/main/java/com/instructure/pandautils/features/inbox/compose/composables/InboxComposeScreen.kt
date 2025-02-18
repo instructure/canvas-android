@@ -184,6 +184,7 @@ private fun InboxComposeScreenContent(
             .verticalScroll(rememberScrollState())
             .padding(padding)
             .fillMaxSize()
+            .testTag("InboxComposeScreenContent")
     ) {
         if (uiState.hiddenFields.isContextHidden.not()) {
             ContextValueRow(
@@ -305,6 +306,14 @@ private fun InboxComposeScreenContent(
                 modifier = Modifier
                     .defaultMinSize(minHeight = 100.dp)
             )
+            if (uiState.signatureLoading) {
+                Loading(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                        .testTag("SignatureLoading"),
+                )
+            }
         }
 
         Column {

@@ -732,7 +732,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Assert that the spinner is displayed and the last/newest attempt ('Attempt 2') is selected.")
         assignmentDetailsPage.assertAttemptSpinnerDisplayed()
-        assignmentDetailsPage.assertSelectedAttempt(2)
+        assignmentDetailsPage.assertAttemptInformation()
 
         Log.d(STEP_TAG, "Go to the Submission Details Page and assert that the selected attempt is 'Attempt 2'.")
         assignmentDetailsPage.goToSubmissionDetails()
@@ -741,6 +741,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate back to the Assignment Details Page. Select the other attempt, 'Attempt 1', and assert if it's displayed as the selected one.")
         Espresso.pressBack()
         assignmentDetailsPage.selectAttempt(1)
+        assignmentDetailsPage.assertAttemptInformation()
         assignmentDetailsPage.assertSelectedAttempt(1)
 
         Log.d(STEP_TAG, "Go to the Submission Details Page and assert that the selected attempt is 'Attempt 1'.")
@@ -807,6 +808,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Assert that the spinner is displayed and the last/newest attempt is selected.")
         assignmentDetailsPage.assertAttemptSpinnerDisplayed()
+        assignmentDetailsPage.assertAttemptInformation()
         assignmentDetailsPage.assertSelectedAttempt(2)
 
         Log.d(STEP_TAG,"Navigate to submission details Comments Tab.")

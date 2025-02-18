@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
@@ -32,7 +33,8 @@ class StudentInboxComposeRepository(
     private val groupApi: GroupAPI.GroupInterface,
     recipientAPI: RecipientAPI.RecipientInterface,
     inboxAPI: InboxApi.InboxInterface,
-): InboxComposeRepository(courseAPI, recipientAPI, inboxAPI) {
+    inboxSettingsManager: InboxSettingsManager
+): InboxComposeRepository(courseAPI, recipientAPI, inboxAPI, inboxSettingsManager) {
 
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
