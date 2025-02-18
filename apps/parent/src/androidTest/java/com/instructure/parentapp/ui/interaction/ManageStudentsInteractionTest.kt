@@ -44,7 +44,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
 
         composeTestRule.waitForIdle()
         data.students.forEach {
-            manageStudentsPage.assertStudentItemDisplayed(it)
+            manageStudentsPage.assertStudentItemDisplayed(it.shortName!!)
         }
     }
 
@@ -55,7 +55,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
         goToManageStudents(data)
 
         composeTestRule.waitForIdle()
-        manageStudentsPage.tapStudent(data.students.first().shortName!!)
+        manageStudentsPage.clickStudent(data.students.first().shortName!!)
         composeTestRule.onNodeWithText("Alert Settings").assertIsDisplayed()
     }
 
@@ -110,7 +110,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
         val parent = data.parents.first()
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickManageStudents()
     }
 

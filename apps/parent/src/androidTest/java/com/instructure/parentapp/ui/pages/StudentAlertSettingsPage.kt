@@ -16,6 +16,7 @@
 package com.instructure.parentapp.ui.pages
 
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsOff
@@ -24,6 +25,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextClearance
@@ -31,7 +33,7 @@ import androidx.compose.ui.test.performTextInput
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.espresso.page.BasePage
 
-class AlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
+class StudentAlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertPercentageThreshold(alertType: AlertType, threshold: String) {
         composeTestRule.onNodeWithTag("${alertType.name}_thresholdItem", useUnmergedTree = true)
@@ -93,8 +95,28 @@ class AlertSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage
         composeTestRule.onNodeWithTag("thresholdDialogNeverButton").performClick()
     }
 
-    fun tapDeleteStudentButton() {
+    fun clickDeleteStudentButton() {
         composeTestRule.onNodeWithTag("deleteConfirmButton").performClick()
+    }
+
+    fun assertToolbarTitle() {
+        composeTestRule.onNodeWithText("Alert Settings").assertIsDisplayed()
+    }
+
+    fun assertDeleteStudentDialogDetails() {
+        composeTestRule.onNodeWithTag("deleteDialogTitle")
+            .assertExists()
+            .assertTextEquals("Delete")
+        composeTestRule.onNodeWithText("This will unpair and remove all enrollments for this student from you account.")
+            .assertExists()
+        composeTestRule.onNodeWithTag("deleteConfirmButton")
+            .assertTextEquals("Delete")
+            .assertExists()
+            .assertHasClickAction()
+        composeTestRule.onNodeWithTag("deleteCancelButton")
+            .assertTextEquals("Cancel")
+            .assertExists()
+            .assertHasClickAction()
     }
 
     private fun getAlertTitle(alertType: AlertType): String {

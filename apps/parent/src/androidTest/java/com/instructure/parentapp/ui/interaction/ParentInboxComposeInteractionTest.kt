@@ -64,7 +64,7 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.clickInbox()
 
         inboxPage.pressNewMessageButton()
@@ -83,7 +83,7 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.clickInbox()
 
         inboxPage.pressNewMessageButton()
