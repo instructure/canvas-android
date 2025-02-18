@@ -47,6 +47,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -57,6 +61,7 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.contentDescriptionRes
 import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.parentapp.R
@@ -74,7 +79,8 @@ internal fun SummaryScreen(
             uiState = uiState,
             onRefresh = { summaryViewModel.refresh() },
             navigateToAssignmentDetails = navigateToAssignmentDetails,
-            navigateToCalendarEvent = navigateToCalendarEvent)
+            navigateToCalendarEvent = navigateToCalendarEvent
+        )
     }
 }
 
@@ -142,7 +148,7 @@ private fun SummaryErrorScreen(
     ErrorContent(
         errorMessage = stringResource(R.string.failed_to_load_summary),
         retryClick = onRefresh,
-        )
+    )
 }
 
 @Composable
@@ -177,6 +183,8 @@ private fun ScheduleItemRow(
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit
 ) {
+    val contentDescription = stringResource(id = scheduleItem.contentDescriptionRes)
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -193,13 +201,17 @@ private fun ScheduleItemRow(
                     val eventId = uri
                         .getQueryParameter("event_id")
                         ?.toLongOrNull() ?: 0
-                    navigateToCalendarEvent (CanvasContext.Type.COURSE.apiString, courseId, eventId)
+                    navigateToCalendarEvent(CanvasContext.Type.COURSE.apiString, courseId, eventId)
                 }
+            }
+            .semantics {
+                role = Role.Button
+                this.contentDescription = contentDescription
             }
     ) {
         Icon(
             painter = painterResource(id = scheduleItem.iconRes),
-            contentDescription = "Summary Item Icon",
+            contentDescription = null,
             tint = Color(CanvasContext.emptyCourseContext(courseId).color),
             modifier = Modifier
                 .padding(8.dp)
