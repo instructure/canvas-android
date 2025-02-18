@@ -23,16 +23,15 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ALERT_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.parentapp.R
+import com.instructure.pandautils.utils.showSnackbar
 import com.instructure.parentapp.features.addstudent.AddStudentAction
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
@@ -96,10 +95,9 @@ class AlertSettingsFragment : BaseCanvasFragment() {
             }
 
             is AlertSettingsViewModelAction.ShowSnackbar -> {
-                Snackbar.make(requireView(), action.message, Snackbar.LENGTH_SHORT).apply {
-                    setAction(R.string.retry) { action.actionCallback() }
-                    setActionTextColor(resources.getColor(R.color.white, resources.newTheme()))
-                }.show()
+                view?.showSnackbar(action.message) {
+                    action.actionCallback()
+                }
             }
         }
     }

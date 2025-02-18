@@ -1949,4 +1949,7 @@
     <string name="smartSearchEmptyTitle">No Perfect Match</string>
     <string name="smartSearchEmptyMessage">We didn’t find exactly what you’re looking for. Maybe try searching for something else?</string>
     <string name="webAccessLimitedMessage">Interactions on this page are limited by your institution.</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
+    <string name="inboxAllRecipients">All Recipients</string>
+    <string name="inboxSearchIn">Search in %1$s</string>
 </resources>

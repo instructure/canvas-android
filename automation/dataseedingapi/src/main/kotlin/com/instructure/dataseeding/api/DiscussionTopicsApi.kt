@@ -62,16 +62,16 @@ object DiscussionTopicsApi {
             .body()!!
     }
 
-    fun createDiscussion(courseId: Long, token: String, isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false): DiscussionApiModel {
-        val discussionTopic = Randomizer.randomDiscussion(isAnnouncement, lockedForUser, locked)
+    fun createDiscussion(courseId: Long, token: String, isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false, discussionTitle: String? = null): DiscussionApiModel {
+        val discussionTopic = Randomizer.randomDiscussion(discussionTitle, isAnnouncement, lockedForUser, locked)
         return discussionTopicsService(token)
                 .createDiscussionTopic(courseId, discussionTopic)
                 .execute()
                 .body()!!
     }
 
-    fun createAnnouncement(courseId: Long, token: String, lockedForUser: Boolean = false, locked: Boolean = false): DiscussionApiModel {
-        val discussion = createDiscussion(courseId, token, true, lockedForUser, locked, )
+    fun createAnnouncement(courseId: Long, token: String, lockedForUser: Boolean = false, locked: Boolean = false, announcementTitle: String? = null): DiscussionApiModel {
+        val discussion = createDiscussion(courseId, token, true, lockedForUser, locked, announcementTitle)
 
         if(!lockedForUser) {
             return DiscussionApiModel(

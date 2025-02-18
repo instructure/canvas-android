@@ -22,11 +22,11 @@ import androidx.compose.ui.test.performTextInput
 
 class PairingCodePage(private val composeTestRule: ComposeTestRule) {
 
-    fun enterPairingCode(code: String) {
-        composeTestRule.onNodeWithTag("pairingCodeTextField").performTextInput(code)
+    fun enterPairingCode(pairingCode: String) {
+        composeTestRule.onNodeWithTag("pairingCodeTextField").performTextInput(pairingCode)
     }
 
-    fun tapSubmit() {
+    fun clickOkButton() {
         composeTestRule.onNodeWithTag("okButton").performClick()
     }
 

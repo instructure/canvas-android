@@ -20,7 +20,13 @@ package com.instructure.pandautils.utils
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.content.res.Resources
+import android.view.View
+import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
+import android.view.accessibility.AccessibilityNodeInfo
+import androidx.core.content.ContextCompat
+import com.google.android.material.checkbox.MaterialCheckBox
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 
 val Context.a11yManager get() = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
@@ -60,4 +66,36 @@ fun isAccessibilityEnabled(context: Context): Boolean {
     return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
 }
 
+fun View.accessibilityClassName(accessibilityClassName: String) {
+    accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
 
+            info.className = accessibilityClassName
+        }
+    }
+}
+
+fun announceAccessibilityText(context: Context, textToAnnounce: String) {
+    val accessibilityManager =
+        ContextCompat.getSystemService(context, AccessibilityManager::class.java)
+    if (accessibilityManager != null && accessibilityManager.isEnabled) {
+        accessibilityManager.sendAccessibilityEvent(AccessibilityEvent.obtain().apply {
+            eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+            text.add(textToAnnounce)
+        })
+    }
+}
+
+fun getCheckedStateStringFromMaterialCheckbox(int: Int): String {
+    return when (int) {
+        MaterialCheckBox.STATE_CHECKED -> ContextKeeper.appContext.getString(R.string.a11y_checked)
+        MaterialCheckBox.STATE_UNCHECKED -> ContextKeeper.appContext.getString(R.string.a11y_unchecked)
+        MaterialCheckBox.STATE_INDETERMINATE -> ContextKeeper.appContext.getString(R.string.a11y_indeterminate)
+        else -> ""
+    }
+}
+
+fun getCheckedStateStringFromCheckbox(checked: Boolean): String {
+    return if (checked) ContextKeeper.appContext.getString(R.string.a11y_checked) else ContextKeeper.appContext.getString(R.string.a11y_unchecked)
+}

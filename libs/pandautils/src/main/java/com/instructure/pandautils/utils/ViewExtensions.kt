@@ -25,7 +25,13 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.content.res.TypedArray
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -33,8 +39,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.TouchDelegate
+import android.view.View
 import android.view.View.OnClickListener
+import android.view.ViewAnimationUtils
+import android.view.ViewGroup
+import android.view.ViewParent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AlphaAnimation
@@ -46,7 +58,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.*
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import androidx.annotation.MenuRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -67,6 +84,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.signature.ObjectKey
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
@@ -79,7 +97,7 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import kotlinx.coroutines.delay
 import java.lang.reflect.Field
-import java.util.*
+import java.util.Locale
 import kotlin.math.hypot
 
 /** Convenience extension for setting a click listener */
@@ -923,4 +941,24 @@ fun View.animateCircularBackgroundColorChange(endColor: Int, image: ImageView, d
     }
 
     anim.start()
+}
+
+fun View.showSnackbar(
+    @StringRes message: Int,
+    @StringRes actionTextRes: Int? = R.string.retry,
+    @ColorRes actionTextColor: Int? = R.color.white,
+    actionCallback: (() -> Unit)? = null
+) {
+    val snackbar = Snackbar.make(this, message, Snackbar.LENGTH_SHORT)
+
+    actionTextColor?.let { snackbar.setActionTextColor(context.getColor(it)) }
+
+    actionTextRes?.let { textRes ->
+        actionCallback?.let {
+            snackbar.setAction(textRes) { it() }
+        }
+    }
+
+    snackbar.show()
+    snackbar.view.requestAccessibilityFocus(1000)
 }

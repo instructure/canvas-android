@@ -22,6 +22,7 @@
     android:background="?android:selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:accessibilityHeading="true"
     android:paddingBottom="6dp"
     android:paddingEnd="16dp"
     android:paddingStart="16dp"

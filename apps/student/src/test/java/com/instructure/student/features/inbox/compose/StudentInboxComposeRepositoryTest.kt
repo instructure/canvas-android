@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -31,12 +32,14 @@ class StudentInboxComposeRepositoryTest {
     private val groupApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
+    private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
 
     private val inboxComposeRepository = StudentInboxComposeRepository(
         courseAPI,
         groupApi,
         recipientAPI,
         inboxAPI,
+        inboxSettingsManager
     )
 
     @After
@@ -140,7 +143,7 @@ class StudentInboxComposeRepositoryTest {
 
         coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Success(expected)
 
-        val result = inboxComposeRepository.getRecipients("", course, true).dataOrThrow
+        val result = inboxComposeRepository.getRecipients("", course.contextId, true).dataOrThrow
 
         assertEquals(expected, result)
     }
@@ -149,7 +152,7 @@ class StudentInboxComposeRepositoryTest {
     fun `Get recipients with error`() = runTest {
         coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Fail()
 
-        inboxComposeRepository.getRecipients("", Course(), true).dataOrThrow
+        inboxComposeRepository.getRecipients("", Course(id = 1L).contextId, true).dataOrThrow
     }
 
     @Test
@@ -168,5 +171,16 @@ class StudentInboxComposeRepositoryTest {
         coEvery { inboxAPI.createConversation(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
         inboxComposeRepository.createConversation(emptyList(), "", "", Course(), emptyList(), false).dataOrThrow
+    }
+
+    @Test
+    fun `Get signature successfully`() = runTest {
+        val expected = "signature"
+
+        coEvery { inboxSettingsManager.getInboxSignature() } returns expected
+
+        val result = inboxComposeRepository.getInboxSignature()
+
+        assertEquals(expected, result)
     }
 }

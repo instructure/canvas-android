@@ -18,17 +18,19 @@ package com.instructure.pandautils.features.legal
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.databinding.DialogLegalBinding
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.setVisible
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,15 +80,21 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
             dialog.dismiss()
         }
 
+        binding.termsOfUse.accessibilityClassName(Button::class.java.name)
+
         binding.privacyPolicy.setOnClickListener {
             legalRouter.routeToPrivacyPolicy()
             dialog.dismiss()
         }
 
+        binding.privacyPolicy.accessibilityClassName(Button::class.java.name)
+
         binding.openSource.setOnClickListener {
             legalRouter.routeToOpenSource()
             dialog.dismiss()
         }
+
+        binding.openSource.accessibilityClassName(Button::class.java.name)
 
         dialog.setCanceledOnTouchOutside(true)
         return dialog
