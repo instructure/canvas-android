@@ -23,7 +23,10 @@ import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.showMasqueradeNotification
-import javax.inject.Inject
+import dagger.hilt.EntryPoint
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 /**
  * Base activity for all Canvas activities that contains cross-cutting concerns like analytics, locale and masquerading.
@@ -31,10 +34,19 @@ import javax.inject.Inject
  */
 open class BaseCanvasActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var pageViewUtils: PageViewUtils
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface PageViewFragmentDelegateEntryPoint {
+        fun pageViewUtils(): PageViewUtils
+    }
 
-    private val pageViewAnnotationProcessor by lazy { PageViewAnnotationProcessor(this::class.java, this, pageViewUtils) }
+    private val pageViewAnnotationProcessor by lazy {
+        val pageViewUtils = EntryPoints.get(
+            applicationContext,
+            PageViewFragmentDelegateEntryPoint::class.java
+        ).pageViewUtils()
+        PageViewAnnotationProcessor(this::class.java, this, pageViewUtils)
+    }
 
     override fun attachBaseContext(base: Context?) {
         val newBase = if (base != null) LocaleUtils.wrapContext(base) else base
