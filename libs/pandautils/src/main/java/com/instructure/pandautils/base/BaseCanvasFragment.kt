@@ -18,9 +18,7 @@ package com.instructure.pandautils.base
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
-import javax.inject.Inject
 
 /**
  * Base class for all Canvas Fragments that contains cross-cutting concerns like analytics.
@@ -28,10 +26,7 @@ import javax.inject.Inject
  */
 open class BaseCanvasFragment : Fragment(), PageViewWindowFocus, PageViewPrerequisites {
 
-    @Inject
-    lateinit var pageViewUtils: PageViewUtils
-
-    private val delegate by lazy { PageViewFragmentDelegate(this, pageViewUtils) }
+    private val delegate by lazy { PageViewFragmentDelegate(this) }
 
     override fun beforePageViewPrerequisites(): List<String> = emptyList()
 

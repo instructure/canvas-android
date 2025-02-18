@@ -53,6 +53,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
@@ -106,6 +107,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     @Inject
     lateinit var fileListRepository: FileListRepository
+
+    @Inject
+    lateinit var pageViewUtils: PageViewUtils
 
     private val binding by viewBinding(FragmentFileListBinding::bind)
 

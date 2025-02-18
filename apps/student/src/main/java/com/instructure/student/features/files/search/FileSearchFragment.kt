@@ -29,6 +29,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
@@ -63,6 +64,9 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
 
     @Inject
     lateinit var fileSearchRepository: FileSearchRepository
+
+    @Inject
+    lateinit var pageViewUtils: PageViewUtils
 
     private fun makePageViewUrl() =
         if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"

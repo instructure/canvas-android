@@ -25,14 +25,29 @@ import com.instructure.pandautils.analytics.pageview.PageViewVisibilityTracker
 import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
 import com.instructure.pandautils.analytics.pageview.PageViewWindowFocusListener
 import com.instructure.pandautils.utils.AppType
+import dagger.hilt.EntryPoint
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 class PageViewFragmentDelegate<T>(
     private val fragment: T,
-    pageViewUtils: PageViewUtils
 ) where T : Fragment, T : PageViewWindowFocus, T : PageViewPrerequisites {
 
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface PageViewFragmentDelegateEntryPoint {
+        fun pageViewUtils(): PageViewUtils
+    }
+
     private val visibilityTracker = PageViewVisibilityTracker()
-    private val pageViewAnnotationProcessor by lazy { PageViewAnnotationProcessor(fragment::class.java, fragment, pageViewUtils) }
+    private val pageViewAnnotationProcessor by lazy {
+        val pageViewUtils = EntryPoints.get(
+            fragment.requireActivity().applicationContext,
+            PageViewFragmentDelegateEntryPoint::class.java
+        ).pageViewUtils()
+        PageViewAnnotationProcessor(fragment::class.java, fragment, pageViewUtils)
+    }
 
     fun completePageViewPrerequisite(prerequisite: String) {
         if (visibilityTracker.trackCustom(prerequisite, true, fragment)) {
@@ -65,10 +80,12 @@ class PageViewFragmentDelegate<T>(
 
     @Deprecated("See description in superclass")
     fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if (visibilityTracker.trackUserHint(isVisibleToUser, fragment)) {
-            pageViewAnnotationProcessor.startEvent()
-        } else {
-            pageViewAnnotationProcessor.stopEvent()
+        if (fragment.isAdded) {
+            if (visibilityTracker.trackUserHint(isVisibleToUser, fragment)) {
+                pageViewAnnotationProcessor.startEvent()
+            } else {
+                pageViewAnnotationProcessor.stopEvent()
+            }
         }
     }
 

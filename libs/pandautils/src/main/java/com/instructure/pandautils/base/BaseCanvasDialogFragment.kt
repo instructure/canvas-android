@@ -18,28 +18,21 @@ package com.instructure.pandautils.base
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
-import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
 import com.instructure.pandautils.utils.showMasqueradeNotification
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Base class for all Canvas DialogFragments that contains cross-cutting concerns like analytics, locale and masquerading.
  * All classes should extend this that would normally extend [DialogFragment] to ensure that these concerns are handled consistently across the app.
  */
-@AndroidEntryPoint
 open class BaseCanvasDialogFragment : DialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
-
-    @Inject
-    lateinit var pageViewUtils: PageViewUtils
 
     override fun onStart() {
         super.onStart()
         showMasqueradeNotification()
     }
 
-    private val delegate by lazy { PageViewFragmentDelegate(this, pageViewUtils) }
+    private val delegate by lazy { PageViewFragmentDelegate(this) }
 
     override fun beforePageViewPrerequisites(): List<String> = emptyList()
 
