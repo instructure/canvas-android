@@ -49,6 +49,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -111,8 +112,8 @@ fun AlertSettingsScreen(
                     backgroundColor = Color(uiState.userColor),
                     textColor = colorResource(id = R.color.textLightest),
                     actions = {
-                        var showMenu by remember { mutableStateOf(false) }
-                        var showConfirmationDialog by remember { mutableStateOf(false) }
+                        var showMenu by rememberSaveable { mutableStateOf(false) }
+                        var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }
                         if (showConfirmationDialog) {
                             UnpairStudentDialog(
                                 uiState.student.id,
