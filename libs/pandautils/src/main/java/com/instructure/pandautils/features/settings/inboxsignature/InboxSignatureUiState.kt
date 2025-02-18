@@ -35,4 +35,5 @@ sealed class InboxSignatureAction {
 
 sealed class InboxSignatureViewModelAction {
     data class CloseAndUpdateSettings(val enabled: Boolean) : InboxSignatureViewModelAction()
+    data object ShowErrorToast : InboxSignatureViewModelAction()
 }

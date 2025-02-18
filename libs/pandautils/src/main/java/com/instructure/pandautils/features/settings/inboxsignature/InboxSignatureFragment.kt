@@ -24,12 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.R
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.settings.SettingsSharedAction
 import com.instructure.pandautils.features.settings.SettingsSharedEvents
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -65,7 +67,10 @@ class InboxSignatureFragment : BaseCanvasFragment() {
             is InboxSignatureViewModelAction.CloseAndUpdateSettings -> {
                 requireActivity().onBackPressed()
                 sharedEvents.sendEvent(lifecycleScope, SettingsSharedAction.UpdateSignatureSettings(action.enabled))
+                toast(R.string.inboxSignatureSettingsUpdated)
             }
+
+            InboxSignatureViewModelAction.ShowErrorToast -> toast(R.string.inboxSignatureSettingsError)
         }
     }
 }

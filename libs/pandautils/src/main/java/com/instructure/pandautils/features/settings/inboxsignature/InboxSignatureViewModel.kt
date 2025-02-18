@@ -99,6 +99,8 @@ class InboxSignatureViewModel @Inject constructor(
             _uiState.update { it.copy(saving = false) }
             if (result.isSuccess) {
                 _events.send(InboxSignatureViewModelAction.CloseAndUpdateSettings(result.dataOrNull?.useSignature ?: false))
+            } else {
+                _events.send(InboxSignatureViewModelAction.ShowErrorToast)
             }
         }
     }
