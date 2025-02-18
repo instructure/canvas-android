@@ -20,31 +20,22 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
 import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
-import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.analytics.pageview.PageViewVisibilityTracker
 import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
 import com.instructure.pandautils.analytics.pageview.PageViewWindowFocusListener
+import com.instructure.pandautils.di.PageViewEntryPoint
 import com.instructure.pandautils.utils.AppType
-import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 
 class PageViewFragmentDelegate<T>(
     private val fragment: T,
 ) where T : Fragment, T : PageViewWindowFocus, T : PageViewPrerequisites {
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface PageViewFragmentDelegateEntryPoint {
-        fun pageViewUtils(): PageViewUtils
-    }
-
     private val visibilityTracker = PageViewVisibilityTracker()
     private val pageViewAnnotationProcessor by lazy {
         val pageViewUtils = EntryPoints.get(
             fragment.requireActivity().applicationContext,
-            PageViewFragmentDelegateEntryPoint::class.java
+            PageViewEntryPoint::class.java
         ).pageViewUtils()
         PageViewAnnotationProcessor(fragment::class.java, fragment, pageViewUtils)
     }
