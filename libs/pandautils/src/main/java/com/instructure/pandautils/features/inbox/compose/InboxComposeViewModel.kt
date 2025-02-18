@@ -628,7 +628,7 @@ class InboxComposeViewModel @Inject constructor(
     }
 
     private fun resetSearchFieldResults() {
-        loadRecipients("", uiState.value.selectContextUiState.selectedCanvasContext ?: return)
+        loadRecipients("", uiState.value.selectContextUiState.selectedCanvasContext ?: return, null)
     }
 
     private fun updateSelectedRecipients(newRecipientList: List<Recipient>) {
