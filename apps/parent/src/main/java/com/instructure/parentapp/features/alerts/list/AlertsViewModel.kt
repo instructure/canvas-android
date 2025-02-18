@@ -183,13 +183,16 @@ class AlertsViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.update { it.copy(alerts = alerts) }
                 alertCountUpdater.updateShouldRefreshAlertCount(true)
+                if (alerts.indexOf(alert) == 0) {
+                    _uiState.update { it.copy(scrollToTop = true) }
+                }
             }
         }
 
         val alerts = _uiState.value.alerts.toMutableList()
         val alert = alerts.find { it.alertId == alertId } ?: return
         alerts.removeIf { it.alertId == alertId }
-        _uiState.update { it.copy(alerts = alerts) }
+        _uiState.update { it.copy(alerts = alerts, scrollToTop = false) }
 
         try {
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.DISMISSED)

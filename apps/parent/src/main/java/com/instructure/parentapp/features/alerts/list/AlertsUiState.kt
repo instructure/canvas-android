@@ -25,7 +25,8 @@ data class AlertsUiState(
     @ColorInt val studentColor: Int = Color.BLACK,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val isRefreshing: Boolean = false
+    val isRefreshing: Boolean = false,
+    val scrollToTop: Boolean = false
 )
 
 data class AlertsItemUiState(
