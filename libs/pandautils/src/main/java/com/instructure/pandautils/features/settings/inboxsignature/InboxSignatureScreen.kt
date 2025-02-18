@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -98,8 +99,7 @@ fun InboxSignatureContent(uiState: InboxSignatureUiState, actionHandler: (InboxS
                 .fillMaxWidth()
                 .padding(vertical = 8.dp, horizontal = 16.dp),
             fontSize = 14.sp,
-            color = colorResource(R.color.textDarkest),
-            fontWeight = FontWeight.SemiBold
+            color = colorResource(R.color.textDarkest)
         )
         LabelSwitchRow(
             label = stringResource(com.instructure.pandares.R.string.inboxSignatureSwitchLabel),
@@ -109,7 +109,9 @@ fun InboxSignatureContent(uiState: InboxSignatureUiState, actionHandler: (InboxS
             },
             fontWeight = FontWeight.SemiBold
         )
-        TextFieldWithHeader(label = stringResource(R.string.inboxSignatureTextfieldHeader), value = uiState.signatureText, onValueChange = {
+        Divider()
+        val placeholder = if (uiState.signatureEnabled) stringResource(R.string.inboxSignatureTextFieldPlaceholder) else null
+        TextFieldWithHeader(label = stringResource(R.string.inboxSignatureTextfieldHeader), value = uiState.signatureText, placeholder = placeholder, onValueChange = {
             actionHandler(InboxSignatureAction.UpdateSignature(it))
         }, enabled = uiState.signatureEnabled, headerEnabled = true)
     }

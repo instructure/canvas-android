@@ -490,4 +490,5 @@
     <string name="inboxSignatureError">Failed to load inbox signature</string>
     <string name="inboxSignatureSettingsUpdated">Inbox settings saved!</string>
     <string name="inboxSignatureSettingsError">Failed to save inbox settings</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Write your signature here</string>
 </resources>
