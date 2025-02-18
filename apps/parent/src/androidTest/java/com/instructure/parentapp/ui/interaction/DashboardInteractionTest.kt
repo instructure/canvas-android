@@ -110,7 +110,7 @@ class DashboardInteractionTest : ParentComposeTest() {
             dashboardPage.clickAddStudent()
         }
 
-        addStudentPage.tapPairingCode()
+        addStudentBottomPage.clickOnPairingCode()
 
         composeTestRule.onNodeWithTag("pairingCodeTextField").assertIsDisplayed()
     }
@@ -128,7 +128,7 @@ class DashboardInteractionTest : ParentComposeTest() {
             dashboardPage.clickAddStudent()
         }
 
-        addStudentPage.tapQrCode()
+        addStudentBottomPage.clickOnQRCode()
 
         composeTestRule.onNodeWithText("Open Canvas Student").assertIsDisplayed()
     }
