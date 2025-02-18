@@ -26,8 +26,11 @@ class SettingsRepository(private val featuresApi: FeaturesAPI.FeaturesInterface,
     suspend fun getInboxSignatureState(): InboxSignatureState {
         val inboxSignatureEnabled = featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull?.enableInboxSignatureBlock ?: false
         if (inboxSignatureEnabled) {
-            val inboxSignature = inboxSettingsManager.getInboxSignatureSettings(forceNetwork = true).dataOrNull
-            return if (inboxSignature?.useSignature == true) InboxSignatureState.ENABLED else InboxSignatureState.DISABLED // TODO proper error handling
+            val inboxSignatureResult = inboxSettingsManager.getInboxSignatureSettings(forceNetwork = true)
+            if (inboxSignatureResult.isFail) return InboxSignatureState.UNKNOWN
+
+            val inboxSignature = inboxSignatureResult.dataOrThrow
+            return if (inboxSignature.useSignature) InboxSignatureState.ENABLED else InboxSignatureState.DISABLED
         } else {
             return InboxSignatureState.HIDDEN
         }
@@ -37,5 +40,6 @@ class SettingsRepository(private val featuresApi: FeaturesAPI.FeaturesInterface,
 enum class InboxSignatureState(@StringRes val textRes: Int? = null) {
     ENABLED(R.string.inboxSignatureEnabled),
     DISABLED(R.string.inboxSignatureNotSet),
-    HIDDEN
+    HIDDEN,
+    UNKNOWN // If the second request fails we know the account settings is enabled, but we don't konow it's state so we show it without a subtitle.
 }

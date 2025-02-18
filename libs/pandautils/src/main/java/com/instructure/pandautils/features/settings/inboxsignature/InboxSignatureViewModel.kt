@@ -48,7 +48,7 @@ class InboxSignatureViewModel @Inject constructor(
     }
 
     private fun getInboxSignature() {
-        _uiState.update { it.copy(loading = true) }
+        _uiState.update { it.copy(loading = true, error = false) }
         viewModelScope.launch {
             val signatureResult = repository.getInboxSignature()
             _uiState.update { it.copy(loading = false)}
@@ -58,6 +58,8 @@ class InboxSignatureViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(signatureText = TextFieldValue(result.signature), signatureEnabled = result.useSignature)
                 }
+            } else {
+                _uiState.update { it.copy(error = true) }
             }
         }
     }
@@ -80,6 +82,8 @@ class InboxSignatureViewModel @Inject constructor(
                     saveEnabled = isSaveEnabled(it.signatureText.text, action.enabled)
                 )
             }
+
+            InboxSignatureAction.Refresh -> getInboxSignature()
         }
     }
 

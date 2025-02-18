@@ -23,12 +23,14 @@ data class InboxSignatureUiState(
     val saving: Boolean = false,
     val saveEnabled: Boolean = true,
     val loading: Boolean = false,
+    val error: Boolean = false
 )
 
 sealed class InboxSignatureAction {
     data object Save : InboxSignatureAction()
     data class UpdateSignature(val signature: TextFieldValue) : InboxSignatureAction()
     data class UpdateSignatureEnabled(val enabled: Boolean) : InboxSignatureAction()
+    data object Refresh : InboxSignatureAction()
 }
 
 sealed class InboxSignatureViewModelAction {

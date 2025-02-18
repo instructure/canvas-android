@@ -41,7 +41,9 @@ import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.LabelSwitchRow
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
 import com.instructure.pandautils.utils.ThemePrefs
 
@@ -74,7 +76,11 @@ fun InboxSignatureScreen(uiState: InboxSignatureUiState, actionHandler: (InboxSi
                     }
                 )
             }) { padding ->
-            InboxSignatureContent(uiState, actionHandler, Modifier.padding(padding))
+            when {
+                uiState.loading -> Loading(modifier = Modifier.fillMaxSize())
+                uiState.error -> ErrorContent(stringResource(R.string.inboxSignatureError)) { actionHandler(InboxSignatureAction.Refresh) }
+                else -> InboxSignatureContent(uiState, actionHandler, Modifier.padding(padding))
+            }
         }
     }
 }
