@@ -46,5 +46,5 @@ enum class InboxSignatureState(@StringRes val textRes: Int? = null) {
     ENABLED(R.string.inboxSignatureEnabled),
     DISABLED(R.string.inboxSignatureNotSet),
     HIDDEN,
-    UNKNOWN // If the second request fails we know the account settings is enabled, but we don't konow it's state so we show it without a subtitle.
+    UNKNOWN // If the second request fails we know the account settings is enabled, but we don't know it's state so we show it without a subtitle.
 }

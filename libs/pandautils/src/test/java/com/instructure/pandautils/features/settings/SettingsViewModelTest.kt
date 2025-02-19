@@ -38,6 +38,7 @@ import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -70,6 +71,7 @@ class SettingsViewModelTest {
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
+    private val settingsRepository: SettingsRepository = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -105,8 +107,10 @@ class SettingsViewModelTest {
 
         val uiState = viewModel.uiState.value
 
+        val expectedItems = items.mapValues { entry -> entry.value.map { SettingsItemUiState(it) } }
+
         assertEquals(AppTheme.LIGHT.ordinal, uiState.appTheme)
-        assertEquals(items, uiState.items)
+        assertEquals(expectedItems, uiState.items)
     }
 
     @Test
@@ -180,7 +184,7 @@ class SettingsViewModelTest {
         coEvery { syncSettingsFacade.getSyncSettingsListenable() } returns syncSettingsLiveData
 
         val items = mapOf(
-            R.string.offlineSyncSettingsTitle to listOf(
+            R.string.offlineContent to listOf(
                 SettingsItem.OFFLINE_SYNCHRONIZATION
             )
         )
@@ -191,15 +195,13 @@ class SettingsViewModelTest {
 
         val viewModel = createViewModel()
 
-        val uiState = viewModel.uiState.value
-
-        assertEquals(R.string.syncSettings_manualDescription, uiState.offlineState)
+        assertEquals(R.string.syncSettings_manualDescription, viewModel.uiState.value.items[R.string.offlineContent]!!.first().subtitleRes!!)
 
         syncSettingsLiveData.value = SyncSettingsEntity(1L, true, SyncFrequency.DAILY, false)
-        assertEquals(SyncFrequency.DAILY.readable, viewModel.uiState.value.offlineState)
+        assertEquals(SyncFrequency.DAILY.readable, viewModel.uiState.value.items[R.string.offlineContent]!!.first().subtitleRes!!)
 
         syncSettingsLiveData.value = SyncSettingsEntity(1L, true, SyncFrequency.WEEKLY, false)
-        assertEquals(SyncFrequency.WEEKLY.readable, viewModel.uiState.value.offlineState)
+        assertEquals(SyncFrequency.WEEKLY.readable, viewModel.uiState.value.items[R.string.offlineContent]!!.first().subtitleRes!!)
     }
 
     @Test
@@ -220,17 +222,130 @@ class SettingsViewModelTest {
         val viewModel = createViewModel()
 
         viewModel.uiState.value.items.flatMap { it.value }.forEach { item ->
-            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item))
+            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item.item))
             val events = mutableListOf<SettingsViewModelAction>()
             backgroundScope.launch(testDispatcher) {
                 viewModel.events.toList(events)
-                assertEquals(SettingsViewModelAction.Navigate(item), events.last())
+                assertEquals(SettingsViewModelAction.Navigate(item.item), events.last())
             }
         }
     }
 
+    @Test
+    fun `Inbox signature is hidden when repository returns hidden state`() = runTest {
+        val syncSettingsLiveData =
+            MutableLiveData(SyncSettingsEntity(1L, false, SyncFrequency.DAILY, false))
+        coEvery { syncSettingsFacade.getSyncSettingsListenable() } returns syncSettingsLiveData
+        coEvery { settingsRepository.getInboxSignatureState() } returns InboxSignatureState.HIDDEN
+
+        val items = mapOf(
+            R.string.inboxSettingsTitle to listOf(
+                SettingsItem.INBOX_SIGNATURE
+            )
+        )
+
+        every { settingsBehaviour.settingsItems } returns items
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        assertEquals(0, viewModel.uiState.value.items.size)
+    }
+
+    @Test
+    fun `Inbox signature is enabled when repository returns enabled state`() = runTest {
+        val syncSettingsLiveData =
+            MutableLiveData(SyncSettingsEntity(1L, false, SyncFrequency.DAILY, false))
+        coEvery { syncSettingsFacade.getSyncSettingsListenable() } returns syncSettingsLiveData
+        coEvery { settingsRepository.getInboxSignatureState() } returns InboxSignatureState.ENABLED
+
+        val items = mapOf(
+            R.string.inboxSettingsTitle to listOf(
+                SettingsItem.INBOX_SIGNATURE
+            )
+        )
+
+        every { settingsBehaviour.settingsItems } returns items
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        assertEquals(R.string.inboxSignatureEnabled, viewModel.uiState.value.items[R.string.inboxSettingsTitle]!!.first().subtitleRes)
+    }
+
+    @Test
+    fun `Inbox signature is not set when repository returns disabled state`() = runTest {
+        val syncSettingsLiveData =
+            MutableLiveData(SyncSettingsEntity(1L, false, SyncFrequency.DAILY, false))
+        coEvery { syncSettingsFacade.getSyncSettingsListenable() } returns syncSettingsLiveData
+        coEvery { settingsRepository.getInboxSignatureState() } returns InboxSignatureState.DISABLED
+
+        val items = mapOf(
+            R.string.inboxSettingsTitle to listOf(
+                SettingsItem.INBOX_SIGNATURE
+            )
+        )
+
+        every { settingsBehaviour.settingsItems } returns items
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        assertEquals(R.string.inboxSignatureNotSet, viewModel.uiState.value.items[R.string.inboxSettingsTitle]!!.first().subtitleRes)
+    }
+
+    @Test
+    fun `Inbox signature subtitle is not present when repository returns unknown state`() = runTest {
+        val syncSettingsLiveData =
+            MutableLiveData(SyncSettingsEntity(1L, false, SyncFrequency.DAILY, false))
+        coEvery { syncSettingsFacade.getSyncSettingsListenable() } returns syncSettingsLiveData
+        coEvery { settingsRepository.getInboxSignatureState() } returns InboxSignatureState.UNKNOWN
+
+        val items = mapOf(
+            R.string.inboxSettingsTitle to listOf(
+                SettingsItem.INBOX_SIGNATURE
+            )
+        )
+
+        every { settingsBehaviour.settingsItems } returns items
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        assertNull(viewModel.uiState.value.items[R.string.inboxSettingsTitle]!!.first().subtitleRes)
+    }
+
+    @Test
+    fun `Change inbox signature subtitle`() = runTest {
+        val syncSettingsLiveData =
+            MutableLiveData(SyncSettingsEntity(1L, false, SyncFrequency.DAILY, false))
+        coEvery { syncSettingsFacade.getSyncSettingsListenable() } returns syncSettingsLiveData
+        coEvery { settingsRepository.getInboxSignatureState() } returns InboxSignatureState.DISABLED
+
+        val items = mapOf(
+            R.string.inboxSettingsTitle to listOf(
+                SettingsItem.INBOX_SIGNATURE
+            )
+        )
+
+        every { settingsBehaviour.settingsItems } returns items
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        assertEquals(R.string.inboxSignatureNotSet, viewModel.uiState.value.items[R.string.inboxSettingsTitle]!!.first().subtitleRes)
+
+        viewModel.updateSignatureSettings(true)
+
+        assertEquals(R.string.inboxSignatureEnabled, viewModel.uiState.value.items[R.string.inboxSettingsTitle]!!.first().subtitleRes)
+    }
 
     private fun createViewModel(): SettingsViewModel {
-        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs, analytics)
+        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs, analytics, settingsRepository)
     }
 }

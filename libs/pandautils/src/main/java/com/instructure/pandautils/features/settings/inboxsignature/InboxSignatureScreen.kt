@@ -79,7 +79,7 @@ fun InboxSignatureScreen(uiState: InboxSignatureUiState, actionHandler: (InboxSi
             }) { padding ->
             when {
                 uiState.loading -> Loading(modifier = Modifier.fillMaxSize())
-                uiState.error -> ErrorContent(stringResource(R.string.inboxSignatureError)) { actionHandler(InboxSignatureAction.Refresh) }
+                uiState.error -> ErrorContent(stringResource(R.string.inboxSignatureError), modifier = Modifier.fillMaxSize()) { actionHandler(InboxSignatureAction.Refresh) }
                 else -> InboxSignatureContent(uiState, actionHandler, Modifier.padding(padding))
             }
         }

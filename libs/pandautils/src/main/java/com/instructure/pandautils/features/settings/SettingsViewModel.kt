@@ -79,17 +79,6 @@ class SettingsViewModel @Inject constructor(
 
     init {
         _uiState.update { it.copy(loading = true) }
-        viewModelScope.tryLaunch {
-            val inboxSignatureState = settingsRepository.getInboxSignatureState()
-            if (inboxSignatureState == InboxSignatureState.HIDDEN) {
-                _uiState.update { it.copy(items = it.items.minus(R.string.inboxSettingsTitle)) }
-            } else {
-                changeSettingsItemSubtitle(SettingsItem.INBOX_SIGNATURE, inboxSignatureState.textRes!!)
-            }
-            _uiState.update { it.copy(loading = false) }
-        } catch {
-            _uiState.update { it.copy(loading = false) }
-        }
 
         val items = settingsBehaviour.settingsItems.filter {
             if (it.value.contains(SettingsItem.OFFLINE_SYNCHRONIZATION)) {
@@ -103,6 +92,20 @@ class SettingsViewModel @Inject constructor(
                 items = items,
                 scrollValue = scrollValue
             )
+        }
+
+        viewModelScope.tryLaunch {
+            val inboxSignatureState = settingsRepository.getInboxSignatureState()
+            if (inboxSignatureState == InboxSignatureState.HIDDEN) {
+                _uiState.update { it.copy(items = it.items.minus(R.string.inboxSettingsTitle)) }
+            } else {
+                inboxSignatureState.textRes?.let {
+                    changeSettingsItemSubtitle(SettingsItem.INBOX_SIGNATURE, it)
+                }
+            }
+            _uiState.update { it.copy(loading = false) }
+        } catch {
+            _uiState.update { it.copy(loading = false) }
         }
 
         if (items.any { item -> item.value.any { it.item == SettingsItem.OFFLINE_SYNCHRONIZATION } }) {

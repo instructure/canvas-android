@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.weave.awaitQL
+import java.util.concurrent.TimeUnit
 
 class InboxSettingsManagerImpl : InboxSettingsManager {
 
@@ -54,7 +55,7 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
 
         callback.enqueueQuery(query) {
             if (forceNetwork) {
-                cachePolicy = HttpCachePolicy.NETWORK_FIRST
+                cachePolicy = HttpCachePolicy.NETWORK_FIRST.expireAfter(1, TimeUnit.DAYS)
             }
         }
     }

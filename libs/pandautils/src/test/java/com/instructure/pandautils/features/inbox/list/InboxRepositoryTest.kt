@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -194,12 +195,12 @@ class InboxRepositoryTest {
 
     @Test
     fun `Get signature successfully`() = runTest {
-        val expected = "signature"
+        val expected = InboxSignatureSettings("signature", true)
 
-        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns expected
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns DataResult.Success(expected)
 
-        val result = inboxRepository.getInboxSignature()
+        inboxRepository.getInboxSignature()
 
-        Assert.assertEquals(expected, result)
+        coVerify { inboxSettingsManager.getInboxSignatureSettings() }
     }
 }

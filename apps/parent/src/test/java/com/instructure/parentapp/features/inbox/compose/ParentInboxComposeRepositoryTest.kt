@@ -4,6 +4,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -159,13 +160,24 @@ class ParentInboxComposeRepositoryTest {
     }
 
     @Test
-    fun `Get signature successfully`() = runTest {
-        val expected = "signature"
+    fun `Get signature successfully when use signature is true`() = runTest {
+        val expected = InboxSignatureSettings("signature", true)
 
-        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns expected
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns DataResult.Success(expected)
 
         val result = inboxComposeRepository.getInboxSignature()
 
-        assertEquals(expected, result)
+        assertEquals("signature", result)
+    }
+
+    @Test
+    fun `Get signature returns empty string when use signature is false`() = runTest {
+        val expected = InboxSignatureSettings("signature", false)
+
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns DataResult.Success(expected)
+
+        val result = inboxComposeRepository.getInboxSignature()
+
+        assertEquals("", result)
     }
 }
