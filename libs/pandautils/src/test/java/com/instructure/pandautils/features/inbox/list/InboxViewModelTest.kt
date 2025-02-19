@@ -915,5 +915,13 @@ class InboxViewModelTest {
         }
     }
 
+    @Test
+    fun `Inbox signature is fetched on init`() {
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+
+        coVerify { inboxRepository.getInboxSignature() }
+    }
+
     private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)
 }

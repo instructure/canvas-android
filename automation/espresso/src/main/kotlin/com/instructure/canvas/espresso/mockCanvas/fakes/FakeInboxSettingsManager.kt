@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,19 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.parentapp.ui.pages
+package com.instructure.canvas.espresso.mockCanvas.fakes
 
-import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 
-class AddStudentPage(private val composeTestRule: ComposeTestRule) {
-
-    fun tapPairingCode() {
-        composeTestRule.onNodeWithText("Pairing Code").performClick()
-    }
-
-    fun tapQrCode() {
-        composeTestRule.onNodeWithText("QR Code").performClick()
-    }
+class FakeInboxSettingsManager : InboxSettingsManager {
+    override suspend fun getInboxSignature(): String = MockCanvas.data.inboxSignature
 }

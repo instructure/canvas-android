@@ -205,7 +205,6 @@ class FlutterAppMigration(
         isMasquerading = flutterSignedInUser.masqueradeUser != null
         isMasqueradingFromQRCode = flutterSignedInUser.isMasqueradingFromQRCode.orDefault()
         masqueradeId = flutterSignedInUser.masqueradeUser?.id ?: -1
-        isFirstMasqueradingStart = true
         domain = if (isMasquerading) Uri.parse(flutterSignedInUser.masqueradeDomain).host.orEmpty() else signedInUser.domain
         user = if (isMasquerading) flutterSignedInUser.masqueradeUser else signedInUser.user
     }

@@ -40,8 +40,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
@@ -94,10 +92,10 @@ import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
-import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -150,10 +148,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     lateinit var featureFlagProvider: FeatureFlagProvider
 
     @Inject
-    lateinit var oAuthApi: OAuthAPI.OAuthInterface
+    lateinit var alarmScheduler: AlarmScheduler
 
     @Inject
-    lateinit var alarmScheduler: AlarmScheduler
+    lateinit var webViewAuthenticator: WebViewAuthenticator
 
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
@@ -267,22 +265,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         fetchFeatureFlags()
 
         requestNotificationsPermission()
-
-        if (ApiPrefs.isFirstMasqueradingStart) {
-            loadAuthenticatedSession()
-            ApiPrefs.isFirstMasqueradingStart = false
-        }
     }
 
-    private fun loadAuthenticatedSession() {
-        lifecycleScope.launch {
-            oAuthApi.getAuthenticatedSession(
-                ApiPrefs.fullDomain,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull?.sessionUrl?.let {
-                loadUrlIntoHeadlessWebView(this@InitActivity, it)
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 
     private fun requestNotificationsPermission() {

@@ -41,7 +41,7 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode 55
+        versionCode 56
         versionName "4.0.0"
 
         buildConfigField "boolean", "IS_TESTING", "false"

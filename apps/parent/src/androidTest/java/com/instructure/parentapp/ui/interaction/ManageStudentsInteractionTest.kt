@@ -79,7 +79,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
         composeTestRule.waitForIdle()
 
         manageStudentsPage.tapAddStudent()
-        addStudentPage.tapPairingCode()
+        addStudentBottomPage.clickOnPairingCode()
 
         composeTestRule.onNodeWithTag("pairingCodeTextField").assertIsDisplayed()
     }
@@ -93,7 +93,7 @@ class ManageStudentsInteractionTest : ParentComposeTest() {
         composeTestRule.waitForIdle()
 
         manageStudentsPage.tapAddStudent()
-        addStudentPage.tapQrCode()
+        addStudentBottomPage.clickOnQRCode()
 
         composeTestRule.onNodeWithText("Open Canvas Student").assertIsDisplayed()
     }

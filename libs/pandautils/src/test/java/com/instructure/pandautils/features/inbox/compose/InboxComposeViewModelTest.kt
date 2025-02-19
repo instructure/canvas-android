@@ -98,6 +98,24 @@ class InboxComposeViewModelTest {
     }
 
     @Test
+    fun `Signature footer added on init`() {
+        coEvery { inboxComposeRepository.getInboxSignature() } returns "Signature"
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals("\n\n---\nSignature", uiState.body.text)
+    }
+
+    @Test
+    fun `Signature footer not added on init when it is blank`() {
+        coEvery { inboxComposeRepository.getInboxSignature() } returns ""
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals("", uiState.body.text)
+    }
+
+    @Test
     fun `Load available contexts on init`() {
         val viewmodel = getViewModel()
 
@@ -726,6 +744,35 @@ class InboxComposeViewModelTest {
         viewmodel.recipientPickerDone()
         assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
         assertEquals(RecipientPickerScreenOption.Roles, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+    }
+
+    // endregion
+
+    // region SendIndividual
+
+    @Test
+    fun `Test Send individual over 100 recipients`() {
+        val viewmodel = getViewModel()
+        val over100RecipientGroup = Recipient(stringId = "all", name = "Test", userCount = 110)
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(over100RecipientGroup))
+
+        assertEquals(true, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(false, viewmodel.uiState.value.sendIndividual)
+
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(over100RecipientGroup))
+
+        assertEquals(false, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(false, viewmodel.uiState.value.sendIndividual)
+
+        viewmodel.handleAction(InboxComposeActionHandler.SendIndividualChanged(true))
+
+        assertEquals(true, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
+
+        viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(over100RecipientGroup))
+
+        assertEquals(true, viewmodel.uiState.value.isSendIndividualEnabled)
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
     }
 
     // endregion

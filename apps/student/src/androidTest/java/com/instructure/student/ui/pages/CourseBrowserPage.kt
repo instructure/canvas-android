@@ -43,6 +43,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
@@ -125,6 +126,10 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         // Scroll RecyclerView item into view, if necessary
         recyclerViewScrollTo(matcher)
         onView(matcher).click()
+    }
+
+    fun clickOnSmartSearch() {
+        onView(withId(R.id.searchBar) + withAncestor(R.id.courseBrowserPage)).click()
     }
 
     fun assertTitleCorrect(course: Course) {
