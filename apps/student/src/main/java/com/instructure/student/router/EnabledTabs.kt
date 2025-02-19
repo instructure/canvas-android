@@ -25,14 +25,13 @@ class EnabledTabsImpl(
         val pathSegments = uri.pathSegments
         val relativePath = uri.path?.replaceBefore("/courses/$courseId", "")
         // Details urls should be accepted, like /assignments/1, but assignments/syllabus should not
-        return if (pathSegments.last() == Tab.SYLLABUS_ID) { // handle syllabus which has the same url scheme as assignment details
-            tabs.any { relativePath == it.htmlUrl }
-        } else if (pathSegments.size == 3) { // tab urls
-            tabs.any { relativePath == it.htmlUrl }
-        } else if (pathSegments.contains("external_tools") && pathSegments.size == 4) { // external tools
-            return tabs.any { relativePath == it.htmlUrl }
-        } else {
-            true
+        return when {
+            pathSegments.last() == "grades" -> true
+            pathSegments.last() == "discussion_topics" -> true
+            pathSegments.last() == Tab.SYLLABUS_ID -> tabs.any { relativePath == it.htmlUrl }
+            pathSegments.size == 3 -> tabs.any { relativePath == it.htmlUrl }
+            pathSegments.contains("external_tools") && pathSegments.size == 4 -> tabs.any { relativePath == it.htmlUrl }
+            else -> true
         }
     }
 
