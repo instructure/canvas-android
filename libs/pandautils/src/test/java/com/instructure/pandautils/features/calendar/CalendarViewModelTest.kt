@@ -486,7 +486,7 @@ class CalendarViewModelTest {
 
         // Tap on today
         viewModel.handleAction(CalendarAction.TodayTapped)
-        assertEquals(expectedState, viewModel.uiState.value)
+        assertEquals(expectedState.copy(calendarUiState = expectedState.calendarUiState.copy(todayTapped = true)), viewModel.uiState.value)
     }
 
     @Test
