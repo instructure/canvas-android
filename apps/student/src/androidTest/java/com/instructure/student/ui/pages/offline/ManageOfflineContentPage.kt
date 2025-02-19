@@ -69,7 +69,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
     }
 
     fun clickOnSyncButton() {
-        syncButton.click()
+        waitForView(withId(R.id.syncButton)).click()
     }
 
     fun clickOnSyncButtonAndConfirm() {
@@ -78,7 +78,9 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
     }
 
     private fun confirmSync() {
-        waitForView(withText("Sync") + withAncestor(R.id.buttonPanel)).click()
+        val syncDialogButton = waitForView(withText("Sync") + withAncestor(R.id.buttonPanel))
+        Thread.sleep(2000)
+        syncDialogButton.click()
     }
 
     fun confirmDiscardChanges() {
