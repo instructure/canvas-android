@@ -103,7 +103,7 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
             val annotations = it.annotationProvider.getAllAnnotationsOfType(
                 EnumSet.allOf(AnnotationType::class.java)
             )
-            if (annotations.isEmpty()) {
+            if (annotations.isEmpty() && networkStateProvider.isOnline()) {
                 val file = File(path)
                 if (file.exists()) {
                     file.delete()
