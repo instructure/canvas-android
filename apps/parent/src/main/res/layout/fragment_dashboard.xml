@@ -73,7 +73,8 @@
                             android:accessibilityLiveRegion="polite"
                             android:accessibilityTraversalAfter="@id/navigationButtonHolder"
                             android:contentDescription="@{viewModel.data.studentSelectorContentDescription}"
-                            android:onClick="@{() -> viewModel.toggleStudentSelector()}">
+                            android:onClick="@{() -> viewModel.toggleStudentSelector()}"
+                            app:accessibilityClassName='@{"android.widget.Button"}'>
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/selected_student_container"
@@ -134,7 +135,8 @@
                             android:foreground="?attr/selectableItemBackground"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
-                            android:paddingStart="16dp">
+                            android:paddingStart="16dp"
+                            app:accessibilityClassName='@{"android.widget.Button"}'>
 
                             <ImageView
                                 android:id="@+id/navigationButton"
@@ -174,6 +176,7 @@
                             android:minHeight="48dp"
                             android:paddingEnd="16dp"
                             android:visibility="gone"
+                            app:accessibilityClassName='@{"android.widget.Button"}'
                             tools:visibility="visible">
 
                             <ImageView

@@ -36,7 +36,9 @@
         android:background="@drawable/bg_rounded_outline_6dp"
         android:contentDescription="@{viewData.gradeCellContentDescription}"
         android:foreground="?android:attr/selectableItemBackground"
-        android:padding="16dp">
+        android:padding="16dp"
+        app:accessibilityClassName='@{"android.widget.Button"}'>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/gradeCellHeaderLayout"
             android:layout_width="match_parent"
@@ -64,8 +66,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="@{viewData.state == viewData.State.SUBMITTED || viewData.state == viewData.State.GRADED  ? View.VISIBLE : View.GONE}"
-                tools:ignore="MissingConstraints"
-                />
+                tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/submissionAndRubricLabel"
@@ -87,12 +88,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="34dp"
+            android:accessibilityLiveRegion="polite"
             android:drawablePadding="6dp"
             android:text="@string/submissionStatusUploadingTitle"
             android:textColor="@color/textDarkest"
             android:textSize="22sp"
             android:visibility="@{viewData.state == viewData.State.UPLOADING ? View.VISIBLE : View.GONE}"
-            android:accessibilityLiveRegion="polite"
             app:layout_constraintBottom_toTopOf="@id/uploadingSubtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,12 +120,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="34dp"
+            android:accessibilityLiveRegion="polite"
             android:drawablePadding="6dp"
             android:text="@string/submissionStatusFailedTitle"
             android:textColor="@color/textDarkest"
             android:textSize="22sp"
             android:visibility="@{viewData.state == viewData.State.FAILED ? View.VISIBLE : View.GONE}"
-            android:accessibilityLiveRegion="polite"
             app:layout_constraintBottom_toTopOf="@id/uploadingSubtitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,12 +152,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/grade_cell_text_top_margin"
+            android:accessibilityLiveRegion="polite"
             android:drawablePadding="6dp"
             android:text="@string/submissionStatusSuccessTitle"
             android:textColor="@color/textDarkest"
             android:textSize="22sp"
             android:visibility="@{viewData.state == viewData.State.SUBMITTED ? View.VISIBLE : View.GONE}"
-            android:accessibilityLiveRegion="polite"
             app:drawableStartCompat="@drawable/ic_complete_solid"
             app:drawableTint="@color/backgroundSuccess"
             app:layout_constraintBottom_toTopOf="@id/submittedSubtitle"
