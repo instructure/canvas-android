@@ -16,10 +16,15 @@
  */
 package com.instructure.parentapp.features.lti
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
 
 class ParentLtiLaunchFragmentBehavior(parentPrefs: ParentPrefs) : LtiLaunchFragmentBehavior {
     override val toolbarColor: Int = parentPrefs.currentStudent.studentColor
+
+    override fun closeLtiLaunchFragment(activity: FragmentActivity) {
+        activity.supportFragmentManager.popBackStack()
+    }
 }

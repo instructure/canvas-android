@@ -290,7 +290,10 @@ class InboxComposeViewModel @Inject constructor(
                         selectedRole = null,
                         selectedRecipients = emptyList()
                     ),
-                    screenOption = InboxComposeScreenOptions.None
+                    screenOption = InboxComposeScreenOptions.None,
+                    inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
+                        selectedValues = emptyList(),
+                    )
                 ) }
 
                 loadRecipients("", action.context, uiState.value.recipientPickerUiState.selectedRole)
@@ -373,6 +376,7 @@ class InboxComposeViewModel @Inject constructor(
         ) }
 
         resetSearchFieldValue()
+        resetSearchFieldResults()
     }
 
     fun recipientPickerDone() {
@@ -381,10 +385,12 @@ class InboxComposeViewModel @Inject constructor(
             recipientPickerUiState = it.recipientPickerUiState.copy(
                 screenOption = RecipientPickerScreenOption.Roles,
                 selectedRole = null,
-            )
+                searchValue = TextFieldValue(""),
+            ),
         ) }
 
         resetSearchFieldValue()
+        resetSearchFieldResults()
     }
 
     private fun loadContexts(forceRefresh: Boolean = false) {
@@ -496,7 +502,7 @@ class InboxComposeViewModel @Inject constructor(
                         message = getMessageBody(),
                         context = canvasContext,
                         attachments = uiState.value.attachments.map { it.attachment },
-                        isIndividual = uiState.value.sendIndividual
+                        isIndividual = uiState.value.isSendIndividualEnabled
                     ).dataOrThrow
 
                     _uiState.update { it.copy(enableCustomBackHandler = false) }
@@ -619,6 +625,10 @@ class InboxComposeViewModel @Inject constructor(
                 searchValue = TextFieldValue("")
             )
         ) }
+    }
+
+    private fun resetSearchFieldResults() {
+        loadRecipients("", uiState.value.selectContextUiState.selectedCanvasContext ?: return, uiState.value.recipientPickerUiState.selectedRole)
     }
 
     private fun updateSelectedRecipients(newRecipientList: List<Recipient>) {

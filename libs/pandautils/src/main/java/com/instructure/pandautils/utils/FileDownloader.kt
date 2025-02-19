@@ -53,7 +53,7 @@ class FileDownloader(
             .setMimeType(contentType)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$filename")
 
-        if (cookie.isNotEmpty()) {
+        if (cookie?.isNotEmpty().orDefault()) {
             request.addRequestHeader("Cookie", cookie)
         }
 
