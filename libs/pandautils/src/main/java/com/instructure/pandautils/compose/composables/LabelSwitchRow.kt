@@ -43,10 +43,10 @@ import com.instructure.pandautils.utils.ThemePrefs
 @Composable
 fun LabelSwitchRow(
     label: String,
-    subtitle: String? = null,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     enabled: Boolean = true,
     fontWeight: FontWeight? = null,
 ) {
