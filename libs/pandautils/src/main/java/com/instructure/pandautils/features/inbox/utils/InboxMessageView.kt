@@ -196,16 +196,16 @@ private fun InboxMessageAuthorView(
                         messageState.recipients.size - 1
                     )
                 } else {
-                    messageState.recipients[0].name
+                    messageState.recipients.firstOrNull()?.name
                 }
             }
 
             Text(
-                text = stringResource(
+                text = if (recipientText != null) stringResource(
                     R.string.inboxMessageAuthorAndRecipientsLabel,
                     author?.name ?: "",
-                    recipientText ?:""
-                ),
+                    recipientText
+                ) else author?.name ?: "",
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest)
             )

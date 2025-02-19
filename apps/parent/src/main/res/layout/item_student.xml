@@ -26,7 +26,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="120dp"
         android:layout_height="90dp"
-        android:onClick="@{() -> itemViewModel.onStudentClick()}">
+        android:contentDescription="@{@string/a11y_studentSelectorSelectStudent(itemViewModel.studentItemViewData.studentName)}"
+        android:onClick="@{() -> itemViewModel.onStudentClick()}"
+        app:accessibilityClassName='@{"android.widget.Button"}'>
 
         <ImageView
             android:id="@+id/student_image"

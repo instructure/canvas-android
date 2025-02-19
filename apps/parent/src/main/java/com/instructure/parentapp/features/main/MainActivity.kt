@@ -27,8 +27,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.snackbar.Snackbar
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
@@ -42,7 +41,8 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
+import com.instructure.pandautils.utils.WebViewAuthenticator
+import com.instructure.pandautils.utils.toast
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityMainBinding
 import com.instructure.parentapp.features.dashboard.InboxCountUpdater
@@ -50,6 +50,9 @@ import com.instructure.parentapp.features.splash.SplashFragment
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 
@@ -68,7 +71,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     lateinit var alarmScheduler: AlarmScheduler
 
     @Inject
-    lateinit var oAuthApi: OAuthAPI.OAuthInterface
+    lateinit var webViewAuthenticator: WebViewAuthenticator
 
     private lateinit var navController: NavController
 
@@ -80,23 +83,12 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         handleQrMasquerading()
         scheduleAlarms()
 
-        if (ApiPrefs.isFirstMasqueradingStart) {
-            loadAuthenticatedSession()
-            ApiPrefs.isFirstMasqueradingStart = false
-        }
-
         RatingDialog.showRatingDialog(this, AppType.PARENT)
     }
 
-    private fun loadAuthenticatedSession() {
-        lifecycleScope.launch {
-            oAuthApi.getAuthenticatedSession(
-                ApiPrefs.fullDomain,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull?.sessionUrl?.let {
-                loadUrlIntoHeadlessWebView(this@MainActivity, it)
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 
     private fun handleQrMasquerading() {
@@ -182,6 +174,22 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onQuotaExceeded(errorCode: StorageQuotaExceededError) {
+        toast(R.string.fileQuotaExceeded)
     }
 
     companion object {

@@ -259,7 +259,13 @@ private fun InboxComposeScreenContent(
         if (uiState.hiddenFields.isSendIndividualHidden.not()) {
             LabelSwitchRow(
                 label = stringResource(R.string.sendIndividualMessage),
-                checked = uiState.sendIndividual,
+                subtitle =
+                    if (uiState.isSendIndividualMandatory)
+                        stringResource(R.string.sendIndividualMessageIsMandatory)
+                    else
+                        null,
+                checked = uiState.isSendIndividualEnabled,
+                enabled = uiState.disabledFields.isSendIndividualDisabled.not() && uiState.isSendIndividualMandatory.not(),
                 onCheckedChange = {
                     actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
                 },
