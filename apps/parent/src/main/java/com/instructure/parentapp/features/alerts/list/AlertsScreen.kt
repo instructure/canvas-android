@@ -171,9 +171,12 @@ fun AlertsListContent(
             Spacer(modifier = Modifier.size(8.dp))
         }
     }
-    LaunchedEffect(uiState.scrollToTop) {
-        if (uiState.scrollToTop) {
-            lazyListState.animateScrollToItem(0)
+    LaunchedEffect(uiState.addedItemIndex) {
+        if (uiState.addedItemIndex != -1) {
+            val firstVisibleIndex = lazyListState.firstVisibleItemIndex
+            if (uiState.addedItemIndex < firstVisibleIndex && firstVisibleIndex > 0) {
+                lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex - 1)
+            }
         }
     }
 }

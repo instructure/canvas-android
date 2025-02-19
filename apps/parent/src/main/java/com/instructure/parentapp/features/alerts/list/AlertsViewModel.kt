@@ -166,7 +166,7 @@ class AlertsViewModel @Inject constructor(
                     alerts = uiState.alerts.map { alertItem ->
                         if (alertItem.alertId == alertId) alertItem.copy(unread = false) else alertItem
                     },
-                    scrollToTop = false
+                    addedItemIndex = -1
                 )
             }
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
@@ -184,16 +184,14 @@ class AlertsViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.update { it.copy(alerts = alerts) }
                 alertCountUpdater.updateShouldRefreshAlertCount(true)
-                if (alerts.indexOf(alert) == 0) {
-                    _uiState.update { it.copy(scrollToTop = true) }
-                }
+                _uiState.update { it.copy(addedItemIndex = alerts.indexOf(alert)) }
             }
         }
 
         val alerts = _uiState.value.alerts.toMutableList()
         val alert = alerts.find { it.alertId == alertId } ?: return
         alerts.removeIf { it.alertId == alertId }
-        _uiState.update { it.copy(alerts = alerts, scrollToTop = false) }
+        _uiState.update { it.copy(alerts = alerts, addedItemIndex = -1) }
 
         try {
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.DISMISSED)

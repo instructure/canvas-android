@@ -26,7 +26,7 @@ data class AlertsUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val isRefreshing: Boolean = false,
-    val scrollToTop: Boolean = false
+    val addedItemIndex: Int = -1
 )
 
 data class AlertsItemUiState(

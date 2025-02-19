@@ -433,7 +433,7 @@ class AlertsViewModelTest {
             R.string.alertDismissErrorMessage,
             (events.last() as AlertsViewModelAction.ShowSnackbar).message
         )
-        assertEquals(expected, viewModel.uiState.value)
+        assertEquals(expected.copy(addedItemIndex = 0), viewModel.uiState.value)
     }
 
     @Test
@@ -507,7 +507,7 @@ class AlertsViewModelTest {
 
         (events.last() as AlertsViewModelAction.ShowSnackbar).actionCallback?.invoke()
 
-        assertEquals(expected, viewModel.uiState.value)
+        assertEquals(expected.copy(addedItemIndex = 0), viewModel.uiState.value)
     }
 
     @Test
