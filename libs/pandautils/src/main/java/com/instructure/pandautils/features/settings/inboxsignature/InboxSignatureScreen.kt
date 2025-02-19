@@ -32,13 +32,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
@@ -78,7 +82,7 @@ fun InboxSignatureScreen(uiState: InboxSignatureUiState, actionHandler: (InboxSi
                 )
             }) { padding ->
             when {
-                uiState.loading -> Loading(modifier = Modifier.fillMaxSize())
+                uiState.loading -> Loading(modifier = Modifier.fillMaxSize().testTag("loading"))
                 uiState.error -> ErrorContent(stringResource(R.string.inboxSignatureError), modifier = Modifier.fillMaxSize()) { actionHandler(InboxSignatureAction.Refresh) }
                 else -> InboxSignatureContent(uiState, actionHandler, Modifier.padding(padding))
             }
@@ -141,3 +145,37 @@ private fun SaveAction(
         )
     }
 }
+
+@Preview
+@Composable
+fun InboxSignatureScreenPreviewEmptyText() {
+    ContextKeeper.appContext = LocalContext.current
+    InboxSignatureScreen(
+        uiState = InboxSignatureUiState(),
+        actionHandler = {},
+        navigationActionClick = {}
+    )
+}
+
+@Preview
+@Composable
+fun InboxSignatureScreenPreviewWithSignature() {
+    ContextKeeper.appContext = LocalContext.current
+    InboxSignatureScreen(
+        uiState = InboxSignatureUiState(signatureText = TextFieldValue("Signature")),
+        actionHandler = {},
+        navigationActionClick = {}
+    )
+}
+
+@Preview
+@Composable
+fun InboxSignatureScreenPreviewError() {
+    ContextKeeper.appContext = LocalContext.current
+    InboxSignatureScreen(
+        uiState = InboxSignatureUiState(error = true),
+        actionHandler = {},
+        navigationActionClick = {}
+    )
+}
+

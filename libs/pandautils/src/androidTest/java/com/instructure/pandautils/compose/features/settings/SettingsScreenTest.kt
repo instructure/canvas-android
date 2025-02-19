@@ -27,6 +27,7 @@ import androidx.test.uiautomator.UiDevice
 import com.instructure.espresso.retry
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.settings.SettingsItem
+import com.instructure.pandautils.features.settings.SettingsItemUiState
 import com.instructure.pandautils.features.settings.SettingsScreen
 import com.instructure.pandautils.features.settings.SettingsUiState
 import org.junit.Rule
@@ -44,23 +45,25 @@ class SettingsScreenTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val items = mapOf(
             R.string.preferences to listOf(
-                SettingsItem.APP_THEME,
-                SettingsItem.PROFILE_SETTINGS,
-                SettingsItem.PUSH_NOTIFICATIONS,
-                SettingsItem.EMAIL_NOTIFICATIONS,
+                SettingsItemUiState(SettingsItem.APP_THEME),
+                SettingsItemUiState(SettingsItem.PROFILE_SETTINGS),
+                SettingsItemUiState(SettingsItem.PUSH_NOTIFICATIONS),
+                SettingsItemUiState(SettingsItem.EMAIL_NOTIFICATIONS),
+            ),
+            R.string.inboxSettingsTitle to listOf(
+                SettingsItemUiState(SettingsItem.INBOX_SIGNATURE, R.string.inboxSignatureEnabled),
             ),
             R.string.offlineContent to listOf(
-                SettingsItem.OFFLINE_SYNCHRONIZATION
+                SettingsItemUiState(SettingsItem.OFFLINE_SYNCHRONIZATION, R.string.daily)
             ),
             R.string.legal to listOf(
-                SettingsItem.ABOUT,
+                SettingsItemUiState(SettingsItem.ABOUT),
             )
         )
 
         val uiState = SettingsUiState(
             items = items,
             homeroomView = true,
-            offlineState = R.string.daily,
             appTheme = R.string.appThemeLight,
             actionHandler = {}
         )
@@ -83,15 +86,11 @@ class SettingsScreenTest {
                         10
                     )
                 }) {
-                    val testTag = when (item) {
-                        SettingsItem.OFFLINE_SYNCHRONIZATION -> "syncSettingsItem"
-                        else -> "settingsItem"
-                    }
                     composeTestRule.onNode(
-                        hasTestTag(testTag).and(
+                        hasTestTag("settingsItem").and(
                             hasAnyDescendant(
                                 hasText(
-                                    context.getString(item.res)
+                                    context.getString(item.item.res)
                                 )
                             )
                         ), useUnmergedTree = true
