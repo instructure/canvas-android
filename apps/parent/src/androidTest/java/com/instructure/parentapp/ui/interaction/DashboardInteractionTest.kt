@@ -46,7 +46,7 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         goToDashboard(data)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.assertObserverData(data.parents.first())
     }
 
@@ -71,7 +71,7 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         goToDashboard(data)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickLogout()
         leftSideNavigationDrawerPage.assertLogoutDialog()
         leftSideNavigationDrawerPage.clickOk()
@@ -88,7 +88,7 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         goToDashboard(data)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickSwitchUsers()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(

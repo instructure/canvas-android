@@ -56,7 +56,7 @@ class InboxE2ETest: ParentComposeTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()
@@ -236,7 +236,7 @@ class InboxE2ETest: ParentComposeTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()
@@ -288,7 +288,7 @@ class InboxE2ETest: ParentComposeTest() {
 
         Log.d(STEP_TAG, "Log out from ${parent.name} account.")
         Espresso.pressBack()
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         composeTestRule.waitForIdle()
         leftSideNavigationDrawerPage.clickLogout()
         composeTestRule.waitForIdle()
@@ -300,7 +300,7 @@ class InboxE2ETest: ParentComposeTest() {
         composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG, "Open Inbox")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickInbox()
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation.")
@@ -337,7 +337,7 @@ class InboxE2ETest: ParentComposeTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()

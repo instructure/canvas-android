@@ -67,7 +67,7 @@ class ParentInboxDetailsInteractionTest: InboxDetailsInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.clickInbox()
 
         inboxPage.openConversation(conversationSubject)
@@ -78,7 +78,7 @@ class ParentInboxDetailsInteractionTest: InboxDetailsInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.clickInbox()
 
         inboxPage.openConversation(conversation)

@@ -23,7 +23,6 @@ import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.AddStudentBottomPage
-import com.instructure.parentapp.ui.pages.AlertSettingsPage
 import com.instructure.parentapp.ui.pages.AlertsPage
 import com.instructure.parentapp.ui.pages.AnnouncementDetailsPage
 import com.instructure.parentapp.ui.pages.CourseDetailsPage
@@ -33,6 +32,7 @@ import com.instructure.parentapp.ui.pages.ManageStudentsPage
 import com.instructure.parentapp.ui.pages.PairingCodePage
 import com.instructure.parentapp.ui.pages.ParentInboxCoursePickerPage
 import com.instructure.parentapp.ui.pages.QrPairingPage
+import com.instructure.parentapp.ui.pages.StudentAlertSettingsPage
 import com.instructure.parentapp.ui.pages.SummaryPage
 import com.instructure.parentapp.ui.pages.compose.NotAParentPage
 import org.junit.Rule
@@ -46,7 +46,7 @@ abstract class ParentComposeTest : ParentTest() {
     //Compose pages
     protected val alertsPage = AlertsPage(composeTestRule)
     protected val manageStudentsPage = ManageStudentsPage(composeTestRule)
-    protected val alertSettingsPage = AlertSettingsPage(composeTestRule)
+    protected val studentAlertSettingsPage = StudentAlertSettingsPage(composeTestRule)
     protected val addStudentBottomPage = AddStudentBottomPage(composeTestRule)
     protected val pairingCodePage = PairingCodePage(composeTestRule)
     protected val qrPairingPage = QrPairingPage(composeTestRule)
