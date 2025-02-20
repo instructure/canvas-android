@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.managers
 import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.instructure.canvasapi2.InboxSettingsQuery
 import com.instructure.canvasapi2.QLCallback
+import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.UpdateInboxSettingsMutation
 import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
@@ -75,6 +76,8 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
 
                 it.enqueueMutation(mutation)
             }
+
+            QLClientConfig().buildClient().clearHttpCache()
 
             return DataResult.Success(
                 InboxSignatureSettings(
