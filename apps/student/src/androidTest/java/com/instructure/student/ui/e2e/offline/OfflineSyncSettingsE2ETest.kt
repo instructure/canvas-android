@@ -57,7 +57,7 @@ class OfflineSyncSettingsE2ETest : StudentComposeTest() {
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
         Log.d(STEP_TAG, "Assert that the Offline Sync Settings related information is displayed properly on the Settings Page ('Daily' is the default status).")
-        settingsPage.assertOfflineContentDisplayed()
+        settingsPage.assertSettingsItemDisplayed("Synchronization")
         settingsPage.assertOfflineSyncSettingsStatus("Daily")
 
         Log.d(STEP_TAG, "Open Offline Sync Settings page and wait for it to be loaded.")
