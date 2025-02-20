@@ -16,7 +16,6 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -123,27 +122,6 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
             .performClick()
     }
 
-    fun clickOnSyncSettingsItem() {
-        retry(catchBlock = {
-            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-            val y = device.displayHeight / 2
-            val x = device.displayWidth / 2
-            device.swipe(
-                x,
-                y,
-                x,
-                0,
-                10
-            )
-        }) {
-            composeTestRule.onNode(
-                hasTestTag("syncSettingsItem"),
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-                .performClick()
-        }
-    }
-
     fun clickOnSubscribeButton() {
         onViewWithText("Subscribe").click()
     }
@@ -167,8 +145,9 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertOfflineContentNotDisplayed() {
         composeTestRule.onNode(
-            hasTestTag("syncSettingsItem"),
+            hasTestTag("settingsItem").and(hasAnyDescendant(hasText("Synchronization"))),
             useUnmergedTree = true
-        ).assertIsNotDisplayed()
+        )
+            .assertDoesNotExist()
     }
 }
