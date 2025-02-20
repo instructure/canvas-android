@@ -33,10 +33,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
@@ -73,19 +73,25 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.viewMedia
 import com.instructure.teacher.viewinterface.FileListView
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.UUID
+import javax.inject.Inject
 
 @PageView
 @ScreenView(SCREEN_VIEW_FILE_LIST)
+@AndroidEntryPoint
 class FileListFragment : BaseSyncFragment<
         FileFolder,
         FileListPresenter,
         FileListView,
         FileFolderViewHolder,
         FileListAdapter>(), FileListView, FileUploadDialogParent {
+
+    @Inject
+    lateinit var pageViewUtils: PageViewUtils
 
     private val binding by viewBinding(FragmentFileListBinding::bind)
 
@@ -237,7 +243,7 @@ class FileListFragment : BaseSyncFragment<
     }
 
     private fun recordFilePreviewEvent(file: FileFolder) {
-        PageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
+        pageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
     }
 
     override fun onRefreshStarted() = with(binding) {

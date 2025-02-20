@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.jakewharton.threetenabp.AndroidThreeTen
-import io.paperdb.Paper
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
@@ -59,7 +58,6 @@ abstract class AppManager : Application(), Configuration.Provider {
 
         super.onCreate()
         AndroidThreeTen.init(this)
-        Paper.init(this)
         EventBus.getDefault().register(this)
         logTokenAnalytics()
     }
