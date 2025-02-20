@@ -546,6 +546,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         presenter?.updateUnreadCount()
     }
 
+    override fun updateUnreadCountOffline(increaseBy: Int) {
+        updateInboxUnreadCount(binding.bottomBar.getOrCreateBadge(R.id.tab_inbox).number + increaseBy)
+    }
+
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) = with(binding) {
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count

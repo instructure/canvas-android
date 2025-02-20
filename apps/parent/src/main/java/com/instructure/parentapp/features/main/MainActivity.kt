@@ -162,6 +162,10 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         }
     }
 
+    override fun updateUnreadCountOffline(increaseBy: Int) {
+        // Parent app does not have batch operations on alerts screen, so we don't need this
+    }
+
     override fun onStartMasquerading(domain: String, userId: Long) {
         MasqueradeHelper.startMasquerading(userId, domain, MainActivity::class.java)
     }

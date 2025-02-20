@@ -1263,6 +1263,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         updateBottomBarBadge(R.id.bottomNavigationInbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
     }
 
+    override fun increaseUnreadCount(increaseBy: Int) {
+        updateUnreadCount(binding.bottomBar.getOrCreateBadge(R.id.bottomNavigationInbox).number + increaseBy)
+    }
+
     override fun updateNotificationCount(notificationCount: Int) {
         updateBottomBarBadge(R.id.bottomNavigationNotifications, notificationCount, R.plurals.a11y_notificationsUnreadCount)
     }
