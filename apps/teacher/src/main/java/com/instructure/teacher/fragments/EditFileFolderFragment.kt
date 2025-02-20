@@ -95,6 +95,8 @@ class EditFileFolderFragment : BasePresenterFragment<
 
     private lateinit var updateFileFolder: FileFolder
 
+    val deleteCallback = { presenter.deleteFileFolder() }
+
     private val dateClickListener: (View, Boolean) -> Unit = { view, isLockDate ->
         DatePickerDialogFragment.getInstance(requireActivity().supportFragmentManager, if (isLockDate) lockDate else unlockDate) { year, month, dayOfMonth ->
             val updatedDate = setupDateCalendar(year, month, dayOfMonth, if (isLockDate) lockDate else unlockDate)
@@ -183,9 +185,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         setupUsageRights()
 
         deleteWrapper.setOnClickListener {
-            ConfirmDeleteFileFolderDialog.show(requireActivity().supportFragmentManager, presenter.isFile) {
-                presenter.deleteFileFolder()
-            }
+            ConfirmDeleteFileFolderDialog.show(childFragmentManager, presenter.isFile)
         }
 
         if (!presenter.isFile) {
