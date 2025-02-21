@@ -16,6 +16,7 @@
 package com.instructure.parentapp.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -31,6 +32,7 @@ import com.instructure.parentapp.util.ParentPrefs
 class ParentInboxComposeRepository(
     private val courseAPI: CourseAPI.CoursesInterface,
     private val parentPrefs: ParentPrefs,
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
     recipientAPI: RecipientAPI.RecipientInterface,
     inboxAPI: InboxApi.InboxInterface,
     inboxSettingsManager: InboxSettingsManager
@@ -53,5 +55,9 @@ class ParentInboxComposeRepository(
 
     override suspend fun getGroups(forceRefresh: Boolean): DataResult<List<Group>> {
         return DataResult.Success(emptyList())
+    }
+
+    override suspend fun isInboxSignatureFeatureEnabled(): Boolean {
+        return featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull?.enableInboxSignatureBlock.orDefault()
     }
 }

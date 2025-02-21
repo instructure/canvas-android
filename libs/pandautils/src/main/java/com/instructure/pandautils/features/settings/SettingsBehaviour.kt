@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.settings
 
+import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.pandautils.R
 
 interface SettingsBehaviour {
@@ -23,6 +24,8 @@ interface SettingsBehaviour {
     val settingsItems: Map<Int, List<SettingsItem>>
 
     suspend fun applyAppSpecificColorSettings() = Unit
+
+    fun isInboxSignatureEnabledForRole(settings: EnvironmentSettings?) = true
 }
 
 enum class SettingsItem(val res: Int) {
@@ -32,6 +35,7 @@ enum class SettingsItem(val res: Int) {
     EMAIL_NOTIFICATIONS(R.string.emailNotifications),
     PAIR_WITH_OBSERVER(R.string.pairWithObserver),
     SUBSCRIBE_TO_CALENDAR(R.string.subscribeToCalendar),
+    INBOX_SIGNATURE(R.string.inboxSettingsInboxSignature),
     OFFLINE_SYNCHRONIZATION(R.string.offlineSyncSettingsTitle),
     ABOUT(R.string.about),
     LEGAL(R.string.legal),

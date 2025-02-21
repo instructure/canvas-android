@@ -57,6 +57,7 @@ fun TextFieldWithHeader(
     modifier: Modifier = Modifier,
     @DrawableRes headerIconResource: Int? = null,
     iconContentDescription: String? = null,
+    placeholder: String? = null,
     onIconClick: (() -> Unit)? = null,
     focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
@@ -87,7 +88,8 @@ fun TextFieldWithHeader(
                 .fillMaxSize()
                 .padding(start = 16.dp, end = 16.dp)
                 .focusRequester(focusRequester)
-                .testTag("textFieldWithHeaderTextField")
+                .testTag("textFieldWithHeaderTextField"),
+            placeholder = placeholder
         )
     }
 }

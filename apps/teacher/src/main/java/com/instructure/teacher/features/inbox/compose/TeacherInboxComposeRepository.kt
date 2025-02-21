@@ -16,6 +16,7 @@
 package com.instructure.teacher.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -25,9 +26,11 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.utils.orDefault
 
 class TeacherInboxComposeRepository(
     private val courseAPI: CourseAPI.CoursesInterface,
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
     recipientAPI: RecipientAPI.RecipientInterface,
     inboxAPI: InboxApi.InboxInterface,
     inboxSettingsManager: InboxSettingsManager
@@ -44,5 +47,9 @@ class TeacherInboxComposeRepository(
 
     override suspend fun getGroups(forceRefresh: Boolean): DataResult<List<Group>> {
         return DataResult.Success(emptyList())
+    }
+
+    override suspend fun isInboxSignatureFeatureEnabled(): Boolean {
+        return featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull?.enableInboxSignatureBlock.orDefault()
     }
 }

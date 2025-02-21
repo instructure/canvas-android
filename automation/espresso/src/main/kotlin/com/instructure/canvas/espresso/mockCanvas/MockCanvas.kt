@@ -310,6 +310,7 @@ class MockCanvas {
     val pairingCodes = mutableMapOf<String, User>()
 
     var inboxSignature = ""
+    var signatureEnabled = true
 
     //region Convenience functionality
 

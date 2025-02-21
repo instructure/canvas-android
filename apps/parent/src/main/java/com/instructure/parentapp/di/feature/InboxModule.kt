@@ -20,6 +20,7 @@ package com.instructure.parentapp.di.feature
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
@@ -62,20 +63,22 @@ class InboxModule {
         coursesApi: CourseAPI.CoursesInterface,
         groupsApi: GroupAPI.GroupInterface,
         progressApi: ProgressAPI.ProgressInterface,
-        inboxSettingsManager: InboxSettingsManager
+        inboxSettingsManager: InboxSettingsManager,
+        featuresApi: FeaturesAPI.FeaturesInterface
     ): InboxRepository {
-        return ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager)
+        return ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager, featuresApi)
     }
 
     @Provides
     fun provideInboxComposeRepository(
         courseAPI: CourseAPI.CoursesInterface,
         recipientAPI: RecipientAPI.RecipientInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface,
         inboxAPI: InboxApi.InboxInterface,
         parentPrefs: ParentPrefs,
         inboxSettingsManager: InboxSettingsManager
     ): InboxComposeRepository {
-        return ParentInboxComposeRepository(courseAPI, parentPrefs, recipientAPI, inboxAPI, inboxSettingsManager)
+        return ParentInboxComposeRepository(courseAPI, parentPrefs, featuresApi, recipientAPI, inboxAPI, inboxSettingsManager)
     }
 
     @Provides

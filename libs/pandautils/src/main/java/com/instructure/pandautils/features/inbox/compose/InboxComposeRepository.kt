@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 
 abstract class InboxComposeRepository(
@@ -42,6 +41,8 @@ abstract class InboxComposeRepository(
     abstract suspend fun getCourses(forceRefresh: Boolean = false): DataResult<List<Course>>
 
     abstract suspend fun getGroups(forceRefresh: Boolean = false): DataResult<List<Group>>
+
+    abstract suspend fun isInboxSignatureFeatureEnabled(): Boolean
 
     open suspend fun getRecipients(
         searchQuery: String,
@@ -112,6 +113,14 @@ abstract class InboxComposeRepository(
 
     suspend fun getInboxSignature(): String {
         // Just to ensure we won't show the loading forever if there is an issue with the network connection
-        return withTimeoutOrNull(3000) { inboxSettingsManager.getInboxSignature() } ?: ""
+        val inboxSignatureSettings = withTimeoutOrNull(3000) {
+            if (isInboxSignatureFeatureEnabled()) inboxSettingsManager.getInboxSignatureSettings() else null
+        }?.dataOrNull
+
+        return if (inboxSignatureSettings != null && inboxSignatureSettings.useSignature && inboxSignatureSettings.signature.isNotBlank()) {
+            inboxSignatureSettings.signature
+        } else {
+            ""
+        }
     }
 }
