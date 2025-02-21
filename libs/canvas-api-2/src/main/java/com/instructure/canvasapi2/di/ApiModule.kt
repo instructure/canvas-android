@@ -56,6 +56,7 @@ import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -346,5 +347,10 @@ class ApiModule {
     @Provides
     fun provideSmartSearchApi(): SmartSearchApi {
         return RestBuilder().build(SmartSearchApi::class.java, RestParams())
+    }
+
+    @Provides
+    fun providePandataApi(): PandataApi.PandataInterface {
+        return RestBuilder().build(PandataApi.PandataInterface::class.java, RestParams())
     }
 }

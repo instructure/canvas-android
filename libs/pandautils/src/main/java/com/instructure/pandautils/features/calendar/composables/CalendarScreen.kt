@@ -86,7 +86,6 @@ fun CalendarScreen(
 ) {
     val focusRequester = remember { FocusRequester() }
     val todayFocusRequester = remember { FocusRequester() }
-    val todayPressed = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     CanvasTheme {
@@ -102,6 +101,15 @@ fun CalendarScreen(
                 }
             }
         }
+        val todayTapped = calendarScreenUiState.calendarUiState.todayTapped
+        LaunchedEffect(todayTapped) {
+            if (todayTapped) {
+                focusManager.clearFocus(true)
+                delay(200)
+                todayFocusRequester.requestFocus()
+                actionHandler(CalendarAction.TodayTapHandled)
+            }
+        }
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
@@ -115,7 +123,6 @@ fun CalendarScreen(
                                     .semantics(mergeDescendants = true) { }
                                     .clickable {
                                         actionHandler(CalendarAction.TodayTapped)
-                                        todayPressed.value = true
                                     }) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_calendar_day),
@@ -148,15 +155,6 @@ fun CalendarScreen(
                     LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
                         focusRequester.requestFocus()
                     })
-
-                    LaunchedEffect(todayPressed.value) {
-                        if (todayPressed.value) {
-                            focusManager.clearFocus(true)
-                            delay(200)
-                            todayFocusRequester.requestFocus()
-                            todayPressed.value = false
-                        }
-                    }
                 }
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
