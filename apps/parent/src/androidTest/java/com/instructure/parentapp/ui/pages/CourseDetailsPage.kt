@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvasapi2.models.Course
@@ -61,5 +62,9 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertAssignmentLabelTextColor(assignmentName: String, expectedTextColor: Long) {
         composeTestRule.onNodeWithText(assignmentName).assertTextColor(Color(expectedTextColor))
+    }
+
+    fun clickComposeMessageFAB() {
+        composeTestRule.onNodeWithContentDescription("Send a message about this course").performClick()
     }
 }
