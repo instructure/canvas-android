@@ -111,6 +111,16 @@ class DashboardViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            inboxCountUpdater.increaseInboxCountFlow.collect { increaseBy ->
+                _data.update { data ->
+                    data.copy(
+                        unreadCount = data.unreadCount + increaseBy
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
             alertCountUpdater.shouldRefreshAlertCountFlow.collect { shouldUpdate ->
                 if (shouldUpdate) {
                     updateAlertCount()

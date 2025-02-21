@@ -162,6 +162,12 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         }
     }
 
+    override fun updateUnreadCountOffline(increaseBy: Int) {
+        lifecycleScope.launch {
+            inboxCountUpdater.increaseInboxCount(increaseBy)
+        }
+    }
+
     override fun onStartMasquerading(domain: String, userId: Long) {
         MasqueradeHelper.startMasquerading(userId, domain, MainActivity::class.java)
     }
