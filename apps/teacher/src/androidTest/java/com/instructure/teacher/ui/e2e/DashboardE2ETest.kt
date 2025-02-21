@@ -48,7 +48,7 @@ class DashboardE2ETest : TeacherTest() {
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
