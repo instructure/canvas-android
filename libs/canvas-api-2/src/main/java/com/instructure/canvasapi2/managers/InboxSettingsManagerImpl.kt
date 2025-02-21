@@ -34,11 +34,11 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
         return try {
             val inboxSettingsData = awaitQL { getInboxSignature(it, forceNetwork) }
             val inboxSignatureSettings = InboxSignatureSettings(
-                inboxSettingsData.myInboxSettings?.signature ?: "",
+                inboxSettingsData.myInboxSettings?.signature.orEmpty(),
                 inboxSettingsData.myInboxSettings?.isUseSignature ?: false,
                 inboxSettingsData.myInboxSettings?.isUseOutOfOffice ?: false,
-                inboxSettingsData.myInboxSettings?.outOfOfficeMessage ?: "",
-                inboxSettingsData.myInboxSettings?.outOfOfficeSubject ?: "",
+                inboxSettingsData.myInboxSettings?.outOfOfficeMessage.orEmpty(),
+                inboxSettingsData.myInboxSettings?.outOfOfficeSubject.orEmpty(),
                 inboxSettingsData.myInboxSettings?.outOfOfficeFirstDate.toApiString(),
                 inboxSettingsData.myInboxSettings?.outOfOfficeLastDate.toApiString()
             )
@@ -56,7 +56,7 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
 
         callback.enqueueQuery(query) {
             if (forceNetwork) {
-                cachePolicy = HttpCachePolicy.NETWORK_FIRST.expireAfter(1, TimeUnit.DAYS)
+                cachePolicy = HttpCachePolicy.NETWORK_FIRST.expireAfter(1, TimeUnit.HOURS)
             }
         }
     }
