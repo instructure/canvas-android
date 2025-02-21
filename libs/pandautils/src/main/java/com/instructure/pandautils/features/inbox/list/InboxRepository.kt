@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.inbox.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
@@ -38,7 +39,8 @@ abstract class InboxRepository(
     private val inboxApi: InboxApi.InboxInterface,
     private val groupsApi: GroupAPI.GroupInterface,
     private val progressApi: ProgressAPI.ProgressInterface,
-    private val inboxSettingsManager: InboxSettingsManager
+    private val inboxSettingsManager: InboxSettingsManager,
+    private val featuresApi: FeaturesAPI.FeaturesInterface
 ) {
 
     suspend fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, filter: CanvasContext?, nextPageLink: String? = null): DataResult<List<Conversation>> {
@@ -119,6 +121,8 @@ abstract class InboxRepository(
     }
 
     suspend fun getInboxSignature() {
+        // We are just prefetching the signature settings here
+        featuresApi.getAccountSettingsFeatures(RestParams())
         inboxSettingsManager.getInboxSignatureSettings()
     }
 }

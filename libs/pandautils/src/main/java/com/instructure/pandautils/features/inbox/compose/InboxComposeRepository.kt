@@ -42,6 +42,8 @@ abstract class InboxComposeRepository(
 
     abstract suspend fun getGroups(forceRefresh: Boolean = false): DataResult<List<Group>>
 
+    abstract suspend fun isInboxSignatureFeatureEnabled(): Boolean
+
     open suspend fun getRecipients(
         searchQuery: String,
         contextId: String,
@@ -111,7 +113,9 @@ abstract class InboxComposeRepository(
 
     suspend fun getInboxSignature(): String {
         // Just to ensure we won't show the loading forever if there is an issue with the network connection
-        val inboxSignatureSettings = withTimeoutOrNull(3000) { inboxSettingsManager.getInboxSignatureSettings() }?.dataOrNull
+        val inboxSignatureSettings = withTimeoutOrNull(3000) {
+            if (isInboxSignatureFeatureEnabled()) inboxSettingsManager.getInboxSignatureSettings() else null
+        }?.dataOrNull
 
         return if (inboxSignatureSettings != null && inboxSignatureSettings.useSignature && inboxSignatureSettings.signature.isNotBlank()) {
             inboxSignatureSettings.signature

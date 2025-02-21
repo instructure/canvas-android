@@ -19,6 +19,7 @@ package com.instructure.teacher.di
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
@@ -58,19 +59,21 @@ class InboxModule {
         coursesApi: CourseAPI.CoursesInterface,
         groupsApi: GroupAPI.GroupInterface,
         progressApi: ProgressAPI.ProgressInterface,
-        inboxSettingsManager: InboxSettingsManager
+        inboxSettingsManager: InboxSettingsManager,
+        featuresApi: FeaturesAPI.FeaturesInterface
     ): InboxRepository {
-        return TeacherInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager)
+        return TeacherInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager, featuresApi)
     }
 
     @Provides
     fun provideInboxComposeRepository(
         coursesApi: CourseAPI.CoursesInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface,
         recipientApi: RecipientAPI.RecipientInterface,
         inboxApi: InboxApi.InboxInterface,
         inboxSettingsManager: InboxSettingsManager
     ): InboxComposeRepository {
-        return TeacherInboxComposeRepository(coursesApi, recipientApi, inboxApi, inboxSettingsManager)
+        return TeacherInboxComposeRepository(coursesApi, featuresApi, recipientApi, inboxApi, inboxSettingsManager)
     }
 
     @Provides

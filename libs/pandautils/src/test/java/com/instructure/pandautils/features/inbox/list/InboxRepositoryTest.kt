@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.inbox.list/*
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
@@ -47,8 +48,9 @@ class InboxRepositoryTest {
     private val groupsApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
     private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
+    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
-    private val inboxRepository = object : InboxRepository(inboxApi, groupsApi, progressApi, inboxSettingsManager) {
+    private val inboxRepository = object : InboxRepository(inboxApi, groupsApi, progressApi, inboxSettingsManager, featuresApi) {
         override suspend fun getCourses(params: RestParams): DataResult<List<Course>> {
             return coursesApi.getFirstPageCourses(params)
         }
@@ -201,6 +203,7 @@ class InboxRepositoryTest {
 
         inboxRepository.getInboxSignature()
 
+        coVerify { featuresApi.getAccountSettingsFeatures(any()) }
         coVerify { inboxSettingsManager.getInboxSignatureSettings() }
     }
 }
