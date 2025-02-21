@@ -66,7 +66,7 @@ class ParentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickSettings()
         settingsPage.clickOnSettingsItem("Inbox Signature")
 
