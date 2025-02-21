@@ -163,7 +163,9 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     }
 
     override fun updateUnreadCountOffline(increaseBy: Int) {
-        // Parent app does not have batch operations on alerts screen, so we don't need this
+        lifecycleScope.launch {
+            inboxCountUpdater.increaseInboxCount(increaseBy)
+        }
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {
