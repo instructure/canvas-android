@@ -230,4 +230,37 @@ class EnabledTabsTest {
         val result = enabledTabs.isPathTabNotEnabled(route)
         assert(result)
     }
+
+    @Test
+    fun `routing to grades is always allowed`() = runTest {
+        coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
+            listOf(
+                Course(id = 1, tabs = listOf(Tab(tabId = "assignments", htmlUrl = "/courses/1/assignments"))),
+            )
+        )
+        enabledTabs.initTabs()
+
+        every { mockUri.path } returns "http://www.google.com/courses/1/grades"
+        every { mockUri.pathSegments } returns listOf("courses", "1", "grades")
+
+        val route = Route(uri = mockUri)
+        val result = enabledTabs.isPathTabNotEnabled(route)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `routing to discussions is always allowed`() = runTest {
+        coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
+            listOf(
+                Course(id = 1, tabs = listOf(Tab(tabId = "assignments", htmlUrl = "/courses/1/assignments"))),
+            )
+        )
+        enabledTabs.initTabs()
+
+        val route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/1/discussion_topics"
+        every { mockUri.pathSegments } returns listOf("courses", "1", "discussion_topics")
+        val result = enabledTabs.isPathTabNotEnabled(route)
+        assertFalse(result)
+    }
 }
