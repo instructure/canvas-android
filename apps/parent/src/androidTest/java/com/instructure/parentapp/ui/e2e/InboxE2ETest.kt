@@ -332,7 +332,7 @@ class InboxE2ETest: ParentComposeTest() {
         val parent = data.parentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 

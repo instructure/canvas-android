@@ -62,7 +62,7 @@ class SettingsE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettings()
@@ -80,7 +80,7 @@ class SettingsE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back and open the Left Side Navigation Drawer menu.")
         Espresso.pressBack()
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings again.")
         leftSideNavigationDrawerPage.clickSettings()
@@ -110,7 +110,7 @@ class SettingsE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettings()
@@ -133,7 +133,7 @@ class SettingsE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettings()
