@@ -27,8 +27,8 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
+import dagger.hilt.android.EarlyEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -72,7 +72,7 @@ class AnalyticsModule {
     }
 }
 
-@EntryPoint
+@EarlyEntryPoint
 @InstallIn(SingletonComponent::class)
 interface PageViewEntryPoint {
     fun pageViewUtils(): PageViewUtils

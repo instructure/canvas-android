@@ -23,7 +23,7 @@ import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
 import com.instructure.pandautils.di.PageViewEntryPoint
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.showMasqueradeNotification
-import dagger.hilt.EntryPoints
+import dagger.hilt.android.EarlyEntryPoints
 
 /**
  * Base activity for all Canvas activities that contains cross-cutting concerns like analytics, locale and masquerading.
@@ -32,7 +32,7 @@ import dagger.hilt.EntryPoints
 open class BaseCanvasActivity : AppCompatActivity() {
 
     private val pageViewAnnotationProcessor by lazy {
-        val pageViewUtils = EntryPoints.get(
+        val pageViewUtils = EarlyEntryPoints.get(
             applicationContext,
             PageViewEntryPoint::class.java
         ).pageViewUtils()

@@ -25,7 +25,7 @@ import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
 import com.instructure.pandautils.analytics.pageview.PageViewWindowFocusListener
 import com.instructure.pandautils.di.PageViewEntryPoint
 import com.instructure.pandautils.utils.AppType
-import dagger.hilt.EntryPoints
+import dagger.hilt.android.EarlyEntryPoints
 
 class PageViewFragmentDelegate<T>(
     private val fragment: T,
@@ -33,7 +33,7 @@ class PageViewFragmentDelegate<T>(
 
     private val visibilityTracker = PageViewVisibilityTracker()
     private val pageViewAnnotationProcessor by lazy {
-        val pageViewUtils = EntryPoints.get(
+        val pageViewUtils = EarlyEntryPoints.get(
             fragment.requireActivity().applicationContext,
             PageViewEntryPoint::class.java
         ).pageViewUtils()
