@@ -204,7 +204,7 @@ class AlertsE2ETest : ParentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ALERTS, TestCategory.E2E)
-    fun testAlertsE2EdontReceiveAlertsWhenAlertSettingsAreDisabled() {
+    fun testAlertsSettingsE2EdontReceiveAlertsWhenAlertSettingsAreDisabled() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, courses = 1, teachers = 1, parents = 1)
         val course = data.coursesList[0]
@@ -226,23 +226,58 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_MISSING)
         studentAlertSettingsPage.clickThreshold(AlertType.COURSE_ANNOUNCEMENT)
         studentAlertSettingsPage.clickThreshold(AlertType.INSTITUTION_ANNOUNCEMENT)
+
         studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
         studentAlertSettingsPage.enterThreshold("80")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
+        studentAlertSettingsPage.enterThreshold("20")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("80")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_LOW)
+        studentAlertSettingsPage.enterThreshold("20")
         studentAlertSettingsPage.tapThresholdSaveButton()
 
         Espresso.pressBack()
 
         manageStudentsPage.clickStudent(student.shortName)
+
+        studentAlertSettingsPage.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, true)
+        studentAlertSettingsPage.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, true)
+        studentAlertSettingsPage.assertSwitchThreshold(AlertType.INSTITUTION_ANNOUNCEMENT, true)
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "80%")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "20%")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "80%")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "20%")
+
         studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_MISSING)
         studentAlertSettingsPage.clickThreshold(AlertType.COURSE_ANNOUNCEMENT)
         studentAlertSettingsPage.clickThreshold(AlertType.INSTITUTION_ANNOUNCEMENT)
+
         studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
+        studentAlertSettingsPage.tapThresholdNeverButton()
+
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
+        studentAlertSettingsPage.tapThresholdNeverButton()
+
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
+        studentAlertSettingsPage.tapThresholdNeverButton()
+
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_LOW)
         studentAlertSettingsPage.tapThresholdNeverButton()
 
         studentAlertSettingsPage.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, false)
         studentAlertSettingsPage.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, false)
         studentAlertSettingsPage.assertSwitchThreshold(AlertType.INSTITUTION_ANNOUNCEMENT, false)
         studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "Never")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "Never")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Never")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Never")
 
         Espresso.pressBack()
         Espresso.pressBack()
