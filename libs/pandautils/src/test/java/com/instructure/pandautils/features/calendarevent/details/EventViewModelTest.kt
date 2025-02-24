@@ -494,8 +494,7 @@ class EventViewModelTest {
 
     @Test
     fun `Custom DatePicker opens to set reminder if Due Date is in past`() {
-        val scheduleItem =
-            scheduleItem.copy(startAt = LocalDateTime.now().minusDays(2).toString(), endAt = LocalDateTime.now().minusDays(1).toString())
+        val scheduleItem = scheduleItem.copy(startAt = LocalDateTime.now().minusDays(2).toString(), endAt = LocalDateTime.now().minusDays(1).toString())
         val context: Context = mockk(relaxed = true)
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
         every { apiPrefs.user } returns User(1)

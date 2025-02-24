@@ -228,8 +228,8 @@ class EventViewModel @Inject constructor(
 
             is EventAction.OnMessageFabClicked -> viewModelScope.launch {
                 scheduleItem?.let {
-                    val option = eventViewModelBehavior.getInboxComposeOptions(getCanvasContext(), it)
-                    _events.send(EventViewModelAction.NavigateToComposeMessageScreen(option))
+                    val options = eventViewModelBehavior.getInboxComposeOptions(getCanvasContext(), it)
+                    _events.send(EventViewModelAction.NavigateToComposeMessageScreen(options))
                 }
             }
         }
