@@ -27,10 +27,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
-import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
@@ -38,7 +35,6 @@ import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.ThemePrefs
@@ -146,28 +142,6 @@ class ApplicationModule {
     @Singleton
     fun provideThemePrefs(): ThemePrefs {
         return ThemePrefs
-    }
-
-    @Provides
-    fun provideAnalytics(): Analytics {
-        return Analytics
-    }
-
-    @Provides
-    fun providePageViewUtils(): PageViewUtils {
-        return PageViewUtils
-    }
-
-    @Provides
-    fun provideOfflineAnalyticsManager(
-        @ApplicationContext context: Context,
-        analytics: Analytics,
-        pageViewUtils: PageViewUtils,
-        apiPrefs: ApiPrefs,
-        dateTimeProvider: DateTimeProvider,
-        featureFlagProvider: FeatureFlagProvider
-    ): OfflineAnalyticsManager {
-        return OfflineAnalyticsManager(context, analytics, pageViewUtils, apiPrefs, dateTimeProvider, featureFlagProvider)
     }
 
     @Provides

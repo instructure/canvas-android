@@ -15,7 +15,21 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.instructure.canvasapi2.utils.DataResult
+
 interface InboxSettingsManager {
 
-    suspend fun getInboxSignature(): String
+    suspend fun getInboxSignatureSettings(forceNetwork: Boolean = false): DataResult<InboxSignatureSettings>
+
+    suspend fun updateInboxSignatureSettings(inboxSignatureSettings: InboxSignatureSettings): DataResult<InboxSignatureSettings>
 }
+
+data class InboxSignatureSettings(
+    val signature: String,
+    val useSignature: Boolean,
+    val useOutOfOffice: Boolean = false,
+    val outOfOfficeMessage: String = "",
+    val outOfOfficeSubject: String = "",
+    val outOfOfficeFirstDate: String = "",
+    val outOfOfficeLastDate: String = ""
+)

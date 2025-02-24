@@ -37,8 +37,8 @@ import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -95,7 +95,7 @@ class ParentGradesRepositoryTest {
 
         val result = repository.loadAssignmentGroups(1, 1, false)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -145,7 +145,7 @@ class ParentGradesRepositoryTest {
 
         val result = repository.loadAssignmentGroups(1, 1, true)
 
-        Assert.assertEquals(page1 + page2, result)
+        assertEquals(page1 + page2, result)
     }
 
     @Test
@@ -193,7 +193,7 @@ class ParentGradesRepositoryTest {
         val result = repository.loadAssignmentGroups(1, 1, false)
 
         val expected = assignmentGroups.map { group -> group.copy(assignments = group.assignments.filter { it.published }) }
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -247,7 +247,7 @@ class ParentGradesRepositoryTest {
                 )
             )
         )
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -278,7 +278,7 @@ class ParentGradesRepositoryTest {
 
         val result = repository.loadGradingPeriods(1, false)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -310,7 +310,7 @@ class ParentGradesRepositoryTest {
 
         val result = repository.loadEnrollments(1, 1, false)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -339,7 +339,7 @@ class ParentGradesRepositoryTest {
 
         val result = repository.loadCourse(1, false)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -380,7 +380,57 @@ class ParentGradesRepositoryTest {
         )
 
         val result = repository.getCourseGrade(course, 1, enrollments, null)
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Non-Graded assignments should not be shown`() = runTest {
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 11,
+                        published = true,
+                        submission = Submission(id = 111, userId = 1),
+                        gradingType = "not_graded"
+                    ),
+                    Assignment(
+                        id = 12,
+                        published = true,
+                        submission = Submission(id = 121, userId = 2)
+                    )
+                )
+            )
+        )
+
+        coEvery {
+            assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForObserver(
+                1, 1, RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)
+            )
+        } returns DataResult.Success(assignmentGroups.map {
+            it.toObserveeAssignmentGroup()
+        })
+
+        createRepository()
+
+        val result = repository.loadAssignmentGroups(1, 1, false)
+
+        val expected = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 12,
+                        published = true,
+                        submission = null
+                    )
+                )
+            )
+        )
+        assertEquals(expected, result)
     }
 
     private fun AssignmentGroup.toObserveeAssignmentGroup() = ObserveeAssignmentGroup(
@@ -392,7 +442,8 @@ class ParentGradesRepositoryTest {
                 published = assignment.published,
                 submissionList = assignment.submission?.let {
                     listOf(it)
-                }.orEmpty()
+                }.orEmpty(),
+                gradingType = assignment.gradingType
             )
         }
     )

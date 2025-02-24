@@ -17,7 +17,16 @@ package com.instructure.canvas.espresso.mockCanvas.fakes
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.InboxSignatureSettings
+import com.instructure.canvasapi2.utils.DataResult
 
 class FakeInboxSettingsManager : InboxSettingsManager {
-    override suspend fun getInboxSignature(): String = MockCanvas.data.inboxSignature
+    override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): DataResult<InboxSignatureSettings> =
+        DataResult.Success(InboxSignatureSettings(MockCanvas.data.inboxSignature, MockCanvas.data.signatureEnabled))
+
+    override suspend fun updateInboxSignatureSettings(inboxSignatureSettings: InboxSignatureSettings): DataResult<InboxSignatureSettings> {
+        MockCanvas.data.inboxSignature = inboxSignatureSettings.signature
+        MockCanvas.data.signatureEnabled = inboxSignatureSettings.useSignature
+        return DataResult.Success(inboxSignatureSettings)
+    }
 }

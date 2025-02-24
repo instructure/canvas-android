@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.inbox.list
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
@@ -32,8 +33,9 @@ class TeacherInboxRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
     groupsApi: GroupAPI.GroupInterface,
     progressApi: ProgressAPI.ProgressInterface,
-    inboxSettingsManager: InboxSettingsManager
-) : InboxRepository(inboxApi, groupsApi, progressApi, inboxSettingsManager) {
+    inboxSettingsManager: InboxSettingsManager,
+    featuresApi: FeaturesAPI.FeaturesInterface
+) : InboxRepository(inboxApi, groupsApi, progressApi, inboxSettingsManager, featuresApi) {
 
     override suspend fun getCourses(params: RestParams): DataResult<List<Course>> {
         return coursesApi.getFirstPageCoursesTeacher(params)

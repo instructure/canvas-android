@@ -16,5 +16,11 @@
 query InboxSettingsQuery {
     myInboxSettings {
         signature
+        useSignature
+        useOutOfOffice
+        outOfOfficeMessage
+        outOfOfficeSubject
+        outOfOfficeFirstDate
+        outOfOfficeLastDate
     }
 }

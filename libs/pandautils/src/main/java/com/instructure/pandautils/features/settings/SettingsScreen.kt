@@ -73,6 +73,7 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.LabelValueSwitch
 import com.instructure.pandautils.compose.composables.LabelValueVerticalItem
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ThemePrefs
 
@@ -93,10 +94,14 @@ fun SettingsScreen(
                     }
                 )
             }) { padding ->
-            SettingsContent(
-                uiState = uiState,
-                modifier = modifier.padding(padding)
-            )
+            if (uiState.loading) {
+                Loading(modifier = Modifier.fillMaxSize())
+            } else {
+                SettingsContent(
+                    uiState = uiState,
+                    modifier = modifier.padding(padding)
+                )
+            }
         }
     }
 }
@@ -130,7 +135,7 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
                 )
             }
             items(items) { settingsItem ->
-                when (settingsItem) {
+                when (settingsItem.item) {
                     SettingsItem.APP_THEME -> {
                         AppThemeItem(uiState.appTheme) { appTheme, x, y ->
                             uiState.actionHandler(
@@ -142,10 +147,6 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
                                 )
                             )
                         }
-                    }
-
-                    SettingsItem.OFFLINE_SYNCHRONIZATION -> {
-                        OfflineSyncItem(uiState)
                     }
 
                     SettingsItem.HOMEROOM_VIEW -> {
@@ -161,14 +162,15 @@ private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modif
                                     role = Role.Button
                                 }
                                 .clickable {
-                                    uiState.actionHandler(SettingsAction.ItemClicked(settingsItem))
+                                    uiState.actionHandler(SettingsAction.ItemClicked(settingsItem.item))
                                 }
                                 .padding(
                                     horizontal = 16.dp,
                                     vertical = 4.dp
                                 )
                                 .testTag("settingsItem"),
-                            label = stringResource(settingsItem.res)
+                            label = stringResource(settingsItem.item.res),
+                            value = settingsItem.subtitleRes?.let { stringResource(it) }
                         )
                     }
                 }
@@ -293,23 +295,6 @@ private fun AppThemeButton(
 }
 
 @Composable
-private fun OfflineSyncItem(uiState: SettingsUiState) {
-    LabelValueVerticalItem(
-        modifier = Modifier
-            .clickable {
-                uiState.actionHandler(SettingsAction.ItemClicked(SettingsItem.OFFLINE_SYNCHRONIZATION))
-            }
-            .padding(
-                horizontal = 16.dp,
-                vertical = 4.dp
-            )
-            .testTag("syncSettingsItem"),
-        label = stringResource(R.string.offlineSyncSettingsTitle),
-        value = uiState.offlineState?.let { stringResource(it) }
-    )
-}
-
-@Composable
 private fun HomeroomViewItem(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     LabelValueSwitch(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
@@ -331,8 +316,8 @@ fun SettingsScreenDarkPreview() {
         homeroomView = true,
         actionHandler = {},
         items = mapOf(
-            R.string.preferences to listOf(SettingsItem.APP_THEME, SettingsItem.HOMEROOM_VIEW),
-            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
+            R.string.preferences to listOf(SettingsItemUiState(SettingsItem.APP_THEME), SettingsItemUiState(SettingsItem.HOMEROOM_VIEW)),
+            R.string.legal to listOf(SettingsItemUiState(SettingsItem.ABOUT), SettingsItemUiState(SettingsItem.LEGAL))
         ),
     ), navigationActionClick = {})
 }
@@ -347,11 +332,11 @@ fun SettingsScreenLightPreview() {
         actionHandler = {},
         items = mapOf(
             R.string.preferences to listOf(
-                SettingsItem.APP_THEME,
-                SettingsItem.HOMEROOM_VIEW,
-                SettingsItem.PROFILE_SETTINGS
+                SettingsItemUiState(SettingsItem.APP_THEME),
+                SettingsItemUiState(SettingsItem.HOMEROOM_VIEW),
+                SettingsItemUiState(SettingsItem.PROFILE_SETTINGS)
             ),
-            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
+            R.string.legal to listOf(SettingsItemUiState(SettingsItem.ABOUT), SettingsItemUiState(SettingsItem.LEGAL))
         ),
     ), navigationActionClick = {})
 }

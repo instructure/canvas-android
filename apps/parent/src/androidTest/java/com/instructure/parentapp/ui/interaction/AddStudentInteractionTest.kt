@@ -54,7 +54,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         pairingCodePage.clickOkButton()
 
         composeTestRule.waitForIdle()
-        manageStudentsPage.assertStudentItemDisplayed(data.students.first())
+        manageStudentsPage.assertStudentItemDisplayed(data.students.first().shortName!!)
     }
 
     @Test
@@ -96,7 +96,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         }
 
         composeTestRule.waitForIdle()
-        manageStudentsPage.assertStudentItemDisplayed(data.students.first())
+        manageStudentsPage.assertStudentItemDisplayed(data.students.first().shortName!!)
     }
 
     @Test
@@ -143,7 +143,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         pairingCodePage.enterPairingCode(code)
         pairingCodePage.assertErrorNotDisplayed()
         pairingCodePage.clickOkButton()
-        manageStudentsPage.assertStudentItemDisplayed(data.students.first())
+        manageStudentsPage.assertStudentItemDisplayed(data.students.first().shortName!!)
     }
 
     private fun initData(): MockCanvas {
@@ -160,7 +160,7 @@ class AddStudentInteractionTest : ParentComposeTest() {
         val parent = data.parents.first()
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickManageStudents()
         manageStudentsPage.tapAddStudent()
     }

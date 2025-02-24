@@ -69,6 +69,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Anything that relies on intent data belongs here
+        noConnectionDialogWithNetworkCheck()
         if (apiURL != null) {
             getQuizDetails(apiURL!!)
         } else if (quiz != null && quiz?.lockInfo != null && CanvasContext.Type.isCourse(canvasContext) && !(canvasContext as Course).isTeacher) {

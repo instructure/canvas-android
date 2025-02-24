@@ -319,7 +319,11 @@ fun CalendarHeader(
                     .clickable {
                         actionHandler(CalendarAction.FilterTapped)
                     }
-                    .padding(horizontal = 8.dp, vertical = 12.dp))
+                    .padding(horizontal = 8.dp, vertical = 12.dp)
+                    .semantics {
+                        role = Role.Button
+                    }
+            )
         }
         if (headerUiState.loadingMonths) {
             LinearProgressIndicator(

@@ -396,13 +396,24 @@ fun View.onClickWithRequireNetwork(clickListener: OnClickListener) = onClick {
         clickListener.onClick(this)
     } else {
         //show dialog
-        AlertDialog.Builder(context)
-                .setTitle(R.string.noInternetConnectionTitle)
-                .setMessage(R.string.noInternetConnectionMessage)
-                .setCancelable(true)
-                .setPositiveButton(android.R.string.ok, { dialog, _ -> dialog.dismiss() })
-                .showThemed()
+        showNoConnectionDialog(context)
     }
+}
+
+fun Fragment.noConnectionDialogWithNetworkCheck() {
+    if (!APIHelper.hasNetworkConnection()) {
+        showNoConnectionDialog(requireContext()) { requireActivity().onBackPressed() }
+    }
+}
+
+private fun showNoConnectionDialog(context: Context, actionAfterDismiss: () -> Unit = {}) {
+    AlertDialog.Builder(context)
+        .setTitle(R.string.noInternetConnectionTitle)
+        .setMessage(R.string.noInternetConnectionMessage)
+        .setCancelable(true)
+        .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+        .setOnDismissListener { _ -> actionAfterDismiss() }
+        .showThemed()
 }
 
 /**

@@ -44,6 +44,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,6 +73,7 @@ import com.instructure.pandautils.utils.drawableId
 import java.util.Date
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AlertsScreen(
     uiState: AlertsUiState,
@@ -167,6 +169,14 @@ fun AlertsListContent(
                 modifier = Modifier.animateItem()
             )
             Spacer(modifier = Modifier.size(8.dp))
+        }
+    }
+    LaunchedEffect(uiState.addedItemIndex) {
+        if (uiState.addedItemIndex != -1) {
+            val firstVisibleIndex = lazyListState.firstVisibleItemIndex
+            if (uiState.addedItemIndex < firstVisibleIndex && firstVisibleIndex > 0) {
+                lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex - 1)
+            }
         }
     }
 }

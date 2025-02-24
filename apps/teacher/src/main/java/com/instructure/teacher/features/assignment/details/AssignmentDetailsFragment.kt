@@ -259,11 +259,6 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             // External tool
             submissionTypesArrowIcon.setVisible()
             submissionTypesLayout.onClickWithRequireNetwork {
-                // If the user is a designer we don't want to let them look at LTI tools
-                if (course.isDesigner) {
-                    toast(R.string.errorIsDesigner)
-                    return@onClickWithRequireNetwork
-                }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
                     val route = LtiLaunchFragment.makeRoute(course, ltiUrl, assignment.name!!, assignmentLti = true, openInternally = assignment.ltiToolType().openInternally)

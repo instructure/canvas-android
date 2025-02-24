@@ -265,10 +265,10 @@ private fun InboxComposeScreenContent(
                     else
                         null,
                 checked = uiState.isSendIndividualEnabled,
-                enabled = uiState.disabledFields.isSendIndividualDisabled.not() && uiState.isSendIndividualMandatory.not(),
                 onCheckedChange = {
                     actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
                 },
+                enabled = uiState.disabledFields.isSendIndividualDisabled.not() && uiState.isSendIndividualMandatory.not()
             )
 
             CanvasDivider()

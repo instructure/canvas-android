@@ -1,0 +1,22 @@
+mutation UpdateInboxSettings(
+    $useSignature: Boolean!,
+    $signature: String,
+    $useOutOfOffice: Boolean!,
+    $outOfOfficeSubject: String,
+    $outOfOfficeMessage: String,
+    $outOfOfficeFirstDate: String,
+    $outOfOfficeLastDate: String) {
+    updateMyInboxSettings(input: {
+        useSignature: $useSignature,
+        signature: $signature,
+        useOutOfOffice: $useOutOfOffice,
+        outOfOfficeSubject: $outOfOfficeSubject,
+        outOfOfficeMessage: $outOfOfficeMessage,
+        outOfOfficeFirstDate: $outOfOfficeFirstDate,
+        outOfOfficeLastDate: $outOfOfficeLastDate}) {
+        myInboxSettings {
+            signature
+            useSignature
+        }
+    }
+}

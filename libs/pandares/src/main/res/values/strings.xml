@@ -2007,4 +2007,12 @@
     <string name="a11y_studentSelectorCollapse">collapse</string>
     <string name="a11y_studentSelectorContentDescription">Tap to %s student selector, selected student is: %s</string>
     <string name="a11y_studentSelectorSelectStudent">Select student %s</string>
+    <string name="inboxSettingsTitle">Inbox</string>
+    <string name="inboxSettingsInboxSignature">Inbox Signature</string>
+    <string name="inboxSignatureNotSet">Not Set</string>
+    <string name="inboxSignatureEnabled">Enabled</string>
+    <string name="inboxSignatureScreenTitle">Inbox Signature</string>
+    <string name="inboxSignatureScreenSubtitle">Signature will be added to the end of all messaging.</string>
+    <string name="inboxSignatureSwitchLabel">Signature</string>
+    <string name="inboxSignatureTextfieldHeader">Signature text</string>
 </resources>

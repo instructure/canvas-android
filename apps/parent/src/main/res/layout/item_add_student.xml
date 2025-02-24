@@ -33,7 +33,8 @@
         android:contentDescription="@string/a11y_addStudentContentDescription"
         android:gravity="center"
         android:onClick="@{() -> itemViewModel.onAddStudentClicked.invoke()}"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:accessibilityClassName='@{"android.widget.Button"}'>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addImage"
