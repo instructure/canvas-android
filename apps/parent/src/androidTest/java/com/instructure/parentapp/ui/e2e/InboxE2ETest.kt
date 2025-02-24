@@ -26,16 +26,21 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.CalendarEventApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.seedData
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.util.Date
 
 @HiltAndroidTest
 class InboxE2ETest: ParentComposeTest() {
@@ -420,6 +425,12 @@ class InboxE2ETest: ParentComposeTest() {
         CoursesApi.updateCourseSettings(course.id, mapOf("syllabus_course_summary" to true))
         CoursesApi.updateCourse(courseWithFrontPage.id, courseWithFrontPage.copy(homePage = "wiki"))
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token)
+        val testEvent = CalendarEventApi.createCalendarEvent(
+            teacher.token,
+            CanvasContext.makeContextId(CanvasContext.Type.COURSE, course.id),
+            "Test Event",
+            Date().toApiString()
+        )
 
         Log.d(STEP_TAG, "Login with user: ${parent.name}, login id: ${parent.loginId}.")
         tokenLogin(parent)
@@ -499,5 +510,32 @@ class InboxE2ETest: ParentComposeTest() {
         courseDetailsPage.clickComposeMessageFAB()
         composeTestRule.waitForIdle()
         inboxComposeMessagePage.assertSubjectText(expectedSubjectFrontPage)
+
+        Log.d(STEP_TAG, "Go to Calendar and click on ${testEvent.title} event.")
+        inboxComposeMessagePage.pressBackButton()
+        inboxComposeMessagePage.pressExitConfirmationButton()
+        Espresso.pressBack()
+        dashboardPage.clickCalendarBottomMenu()
+        calendarScreenPage.clickOnItem(testEvent.title.orEmpty())
+        composeTestRule.waitForIdle()
+
+        val expectedSubjectEvent = "Regarding: ${student.name}, Event - ${testEvent.title}"
+        Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectEvent' as subject.")
+        calendarEventDetailsPage.clickComposeMessageFAB()
+        composeTestRule.waitForIdle()
+        inboxComposeMessagePage.assertSubjectText(expectedSubjectEvent)
+        inboxComposeMessagePage.typeBody("This is a test message.")
+        inboxComposeMessagePage.pressSendButton()
+
+        val expectedMessage =
+            "This is a test message.\n\nRegarding: ${student.name}, https://${CanvasNetworkAdapter.canvasDomain}/courses/${course.id}/calendar_events/${testEvent.id}"
+        Log.d(STEP_TAG, "Go to Inbox and assert the sent message's body is $expectedMessage.")
+        composeTestRule.waitForIdle()
+        Espresso.pressBack()
+        dashboardPage.openLeftSideMenu()
+        leftSideNavigationDrawerPage.clickInbox()
+        inboxPage.filterInbox("Sent")
+        inboxPage.openConversation(expectedSubjectEvent)
+        inboxDetailsPage.assertMessageDisplayed(expectedMessage)
     }
 }

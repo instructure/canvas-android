@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -70,6 +71,7 @@ class EventViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val reminderManager: ReminderManager = mockk(relaxed = true)
+    private val eventViewModelBehavior: EventViewModelBehavior = mockk(relaxed = true)
 
     private lateinit var viewModel: EventViewModel
 
@@ -492,7 +494,8 @@ class EventViewModelTest {
 
     @Test
     fun `Custom DatePicker opens to set reminder if Due Date is in past`() {
-        val scheduleItem = scheduleItem.copy(startAt = LocalDateTime.now().minusDays(2).toString(), endAt = LocalDateTime.now().minusDays(1).toString())
+        val scheduleItem =
+            scheduleItem.copy(startAt = LocalDateTime.now().minusDays(2).toString(), endAt = LocalDateTime.now().minusDays(1).toString())
         val context: Context = mockk(relaxed = true)
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
         every { apiPrefs.user } returns User(1)
@@ -535,7 +538,41 @@ class EventViewModelTest {
         }
     }
 
+    @Test
+    fun `Send message`() = runTest {
+        val canvasContext = CanvasContext.emptyCourseContext(1)
+        every { savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) } returns canvasContext
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        val options = InboxComposeOptions()
+        every { eventViewModelBehavior.getInboxComposeOptions(canvasContext, scheduleItem) } returns options
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.OnMessageFabClicked)
+
+        coVerify {
+            eventViewModelBehavior.getInboxComposeOptions(canvasContext, scheduleItem)
+        }
+
+        val expectedEvent = EventViewModelAction.NavigateToComposeMessageScreen(options)
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
     private fun createViewModel() {
-        viewModel = EventViewModel(savedStateHandle, context, eventRepository, htmlContentFormatter, apiPrefs, themePrefs, reminderManager)
+        viewModel = EventViewModel(
+            savedStateHandle,
+            context,
+            eventRepository,
+            htmlContentFormatter,
+            apiPrefs,
+            themePrefs,
+            reminderManager,
+            eventViewModelBehavior
+        )
     }
 }
