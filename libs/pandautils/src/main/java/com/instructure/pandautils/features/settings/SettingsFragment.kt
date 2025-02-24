@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
@@ -58,6 +59,9 @@ class SettingsFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var sharedEvents: SettingsSharedEvents
+
+    @Inject
+    lateinit var firebaseCrashlytics: FirebaseCrashlytics
 
     private val viewModel: SettingsViewModel by viewModels()
 
@@ -97,15 +101,20 @@ class SettingsFragment : BaseCanvasFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (appThemeChange) {
-            val w = requireView().measuredWidth
-            val h = requireView().measuredHeight
-            val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            requireView().draw(canvas)
-            outState.putParcelable("bitmap", bitmap)
-            outState.putInt("xPos", xPos)
-            outState.putInt("yPos", yPos)
-            outState.putInt("scrollValue", scrollValue)
+            try {
+                val w = requireView().measuredWidth
+                val h = requireView().measuredHeight
+                val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565)
+                outState.putParcelable("bitmap", bitmap)
+                outState.putInt("xPos", xPos)
+                outState.putInt("yPos", yPos)
+                outState.putInt("scrollValue", scrollValue)
+                val canvas = Canvas(bitmap)
+                requireView().draw(canvas)
+            } catch (e: Exception) {
+                // If the Bitmap is too big to serialize we just ignore the animation
+                firebaseCrashlytics.recordException(e)
+            }
         }
     }
 
