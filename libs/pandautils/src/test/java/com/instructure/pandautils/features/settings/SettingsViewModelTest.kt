@@ -31,6 +31,7 @@ import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
@@ -72,6 +73,7 @@ class SettingsViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
     private val settingsRepository: SettingsRepository = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -205,7 +207,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `item click`() = runTest {
+    fun `item click when online`() = runTest {
         val items = mapOf(
             R.string.preferences to listOf(
                 SettingsItem.APP_THEME,
@@ -216,6 +218,7 @@ class SettingsViewModelTest {
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         )
         every { settingsBehaviour.settingsItems } returns items
+        every { networkStateProvider.isOnline() } returns true
 
         every { themePrefs.appTheme } returns 0
 
@@ -227,6 +230,38 @@ class SettingsViewModelTest {
             backgroundScope.launch(testDispatcher) {
                 viewModel.events.toList(events)
                 assertEquals(SettingsViewModelAction.Navigate(item.item), events.last())
+            }
+        }
+    }
+
+    @Test
+    fun `item click when offline`() = runTest {
+        val items = mapOf(
+            R.string.preferences to listOf(
+                SettingsItem.APP_THEME,
+                SettingsItem.PROFILE_SETTINGS,
+                SettingsItem.PUSH_NOTIFICATIONS,
+                SettingsItem.EMAIL_NOTIFICATIONS
+            ),
+            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
+        )
+        every { settingsBehaviour.settingsItems } returns items
+        every { networkStateProvider.isOnline() } returns false
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.items.flatMap { it.value }.forEach { item ->
+            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item.item))
+            val events = mutableListOf<SettingsViewModelAction>()
+            backgroundScope.launch(testDispatcher) {
+                viewModel.events.toList(events)
+                if (item.item.availableOffline) {
+                    assertEquals(SettingsViewModelAction.Navigate(item.item), events.last())
+                } else {
+                    assertEquals(SettingsViewModelAction.ShowOfflineDialog, events.last())
+                }
             }
         }
     }
@@ -346,6 +381,6 @@ class SettingsViewModelTest {
     }
 
     private fun createViewModel(): SettingsViewModel {
-        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs, analytics, settingsRepository)
+        return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs, analytics, settingsRepository, networkStateProvider)
     }
 }

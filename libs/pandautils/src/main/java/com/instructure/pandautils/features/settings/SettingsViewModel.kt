@@ -34,6 +34,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -58,7 +59,8 @@ class SettingsViewModel @Inject constructor(
     private val themePrefs: ThemePrefs,
     private val apiPrefs: ApiPrefs,
     private val analytics: Analytics,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val networkStateProvider: NetworkStateProvider
 ) :
     ViewModel() {
 
@@ -152,7 +154,11 @@ class SettingsViewModel @Inject constructor(
 
             is SettingsAction.ItemClicked -> {
                 viewModelScope.launch {
-                    _events.send(SettingsViewModelAction.Navigate(action.settingsItem))
+                    if (networkStateProvider.isOnline() || action.settingsItem.availableOffline) {
+                        _events.send(SettingsViewModelAction.Navigate(action.settingsItem))
+                    } else {
+                        _events.send(SettingsViewModelAction.ShowOfflineDialog)
+                    }
                 }
             }
         }

@@ -36,6 +36,7 @@ data class SettingsItemUiState(
 sealed class SettingsViewModelAction {
     data class Navigate(val item: SettingsItem) : SettingsViewModelAction()
     data class AppThemeClickPosition(val xPos: Int, val yPos: Int, val scrollValue: Int) : SettingsViewModelAction()
+    data object ShowOfflineDialog : SettingsViewModelAction()
 }
 
 sealed class SettingsAction {
