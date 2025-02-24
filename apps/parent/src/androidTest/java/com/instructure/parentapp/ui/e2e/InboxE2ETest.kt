@@ -30,11 +30,6 @@ import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.PagesApi
-import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.dataseeding.util.days
-import com.instructure.dataseeding.util.fromNow
-import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.seedData
@@ -424,23 +419,24 @@ class InboxE2ETest: ParentComposeTest() {
         PagesApi.createCoursePage(courseWithFrontPage.id, teacher.token, frontPage = true, editingRoles = "public")
         CoursesApi.updateCourseSettings(course.id, mapOf("syllabus_course_summary" to true))
         CoursesApi.updateCourse(courseWithFrontPage.id, courseWithFrontPage.copy(homePage = "wiki"))
-        val testAssignment = AssignmentsApi.createAssignment(
-            course.id,
-            teacher.token,
-            gradingType = GradingType.POINTS,
-            pointsPossible = 15.0,
-            dueAt = 1.days.fromNow.iso8601,
-            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY)
-        )
-
-        Thread.sleep(5000)
+        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token)
 
         Log.d(STEP_TAG, "Login with user: ${parent.name}, login id: ${parent.loginId}.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
-        coursesPage.clickCourseItem(course.name)
+        retryWithIncreasingDelay(
+            initialDelay = 2000,
+            times = 5,
+            maxDelay = 30000,
+            catchBlock = {
+                composeTestRule.waitForIdle()
+                coursesPage.refresh()
+            }
+        ) {
+            coursesPage.clickCourseItem(course.name)
+        }
         composeTestRule.waitForIdle()
         courseDetailsPage.assertCourseNameDisplayed(course)
 
@@ -448,7 +444,7 @@ class InboxE2ETest: ParentComposeTest() {
         courseDetailsPage.clickAssignment(testAssignment.name)
         composeTestRule.waitForIdle()
 
-        val expectedSubjectAssignment = "Regarding: ${student.shortName}, ${testAssignment.name}"
+        val expectedSubjectAssignment = "Regarding: ${student.name}, Assignment - ${testAssignment.name}"
         Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectAssignment' as subject.")
         assignmentDetailsPage.clickComposeMessageFAB()
         composeTestRule.waitForIdle()
