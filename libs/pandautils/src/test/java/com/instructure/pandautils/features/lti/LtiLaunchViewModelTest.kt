@@ -18,16 +18,20 @@ package com.instructure.pandautils.features.lti
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -51,6 +55,7 @@ class LtiLaunchViewModelTest {
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: LtiLaunchRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val oauthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: LtiLaunchViewModel
@@ -64,6 +69,11 @@ class LtiLaunchViewModelTest {
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.IS_ASSIGNMENT_LTI) } returns false
         every { savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) } returns null
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.OPEN_INTERNALLY) } returns false
+
+        val urlCaptor = slot<String>()
+        coEvery { oauthApi.getAuthenticatedSession(capture(urlCaptor), any()) } answers {
+            DataResult.Success(AuthenticatedSession(sessionUrl = urlCaptor.captured))
+        }
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -79,7 +89,7 @@ class LtiLaunchViewModelTest {
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) } returns true
         coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns ltiTool
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -99,7 +109,7 @@ class LtiLaunchViewModelTest {
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.OPEN_INTERNALLY) } returns true
         coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns ltiTool
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -118,7 +128,7 @@ class LtiLaunchViewModelTest {
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) } returns true
         coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns ltiTool
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -136,7 +146,7 @@ class LtiLaunchViewModelTest {
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) } returns true
         coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns ltiTool
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -153,7 +163,7 @@ class LtiLaunchViewModelTest {
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) } returns true
         coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } throws Exception()
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -173,7 +183,7 @@ class LtiLaunchViewModelTest {
         coEvery { repository.getLtiFromAuthenticationUrl("lti-tab-url", any()) } returns LTITool(url = "lti-tab-url")
         coEvery { repository.getLtiFromAuthenticationUrl("url", any()) } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -191,7 +201,7 @@ class LtiLaunchViewModelTest {
         every { savedStateHandle.get<Boolean>(LtiLaunchFragment.OPEN_INTERNALLY) } returns true
         coEvery { repository.getLtiFromAuthenticationUrl("url", any()) } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -207,7 +217,7 @@ class LtiLaunchViewModelTest {
     fun `Load url but do not get authenticated lti url when its not an assignment lti and not a sessionless launch`() = runTest {
         every { savedStateHandle.get<String>(LtiLaunchFragment.LTI_URL) } returns "url"
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -221,7 +231,7 @@ class LtiLaunchViewModelTest {
 
     @Test
     fun `Display error if lti tab and lti url is null`() = runTest {
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -245,7 +255,7 @@ class LtiLaunchViewModelTest {
             )
         } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -275,7 +285,7 @@ class LtiLaunchViewModelTest {
             )
         } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -306,7 +316,7 @@ class LtiLaunchViewModelTest {
             )
         } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -332,7 +342,7 @@ class LtiLaunchViewModelTest {
             )
         } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -358,7 +368,7 @@ class LtiLaunchViewModelTest {
             )
         } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -384,7 +394,7 @@ class LtiLaunchViewModelTest {
             )
         } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -410,7 +420,7 @@ class LtiLaunchViewModelTest {
             )
         } returns LTITool(url = "url")
 
-        viewModel = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs)
+        viewModel = createViewModel()
 
         val events = mutableListOf<LtiLaunchAction>()
 
@@ -421,4 +431,49 @@ class LtiLaunchViewModelTest {
         coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?id=55"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
     }
+
+    @Test
+    fun `Should load authenticated url`() = runTest {
+        val authenticatedUrl = slot<String>()
+        coEvery { oauthApi.getAuthenticatedSession(capture(authenticatedUrl), any()) } answers {
+            DataResult.Success(AuthenticatedSession(sessionUrl = authenticatedUrl.captured + "/authenticated"))
+        }
+        val ltiTool = LTITool(url = "url")
+        every { savedStateHandle.get<String>(LtiLaunchFragment.LTI_URL) } returns "url"
+        every { savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) } returns true
+        coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns ltiTool
+
+        viewModel = createViewModel()
+
+        val events = mutableListOf<LtiLaunchAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(LtiLaunchAction.LaunchCustomTab("url/authenticated"), events[0])
+        assertEquals(ViewState.Success, viewModel.state.value)
+    }
+
+    @Test
+    fun `Should load original url if auth fails`() = runTest {
+        coEvery { oauthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        val ltiTool = LTITool(url = "url")
+        every { savedStateHandle.get<String>(LtiLaunchFragment.LTI_URL) } returns "url"
+        every { savedStateHandle.get<Boolean>(LtiLaunchFragment.SESSION_LESS_LAUNCH) } returns true
+        coEvery { repository.getLtiFromAuthenticationUrl(any(), any()) } returns ltiTool
+
+        viewModel = createViewModel()
+
+        val events = mutableListOf<LtiLaunchAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
+        assertEquals(ViewState.Success, viewModel.state.value)
+    }
+
+    private fun createViewModel() = LtiLaunchViewModel(savedStateHandle, repository, apiPrefs, oauthApi)
 }

@@ -125,7 +125,7 @@ class LtiLaunchViewModel @Inject constructor(
 
     private fun launchLti(url: String) {
         viewModelScope.launch {
-            val authenticatedUrl = oAuthInterface.getAuthenticatedSession(url, RestParams()).dataOrThrow.sessionUrl
+            val authenticatedUrl = oAuthInterface.getAuthenticatedSession(url, RestParams()).dataOrNull?.sessionUrl ?: url
             if (openInternally || Assignment.internalLtiTools.any { url.contains(it) }) {
                 _events.send(LtiLaunchAction.LoadLtiWebView(authenticatedUrl))
             } else {
