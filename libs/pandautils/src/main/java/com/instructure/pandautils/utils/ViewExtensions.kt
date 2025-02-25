@@ -406,7 +406,7 @@ fun Fragment.noConnectionDialogWithNetworkCheck() {
     }
 }
 
-private fun showNoConnectionDialog(context: Context, actionAfterDismiss: () -> Unit = {}) {
+fun showNoConnectionDialog(context: Context, actionAfterDismiss: () -> Unit = {}) {
     AlertDialog.Builder(context)
         .setTitle(R.string.noInternetConnectionTitle)
         .setMessage(R.string.noInternetConnectionMessage)

@@ -45,6 +45,7 @@ import com.instructure.pandautils.features.legal.LegalDialogFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.showNoConnectionDialog
 import com.instructure.pandautils.utils.showThemed
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -170,6 +171,8 @@ class SettingsFragment : BaseCanvasFragment() {
                 yPos = action.yPos
                 appThemeChange = true
             }
+
+            SettingsViewModelAction.ShowOfflineDialog -> showNoConnectionDialog(requireContext())
         }
     }
 
