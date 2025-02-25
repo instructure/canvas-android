@@ -18,7 +18,6 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
@@ -181,7 +180,8 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         val user = getLoggedInUser()
         data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
+            endDate = null,
             title = "Test Event",
             description = "Test Description"
         )
@@ -203,7 +203,8 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
+            endDate = null,
             title = "Test Event",
             description = "Test Description"
         )
@@ -221,13 +222,18 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     }
 
     @Test
-    @Stub("This test is flaky, depends on the time of day")
     fun assertUpdatedFrom() {
         val data = initData()
         val user = getLoggedInUser()
+        val start = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 12)
+            set(Calendar.MINUTE, 15)
+        }
+        val end = start.apply { add(Calendar.HOUR, 1) }
         val event = data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = start.time.toApiString(),
+            endDate = end.time.toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -235,28 +241,30 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         goToEditEvent(data)
 
         composeTestRule.waitForIdle()
-        val calendar = Calendar.getInstance().apply {
-            time = event.startDate
-            add(Calendar.HOUR_OF_DAY, -1)
-            add(Calendar.MINUTE, 15)
-        }
-        createUpdateEventDetailsPage.selectTime("From", calendar)
+        val updatedStart = start.apply { add(Calendar.HOUR, -1) }
+        createUpdateEventDetailsPage.selectTime("From", updatedStart)
         createUpdateEventDetailsPage.clickSave()
 
         composeTestRule.waitForIdle()
         calendarScreenPage.clickOnItem(event.title!!)
         composeTestRule.waitForIdle()
-        val expectedTime = DateHelper.getFormattedTime(activityRule.activity, calendar.time)
+        val expectedTime = DateHelper.getFormattedTime(activityRule.activity, updatedStart.time)
         calendarEventDetailsPage.assertEventDateContains(expectedTime!!)
     }
 
-    @Stub("This test is flaky, depends on the time of day")
+    @Test
     fun assertUpdatedTo() {
         val data = initData()
         val user = getLoggedInUser()
+        val start = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 12)
+            set(Calendar.MINUTE, 15)
+        }
+        val end = start.apply { add(Calendar.HOUR, 1) }
         val event = data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = start.time.toApiString(),
+            endDate = end.time.toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -264,17 +272,14 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         goToEditEvent(data)
 
         composeTestRule.waitForIdle()
-        val calendar = Calendar.getInstance().apply {
-            time = event.endDate
-            add(Calendar.HOUR_OF_DAY, 1)
-            add(Calendar.MINUTE, 15)
-        }
-        createUpdateEventDetailsPage.selectTime("To", calendar)
+        val updatedEnd = end.apply { add(Calendar.HOUR, 1) }
+        createUpdateEventDetailsPage.selectTime("To", updatedEnd)
         createUpdateEventDetailsPage.clickSave()
 
         composeTestRule.waitForIdle()
+
         calendarScreenPage.clickOnItem(event.title!!)
-        val expectedTime = DateHelper.getFormattedTime(activityRule.activity, calendar.time)
+        val expectedTime = DateHelper.getFormattedTime(activityRule.activity, updatedEnd.time)
         calendarEventDetailsPage.assertEventDateContains(expectedTime!!)
     }
 
@@ -284,7 +289,8 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
+            endDate = null,
             title = "Test Event",
             description = "Test Description"
         )
@@ -306,7 +312,8 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
+            endDate = null,
             title = "Test Event",
             description = "Test Description"
         )
@@ -328,7 +335,8 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
+            endDate = null,
             title = "Test Event",
             description = "Test Description"
         )
@@ -350,7 +358,8 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         val user = getLoggedInUser()
         data.addUserCalendarEvent(
             userId = user.id,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
+            endDate = null,
             title = "Test Event",
             description = "Test Description"
         )
