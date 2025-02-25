@@ -539,11 +539,11 @@ class EventViewModelTest {
 
     @Test
     fun `Send message`() = runTest {
-        val canvasContext = CanvasContext.emptyCourseContext(1)
-        every { savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) } returns canvasContext
-        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        val event = scheduleItem.copy(contextCode = "course_1", contextName = "Course")
+        val canvasContext = CanvasContext.fromContextCode("course_1", "Course")
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns event
         val options = InboxComposeOptions()
-        every { eventViewModelBehavior.getInboxComposeOptions(canvasContext, scheduleItem) } returns options
+        every { eventViewModelBehavior.getInboxComposeOptions(canvasContext, event) } returns options
 
         createViewModel()
 
@@ -555,7 +555,7 @@ class EventViewModelTest {
         viewModel.handleAction(EventAction.OnMessageFabClicked)
 
         coVerify {
-            eventViewModelBehavior.getInboxComposeOptions(canvasContext, scheduleItem)
+            eventViewModelBehavior.getInboxComposeOptions(canvasContext, event)
         }
 
         val expectedEvent = EventViewModelAction.NavigateToComposeMessageScreen(options)
