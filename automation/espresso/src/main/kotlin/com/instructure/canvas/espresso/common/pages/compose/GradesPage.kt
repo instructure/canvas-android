@@ -20,6 +20,8 @@ package com.instructure.canvas.espresso.common.pages.compose
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -29,7 +31,10 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
+import com.instructure.composeTest.hasDrawable
+import com.instructure.pandautils.R
 
 
 class GradesPage(private val composeTestRule: ComposeTestRule) {
@@ -53,9 +58,13 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
             .assertIsNotDisplayed()
     }
 
-    fun assertGradeText(grade: String) {
+    fun assertTotalGradeText(grade: String) {
         composeTestRule.onNodeWithText(grade)
             .assertIsDisplayed()
+    }
+
+    fun assertAssignmentGradeText(assignmentName: String, gradeText: String) {
+        composeTestRule.onNode(hasText(assignmentName, substring = true) and hasText(gradeText, substring = true)).assertIsDisplayed()
     }
 
     fun clickBasedOnGradedAssignments() {
@@ -78,6 +87,14 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
     fun clickFilterButton() {
         composeTestRule.onNodeWithContentDescription("Filter")
             .performClick()
+    }
+
+    fun assertFilterNotApplied() {
+        composeTestRule.onNode(hasContentDescription("Filter") and hasDrawable(R.drawable.ic_filter))
+    }
+
+    fun assertFilterApplied() {
+        composeTestRule.onNode(hasContentDescription("Filter") and hasDrawable(R.drawable.ic_filter_active))
     }
 
     fun clickFilterOption(option: String) {
@@ -112,5 +129,19 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("gradesCardText", true)
             .assertTextEquals(text)
             .assertIsDisplayed()
+    }
+
+    fun assertBasedOnGradedAssignmentsLabel() {
+        composeTestRule.onNodeWithTag("basedOnGradedAssignmentsLabel", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun refresh() {
+        composeTestRule.onNodeWithTag("gradesList").performTouchInput { swipeDown() }
+    }
+
+    fun assertGradesPreferencesFilterScreenLabels() {
+        composeTestRule.onNode(hasTestTag("GradePreferencesToolbar") and hasText("Grade Preferences"), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Grading Period", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Sort By", useUnmergedTree = true).assertIsDisplayed()
     }
 }
