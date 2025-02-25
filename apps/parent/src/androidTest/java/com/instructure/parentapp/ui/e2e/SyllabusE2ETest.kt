@@ -38,8 +38,7 @@ class SyllabusE2ETest : ParentComposeTest() {
             students = 1,
             teachers = 1,
             parents = 1,
-            courses = 1,
-            syllabusBody = "dummy syllabus body"
+            courses = 1
         )
         val course = data.coursesList[0]
         val teacher = data.teachersList[0]
