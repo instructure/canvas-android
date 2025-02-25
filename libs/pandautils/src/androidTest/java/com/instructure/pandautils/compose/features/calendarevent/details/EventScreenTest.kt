@@ -276,4 +276,23 @@ class EventScreenTest {
         composeTestRule.onNode(hasText("Reminder title")).assertIsDisplayed()
         composeTestRule.onNode(hasContentDescription("Add reminder")).assertIsDisplayed()
     }
+
+    @Test
+    fun assertMessageFab() {
+        composeTestRule.setContent {
+            EventScreen(
+                title = "Event",
+                eventUiState = EventUiState(
+                    isMessageFabEnabled = true
+                ),
+                actionHandler = {},
+                navigationAction = {},
+                applyOnWebView = {}
+            )
+        }
+
+        composeTestRule.onNode(hasContentDescription("Send a message about this event"))
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
 }

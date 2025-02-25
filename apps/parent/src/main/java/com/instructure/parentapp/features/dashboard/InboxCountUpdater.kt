@@ -22,14 +22,23 @@ import kotlinx.coroutines.flow.asSharedFlow
 
 interface InboxCountUpdater {
     val shouldRefreshInboxCountFlow: SharedFlow<Boolean>
+    val increaseInboxCountFlow: SharedFlow<Int>
     suspend fun updateShouldRefreshInboxCount(shouldRefresh: Boolean)
+    suspend fun increaseInboxCount(increaseBy: Int)
 }
 
 class InboxCountUpdaterImpl : InboxCountUpdater {
     private val _shouldRefreshInboxCountFlow = MutableSharedFlow<Boolean>(replay = 1)
     override val shouldRefreshInboxCountFlow = _shouldRefreshInboxCountFlow.asSharedFlow()
+    private val _increaseInboxCountFlow = MutableSharedFlow<Int>(replay = 1)
+    override val increaseInboxCountFlow = _increaseInboxCountFlow.asSharedFlow()
+
 
     override suspend fun updateShouldRefreshInboxCount(shouldRefresh: Boolean) {
         _shouldRefreshInboxCountFlow.emit(shouldRefresh)
+    }
+
+    override suspend fun increaseInboxCount(increaseBy: Int) {
+        _increaseInboxCountFlow.emit(increaseBy)
     }
 }

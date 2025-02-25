@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.inbox.details
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -46,6 +47,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -106,8 +108,8 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
                 try {
                     val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
                     activity?.startActivity(urlIntent)
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), R.string.inboxMessageFailedToOpenUrl, Toast.LENGTH_SHORT).show()
+                } catch (e: ActivityNotFoundException) {
+                    toast(R.string.inboxMessageFailedToOpenUrl)
                 }
             }
             is InboxDetailsFragmentAction.OpenAttachment -> {

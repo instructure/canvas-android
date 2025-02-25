@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -17,19 +17,17 @@
 
 package com.instructure.student.features.calendarevent
 
-import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
-import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-import com.instructure.student.router.RouteMatcher
 
-class StudentEventRouter(private val activity: FragmentActivity) : EventRouter {
 
-    override fun openEditEvent(scheduleItem: ScheduleItem) {
-        val route = CreateUpdateEventFragment.makeRoute(scheduleItem)
-        RouteMatcher.route(activity, route)
+class StudentEventViewModelBehavior : EventViewModelBehavior {
+
+    override val shouldShowMessageFab = false
+
+    override fun getInboxComposeOptions(canvasContext: CanvasContext?, event: ScheduleItem): InboxComposeOptions {
+        throw NotImplementedError("This method should not be called")
     }
-
-    override fun navigateToComposeMessageScreen(options: InboxComposeOptions) = Unit
 }

@@ -177,9 +177,9 @@ class AlertsViewModel @Inject constructor(
     }
 
     private suspend fun dismissAlert(alertId: Long) {
-        fun resetAlert(alert: AlertsItemUiState) {
+        fun resetAlert(alert: AlertsItemUiState, unreadState: Boolean) {
             val alerts = _uiState.value.alerts.toMutableList()
-            alerts.add(alert)
+            alerts.add(alert.copy(unread = unreadState))
             alerts.sortByDescending { it.date }
             viewModelScope.launch {
                 _uiState.update { it.copy(alerts = alerts) }
@@ -199,11 +199,8 @@ class AlertsViewModel @Inject constructor(
             _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissMessage, R.string.alertDismissAction) {
                 viewModelScope.launch {
                     try {
-                        repository.updateAlertWorkflow(
-                            alert.alertId,
-                            if (alert.unread) AlertWorkflowState.UNREAD else AlertWorkflowState.READ
-                        )
-                        resetAlert(alert)
+                        repository.updateAlertWorkflow(alert.alertId, AlertWorkflowState.READ)
+                        resetAlert(alert, false)
                     } catch (e: Exception) {
                         _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissActionErrorMessage, null, null))
                     }
@@ -211,7 +208,7 @@ class AlertsViewModel @Inject constructor(
             })
         } catch (e: Exception) {
             _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissErrorMessage, null, null))
-            resetAlert(alert)
+            resetAlert(alert, alert.unread)
         }
     }
 

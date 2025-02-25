@@ -28,20 +28,20 @@ interface SettingsBehaviour {
     fun isInboxSignatureEnabledForRole(settings: EnvironmentSettings?) = true
 }
 
-enum class SettingsItem(val res: Int) {
-    APP_THEME(R.string.appThemeSettingsTitle),
+enum class SettingsItem(val res: Int, val availableOffline: Boolean = false) {
+    APP_THEME(R.string.appThemeSettingsTitle, true),
     PROFILE_SETTINGS(R.string.profileSettings),
     PUSH_NOTIFICATIONS(R.string.pushNotifications),
     EMAIL_NOTIFICATIONS(R.string.emailNotifications),
     PAIR_WITH_OBSERVER(R.string.pairWithObserver),
-    SUBSCRIBE_TO_CALENDAR(R.string.subscribeToCalendar),
+    SUBSCRIBE_TO_CALENDAR(R.string.subscribeToCalendar, true),
     INBOX_SIGNATURE(R.string.inboxSettingsInboxSignature),
-    OFFLINE_SYNCHRONIZATION(R.string.offlineSyncSettingsTitle),
-    ABOUT(R.string.about),
-    LEGAL(R.string.legal),
+    OFFLINE_SYNCHRONIZATION(R.string.offlineSyncSettingsTitle, true),
+    ABOUT(R.string.about, true),
+    LEGAL(R.string.legal, true),
     RATE_APP(R.string.rateOnThePlayStore),
-    FEATURE_FLAGS(R.string.featureFlags),
-    REMOTE_CONFIG(R.string.remoteConfigParamsTitle),
-    ACCOUNT_PREFERENCES(R.string.accountPreferences),
-    HOMEROOM_VIEW(R.string.settingsHomeroomView)
+    FEATURE_FLAGS(R.string.featureFlags, true),
+    REMOTE_CONFIG(R.string.remoteConfigParamsTitle, true),
+    ACCOUNT_PREFERENCES(R.string.accountPreferences, true),
+    HOMEROOM_VIEW(R.string.settingsHomeroomView, true)
 }

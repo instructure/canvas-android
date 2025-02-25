@@ -17,7 +17,6 @@
 package com.instructure.parentapp.ui.interaction
 
 import androidx.test.core.app.ApplicationProvider
-import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
@@ -36,7 +35,6 @@ import java.util.Calendar
 
 @HiltAndroidTest
 class SummaryInteractionTest: ParentComposeTest() {
-    private val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
 
     @Test
     fun testSummaryItemsAreDisplayed() {

@@ -84,6 +84,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     abstract fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
     abstract fun updateUnreadCount(unreadCount: Int)
+    abstract fun increaseUnreadCount(increaseBy: Int)
     abstract fun updateNotificationCount(notificationCount: Int)
     abstract fun initialCoreDataLoadingComplete()
 
@@ -264,6 +265,10 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         } catch {
 
         }
+    }
+
+    override fun updateUnreadCountOffline(increaseBy: Int) {
+        increaseUnreadCount(increaseBy)
     }
 
     override fun invalidateNotificationCount() {
