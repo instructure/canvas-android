@@ -25,8 +25,11 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import com.instructure.canvasapi2.models.Course
 import com.instructure.composeTest.hasSiblingWithText
 import com.instructure.dataseeding.model.CourseApiModel
@@ -97,5 +100,9 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
             .performScrollTo()
             .assertIsDisplayed()
             .performClick()
+    }
+
+    fun refresh() {
+        composeTestRule.onRoot().performTouchInput { swipeDown() }
     }
 }

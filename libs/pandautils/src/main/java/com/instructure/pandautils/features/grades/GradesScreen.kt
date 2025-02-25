@@ -85,6 +85,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -491,6 +492,7 @@ fun AssignmentItem(
             .padding(12.dp)
             .semantics {
                 role = Role.Button
+                testTag = "assignmentItem"
             }
     ) {
         Spacer(modifier = Modifier.width(12.dp))

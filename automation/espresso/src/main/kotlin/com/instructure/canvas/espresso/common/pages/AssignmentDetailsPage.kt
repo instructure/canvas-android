@@ -32,6 +32,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
@@ -284,6 +285,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun clickSubmissionAndRubric() {
         onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).click()
+    }
+
+    fun clickComposeMessageFAB() {
+        onView(withContentDescription("Send a message about this assignment")).click()
     }
 
     //OfflineMethod
