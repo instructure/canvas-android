@@ -59,11 +59,11 @@ class DashboardE2ETest : StudentTest() {
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
         val group2 = GroupsApi.createGroup(groupCategory2.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Create group membership for '${student.name}' student.")
+        Log.d(PREPARATION_TAG,"Create group membership for ${student.name} student.")
         GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
         GroupsApi.createGroupMembership(group2.id, student.id, teacher.token)
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

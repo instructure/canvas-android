@@ -19,8 +19,13 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionsForAssignment
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakePersonContextManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.CommentLibraryManager
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
@@ -33,14 +38,24 @@ import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
+@UninstallModules(GraphQlApiModule::class)
 @HiltAndroidTest
 class PersonContextPageTest : TeacherTest() {
 
     @BindValue
     @JvmField
-    val personContextManager: StudentContextManager = FakePersonContextManager()
+    val personContextManager: StudentContextManager = FakeStudentContextManager()
+
+    @BindValue
+    @JvmField
+    val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
 
     @Test
     override fun displaysPageObjects() {
@@ -69,8 +84,8 @@ class PersonContextPageTest : TeacherTest() {
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.STUDENT)
         personContextPage.assertPersonNameIsDisplayed(student.shortName!!)
 
-        //studentContextPage.assertDisplaysCourseInfo(course.name)
-        //studentContextPage.assertDisplaysStudentInfo(student.name)
+        studentContextPage.assertDisplaysCourseInfo(course.name)
+        studentContextPage.assertDisplaysStudentInfo(student.shortName!!, student.loginId!!)
     }
 
     private fun getToPersonContextPage(userRole: PersonContextPage.UserRole? = null): Pair<User, Course> {
@@ -89,11 +104,12 @@ class PersonContextPageTest : TeacherTest() {
             submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
-        var submissionList = mutableListOf<Submission>()
-        submissionList = data.addSubmissionsForAssignment(
+        data.addSubmissionsForAssignment(
             assignmentId = assignment.id,
             userId = student.id,
             types = listOf("online_text_entry"),
+            grade = "100%",
+            score = 10.0,
         )
         val peopleTab = Tab(position = 1, label = "People", visibility = "public", tabId = Tab.PEOPLE_ID)
         data.courseTabs += course.id to mutableListOf(peopleTab)

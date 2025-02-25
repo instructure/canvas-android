@@ -16,10 +16,15 @@
  */
 package com.instructure.teacher.factory
 
+import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.teacher.presenters.StudentContextPresenter
 import com.instructure.teacher.viewinterface.StudentContextView
 import com.instructure.pandautils.blueprint.PresenterFactory
 
-class StudentContextPresenterFactory(private val studentId: Long, private val courseId: Long) : PresenterFactory<StudentContextView, StudentContextPresenter> {
-    override fun create() = StudentContextPresenter(studentId, courseId)
+class StudentContextPresenterFactory(
+    private val studentId: Long,
+    private val courseId: Long,
+    private val studentContextManager: StudentContextManager
+) : PresenterFactory<StudentContextView, StudentContextPresenter> {
+    override fun create() = StudentContextPresenter(studentId, courseId, studentContextManager)
 }
