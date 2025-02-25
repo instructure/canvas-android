@@ -19,8 +19,6 @@ package com.instructure.pandautils.features.lti
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -47,7 +45,6 @@ class LtiLaunchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: LtiLaunchRepository,
     private val apiPrefs: ApiPrefs,
-    private val oAuthInterface: OAuthAPI.OAuthInterface
 ) : ViewModel() {
 
     private val ltiUrl: String? = savedStateHandle.get<String>(LtiLaunchFragment.LTI_URL)
@@ -125,7 +122,7 @@ class LtiLaunchViewModel @Inject constructor(
 
     private fun launchLti(url: String) {
         viewModelScope.launch {
-            val authenticatedUrl = oAuthInterface.getAuthenticatedSession(url, RestParams()).dataOrNull?.sessionUrl ?: url
+            val authenticatedUrl = repository.authenticateUrl(url)
             if (openInternally || Assignment.internalLtiTools.any { url.contains(it) }) {
                 _events.send(LtiLaunchAction.LoadLtiWebView(authenticatedUrl))
             } else {
