@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -39,23 +41,30 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.discussion.DiscussionSharedAction
+import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.CourseDiscussionTopicBinding
-import com.instructure.student.events.DiscussionCreatedEvent
-import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
-import com.instructure.student.events.DiscussionTopicHeaderEvent
-import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.features.discussion.list.adapter.DiscussionListRecyclerAdapter
-import com.instructure.student.fragment.CreateAnnouncementFragment
-import com.instructure.student.fragment.CreateDiscussionFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
@@ -71,7 +80,11 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     @Inject
     lateinit var repository: DiscussionListRepository
 
-    protected var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @Inject
+    lateinit var discussionSharedEvents: DiscussionSharedEvents
+
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private var recyclerAdapter: DiscussionListRecyclerAdapter? = null
 
@@ -175,13 +188,23 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, drawable))
                 onClickWithRequireNetwork {
                     if (isAnnouncement) {
-                        val route = CreateAnnouncementFragment.makeRoute(canvasContext, null)
+                        val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, true)
                         RouteMatcher.route(requireActivity(), route)
                     } else {
-                        val route = CreateDiscussionFragment.makeRoute(canvasContext)
+                        val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, false)
                         RouteMatcher.route(requireActivity(), route)
                     }
                 }
+            }
+        }
+
+        lifecycleScope.collectOneOffEvents(discussionSharedEvents.events.flowWithLifecycle(lifecycle)) { handleSharedAction(it) }
+    }
+
+    private fun handleSharedAction(action: DiscussionSharedAction) {
+        when (action) {
+            is DiscussionSharedAction.RefreshListScreen -> {
+                recyclerAdapter?.refresh()
             }
         }
     }
@@ -205,16 +228,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
     }
 
     override fun onDestroyView() {
@@ -268,52 +281,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             if (view != null) binding.createNewDiscussion.hide()
         }
     }
-
-    //region Bus Events
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionUpdated(event: DiscussionUpdatedEvent) {
-        event.once(javaClass.simpleName) {
-            recyclerAdapter?.refresh()
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicHeaderDeleted(event: DiscussionTopicHeaderDeletedEvent) {
-        event.get {
-            // TODO - COMMS-868
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionTopicCountChange(event: DiscussionTopicHeaderEvent) {
-        if (isAnnouncement) return
-        event.get {
-            // Gets written over on phones - added also to {@link #onRefreshFinished()}
-            when {
-                it.pinned -> {
-                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.PINNED, it)
-                }
-                it.locked -> {
-                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS, it)
-                }
-                else -> {
-                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
-                }
-            }
-        }
-    }
-
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onDiscussionCreated(event: DiscussionCreatedEvent) {
-        event.once(javaClass.simpleName) {
-            recyclerAdapter?.refresh()
-        }
-    }
-    //endregion
 
     override fun handleBackPressed() = binding.discussionListToolbar.closeSearch()
 

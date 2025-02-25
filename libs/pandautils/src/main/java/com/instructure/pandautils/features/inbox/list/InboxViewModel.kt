@@ -126,6 +126,8 @@ class InboxViewModel @Inject constructor(
                 inboxRepository.getCanvasContexts().dataOrNull?.let {
                     canvasContexts = it
                 }
+                // Just prefetch this so we don't have to show a loading on the compose screen, we don't need to do anything with the result
+                inboxRepository.getInboxSignature()
             } catch (e: Exception) {
                 e.printStackTrace()
                 if (_itemViewModels.value?.isNotEmpty() == true) {

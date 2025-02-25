@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
@@ -33,13 +34,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.isVisible
+import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
@@ -51,7 +51,6 @@ import com.instructure.canvasapi2.models.CourseNickname
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
@@ -68,12 +67,16 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
@@ -85,12 +88,14 @@ import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
-import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -98,7 +103,6 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityInitBinding
 import com.instructure.teacher.databinding.NavigationDrawerBinding
-import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory
@@ -106,13 +110,10 @@ import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.fragments.FileListFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
-import com.instructure.teacher.fragments.SettingsFragment
 import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
-import com.instructure.teacher.services.TeacherPageViewService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
@@ -146,7 +147,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     lateinit var featureFlagProvider: FeatureFlagProvider
 
     @Inject
-    lateinit var oAuthApi: OAuthAPI.OAuthInterface
+    lateinit var alarmScheduler: AlarmScheduler
+
+    @Inject
+    lateinit var webViewAuthenticator: WebViewAuthenticator
+
+    @Inject
+    lateinit var pandataAppKey: PandataInfo.AppKey
 
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
@@ -208,6 +215,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
 
+        scheduleAlarms()
+
         if (!ThemePrefs.isThemeApplied) {
             // This will be only called when we change dark/light mode, because the Theme is already applied before in the SplashActivity.
             updateTheme()
@@ -247,7 +256,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             if (ApiPrefs.pandataInfo?.isValid != true) {
                 try {
                     ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
-                        PandataManager.getToken(TeacherPageViewService.pandataAppKey, it)
+                        PandataManager.getToken(pandataAppKey, it)
                     }
                 } catch (ignore: Throwable) {
                     Logger.w("Unable to refresh pandata info")
@@ -258,22 +267,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         fetchFeatureFlags()
 
         requestNotificationsPermission()
-
-        if (ApiPrefs.isFirstMasqueradingStart) {
-            loadAuthenticatedSession()
-            ApiPrefs.isFirstMasqueradingStart = false
-        }
     }
 
-    private fun loadAuthenticatedSession() {
-        lifecycleScope.launch {
-            oAuthApi.getAuthenticatedSession(
-                ApiPrefs.fullDomain,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull?.sessionUrl?.let {
-                loadUrlIntoHeadlessWebView(this@InitActivity, it)
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 
     private fun requestNotificationsPermission() {
@@ -300,13 +298,15 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         // Switching languages will also trigger this method; check for our Pending intent id
-        intent?.let {
-            if (it.hasExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY) && it.getIntExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY, 0) != LocaleUtils.LANGUAGES_PENDING_INTENT_ID) {
-                handlePushNotification(hasUnreadPushNotification(it.extras))
-            }
+        if (intent.hasExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY) && intent.getIntExtra(
+                LocaleUtils.LANGUAGES_PENDING_INTENT_KEY,
+                0
+            ) != LocaleUtils.LANGUAGES_PENDING_INTENT_ID
+        ) {
+            handlePushNotification(hasUnreadPushNotification(intent.extras))
         }
     }
 
@@ -372,11 +372,17 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                     launchLti(launchDefinition)
                 }
                 R.id.navigationDrawerItem_help -> HelpDialogFragment.show(this@InitActivity)
-                R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(
+                    LogoutTask.Type.SWITCH_USERS,
+                    alarmScheduler = alarmScheduler
+                ).execute()
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@InitActivity)
                         .setTitle(R.string.logout_warning)
-                        .setPositiveButton(android.R.string.ok) { _, _ -> TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+                        .setPositiveButton(android.R.string.ok) { _, _ -> TeacherLogoutTask(
+                            LogoutTask.Type.LOGOUT,
+                            alarmScheduler = alarmScheduler
+                        ).execute() }
                         .setNegativeButton(android.R.string.cancel, null)
                         .create()
                         .show()
@@ -388,6 +394,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 R.id.navigationDrawerSettings -> {
                     RouteMatcher.route(this@InitActivity, Route(SettingsFragment::class.java, ApiPrefs.user))
                 }
+                R.id.navigationDrawerItem_closeDrawer -> {
+                    closeNavigationDrawer()
+                }
             }
         }
     }
@@ -396,13 +405,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val user = ApiPrefs.user ?: return
         val canvasContext = CanvasContext.currentUserContext(user)
         val title = launchDefinition.name.orEmpty()
-        val route = LtiLaunchFragment.makeBundle(
+        val route = LtiLaunchFragment.makeRoute(
             canvasContext = canvasContext,
             url = launchDefinition.placements?.globalNavigation?.url.orEmpty(),
             title = title,
             sessionLessLaunch = true
         )
-        RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
+        RouteMatcher.route(this@InitActivity, route)
     }
 
     fun attachToolbar(toolbar: Toolbar) {
@@ -423,6 +432,36 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItemHelp.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStartMasquerading.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItemCloseDrawer.setOnClickListener(navDrawerOnClick)
+        listOf(
+            navigationDrawerItemFiles,
+            navigationDrawerItemGauge,
+            navigationDrawerItemArc,
+            navigationDrawerItemMastery,
+            navigationDrawerItemChangeUser,
+            navigationDrawerItemHelp,
+            navigationDrawerItemLogout,
+            navigationDrawerSettings,
+            navigationDrawerItemStartMasquerading,
+            navigationDrawerItemStopMasquerading,
+            navigationDrawerItemCloseDrawer
+        ).forEach {
+            it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfo
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    info.className = "android.widget.Button"
+                }
+            }
+        }
+
+        binding.drawerLayout.addDrawerListener(object : SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                setCloseDrawerVisibility()
+            }
+        })
 
         // Set up Color Overlay setting
         setUpColorOverlaySwitch()
@@ -720,6 +759,16 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private fun setPushNotificationAsRead() {
         intent.putExtra(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false)
         PushNotification.remove(intent)
+    }
+
+    private fun scheduleAlarms() {
+        lifecycleScope.launch {
+            alarmScheduler.scheduleAllAlarmsForCurrentUser()
+        }
+    }
+
+    private fun setCloseDrawerVisibility() {
+        navigationDrawerBinding.navigationDrawerItemCloseDrawer.setVisible(isAccessibilityEnabled(this))
     }
 
     //endregion

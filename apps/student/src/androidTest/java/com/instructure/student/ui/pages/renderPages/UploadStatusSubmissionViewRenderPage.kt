@@ -16,7 +16,6 @@
 package com.instructure.student.ui.pages.renderPages
 
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R

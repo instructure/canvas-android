@@ -23,6 +23,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
@@ -35,7 +36,8 @@ import javax.inject.Inject
 class SyncSettingsViewModel @Inject constructor(
     private val syncSettingsFacade: SyncSettingsFacade,
     private val offlineSyncHelper: OfflineSyncHelper,
-    private val resources: Resources
+    private val resources: Resources,
+    private val offlineAnalyticsManager: OfflineAnalyticsManager
 ) : ViewModel() {
 
     val data: LiveData<SyncSettingsViewData>
@@ -77,6 +79,7 @@ class SyncSettingsViewModel @Inject constructor(
                 offlineSyncHelper.cancelWork()
             }
             loadData()
+            offlineAnalyticsManager.reportOfflineAutoSyncSwitchChanged(checked)
         }
     }
 

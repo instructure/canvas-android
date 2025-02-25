@@ -24,13 +24,20 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOT_A_TEACHER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentNotATeacherBinding
 import com.instructure.teacher.tasks.TeacherLogoutTask
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_NOT_A_TEACHER)
+@AndroidEntryPoint
 class NotATeacherFragment : BaseFragment() {
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     private val binding by viewBinding(FragmentNotATeacherBinding::bind)
 
@@ -47,16 +54,25 @@ class NotATeacherFragment : BaseFragment() {
 
         parentLink.setOnClickListener {
             startActivity(playStoreIntent(PARENT_ID))
-            TeacherLogoutTask(LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW).execute()
+            TeacherLogoutTask(
+                LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW,
+                alarmScheduler = alarmScheduler
+            ).execute()
         }
 
         studentLink.setOnClickListener {
             startActivity(playStoreIntent(CANVAS_ID))
-            TeacherLogoutTask(LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW).execute()
+            TeacherLogoutTask(
+                LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW,
+                alarmScheduler = alarmScheduler
+            ).execute()
         }
 
         login.setOnClickListener {
-            TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
+            TeacherLogoutTask(
+                LogoutTask.Type.LOGOUT,
+                alarmScheduler = alarmScheduler
+            ).execute()
         }
     }
 

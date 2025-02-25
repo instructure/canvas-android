@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.student.R
@@ -76,6 +77,8 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         description.setTextForVisibility(descriptionText)
+
+        itemView.accessibilityClassName("android.widget.Button")
     }
 
     companion object {

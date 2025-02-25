@@ -446,6 +446,8 @@
     <string name="cancel_editing_comment">Avbryt redigering av kommentar</string>
     <string name="skip">Hoppa över</string>
 
+    <string name="collapseGradePanel">Dölj omdömespanel</string>
+    <string name="expandGradePanel">Visa omdömespanel</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Anpassat resultat %1$s</string>
 
@@ -510,22 +512,7 @@
     <string name="colorPickerDialogMessage">Detta är din personliga färginställning. Endast du kommer att se den här färgen för kursen.</string>
     <string name="colorPickerError">Kursens färg kunde inte ställas in just nu.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Klarrosa</string>
-    <string name="contentDescriptionColorBarneyPurple">Violett</string>
-    <string name="contentDescriptionColorEggplant">Lila</string>
-    <string name="contentDescriptionColorUltramarine">Mörkblå</string>
-    <string name="contentDescriptionColorOcean11">Blå</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Havsblå</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragdgrön</string>
-    <string name="contentDescriptionColorFreshCutLawn">Grön</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Gul</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Mörkorange</string>
-    <string name="contentDescriptionColorSriracha">Röd</string>
-    <string name="launch_link_in_external_browser">Starta länken i en extern webbläsare</string>
+                                                                <string name="launch_link_in_external_browser">Starta länken i en extern webbläsare</string>
     <string name="contentDescriptionSelectedFile">Vald fil</string>
     <string name="contentDescriptionFileIcon">Filikon</string>
     <string name="contentDescriptionExpandPage">Expandera sida</string>
@@ -611,6 +598,7 @@
     <string name="discussion_details">Diskussionsinformation</string>
     <string name="discussions_pinned">Fäst</string>
     <string name="discussions_unpinned">Diskussioner</string>
+    <string name="discussions_close">Stäng för kommentarer</string>
     <string name="discussions_closed">Stängt för kommentarer</string>
     <string name="discussions_open">Öppet för kommentarer</string>
     <string name="discussions_pin">Fäst</string>
@@ -851,6 +839,7 @@
     <string name="errorUpdatingFile">Ett fel uppstod vid uppdatering av den här filen</string>
     <string name="errorUpdatingFolder">Ett fel uppstod vid uppdatering av den här mappen</string>
 
+    <string name="errorEmptyTitle">Titeln får inte vara tom</string>
     <string name="toDoEmpty">Inget mer att göra!\n Ha en bra dag.</string>
     <string name="toDoNoSubmissions">Det finns inga inlämningar att bedöma för denna uppgift.</string>
     <string name="errorToDoRouteFailed">Ett fel uppstod när du försökte visa detta att göra-objekt.</string>

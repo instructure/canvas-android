@@ -18,14 +18,21 @@
 package com.instructure.student.util
 
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.tasks.StudentLogoutTask
 import dagger.hilt.android.HiltAndroidApp
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -43,6 +50,9 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
 
+    @Inject
+    lateinit var workManager: WorkManager
+
     override fun onCreate() {
         super.onCreate()
         MasqueradeHelper.masqueradeLogoutTask = Runnable {
@@ -53,6 +63,8 @@ class AppManager : BaseAppManager() {
                 alarmScheduler = alarmScheduler
             ).execute()
         }
+
+        schedulePandataUpload()
     }
 
     override fun performLogoutOnAuthError() {
@@ -65,4 +77,11 @@ class AppManager : BaseAppManager() {
     }
 
     override fun getWorkManagerFactory(): WorkerFactory = workerFactory
+
+    private fun schedulePandataUpload() {
+        val workRequest = PeriodicWorkRequestBuilder<PageViewUploadWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .build()
+        workManager.enqueueUniquePeriodicWork("pageView-student", ExistingPeriodicWorkPolicy.KEEP, workRequest)
+    }
 }

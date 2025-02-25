@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Hủy chỉnh sửa bình luận</string>
     <string name="skip">Bỏ Qua</string>
 
+    <string name="collapseGradePanel">Thu Gọn Bảng Điểm</string>
+    <string name="expandGradePanel">Mở Rộng Bảng Điểm</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Điểm tùy chỉnh %1$s</string>
 
@@ -511,22 +513,7 @@
     <string name="colorPickerDialogMessage">Đây là cài đặt màu cá nhân của bạn Chỉ có bạn mới thấy màu này cho khóa học.</string>
     <string name="colorPickerError">Không thể cài đặt màu khóa học vào thời điểm này.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Hồng</string>
-    <string name="contentDescriptionColorBarbie">Hồng Nóng</string>
-    <string name="contentDescriptionColorBarneyPurple">Tím</string>
-    <string name="contentDescriptionColorEggplant">Tía</string>
-    <string name="contentDescriptionColorUltramarine">Xanh Dương Đậm</string>
-    <string name="contentDescriptionColorOcean11">Xanh Dương</string>
-    <string name="contentDescriptionColorCyan">Xanh Lá Mạ</string>
-    <string name="contentDescriptionColorAquaMarine">Xanh Nước Biển</string>
-    <string name="contentDescriptionColorEmeraldGreen">Xanh Ngọc Lục Bảo</string>
-    <string name="contentDescriptionColorFreshCutLawn">Xanh Lục</string>
-    <string name="contentDescriptionColorChartreuse">Xanh Nõn Chuối</string>
-    <string name="contentDescriptionColorSunFlower">Vàng</string>
-    <string name="contentDescriptionColorTangerine">Cam</string>
-    <string name="contentDescriptionColorBloodOrange">Cam Đậm</string>
-    <string name="contentDescriptionColorSriracha">Đỏ</string>
-    <string name="launch_link_in_external_browser">Mở liên kết trong trình duyệt bên ngoài</string>
+                                                                <string name="launch_link_in_external_browser">Mở liên kết trong trình duyệt bên ngoài</string>
     <string name="contentDescriptionSelectedFile">Tập Tin Đã Chọn</string>
     <string name="contentDescriptionFileIcon">Biểu Tượng Tập Tin</string>
     <string name="contentDescriptionExpandPage">Mở Rộng Trang</string>
@@ -612,6 +599,7 @@
     <string name="discussion_details">Thông Tin Chi Tiết Thảo Luận</string>
     <string name="discussions_pinned">Đã Ghim</string>
     <string name="discussions_unpinned">Thảo Luận</string>
+    <string name="discussions_close">Đóng để Bình Luận</string>
     <string name="discussions_closed">Đóng Bình Luận</string>
     <string name="discussions_open">Mở Bình Luận</string>
     <string name="discussions_pin">Ghim</string>
@@ -852,6 +840,7 @@
     <string name="errorUpdatingFile">Đã xảy ra lỗi khi tải lên tập tin này</string>
     <string name="errorUpdatingFolder">Đã xảy ra lỗi khi cập nhật thư mục này</string>
 
+    <string name="errorEmptyTitle">Không được để trống tiêu đề</string>
     <string name="toDoEmpty">Không còn gì thêm cần làm!\n Hãy tận hưởng thời gian còn lại trong ngày nhé.</string>
     <string name="toDoNoSubmissions">Không có bài nộp để chấm điểm cho bài tập này.</string>
     <string name="errorToDoRouteFailed">Đã xảy ra lỗi khi thử xem mục Việc Cần Làm.</string>

@@ -117,6 +117,15 @@ object DateHelper {
         return context?.let { getFormattedDate(it, date) + " " + getFormattedTime(it, date) }
     }
 
+    fun getDateAtTimeString(context: Context?, stringResId: Int, dateTime: Date?): String? {
+        if (context == null || dateTime == null) {
+            return null
+        }
+        val date = getDayMonthDateString(context, dateTime)
+        val time = getFormattedTime(context, dateTime)
+        return context.getString(stringResId, date, time)
+    }
+
     /**
      * Simple date helper, formats date as:
      *

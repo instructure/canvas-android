@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,6 +40,8 @@ class ParentSettingsInteractionTest : SettingsInteractionTest() {
 
     private val dashboardPage = DashboardPage()
 
+    private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
+
     override fun initData(): MockCanvas {
         return MockCanvas.init(
             parentCount = 1,
@@ -51,8 +54,8 @@ class ParentSettingsInteractionTest : SettingsInteractionTest() {
         val parent = data.parents.first()
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
-        dashboardPage.openNavigationDrawer()
-        dashboardPage.tapSettings()
+        dashboardPage.openLeftSideMenu()
+        leftSideNavigationDrawerPage.clickSettings()
     }
 
     override fun enableAndConfigureAccessibilityChecks() {

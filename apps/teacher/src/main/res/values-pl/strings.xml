@@ -453,6 +453,8 @@
     <string name="cancel_editing_comment">Anuluj komentarz dotyczący edycji</string>
     <string name="skip">Pomiń</string>
 
+    <string name="collapseGradePanel">Zwiń panel ocen</string>
+    <string name="expandGradePanel">Rozwiń panel ocen</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Niestandardowa ocena %1$s</string>
 
@@ -531,22 +533,7 @@
     <string name="colorPickerDialogMessage">To jest twoje osobiste ustawienie koloru. Tylko ty będziesz widzieć ten kurs podczas kursu.</string>
     <string name="colorPickerError">W danej chwili nie można ustawić koloru kursu.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Różowy</string>
-    <string name="contentDescriptionColorBarbie">Gorący róż</string>
-    <string name="contentDescriptionColorBarneyPurple">Fioletowy</string>
-    <string name="contentDescriptionColorEggplant">Fioletowy</string>
-    <string name="contentDescriptionColorUltramarine">Ciemnoniebieski</string>
-    <string name="contentDescriptionColorOcean11">Niebieski</string>
-    <string name="contentDescriptionColorCyan">Cyjan</string>
-    <string name="contentDescriptionColorAquaMarine">Akwamaryn</string>
-    <string name="contentDescriptionColorEmeraldGreen">Szmaragdowy</string>
-    <string name="contentDescriptionColorFreshCutLawn">Zielony</string>
-    <string name="contentDescriptionColorChartreuse">Żółto-zielony</string>
-    <string name="contentDescriptionColorSunFlower">Żółty</string>
-    <string name="contentDescriptionColorTangerine">Pomarańczowy</string>
-    <string name="contentDescriptionColorBloodOrange">Ciemnopomarańczowy</string>
-    <string name="contentDescriptionColorSriracha">Czerwony</string>
-    <string name="launch_link_in_external_browser">Link uruchamiający w zewnętrznej przeglądarce</string>
+                                                                <string name="launch_link_in_external_browser">Link uruchamiający w zewnętrznej przeglądarce</string>
     <string name="contentDescriptionSelectedFile">Wybrany plik</string>
     <string name="contentDescriptionFileIcon">Ikona pliku</string>
     <string name="contentDescriptionExpandPage">Rozwiń stronę</string>
@@ -634,6 +621,7 @@
     <string name="discussion_details">Informacje szczegółowe dotyczące dyskusji</string>
     <string name="discussions_pinned">Przyczepione</string>
     <string name="discussions_unpinned">Dyskusje</string>
+    <string name="discussions_close">Komentarze zablokowane</string>
     <string name="discussions_closed">Zablokowano dodawanie komentarzy</string>
     <string name="discussions_open">Odblokuj dodawanie komentarzy</string>
     <string name="discussions_pin">Przypnij</string>
@@ -874,6 +862,7 @@
     <string name="errorUpdatingFile">Podczas aktualizowania tego pliku wystąpił błąd</string>
     <string name="errorUpdatingFolder">Podczas aktualizowania tego folderu wystąpił błąd</string>
 
+    <string name="errorEmptyTitle">Tytuł nie może być pusty</string>
     <string name="toDoEmpty">Nic więcej do zrobienia!\n Korzystaj z dnia.</string>
     <string name="toDoNoSubmissions">Brak zgłoszeń do oceny dla tego zadania.</string>
     <string name="errorToDoRouteFailed">Podczas wyświetlania tego elementu listy zadań wystąpił błąd.</string>

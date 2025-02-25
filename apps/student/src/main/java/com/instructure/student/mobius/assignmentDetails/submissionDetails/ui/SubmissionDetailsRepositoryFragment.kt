@@ -20,21 +20,26 @@ import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsRepository
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
-import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.LiveDataSource
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS)
+@PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
 @AndroidEntryPoint
 class SubmissionDetailsRepositoryFragment : SubmissionDetailsFragment() {
 
@@ -52,7 +57,7 @@ class SubmissionDetailsRepositoryFragment : SubmissionDetailsFragment() {
     }
 
     override fun getExternalEventSources() = listOf(
-        ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
+        FlowSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
             when (it) {
                 is SubmissionDetailsSharedEvent.FileSelected -> SubmissionDetailsEvent.AttachmentClicked(it.file)
                 is SubmissionDetailsSharedEvent.AudioRecordingViewLaunched -> SubmissionDetailsEvent.AudioRecordingClicked

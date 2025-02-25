@@ -51,7 +51,6 @@ import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.Enrollment
@@ -94,6 +93,7 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.viewExternally
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.pandautils.views.RecordingMediaType
+import com.instructure.pandautils.views.ExpandCollapseAnimation
 import com.instructure.pandautils.views.ViewPagerNonSwipeable
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
@@ -149,7 +149,7 @@ class SubmissionContentView(
         private val mAssignment: Assignment,
         private val mCourse: Course,
         var initialTabIndex: Int = 0
-) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+) : PdfSubmissionView(context, courseId = mCourse.id), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewSubmissionContentBinding
 
@@ -251,6 +251,42 @@ class SubmissionContentView(
 
         if (isAccessibilityEnabled(context)) {
             binding.slidingUpPanelLayout?.anchorPoint = 1.0f
+        }
+        setupExpandCollapseToggle()
+    }
+
+    private fun setupExpandCollapseToggle() {
+        binding.toggleImageView?.let { toggle ->
+            binding.panelContent?.let { panel ->
+                val panelWidth = resources.getDimensionPixelOffset(R.dimen.speedgraderPanelWidth)
+                val animation = ExpandCollapseAnimation(
+                    panel,
+                    panelWidth,
+                    0
+                ) {
+                    if (panel.width > 50) {
+                        binding.toggleImageView.setImageResource(R.drawable.ic_collapse_horizontal)
+                        binding.toggleImageView.contentDescription =
+                            context.getString(R.string.collapseGradePanel)
+                    } else {
+                        binding.toggleImageView.setImageResource(R.drawable.ic_expand_horizontal)
+                        binding.toggleImageView.contentDescription =
+                            context.getString(R.string.expandGradePanel)
+                    }
+                }
+                animation.duration = 500
+                toggle.onClick {
+                    if (!animation.hasStarted() || animation.hasEnded()) {
+                        panel.clearAnimation()
+                        if (panel.width > 0) {
+                            animation.updateValues(panelWidth, 0)
+                        } else {
+                            animation.updateValues(0, panelWidth)
+                        }
+                        panel.startAnimation(animation)
+                    }
+                }
+            }
         }
     }
 
@@ -384,7 +420,6 @@ class SubmissionContentView(
 
             // LTI submission
                 SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
-                        mCourse,
                         submission.previewUrl.validOrNull() ?: mAssignment.url.validOrNull()
                         ?: mAssignment.htmlUrl ?: ""
                 )
@@ -1043,7 +1078,7 @@ class UploadMediaCommentEvent(val file: File, val assignmentId: Long, val course
 sealed class GradeableContent
 object NoSubmissionContent : GradeableContent()
 object NoneContent : GradeableContent()
-class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : GradeableContent()
+class ExternalToolContent(val url: String) : GradeableContent()
 object OnPaperContent : GradeableContent()
 object UnsupportedContent : GradeableContent()
 class OtherAttachmentContent(val attachment: Attachment) : GradeableContent()

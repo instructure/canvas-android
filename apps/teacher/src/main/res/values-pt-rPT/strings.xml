@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Erro ao editar comentário.</string>
     <string name="skip">Saltar</string>
 
+    <string name="collapseGradePanel">Recolher o Painel de notas</string>
+    <string name="expandGradePanel">Expandir o Painel de notas</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Pontuação padrão %1$s</string>
 
@@ -509,22 +511,7 @@
     <string name="colorPickerDialogMessage">Esta é a sua definição de cor pessoal. Somente você verá essa cor para a disciplina.</string>
     <string name="colorPickerError">A cor da disciplina não deve ser definida neste momento.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Rosa</string>
-    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
-    <string name="contentDescriptionColorEggplant">Violeta</string>
-    <string name="contentDescriptionColorUltramarine">Azul escuro</string>
-    <string name="contentDescriptionColorOcean11">Azul</string>
-    <string name="contentDescriptionColorCyan">Ciano</string>
-    <string name="contentDescriptionColorAquaMarine">Azul marinho</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verde esmeralda</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verde</string>
-    <string name="contentDescriptionColorChartreuse">Verde limão</string>
-    <string name="contentDescriptionColorSunFlower">Amarelo</string>
-    <string name="contentDescriptionColorTangerine">Laranja</string>
-    <string name="contentDescriptionColorBloodOrange">Laranja escuro</string>
-    <string name="contentDescriptionColorSriracha">Vermelho</string>
-    <string name="launch_link_in_external_browser">Iniciar a ligação no navegador externo</string>
+                                                                <string name="launch_link_in_external_browser">Iniciar a ligação no navegador externo</string>
     <string name="contentDescriptionSelectedFile">Ficheiro selecionado</string>
     <string name="contentDescriptionFileIcon">Ícone de Ficheiro</string>
     <string name="contentDescriptionExpandPage">Página expandida</string>
@@ -610,6 +597,7 @@
     <string name="discussion_details">Detalhes da discussão</string>
     <string name="discussions_pinned">Afixado</string>
     <string name="discussions_unpinned">Discussões</string>
+    <string name="discussions_close">Fechar para comentários</string>
     <string name="discussions_closed">Fechado para comentários</string>
     <string name="discussions_open">Abrir para comentários</string>
     <string name="discussions_pin">Afixar</string>
@@ -850,6 +838,7 @@
     <string name="errorUpdatingFile">Ocorreu um erro ao atualizar este ficheiro</string>
     <string name="errorUpdatingFolder">Ocorreu um erro ao atualizar esta pasta</string>
 
+    <string name="errorEmptyTitle">O título não pode estar em branco</string>
     <string name="toDoEmpty">Nada mais a fazer!\n Aproveite seu dia.</string>
     <string name="toDoNoSubmissions">Não há envios para classificação para esta tarefa.</string>
     <string name="errorToDoRouteFailed">Ocorreu um erro ao tentar exibir este item para fazer.</string>

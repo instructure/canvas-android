@@ -27,9 +27,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.analytics.SCREEN_VIEW_PAIRING_CODE
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.AddStudentAction
@@ -38,8 +40,9 @@ import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import dagger.hilt.android.AndroidEntryPoint
 
 
+@ScreenView(SCREEN_VIEW_PAIRING_CODE)
 @AndroidEntryPoint
-class PairingCodeDialogFragment : DialogFragment() {
+class PairingCodeDialogFragment : BaseCanvasDialogFragment() {
 
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
 

@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Canslo’r broses o olygu sylw</string>
     <string name="skip">Anwybyddu</string>
 
+    <string name="collapseGradePanel">Cau\'r Panel Gradd</string>
+    <string name="expandGradePanel">Ehangu’r Panel Gradd</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Sgôr personol %1$s</string>
 
@@ -509,22 +511,7 @@
     <string name="colorPickerDialogMessage">Dyma\'ch gosodiad lliw personol. Dim ond chi sy’n gallu gweld y lliw hwn ar gyfer y cwrs.</string>
     <string name="colorPickerError">Doedd dim modd gosod lliw’r cwrs y tro hwn.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Pinc</string>
-    <string name="contentDescriptionColorBarbie">Pinc Llachar</string>
-    <string name="contentDescriptionColorBarneyPurple">Fioled</string>
-    <string name="contentDescriptionColorEggplant">Porffor</string>
-    <string name="contentDescriptionColorUltramarine">Glas Tywyll</string>
-    <string name="contentDescriptionColorOcean11">Glas</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Gwyrddlas</string>
-    <string name="contentDescriptionColorEmeraldGreen">Gwyrdd Emrallt</string>
-    <string name="contentDescriptionColorFreshCutLawn">Gwyrdd</string>
-    <string name="contentDescriptionColorChartreuse">Melynwyrdd</string>
-    <string name="contentDescriptionColorSunFlower">Melyn</string>
-    <string name="contentDescriptionColorTangerine">Oren</string>
-    <string name="contentDescriptionColorBloodOrange">Oren Tywyll</string>
-    <string name="contentDescriptionColorSriracha">Coch</string>
-    <string name="launch_link_in_external_browser">Lansio dolen mewn porwr allanol</string>
+                                                                <string name="launch_link_in_external_browser">Lansio dolen mewn porwr allanol</string>
     <string name="contentDescriptionSelectedFile">Ffeil wedi’i dewis</string>
     <string name="contentDescriptionFileIcon">Eicon Ffeil</string>
     <string name="contentDescriptionExpandPage">Ehangu Tudalen</string>
@@ -610,6 +597,7 @@
     <string name="discussion_details">Manylion Trafodaeth</string>
     <string name="discussions_pinned">Wedi’i phinio</string>
     <string name="discussions_unpinned">Trafodaethau</string>
+    <string name="discussions_close">Cau ar gyfer Sylwadau</string>
     <string name="discussions_closed">Wedi Cau ar gyfer Sylwadau</string>
     <string name="discussions_open">Ar agor ar gyfer Sylwadau</string>
     <string name="discussions_pin">Pinio</string>
@@ -850,6 +838,7 @@
     <string name="errorUpdatingFile">Gwall wrth ddiweddaru’r ffeil hon</string>
     <string name="errorUpdatingFolder">Gwall wrth ddiweddaru’r ffolder hon</string>
 
+    <string name="errorEmptyTitle">Does dim modd i’r teitl fod yn wag</string>
     <string name="toDoEmpty">Dim byd arall i\'w wneud!\n Mwynhewch eich diwrnod.</string>
     <string name="toDoNoSubmissions">Does dim cyflwyniadau i’w graddio ar gyfer yr aseiniad hwn.</string>
     <string name="errorToDoRouteFailed">Gwall wrth geisio gweld yr eitem i’w gwneud.</string>

@@ -17,7 +17,11 @@
 @file:Suppress("unused")
 package com.instructure.student.events
 
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.User
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -115,23 +119,14 @@ fun RationedBusEvent<*>.post() = EventBus.getDefault().post(this)
 /** A RationedBusEvent for a User. @see [RationedBusEvent] */
 class UserUpdatedEvent(user: User, skipId: String? = null) : RationedBusEvent<User>(user, skipId)
 
-/** A RationedBusEvent for a Conversation. @see [RationedBusEvent] */
-class ConversationUpdatedEvent(conversation: Conversation, skipId: String? = null) : RationedBusEvent<Conversation>(conversation, skipId)
-
 /** A RationedBusEvent adding a new message to the MessageThreadFragment. @see [RationedBusEvent] */
 class MessageAddedEvent(shouldUpdate: Boolean, skipId: String? = null) : RationedBusEvent<Boolean>(shouldUpdate, skipId)
 
 /** A RationedBusEvent for choosing message recipients. @see [RationedBusEvent] */
 class ChooseRecipientsEvent(list: List<Recipient>, skipId: String? = null) : RationedBusEvent<List<Recipient>>(list, skipId)
 
-/** A RationedBusEvent for creating discussions. @see [RationedBusEvent] */
-class DiscussionCreatedEvent(shouldUpdate: Boolean, skipId: String? = null) : RationedBusEvent<Boolean>(shouldUpdate, skipId)
-
 /** A RationedBusEvent for updating discussions. @see [RationedBusEvent] */
 class DiscussionUpdatedEvent(discussionTopicHeader: DiscussionTopicHeader, skipId: String? = null) : RationedBusEvent<DiscussionTopicHeader>(discussionTopicHeader, skipId)
-
-/** A RationedBusEvent for Deleted DiscussionTopicHeader. @see [RationedBusEvent] */
-class DiscussionTopicHeaderDeletedEvent(discussionTopicHeaderId: Long, skipId: String? = null) : RationedBusEvent<Long>(discussionTopicHeaderId, skipId)
 
 /** A RationedBusEvent for DiscussionTopicHeader changes. @see [RationedBusEvent] */
 class DiscussionTopicHeaderEvent(discussionTopicHeader: DiscussionTopicHeader, skipId: String? = null) : RationedBusEvent<DiscussionTopicHeader>(discussionTopicHeader, skipId)

@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
@@ -37,12 +38,11 @@ import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
-import java.util.*
+import java.util.Locale
 
 object TabHelper {
 

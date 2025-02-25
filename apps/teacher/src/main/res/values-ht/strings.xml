@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Anile modifikasyon kòmantè</string>
     <string name="skip">Sote</string>
 
+    <string name="collapseGradePanel">Redui Pano Nòt yo</string>
+    <string name="expandGradePanel">Elaji Pano Nòt yo</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Nòt pèsonalize %1$s</string>
 
@@ -509,22 +511,7 @@
     <string name="colorPickerDialogMessage">Sa se paramèt koulè pèsonèl ou. Sèlman ou menm k ap wè koulè sa a pou kou a.</string>
     <string name="colorPickerError">Koulè kou a paka defini nan moman sa a,</string>
 
-    <string name="contentDescriptionColorCottonCandy">Woz</string>
-    <string name="contentDescriptionColorBarbie">Woz</string>
-    <string name="contentDescriptionColorBarneyPurple">Vyolèt</string>
-    <string name="contentDescriptionColorEggplant">Mov</string>
-    <string name="contentDescriptionColorUltramarine">Ble Maren</string>
-    <string name="contentDescriptionColorOcean11">Ble</string>
-    <string name="contentDescriptionColorCyan">Blesyèl</string>
-    <string name="contentDescriptionColorAquaMarine">Ble Klè</string>
-    <string name="contentDescriptionColorEmeraldGreen">Vè Emwod</string>
-    <string name="contentDescriptionColorFreshCutLawn">Vèt</string>
-    <string name="contentDescriptionColorChartreuse">Vè jòn</string>
-    <string name="contentDescriptionColorSunFlower">Jòn</string>
-    <string name="contentDescriptionColorTangerine">Zoranj</string>
-    <string name="contentDescriptionColorBloodOrange">Oranj sonb</string>
-    <string name="contentDescriptionColorSriracha">Wouj</string>
-    <string name="launch_link_in_external_browser">Lanse lyen nan navigatè ekstèn</string>
+                                                                <string name="launch_link_in_external_browser">Lanse lyen nan navigatè ekstèn</string>
     <string name="contentDescriptionSelectedFile">Fichye Seleksyone</string>
     <string name="contentDescriptionFileIcon">Ikòn Fichye</string>
     <string name="contentDescriptionExpandPage">Elaji Paj</string>
@@ -610,6 +597,7 @@
     <string name="discussion_details">Detay Diskisyon</string>
     <string name="discussions_pinned">Make</string>
     <string name="discussions_unpinned">Diskisyon</string>
+    <string name="discussions_close">Fèmen pou Kòmantè</string>
     <string name="discussions_closed">Fèmen pou Kòmantè</string>
     <string name="discussions_open">Ouvri pou Kòmantè</string>
     <string name="discussions_pin">Tache</string>
@@ -850,6 +838,7 @@
     <string name="errorUpdatingFile">Yon erè fèt pandan aktyalizasyon fichye sa a</string>
     <string name="errorUpdatingFolder">Yon erè fèt pandan aktyalizasyon dosye sa a</string>
 
+    <string name="errorEmptyTitle">Tit la pa dwe vid</string>
     <string name="toDoEmpty">Pa gen anyen ki pou fèt ankò!\n Pwofite jounen an.</string>
     <string name="toDoNoSubmissions">Pa gen soumisyon pou evalye pou sesyon sa a.</string>
     <string name="errorToDoRouteFailed">Gen yon erè ki fèt pandan w ap eseye afiche eleman Tach sa a.</string>

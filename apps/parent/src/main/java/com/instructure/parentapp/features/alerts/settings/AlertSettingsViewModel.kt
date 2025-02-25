@@ -91,10 +91,8 @@ class AlertSettingsViewModel @Inject constructor(
 
                 is AlertSettingsAction.DeleteThreshold -> {
                     try {
-                        deleteAlertThreshold(
-                            _uiState.value.thresholds[alertSettingsAction.alertType]?.id
-                                ?: throw IllegalArgumentException("Threshold not found")
-                        )
+                        val id = _uiState.value.thresholds.getOrDefault(alertSettingsAction.alertType, null)?.id
+                        id?.let { deleteAlertThreshold(it) }
                     } catch (e: Exception) {
                         crashlytics.recordException(e)
                         e.printStackTrace()

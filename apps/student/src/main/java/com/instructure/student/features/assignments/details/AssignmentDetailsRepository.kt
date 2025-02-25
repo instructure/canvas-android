@@ -17,64 +17,45 @@
 
 package com.instructure.student.features.assignments.details
 
-import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
-import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 
-class AssignmentDetailsRepository(
+class StudentAssignmentDetailsRepository(
     localDataSource: AssignmentDetailsLocalDataSource,
     networkDataSource: AssignmentDetailsNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-    private val reminderDao: ReminderDao
-) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
+) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), AssignmentDetailsRepository {
 
-    suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
+    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         return dataSource().getCourseWithGrade(courseId, forceNetwork)
     }
 
-    suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+    override suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
         return dataSource().getAssignment(isObserver, assignmentId, courseId, forceNetwork)
     }
 
-    suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
+    override suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz {
         return dataSource().getQuiz(courseId, quizId, forceNetwork)
     }
 
-    suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
+    override suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
         return dataSource().getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, forceNetwork)
     }
 
-    suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
+    override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
         return dataSource().getLtiFromAuthenticationUrl(url, forceNetwork)
     }
 
-    fun getRemindersByAssignmentIdLiveData(userId: Long, assignmentId: Long): LiveData<List<ReminderEntity>> {
-        return reminderDao.findByAssignmentIdLiveData(userId, assignmentId)
-    }
-
-    suspend fun deleteReminderById(id: Long) {
-        reminderDao.deleteById(id)
-    }
-
-    suspend fun addReminder(userId: Long, assignment: Assignment, text: String, time: Long) = reminderDao.insert(
-        ReminderEntity(
-            userId = userId,
-            assignmentId = assignment.id,
-            htmlUrl = assignment.htmlUrl.orEmpty(),
-            name = assignment.name.orEmpty(),
-            text = text,
-            time = time
-        )
-    )
+    // Not relevant for student
+    override suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean) = false
 }

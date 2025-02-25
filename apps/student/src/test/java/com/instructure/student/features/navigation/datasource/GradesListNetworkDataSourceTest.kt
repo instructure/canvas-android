@@ -24,13 +24,11 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class NavigationNetworkDataSourceTest {
 
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)

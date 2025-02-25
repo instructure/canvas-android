@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -38,6 +39,7 @@ import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.createupdate.composables.CreateUpdateEventScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
@@ -46,7 +48,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class CreateUpdateEventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CreateUpdateEventViewModel by viewModels()
 
@@ -85,7 +87,19 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
             }
 
             is CreateUpdateEventViewModelAction.NavigateBack -> navigateBack()
+            is CreateUpdateEventViewModelAction.AnnounceEventCreation -> announceEventCreation(action.title)
+            is CreateUpdateEventViewModelAction.AnnounceEventUpdate -> announceEventUpdate(action.title)
         }
+    }
+
+    private fun announceEventCreation(title: String) {
+        val textToAnnounce = getString(R.string.a11y_eventCreatedAnnouncement, title)
+        announceAccessibilityText(requireContext(), textToAnnounce)
+    }
+
+    private fun announceEventUpdate(title: String) {
+        val textToAnnounce = getString(R.string.a11y_eventUpdatedAnnouncement, title)
+        announceAccessibilityText(requireContext(), textToAnnounce)
     }
 
     override val navigation: Navigation?

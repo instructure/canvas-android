@@ -33,13 +33,11 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class FileListNetworkDataSourceTest {
 
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)

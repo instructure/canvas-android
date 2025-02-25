@@ -17,7 +17,9 @@
 package com.instructure.pandautils.features.inbox.list
 
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
@@ -27,9 +29,13 @@ interface InboxRouter {
 
     fun attachNavigationIcon(toolbar: Toolbar)
 
-    fun routeToNewMessage()
+    fun routeToNewMessage(activity: FragmentActivity)
 
     fun routeToCompose(options: InboxComposeOptions)
 
     fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope)
+
+    fun routeToAttachment(attachment: Attachment)
+
+    fun popDetailsScreen(activity: FragmentActivity?)
 }

@@ -44,7 +44,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.Clock
@@ -484,7 +486,7 @@ class CalendarViewModelTest {
 
         // Tap on today
         viewModel.handleAction(CalendarAction.TodayTapped)
-        assertEquals(expectedState, viewModel.uiState.value)
+        assertEquals(expectedState.copy(calendarUiState = expectedState.calendarUiState.copy(todayTapped = true)), viewModel.uiState.value)
     }
 
     @Test
@@ -727,7 +729,7 @@ class CalendarViewModelTest {
             viewModel.events.toList(events)
         }
 
-        val expectedAction = CalendarViewModelAction.OpenDiscussion(Course(1), 1)
+        val expectedAction = CalendarViewModelAction.OpenDiscussion(Course(1), 1, 1)
         assertEquals(expectedAction, events.last())
     }
 
@@ -1208,6 +1210,19 @@ class CalendarViewModelTest {
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2023, 4, 22)))
 
         coVerify { calendarSharedEvents.sendEvent(any(), SharedCalendarAction.TodayButtonVisible(true)) }
+    }
+
+    @Test
+    fun `Set today tapped in UI state when today tapped and set it back to false when handled`() {
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.TodayTapped)
+
+        assertTrue(viewModel.uiState.value.calendarUiState.todayTapped)
+
+        viewModel.handleAction(CalendarAction.TodayTapHandled)
+
+        assertFalse(viewModel.uiState.value.calendarUiState.todayTapped)
     }
 
     private fun initViewModel() {

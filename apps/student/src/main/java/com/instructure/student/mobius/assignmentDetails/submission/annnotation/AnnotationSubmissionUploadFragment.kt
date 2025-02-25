@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
@@ -41,7 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AnnotationSubmissionUploadFragment : Fragment() {
+class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var submissionHelper: SubmissionHelper
@@ -66,11 +66,17 @@ class AnnotationSubmissionUploadFragment : Fragment() {
 
         viewModel.loadAnnotatedPdfUrl(submissionId)
 
-        viewModel.pdfUrl.observe(viewLifecycleOwner, {
+        viewModel.pdfUrl.observe(viewLifecycleOwner) {
             binding.annotationSubmissionViewContainer.addView(
-                PdfStudentSubmissionView(requireActivity(), it, childFragmentManager, studentAnnotationSubmit = true)
+                PdfStudentSubmissionView(
+                    activity = requireActivity(),
+                    pdfUrl = it,
+                    fragmentManager = childFragmentManager,
+                    studentAnnotationSubmit = true,
+                    courseId = canvasContext.id
+                )
             )
-        })
+        }
 
         setUpToolbar(binding.annotationSubmissionToolbar)
 
@@ -96,7 +102,8 @@ class AnnotationSubmissionUploadFragment : Fragment() {
         private const val SUBMISSION_ID = "submission_id"
 
         fun newInstance(route: Route): AnnotationSubmissionUploadFragment {
-            return AnnotationSubmissionUploadFragment().withArgs(route.arguments)
+            return AnnotationSubmissionUploadFragment()
+                .withArgs(route.arguments)
         }
 
         fun makeRoute(

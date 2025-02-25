@@ -16,10 +16,12 @@
  */
 package com.instructure.parentapp.features.alerts.list
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.studentColor
@@ -51,6 +53,8 @@ class AlertsViewModel @Inject constructor(
 
     private var selectedStudent: User? = null
     private var thresholds: Map<Long, AlertThreshold> = emptyMap()
+
+    val lazyListState = LazyListState()
 
     init {
         viewModelScope.launch {
@@ -126,7 +130,14 @@ class AlertsViewModel @Inject constructor(
         when (action) {
             is AlertsAction.Navigate -> {
                 viewModelScope.launch {
-                    _events.send(AlertsViewModelAction.Navigate(action.route))
+                        when (action.alertType) {
+                            AlertType.INSTITUTION_ANNOUNCEMENT -> {
+                                _events.send(AlertsViewModelAction.NavigateToGlobalAnnouncement(action.contextId))
+                            }
+                            else -> {
+                                _events.send(AlertsViewModelAction.NavigateToRoute(action.route))
+                            }
+                        }
                     markAlertRead(action.alertId)
                     alertCountUpdater.updateShouldRefreshAlertCount(true)
                 }
@@ -154,7 +165,8 @@ class AlertsViewModel @Inject constructor(
                 uiState.copy(
                     alerts = uiState.alerts.map { alertItem ->
                         if (alertItem.alertId == alertId) alertItem.copy(unread = false) else alertItem
-                    }
+                    },
+                    addedItemIndex = -1
                 )
             }
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
@@ -169,16 +181,17 @@ class AlertsViewModel @Inject constructor(
             val alerts = _uiState.value.alerts.toMutableList()
             alerts.add(alert)
             alerts.sortByDescending { it.date }
-            _uiState.update { it.copy(alerts = alerts) }
             viewModelScope.launch {
+                _uiState.update { it.copy(alerts = alerts) }
                 alertCountUpdater.updateShouldRefreshAlertCount(true)
+                _uiState.update { it.copy(addedItemIndex = alerts.indexOf(alert)) }
             }
         }
 
         val alerts = _uiState.value.alerts.toMutableList()
         val alert = alerts.find { it.alertId == alertId } ?: return
         alerts.removeIf { it.alertId == alertId }
-        _uiState.update { it.copy(alerts = alerts) }
+        _uiState.update { it.copy(alerts = alerts, addedItemIndex = -1) }
 
         try {
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.DISMISSED)
@@ -205,6 +218,7 @@ class AlertsViewModel @Inject constructor(
     private fun createAlertItem(alert: Alert): AlertsItemUiState {
         return AlertsItemUiState(
             alertId = alert.id,
+            contextId = alert.contextId,
             title = alert.title,
             alertType = alert.alertType,
             date = alert.actionDate,

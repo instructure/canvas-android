@@ -23,6 +23,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ColorKeeper
@@ -33,6 +35,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -61,6 +64,7 @@ class AddStudentViewModelTest {
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
     private val repository: AddStudentRepository = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
 
     @Before
@@ -72,7 +76,7 @@ class AddStudentViewModelTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(Color.BLACK)
         every { selectedStudentHolder.selectedStudentState.value } returns mockk(relaxed = true)
-        viewModel = AddStudentViewModel(selectedStudentHolder, repository, crashlytics)
+        viewModel = AddStudentViewModel(selectedStudentHolder, repository, crashlytics, analytics)
     }
 
     @After
@@ -95,6 +99,8 @@ class AddStudentViewModelTest {
         events.addAll(viewModel.events.replayCache)
 
         assert(events.last() is AddStudentViewModelAction.PairStudentSuccess)
+
+        verify { analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS) }
     }
 
     @Test
@@ -111,6 +117,8 @@ class AddStudentViewModelTest {
         assert(events.size == 0)
 
         assert(viewModel.uiState.value.isError)
+
+        verify { analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_FAILURE) }
     }
 
     @Test

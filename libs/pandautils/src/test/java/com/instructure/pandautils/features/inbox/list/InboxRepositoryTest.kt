@@ -17,10 +17,13 @@ package com.instructure.pandautils.features.inbox.list/*
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -32,55 +35,57 @@ import com.instructure.canvasapi2.utils.Failure
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.*
+import junit.framework.Assert
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class InboxRepositoryTest {
 
     private val inboxApi: InboxApi.InboxInterface = mockk(relaxed = true)
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val groupsApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
+    private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
+    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
-    private val inboxRepository = object : InboxRepository(inboxApi, groupsApi, progressApi) {
+    private val inboxRepository = object : InboxRepository(inboxApi, groupsApi, progressApi, inboxSettingsManager, featuresApi) {
         override suspend fun getCourses(params: RestParams): DataResult<List<Course>> {
             return coursesApi.getFirstPageCourses(params)
         }
     }
 
     @Test
-    fun `Get all conversations for scope if filter is null`() = runBlockingTest {
+    fun `Get all conversations for scope if filter is null`() = runTest {
         inboxRepository.getConversations(InboxApi.Scope.INBOX, true, null)
 
         coVerify { inboxApi.getConversations("", RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)) }
     }
 
     @Test
-    fun `Get filtered conversations for scope if filter is not null`() = runBlockingTest {
+    fun `Get filtered conversations for scope if filter is not null`() = runTest {
         inboxRepository.getConversations(InboxApi.Scope.UNREAD, true, CanvasContext.emptyCourseContext(55))
 
         coVerify { inboxApi.getConversationsFiltered("unread", "course_55", RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)) }
     }
 
     @Test
-    fun `Get next page if next page is not null`() = runBlockingTest {
+    fun `Get next page if next page is not null`() = runTest {
         inboxRepository.getConversations(InboxApi.Scope.STARRED, false, null, "http://nextpage.com")
 
         coVerify { inboxApi.getNextPage("http://nextpage.com", RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)) }
     }
 
     @Test
-    fun `Batch update conversations`() = runBlockingTest {
+    fun `Batch update conversations`() = runTest {
         inboxRepository.batchUpdateConversations(listOf(16L, 55L), "archive")
 
         coVerify { inboxApi.batchUpdateConversations(listOf(16L, 55L), "archive") }
     }
 
     @Test
-    fun `Get contexts return course results and don't request groups if course request is failed`() = runBlockingTest {
+    fun `Get contexts return course results and don't request groups if course request is failed`() = runTest {
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Fail()
 
         val canvasContextsResults = inboxRepository.getCanvasContexts()
@@ -90,7 +95,7 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Get contexts returns only courses if group request is failed`() = runBlockingTest {
+    fun `Get contexts returns only courses if group request is failed`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Fail()
@@ -102,7 +107,7 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Get contexts returns courses and groups if successful`() = runBlockingTest {
+    fun `Get contexts returns courses and groups if successful`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         val groups = listOf(Group(id = 63, courseId = 44, name = "First group"))
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
@@ -117,7 +122,7 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Get contexts returns only valid groups`() = runBlockingTest {
+    fun `Get contexts returns only valid groups`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         val groups = listOf(
             Group(id = 63, courseId = 44, name = "First group"),
@@ -135,7 +140,7 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Poll progress returns on first try`() = runBlockingTest {
+    fun `Poll progress returns on first try`() = runTest {
         val initialProgress = Progress(id = 1, workflowState = "running")
         coEvery { progressApi.getProgress(initialProgress.id.toString(), any()) } returns DataResult.Success(initialProgress.copy(workflowState = "completed"))
 
@@ -147,7 +152,7 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Poll progress returns after multiple tries`() = runBlockingTest {
+    fun `Poll progress returns after multiple tries`() = runTest {
         val initialProgress = Progress(id = 1, workflowState = "running")
         coEvery { progressApi.getProgress(initialProgress.id.toString(), any()) }.returnsMany(
             DataResult.Success(initialProgress.copy(workflowState = "running")),
@@ -163,7 +168,7 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Poll progress returns failed result if call failed`() = runBlockingTest {
+    fun `Poll progress returns failed result if call failed`() = runTest {
         val initialProgress = Progress(id = 1, workflowState = "running")
         coEvery { progressApi.getProgress(initialProgress.id.toString(), any()) } returns DataResult.Fail()
 
@@ -173,7 +178,7 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Poll progress times out after failing to get a completed result`() = runBlockingTest {
+    fun `Poll progress times out after failing to get a completed result`() = runTest {
         val initialProgress = Progress(id = 1, workflowState = "running")
         coEvery { progressApi.getProgress(initialProgress.id.toString(), any()) } returns DataResult.Success(initialProgress.copy(workflowState = "running"))
 
@@ -184,9 +189,21 @@ class InboxRepositoryTest {
     }
 
     @Test
-    fun `Test update conversations`() = runBlockingTest {
+    fun `Test update conversations`() = runTest {
         inboxRepository.updateConversation(16L, Conversation.WorkflowState.ARCHIVED)
 
         coVerify { inboxApi.updateConversation(16L, "archived", any<Boolean>(), any<RestParams>()) }
+    }
+
+    @Test
+    fun `Get signature successfully`() = runTest {
+        val expected = InboxSignatureSettings("signature", true)
+
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns DataResult.Success(expected)
+
+        inboxRepository.getInboxSignature()
+
+        coVerify { featuresApi.getAccountSettingsFeatures(any()) }
+        coVerify { inboxSettingsManager.getInboxSignatureSettings() }
     }
 }

@@ -17,21 +17,49 @@
 
 package com.instructure.student.di.feature
 
-import com.instructure.canvasapi2.apis.*
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsBehaviour
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsColorProvider
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRepository
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRouter
+import com.instructure.student.features.assignments.details.StudentAssignmentDetailsSubmissionHandler
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import com.instructure.student.room.StudentDb
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
 
+@Module
+@InstallIn(FragmentComponent::class)
+class AssignmentDetailsFragmentModule {
+    @Provides
+    fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
+        return StudentAssignmentDetailsRouter()
+    }
+
+    @Provides
+    fun provideAssignmentDetailsBehaviour(router: AssignmentDetailsRouter): AssignmentDetailsBehaviour {
+        return StudentAssignmentDetailsBehaviour(router)
+    }
+}
 @Module
 @InstallIn(ViewModelComponent::class)
 class AssignmentDetailsModule {
@@ -56,13 +84,22 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideCourseBrowserRepository(
+    fun provideAssignmentDetailsRepository(
         networkStateProvider: NetworkStateProvider,
         localDataSource: AssignmentDetailsLocalDataSource,
         networkDataSource: AssignmentDetailsNetworkDataSource,
         featureFlagProvider: FeatureFlagProvider,
-        reminderDao: ReminderDao
     ): AssignmentDetailsRepository {
-        return AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, reminderDao)
+        return StudentAssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+    }
+
+    @Provides
+    fun provideAssignmentDetailsSubmissionHandler(submissionHandler: SubmissionHelper, studentDb: StudentDb): AssignmentDetailsSubmissionHandler {
+        return StudentAssignmentDetailsSubmissionHandler(submissionHandler, studentDb)
+    }
+
+    @Provides
+    fun provideAssignmentDetailsColorProvider(colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
+        return StudentAssignmentDetailsColorProvider(colorKeeper)
     }
 }

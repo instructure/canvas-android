@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.CreateObserverPostBody
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
@@ -64,6 +65,9 @@ object UserAPI {
 
         @GET("accounts/self/terms_of_service")
         fun getTermsOfService(): Call<TermsOfService>
+
+        @GET
+        suspend fun getTermsOfService(@Url url: String): DataResult<TermsOfService>
 
         @GET("accounts/self")
         fun getAccount(): Call<Account>
@@ -116,6 +120,9 @@ object UserAPI {
         @GET("accounts/{accountId}/permissions?permissions[]=become_user")
         fun getBecomeUserPermission(@Path("accountId") accountId: Long): Call<BecomeUserPermission>
 
+        @GET("accounts/self/permissions?permissions[]=become_user")
+        suspend fun getBecomeUserPermission(@Tag restParams: RestParams): DataResult<BecomeUserPermission>
+
         @GET("courses/{courseId}/student_view_student")
         fun getTestUser(@Path("courseId") courseId: Long?): Call<User>
 
@@ -138,6 +145,9 @@ object UserAPI {
 
         @PUT("users/self/dashboard_positions")
         suspend fun updateDashboardPositions(@Body positions: DashboardPositions, @Tag restParams: RestParams): DataResult<DashboardPositions>
+
+        @POST
+        suspend fun createObserverAccount(@Url url: String, @Body data: CreateObserverPostBody): DataResult<User>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {

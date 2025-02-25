@@ -38,7 +38,7 @@ import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.AssertionFailedError
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltAndroidTest

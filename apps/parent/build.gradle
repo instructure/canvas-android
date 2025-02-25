@@ -22,6 +22,8 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'io.heap.gradle'
 }
 
 configurations {
@@ -39,8 +41,8 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode 52
-        versionName "3.12.0"
+        versionCode 56
+        versionName "4.0.0"
 
         buildConfigField "boolean", "IS_TESTING", "false"
         testInstrumentationRunner 'com.instructure.parentapp.ui.espresso.ParentHiltTestRunner'
@@ -96,6 +98,8 @@ android {
                 // you can speed up your build by disabling mapping file uploading.
                 mappingFileUploadEnabled false
             }
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
         }
 
         debugMinify {
@@ -109,7 +113,9 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
         }
     }
 
@@ -134,11 +140,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding true
@@ -148,9 +154,6 @@ android {
     hilt {
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
 
     testOptions.animationsDisabled = true
@@ -212,13 +215,17 @@ dependencies {
     implementation Libs.ANDROIDX_BROWSER
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
-    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.JOURNEY_ZXING_CORE
+
+    implementation Libs.ENCRYPTED_SHARED_PREFERENCES
+
+    implementation Libs.HEAP_CORE
 }

@@ -42,6 +42,10 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
@@ -60,7 +64,6 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.databinding.FragmentPeopleDetailsBinding
 import com.instructure.student.features.people.list.PeopleListFragment
-import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,7 +78,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     @Suppress("unused")
     @PageViewUrlParam(name = "userId")
-    private fun getUserIdForPageView() = userId
+    fun getUserIdForPageView() = userId
 
     @Inject
     lateinit var repository: PeopleDetailsRepository
@@ -86,19 +89,31 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     private var userId by LongArg(key = Const.USER_ID)
 
-    private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     override fun title(): String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.fragment_people_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.compose.backgroundTintList = ColorStateList.valueOf(ThemePrefs.buttonColor)
         binding.compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, ThemePrefs.buttonTextColor))
         binding.compose.setOnClickListener {
             // Messaging other users is not available in Student view
             val route = if (ApiPrefs.isStudentView) NothingToSeeHereFragment.makeRoute() else {
-                InboxComposeMessageFragment.makeRoute(canvasContext, arrayListOf(Recipient.from(user!!)))
+                val options = InboxComposeOptions.buildNewMessage().copy(
+                    defaultValues = InboxComposeOptionsDefaultValues(
+                        contextName = canvasContext.name,
+                        contextCode = canvasContext.contextId,
+                        recipients = listOf(Recipient.from(user!!))
+                    ),
+                    disabledFields = InboxComposeOptionsDisabledFields(
+                        isContextDisabled = true,
+                    )
+                )
+                InboxComposeFragment.makeRoute(options)
             }
 
             RouteMatcher.route(requireActivity(), route)

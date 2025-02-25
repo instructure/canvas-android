@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.features.shareextension.StudentShareExtensionActivity
+import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.document.processor.PdfProcessorTask
 import com.pspdfkit.document.sharing.DefaultDocumentSharingController
 import com.pspdfkit.document.sharing.DocumentSharingIntentHelper
@@ -48,7 +49,9 @@ import com.pspdfkit.ui.toolbar.ContextualToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.io.File
+import java.util.EnumSet
+import java.util.Locale
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PSPDFKIT)
@@ -91,6 +94,24 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
         } else {
             toolbar.menuItems = menuItems as List<ContextualToolbarMenuItem>
         }
+    }
+
+
+    override fun onDestroy() {
+        val path = filesDir.path + intent.data?.path?.replace("/files", "")
+        document?.let {
+            val annotations = it.annotationProvider.getAllAnnotationsOfType(
+                EnumSet.allOf(AnnotationType::class.java)
+            )
+            if (annotations.isEmpty() && networkStateProvider.isOnline()) {
+                val file = File(path)
+                if (file.exists()) {
+                    file.delete()
+                }
+            }
+        }
+
+        super.onDestroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

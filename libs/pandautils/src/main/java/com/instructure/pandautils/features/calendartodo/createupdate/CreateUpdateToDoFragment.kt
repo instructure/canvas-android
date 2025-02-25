@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -34,11 +33,13 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendartodo.createupdate.composables.CreateUpdateToDoScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
@@ -46,14 +47,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class CreateUpdateToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CreateUpdateToDoViewModel by viewModels()
 
     @Inject
     lateinit var sharedEvents: CalendarSharedEvents
 
-    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,7 +79,19 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
             }
 
             is CreateUpdateToDoViewModelAction.NavigateBack -> navigateBack()
+            is CreateUpdateToDoViewModelAction.AnnounceToDoCreation -> announceToDoCreation(action.title)
+            is CreateUpdateToDoViewModelAction.AnnounceToDoUpdate -> announceToDoUpdate(action.title)
         }
+    }
+
+    private fun announceToDoCreation(title: String) {
+        val textToAnnounce = getString(R.string.a11y_toDoCreatedAnnouncement, title)
+        announceAccessibilityText(requireContext(), textToAnnounce)
+    }
+
+    private fun announceToDoUpdate(title: String) {
+        val textToAnnounce = getString(R.string.a11y_toDoUpdatedAnnouncement, title)
+        announceAccessibilityText(requireContext(), textToAnnounce)
     }
 
     override val navigation: Navigation?

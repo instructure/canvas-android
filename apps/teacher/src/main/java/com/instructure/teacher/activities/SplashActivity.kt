@@ -20,16 +20,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -43,13 +42,16 @@ import com.instructure.teacher.databinding.ActivitySplashBinding
 import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
+import dagger.hilt.android.AndroidEntryPoint
+import io.heap.autocapture.ViewAutocaptureSDK
+import io.heap.core.Heap
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 
-@Suppress("EXPERIMENTAL_FEATURE_WARNING")
-class SplashActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class SplashActivity : BaseCanvasActivity() {
 
     private val binding by viewBinding(ActivitySplashBinding::inflate)
 
@@ -214,7 +216,13 @@ class SplashActivity : AppCompatActivity() {
     private suspend fun setupHeapTracking() {
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
-        Heap.setTrackingEnabled(sendUsageMetrics)
+        if (sendUsageMetrics) {
+            Heap.startRecording(applicationContext, BuildConfig.HEAP_APP_ID)
+            ViewAutocaptureSDK.register()
+        } else {
+            Heap.stopRecording()
+            ViewAutocaptureSDK.deregister()
+        }
     }
 
     override fun onStop() {

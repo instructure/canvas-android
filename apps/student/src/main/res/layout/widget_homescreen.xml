@@ -31,7 +31,7 @@
         android:layout_alignParentStart="true"
         android:padding="8dp"
         android:scaleType="centerInside"
-        app:srcCompat="@drawable/ic_canvas_logo_red"
+        app:srcCompat="@drawable/ic_canvas_logo_student"
         android:importantForAccessibility="no"/>
 
     <TextView

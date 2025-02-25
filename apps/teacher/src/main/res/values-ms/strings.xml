@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Batalkan mengedit komen.</string>
     <string name="skip">Langkau</string>
 
+    <string name="collapseGradePanel">Runtuhkan Panel Gred</string>
+    <string name="expandGradePanel">Kembangkan Panel Gred</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Sesuaikan skor %1$s</string>
 
@@ -511,22 +513,7 @@
     <string name="colorPickerDialogMessage">Ini ialah tetapan warna peribadi anda. Hanya anda sahaja akan melihat warna ini untuk kursus ini.</string>
     <string name="colorPickerError">Warna kursus tidak boleh ditetapkan pada masa ini.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Merah jambu</string>
-    <string name="contentDescriptionColorBarbie">Merah jambu terang</string>
-    <string name="contentDescriptionColorBarneyPurple">Lembayung</string>
-    <string name="contentDescriptionColorEggplant">Ungu</string>
-    <string name="contentDescriptionColorUltramarine">Biru Tua</string>
-    <string name="contentDescriptionColorOcean11">Biru</string>
-    <string name="contentDescriptionColorCyan">Sian</string>
-    <string name="contentDescriptionColorAquaMarine">Biru Laut</string>
-    <string name="contentDescriptionColorEmeraldGreen">Hijau Zamrud</string>
-    <string name="contentDescriptionColorFreshCutLawn">Hijau</string>
-    <string name="contentDescriptionColorChartreuse">Hijau Pucuk Pisang</string>
-    <string name="contentDescriptionColorSunFlower">Kuning</string>
-    <string name="contentDescriptionColorTangerine">Oren</string>
-    <string name="contentDescriptionColorBloodOrange">Oren Tua</string>
-    <string name="contentDescriptionColorSriracha">Merah</string>
-    <string name="launch_link_in_external_browser">Lancarkan pautan dalam pelayar luar</string>
+                                                                <string name="launch_link_in_external_browser">Lancarkan pautan dalam pelayar luar</string>
     <string name="contentDescriptionSelectedFile">Fail Dipilih</string>
     <string name="contentDescriptionFileIcon">Ikon Fail</string>
     <string name="contentDescriptionExpandPage">Kembangkan Halaman</string>
@@ -612,6 +599,7 @@
     <string name="discussion_details">Butiran Perbincangan</string>
     <string name="discussions_pinned">Dipinkan</string>
     <string name="discussions_unpinned">Perbincangan</string>
+    <string name="discussions_close">Tutup untuk Komen</string>
     <string name="discussions_closed">Ditutup untuk Komen</string>
     <string name="discussions_open">Buka untuk Komen</string>
     <string name="discussions_pin">Pinkan</string>
@@ -852,6 +840,7 @@
     <string name="errorUpdatingFile">Ralat berlaku semasa mengemas kini fail ini.</string>
     <string name="errorUpdatingFolder">Ralat berlaku semasa mengemas kini folder ini</string>
 
+    <string name="errorEmptyTitle">Tajuk tidak boleh kosong</string>
     <string name="toDoEmpty">Tiada apa-apa lagi untuk dilakukan!\n Nikmati hari anda</string>
     <string name="toDoNoSubmissions">Tiada serahan untuk digredkan untuk tugasan ini.</string>
     <string name="errorToDoRouteFailed">Ralat berlaku semasa cuba melihat Item Untuk Dilakukan</string>

@@ -17,23 +17,34 @@
 
 package com.instructure.parentapp.ui.pages
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvasapi2.models.Course
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.espresso.assertTextColor
 
 
 class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertCourseDetailsDisplayed(course: Course) {
-        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
+        assertCourseNameDisplayed(course)
         composeTestRule.onNodeWithText("GRADES")
             .assertIsDisplayed()
             .assertIsSelected()
         composeTestRule.onNodeWithText("SYLLABUS").assertIsDisplayed()
         composeTestRule.onNodeWithText("SUMMARY").assertIsDisplayed()
+    }
+
+    fun assertCourseNameDisplayed(course: Course) {
+        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
+    }
+
+    fun assertCourseNameDisplayed(course: CourseApiModel) {
+        composeTestRule.onNodeWithText(course.name).assertIsDisplayed()
     }
 
     fun selectTab(tabName: String) {
@@ -42,5 +53,13 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertTabSelected(tabName: String) {
         composeTestRule.onNodeWithText(tabName).assertIsSelected()
+    }
+
+    fun clickAssignment(assignmentName: String) {
+        composeTestRule.onNodeWithText(assignmentName).performClick()
+    }
+
+    fun assertAssignmentLabelTextColor(assignmentName: String, expectedTextColor: Long) {
+        composeTestRule.onNodeWithText(assignmentName).assertTextColor(Color(expectedTextColor))
     }
 }

@@ -26,10 +26,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.CourseManager.getAllFavoriteCourses
 import com.instructure.canvasapi2.managers.InboxManager.createConversation
@@ -45,13 +49,14 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASK_INSTRUCTOR
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.utils.ThemePrefs.brandColor
 import com.instructure.pandautils.utils.ViewStyler.themeEditText
 import com.instructure.student.R
 import com.instructure.student.dialog.FatalErrorDialogStyled.Companion.newInstance
 
 @ScreenView(SCREEN_VIEW_ASK_INSTRUCTOR)
-class AskInstructorDialogStyled : DialogFragment() {
+class AskInstructorDialogStyled : BaseCanvasDialogFragment() {
 
     // Data
     private var courseList: List<Course> = emptyList()
@@ -91,6 +96,9 @@ class AskInstructorDialogStyled : DialogFragment() {
                     Toast.makeText(activity, getString(R.string.emptyMessage), Toast.LENGTH_SHORT).show()
                 }
             }
+            .setNegativeButton(getString(R.string.cancel)) {dialog, _ ->
+                dialog.dismiss()
+            }
 
         val view = LayoutInflater.from(activity).inflate(R.layout.ask_instructor, null)
         courseSpinner = view.findViewById(R.id.courseSpinner)
@@ -104,6 +112,7 @@ class AskInstructorDialogStyled : DialogFragment() {
         val dialog = builder.create()
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(brandColor)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(brandColor)
             themeEditText(requireContext(), (message as AppCompatEditText?)!!, brandColor)
         }
         dialog.setCanceledOnTouchOutside(true)

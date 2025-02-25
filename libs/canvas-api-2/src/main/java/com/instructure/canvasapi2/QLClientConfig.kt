@@ -82,6 +82,7 @@ class QLClientConfig {
 
         /** Default GraphQL endpoint */
         internal const val GRAPHQL_ENDPOINT = "/api/graphql/"
+        internal const val GRAPHQL_PAGE_SIZE = 20
 
         /** Cache configuration */
         private const val CACHE_SIZE = 10L * 1024 * 1024 // 10MB disk cache
@@ -108,8 +109,9 @@ class QLClientConfig {
 /**
  * Calls the specified function [block] with a [QLClientConfig] instance as its receiver and enqueues the provided [Query] request.
  */
-fun <DATA, T : Query<*, DATA, *>> QLCallback<DATA>.enqueueQuery(query: T, block: QLClientConfig.() -> Unit = {} ) {
+fun <DATA, T : Query<*, DATA, *>> QLCallback<DATA>.enqueueQuery(query: T, forceNetwork: Boolean = false, block: QLClientConfig.() -> Unit = {} ) {
     val config = QLClientConfig()
+    if (forceNetwork) config.cachePolicy = HttpCachePolicy.NETWORK_ONLY
     config.block()
     val call = config.buildClient().query(query)
     addCall(call).enqueue(this)

@@ -16,19 +16,14 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
-import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.util.HumanReadables
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import org.hamcrest.Matcher
-import java.lang.System.currentTimeMillis
-import java.lang.Thread.sleep
-import java.util.concurrent.TimeoutException
 
 open class UrlSubmissionUploadPage : BasePage(R.id.urlSubmissionUpload) {
 

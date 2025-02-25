@@ -41,6 +41,7 @@ buildscript {
 }
 
 android {
+    namespace 'com.instructure.canvasapi2'
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -63,6 +64,19 @@ android {
 
     hilt {
         enableAggregatingTask = false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -135,9 +149,6 @@ dependencies {
     implementation Libs.ANDROIDX_APPCOMPAT
     implementation Libs.ANDROIDX_ANNOTATION
 
-    /* Paper No SQl Storage */
-    api Libs.PAPERDB
-
     // Firebase
     implementation platform(Libs.FIREBASE_BOM) {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
@@ -150,7 +161,7 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
 
-    implementation Libs.HEAP
+    implementation Libs.HEAP_CORE
 
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX

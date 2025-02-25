@@ -17,8 +17,9 @@ package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.utils.toDate
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class Plannable(
@@ -58,4 +59,28 @@ data class Plannable(
 
     @SerializedName("all_day")
     val allDay: Boolean?,
-) : Parcelable
+) : Parcelable {
+    val contextType: CanvasContext.Type
+        get() = when {
+            courseId != null -> CanvasContext.Type.COURSE
+            groupId != null -> CanvasContext.Type.GROUP
+            userId != null -> CanvasContext.Type.USER
+            else -> CanvasContext.Type.UNKNOWN
+        }
+    fun toPlannableItem(contextName: String? = null): PlannerItem {
+        return PlannerItem(
+            courseId = courseId,
+            groupId = groupId,
+            userId = userId,
+            contextType = contextType.apiString,
+            contextName = contextName,
+            plannableType = PlannableType.PLANNER_NOTE,
+            plannable = this,
+            plannableDate = todoDate?.toDate() ?: Date(),
+            htmlUrl = null,
+            submissionState = null,
+            newActivity = false,
+            plannerOverride = null
+        )
+    }
+}

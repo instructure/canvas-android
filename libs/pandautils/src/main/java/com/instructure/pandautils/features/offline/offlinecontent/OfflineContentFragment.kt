@@ -31,12 +31,23 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentOfflineContentBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.announceAccessibilityText
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OfflineContentFragment : Fragment(), FragmentInteractions {
+class OfflineContentFragment : BaseCanvasFragment(), FragmentInteractions {
 
     private val viewModel: OfflineContentViewModel by viewModels()
 
@@ -103,6 +114,9 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
                 positive = action.positive,
                 positiveCallback = action.positiveCallback
             )
+            is OfflineContentAction.AnnounceSyncStarted -> {
+                context?.let { announceAccessibilityText(it, getString(R.string.offline_content_a11y_sync_started_announcement)) }
+            }
         }
     }
 

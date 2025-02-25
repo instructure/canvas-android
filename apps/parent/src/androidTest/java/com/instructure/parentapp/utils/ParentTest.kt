@@ -18,9 +18,19 @@
 package com.instructure.parentapp.utils
 
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.AboutPage
+import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
+import com.instructure.canvas.espresso.common.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.LegalPage
+import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
+import com.instructure.canvas.espresso.common.pages.LoginLandingPage
+import com.instructure.canvas.espresso.common.pages.LoginSignInPage
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.HelpPage
+import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
 
 
 abstract class ParentTest : CanvasTest() {
@@ -29,5 +39,17 @@ abstract class ParentTest : CanvasTest() {
 
     override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
 
+    //Regular pages (non-compose)
     val dashboardPage = DashboardPage()
+    val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
+    val helpPage = HelpPage()
+    val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+
+    // Common pages (it's common for all apps)
+    val loginLandingPage = LoginLandingPage()
+    val loginFindSchoolPage = LoginFindSchoolPage()
+    val loginSignInPage = LoginSignInPage()
+    val inboxPage = InboxPage()
+    val legalPage = LegalPage()
+    val aboutPage = AboutPage()
 }

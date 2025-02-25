@@ -20,38 +20,31 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.StudentContextFragment
-import com.instructure.teacher.events.ConversationDeletedEvent
-import com.instructure.teacher.events.ConversationUpdatedEvent
-import com.instructure.teacher.fragments.AddMessageFragment
-import com.instructure.teacher.fragments.MessageThreadFragment
+import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.router.RouteMatcher.openMedia
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class TeacherInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
-        // we send a parcel copy so that we can properly propagate updates through our events
-        if (activity.resources.getBoolean(R.bool.isDeviceTablet)) { // but tablets need reference, since the detail view remains in view
-            val args = MessageThreadFragment.createBundle(conversation, InboxApi.conversationScopeToString(scope))
-            RouteMatcher.route(activity, Route(null, MessageThreadFragment::class.java, null, args))
-        } else { //phones use the parcel copy
-            val args = MessageThreadFragment.createBundle(conversation.parcelCopy(), InboxApi.conversationScopeToString(scope))
-            RouteMatcher.route(activity, Route(null, MessageThreadFragment::class.java, null, args))
-        }
+        val route = InboxDetailsFragment.makeRoute(conversation.id)
+        RouteMatcher.route(activity, route)
     }
 
     override fun attachNavigationIcon(toolbar: Toolbar) {
@@ -63,13 +56,14 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
         }
     }
 
-    override fun routeToNewMessage() {
-        val args = AddMessageFragment.createBundle()
-        RouteMatcher.route(activity, Route(AddMessageFragment::class.java, null, args))
+    override fun routeToNewMessage(activity: FragmentActivity) {
+        val route = InboxComposeFragment.makeRoute(InboxComposeOptions.buildNewMessage())
+        RouteMatcher.route(activity, route)
     }
 
     override fun routeToCompose(options: InboxComposeOptions) {
-        TODO("Not yet implemented")
+        val route = InboxComposeFragment.makeRoute(options)
+        RouteMatcher.route(activity, route)
     }
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {
@@ -88,34 +82,25 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
         }
     }
 
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onConversationUpdated(event: ConversationUpdatedEvent) {
-        event.once(javaClass.simpleName) {
-            if (fragment is InboxFragment) {
-                fragment.conversationUpdated()
-            }
-        }
+    override fun routeToAttachment(attachment: Attachment) {
+        openMedia(activity, attachment.url)
     }
 
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onConversationDeleted(event: ConversationDeletedEvent) {
-        event.once(javaClass.simpleName) {
-            if (fragment is InboxFragment) {
-                fragment.conversationUpdated()
-            }
+    override fun popDetailsScreen(activity: FragmentActivity?) {
+        if (activity == null) return
 
-            //pop current detail fragment if tablet
-            if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
-                val fragmentManager = fragment.parentFragmentManager
-                val currentFrag = fragmentManager.findFragmentById(R.id.detail)
-                if (currentFrag != null) {
-                    val transaction = fragmentManager.beginTransaction()
-                    transaction.remove(currentFrag)
-                    transaction.commit()
-                }
+        if (activity.resources.getBoolean(R.bool.isDeviceTablet).orDefault()) {
+            val fragmentManager = fragment.parentFragmentManager
+            val currentFrag = fragmentManager.findFragmentById(R.id.detail)
+            val newFragment = EmptyFragment.newInstance(RouteMatcher.getClassDisplayName(activity, InboxFragment::class.java))
+            if (currentFrag != null) {
+                val transaction = fragmentManager.beginTransaction()
+                transaction.remove(currentFrag)
+                transaction.add(R.id.detail, newFragment)
+                transaction.commit()
             }
+        } else {
+            activity.onBackPressed()
         }
     }
 }

@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Avbryte redigering av kommentar</string>
     <string name="skip">Hopp over</string>
 
+    <string name="collapseGradePanel">Skjul vurderingspanel</string>
+    <string name="expandGradePanel">Vis vurderingspanel</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Egendefinert vurdering %1$s</string>
 
@@ -511,22 +513,7 @@
     <string name="colorPickerDialogMessage">Dette er din personlige fargeinnstilling. Bare du vil se denne fargen for faget.</string>
     <string name="colorPickerError">Fagfargen kan ikke angis nå.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Varmrosa</string>
-    <string name="contentDescriptionColorBarneyPurple">Fiolett</string>
-    <string name="contentDescriptionColorEggplant">Lilla</string>
-    <string name="contentDescriptionColorUltramarine">Mørkeblå</string>
-    <string name="contentDescriptionColorOcean11">Blå</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua blå</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragdgrønt</string>
-    <string name="contentDescriptionColorFreshCutLawn">Grønn</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Gul</string>
-    <string name="contentDescriptionColorTangerine">Oransje</string>
-    <string name="contentDescriptionColorBloodOrange">Mørk oransje</string>
-    <string name="contentDescriptionColorSriracha">Rød</string>
-    <string name="launch_link_in_external_browser">Starte lenke i ekstern nettleser</string>
+                                                                <string name="launch_link_in_external_browser">Starte lenke i ekstern nettleser</string>
     <string name="contentDescriptionSelectedFile">Valgt fil</string>
     <string name="contentDescriptionFileIcon">Fil-ikon</string>
     <string name="contentDescriptionExpandPage">Utvid siden</string>
@@ -612,6 +599,7 @@
     <string name="discussion_details">Diskusjonsdetaljer</string>
     <string name="discussions_pinned">Festet</string>
     <string name="discussions_unpinned">Diskusjoner</string>
+    <string name="discussions_close">Stengt for kommentarer</string>
     <string name="discussions_closed">Stengt for kommentarer</string>
     <string name="discussions_open">Åpen for kommentarer</string>
     <string name="discussions_pin">Fest</string>
@@ -852,6 +840,7 @@
     <string name="errorUpdatingFile">En feil oppsto under oppdateringen av denne filen</string>
     <string name="errorUpdatingFolder">En feil oppsto under oppdateringen av denne mappen</string>
 
+    <string name="errorEmptyTitle">Tittelen kan ikke være tom</string>
     <string name="toDoEmpty">Ingen flere oppgaver!\n Ha en fin dag.</string>
     <string name="toDoNoSubmissions">Det finnes ingen innleveringer å gi vurderinger til for denne oppgaven.</string>
     <string name="errorToDoRouteFailed">En feil oppsto under visning av dette gjøremålselementet.</string>

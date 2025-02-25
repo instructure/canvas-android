@@ -16,13 +16,32 @@
  */
 package com.instructure.pandautils.features.settings
 
+import androidx.annotation.StringRes
+import com.instructure.pandautils.utils.AppTheme
+
 data class SettingsUiState(
-    val items: Map<Int, List<SettingsItem>> = emptyMap(),
-    val offlineState: Int? = null,
-    val appTheme: Int? = null,
-    val onClick: (SettingsItem) -> Unit
+    val appTheme: Int,
+    val homeroomView: Boolean,
+    val scrollValue: Int = 0,
+    val items: Map<Int, List<SettingsItemUiState>> = emptyMap(),
+    val loading: Boolean = false,
+    val actionHandler: (SettingsAction) -> Unit
+)
+
+data class SettingsItemUiState(
+    val item: SettingsItem,
+    @StringRes val subtitleRes: Int? = null,
 )
 
 sealed class SettingsViewModelAction {
     data class Navigate(val item: SettingsItem) : SettingsViewModelAction()
+    data class AppThemeClickPosition(val xPos: Int, val yPos: Int, val scrollValue: Int) : SettingsViewModelAction()
+}
+
+sealed class SettingsAction {
+    data class SetAppTheme(val appTheme: AppTheme, val xPos: Int, val yPos: Int, val scrollValue: Int) : SettingsAction()
+
+    data class SetHomeroomView(val homeroomView: Boolean) : SettingsAction()
+
+    data class ItemClicked(val settingsItem: SettingsItem) : SettingsAction()
 }

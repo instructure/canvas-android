@@ -17,10 +17,12 @@
 package com.instructure.student.features.inbox.list
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
@@ -32,8 +34,10 @@ class StudentInboxRepository(
     inboxApi: InboxApi.InboxInterface,
     private val coursesApi: CourseAPI.CoursesInterface,
     groupsApi: GroupAPI.GroupInterface,
-    progressApi: ProgressAPI.ProgressInterface
-) : InboxRepository(inboxApi, groupsApi, progressApi) {
+    progressApi: ProgressAPI.ProgressInterface,
+    inboxSettingsManager: InboxSettingsManager,
+    featuresApi: FeaturesAPI.FeaturesInterface
+) : InboxRepository(inboxApi, groupsApi, progressApi, inboxSettingsManager, featuresApi) {
 
     override suspend fun getCourses(params: RestParams): DataResult<List<Course>> {
         val coursesResult = coursesApi.getFirstPageCourses(params)

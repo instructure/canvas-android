@@ -49,8 +49,16 @@
                 android:elevation="6dp"
                 app:popupTheme="@style/ToolBarPopupStyle"
                 app:theme="@style/ToolBarStyle"
-                app:title="@string/inbox"
-                tools:targetApi="lollipop" />
+                tools:targetApi="lollipop">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:text="@string/inbox"
+                    android:accessibilityHeading="true" />
+
+            </androidx.appcompat.widget.Toolbar>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/editToolbar"
@@ -99,6 +107,7 @@
                         android:minWidth="48dp"
                         android:minHeight="48dp"
                         android:onClick="@{() -> viewModel.coursesFilterClicked()}"
+                        app:accessibilityClassName='@{"android.widget.Button"}'
                         app:layout_constrainedWidth="true"
                         app:layout_constraintEnd_toStartOf="@id/scopeFilter"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -140,6 +149,8 @@
                         android:onClick="@{() -> viewModel.openScopeSelector()}"
                         android:orientation="horizontal"
                         android:paddingStart="8dp"
+                        android:contentDescription="@{@string/a11y_mailboxSelectionContentDescription(viewModel.data.scope)}"
+                        app:accessibilityClassName='@{"android.widget.Button"}'
                         app:layout_constraintBottom_toBottomOf="@id/courseFilter"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/courseFilter">
@@ -183,7 +194,7 @@
                     android:id="@+id/inboxRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:importantForAccessibility="no"
+                    android:contentDescription="@string/a11y_inboxRecyclerViewContentDescription"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:loadingState="@{viewModel.state}"
                     app:onBottomReached="@{viewModel.bottomReachedCallback}"

@@ -18,8 +18,12 @@
 package com.instructure.parentapp.features.splash
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.models.BecomeUserPermission
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.Enrollment
@@ -29,7 +33,10 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 
@@ -38,8 +45,9 @@ class SplashRepositoryTest {
     private val themeApi: ThemeAPI.ThemeInterface = mockk(relaxed = true)
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
+    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
-    private val repository = SplashRepository(userApi, themeApi, enrollmentApi)
+    private val repository = SplashRepository(userApi, themeApi, enrollmentApi, featuresApi)
 
     @Test
     fun `Get students successfully returns data`() = runTest {
@@ -49,7 +57,7 @@ class SplashRepositoryTest {
         coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(enrollments)
 
         val result = repository.getStudents()
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -66,7 +74,7 @@ class SplashRepositoryTest {
         coEvery { enrollmentApi.getNextPage("page_2_url", any()) } returns DataResult.Success(enrollments2)
 
         val result = repository.getStudents()
-        Assert.assertEquals(page1 + page2, result)
+        assertEquals(page1 + page2, result)
     }
 
     @Test
@@ -74,7 +82,7 @@ class SplashRepositoryTest {
         coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Fail()
 
         val result = repository.getStudents()
-        Assert.assertTrue(result.isEmpty())
+        assertTrue(result.isEmpty())
     }
 
     @Test
@@ -84,7 +92,7 @@ class SplashRepositoryTest {
         coEvery { userApi.getSelf(any()) } returns DataResult.Success(expected)
 
         val result = repository.getSelf()
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -92,7 +100,7 @@ class SplashRepositoryTest {
         coEvery { userApi.getSelf(any()) } returns DataResult.Fail()
 
         val result = repository.getSelf()
-        Assert.assertNull(result)
+        assertNull(result)
     }
 
     @Test
@@ -102,7 +110,7 @@ class SplashRepositoryTest {
         coEvery { userApi.getColors(any()) } returns DataResult.Success(expected)
 
         val result = repository.getColors()
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -110,7 +118,7 @@ class SplashRepositoryTest {
         coEvery { userApi.getColors(any()) } returns DataResult.Fail()
 
         val result = repository.getColors()
-        Assert.assertNull(result)
+        assertNull(result)
     }
 
     @Test
@@ -120,7 +128,7 @@ class SplashRepositoryTest {
         coEvery { themeApi.getTheme(any()) } returns DataResult.Success(expected)
 
         val result = repository.getTheme()
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -128,6 +136,50 @@ class SplashRepositoryTest {
         coEvery { themeApi.getTheme(any()) } returns DataResult.Fail()
 
         val result = repository.getTheme()
-        Assert.assertNull(result)
+        assertNull(result)
+    }
+
+    @Test
+    fun `GetBecomeUserPermission returns true when call succeeds and returns true`() = runTest {
+        coEvery { userApi.getBecomeUserPermission(any<RestParams>()) } returns DataResult.Success(BecomeUserPermission(true))
+
+        val result = repository.getBecomeUserPermission()
+        assertTrue(result)
+    }
+
+    @Test
+    fun `GetBecomeUserPermission returns false when call fails`() = runTest {
+        coEvery { userApi.getBecomeUserPermission(any<RestParams>()) } returns DataResult.Fail()
+
+        val result = repository.getBecomeUserPermission()
+        assertFalse(result)
+    }
+
+    @Test
+    fun `Get send usage metrics returns false when feature flag is disabled`() = runTest {
+        coEvery { featuresApi.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(
+            mapOf(FeaturesManager.SEND_USAGE_METRICS to false)
+        )
+
+        val result = repository.getSendUsageMetrics()
+        assertFalse(result)
+    }
+
+    @Test
+    fun `Get send usage metrics returns true when feature flag is enabled`() = runTest {
+        coEvery { featuresApi.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(
+            mapOf(FeaturesManager.SEND_USAGE_METRICS to true)
+        )
+
+        val result = repository.getSendUsageMetrics()
+        assertTrue(result)
+    }
+
+    @Test
+    fun `Get send usage metrics returns false when call fails`() = runTest {
+        coEvery { featuresApi.getEnvironmentFeatureFlags(any()) } returns DataResult.Fail()
+
+        val result = repository.getSendUsageMetrics()
+        assertFalse(result)
     }
 }

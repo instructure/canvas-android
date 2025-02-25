@@ -201,6 +201,7 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/options"
+                android:importantForAccessibility="no"
                 android:textAllCaps="true"
                 android:letterSpacing="0.14"
                 android:layout_marginBottom="16dp"/>
@@ -228,7 +229,9 @@
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/navigationDrawerColorOverlaySwitch"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"/>
 
             </LinearLayout>
 
@@ -288,6 +291,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_closeDrawer"
+                style="@style/NavigationDrawerItem"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/ic_close" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigation_drawer_close"
                     android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 

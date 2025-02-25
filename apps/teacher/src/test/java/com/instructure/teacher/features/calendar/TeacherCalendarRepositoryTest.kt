@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -38,14 +39,12 @@ import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class TeacherCalendarRepositoryTest {
 
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
@@ -134,6 +133,76 @@ class TeacherCalendarRepositoryTest {
     }
 
     @Test
+    fun `getPlannerItems filters hidden events`() = runTest {
+        val assignment = ScheduleItem(
+            itemId = "123",
+            title = "assignment",
+            assignment = Assignment(id = 123L, dueAt = LocalDateTime.now().toApiString()),
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            contextCode = "course_1"
+        )
+
+        val assignmentHidden = ScheduleItem(
+            itemId = "124",
+            title = "assignment hidden",
+            assignment = Assignment(id = 124L, dueAt = LocalDateTime.now().toApiString()),
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            contextCode = "course_1",
+            isHidden = true
+        )
+
+        val calendarEvent = ScheduleItem(
+            itemId = "0",
+            title = "calendar event",
+            assignment = null,
+            startAt = LocalDateTime.now().toApiString(),
+            endAt = LocalDateTime.now().toApiString(),
+            itemType = ScheduleItem.Type.TYPE_CALENDAR,
+            contextCode = "course_1"
+        )
+
+        val calendarEventHidden = ScheduleItem(
+            itemId = "1",
+            title = "calendar event hidden",
+            assignment = null,
+            startAt = LocalDateTime.now().toApiString(),
+            endAt = LocalDateTime.now().toApiString(),
+            itemType = ScheduleItem.Type.TYPE_CALENDAR,
+            contextCode = "course_1",
+            isHidden = true
+        )
+
+        coEvery {
+            calendarEventApi.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
+                any(), any(), any(), any()
+            )
+        } returns DataResult.Success(listOf(assignment, assignmentHidden))
+
+        coEvery {
+            calendarEventApi.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.CALENDAR.apiName,
+                any(), any(), any(), any()
+            )
+        } returns DataResult.Success(listOf(calendarEvent, calendarEventHidden))
+
+        coEvery { plannerApi.getPlannerNotes(any(), any(), any(), any()) } returns DataResult.Success(emptyList())
+
+        val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
+
+        assertEquals(2, result.size)
+        val assignmentResult = result.find { it.plannableType == PlannableType.ASSIGNMENT }!!
+        val calendarEventResult = result.find { it.plannableType == PlannableType.CALENDAR_EVENT }!!
+        assertEquals(assignment.assignment?.id, assignmentResult.plannable.id)
+        assertEquals(assignment.title, assignmentResult.plannable.title)
+
+        assertEquals(calendarEvent.itemId, calendarEventResult.plannable.id.toString())
+        assertEquals(calendarEvent.title, calendarEventResult.plannable.title)
+    }
+
+    @Test
     fun `getPlannerItems returns empty list when no canvas contexts are given`() = runTest {
         val assignment = ScheduleItem(
             itemId = "123",
@@ -184,21 +253,12 @@ class TeacherCalendarRepositoryTest {
     }
 
     @Test
-    fun `Return 20 for calendar filter limit when context limit is increased`() = runTest {
-        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(mapOf("calendar_contexts_limit" to true))
+    fun `Return context limit from api when request is success`() = runTest {
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(EnvironmentSettings(calendarContextsLimit = 20))
 
         val result = calendarRepository.getCalendarFilterLimit()
 
         assertEquals(20, result)
-    }
-
-    @Test
-    fun `Return 10 for calendar filter limit when context limit is not increased`() = runTest {
-        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(mapOf("calendar_contexts_limit" to false))
-
-        val result = calendarRepository.getCalendarFilterLimit()
-
-        assertEquals(10, result)
     }
 
     @Test

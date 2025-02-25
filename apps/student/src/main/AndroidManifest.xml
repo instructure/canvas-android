@@ -17,8 +17,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.instructure.student">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
@@ -116,10 +115,6 @@
             android:name=".activity.CandroidPSPDFActivity"
             android:theme="@style/PSPDFKitTheme"
             android:windowSoftInputMode="adjustNothing" />
-
-        <activity
-            android:name=".activity.SettingsActivity"
-            android:theme="@style/CanvasMaterialTheme_Default"/>
 
         <activity android:name=".activity.PandaAvatarActivity"
             android:label="@string/pandaAvatar"
@@ -304,7 +299,7 @@
 
         <!--Reminder-->
         <receiver
-            android:name=".receivers.AlarmReceiver"
+            android:name="com.instructure.pandautils.receivers.alarm.AlarmReceiver"
             android:exported="false" />
 
         <!-- To do widget -->
@@ -369,11 +364,6 @@
         <service
             android:name=".widget.NotificationViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
-
-        <service
-            android:name=".service.StudentPageViewService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <!-- End of Widget Items -->
 

@@ -446,6 +446,8 @@
     <string name="cancel_editing_comment">Cancelar la edición del comentario</string>
     <string name="skip">Saltar</string>
 
+    <string name="collapseGradePanel">Colapsar panel de calificaciones</string>
+    <string name="expandGradePanel">Expandir panel de calificaciones</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Puntaje personalizado %1$s</string>
 
@@ -510,22 +512,7 @@
     <string name="colorPickerDialogMessage">Esta es su configuración de color personal. Solo usted verá este color para el curso.</string>
     <string name="colorPickerError">No se pudo establecer el color del curso en este momento.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosado</string>
-    <string name="contentDescriptionColorBarbie">Rosa intenso</string>
-    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
-    <string name="contentDescriptionColorEggplant">Morado</string>
-    <string name="contentDescriptionColorUltramarine">Azul oscuro</string>
-    <string name="contentDescriptionColorOcean11">Azul</string>
-    <string name="contentDescriptionColorCyan">Turquesa</string>
-    <string name="contentDescriptionColorAquaMarine">Azul agua</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verde esmeralda</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verde</string>
-    <string name="contentDescriptionColorChartreuse">Verde amarillento</string>
-    <string name="contentDescriptionColorSunFlower">Amarillo</string>
-    <string name="contentDescriptionColorTangerine">Anaranjado</string>
-    <string name="contentDescriptionColorBloodOrange">Naranja oscuro</string>
-    <string name="contentDescriptionColorSriracha">Rojo</string>
-    <string name="launch_link_in_external_browser">Iniciar el enlace en un navegador externo</string>
+                                                                <string name="launch_link_in_external_browser">Iniciar el enlace en un navegador externo</string>
     <string name="contentDescriptionSelectedFile">Archivo seleccionado</string>
     <string name="contentDescriptionFileIcon">Icono de archivo</string>
     <string name="contentDescriptionExpandPage">Expandir página</string>
@@ -611,6 +598,7 @@
     <string name="discussion_details">Detalles del foro de discusión</string>
     <string name="discussions_pinned">Anclado</string>
     <string name="discussions_unpinned">Foros de discusión</string>
+    <string name="discussions_close">Deshabilitar comentarios</string>
     <string name="discussions_closed">No admite comentarios</string>
     <string name="discussions_open">Habilitar comentarios</string>
     <string name="discussions_pin">Fijar</string>
@@ -851,6 +839,7 @@
     <string name="errorUpdatingFile">Se produjo un error al actualizar este archivo</string>
     <string name="errorUpdatingFolder">Se produjo un error al actualizar esta carpeta</string>
 
+    <string name="errorEmptyTitle">Este título no puede quedar en blanco</string>
     <string name="toDoEmpty">¡Nada más que hacer!\n Disfrute su día.</string>
     <string name="toDoNoSubmissions">No hay entregas para calificar para esta tarea.</string>
     <string name="errorToDoRouteFailed">Se produjo un error al intentar ver este item por hacer.</string>

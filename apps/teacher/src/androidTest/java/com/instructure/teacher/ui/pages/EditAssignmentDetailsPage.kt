@@ -51,7 +51,8 @@ import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * Represents the Edit Assignment Details page.

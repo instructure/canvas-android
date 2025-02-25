@@ -14,13 +14,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.elementary.course
+package com.instructure.student.features.elementary.course
 
 import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.TabManager
@@ -33,10 +34,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.student.features.elementary.course.ElementaryCourseAction
-import com.instructure.student.features.elementary.course.ElementaryCourseTab
-import com.instructure.student.features.elementary.course.ElementaryCourseViewData
-import com.instructure.student.features.elementary.course.ElementaryCourseViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -46,7 +43,7 @@ import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
@@ -61,13 +58,14 @@ class ElementaryCourseViewModelTest {
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val tabManager: TabManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
+    private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: ElementaryCourseViewModel
 
@@ -89,7 +87,7 @@ class ElementaryCourseViewModelTest {
         }
         setupStrings()
 
-        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager, courseManager)
+        viewModel = ElementaryCourseViewModel(tabManager, resources, apiPrefs, oauthManager, courseManager, firebaseCrashlytics)
 
         mockkObject(ColorKeeper)
         every { ColorKeeper.darkTheme } returns false

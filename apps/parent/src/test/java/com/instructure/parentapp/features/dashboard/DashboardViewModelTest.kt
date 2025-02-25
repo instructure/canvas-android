@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.Placement
 import com.instructure.canvasapi2.models.Placements
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.model.SignedInUser
@@ -43,6 +45,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -82,6 +85,7 @@ class DashboardViewModelTest {
     private val inboxCountUpdater: InboxCountUpdater = TestInboxCountUpdater(inboxCountUpdaterFlow)
     private val alertCountUpdaterFlow = MutableSharedFlow<Boolean>()
     private val alertCountUpdater: AlertCountUpdater = TestAlertCountUpdater(alertCountUpdaterFlow)
+    private val analytics: Analytics = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
@@ -92,6 +96,11 @@ class DashboardViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
+        every { context.getString(R.string.a11y_studentSelectorExpand) } returns "expand"
+        every { context.getString(R.string.a11y_studentSelectorCollapse) } returns "collapse"
+        every { context.getString(R.string.a11y_studentSelectorContentDescription, any(), any()) } answers {
+            "Tap to ${secondArg<Array<Any>>()[0]} student selector, selected student is: ${secondArg<Array<Any>>()[1]}"
+        }
     }
 
     @After
@@ -148,6 +157,24 @@ class DashboardViewModelTest {
         assert(items[1] is StudentItemViewModel)
         assertEquals((expected[1] as StudentItemViewModel).studentItemViewData, (items[1] as StudentItemViewModel).studentItemViewData)
         assert(items[2] is AddStudentItemViewModel)
+    }
+
+    @Test
+    fun `Add student click`() = runTest {
+        coEvery { repository.getStudents(any()) } returns listOf(User(id = 1L))
+
+        createViewModel()
+
+        val events = mutableListOf<DashboardViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        (viewModel.data.value.studentItems.last() as AddStudentItemViewModel).onAddStudentClicked()
+
+        assertEquals(DashboardViewModelAction.AddStudent, events.first())
+        verify { analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD) }
     }
 
     @Test
@@ -212,13 +239,23 @@ class DashboardViewModelTest {
 
     @Test
     fun `Toggle student selector`() {
+        coEvery { repository.getStudents(any()) } returns listOf(User(shortName = "Short Name"))
+
         createViewModel()
 
         viewModel.toggleStudentSelector()
         assertTrue(viewModel.data.value.studentSelectorExpanded)
+        assertEquals(
+            "Tap to collapse student selector, selected student is: Short Name",
+            viewModel.data.value.studentSelectorContentDescription
+        )
 
         viewModel.toggleStudentSelector()
         assertFalse(viewModel.data.value.studentSelectorExpanded)
+        assertEquals(
+            "Tap to expand student selector, selected student is: Short Name",
+            viewModel.data.value.studentSelectorContentDescription
+        )
     }
 
     @Test
@@ -290,8 +327,10 @@ class DashboardViewModelTest {
         val students = listOf(User(id = 1L), User(id = 2L))
         coEvery { repository.getStudents(any()) } returns students
         coEvery { repository.getLaunchDefinitions() } returns listOf(
-            LaunchDefinition("type", 1, "name", null, "domain",
-                Placements(Placement("", "global.url", "")), null)
+            LaunchDefinition(
+                "type", 1, "name", null, "domain",
+                Placements(Placement("", "global.url", "")), null
+            )
         )
 
         createViewModel()
@@ -308,10 +347,14 @@ class DashboardViewModelTest {
         val students = listOf(User(id = 1L), User(id = 2L))
         coEvery { repository.getStudents(any()) } returns students
         coEvery { repository.getLaunchDefinitions() } returns listOf(
-            LaunchDefinition("type", 1, "name", null, "domain",
-                Placements(null), null),
-            LaunchDefinition("type", 1, "name", null, null,
-                Placements(Placement("", "global.url", "")), null)
+            LaunchDefinition(
+                "type", 1, "name", null, "domain",
+                Placements(null), null
+            ),
+            LaunchDefinition(
+                "type", 1, "name", null, null,
+                Placements(Placement("", "global.url", "")), null
+            )
         )
 
         createViewModel()
@@ -324,8 +367,10 @@ class DashboardViewModelTest {
         val students = listOf(User(id = 1L), User(id = 2L))
         coEvery { repository.getStudents(any()) } returns students
         coEvery { repository.getLaunchDefinitions() } returns listOf(
-            LaunchDefinition("type", 1, "name", null, LaunchDefinition.MASTERY_DOMAIN,
-                Placements(Placement("", "global.url", "")), null)
+            LaunchDefinition(
+                "type", 1, "name", null, LaunchDefinition.MASTERY_DOMAIN,
+                Placements(Placement("", "global.url", "")), null
+            )
         )
 
         createViewModel()
@@ -346,8 +391,10 @@ class DashboardViewModelTest {
         val students = listOf(User(id = 1L), User(id = 2L))
         coEvery { repository.getStudents(any()) } returns students
         coEvery { repository.getLaunchDefinitions() } returns listOf(
-            LaunchDefinition("type", 1, "name", null, LaunchDefinition.STUDIO_DOMAIN,
-                Placements(Placement("", "global.url", "")), null)
+            LaunchDefinition(
+                "type", 1, "name", null, LaunchDefinition.STUDIO_DOMAIN,
+                Placements(Placement("", "global.url", "")), null
+            )
         )
 
         createViewModel()
@@ -374,6 +421,7 @@ class DashboardViewModelTest {
             selectedStudentHolder = selectedStudentHolder,
             inboxCountUpdater = inboxCountUpdater,
             alertCountUpdater = alertCountUpdater,
+            analytics = analytics,
             savedStateHandle = savedStateHandle
         )
     }

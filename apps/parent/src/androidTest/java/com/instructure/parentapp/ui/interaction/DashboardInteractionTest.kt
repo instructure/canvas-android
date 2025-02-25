@@ -28,6 +28,7 @@ import com.google.android.apps.common.testing.accessibility.framework.checks.Spe
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.loginapi.login.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
@@ -45,7 +46,7 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         goToDashboard(data)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.assertObserverData(data.parents.first())
     }
 
@@ -56,10 +57,12 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         val students = data.students.sortedBy { it.sortableName }
-        dashboardPage.assertSelectedStudent(students.first().shortName!!)
+        val firstStudent = students.first()
+        dashboardPage.assertSelectedStudent(Pronouns.span(firstStudent.shortName, firstStudent.pronouns).toString())
         dashboardPage.openStudentSelector()
-        dashboardPage.selectStudent(data.students.last().shortName!!)
-        dashboardPage.assertSelectedStudent(students.last().shortName!!)
+        val lastStudent = students.last()
+        dashboardPage.selectStudent(lastStudent.shortName!!)
+        dashboardPage.assertSelectedStudent(Pronouns.span(lastStudent.shortName, lastStudent.pronouns).toString())
     }
 
     @Test
@@ -68,10 +71,10 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         goToDashboard(data)
 
-        dashboardPage.openNavigationDrawer()
-        dashboardPage.tapLogout()
-        dashboardPage.assertLogoutDialog()
-        dashboardPage.tapOk()
+        dashboardPage.openLeftSideMenu()
+        leftSideNavigationDrawerPage.clickLogout()
+        leftSideNavigationDrawerPage.assertLogoutDialog()
+        leftSideNavigationDrawerPage.clickOk()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()
@@ -85,8 +88,8 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         goToDashboard(data)
 
-        dashboardPage.openNavigationDrawer()
-        dashboardPage.tapSwitchUsers()
+        dashboardPage.openLeftSideMenu()
+        leftSideNavigationDrawerPage.clickSwitchUsers()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()
@@ -101,13 +104,13 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         try {
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         } catch (e: Exception) {
             dashboardPage.openStudentSelector()
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         }
 
-        addStudentPage.tapPairingCode()
+        addStudentBottomPage.clickOnPairingCode()
 
         composeTestRule.onNodeWithTag("pairingCodeTextField").assertIsDisplayed()
     }
@@ -119,13 +122,13 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         try {
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         } catch (e: Exception) {
             dashboardPage.openStudentSelector()
-            dashboardPage.tapAddStudent()
+            dashboardPage.clickAddStudent()
         }
 
-        addStudentPage.tapQrCode()
+        addStudentBottomPage.clickOnQRCode()
 
         composeTestRule.onNodeWithText("Open Canvas Student").assertIsDisplayed()
     }

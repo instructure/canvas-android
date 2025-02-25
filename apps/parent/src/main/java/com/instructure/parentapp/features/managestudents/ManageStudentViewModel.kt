@@ -21,6 +21,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
@@ -43,7 +45,8 @@ class ManageStudentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val colorKeeper: ColorKeeper,
     private val repository: ManageStudentsRepository,
-    private val selectedStudentHolder: SelectedStudentHolder
+    private val selectedStudentHolder: SelectedStudentHolder,
+    private val analytics: Analytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ManageStudentsUiState())
@@ -145,6 +148,10 @@ class ManageStudentViewModel @Inject constructor(
                         }
                     )
                 }
+
+                viewModelScope.launch {
+                    _events.send(ManageStudentsViewModelAction.AccessibilityAnnouncement(context.getString(R.string.manageStudentsColorSavedSuccessfully)))
+                }
             } else {
                 showSavingError()
             }
@@ -172,6 +179,10 @@ class ManageStudentViewModel @Inject constructor(
                 )
             )
         }
+
+        viewModelScope.launch {
+            _events.send(ManageStudentsViewModelAction.AccessibilityAnnouncement(context.getString(R.string.errorSavingColor)))
+        }
     }
 
     fun handleAction(action: ManageStudentsAction) {
@@ -185,9 +196,11 @@ class ManageStudentViewModel @Inject constructor(
             is ManageStudentsAction.Refresh -> loadStudents(true)
             is ManageStudentsAction.AddStudent -> {
                 viewModelScope.launch {
+                    analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)
                     _events.send(ManageStudentsViewModelAction.AddStudent)
                 }
             }
+
             is ManageStudentsAction.ShowColorPickerDialog -> _uiState.update {
                 it.copy(
                     colorPickerDialogUiState = it.colorPickerDialogUiState.copy(

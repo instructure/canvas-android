@@ -25,8 +25,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.models.StreamItem.Type.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.models.StreamItem.Type.ANNOUNCEMENT
+import com.instructure.canvasapi2.models.StreamItem.Type.COLLABORATION
+import com.instructure.canvasapi2.models.StreamItem.Type.CONFERENCE
+import com.instructure.canvasapi2.models.StreamItem.Type.CONVERSATION
+import com.instructure.canvasapi2.models.StreamItem.Type.DISCUSSION_MENTION
+import com.instructure.canvasapi2.models.StreamItem.Type.DISCUSSION_TOPIC
+import com.instructure.canvasapi2.models.StreamItem.Type.MESSAGE
+import com.instructure.canvasapi2.models.StreamItem.Type.SUBMISSION
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
@@ -36,14 +48,28 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isCourseOrGroup
+import com.instructure.pandautils.utils.isGroup
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.isUser
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.activity.ParentActivity
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListNotificationBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.router.RouteMatcher
@@ -110,6 +136,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
             = layoutInflater.inflate(R.layout.fragment_list_notification, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         recyclerAdapter?.let {
@@ -239,7 +266,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                     if (conversation.isDeleted) {
                         Toast.makeText(activity, R.string.deleteConversation, Toast.LENGTH_SHORT).show()
                     } else {
-                        RouteMatcher.route(activity, InboxConversationFragment.makeRoute(conversation, null))
+                        RouteMatcher.route(activity, InboxDetailsFragment.makeRoute(conversation.id))
                     }
                 }
                 return
@@ -274,6 +301,13 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 }
                 COLLABORATION -> UnsupportedTabFragment.makeRoute(canvasContext, Tab.COLLABORATIONS_ID)
                 CONFERENCE -> ConferenceListRepositoryFragment.makeRoute(canvasContext)
+                DISCUSSION_MENTION -> {
+                    if (streamItem.htmlUrl.isNotEmpty()) {
+                        RouteMatcher.getInternalRoute(streamItem.htmlUrl, ApiPrefs.domain)
+                    } else {
+                        UnknownItemFragment.makeRoute(canvasContext, streamItem)
+                    }
+                }
                 else -> UnsupportedFeatureFragment.makeRoute(canvasContext, featureName = streamItem.type, url = streamItem.url ?: streamItem.htmlUrl)
             }
 

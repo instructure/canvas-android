@@ -20,6 +20,7 @@ package com.instructure.pandautils.di
 
 import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
 import com.instructure.pandautils.utils.LogoutHelper
@@ -36,7 +37,12 @@ class OfflineDatabaseProviderModule {
 
     @Provides
     @Singleton
-    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context, logoutHelper: LogoutHelper, firebaseCrashlytics: FirebaseCrashlytics): DatabaseProvider {
-        return OfflineDatabaseProvider(context, logoutHelper, firebaseCrashlytics)
+    fun provideOfflineDatabaseProvider(
+        @ApplicationContext context: Context,
+        logoutHelper: LogoutHelper,
+        firebaseCrashlytics: FirebaseCrashlytics,
+        alarmScheduler: AlarmScheduler
+    ): DatabaseProvider {
+        return OfflineDatabaseProvider(context, logoutHelper, firebaseCrashlytics, alarmScheduler)
     }
 }

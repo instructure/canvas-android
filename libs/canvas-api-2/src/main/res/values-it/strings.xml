@@ -77,4 +77,10 @@
     <string name="enrollmentTypeDesigner">Progettista</string>
     <string name="enrollmentTypeUnknown">Sconosciuto</string>
 
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Studenti</string>
+    <string name="enrollmentTypeTeachers">Insegnanti</string>
+    <string name="enrollmentTypeObservers">Osservatori</string>
+    <string name="enrollmentTypeTeachingAssistants">Assistenti</string>
+    <string name="enrollmentTypeDesigners">Progettista</string>
 </resources>

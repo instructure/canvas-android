@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Ändern des Kommentars abbrechen</string>
     <string name="skip">Überspringen</string>
 
+    <string name="collapseGradePanel">Noten-Panel reduzieren</string>
+    <string name="expandGradePanel">Noten-Panel erweitern</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Benutzerdefinierte Punktzahl %1$s</string>
 
@@ -509,22 +511,7 @@
     <string name="colorPickerDialogMessage">Dies ist Ihre persönliche Farbeinstellung. Nur Sie sehen diese Farbe für den Kurs.</string>
     <string name="colorPickerError">Die Kursfarbe konnte jetzt nicht festgelegt werden.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">violett</string>
-    <string name="contentDescriptionColorEggplant">Purpur</string>
-    <string name="contentDescriptionColorUltramarine">Dunkelblau</string>
-    <string name="contentDescriptionColorOcean11">Blau</string>
-    <string name="contentDescriptionColorCyan">Cyan</string>
-    <string name="contentDescriptionColorAquaMarine">Aquamarinblau</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragdgrün</string>
-    <string name="contentDescriptionColorFreshCutLawn">Grün</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Gelb</string>
-    <string name="contentDescriptionColorTangerine">Orange</string>
-    <string name="contentDescriptionColorBloodOrange">Dunkelorange</string>
-    <string name="contentDescriptionColorSriracha">Rot</string>
-    <string name="launch_link_in_external_browser">Link in einem externen Browser öffnen</string>
+                                                                <string name="launch_link_in_external_browser">Link in einem externen Browser öffnen</string>
     <string name="contentDescriptionSelectedFile">Ausgewählte Datei</string>
     <string name="contentDescriptionFileIcon">Dateisymbol</string>
     <string name="contentDescriptionExpandPage">Seite einblenden</string>
@@ -610,6 +597,7 @@
     <string name="discussion_details">Diskussionsdetails</string>
     <string name="discussions_pinned">Angeheftet</string>
     <string name="discussions_unpinned">Diskussionen</string>
+    <string name="discussions_close">Für Kommentare schließen</string>
     <string name="discussions_closed">Für Kommentare geschlossen</string>
     <string name="discussions_open">Für Kommentare öffnen</string>
     <string name="discussions_pin">Anheften</string>
@@ -850,6 +838,7 @@
     <string name="errorUpdatingFile">Fehler bei der Aktualisierung dieser Datei</string>
     <string name="errorUpdatingFolder">Fehler bei der Aktualisierung dieses Ordners</string>
 
+    <string name="errorEmptyTitle">Der Titel darf nicht leer sein</string>
     <string name="toDoEmpty">Nichts weiter zu tun.\n Genießen Sie Ihren Tag!</string>
     <string name="toDoNoSubmissions">Für diese Aufgabe sind keine Abgaben zu benoten.</string>
     <string name="errorToDoRouteFailed">Fehler beim Anzeigen dieser Aufgabe.</string>

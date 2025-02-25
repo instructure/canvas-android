@@ -6,11 +6,9 @@ import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelp
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class DiscussionRouteHelperTeacherRepositoryTest {
     private val networkDataSource: DiscussionRouteHelperNetworkDataSource = mockk(relaxed = true)
 

@@ -19,9 +19,12 @@ package com.instructure.student.di
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
@@ -53,13 +56,22 @@ class InboxModule {
         inboxApi: InboxApi.InboxInterface,
         coursesApi: CourseAPI.CoursesInterface,
         groupsApi: GroupAPI.GroupInterface,
-        progressApi: ProgressAPI.ProgressInterface
+        progressApi: ProgressAPI.ProgressInterface,
+        inboxSettingsManager: InboxSettingsManager,
+        featuresApi: FeaturesAPI.FeaturesInterface
     ): InboxRepository {
-        return StudentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+        return StudentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager, featuresApi)
     }
 
     @Provides
-    fun provideInboxComposeRepository(): InboxComposeRepository {
-        return StudentInboxComposeRepository()
+    fun provideInboxComposeRepository(
+        courseApi: CourseAPI.CoursesInterface,
+        groupsApi: GroupAPI.GroupInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        recipientApi: RecipientAPI.RecipientInterface,
+        inboxApi: InboxApi.InboxInterface,
+        inboxSettingsManager: InboxSettingsManager
+    ): InboxComposeRepository {
+        return StudentInboxComposeRepository(courseApi, groupsApi, featuresApi, recipientApi, inboxApi, inboxSettingsManager)
     }
 }

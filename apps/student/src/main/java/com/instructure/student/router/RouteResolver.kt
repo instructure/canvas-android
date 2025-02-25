@@ -3,23 +3,31 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
+import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
+import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
+import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
+import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
@@ -42,17 +50,10 @@ import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.AssignmentBasicFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.CreateAnnouncementFragment
-import com.instructure.student.fragment.CreateDiscussionFragment
 import com.instructure.student.fragment.DashboardFragment
-import com.instructure.student.fragment.DiscussionsReplyFragment
-import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
-import com.instructure.student.fragment.InboxComposeMessageFragment
-import com.instructure.student.fragment.InboxConversationFragment
-import com.instructure.student.fragment.InboxRecipientsFragment
+import com.instructure.student.fragment.FeatureFlagsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
@@ -73,6 +74,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
+import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 
 object RouteResolver {
@@ -119,16 +121,14 @@ object RouteResolver {
             cls.isA<EditDashboardFragment>() -> EditDashboardFragment.newInstance(route)
             cls.isA<ModuleQuizDecider>() -> ModuleQuizDecider.newInstance(route)
             cls.isA<EditPageDetailsFragment>() -> EditPageDetailsFragment.newInstance(route)
-            cls.isA<InboxConversationFragment>() -> InboxConversationFragment.newInstance(route)
-            cls.isA<InboxRecipientsFragment>() -> InboxRecipientsFragment.newInstance(route)
-            cls.isA<InboxComposeMessageFragment>() -> InboxComposeMessageFragment.newInstance(route)
+            cls.isA<InboxDetailsFragment>() -> InboxDetailsFragment.newInstance(route)
+            cls.isA<InboxComposeFragment>() -> InboxComposeFragment.newInstance(route)
             cls.isA<QuizListFragment>() -> QuizListFragment.newInstance(route)
             cls.isA<BasicQuizViewFragment>() -> BasicQuizViewFragment.newInstance(route)
             cls.isA<AssignmentListFragment>() -> AssignmentListFragment.newInstance(route)
             cls.isA<AssignmentBasicFragment>() -> AssignmentBasicFragment.newInstance(route)
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
             cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
-            cls.isA<CreateAnnouncementFragment>() -> CreateAnnouncementFragment.newInstance(route)
             cls.isA<SyllabusRepositoryFragment>() -> SyllabusRepositoryFragment.newInstance(route)
             cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
@@ -161,9 +161,7 @@ object RouteResolver {
             cls.isA<SubmissionRubricDescriptionFragment>() -> SubmissionRubricDescriptionFragment.newInstance(route)
             cls.isA<DiscussionListFragment>() -> DiscussionListFragment.newInstance(route)
             cls.isA<DiscussionDetailsFragment>() -> DiscussionDetailsFragment.newInstance(route)
-            cls.isA<DiscussionsReplyFragment>() -> DiscussionsReplyFragment.newInstance(route)
-            cls.isA<CreateDiscussionFragment>() -> CreateDiscussionFragment.newInstance(route)
-            cls.isA<DiscussionsUpdateFragment>() -> DiscussionsUpdateFragment.newInstance(route)
+            cls.isA<CreateDiscussionWebViewFragment>() -> CreateDiscussionWebViewFragment.newInstance(route)
             cls.isA<StudioWebViewFragment>() -> StudioWebViewFragment.newInstance(route)
             cls.isA<TextSubmissionUploadFragment>() -> TextSubmissionUploadFragment.newInstance(route)
             cls.isA<UrlSubmissionUploadFragment>() -> UrlSubmissionUploadFragment.newInstance(route)
@@ -178,6 +176,12 @@ object RouteResolver {
             cls.isA<DiscussionRouterFragment>() -> DiscussionRouterFragment.newInstance(route.canvasContext!!, route)
             cls.isA<OfflineContentFragment>() -> OfflineContentFragment.newInstance(route)
             cls.isA<SyncProgressFragment>() -> SyncProgressFragment.newInstance()
+            cls.isA<PairObserverFragment>() -> PairObserverFragment.newInstance()
+            cls.isA<SyncSettingsFragment>() -> SyncSettingsFragment.newInstance()
+            cls.isA<FeatureFlagsFragment>() -> FeatureFlagsFragment()
+            cls.isA<RemoteConfigParamsFragment>() -> RemoteConfigParamsFragment()
+            cls.isA<SmartSearchFragment>() -> SmartSearchFragment.newInstance(route)
+            cls.isA<InboxSignatureFragment>() -> InboxSignatureFragment()
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

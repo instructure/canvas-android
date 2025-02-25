@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Batalkan pengeditan komentar</string>
     <string name="skip">Lewati</string>
 
+    <string name="collapseGradePanel">Tutup Panel Nilai</string>
+    <string name="expandGradePanel">Perbesar Panel Nilai</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Skor khusus %1$s</string>
 
@@ -511,22 +513,7 @@
     <string name="colorPickerDialogMessage">Ini adalah pengaturan warna pribadi Anda. Hanya Anda yang bisa melihat warna ini untuk kursus.</string>
     <string name="colorPickerError">Warna kursus tidak dapat diatur pada saat ini.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Merah Muda</string>
-    <string name="contentDescriptionColorBarbie">Hot Pink</string>
-    <string name="contentDescriptionColorBarneyPurple">Violet</string>
-    <string name="contentDescriptionColorEggplant">Ungu</string>
-    <string name="contentDescriptionColorUltramarine">Biru Gelap</string>
-    <string name="contentDescriptionColorOcean11">Biru</string>
-    <string name="contentDescriptionColorCyan">Sian</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua Blue</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerald Green</string>
-    <string name="contentDescriptionColorFreshCutLawn">Hijau</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Kuning</string>
-    <string name="contentDescriptionColorTangerine">Oranye</string>
-    <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
-    <string name="contentDescriptionColorSriracha">Merah</string>
-    <string name="launch_link_in_external_browser">Jalankan tautan di browser eksternal</string>
+                                                                <string name="launch_link_in_external_browser">Jalankan tautan di browser eksternal</string>
     <string name="contentDescriptionSelectedFile">File yang Dipilih</string>
     <string name="contentDescriptionFileIcon">Ikon File</string>
     <string name="contentDescriptionExpandPage">Perbesar Halaman</string>
@@ -612,6 +599,7 @@
     <string name="discussion_details">Detail Diskusi</string>
     <string name="discussions_pinned">Dipin</string>
     <string name="discussions_unpinned">Diskusi</string>
+    <string name="discussions_close">Tutup untuk Komentar</string>
     <string name="discussions_closed">Ditutup untuk Komentar</string>
     <string name="discussions_open">Buka untuk melihat Komentar</string>
     <string name="discussions_pin">Pin</string>
@@ -852,6 +840,7 @@
     <string name="errorUpdatingFile">Kesalahan terjadi saat memperbarui file ini</string>
     <string name="errorUpdatingFolder">Kesalahan terjadi saat memperbarui folder ini</string>
 
+    <string name="errorEmptyTitle">Judul tidak boleh kosong</string>
     <string name="toDoEmpty">Tidak ada lagi hal yang harus dilakukan!\n Semoga harimu menyenangkan.</string>
     <string name="toDoNoSubmissions">Tidak ada penyerahan untuk dinilai untuk tugas ini.</string>
     <string name="errorToDoRouteFailed">Kesalahan terjadi saat mencoba melihat item To Do ini.</string>

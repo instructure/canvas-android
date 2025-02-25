@@ -20,6 +20,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -30,6 +31,7 @@ static String isTesting() {
 }
 
 android {
+    namespace 'com.instructure.pandautils'
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -74,8 +76,13 @@ android {
         exclude 'LICENSE.txt'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     testOptions {
@@ -97,10 +104,6 @@ android {
     sourceSets {
         debug.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
-    }
 }
 
 tasks.withType(Test) {
@@ -110,6 +113,7 @@ tasks.withType(Test) {
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    androidTestImplementation.exclude module:'protobuf-lite'
 
     all*.resolutionStrategy {
         force Libs.KOTLIN_STD_LIB
@@ -120,7 +124,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     /* Modules */
-    api project(path: ':blueprint')
+    api project(path: ':canvas-api-2')
+    api project(path: ':recyclerview')
     api project(path: ':interactions')
 
     implementation Libs.CAMERA_VIEW
@@ -177,7 +182,7 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_APPCOMPAT
     implementation Libs.ANDROIDX_CARDVIEW
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_EXIF
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
@@ -198,7 +203,7 @@ dependencies {
     implementation Libs.VIEW_MODEL
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODE_SAVED_STATE
-    implementation Libs.FRAGMENT_KTX
+    implementation Libs.ANDROIDX_FRAGMENT_KTX
     kapt Libs.LIFECYCLE_COMPILER
 
     /* ROOM */
@@ -210,6 +215,9 @@ dependencies {
     def composeBom = platform(Libs.COMPOSE_BOM)
     api composeBom
     androidTestApi composeBom
+
+    // Data Store
+    implementation Libs.DATASTORE
 
     api Libs.COMPOSE_BOM
     api Libs.COMPOSE_MATERIAL
@@ -241,4 +249,6 @@ dependencies {
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
     debugImplementation Libs.COMPOSE_UI_TEST_MANIFEST
+
+    implementation Libs.LOTTIE_COMPOSE
 }

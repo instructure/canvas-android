@@ -441,6 +441,8 @@
     <string name="cancel_editing_comment">取消编辑评论</string>
     <string name="skip">略过</string>
 
+    <string name="collapseGradePanel">折叠年级面板</string>
+    <string name="expandGradePanel">展开年级面板</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">自定义分数%1$s</string>
 
@@ -498,22 +500,7 @@
     <string name="colorPickerDialogMessage">这是您的个人颜色设置。只有您自己可以看到此课程颜色。</string>
     <string name="colorPickerError">暂时无法设置课程颜色。</string>
 
-    <string name="contentDescriptionColorCottonCandy">粉红色</string>
-    <string name="contentDescriptionColorBarbie">亮粉色</string>
-    <string name="contentDescriptionColorBarneyPurple">紫色</string>
-    <string name="contentDescriptionColorEggplant">紫色</string>
-    <string name="contentDescriptionColorUltramarine">深蓝色</string>
-    <string name="contentDescriptionColorOcean11">蓝色</string>
-    <string name="contentDescriptionColorCyan">青色</string>
-    <string name="contentDescriptionColorAquaMarine">蓝绿色</string>
-    <string name="contentDescriptionColorEmeraldGreen">翠绿色</string>
-    <string name="contentDescriptionColorFreshCutLawn">绿色</string>
-    <string name="contentDescriptionColorChartreuse">黄绿色</string>
-    <string name="contentDescriptionColorSunFlower">黄色</string>
-    <string name="contentDescriptionColorTangerine">橙色</string>
-    <string name="contentDescriptionColorBloodOrange">深橙色</string>
-    <string name="contentDescriptionColorSriracha">红色</string>
-    <string name="launch_link_in_external_browser">在外部浏览器中打开链接</string>
+                                                                <string name="launch_link_in_external_browser">在外部浏览器中打开链接</string>
     <string name="contentDescriptionSelectedFile">选择的文件</string>
     <string name="contentDescriptionFileIcon">文件图标</string>
     <string name="contentDescriptionExpandPage">扩展页面</string>
@@ -598,6 +585,7 @@
     <string name="discussion_details">讨论详细信息</string>
     <string name="discussions_pinned">已固定</string>
     <string name="discussions_unpinned">讨论</string>
+    <string name="discussions_close">关闭评论</string>
     <string name="discussions_closed">关闭评论</string>
     <string name="discussions_open">开放评论</string>
     <string name="discussions_pin">固定</string>
@@ -838,6 +826,7 @@
     <string name="errorUpdatingFile">更新此文件时出错</string>
     <string name="errorUpdatingFolder">更新此文件夹时出错</string>
 
+    <string name="errorEmptyTitle">标题不能为空</string>
     <string name="toDoEmpty">无需再执行其他操作！\n祝您度过愉快的一天。</string>
     <string name="toDoNoSubmissions">此作业没有要评分的提交项。</string>
     <string name="errorToDoRouteFailed">尝试查看此待办事项时出错。</string>

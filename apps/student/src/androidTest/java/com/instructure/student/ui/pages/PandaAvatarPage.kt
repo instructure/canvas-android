@@ -11,7 +11,6 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
 
 class PandaAvatarPage : BasePage(R.id.panda_create_layout) {
 

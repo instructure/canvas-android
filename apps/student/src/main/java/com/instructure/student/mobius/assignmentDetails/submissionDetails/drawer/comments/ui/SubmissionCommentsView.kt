@@ -27,7 +27,13 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.databinding.DialogCommentFilePickerBinding
@@ -164,7 +170,7 @@ class SubmissionCommentsView(
     }
 
     fun openMedia(canvasContext: CanvasContext, contentType: String, url: String, fileName: String) {
-        (activity as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName)
+        (activity as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName, null)
     }
 
     fun showPermissionDeniedToast() {

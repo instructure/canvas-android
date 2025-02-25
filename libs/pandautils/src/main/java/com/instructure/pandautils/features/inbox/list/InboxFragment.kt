@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.inbox.list
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -40,8 +39,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -55,18 +54,20 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.pandautils.databinding.FragmentInboxBinding
 import com.instructure.pandautils.databinding.ItemInboxEntryBinding
-import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
-import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
+import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
+import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.items
@@ -78,7 +79,6 @@ import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
-import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 private const val ANIM_DURATION = 150L
@@ -86,7 +86,7 @@ private const val ANIM_DURATION = 150L
 @ScreenView(SCREEN_VIEW_INBOX)
 @PageView(url = "conversations")
 @AndroidEntryPoint
-class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: InboxViewModel by viewModels()
 
@@ -94,6 +94,9 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     @Inject
     lateinit var inboxRouter: InboxRouter
+
+    @Inject
+    lateinit var sharedEvents: InboxSharedEvents
 
     private lateinit var binding: FragmentInboxBinding
 
@@ -117,7 +120,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
-        setupFragmentResultListener()
+        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -150,12 +153,12 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         configureItemTouchHelper()
     }
 
-    private fun setupFragmentResultListener() {
-        setFragmentResultListener(InboxComposeFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxComposeFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
-        }
-        setFragmentResultListener(InboxDetailsFragment.FRAGMENT_RESULT_KEY) { key, bundle ->
-            if (key == InboxDetailsFragment.FRAGMENT_RESULT_KEY) { conversationUpdated() }
+    private fun handleSharedViewModelAction(action: InboxSharedAction) {
+        when (action) {
+            is InboxSharedAction.RefreshListScreen -> {
+                viewModel.refresh()
+            }
+            else -> {}
         }
     }
 
@@ -352,7 +355,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             InboxAction.OpenScopeSelector -> openScopeSelector()
             is InboxAction.ItemSelectionChanged -> animateAvatar(action.view, action.selected)
             is InboxAction.ShowConfirmationSnackbar -> showConfirmation(action)
-            InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage()
+            InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage(requireActivity())
             InboxAction.FailedToLoadNextPage -> Snackbar.make(requireView(), R.string.failedToLoadNextPage, Snackbar.LENGTH_LONG).show()
             InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
             is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
@@ -456,16 +459,6 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         onUnreadCountInvalidated?.invalidateUnreadCount()
     }
 
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(inboxRouter)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(inboxRouter)
-    }
-
     // We might need to change this for the teacher implementation
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -473,7 +466,7 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     }
 
     companion object {
-        fun makeRoute() = Route(InboxFragment::class.java, null)
+        fun makeRoute() = Route(primaryClass = InboxFragment::class.java, secondaryClass = null)
 
         fun newInstance(route: Route) = if (validateRoute(route)) InboxFragment().withArgs(route.arguments) else null
 

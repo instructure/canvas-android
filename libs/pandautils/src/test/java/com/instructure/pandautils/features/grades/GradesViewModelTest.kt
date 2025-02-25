@@ -237,7 +237,8 @@ class GradesViewModelTest {
                         ),
                         submission = Submission(
                             submittedAt = Date(),
-                            grade = "A"
+                            grade = "A",
+                            postedAt = Date()
                         )
                     ),
                     Assignment(
@@ -370,7 +371,8 @@ class GradesViewModelTest {
                         ),
                         submission = Submission(
                             submittedAt = Date(),
-                            grade = "A"
+                            grade = "A",
+                            postedAt = Date()
                         )
                     ),
                     Assignment(
@@ -380,7 +382,7 @@ class GradesViewModelTest {
                             SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
                         ),
                         submission = Submission(
-                            submittedAt = Date()
+                            submittedAt = Date(),
                         )
                     )
                 )
@@ -509,7 +511,7 @@ class GradesViewModelTest {
     fun `Refresh reloads grades`() {
         createViewModel()
 
-        viewModel.handleAction(GradesAction.Refresh)
+        viewModel.handleAction(GradesAction.Refresh())
 
         coVerify { gradesRepository.loadCourse(1, true) }
         coVerify { gradesRepository.loadGradingPeriods(1, true) }
@@ -627,7 +629,7 @@ class GradesViewModelTest {
 
         viewModel.handleAction(GradesAction.AssignmentClick(1L))
 
-        val expected = GradesViewModelAction.NavigateToAssignmentDetails(1L)
+        val expected = GradesViewModelAction.NavigateToAssignmentDetails(1L, 1L)
         Assert.assertEquals(expected, events.last())
     }
 
@@ -682,7 +684,7 @@ class GradesViewModelTest {
         )
 
         coEvery { gradesRepository.loadCourse(1, any()) } throws Exception()
-        viewModel.handleAction(GradesAction.Refresh)
+        viewModel.handleAction(GradesAction.Refresh())
 
         val expectedWithSnackbar = loaded.copy(snackbarMessage = "Grade refresh failed")
         Assert.assertEquals(expectedWithSnackbar, viewModel.uiState.value)

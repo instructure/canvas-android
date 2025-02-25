@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.view.*
-import instructure.androidblueprint.ListPresenter
+import com.instructure.pandautils.blueprint.ListPresenter
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus

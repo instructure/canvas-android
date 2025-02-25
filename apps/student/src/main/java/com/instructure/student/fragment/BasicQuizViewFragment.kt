@@ -57,7 +57,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     private var apiURL: String? by NullableStringArg()
     private var quiz: Quiz? by NullableParcelableArg()
     @get:PageViewUrlParam("quizId")
-    private var quizId: Long by LongArg()
+    var quizId: Long by LongArg()
 
     override fun title(): String = getString(R.string.quizzes)
 
@@ -69,6 +69,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Anything that relies on intent data belongs here
+        noConnectionDialogWithNetworkCheck()
         if (apiURL != null) {
             getQuizDetails(apiURL!!)
         } else if (quiz != null && quiz?.lockInfo != null && CanvasContext.Type.isCourse(canvasContext) && !(canvasContext as Course).isTeacher) {

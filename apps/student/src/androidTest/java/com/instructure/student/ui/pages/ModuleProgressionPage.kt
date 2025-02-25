@@ -23,10 +23,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertInvisible
-import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R

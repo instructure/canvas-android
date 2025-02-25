@@ -14,6 +14,8 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.interactions.router.UrlValidator
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
@@ -22,22 +24,26 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.qr.QrPairingFragment
+import com.instructure.parentapp.features.alerts.details.AnnouncementDetailsFragment
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
 import com.instructure.parentapp.features.alerts.settings.AlertSettingsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
-import com.instructure.parentapp.features.lti.LtiLaunchFragment
+import com.instructure.parentapp.features.login.createaccount.CreateAccountFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
 import com.instructure.parentapp.features.splash.SplashFragment
+import com.instructure.parentapp.features.webview.SimpleWebViewFragment
 
 
 class Navigation(apiPrefs: ApiPrefs) {
@@ -45,8 +51,25 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val baseUrl = apiPrefs.fullDomain
 
     private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
+    private val announcementId = "announcement-id"
+    private val courseAnnouncementDetails = "$baseUrl/courses/{$COURSE_ID}/discussion_topics/{$announcementId}"
+    private val globalAnnouncementDetails = "$baseUrl/account_notifications/{$announcementId}"
+    private val assignmentDetails = "$baseUrl/courses/{${Const.COURSE_ID}}/assignments/{${Const.ASSIGNMENT_ID}}"
+    private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
+    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
+    private val calendarEvent = "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
+    private val createEvent = "$baseUrl/create-event/{${CreateUpdateEventFragment.INITIAL_DATE}}"
+    private val updateEvent = "$baseUrl/update-event/{${CreateUpdateEventFragment.SCHEDULE_ITEM}}"
+    private val todo = "$baseUrl/todos/{${ToDoFragment.PLANNER_ITEM}}"
+    private val todoById = "$baseUrl/todos/{${ToDoFragment.PLANNABLE_ID}}"
+    private val createToDo = "$baseUrl/create-todo/{${CreateUpdateToDoFragment.INITIAL_DATE}}"
+    private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
+    private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
+    private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}/{${LtiLaunchFragment.SESSION_LESS_LAUNCH}}"
+    private val simpleWebView = "$baseUrl/internal/{${Const.URL}}/{${Const.TITLE}}/{${INITIAL_COOKIES}}"
+    private val splash = "$baseUrl/splash/{${Const.QR_CODE_MASQUERADE_ID}}"
+    private val createAccount = "$baseUrl/account_creation?pairing_code={${CreateAccountFragment.PAIRING_CODE}}&domain={${CreateAccountFragment.DOMAIN}}&accountId={${CreateAccountFragment.ACCOUNT_ID}}"
 
-    val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
     val courses = "$baseUrl/courses"
     val calendar = "$baseUrl/calendar"
@@ -55,44 +78,35 @@ class Navigation(apiPrefs: ApiPrefs) {
     val manageStudents = "$baseUrl/manage-students"
     val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
+    val inboxSignatureSettings = "$baseUrl/inboxSignatureSettings"
 
-    private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
+    private fun splashRoute(qrCodeMasqueradeId: Long) = "$baseUrl/splash/$qrCodeMasqueradeId"
+    fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
     fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
-
-    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
     fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
-
-    private val calendarEvent =
-        "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
-    private val createEvent = "$baseUrl/create-event/{${CreateUpdateEventFragment.INITIAL_DATE}}"
-    private val updateEvent = "$baseUrl/update-event/{${CreateUpdateEventFragment.SCHEDULE_ITEM}}"
-
-    private val todo = "$baseUrl/todos/{${ToDoFragment.PLANNER_ITEM}}"
-    private val createToDo = "$baseUrl/create-todo/{${CreateUpdateToDoFragment.INITIAL_DATE}}"
-    private val updateToDo = "$baseUrl/update-todo/{${CreateUpdateToDoFragment.PLANNER_ITEM}}"
-    private val alertSettings = "$baseUrl/alert-settings/{${Const.USER}}"
-
-    private val ltiLaunch = "$baseUrl/lti-launch/{${LtiLaunchFragment.LTI_URL}}/{${LtiLaunchFragment.LTI_TITLE}}"
-
+    fun createAccount(domain: String, accountId: String, pairingCode: String) = "$baseUrl/account_creation?pairing_code=$pairingCode&domain=$domain&accountId=$accountId"
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
-
     fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
     fun createEventRoute(initialDate: String?) = "$baseUrl/create-event/${Uri.encode(initialDate.orEmpty())}"
     fun updateEventRoute(scheduleItem: ScheduleItem) = "$baseUrl/update-event/${ScheduleItemParametersType.serializeAsValue(scheduleItem)}"
-
     fun toDoRoute(plannerItem: PlannerItem) = "$baseUrl/todos/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
     fun createToDoRoute(initialDate: String?) = "$baseUrl/create-todo/${Uri.encode(initialDate.orEmpty())}"
     fun updateToDoRoute(plannerItem: PlannerItem) = "$baseUrl/update-todo/${PlannerItemParametersType.serializeAsValue(plannerItem)}"
-
     fun alertSettingsRoute(student: User) = "$baseUrl/alert-settings/${UserParametersType.serializeAsValue(student)}"
+    fun globalAnnouncementRoute(alertId: Long) = "$baseUrl/account_notifications/$alertId"
+    fun ltiLaunchRoute(url: String, title: String, sessionlessLaunch: Boolean) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}/$sessionlessLaunch"
+    fun internalWebViewRoute(url: String, title: String?, initialCookies: Map<String, String>? = null) = "$baseUrl/internal/${Uri.encode(url)}/${Uri.encode(title)}/${Uri.encode(initialCookies?.toJson())}"
 
-    fun ltiLaunchRoute(url: String, title: String) = "$baseUrl/lti-launch/${Uri.encode(url)}/${Uri.encode(title)}"
-
-    fun crateMainNavGraph(navController: NavController): NavGraph {
+    fun crateMainNavGraph(navController: NavController, qrCodeMasqueradeId: Long): NavGraph {
         return navController.createGraph(
-            splash
+            splashRoute(qrCodeMasqueradeId)
         ) {
-            fragment<SplashFragment>(splash)
+            fragment<SplashFragment>(splash) {
+                argument(Const.QR_CODE_MASQUERADE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+            }
             fragment<NotAParentFragment>(notAParent)
             fragment<DashboardFragment>(courses) {
                 deepLink {
@@ -137,6 +151,22 @@ class Navigation(apiPrefs: ApiPrefs) {
                     uriPattern = courseDetails
                 }
             }
+            fragment<AnnouncementDetailsFragment>(courseAnnouncementDetails) {
+                argument(AnnouncementDetailsFragment.COURSE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+            }
+            fragment<AnnouncementDetailsFragment>(globalAnnouncementDetails) {
+                argument(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+            }
             fragment<EventFragment>(calendarEvent) {
                 argument(EventFragment.CONTEXT_TYPE) {
                     type = NavType.StringType
@@ -152,6 +182,15 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
                 deepLink {
                     uriPattern = calendarEvent
+                }
+            }
+            fragment<ToDoFragment>(todoById) {
+                argument(ToDoFragment.PLANNABLE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = todoById
                 }
             }
             fragment<ToDoFragment>(todo) {
@@ -184,6 +223,19 @@ class Navigation(apiPrefs: ApiPrefs) {
                     nullable = false
                 }
             }
+            fragment<AssignmentDetailsFragment>(assignmentDetails) {
+                argument(Const.COURSE_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(Const.ASSIGNMENT_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = assignmentDetails
+                }
+            }
             fragment<AlertSettingsFragment>(alertSettings) {
                 argument(Const.USER) {
                     type = UserParametersType
@@ -199,7 +251,27 @@ class Navigation(apiPrefs: ApiPrefs) {
                     type = NavType.StringType
                     nullable = false
                 }
+                argument(LtiLaunchFragment.SESSION_LESS_LAUNCH) {
+                    type = NavType.BoolType
+                    nullable = false
+                    defaultValue = false
+                }
             }
+            fragment<SimpleWebViewFragment>(simpleWebView) {
+                argument(Const.URL) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(Const.TITLE) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+                argument(INITIAL_COOKIES) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            }
+            fragment<InboxSignatureFragment>(inboxSignatureSettings)
         }
     }
 
@@ -225,6 +297,28 @@ class Navigation(apiPrefs: ApiPrefs) {
         }
     }
 
+    fun createAccountCreationNavGraph(navController: NavController): NavGraph {
+        return navController.createGraph(
+            qrPairing
+        ) {
+            fragment<QrPairingFragment>(qrPairing)
+            fragment<CreateAccountFragment>(createAccount) {
+                argument(CreateAccountFragment.PAIRING_CODE) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(CreateAccountFragment.DOMAIN) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+                argument(CreateAccountFragment.ACCOUNT_ID) {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            }
+        }
+    }
+
     fun navigate(activity: Activity?, route: String) {
         val navController = activity?.findNavController(R.id.nav_host_fragment) ?: return
         try {
@@ -234,8 +328,17 @@ class Navigation(apiPrefs: ApiPrefs) {
         }
     }
 
+    fun canNavigate(activity: Activity?, url: String, navigateIfPossible: Boolean): Boolean {
+        val navController = activity?.findNavController(R.id.nav_host_fragment) ?: return false
+        val validatedUrl = UrlValidator(url, baseUrl).url
+        val canNavigate = navController.graph.findNode(validatedUrl) != null
+        if (navigateIfPossible) navigate(activity, validatedUrl)
+        return canNavigate
+    }
+
     companion object {
         const val COURSE_ID = "course-id"
+        const val INITIAL_COOKIES = "initial-cookies"
     }
 }
 

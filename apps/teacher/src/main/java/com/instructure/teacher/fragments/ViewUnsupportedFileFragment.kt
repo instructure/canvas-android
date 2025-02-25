@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.instructure.annotations.FileCaching.FileCache
@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.isTablet
@@ -61,7 +62,7 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 @ScreenView(SCREEN_VIEW_VIEW_UNSUPPORTED_FILE)
-class ViewUnsupportedFileFragment : Fragment() {
+class ViewUnsupportedFileFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentUnsupportedFileTypeBinding::bind)
 
@@ -129,7 +130,8 @@ class ViewUnsupportedFileFragment : Fragment() {
             }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
         } else if (isTablet && mToolbarColor != 0) {
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
+            val textColor = if (mToolbarColor == ThemePrefs.primaryColor) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.textLightest)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, textColor)
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()

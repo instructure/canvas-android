@@ -22,14 +22,12 @@ import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.toPlannerItems
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
@@ -47,9 +45,7 @@ class ParentCalendarRepository(
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val parentPrefs: ParentPrefs,
     private val calendarFilterDao: CalendarFilterDao
-) : CalendarRepository {
-
-    private var canvasContexts: List<CanvasContext> = emptyList()
+) : CalendarRepository() {
 
     override suspend fun getPlannerItems(
         startDate: String,
@@ -72,7 +68,10 @@ class ParentCalendarRepository(
                     restParams
                 ).depaginate {
                     calendarEventApi.next(it, restParams)
-                }.dataOrThrow.toPlannerItems(PlannableType.CALENDAR_EVENT)
+                }.dataOrThrow
+                    .filterNot { it.isHidden }
+                    .toPlannerItems(PlannableType.CALENDAR_EVENT)
+                    .mapContextName()
             }
 
             val calendarAssignments = async {
@@ -85,7 +84,10 @@ class ParentCalendarRepository(
                     restParams
                 ).depaginate {
                     calendarEventApi.next(it, restParams)
-                }.dataOrThrow.toPlannerItems(PlannableType.ASSIGNMENT)
+                }.dataOrThrow
+                    .filterNot { it.isHidden }
+                    .toPlannerItems(PlannableType.ASSIGNMENT)
+                    .mapContextName()
             }
 
             val plannerNotes = async {
@@ -124,37 +126,10 @@ class ParentCalendarRepository(
     override suspend fun getCalendarFilterLimit(): Int {
         val result = featuresApi.getAccountSettingsFeatures(RestParams())
         return if (result.isSuccess) {
-            val features = result.dataOrThrow
-            val increasedContextLimit = features["calendar_contexts_limit"]
-            if (increasedContextLimit == true) 20 else 10
+            val settings = result.dataOrThrow
+            settings.calendarContextsLimit
         } else {
             10
-        }
-    }
-
-    private fun List<Plannable>.toPlannerItems(): List<PlannerItem> {
-        return mapNotNull { plannable ->
-            val contextType = if (plannable.courseId != null) CanvasContext.Type.COURSE.apiString else CanvasContext.Type.USER.apiString
-            val contextName = if (plannable.courseId != null) canvasContexts.find { it.id == plannable.courseId }?.name else null
-            val plannableDate = plannable.todoDate.toDate()
-            if (plannableDate == null) {
-                null
-            } else {
-                PlannerItem(
-                    courseId = plannable.courseId,
-                    groupId = plannable.groupId,
-                    userId = plannable.userId,
-                    contextType = contextType,
-                    contextName = contextName,
-                    plannableType = PlannableType.PLANNER_NOTE,
-                    plannable = plannable,
-                    plannableDate = plannableDate,
-                    htmlUrl = null,
-                    submissionState = null,
-                    newActivity = false,
-                    plannerOverride = null
-                )
-            }
         }
     }
 

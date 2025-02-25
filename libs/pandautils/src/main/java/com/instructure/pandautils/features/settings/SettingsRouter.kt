@@ -17,12 +17,24 @@ package com.instructure.pandautils.features.settings
 
 interface SettingsRouter {
 
-    fun navigateToProfileSettings()
+    fun navigateToProfileSettings() = Unit
 
-    fun navigateToPushNotificationsSettings()
+    fun navigateToPushNotificationsSettings() = Unit
 
-    fun navigateToEmailNotificationsSettings()
+    fun navigateToEmailNotificationsSettings() = Unit
 
-    fun navigateToPairWithObserver()
+    fun navigateToPairWithObserver() = Unit
+
+    fun navigateToSyncSettings() = Unit
+
+    fun navigateToAccountPreferences() = Unit
+
+    fun navigateToRemoteConfig() = Unit
+
+    fun navigateToFeatureFlags() = Unit
+
+    fun navigateToRateApp() = Unit
+
+    fun navigateToInboxSignature() = Unit
 
 }

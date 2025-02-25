@@ -18,7 +18,12 @@ package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withAlpha
-import com.instructure.espresso.*
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertInvisible
+import com.instructure.espresso.assertVisible
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.withParent

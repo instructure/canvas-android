@@ -32,6 +32,7 @@ static String isTesting() {
 }
 
 android {
+    namespace 'com.instructure.loginapi.login'
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -80,7 +81,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -111,7 +117,7 @@ dependencies {
     /* Support Dependencies */
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_APPCOMPAT
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
@@ -119,7 +125,7 @@ dependencies {
     implementation (Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.JOURNEY_ZXING_CORE
 
-    implementation Libs.FRAGMENT_KTX
+    implementation Libs.ANDROIDX_FRAGMENT_KTX
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
 }

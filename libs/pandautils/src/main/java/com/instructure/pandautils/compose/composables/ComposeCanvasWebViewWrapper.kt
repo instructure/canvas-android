@@ -18,9 +18,13 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.os.bundleOf
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
@@ -36,23 +40,36 @@ fun ComposeCanvasWebViewWrapper(
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null
 ) {
-    AndroidView(
-        factory = {
-            CanvasWebViewWrapper(it).apply {
-                applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
-            }
-        },
-        update = {
-            it.loadHtml(html, title)
+    val webViewState = rememberSaveable { bundleOf() }
 
-            if (onLtiButtonPressed != null) {
-                it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
-            }
+    if (LocalInspectionMode.current) {
+        Text(text = html)
+    } else {
+        AndroidView(
+            factory = {
+                CanvasWebViewWrapper(it).apply {
+                    applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
+                }
+            },
+            update = {
+                if (webViewState.isEmpty) {
+                    it.loadHtml(html, title)
 
-            if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-                it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
-            }
-        },
-        modifier = modifier.fillMaxSize()
-    )
+                    if (onLtiButtonPressed != null) {
+                        it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
+                    }
+
+                    if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
+                        it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
+                    }
+                } else {
+                    it.webView.restoreState(webViewState)
+                }
+            },
+            onRelease = {
+                it.webView.saveState(webViewState)
+            },
+            modifier = modifier.fillMaxSize()
+        )
+    }
 }

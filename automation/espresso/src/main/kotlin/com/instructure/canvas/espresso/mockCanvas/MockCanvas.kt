@@ -309,6 +309,9 @@ class MockCanvas {
 
     val pairingCodes = mutableMapOf<String, User>()
 
+    var inboxSignature = ""
+    var signatureEnabled = true
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -390,6 +393,8 @@ class MockCanvas {
     }
 
     var offlineModeEnabled = false
+
+    var assignmentEnhancementsEnabled = true
 
     companion object {
         /** Whether the mock Canvas data has been initialized for the current test run */
@@ -1097,7 +1102,8 @@ fun MockCanvas.addAssignment(
     unlockAt: String? = null,
     withDescription: Boolean = false,
     gradingType: String = "percent",
-    discussionTopicHeader: DiscussionTopicHeader? = null
+    discussionTopicHeader: DiscussionTopicHeader? = null,
+    htmlUrl: String? = ""
 ) : Assignment {
     val assignmentId = newItemId()
     val submissionTypeListRawStrings = submissionTypeList.map { it.apiString }
@@ -1118,7 +1124,8 @@ fun MockCanvas.addAssignment(
             published = true,
             allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
             gradingType = gradingType,
-            discussionTopicHeader = discussionTopicHeader
+            discussionTopicHeader = discussionTopicHeader,
+            htmlUrl = htmlUrl
     )
 
     if (isQuizzesNext) {

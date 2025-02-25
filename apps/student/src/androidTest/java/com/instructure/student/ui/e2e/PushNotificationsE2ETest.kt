@@ -7,12 +7,12 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.BuildConfig
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class PushNotificationsE2ETest : StudentTest() {
+class PushNotificationsE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -20,7 +20,7 @@ class PushNotificationsE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testPushNotificationsUIE2E() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
@@ -40,7 +40,7 @@ class PushNotificationsE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
         Log.d(STEP_TAG, "Open Push Notifications Page.")
-        settingsPage.openPushNotificationsPage()
+        settingsPage.clickOnSettingsItem("Push Notifications")
 
         Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Push Notifications' on the Push Notifications Page.")
         pushNotificationsPage.assertToolbarTitle()

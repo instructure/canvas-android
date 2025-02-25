@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -43,6 +44,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,8 +55,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,11 +73,13 @@ import com.instructure.pandautils.utils.drawableId
 import java.util.Date
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AlertsScreen(
     uiState: AlertsUiState,
     actionHandler: (AlertsAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = LazyListState()
 ) {
     CanvasTheme {
         Scaffold(
@@ -122,6 +127,7 @@ fun AlertsScreen(
                             AlertsListContent(
                                 uiState = uiState,
                                 actionHandler = actionHandler,
+                                lazyListState = lazyListState,
                                 modifier = Modifier
                                     .padding(padding)
                                     .fillMaxSize()
@@ -148,19 +154,29 @@ fun AlertsScreen(
 fun AlertsListContent(
     uiState: AlertsUiState,
     actionHandler: (AlertsAction) -> Unit,
+    lazyListState: LazyListState,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier
+        state = lazyListState,
+        modifier = modifier.testTag("alertsList")
     ) {
         items(uiState.alerts, key = { it.alertId }) { alert ->
             AlertsListItem(
                 alert = alert,
                 userColor = uiState.studentColor,
                 actionHandler = actionHandler,
-                modifier = Modifier.animateItemPlacement()
+                modifier = Modifier.animateItem()
             )
             Spacer(modifier = Modifier.size(8.dp))
+        }
+    }
+    LaunchedEffect(uiState.addedItemIndex) {
+        if (uiState.addedItemIndex != -1) {
+            val firstVisibleIndex = lazyListState.firstVisibleItemIndex
+            if (uiState.addedItemIndex < firstVisibleIndex && firstVisibleIndex > 0) {
+                lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex - 1)
+            }
         }
     }
 }
@@ -182,18 +198,22 @@ fun AlertsListItem(
                 R.string.assignmentGradeHighAlertTitle,
                 threshold
             )
+
             AlertType.ASSIGNMENT_GRADE_LOW -> context.getString(
                 R.string.assignmentGradeLowAlertTitle,
                 threshold
             )
+
             AlertType.COURSE_GRADE_HIGH -> context.getString(
                 R.string.courseGradeHighAlertTitle,
                 threshold
             )
+
             AlertType.COURSE_GRADE_LOW -> context.getString(
                 R.string.courseGradeLowAlertTitle,
                 threshold
             )
+
             AlertType.COURSE_ANNOUNCEMENT -> context.getString(R.string.courseAnnouncementAlertTitle)
             AlertType.INSTITUTION_ANNOUNCEMENT -> context.getString(R.string.institutionAnnouncementAlertTitle)
         }
@@ -217,23 +237,25 @@ fun AlertsListItem(
         }
     }
 
-    fun dateTime(dateTime: Date): String {
-        val date = DateHelper.getDayMonthDateString(context, dateTime)
-        val time = DateHelper.getFormattedTime(context, dateTime)
-
-        return context.getString(R.string.alertDateTime, date, time)
-    }
-
     Row(modifier = modifier
         .fillMaxWidth()
-        .clickable(enabled = alert.htmlUrl != null) {
-            alert.htmlUrl?.let {
-                actionHandler(AlertsAction.Navigate(alert.alertId, it))
-            }
+        .clickable {
+            actionHandler(
+                AlertsAction.Navigate(
+                    alert.alertId,
+                    alert.contextId,
+                    alert.htmlUrl,
+                    alert.alertType
+                )
+            )
         }
         .padding(8.dp)
-        .testTag("alertItem"),
-        verticalAlignment = Alignment.CenterVertically) {
+        .testTag("alertItem")
+        .semantics {
+            role = Role.Button
+        },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Row(modifier = Modifier.align(Alignment.Top)) {
             if (alert.unread) {
                 Box(
@@ -260,20 +282,24 @@ fun AlertsListItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = alertTitle(alert.alertType, alert.observerAlertThreshold),
-                style = TextStyle(color = Color(alertColor(alert.alertType)), fontSize = 12.sp)
+                color = Color(alertColor(alert.alertType)),
+                fontSize = 12.sp
             )
             Text(
                 modifier = Modifier.padding(vertical = 4.dp),
                 text = alert.title,
-                style = TextStyle(color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 16.sp
             )
             alert.date?.let {
                 Text(
-                    text = dateTime(alert.date),
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 12.sp
-                    )
+                    text = DateHelper.getDateAtTimeString(
+                        LocalContext.current,
+                        com.instructure.pandares.R.string.alertDateTime,
+                        it
+                    ) ?: "",
+                    fontSize = 12.sp,
+                    color = colorResource(id = R.color.textDark)
                 )
             }
         }
@@ -300,6 +326,7 @@ fun AlertsScreenPreview() {
             alerts = listOf(
                 AlertsItemUiState(
                     alertId = 1L,
+                    contextId = 1L,
                     title = "Alert title",
                     alertType = AlertType.COURSE_ANNOUNCEMENT,
                     date = Date(),
@@ -310,6 +337,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 2L,
+                    contextId = 2L,
                     title = "Assignment missing",
                     alertType = AlertType.ASSIGNMENT_MISSING,
                     date = Date(),
@@ -320,6 +348,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 3L,
+                    contextId = 3L,
                     title = "Course grade low",
                     alertType = AlertType.COURSE_GRADE_LOW,
                     date = Date(),
@@ -330,6 +359,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 4L,
+                    contextId = 4L,
                     title = "Course grade high",
                     alertType = AlertType.COURSE_GRADE_HIGH,
                     date = Date(),
@@ -340,6 +370,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 5L,
+                    contextId = 5L,
                     title = "Institution announcement",
                     alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
                     date = Date(),
@@ -350,6 +381,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 6L,
+                    contextId = 6L,
                     title = "Assignment grade low",
                     alertType = AlertType.ASSIGNMENT_GRADE_LOW,
                     date = Date(),
@@ -360,6 +392,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 7L,
+                    contextId = 7L,
                     title = "Assignment grade high",
                     alertType = AlertType.ASSIGNMENT_GRADE_HIGH,
                     date = Date(),
@@ -370,6 +403,7 @@ fun AlertsScreenPreview() {
                 ),
                 AlertsItemUiState(
                     alertId = 8L,
+                    contextId = 8L,
                     title = "Locked alert",
                     alertType = AlertType.COURSE_ANNOUNCEMENT,
                     date = Date(),
@@ -427,6 +461,7 @@ fun AlertsListItemPreview() {
     AlertsListItem(
         alert = AlertsItemUiState(
             alertId = 1L,
+            contextId = 1L,
             title = "Alert title",
             alertType = AlertType.COURSE_ANNOUNCEMENT,
             date = Date(),

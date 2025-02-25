@@ -86,10 +86,8 @@ class StudioSync(
             it.domain == LaunchDefinition.STUDIO_DOMAIN
         } ?: return null
 
-        val studioLti = launchDefinitionsApi.getLtiFromAuthenticationUrl(
-            studioLaunchDefinition.url.orEmpty(),
-            RestParams(isForceReadFromNetwork = true)
-        ).dataOrNull ?: return null
+        val studioUrl = "${apiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=${studioLaunchDefinition.url}"
+        val studioLti = launchDefinitionsApi.getLtiFromAuthenticationUrl(studioUrl, RestParams(isForceReadFromNetwork = true)).dataOrNull ?: return null
 
         return studioLti.url?.let {
             val webView = withTimeoutOrNull(10000) { loadUrlIntoHeadlessWebView(context, it) }

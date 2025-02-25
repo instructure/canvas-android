@@ -41,7 +41,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -66,7 +66,7 @@ class InboxViewModelTest {
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
@@ -97,7 +97,7 @@ class InboxViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
+        
     }
 
     @Test
@@ -913,6 +913,14 @@ class InboxViewModelTest {
             inboxRepository.updateConversation(1, Conversation.WorkflowState.READ, any())
             inboxRepository.updateConversation(1, Conversation.WorkflowState.ARCHIVED, any())
         }
+    }
+
+    @Test
+    fun `Inbox signature is fetched on init`() {
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+
+        coVerify { inboxRepository.getInboxSignature() }
     }
 
     private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)

@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">टिप्पणी संपादित करना रद्द करें</string>
     <string name="skip">छोड़ें</string>
 
+    <string name="collapseGradePanel">ग्रेड पैनल को संक्षिप्त करें</string>
+    <string name="expandGradePanel">ग्रेड पैनल को बढ़ाएं</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">कस्टम अंक %1$s</string>
 
@@ -511,22 +513,7 @@
     <string name="colorPickerDialogMessage">रंगों के लिए यह आपकी व्यक्तिगत सेटिंग है। पाठ्यक्रम के लिए केवल आपको यह रंग दिखाई देगा।</string>
     <string name="colorPickerError">इस समय पाठ्यक्रम का रंग सेट नहीं किया जा सका।</string>
 
-    <string name="contentDescriptionColorCottonCandy">गुलाबी</string>
-    <string name="contentDescriptionColorBarbie">सुर्ख गुलाबी</string>
-    <string name="contentDescriptionColorBarneyPurple">वायलेट</string>
-    <string name="contentDescriptionColorEggplant">बैंगनी</string>
-    <string name="contentDescriptionColorUltramarine">गहरा नीला</string>
-    <string name="contentDescriptionColorOcean11">नीला</string>
-    <string name="contentDescriptionColorCyan">सियान</string>
-    <string name="contentDescriptionColorAquaMarine">एक्वा ब्लू</string>
-    <string name="contentDescriptionColorEmeraldGreen">एमराल्ड ग्रीन</string>
-    <string name="contentDescriptionColorFreshCutLawn">हरा</string>
-    <string name="contentDescriptionColorChartreuse">शार्ट्रूज़ </string>
-    <string name="contentDescriptionColorSunFlower">पीला</string>
-    <string name="contentDescriptionColorTangerine">नारंगी</string>
-    <string name="contentDescriptionColorBloodOrange">गहरा नारंगी</string>
-    <string name="contentDescriptionColorSriracha">लाल</string>
-    <string name="launch_link_in_external_browser">बाहरी ब्राउज़र में लिंक लॉन्च करें</string>
+                                                                <string name="launch_link_in_external_browser">बाहरी ब्राउज़र में लिंक लॉन्च करें</string>
     <string name="contentDescriptionSelectedFile">चयनित फ़ाइल</string>
     <string name="contentDescriptionFileIcon">फ़ाइल आइकन</string>
     <string name="contentDescriptionExpandPage">पेज बढ़ाएं</string>
@@ -612,6 +599,7 @@
     <string name="discussion_details">चर्चा का विवरण</string>
     <string name="discussions_pinned">पिन किया गया</string>
     <string name="discussions_unpinned">चर्चाएं</string>
+    <string name="discussions_close">टिप्पणियों के लिए बंद करें</string>
     <string name="discussions_closed">टिप्पणियों के लिए बंद</string>
     <string name="discussions_open">टिप्पणियों के लिए खोलें</string>
     <string name="discussions_pin">पिन करें</string>
@@ -852,6 +840,7 @@
     <string name="errorUpdatingFile">इस फ़ाइल को अपडेट करने के दौरान त्रुटि उत्पन्न हुई</string>
     <string name="errorUpdatingFolder">इस फ़ोल्डर को अपडेट करने के दौरान त्रुटि उत्पन्न हुई</string>
 
+    <string name="errorEmptyTitle">शीर्षक खाली नहीं हो सकता</string>
     <string name="toDoEmpty">करके के लिए और कुछ नहीं है!\n अपने दिन का आनंद लें।</string>
     <string name="toDoNoSubmissions">इस असाइनमेंट को ग्रेड करने के लिए कोई सबमिशन नहीं है।</string>
     <string name="errorToDoRouteFailed">इस करने के लिए आइटम को देखने की कोशिश करने के दौरान त्रुटि उत्पन्न हुई।</string>

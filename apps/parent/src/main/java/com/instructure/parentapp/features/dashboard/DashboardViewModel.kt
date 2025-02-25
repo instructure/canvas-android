@@ -27,6 +27,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -61,6 +63,7 @@ class DashboardViewModel @Inject constructor(
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
     private val alertCountUpdater: AlertCountUpdater,
+    private val analytics: Analytics,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -174,6 +177,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadStudents(forceNetwork: Boolean) {
+        selectedStudentHolder.updateSelectedStudent(null)
         val students = repository.getStudents(forceNetwork)
         val selectedStudent = if (this.students.isEmpty()) {
             students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
@@ -183,9 +187,7 @@ class DashboardViewModel @Inject constructor(
         this.students = students.toMutableList()
 
         parentPrefs.currentStudent = selectedStudent
-        selectedStudent?.let {
-            selectedStudentHolder.updateSelectedStudent(it)
-        }
+        selectedStudentHolder.updateSelectedStudent(selectedStudent)
 
         val studentItems = students.map { user ->
             StudentItemViewModel(
@@ -210,6 +212,10 @@ class DashboardViewModel @Inject constructor(
 
         _data.update { data ->
             data.copy(
+                studentSelectorContentDescription = getStudentSelectorContentDescription(
+                    data.studentSelectorExpanded,
+                    selectedStudent?.shortName.orEmpty()
+                ),
                 studentItems = studentItemsWithAddStudent,
                 selectedStudent = selectedStudent
             )
@@ -228,6 +234,7 @@ class DashboardViewModel @Inject constructor(
 
     private fun addStudent() {
         viewModelScope.launch {
+            analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD)
             _events.send(DashboardViewModelAction.AddStudent)
         }
     }
@@ -240,6 +247,10 @@ class DashboardViewModel @Inject constructor(
         _data.update {
             it.copy(
                 studentSelectorExpanded = false,
+                studentSelectorContentDescription = getStudentSelectorContentDescription(
+                    false,
+                    student.shortName.orEmpty()
+                ),
                 selectedStudent = student,
                 studentItems = it.studentItems.map { item ->
                     if (item is AddStudentItemViewModel) {
@@ -276,9 +287,29 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    private fun openLtiTool(ltiViewData: LaunchDefinitionViewData?) {
+        ltiViewData?.let {
+            viewModelScope.launch {
+                _events.send(DashboardViewModelAction.OpenLtiTool(it.url, it.name))
+            }
+        }
+    }
+
+    private fun getStudentSelectorContentDescription(expanded: Boolean, selectedStudentName: String) = context.getString(
+        R.string.a11y_studentSelectorContentDescription,
+        context.getString(if (expanded) R.string.a11y_studentSelectorCollapse else R.string.a11y_studentSelectorExpand),
+        selectedStudentName
+    )
+
     fun toggleStudentSelector() {
         _data.update {
-            it.copy(studentSelectorExpanded = !it.studentSelectorExpanded)
+            it.copy(
+                studentSelectorExpanded = !it.studentSelectorExpanded,
+                studentSelectorContentDescription = getStudentSelectorContentDescription(
+                    !it.studentSelectorExpanded,
+                    it.selectedStudent?.shortName.orEmpty()
+                )
+            )
         }
     }
 
@@ -296,13 +327,5 @@ class DashboardViewModel @Inject constructor(
     fun openStudio() {
         val studioLaunchDefinition = _data.value.launchDefinitionViewData.find { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         openLtiTool(studioLaunchDefinition)
-    }
-
-    private fun openLtiTool(ltiViewData: LaunchDefinitionViewData?) {
-        ltiViewData?.let {
-            viewModelScope.launch {
-                _events.send(DashboardViewModelAction.OpenLtiTool(it.url, it.name))
-            }
-        }
     }
 }

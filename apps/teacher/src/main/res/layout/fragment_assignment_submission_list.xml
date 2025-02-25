@@ -13,118 +13,125 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<layout>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/assignmentSubmissionListToolbar"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:elevation="6dp"
-        app:popupTheme="@style/ToolBarPopupStyle"
-        app:theme="@style/ToolBarStyle"
-        tools:ignore="UnusedAttribute" />
+        android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/filterTitleWrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/assignmentSubmissionListToolbar"
-        android:paddingStart="16dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="12dp">
-
-        <TextView
-            android:id="@+id/filterTitle"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/clearFilterTextView"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/all_submissions"
-            android:textSize="20sp"
-            tools:text="All Submissions" />
-
-        <TextView
-            android:id="@+id/anonGradingStatusView"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/filterTitle"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/clearFilterTextView"
-            android:textColor="@color/textDark"
-            android:textSize="12sp"
-            tools:text="Anonymous Grading, Grades Muted" />
-
-        <TextView
-            android:id="@+id/clearFilterTextView"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/filterTitle"
-            android:layout_alignParentEnd="true"
-            android:background="?android:selectableItemBackground"
-            android:clickable="true"
-            android:gravity="center"
-            android:minHeight="48dp"
-            android:padding="4dp"
-            android:text="@string/clear_filter"
-            android:textColor="@color/textInfo"
-            android:visibility="gone"
-            tools:text="Clear filter"
-            tools:visibility="visible" />
-
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/filterTitleWrapper"
-        android:background="@color/backgroundMedium"
-        android:importantForAccessibility="no"
-        android:visibility="gone" />
-
-    <com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
-        android:orientation="vertical">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/submissionsRecyclerView"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/assignmentSubmissionListToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:cacheColorHint="@android:color/transparent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:accessibilityHeading="true"
+            android:elevation="6dp"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ToolBarPopupStyle"
+            app:theme="@style/ToolBarStyle"
+            tools:ignore="UnusedAttribute" />
 
-    </com.instructure.pandautils.views.SwipeRefreshLayoutAppBar>
+        <RelativeLayout
+            android:id="@+id/filterTitleWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/assignmentSubmissionListToolbar"
+            android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="12dp">
 
-    <com.instructure.pandautils.views.EmptyView
-        android:id="@+id/emptyPandaView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/filterTitle"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/clearFilterTextView"
+                android:accessibilityHeading="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/all_submissions"
+                android:textSize="20sp"
+                tools:text="All Submissions" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/sendMessage"
-        android:tint="@color/white"
-        app:elevation="4dp"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/ic_mail_solid" />
+            <TextView
+                android:id="@+id/anonGradingStatusView"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/filterTitle"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/clearFilterTextView"
+                android:textColor="@color/textDark"
+                android:textSize="12sp"
+                tools:text="Anonymous Grading, Grades Muted" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/clearFilterTextView"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/filterTitle"
+                android:layout_alignParentEnd="true"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="4dp"
+                android:text="@string/clear_filter"
+                android:textColor="@color/textInfo"
+                android:visibility="gone"
+                app:accessibilityClassName='@{"android.widget.Button"}'
+                tools:text="Clear filter"
+                tools:visibility="visible" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/filterTitleWrapper"
+            android:background="@color/backgroundMedium"
+            android:importantForAccessibility="no"
+            android:visibility="gone" />
+
+        <com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/submissionsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@android:color/transparent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        </com.instructure.pandautils.views.SwipeRefreshLayoutAppBar>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyPandaView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/divider"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/sendMessage"
+            android:tint="@color/white"
+            app:elevation="4dp"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_mail_solid" />
+
+    </RelativeLayout>
+</layout>

@@ -94,14 +94,25 @@ data class StreamItem(
         @SerializedName("user_id")
         val userId: Long = -1,
         val user: User = User(),
-        val excused: Boolean = false
+        val excused: Boolean = false,
+        @SerializedName("latest_messages")
+        val latestMessages: List<Message> = ArrayList(),
 ) : CanvasModel<StreamItem>() {
     // We want opposite of natural sorting order of date since we want the newest one to come first
     override val comparisonDate get() = updatedDate
 
     val gradedDate get() = graded_at.toDate()
     val submittedDate get() = submittedAt.toDate()
-    val updatedDate get() = updatedAt.toDate()
+    val updatedDate: Date?
+        get() {
+            if (getStreamItemType() == Type.CONVERSATION && latestMessages.isNotEmpty()) {
+                return latestMessages
+                    .filter { it.createdAt.toDate() != null }
+                    .maxBy { it.createdAt.toDate()!! }
+                    .createdAt.toDate()
+            }
+            return updatedAt.toDate()
+        }
 
     // Helper fields
     @IgnoredOnParcel
@@ -155,7 +166,7 @@ data class StreamItem(
         } else discussion_topic_id
 
     enum class Type {
-        DISCUSSION_TOPIC, SUBMISSION, ANNOUNCEMENT, CONVERSATION, MESSAGE, CONFERENCE, COLLABORATION, COLLECTION_ITEM, UNKNOWN, NOT_SET;
+        DISCUSSION_TOPIC, SUBMISSION, ANNOUNCEMENT, CONVERSATION, MESSAGE, CONFERENCE, COLLABORATION, COLLECTION_ITEM, UNKNOWN, NOT_SET, DISCUSSION_MENTION, DISCUSSION_ENTRY;
 
 
         companion object {
@@ -186,18 +197,20 @@ data class StreamItem(
         return message
     }
 
-    fun getStreamItemType(): Type? = typeFromString(type)
+    fun getStreamItemType(): Type = typeFromString(type)
 
     private fun typeFromString(type: String): Type = when {
         type.lowercase(Locale.getDefault()) == "conversation" -> Type.CONVERSATION
         type.lowercase(Locale.getDefault()) == "submission" -> Type.SUBMISSION
         type.lowercase(Locale.getDefault()) == "discussiontopic" -> Type.DISCUSSION_TOPIC
         type.lowercase(Locale.getDefault()) == "announcement" -> Type.ANNOUNCEMENT
+        type.lowercase(Locale.getDefault()) == "message" && notificationCategory.lowercase() == "discussionmention" -> Type.DISCUSSION_MENTION
         type.lowercase(Locale.getDefault()) == "message" -> Type.MESSAGE
         type.lowercase(Locale.getDefault()) == "conference" -> Type.CONFERENCE
         type.lowercase(Locale.getDefault()) == "webconference" -> Type.CONFERENCE
         type.lowercase(Locale.getDefault()) == "collaboration" -> Type.COLLABORATION
         type.lowercase(Locale.getDefault()) == "collectionitem" -> Type.COLLECTION_ITEM
+        type.lowercase(Locale.getDefault()) == "discussionentry" -> Type.DISCUSSION_ENTRY
         else -> Type.UNKNOWN
     }
 

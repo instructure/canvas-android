@@ -1,5 +1,6 @@
 package com.instructure.canvasapi2.di
 
+import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
@@ -23,6 +24,7 @@ import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.apis.SmartSearchApi
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.TabAPI
@@ -54,6 +56,7 @@ import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -163,6 +166,11 @@ class ApiModule {
     @Provides
     fun provideAccountNotificationManager(): AccountNotificationManager {
         return AccountNotificationManager
+    }
+
+    @Provides
+    fun provideAccountNotificationApi(): AccountNotificationAPI.AccountNotificationInterface {
+        return RestBuilder().build(AccountNotificationAPI.AccountNotificationInterface::class.java, RestParams())
     }
 
     @Provides
@@ -334,5 +342,15 @@ class ApiModule {
     @Provides
     fun provideStudioApi(): StudioApi {
         return RestBuilder().build(StudioApi::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideSmartSearchApi(): SmartSearchApi {
+        return RestBuilder().build(SmartSearchApi::class.java, RestParams())
+    }
+
+    @Provides
+    fun providePandataApi(): PandataApi.PandataInterface {
+        return RestBuilder().build(PandataApi.PandataInterface::class.java, RestParams())
     }
 }

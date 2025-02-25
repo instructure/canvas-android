@@ -22,10 +22,10 @@ import com.instructure.canvasapi2.managers.RecipientManager
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.teacher.viewinterface.ChooseRecipientsView
-import instructure.androidblueprint.SyncPresenter
 import retrofit2.Response
-import java.util.*
+import java.util.Stack
 
 
 class ChooseRecipientsPresenter(rootContextId: String) : SyncPresenter<Recipient, ChooseRecipientsView>(Recipient::class.java) {

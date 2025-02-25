@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.Searchable
@@ -25,11 +26,15 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
+import org.hamcrest.Matchers.allOf
 
 /**
  * Represents the Quiz List Page.
@@ -83,6 +88,24 @@ class QuizListPage(val searchable: Searchable) : BasePage() {
     }
 
     /**
+     * Asserts the presence of a quiz on the page.
+     *
+     * @param quizTitle The quiz title to check.
+     */
+    fun assertHasQuiz(quizTitle: String) {
+        waitForView(withId(R.id.quizTitle) + withText(quizTitle)).assertDisplayed()
+    }
+
+    /**
+     * Asserts the non-existence of a quiz on the page.
+     *
+     * @param quizTitle The quiz title to check.
+     */
+    fun assertQuizNotDisplayed(quizTitle: String) {
+        onView(allOf(withText(quizTitle) + withId(R.id.quizTitle))).check(DoesNotExistAssertion(5))
+    }
+
+    /**
      * Clicks on a quiz.
      *
      * @param quiz The quiz object representing the quiz to be clicked.
@@ -106,7 +129,7 @@ class QuizListPage(val searchable: Searchable) : BasePage() {
      * @param count The expected count of quizzes.
      */
     fun assertQuizCount(count: Int) {
-        quizRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+        quizRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count + 1)) // +1 needed because we don't want to count the 'Assignment Quizzes' group label.
     }
 
     /**

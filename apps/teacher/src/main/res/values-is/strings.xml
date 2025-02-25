@@ -446,6 +446,8 @@
     <string name="cancel_editing_comment">Hætta við að breyta athugasemd</string>
     <string name="skip">Sleppa</string>
 
+    <string name="collapseGradePanel">Fella saman einkunnaborð</string>
+    <string name="expandGradePanel">Stækka einkunnaborð</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Sérsniðin einkunn %1$s</string>
 
@@ -510,22 +512,7 @@
     <string name="colorPickerDialogMessage">Þetta er persónuleg litastilling þín. Aðeins þú sérð þessa litastillingu fyrir námskeiðið.</string>
     <string name="colorPickerError">Ekki var hægt að stilla lit námskeiðs í augnablikinu.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Bleikt</string>
-    <string name="contentDescriptionColorBarbie">Skærbleikur</string>
-    <string name="contentDescriptionColorBarneyPurple">Blárauður</string>
-    <string name="contentDescriptionColorEggplant">Fjólublár</string>
-    <string name="contentDescriptionColorUltramarine">Dökkblár</string>
-    <string name="contentDescriptionColorOcean11">Blár</string>
-    <string name="contentDescriptionColorCyan">Blágrænn</string>
-    <string name="contentDescriptionColorAquaMarine">Vatnsblár</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragðsgrænn</string>
-    <string name="contentDescriptionColorFreshCutLawn">Grænn</string>
-    <string name="contentDescriptionColorChartreuse">Ljós gulgrænn</string>
-    <string name="contentDescriptionColorSunFlower">Gulur</string>
-    <string name="contentDescriptionColorTangerine">Appelsínugulur</string>
-    <string name="contentDescriptionColorBloodOrange">Dökk appelsínugulur</string>
-    <string name="contentDescriptionColorSriracha">Rauður</string>
-    <string name="launch_link_in_external_browser">Opna tengil í ytri vafra</string>
+                                                                <string name="launch_link_in_external_browser">Opna tengil í ytri vafra</string>
     <string name="contentDescriptionSelectedFile">Valin skrá</string>
     <string name="contentDescriptionFileIcon">Skráartákn</string>
     <string name="contentDescriptionExpandPage">Útvíkka síðu</string>
@@ -611,6 +598,7 @@
     <string name="discussion_details">Upplýsingar umræðu</string>
     <string name="discussions_pinned">Festar</string>
     <string name="discussions_unpinned">Umræður</string>
+    <string name="discussions_close">Loka fyrir athugasemdir</string>
     <string name="discussions_closed">Lokað fyrir athugasemdir</string>
     <string name="discussions_open">Opið fyrir athugasemdir</string>
     <string name="discussions_pin">Festa</string>
@@ -851,6 +839,7 @@
     <string name="errorUpdatingFile">Villa kom upp við uppfærslu skráarinnar</string>
     <string name="errorUpdatingFolder">Villa kom upp við uppfærslu möppunnar</string>
 
+    <string name="errorEmptyTitle">Titill getur ekki verið auður</string>
     <string name="toDoEmpty">Ekkert annað á dagskrá!\n Njóttu dagsins.</string>
     <string name="toDoNoSubmissions">Þetta verkefni er ekki með nein skil sem bíða mats.</string>
     <string name="errorToDoRouteFailed">Villa kom upp við að skoða þetta verkefni á verkefnalista.</string>

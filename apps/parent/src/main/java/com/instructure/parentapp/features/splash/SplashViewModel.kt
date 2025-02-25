@@ -18,6 +18,7 @@
 package com.instructure.parentapp.features.splash
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
@@ -25,9 +26,12 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.Const
+import com.instructure.parentapp.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.heap.autocapture.ViewAutocaptureSDK
+import io.heap.core.Heap
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -39,11 +43,16 @@ class SplashViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: SplashRepository,
     private val apiPrefs: ApiPrefs,
-    private val colorKeeper: ColorKeeper
+    private val colorKeeper: ColorKeeper,
+    private val heap: Heap,
+    private val viewAutocaptureSDK: ViewAutocaptureSDK,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _events = Channel<SplashAction>()
     val events = _events.receiveAsFlow()
+
+    private val qrMasqueradeId = savedStateHandle.get<Long>(Const.QR_CODE_MASQUERADE_ID) ?: 0L
 
     init {
         loadInitialData()
@@ -60,8 +69,25 @@ class SplashViewModel @Inject constructor(
             val theme = repository.getTheme()
             theme?.let { _events.send(SplashAction.ApplyTheme(it)) }
 
+            if (apiPrefs.canBecomeUser == null && qrMasqueradeId == 0L) {
+                if (apiPrefs.domain.startsWith("siteadmin", true)) {
+                    apiPrefs.canBecomeUser = true
+                } else {
+                    apiPrefs.canBecomeUser = repository.getBecomeUserPermission()
+                }
+            }
+
+            val sendUsageMetrics = repository.getSendUsageMetrics()
+            if (sendUsageMetrics) {
+                heap.startRecording(context, BuildConfig.HEAP_APP_ID)
+                viewAutocaptureSDK.register()
+            } else {
+                heap.stopRecording()
+                viewAutocaptureSDK.deregister()
+            }
+
             val students = repository.getStudents()
-            if (students.isEmpty()) {
+            if (students.isEmpty() && apiPrefs.canBecomeUser == false) {
                 _events.send(SplashAction.NavigateToNotAParentScreen)
             } else {
                 _events.send(SplashAction.InitialDataLoadingFinished)

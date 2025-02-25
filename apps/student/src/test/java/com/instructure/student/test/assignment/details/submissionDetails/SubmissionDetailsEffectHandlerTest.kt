@@ -18,38 +18,58 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.ExternalToolAttributes
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffect
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsRepository
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
-import com.instructure.student.mobius.common.ChannelSource
-import com.instructure.student.test.util.receiveOnce
+import com.instructure.student.mobius.common.FlowSource
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.io.File
-import java.util.concurrent.Executors
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SubmissionDetailsEffectHandlerTest : Assert() {
     private val view: SubmissionDetailsView = mockk(relaxed = true)
     private val repository: SubmissionDetailsRepository = mockk(relaxed = true)
     private val effectHandler = SubmissionDetailsEffectHandler(repository).apply { view = this@SubmissionDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
-
-    @ExperimentalCoroutinesApi
+    private val testDispatcher = UnconfinedTestDispatcher()
+    
     @Before
     fun setup() {
-        Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
+        Dispatchers.setMain(testDispatcher)
         mockkObject(FeaturesManager)
         mockkObject(CourseManager)
         every { FeaturesManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
@@ -58,6 +78,11 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         every { CourseManager.getCourseSettingsAsync(any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(CourseSettings())
         }
+    }
+    
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -85,7 +110,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Fail(Failure.Network(errorMessage)),
                     rootSubmissionResult = DataResult.Fail(Failure.Network(errorMessage)),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -122,7 +147,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Fail(Failure.Authorization(errorMessage)),
                     rootSubmissionResult = DataResult.Fail(Failure.Authorization(errorMessage)),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -172,7 +197,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Success(ltiTool),
+                    ltiTool = DataResult.Success(ltiTool),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -221,7 +246,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     SubmissionDetailsEvent.DataLoaded(
                             assignment = DataResult.Success(assignment),
                             rootSubmissionResult = DataResult.Success(submission),
-                            ltiUrlResult = DataResult.Success(ltiTool),
+                            ltiTool = DataResult.Success(ltiTool),
                             isStudioEnabled = false,
                             quizResult = null,
                             studioLTIToolResult = DataResult.Fail(null),
@@ -263,7 +288,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Success(ltiTool),
+                    ltiTool = DataResult.Success(ltiTool),
                     isStudioEnabled = false,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null),
@@ -307,7 +332,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = false,
                     quizResult = DataResult.Success(quiz),
                     studioLTIToolResult = DataResult.Fail(null),
@@ -355,7 +380,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     assignment = DataResult.Success(assignment),
                     rootSubmissionResult = DataResult.Success(submission),
-                    ltiUrlResult = DataResult.Fail(null),
+                    ltiTool = DataResult.Fail(null),
                     isStudioEnabled = true,
                     quizResult = null,
                     studioLTIToolResult = DataResult.Success(studioLTITool),
@@ -439,26 +464,32 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `UploadMediaComment results in SendMediaCommentClicked shared event`() {
+    fun `UploadMediaComment results in SendMediaCommentClicked shared event`() = runTest(testDispatcher) {
         val file = File("test")
-        val channel = ChannelSource.getChannel<SubmissionCommentsSharedEvent>()
+        val flow = FlowSource.getFlow<SubmissionCommentsSharedEvent>()
         val expectedEvent = SubmissionCommentsSharedEvent.SendMediaCommentClicked(file)
-        val actualEvent = channel.receiveOnce {
-            connection.accept(SubmissionDetailsEffect.UploadMediaComment(file))
+
+        val deferred = async {
+            flow.first()
         }
 
-        assertEquals(expectedEvent, actualEvent)
+        connection.accept(SubmissionDetailsEffect.UploadMediaComment(file))
+
+        assertEquals(expectedEvent, deferred.await())
     }
 
     @Test
-    fun `MediaCommentDialogClosed results in MediaCommentDialogClosed shared event`() {
-        val channel = ChannelSource.getChannel<SubmissionCommentsSharedEvent>()
+    fun `MediaCommentDialogClosed results in MediaCommentDialogClosed shared event`() = runTest(testDispatcher) {
+        val flow = FlowSource.getFlow<SubmissionCommentsSharedEvent>()
         val expectedEvent = SubmissionCommentsSharedEvent.MediaCommentDialogClosed
-        val actualEvent = channel.receiveOnce {
-            connection.accept(SubmissionDetailsEffect.MediaCommentDialogClosed)
+
+        val deferred = async {
+            flow.first()
         }
 
-        assertEquals(expectedEvent, actualEvent)
+        connection.accept(SubmissionDetailsEffect.MediaCommentDialogClosed)
+
+        assertEquals(expectedEvent, deferred.await())
     }
 
 }

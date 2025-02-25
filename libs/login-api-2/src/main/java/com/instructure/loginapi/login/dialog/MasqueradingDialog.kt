@@ -22,21 +22,33 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Patterns
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.view.animation.Interpolator
 import androidx.annotation.FloatRange
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.databinding.DialogMasqueradingBinding
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsCloseButton
 import java.util.Locale
 
 
-class MasqueradingDialog : DialogFragment() {
+class MasqueradingDialog : BaseCanvasDialogFragment() {
 
     private val binding by viewBinding(DialogMasqueradingBinding::bind)
 
@@ -148,6 +160,10 @@ class MasqueradingDialog : DialogFragment() {
 
     private fun validateDomain(domain: String) = Patterns.DOMAIN_NAME.matcher(domain).matches()
 
+    override fun onDestroy() {
+        super.onDestroy()
+        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+    }
 
     /**
      * An [Interpolator] which pads the provided [interpolator] with start and end values.

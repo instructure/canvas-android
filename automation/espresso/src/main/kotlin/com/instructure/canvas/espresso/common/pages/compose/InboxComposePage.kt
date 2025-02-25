@@ -29,11 +29,15 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.isNotEnabled
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 
@@ -57,7 +61,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertContextSelected(contextName: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(contextName).assertIsDisplayed()
+        composeTestRule.onNode(hasText(contextName) and hasTestTag("contextValueRow")).assertIsDisplayed()
     }
 
     fun assertRecipientSelected(recipientName: String) {
@@ -108,6 +112,8 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     fun assertPreviousMessagesDisplayed(conversation: Conversation, includedMessages: List<Message>) {
         composeTestRule.waitForIdle()
 
+        composeTestRule.onNodeWithTag("InboxComposeScreenContent")
+            .performTouchInput { swipeUp() }
         composeTestRule.onNodeWithText("Previous Messages")
             .assertIsDisplayed()
 
@@ -142,6 +148,11 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithContentDescription("Close").performClick()
     }
 
+    fun pressExitConfirmationButton() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Exit").performClick()
+    }
+
     fun pressSendButton() {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithContentDescription("Send message").performClick()
@@ -165,5 +176,18 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     fun pressIndividualSendSwitch() {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("switch").performClick()
+    }
+
+    fun isRecipientsLoading(): Boolean {
+        composeTestRule.waitForIdle()
+        return composeTestRule.onNodeWithTag("Loading").isDisplayed()
+    }
+
+    fun removeAllRecipients() {
+        composeTestRule.waitForIdle()
+        val nodes = composeTestRule.onAllNodesWithContentDescription("Remove Recipient")
+        if (nodes.fetchSemanticsNodes().isNotEmpty()) {
+            nodes.onFirst().performClick()
+        }
     }
 }

@@ -17,22 +17,23 @@
 package com.instructure.teacher.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFIRM_DELETE_FILE_FOLDER
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.teacher.R
-import com.instructure.pandautils.utils.BlindSerializableArg
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.dismissExisting
+import com.instructure.teacher.R
+import com.instructure.teacher.fragments.EditFileFolderFragment
 
 @ScreenView(SCREEN_VIEW_CONFIRM_DELETE_FILE_FOLDER)
-class ConfirmDeleteFileFolderDialog : AppCompatDialogFragment() {
+class ConfirmDeleteFileFolderDialog : BaseCanvasAppCompatDialogFragment() {
 
-    private var deleteCallback: (() -> Unit)? by BlindSerializableArg()
+    private var deleteCallback: (() -> Unit)? = null
     private var isFile: Boolean by BooleanArg(false)
 
     init { retainInstance = true }
@@ -53,17 +54,28 @@ class ConfirmDeleteFileFolderDialog : AppCompatDialogFragment() {
         }
     }
 
-    override fun onDestroyView() {
+    override fun onDetach() {
         deleteCallback = null
-        // Fix for rotation bug
-        dialog?.let { if (retainInstance) it.setDismissMessage(null) }
-        super.onDestroyView()
+        super.onDetach()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        deleteCallback = getDeleteCallback()
+    }
+
+    private fun getDeleteCallback(): (() -> Unit)? {
+        val parent = parentFragment
+        return if (parent is EditFileFolderFragment) {
+            parent.deleteCallback
+        } else {
+            null
+        }
     }
 
     companion object {
-        fun show(manager: FragmentManager, isFile: Boolean, listener: () -> Unit) = ConfirmDeleteFileFolderDialog().apply {
+        fun show(manager: FragmentManager, isFile: Boolean) = ConfirmDeleteFileFolderDialog().apply {
             manager.dismissExisting<ConfirmDeleteFileFolderDialog>()
-            deleteCallback = listener
             this.isFile = isFile
             show(manager, javaClass.simpleName)
         }

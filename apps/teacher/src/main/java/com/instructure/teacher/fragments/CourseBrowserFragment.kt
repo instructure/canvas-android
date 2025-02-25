@@ -32,10 +32,12 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Const.CANVAS_STUDENT_ID
@@ -85,7 +87,8 @@ class CourseBrowserFragment : BaseSyncFragment<
 
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
-    private var canvasContext: CanvasContext by ParcelableArg(Course())
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(Course())
 
     private val courseBrowserHeader by lazy { rootView.findViewById<CourseBrowserHeaderView>(R.id.courseBrowserHeader) }
 
@@ -272,11 +275,6 @@ class CourseBrowserFragment : BaseSyncFragment<
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {
-                        // if the user is a designer we don't want to let them look at LTI tools (like attendance)
-                        if ((presenter.canvasContext as? Course)?.isDesigner == true) {
-                            toast(R.string.errorIsDesigner)
-                            return@CourseBrowserAdapter
-                        }
                         val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
                         if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                             val args = AttendanceListFragment.makeBundle(tab)
@@ -285,11 +283,8 @@ class CourseBrowserFragment : BaseSyncFragment<
                                 Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
                             )
                         } else {
-                            val args = LtiLaunchFragment.makeTabBundle(presenter.canvasContext, tab)
-                            RouteMatcher.route(
-                                requireActivity(),
-                                Route(LtiLaunchFragment::class.java, presenter.canvasContext, args)
-                            )
+                            val route = LtiLaunchFragment.makeRoute(presenter.canvasContext, tab)
+                            RouteMatcher.route(requireActivity(), route)
                         }
                     }
                 }

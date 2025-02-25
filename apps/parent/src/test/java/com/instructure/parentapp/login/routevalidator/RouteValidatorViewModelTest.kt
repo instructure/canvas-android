@@ -34,6 +34,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.loginapi.login.util.QRLogin
+import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.parentapp.R
 import com.instructure.parentapp.features.login.routevalidator.RouteValidatorAction
 import com.instructure.parentapp.features.login.routevalidator.RouteValidatorViewModel
 import com.instructure.parentapp.util.ParentLogoutTask
@@ -77,6 +79,7 @@ class RouteValidatorViewModelTest {
     private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
     private val qrLogin: QRLogin = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
+    private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
     private val mockUri = mockk<Uri>(relaxed = true) {
         every { host } returns "mobiledev.instructure.com"
     }
@@ -265,7 +268,27 @@ class RouteValidatorViewModelTest {
         Assert.assertEquals(RouteValidatorAction.StartMainActivity(data = mockUri), events.last())
     }
 
+    @Test
+    fun `Load route when user is logged in but the domain is different`() = runTest {
+        every { context.getString(R.string.differentDomainFromLink) } returns "Different domain message"
+        every { apiPrefs.domain } returns "mobiledev.instructure.com"
+        every { apiPrefs.getValidToken() } returns "token"
+        every { mockUri.host } returns "different.instructure.com"
+
+        createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.loadRoute("https://mobiledev.instructure.com/courses")
+
+        delay(800)
+        Assert.assertEquals(RouteValidatorAction.StartMainActivity(message = "Different domain message"), events.last())
+    }
+
     private fun createViewModel() {
-        viewModel = RouteValidatorViewModel(context, apiPrefs, oAuthApi, qrLogin, analytics)
+        viewModel = RouteValidatorViewModel(context, apiPrefs, oAuthApi, qrLogin, analytics, alarmScheduler)
     }
 }

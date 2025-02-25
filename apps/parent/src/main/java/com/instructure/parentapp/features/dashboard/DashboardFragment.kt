@@ -24,11 +24,12 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
+import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -36,19 +37,35 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collectDistinctUntilChanged
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.isAccessibilityEnabled
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -61,6 +78,7 @@ import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
 import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
+import com.instructure.parentapp.features.main.MainActivity
 import com.instructure.parentapp.util.ParentLogoutTask
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -71,8 +89,9 @@ import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_DASHBOARD)
 @AndroidEntryPoint
-class DashboardFragment : Fragment(), NavigationCallbacks {
+class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private lateinit var binding: FragmentDashboardBinding
 
@@ -87,12 +106,47 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     @Inject
     lateinit var firebaseCrashlytics: FirebaseCrashlytics
 
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     private var inboxBadge: TextView? = null
 
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
+
+    private val onItemSelectedListener = NavigationBarView.OnItemSelectedListener {
+        when (it.itemId) {
+            R.id.courses -> navigateWithPopBackStack(navigation.courses)
+            R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
+            R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
+            else -> false
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navHostFragment?.let {
+            navController = it.navController
+            navController.graph = navigation.createDashboardNavGraph(navController)
+        }
+    }
+
+    private val onDestinationChangedListener = NavController.OnDestinationChangedListener { _, destination, _ ->
+        if (destination.route == navigation.alerts || destination.route == navigation.courses) {
+            binding.todayButtonHolder.setGone()
+        }
+        val menuId = when (destination.route) {
+            navigation.alerts -> R.id.alerts
+            navigation.courses -> R.id.courses
+            navigation.calendar -> R.id.calendar
+            else -> return@OnDestinationChangedListener
+        }
+        bottomNavigationView.menu.findItem(menuId).isChecked = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,9 +169,11 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         when (action) {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.reloadData()
+                context?.let { announceAccessibilityText(it, getString(R.string.addStudentSuccessfull)) }
             }
             is AddStudentViewModelAction.UnpairStudentSuccess -> {
                 viewModel.reloadData()
+                context?.let { announceAccessibilityText(it, getString(R.string.unpairStudentSuccessfull)) }
             }
         }
     }
@@ -132,19 +188,31 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupLaunchDefinitions(it.launchDefinitionViewData)
-                setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
                 updateAlertCount(it.alertCount)
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.data.collectDistinctUntilChanged(lifecycle, { it.selectedStudent }) { selectedStudent ->
+                setupAppColors(selectedStudent)
+                binding.studentSelector.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+            }
+        }
+
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bottomNavigationView.setOnItemSelectedListener(null)
+        bottomNavigationView.setOnItemReselectedListener(null)
+        navController.removeOnDestinationChangedListener(onDestinationChangedListener)
     }
 
     private fun handleAction(action: DashboardViewModelAction) {
@@ -160,7 +228,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 }
             }
             is DashboardViewModelAction.OpenLtiTool -> {
-                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name))
+                navigation.navigate(requireActivity(), navigation.ltiLaunchRoute(action.url, action.name, sessionlessLaunch = true))
             }
         }
     }
@@ -178,6 +246,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         val unreadCountText = if (unreadCount <= 99) unreadCount.toString() else requireContext().getString(R.string.inboxUnreadCountMoreThan99)
         inboxBadge?.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
         inboxBadge?.text = unreadCountText
+        inboxBadge?.contentDescription = resources.getQuantityString(R.plurals.a11y_inboxUnreadCount, unreadCount, unreadCount)
         binding.unreadCountBadge.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
         binding.unreadCountBadge.text = unreadCountText
 
@@ -191,9 +260,11 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupNavigation() {
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        navController.graph = navigation.createDashboardNavGraph(navController)
+        if (!this::navController.isInitialized) {
+            val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            navController = navHostFragment.navController
+            navController.graph = navigation.createDashboardNavGraph(navController)
+        }
 
         setupToolbar()
         setupNavigationDrawer()
@@ -221,15 +292,15 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
         inboxBadge = TextView(requireContext())
         actionView.addView(inboxBadge)
-
-        inboxBadge?.width = 24.toPx
-        inboxBadge?.height = 24.toPx
-        inboxBadge?.gravity = Gravity.CENTER
-        inboxBadge?.textSize = 10f
-        inboxBadge?.setTextColor(requireContext().getColor(R.color.white))
-        inboxBadge?.setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
-        inboxBadge?.visibility = View.GONE
-
+        inboxBadge?.apply {
+            width = 24.toPx
+            height = 24.toPx
+            gravity = Gravity.CENTER
+            textSize = 10f
+            setTextColor(requireContext().getColor(R.color.textLightest))
+            setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
+            visibility = View.GONE
+        }
 
         navView.setNavigationItemSelectedListener {
             closeNavigationDrawer()
@@ -242,9 +313,25 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
                 R.id.switch_users -> menuItemSelected { onSwitchUsers() }
+                R.id.act_as_user -> menuItemSelected { MasqueradingDialog.show(requireActivity().supportFragmentManager, ApiPrefs.domain, null, !isTablet) }
+                R.id.stop_act_as_user -> menuItemSelected { MasqueradeHelper.stopMasquerading(MainActivity::class.java) }
                 else -> false
             }
         }
+
+        val actAsUserItem = binding.navView.menu.findItem(R.id.act_as_user)
+        actAsUserItem.isVisible = !ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true
+
+        val stopActAsUserItem = binding.navView.menu.findItem(R.id.stop_act_as_user)
+        stopActAsUserItem.isVisible = ApiPrefs.isMasquerading
+
+        val closeNavigationDrawerItem = binding.navView.menu.findItem(R.id.close_navigation_drawer)
+        binding.drawerLayout.addDrawerListener(object : SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                closeNavigationDrawerItem.isVisible = isAccessibilityEnabled(requireContext())
+                super.onDrawerOpened(drawerView)
+            }
+        })
     }
 
     private fun menuItemSelected(action: () -> Unit): Boolean {
@@ -253,32 +340,10 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupBottomNavigationView() {
-        val bottomNavigationView = binding.bottomNav
-
-        bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.courses -> navigateWithPopBackStack(navigation.courses)
-                R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
-                R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
-                else -> false
-            }
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.route == navigation.alerts || destination.route == navigation.courses) {
-                binding.todayButtonHolder.setGone()
-            }
-        }
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            val menuId = when (destination.route) {
-                navigation.courses -> R.id.courses
-                navigation.calendar -> R.id.calendar
-                navigation.alerts -> R.id.alerts
-                else -> return@addOnDestinationChangedListener
-            }
-            bottomNavigationView.menu.findItem(menuId).isChecked = true
-        }
+        bottomNavigationView = binding.bottomNav
+        bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener)
+        bottomNavigationView.setOnItemReselectedListener { }
+        navController.addOnDestinationChangedListener(onDestinationChangedListener)
     }
 
     private fun navigateWithPopBackStack(route: String): Boolean {
@@ -298,10 +363,13 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.bottomNav.applyTheme(color, requireActivity().getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(requireActivity(), color)
 
+        val toolbarIconsColor = if (student != null) requireContext().getColor(R.color.textLightest) else ThemePrefs.primaryTextColor
         val gradientDrawable = requireContext().getDrawableCompat(R.drawable.bg_button_full_rounded_filled_with_border) as? GradientDrawable
         gradientDrawable?.setStroke(2.toPx, color)
+        gradientDrawable?.setColor(toolbarIconsColor)
         binding.unreadCountBadge.background = gradientDrawable
         binding.unreadCountBadge.setTextColor(color)
+        binding.navigationButton.setColorFilter(toolbarIconsColor)
 
         binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
         viewModel.updateColor(color)
@@ -323,14 +391,22 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.logout_warning)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                Analytics.logEvent(AnalyticsEventConstants.LOGOUT)
+                ParentLogoutTask(
+                    LogoutTask.Type.LOGOUT,
+                    alarmScheduler = alarmScheduler
+                ).execute()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .showThemed(ParentPrefs.currentStudent.studentColor)
     }
 
     private fun onSwitchUsers() {
-        ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+        Analytics.logEvent(AnalyticsEventConstants.SWITCH_USERS)
+        ParentLogoutTask(
+            LogoutTask.Type.SWITCH_USERS,
+            alarmScheduler = alarmScheduler
+        ).execute()
     }
 
     private fun setupLaunchDefinitions(launchDefinitionViewData: List<LaunchDefinitionViewData>) {

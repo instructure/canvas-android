@@ -8,11 +8,9 @@ import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicDao
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class DiscussionTopicFacadeTest {
 
     private val discussionTopicDao: DiscussionTopicDao = mockk(relaxed = true)

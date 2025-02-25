@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Peruuta kommentin muokkaus</string>
     <string name="skip">Ohita</string>
 
+    <string name="collapseGradePanel">Kutista arvosanan anto -paneeli</string>
+    <string name="expandGradePanel">Laajenna arvosanan anto -paneeli</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Mukautettu pistemäärä %1$s</string>
 
@@ -509,22 +511,7 @@
     <string name="colorPickerDialogMessage">Tämä on henkilökohtainen väriasetuksesi. Vain sinä näet tämän värin kurssille.</string>
     <string name="colorPickerError">Kurssin värin määrittäminen ei onnistu juuri nyt.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Vaaleanpunainen</string>
-    <string name="contentDescriptionColorBarbie">Kuuma vaaleanpunainen</string>
-    <string name="contentDescriptionColorBarneyPurple">Violetti</string>
-    <string name="contentDescriptionColorEggplant">Purppura</string>
-    <string name="contentDescriptionColorUltramarine">Tummansininen</string>
-    <string name="contentDescriptionColorOcean11">Sininen</string>
-    <string name="contentDescriptionColorCyan">Syaani</string>
-    <string name="contentDescriptionColorAquaMarine">Vedensininen</string>
-    <string name="contentDescriptionColorEmeraldGreen">Smaragdinvihreä</string>
-    <string name="contentDescriptionColorFreshCutLawn">Vihreä</string>
-    <string name="contentDescriptionColorChartreuse">Herneenvihreä</string>
-    <string name="contentDescriptionColorSunFlower">Keltainen</string>
-    <string name="contentDescriptionColorTangerine">Oranssi</string>
-    <string name="contentDescriptionColorBloodOrange">Tummanoranssi</string>
-    <string name="contentDescriptionColorSriracha">Punainen</string>
-    <string name="launch_link_in_external_browser">Lanseeraa linkki ulkoisessa selaimessa</string>
+                                                                <string name="launch_link_in_external_browser">Lanseeraa linkki ulkoisessa selaimessa</string>
     <string name="contentDescriptionSelectedFile">Valitse tiedosto</string>
     <string name="contentDescriptionFileIcon">Tiedostokuvake</string>
     <string name="contentDescriptionExpandPage">Laajenna sivu</string>
@@ -610,6 +597,7 @@
     <string name="discussion_details">Keskustelun tiedot</string>
     <string name="discussions_pinned">Kiinnitetty</string>
     <string name="discussions_unpinned">Keskustelut</string>
+    <string name="discussions_close">Suljettu kommenteilta</string>
     <string name="discussions_closed">Suljettu kommenteilta</string>
     <string name="discussions_open">Avoin kommenteille</string>
     <string name="discussions_pin">Kiinnitä</string>
@@ -850,6 +838,7 @@
     <string name="errorUpdatingFile">Virhe päivitettäessä tätä tiedostoa</string>
     <string name="errorUpdatingFolder">Tätä kansiota päivitettäessä ilmeni virhe</string>
 
+    <string name="errorEmptyTitle">Otsikko ei voi olla tyhjä</string>
     <string name="toDoEmpty">Ei enempää tehtävänä!\n Nauti päivästäsi.</string>
     <string name="toDoNoSubmissions">Ei ole lähetyksiä tämän tehtävän arvosteluun.</string>
     <string name="errorToDoRouteFailed">Tämän Tehtävä-kohteen näyttämisen yhteydessä ilmeni virhe.</string>

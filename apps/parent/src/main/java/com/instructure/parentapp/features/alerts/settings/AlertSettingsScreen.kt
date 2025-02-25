@@ -30,10 +30,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
@@ -43,19 +45,26 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -75,6 +84,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 
@@ -97,12 +107,13 @@ fun AlertSettingsScreen(
                 CanvasAppBar(
                     title = stringResource(id = R.string.alertSettingsTitle),
                     navIconRes = R.drawable.ic_back_arrow,
+                    navIconContentDescription = stringResource(id = R.string.back),
                     navigationActionClick = navigationActionClick,
                     backgroundColor = Color(uiState.userColor),
                     textColor = colorResource(id = R.color.textLightest),
                     actions = {
-                        var showMenu by remember { mutableStateOf(false) }
-                        var showConfirmationDialog by remember { mutableStateOf(false) }
+                        var showMenu by rememberSaveable { mutableStateOf(false) }
+                        var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }
                         if (showConfirmationDialog) {
                             UnpairStudentDialog(
                                 uiState.student.id,
@@ -126,7 +137,10 @@ fun AlertSettingsScreen(
                                         showConfirmationDialog = true
                                     }
                                 }) {
-                                Text(text = stringResource(id = R.string.delete), color = colorResource(id = R.color.textDarkest))
+                                Text(
+                                    text = stringResource(id = R.string.delete),
+                                    color = colorResource(id = R.color.textDarkest)
+                                )
                             }
                         }
                     }
@@ -162,7 +176,7 @@ fun AlertSettingsScreen(
 
 @Composable
 fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState()).testTag("alertSettingsContent")) {
         StudentDetails(
             avatarUrl = uiState.avatarUrl,
             studentName = uiState.studentName,
@@ -174,7 +188,8 @@ fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
         Text(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp),
             text = stringResource(id = R.string.alertSettingsThresholdsTitle),
-            style = TextStyle(fontSize = 14.sp, color = colorResource(id = R.color.textDark))
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.textDark)
         )
         listOf(
             AlertType.COURSE_GRADE_LOW,
@@ -264,7 +279,7 @@ fun getTitle(alertType: AlertType): Int {
         AlertType.COURSE_GRADE_HIGH -> R.string.alertSettingsCourseGradeHigh
         AlertType.COURSE_GRADE_LOW -> R.string.alertSettingsCourseGradeLow
         AlertType.COURSE_ANNOUNCEMENT -> R.string.alertSettingsCourseAnnouncement
-        AlertType.INSTITUTION_ANNOUNCEMENT -> R.string.alertSettingsInstitutionAnnouncement
+        AlertType.INSTITUTION_ANNOUNCEMENT -> R.string.alertSettingsGlobalAnnouncement
     }
 }
 
@@ -322,19 +337,24 @@ private fun PercentageItem(
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(56.dp)
-            .testTag("${alertType.name}_thresholdItem"),
+            .testTag("${alertType.name}_thresholdItem")
+            .semantics {
+                role = Role.Button
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier.testTag("${alertType.name}_thresholdTitle"),
             text = title,
-            style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.textDarkest)
         )
         Text(
             text = threshold?.let { stringResource(id = R.string.alertSettingsPercentage, it) }
                 ?: stringResource(id = R.string.alertSettingsThresholdNever),
-            style = TextStyle(color = color, textAlign = TextAlign.End),
+            color = color,
+            textAlign = TextAlign.End,
             modifier = Modifier
                 .padding(8.dp)
                 .testTag("${alertType.name}_thresholdValue")
@@ -342,6 +362,7 @@ private fun PercentageItem(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SwitchItem(
     title: String,
@@ -361,10 +382,14 @@ private fun SwitchItem(
     var switchState by remember { mutableStateOf(active) }
     Row(
         modifier = Modifier
-            .clickable {
-                switchState = !switchState
-                toggleAlert(switchState)
-            }
+            .toggleable(
+                value = switchState,
+                onValueChange = {
+                    switchState = !switchState
+                    toggleAlert(switchState)
+                },
+                role = Role.Switch
+            )
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(56.dp)
@@ -375,10 +400,13 @@ private fun SwitchItem(
         Text(
             modifier = Modifier.testTag("${alertType.name}_thresholdTitle"),
             text = title,
-            style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.textDarkest)
         )
         Switch(
-            modifier = Modifier.testTag("${alertType.name}_thresholdSwitch"),
+            modifier = Modifier
+                .testTag("${alertType.name}_thresholdSwitch")
+                .semantics { invisibleToUser() },
             checked = switchState,
             onCheckedChange = {
                 switchState = it
@@ -402,8 +430,9 @@ private fun ThresholdDialog(
     actionHandler: (AlertSettingsAction) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = LocalContext.current
     var percentage by remember { mutableStateOf(threshold.orEmpty()) }
-    val enabled = percentage.toIntOrNull().orDefault() in (min + 1)..< max
+    val enabled = percentage.toIntOrNull().orDefault() in (min + 1)..<max
     Dialog(onDismissRequest = { onDismiss() }) {
         Column(
             Modifier
@@ -413,12 +442,13 @@ private fun ThresholdDialog(
             Text(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
-                    .testTag("thresholdDialogTitle"),
+                    .testTag("thresholdDialogTitle")
+                    .semantics {
+                        heading()
+                    },
                 text = stringResource(id = getTitle(alertType)),
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.textDarkest)
-                )
+                fontSize = 18.sp,
+                color = colorResource(id = R.color.textDarkest)
             )
 
             TextField(
@@ -450,12 +480,15 @@ private fun ThresholdDialog(
                 else -> null
             }
             if (errorText != null) {
+                LaunchedEffect(Unit) {
+                    announceAccessibilityText(context, errorText)
+                }
                 Text(
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .testTag("thresholdDialogError"),
                     text = errorText,
-                    style = TextStyle(color = colorResource(id = R.color.textDanger))
+                    color = colorResource(id = R.color.textDanger)
                 )
             }
 
@@ -485,7 +518,10 @@ private fun ThresholdDialog(
                 TextButton(
                     modifier = Modifier.testTag("thresholdDialogSaveButton"),
                     enabled = enabled,
-                    colors = ButtonDefaults.textButtonColors(contentColor = color),
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = color,
+                        disabledContentColor = color.copy(alpha = ContentAlpha.disabled)
+                    ),
                     onClick = {
                         actionHandler(
                             AlertSettingsAction.CreateThreshold(
@@ -514,15 +550,19 @@ private fun UnpairStudentDialog(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         title = {
             Text(
-                modifier = Modifier.testTag("deleteDialogTitle"),
+                modifier = Modifier
+                    .testTag("deleteDialogTitle")
+                    .semantics {
+                        heading()
+                    },
                 text = stringResource(id = R.string.unpairStudentTitle),
-                style = TextStyle(color = colorResource(id = R.color.textDarkest))
+                color = colorResource(id = R.color.textDarkest)
             )
         },
         text = {
             Text(
                 text = stringResource(id = R.string.unpairStudentMessage),
-                style = TextStyle(color = colorResource(id = R.color.textDarkest))
+                color = colorResource(id = R.color.textDarkest)
             )
         },
         onDismissRequest = { onDismiss() },
@@ -541,7 +581,8 @@ private fun UnpairStudentDialog(
             TextButton(
                 modifier = Modifier.testTag("deleteCancelButton"),
                 onClick = { onDismiss() },
-                colors = ButtonDefaults.textButtonColors(contentColor = color)) {
+                colors = ButtonDefaults.textButtonColors(contentColor = color)
+            ) {
                 Text(text = stringResource(id = R.string.cancel))
             }
         })

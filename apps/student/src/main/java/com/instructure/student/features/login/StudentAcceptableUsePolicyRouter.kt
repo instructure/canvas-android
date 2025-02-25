@@ -27,7 +27,7 @@ import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentAcceptableUsePolicyRouter(

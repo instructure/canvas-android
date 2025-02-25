@@ -79,7 +79,14 @@ void main() {
       var dio = await canvasDio(pageSize: PageSize(perPageSize));
       final options = dio.options;
 
-      expect(options.queryParameters, {'per_page': perPageSize});
+      expect(options.queryParameters['per_page'], 1);
+    });
+
+    test('sets no verifiers param by default', () async {
+      var dio = await canvasDio();
+      final options = dio.options;
+
+      expect(options.queryParameters['no_verifiers'], 1);
     });
 
     test('sets as_user_id param when masquerading', () async {

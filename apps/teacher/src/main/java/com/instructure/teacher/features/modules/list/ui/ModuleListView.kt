@@ -233,7 +233,7 @@ class ModuleListView(
         negativeButton: Int,
         onConfirmed: () -> Unit
     ) {
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(context, R.style.AccessibleAlertDialog)
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(positiveButton) { _, _ ->
@@ -244,7 +244,9 @@ class ModuleListView(
     }
 
     fun showSnackbar(@StringRes message: Int, params: Array<Any> = emptyArray()) {
-        Snackbar.make(binding.root, context.getString(message, *params), Snackbar.LENGTH_SHORT).show()
+        val messageText = context.getString(message, *params)
+        Snackbar.make(binding.root, messageText, Snackbar.LENGTH_SHORT).show()
+        binding.root.announceForAccessibility(messageText)
     }
 
     fun showUpdateFileDialog(fileId: Long, contentDetails: ModuleContentDetails) {

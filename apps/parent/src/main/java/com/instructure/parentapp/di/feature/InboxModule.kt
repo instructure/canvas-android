@@ -19,16 +19,23 @@ package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeRepository
+import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
+import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
@@ -41,8 +48,8 @@ import dagger.hilt.android.components.ViewModelComponent
 class InboxFragmentModule {
 
     @Provides
-    fun provideInboxRouter(activity: FragmentActivity, navigation: Navigation): InboxRouter {
-        return ParentInboxRouter(activity, navigation)
+    fun provideInboxRouter(activity: FragmentActivity, navigation: Navigation, fileDownloader: FileDownloader): InboxRouter {
+        return ParentInboxRouter(activity, navigation, fileDownloader)
     }
 }
 
@@ -55,17 +62,35 @@ class InboxModule {
         inboxApi: InboxApi.InboxInterface,
         coursesApi: CourseAPI.CoursesInterface,
         groupsApi: GroupAPI.GroupInterface,
-        progressApi: ProgressAPI.ProgressInterface
+        progressApi: ProgressAPI.ProgressInterface,
+        inboxSettingsManager: InboxSettingsManager,
+        featuresApi: FeaturesAPI.FeaturesInterface
     ): InboxRepository {
-        return ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+        return ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager, featuresApi)
     }
 
     @Provides
     fun provideInboxComposeRepository(
         courseAPI: CourseAPI.CoursesInterface,
         recipientAPI: RecipientAPI.RecipientInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface,
         inboxAPI: InboxApi.InboxInterface,
+        parentPrefs: ParentPrefs,
+        inboxSettingsManager: InboxSettingsManager
     ): InboxComposeRepository {
-        return ParentInboxComposeRepository(courseAPI, recipientAPI, inboxAPI)
+        return ParentInboxComposeRepository(courseAPI, parentPrefs, featuresApi, recipientAPI, inboxAPI, inboxSettingsManager)
+    }
+
+    @Provides
+    fun provideInboxCoursePickerRepository(
+        courseAPI: CourseAPI.CoursesInterface,
+        enrollmentAPI: EnrollmentAPI.EnrollmentInterface,
+    ): ParentInboxCoursePickerRepository {
+        return ParentInboxCoursePickerRepository(courseAPI, enrollmentAPI)
+    }
+
+    @Provides
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return InboxDetailsBehavior()
     }
 }

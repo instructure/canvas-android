@@ -24,6 +24,7 @@ import androidx.test.espresso.intent.Intents.intended
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.RemoteConfigParam
@@ -32,21 +33,28 @@ import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.espresso.ViewUtils
+import com.instructure.pandautils.utils.AppTheme
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.ui.utils.IntentActionMatcher
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 
 @HiltAndroidTest
-class SettingsE2ETest : StudentTest() {
+class SettingsE2ETest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    @After
+    fun tearDown() {
+        Intents.release()
+    }
 
     @E2E
     @Test
@@ -66,7 +74,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open Profile Settings Page.")
-        settingsPage.openProfileSettings()
+        settingsPage.clickOnSettingsItem("Profile Settings")
         profileSettingsPage.assertPageObjects()
 
         val newUserName = "John Doe"
@@ -82,7 +90,7 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate to Settings Page again and open Panda Avatar Creator.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
-        settingsPage.openProfileSettings()
+        settingsPage.clickOnSettingsItem("Profile Settings")
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.launchPandaAvatarCreator()
 
@@ -126,13 +134,9 @@ class SettingsE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings.")
-        settingsPage.openAppThemeSettings()
 
         Log.d(STEP_TAG,"Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
-        settingsPage.selectAppTheme("Dark")
-        settingsPage.assertAppThemeTitleTextColor("#FFFFFFFF") //Currently, this color is used in the Dark mode for the AppTheme Title text.
-        settingsPage.assertAppThemeStatusTextColor("#FF919CA8") //Currently, this color is used in the Dark mode for the AppTheme Status text.
+        settingsPage.selectAppTheme(AppTheme.DARK)
 
         Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Dark mode).")
         Espresso.pressBack()
@@ -146,12 +150,9 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings again.")
         Espresso.pressBack()
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openAppThemeSettings()
 
         Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
-        settingsPage.selectAppTheme("Light")
-        settingsPage.assertAppThemeTitleTextColor("#FF273540") //Currently, this color is used in the Light mode for the AppTheme Title texts.
-        settingsPage.assertAppThemeStatusTextColor("#FF6A7883") //Currently, this color is used in the Light mode for the AppTheme Status text.
+        settingsPage.selectAppTheme(AppTheme.LIGHT)
 
         Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Light mode).")
         Espresso.pressBack()
@@ -176,7 +177,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'Legal' link to open Legal Page. Assert that Legal Page has opened.")
-        settingsPage.openLegalPage()
+        settingsPage.clickOnSettingsItem("Legal")
         legalPage.assertPageObjects()
     }
 
@@ -198,7 +199,7 @@ class SettingsE2ETest : StudentTest() {
         settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'About' link to open About Page. Assert that About Page has opened.")
-        settingsPage.openAboutPage()
+        settingsPage.clickOnSettingsItem("About")
         aboutPage.assertPageObjects()
 
         Log.d(STEP_TAG,"Check that domain is equal to: ${student.domain} (student's domain).")
@@ -236,7 +237,7 @@ class SettingsE2ETest : StudentTest() {
         RemoteConfigParam.values().forEach {param -> initialValues.put(param.rc_name, RemoteConfigUtils.getString(param))}
 
         Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
-        settingsPage.openRemoteConfigParams()
+        settingsPage.clickOnSettingsItem("Remote Config Params")
 
         RemoteConfigParam.values().forEach { param ->
 
@@ -256,7 +257,7 @@ class SettingsE2ETest : StudentTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Navigate to Remote Config Settings Page.")
-        settingsPage.openRemoteConfigParams()
+        settingsPage.clickOnSettingsItem("Remote Config Params")
 
         Log.d(STEP_TAG, "Assert that all fields have maintained their initial value.")
         RemoteConfigParam.values().forEach { param ->
@@ -282,26 +283,22 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on 'Subscribe to Calendar'.")
-        settingsPage.openSubscribeToCalendar()
+        settingsPage.clickOnSettingsItem("Subscribe to Calendar Feed")
 
         Log.d(STEP_TAG, "Click on the 'SUBSCRIBE' button of the pop-up dialog.")
-        settingsPage.clickOnSubscribe()
+        settingsPage.clickOnSubscribeButton()
 
         Log.d(STEP_TAG, "Assert that the proper intents has launched, so the NavigationActivity has been launched with an Intent from SettingsActivity.")
         val calendarDataMatcherString = "https://calendar.google.com/calendar/r?cid=webcal://"
         val intentActionMatcher = IntentActionMatcher(Intent.ACTION_VIEW, calendarDataMatcherString)
         intended(intentActionMatcher)
-
-        Log.d(PREPARATION_TAG, "Release Intents.")
-        Intents.release()
     }
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testPronounsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -362,5 +359,59 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on 'Change User' menu and assert on the Login Landing Page that the '$testPronoun' pronouns are displayed besides the 'Pronoun Student' user's name.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
         loginLandingPage.assertPreviousLoginUserDisplayed("Pronoun Student $testPronoun")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.E2E, SecondaryFeatureCategory.SETTINGS_EMAIL_NOTIFICATIONS)
+    fun testEmailNotificationsUIE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to Settings Page on the Left Side menu.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+
+        Log.d(STEP_TAG, "Open Email Notifications Page.")
+        settingsPage.clickOnSettingsItem("Email Notifications")
+
+        Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Email Notifications' on the Email Notifications Page.")
+        emailNotificationsPage.assertToolbarTitle()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Course Activities' email notifications are displayed.")
+        emailNotificationsPage.assertCourseActivitiesEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Discussions' email notifications are displayed.")
+        emailNotificationsPage.assertDiscussionsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Conversations' email notifications are displayed.")
+        emailNotificationsPage.assertConversationsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Scheduling' email notifications are displayed.")
+        emailNotificationsPage.assertSchedulingEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Groups' email notifications are displayed.")
+        emailNotificationsPage.assertGroupsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Alerts' email notifications are displayed.")
+        emailNotificationsPage.assertAlertsEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 'Conferences' email notifications are displayed.")
+        emailNotificationsPage.assertConferencesEmailNotificationsDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Appointment Availability' email notification's frequency is 'Immediately' yet.")
+        emailNotificationsPage.assertNotificationFrequency("Appointment Availability", "Immediately")
+
+        Log.d(STEP_TAG, "Click on the 'Appointment Availability' and select the 'Weekly' frequency.")
+        emailNotificationsPage.clickOnNotification("Appointment Availability")
+        emailNotificationsPage.selectFrequency("Weekly")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Appointment Availability' email notification's frequency is 'Weekly' yet.")
+        emailNotificationsPage.assertNotificationFrequency("Appointment Availability", "Weekly")
     }
 }

@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -48,6 +49,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_MODULE_PROGRESSION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.BooleanArg
@@ -70,7 +72,6 @@ import com.instructure.student.R
 import com.instructure.student.databinding.CourseModuleProgressionBinding
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
-import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.util.ModuleProgressionUtility
@@ -103,7 +104,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var markAsReadJob: WeaveJob? = null
 
     // Bundle Args
-    private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("canvasContext")
+    var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var groupPos: Int by IntArg(key = GROUP_POSITION)
     private var childPos: Int by IntArg(key = CHILD_POSITION)
     private var modules: ArrayList<ModuleObject> by ParcelableArrayListArg(key = MODULE_OBJECTS)

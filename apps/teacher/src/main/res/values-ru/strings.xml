@@ -453,6 +453,8 @@
     <string name="cancel_editing_comment">Отменить редактирование комментария</string>
     <string name="skip">Пропустить</string>
 
+    <string name="collapseGradePanel">Свернуть панель оценок</string>
+    <string name="expandGradePanel">Развернуть панель оценок</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Персонализированная оценка %1$s</string>
 
@@ -531,22 +533,7 @@
     <string name="colorPickerDialogMessage">Это ваша персональная настройка цвета. Только вы будет видеть этот цвет для курса.</string>
     <string name="colorPickerError">В данный момент невозможно задать цвет курса.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Розовый</string>
-    <string name="contentDescriptionColorBarbie">Ярко-розовый</string>
-    <string name="contentDescriptionColorBarneyPurple">Фиолетовый</string>
-    <string name="contentDescriptionColorEggplant">Пурпурный</string>
-    <string name="contentDescriptionColorUltramarine">Темно-синий</string>
-    <string name="contentDescriptionColorOcean11">Синий</string>
-    <string name="contentDescriptionColorCyan">Голубой</string>
-    <string name="contentDescriptionColorAquaMarine">Бирюзовый</string>
-    <string name="contentDescriptionColorEmeraldGreen">Изумрудный</string>
-    <string name="contentDescriptionColorFreshCutLawn">Зеленый</string>
-    <string name="contentDescriptionColorChartreuse">Салатовый</string>
-    <string name="contentDescriptionColorSunFlower">Желтый</string>
-    <string name="contentDescriptionColorTangerine">Оранжевый</string>
-    <string name="contentDescriptionColorBloodOrange">Темно-оранжевый</string>
-    <string name="contentDescriptionColorSriracha">Красный</string>
-    <string name="launch_link_in_external_browser">Перейдите по ссылке во внешнем браузере</string>
+                                                                <string name="launch_link_in_external_browser">Перейдите по ссылке во внешнем браузере</string>
     <string name="contentDescriptionSelectedFile">Выбранный файл</string>
     <string name="contentDescriptionFileIcon">Иконка файла</string>
     <string name="contentDescriptionExpandPage">Развернуть страницу</string>
@@ -634,6 +621,7 @@
     <string name="discussion_details">Сведения об обсуждении</string>
     <string name="discussions_pinned">Прикреплен</string>
     <string name="discussions_unpinned">Дискуссии</string>
+    <string name="discussions_close">Закрыть для комментариев</string>
     <string name="discussions_closed">Закрыто для комментариев</string>
     <string name="discussions_open">Открыть для комментариев</string>
     <string name="discussions_pin">Привязать</string>
@@ -874,6 +862,7 @@
     <string name="errorUpdatingFile">При обновлении этого файла произошла ошибка</string>
     <string name="errorUpdatingFolder">При обновлении этой папки произошла ошибка</string>
 
+    <string name="errorEmptyTitle">Поле названия не может быть пустым</string>
     <string name="toDoEmpty">Все задания выполнены!\n Хорошего дня.</string>
     <string name="toDoNoSubmissions">Для этого задания отсутствуют объекты для оценки.</string>
     <string name="errorToDoRouteFailed">Произошла ошибка при попытке просмотра этого элемента списка текущих дел.</string>

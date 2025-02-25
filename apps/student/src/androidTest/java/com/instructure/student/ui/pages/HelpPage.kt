@@ -16,9 +16,13 @@
  */
 package com.instructure.student.ui.pages
 
+import android.app.Instrumentation
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.BundleMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -33,9 +37,11 @@ import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
+import org.hamcrest.CoreMatchers
 
 // This is a little hokey, as the options that appear are somewhat governed by the results of
 // the /api/v1/accounts/self/help_links call.  If that changes a lot over time (thus breaking
@@ -70,7 +76,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(containsTextCaseInsensitive("Send")).click()
     }
 
-    fun launchGuides() {
+    fun clickSearchGuidesLabel() {
         searchGuidesLabel.scrollTo().click()
     }
 
@@ -84,11 +90,16 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(containsTextCaseInsensitive("Send")).scrollTo().assertDisplayed()
     }
 
-    fun shareYourLove() {
+    fun assertReportProblemDialogDisplayed() {
+        waitForViewWithText("Report A Problem").assertDisplayed()
+        onView(withId(R.id.cancelButton)).click()
+    }
+
+    fun clickShareLoveLabel() {
         shareLoveLabel.scrollTo().click()
     }
 
-    fun submitFeature() {
+    fun clickSubmitFeatureLabel() {
         submitFeatureLabel.scrollTo().click()
     }
 
@@ -99,22 +110,43 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     fun assertHelpMenuContent() {
 
-        onView(withId(R.id.title) + withText(R.string.searchGuides))
-        onView(withId(R.id.subtitle) + withText(R.string.searchGuidesDetails))
+        onView(withId(R.id.title) + withText("Search the Canvas Guides")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Find answers to common questions")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.askInstructor))
-        onView(withId(R.id.subtitle) + withText(R.string.askInstructorDetails))
+        onView(withId(R.id.title) + withText("CUSTOM LINK")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("This is a custom help link.")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.reportProblem))
-        onView(withId(R.id.subtitle) + withText(R.string.reportProblemDetails))
+        onView(withId(R.id.title) + withText("Ask Your Instructor a Question")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Questions are submitted to your instructor")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(R.string.shareYourLove))
-        onView(withId(R.id.subtitle) + withText(R.string.shareYourLoveDetails))
+        onView(withId(R.id.title) + withText("Report a Problem")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("If Canvas misbehaves, tell us about it")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Submit a Feature Idea"))
-        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?"))
+        onView(withId(R.id.title) + withText("Submit a Feature Idea")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?")).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("COVID-19 Canvas Resources"))
-        onView(withId(R.id.subtitle) + withText("Tips for teaching and learning online"))
+        onView(withId(R.id.title) + withText("Share Your Love for the App")).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText("Tell us about your favorite parts of the app")).assertDisplayed()
+    }
+
+    fun assertHelpMenuURL(helpMenuText: String, expectedURL: String) {
+        val expectedIntent = CoreMatchers.allOf(
+            IntentMatchers.hasExtras(
+                BundleMatchers.hasEntry(
+                    "bundledExtras",
+                    BundleMatchers.hasEntry("internalURL", expectedURL)
+                )
+            )
+        )
+
+        Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+
+        when (helpMenuText) {
+            "Search the Canvas Guides" -> clickSearchGuidesLabel()
+            "Submit a Feature Idea" -> clickSubmitFeatureLabel()
+            "Share Your Love for the App" -> clickShareLoveLabel()
+        }
+
+        Intents.intended(expectedIntent)
     }
 }

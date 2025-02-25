@@ -20,17 +20,22 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.google.firebase.messaging.FirebaseMessaging
-import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.utils.TeacherPrefs
+import io.heap.core.Heap
 
-class TeacherLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
+class TeacherLogoutTask(
+    type: Type,
+    uri: Uri? = null,
+    private val alarmScheduler: AlarmScheduler?
+) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
         TeacherPrefs.safeClearPrefs()
-        Heap.setTrackingEnabled(false)
+        Heap.stopRecording()
     }
 
     override fun createLoginIntent(context: Context): Intent {
@@ -52,4 +57,8 @@ class TeacherLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
     }
 
     override fun removeOfflineData(userId: Long?) {}
+
+    override suspend fun cancelAlarms() {
+        alarmScheduler?.cancelAllAlarmsForCurrentUser()
+    }
 }

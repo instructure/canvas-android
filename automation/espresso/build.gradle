@@ -41,6 +41,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
+    namespace 'com.instructure.espresso'
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -77,12 +78,19 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
 
+    implementation project(':dataseedingapi')
+    implementation project(':login-api-2')
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
     implementation project(':pandautils')
@@ -113,7 +121,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
 
-    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.MATERIAL_DESIGN
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
 
     implementation Libs.GSON

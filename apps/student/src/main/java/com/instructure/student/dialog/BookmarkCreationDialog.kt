@@ -25,7 +25,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
@@ -38,6 +37,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARK_CREATION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
@@ -49,7 +49,7 @@ import com.instructure.student.util.CacheControlFlags
 import kotlinx.coroutines.Job
 
 @ScreenView(SCREEN_VIEW_BOOKMARK_CREATION)
-class BookmarkCreationDialog : AppCompatDialogFragment() {
+class BookmarkCreationDialog : BaseCanvasAppCompatDialogFragment() {
     private var bookmarkJob: Job? = null
     private var bookmarkEditText: AppCompatEditText? = null
 
@@ -58,7 +58,7 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireContext(), R.style.AccessibleAlertDialog)
         val view = View.inflate(ContextThemeWrapper(activity, 0), R.layout.dialog_bookmark, null)
         setupViews(view)
         builder.setView(view)

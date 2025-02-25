@@ -19,11 +19,16 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseItemViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.CourseTabViewModel
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.FileViewModel
@@ -51,7 +56,8 @@ class OfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val offlineContentRepository: OfflineContentRepository,
     private val storageUtils: StorageUtils,
-    private val offlineSyncHelper: OfflineSyncHelper
+    private val offlineSyncHelper: OfflineSyncHelper,
+    private val offlineAnalyticsManager: OfflineAnalyticsManager,
 ) : ViewModel() {
 
     val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
@@ -414,9 +420,11 @@ class OfflineContentViewModel @Inject constructor(
 
     private fun startSync() {
         viewModelScope.launch {
+            offlineAnalyticsManager.reportOfflineSyncStarted()
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
-            _events.postValue(Event(OfflineContentAction.Back))
+            _events.value = Event(OfflineContentAction.AnnounceSyncStarted)
+            _events.value = Event(OfflineContentAction.Back)
         }
     }
 
@@ -447,14 +455,21 @@ class OfflineContentViewModel @Inject constructor(
         val usedSpace = totalSpace - (storageUtils.getFreeSpace() - appSizeModifier)
         val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
-        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
-        val storageInfoText = context.getString(
-            R.string.offline_content_storage_info,
-            Formatter.formatShortFileSize(context, usedSpace),
-            Formatter.formatShortFileSize(context, totalSpace),
+        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) else 0
+        val allAppsPercent = canvasPercent + otherPercent
+        val usedSpaceText = Formatter.formatShortFileSize(context, usedSpace)
+        val totalSpaceText = Formatter.formatShortFileSize(context, totalSpace)
+        val storageInfoText = context.getString(R.string.offline_content_storage_info, usedSpaceText, totalSpaceText)
+        val contentDescription = context.getString(
+            R.string.offline_content_storage_info_a11y_description,
+            usedSpaceText,
+            totalSpaceText,
+            otherPercent,
+            canvasPercent,
+            100 - allAppsPercent
         )
 
-        return StorageInfo(otherPercent, canvasPercent, storageInfoText)
+        return StorageInfo(otherPercent, allAppsPercent, storageInfoText, contentDescription)
     }
 
     private suspend fun getAppSizeModifier(): Long {

@@ -28,6 +28,7 @@ import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -60,7 +61,6 @@ import com.instructure.canvasapi2.models.StorageQuotaExceededError
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
@@ -78,13 +78,19 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
@@ -95,6 +101,7 @@ import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
@@ -105,10 +112,11 @@ import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
-import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.post
 import com.instructure.pandautils.utils.postSticky
@@ -126,16 +134,11 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
-import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.fragment.DashboardFragment
-import com.instructure.student.fragment.InboxComposeMessageFragment
-import com.instructure.student.fragment.InboxConversationFragment
-import com.instructure.student.fragment.InboxRecipientsFragment
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -144,6 +147,7 @@ import com.instructure.student.navigation.AccountMenuItem
 import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.NavigationMenuItem
 import com.instructure.student.navigation.OptionsMenuItem
+import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -209,7 +213,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     lateinit var alarmScheduler: AlarmScheduler
 
     @Inject
-    lateinit var oAuthApi: OAuthAPI.OAuthInterface
+    lateinit var offlineAnalyticsManager: OfflineAnalyticsManager
+
+    @Inject
+    lateinit var enabledCourseTabs: EnabledTabs
+
+    @Inject
+    lateinit var webViewAuthenticator: WebViewAuthenticator
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -277,7 +287,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
-                R.id.navigationDrawerSettings -> startActivity(SettingsActivity.createIntent(applicationContext, featureFlagProvider.offlineEnabled()))
+                R.id.navigationDrawerSettings -> {
+                    val route = SettingsFragment.makeRoute(featureFlagProvider.offlineEnabled())
+                    val fragment = SettingsFragment.newInstance(route)
+                    addFragment(fragment, route)
+                }
+                R.id.navigationDrawerItem_closeDrawer -> {
+                    closeNavigationDrawer()
+                }
             }
         }
     }
@@ -312,6 +329,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 
     private fun checkAppUpdates() {
@@ -339,6 +357,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         super.onCreate(savedInstanceState)
         RouteMatcher.offlineDb = offlineDatabase
         RouteMatcher.networkStateProvider = networkStateProvider
+        RouteMatcher.enabledTabs = enabledCourseTabs
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)
@@ -376,6 +395,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         requestNotificationsPermission()
 
         networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
+            logOfflineEvents(isOnline)
             setOfflineState(!isOnline)
             handleTokenCheck(isOnline)
         }
@@ -387,20 +407,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         scheduleAlarms()
-
-        if (ApiPrefs.isFirstMasqueradingStart) {
-            loadAuthenticatedSession()
-            ApiPrefs.isFirstMasqueradingStart = false
-        }
     }
 
-    private fun loadAuthenticatedSession() {
+    private fun logOfflineEvents(isOnline: Boolean) {
         lifecycleScope.launch {
-            oAuthApi.getAuthenticatedSession(
-                ApiPrefs.fullDomain,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull?.sessionUrl?.let {
-                loadUrlIntoHeadlessWebView(this@NavigationActivity, it)
+            if (isOnline) {
+                offlineAnalyticsManager.offlineModeEnded()
+            } else {
+                offlineAnalyticsManager.offlineModeStarted()
             }
         }
     }
@@ -479,11 +493,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+        logOfflineEvents(networkStateProvider.isOnline())
     }
 
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
+        logOfflineEvents(true)
     }
 
     override fun onDestroy() {
@@ -597,17 +613,45 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar?) where F : Fragment, F : FragmentInteractions {
         //Navigation items
-        navigationDrawerBinding.navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerBinding.navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+        with(navigationDrawerBinding) {
+            navigationDrawerItemFiles.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemCloseDrawer.setOnClickListener(mNavigationDrawerItemClickListener)
+            listOf(
+                navigationDrawerItemFiles,
+                navigationDrawerItemGauge,
+                navigationDrawerItemStudio,
+                navigationDrawerItemMastery,
+                navigationDrawerItemBookmarks,
+                navigationDrawerItemChangeUser,
+                navigationDrawerItemHelp,
+                navigationDrawerItemLogout,
+                navigationDrawerSettings,
+                navigationDrawerItemStartMasquerading,
+                navigationDrawerItemStopMasquerading,
+                navigationDrawerItemCloseDrawer
+            ).forEach {
+                it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                    override fun onInitializeAccessibilityNodeInfo(
+                        host: View,
+                        info: AccessibilityNodeInfo
+                    ) {
+                        super.onInitializeAccessibilityNodeInfo(host, info)
+                        info.className = "android.widget.Button"
+                    }
+                }
+            }
+        }
+
 
         //Load Show Grades
         navigationDrawerBinding.navigationDrawerShowGradesSwitch.isChecked = StudentPrefs.showGradesOnCard
@@ -645,6 +689,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 invalidateOptionsMenu()
+                setCloseDrawerVisibility()
             }
 
             override fun onDrawerClosed(drawerView: View) {
@@ -843,9 +888,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
             //Inbox
             is InboxFragment,
-            is InboxConversationFragment,
-            is InboxComposeMessageFragment,
-            is InboxRecipientsFragment -> setBottomBarItemSelected(R.id.bottomNavigationInbox)
+            is InboxDetailsFragment,
+            is InboxComposeFragment -> setBottomBarItemSelected(R.id.bottomNavigationInbox)
             //courses
             else -> setBottomBarItemSelected(R.id.bottomNavigationHome)
         }
@@ -895,7 +939,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     when {
                         RouteContext.FILE == route.routeContext && route.secondaryClass != CourseModuleProgressionFragment::class.java -> {
                             if (route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD)) {
-                                if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString())
+                                if(route.uri != null) openMedia(CanvasContext.getGenericContext(CanvasContext.Type.COURSE, contextId, ""), route.uri.toString(), null)
                             }
                             route.paramsHash[RouterParams.FILE_ID]?.let { handleSpecificFile(contextId, it) }
 
@@ -1285,6 +1329,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
+    }
+
+    private fun setCloseDrawerVisibility() {
+        navigationDrawerBinding.navigationDrawerItemCloseDrawer.setVisible(isAccessibilityEnabled(this))
     }
 
     companion object {

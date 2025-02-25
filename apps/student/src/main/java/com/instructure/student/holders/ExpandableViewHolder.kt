@@ -23,6 +23,7 @@ import android.view.View
 import android.view.accessibility.AccessibilityManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.hasSpokenFeedback
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderHeaderExpandableBinding
@@ -56,6 +57,8 @@ class ExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 flipAnimator.duration = 200
                 flipAnimator.start()
             }
+
+            root.accessibilityClassName("android.widget.Button")
         }
     }
 

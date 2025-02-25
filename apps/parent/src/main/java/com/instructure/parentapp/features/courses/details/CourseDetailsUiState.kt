@@ -20,6 +20,7 @@ package com.instructure.parentapp.features.courses.details
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.parentapp.R
 
 
@@ -27,8 +28,12 @@ data class CourseDetailsUiState(
     val courseName: String = "",
     @ColorInt val studentColor: Int = Color.BLACK,
     val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
     val isError: Boolean = false,
-    val tabs: List<TabType> = emptyList()
+    val tabs: List<TabType> = emptyList(),
+    val currentTab: TabType? = null,
+    val syllabus: String = "",
+    val snackbarMessage: String? = null
 )
 
 enum class TabType(@StringRes val labelRes: Int) {
@@ -40,11 +45,19 @@ enum class TabType(@StringRes val labelRes: Int) {
 
 sealed class CourseDetailsAction {
     data object Refresh : CourseDetailsAction()
+    data object RefreshCourse : CourseDetailsAction()
     data object SendAMessage : CourseDetailsAction()
-    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsAction()
+    data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsAction()
+    data class NavigateToCalendarEvent(val contextType: String, val contextId: Long, val eventId: Long) : CourseDetailsAction()
+    data class CurrentTabChanged(val newTab: TabType) : CourseDetailsAction()
+    data class OnLtiClicked(val url: String) : CourseDetailsAction()
+    data class ShowSnackbar(val message: String) : CourseDetailsAction()
+    data object SnackbarDismissed : CourseDetailsAction()
 }
 
 sealed class CourseDetailsViewModelAction {
-    data object NavigateToComposeMessageScreen : CourseDetailsViewModelAction()
-    data class NavigateToAssignmentDetails(val id: Long) : CourseDetailsViewModelAction()
+    data class NavigateToComposeMessageScreen(val options: InboxComposeOptions) : CourseDetailsViewModelAction()
+    data class NavigateToAssignmentDetails(val courseId: Long, val assignmentId: Long) : CourseDetailsViewModelAction()
+    data class NavigateToCalendarEvent(val contextType: String, val contextId: Long, val eventId: Long) : CourseDetailsViewModelAction()
+    data class OpenLtiScreen(val url: String) : CourseDetailsViewModelAction()
 }

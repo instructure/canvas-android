@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -40,6 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +58,8 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 internal fun CoursesScreen(
     uiState: CoursesUiState,
     actionHandler: (CoursesAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = LazyListState()
 ) {
     CanvasTheme {
         Scaffold(
@@ -95,6 +100,7 @@ internal fun CoursesScreen(
                             CourseListContent(
                                 uiState = uiState,
                                 actionHandler = actionHandler,
+                                lazyListState = lazyListState,
                                 modifier = Modifier
                                     .padding(padding)
                                     .fillMaxSize()
@@ -120,9 +126,11 @@ internal fun CoursesScreen(
 private fun CourseListContent(
     uiState: CoursesUiState,
     actionHandler: (CoursesAction) -> Unit,
+    lazyListState: LazyListState,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
+        state = lazyListState,
         modifier = modifier.fillMaxSize()
     ) {
         items(uiState.courseListItems) {
@@ -146,6 +154,9 @@ private fun CourseListItem(
                 actionHandler(CoursesAction.CourseTapped(uiState.courseId))
             }
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .semantics {
+                role = Role.Button
+            }
     ) {
         Text(
             text = uiState.courseName,
@@ -156,7 +167,8 @@ private fun CourseListItem(
             Text(
                 text = uiState.courseCode,
                 color = colorResource(id = R.color.textDark),
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                modifier = Modifier.testTag("courseCodeText")
             )
         }
         uiState.grade?.let {

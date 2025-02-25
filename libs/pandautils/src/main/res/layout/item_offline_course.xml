@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/backgroundLight"
-        android:onClick="@{()->itemViewModel.onRowClicked()}">
+        android:onClick="@{()->itemViewModel.onRowClicked()}"
+        android:contentDescription="@{itemViewModel.data.contentDescription}">
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkbox"
@@ -28,6 +29,7 @@
             android:buttonTint="@{ViewStyler.INSTANCE.makeColorStateList(@color/textDarkest, ThemePrefs.INSTANCE.brandColor)}"
             android:onCheckedChanged="@{itemViewModel.onCheckChanged}"
             android:theme="@style/Theme.Material3.DayNight"
+            android:importantForAccessibility="no"
             app:accessibleTouchTarget="@{true}"
             app:buttonIconTint="@color/white"
             app:checkedState="@{itemViewModel.data.checkedState()}"
@@ -46,6 +48,7 @@
             android:text="@{itemViewModel.data.title}"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
+            android:importantForAccessibility="no"
             app:layout_constraintBottom_toTopOf="@id/size"
             app:layout_constraintEnd_toStartOf="@id/arrow"
             app:layout_constraintStart_toEndOf="@id/checkbox"
@@ -62,6 +65,7 @@
             android:text="@{itemViewModel.data.size}"
             android:textColor="@color/textDark"
             android:textSize="14sp"
+            android:importantForAccessibility="no"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/arrow"
             app:layout_constraintStart_toEndOf="@id/checkbox"
@@ -72,7 +76,7 @@
             android:id="@+id/arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@{itemViewModel.collapsed ? @string/content_description_expand_content : @string/content_description_collapse_content}"
+            android:contentDescription="@{String.format(itemViewModel.collapsed ? @string/content_description_expand_content_with_param : @string/content_description_collapse_content_with_param, itemViewModel.data.title)}"
             android:onClick="@{() -> itemViewModel.toggleItems()}"
             android:padding="16dp"
             android:rotation="@{itemViewModel.collapsed ? 0 : 180}"

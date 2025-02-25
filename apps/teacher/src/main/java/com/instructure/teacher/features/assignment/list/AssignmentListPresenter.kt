@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.viewinterface.AssignmentListView
-import instructure.androidblueprint.SyncExpandablePresenter
+import com.instructure.pandautils.blueprint.SyncExpandablePresenter
 import kotlinx.coroutines.Job
 import retrofit2.Response
 import java.util.*

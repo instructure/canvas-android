@@ -25,12 +25,14 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,6 +43,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -68,6 +71,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
@@ -77,8 +82,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
@@ -95,6 +104,7 @@ import com.instructure.pandautils.features.calendar.CalendarRowUiState
 import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
@@ -111,7 +121,12 @@ private const val CALENDAR_ROW_HEIGHT = 46
 private const val PAGE_COUNT = 1000
 
 @Composable
-fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
+fun Calendar(
+    calendarUiState: CalendarUiState,
+    actionHandler: (CalendarAction) -> Unit,
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
+) {
     Column(modifier = modifier) {
         var centerIndex by remember { mutableIntStateOf(PAGE_COUNT / 2) }
         val pagerState = rememberPagerState(
@@ -154,15 +169,19 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
             expanded = calendarUiState.expanded
         )
         HorizontalPager(
-            modifier = Modifier.swipeable(
-                state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
-                    actionHandler(CalendarAction.ExpandChanged(it == 1f))
-                    true
-                }),
-                orientation = Orientation.Vertical,
-                anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
-                thresholds = { _, _ -> FractionalThreshold(0.5f) },
-            ).testTag("calendarPager"),
+            modifier = Modifier
+                .swipeable(
+                    state = rememberSwipeableState(
+                        initialValue = if (calendarUiState.expanded) 1f else 0f,
+                        confirmStateChange = {
+                            actionHandler(CalendarAction.ExpandChanged(it == 1f))
+                            true
+                        }),
+                    orientation = Orientation.Vertical,
+                    anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
+                    thresholds = { _, _ -> FractionalThreshold(0.5f) },
+                )
+                .testTag("calendarPager"),
             state = pagerState,
             beyondViewportPageCount = 2,
             reverseLayout = false,
@@ -194,6 +213,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                         calendarUiState.pendingSelectedDay ?: calendarUiState.selectedDay,
                         scaleRatio = rowsScaleRatio,
                         selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) },
+                        todayFocusRequester = todayFocusRequester,
                         modifier = Modifier
                             .height(height.dp)
                             .testTag("calendarBody$monthOffset")
@@ -227,16 +247,35 @@ fun CalendarHeader(
         actionHandler(CalendarAction.ExpandEnabled)
     }
 
+    val context = LocalContext.current
+
     var monthRowModifier = Modifier
-        .semantics(mergeDescendants = true) {}
         .testTag("yearMonthTitle")
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+        val announcementText = stringResource(if (calendarOpen) R.string.a11y_calendarSwitchedToWeekView else R.string.a11y_calendarSwitchedToMonthView)
         monthRowModifier = monthRowModifier
             .clickable(
-                onClick = { actionHandler(CalendarAction.ExpandChanged(!calendarOpen)) },
-                onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
+                onClick = {
+                    actionHandler(CalendarAction.ExpandChanged(!calendarOpen))
+                    announceAccessibilityText(context, announcementText)
+                },
+                onClickLabel = stringResource(id = R.string.a11y_calendarSwitchBetweenMonthAndWeekView)
             )
             .padding(8.dp)
+    }
+
+    val calendarExpandedStateTExt =
+        stringResource(id = if (calendarOpen) R.string.a11y_calendarMonthView else R.string.a11y_calendarWeekView)
+    val calendarHeadingButtonContentDescription = stringResource(
+        id = R.string.a11y_calendarMonthButtonContentDescription,
+        headerUiState.yearTitle,
+        headerUiState.monthTitle,
+        calendarExpandedStateTExt
+    )
+    monthRowModifier = monthRowModifier.clearAndSetSemantics {
+        contentDescription = calendarHeadingButtonContentDescription
+        role = Role.Button
+        liveRegion = LiveRegionMode.Polite
     }
 
     Column(modifier = modifier) {
@@ -258,7 +297,7 @@ fun CalendarHeader(
                         text = headerUiState.monthTitle,
                         fontSize = 22.sp,
                         color = colorResource(id = R.color.textDarkest),
-                        modifier = Modifier.height(30.dp)
+                        modifier = Modifier.defaultMinSize(minHeight = 30.dp)
                     )
                     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
                         Icon(
@@ -280,7 +319,11 @@ fun CalendarHeader(
                     .clickable {
                         actionHandler(CalendarAction.FilterTapped)
                     }
-                    .padding(horizontal = 8.dp, vertical = 12.dp))
+                    .padding(horizontal = 8.dp, vertical = 12.dp)
+                    .semantics {
+                        role = Role.Button
+                    }
+            )
         }
         if (headerUiState.loadingMonths) {
             LinearProgressIndicator(
@@ -300,7 +343,8 @@ fun CalendarBody(
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
     scaleRatio: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
 ) {
     Column(
         modifier
@@ -312,7 +356,7 @@ fun CalendarBody(
                 .padding(start = 16.dp, end = 16.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio)
+        CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio, todayFocusRequester = todayFocusRequester)
     }
 }
 
@@ -348,7 +392,8 @@ fun CalendarPage(
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
     scaleRatio: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
 ) {
     Column(modifier = modifier) {
         calendarRows.forEachIndexed { index, it ->
@@ -356,7 +401,7 @@ fun CalendarPage(
             // to be able to see the neighbouring pages
             val scale = if (it.days.any { day -> day.date == selectedDay } || calendarRows.size == 1) 1.0f else scaleRatio
             DaysOfWeekRow(
-                days = it.days, selectedDay, selectedDayChanged, modifier = Modifier
+                days = it.days, selectedDay, selectedDayChanged, todayFocusRequester = todayFocusRequester, modifier = Modifier
                     .height(CALENDAR_ROW_HEIGHT.dp * scale)
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
@@ -373,7 +418,8 @@ fun DaysOfWeekRow(
     days: List<CalendarDayUiState>,
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    todayFocusRequester: FocusRequester? = null
 ) {
     Row(
         modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
@@ -385,38 +431,55 @@ fun DaysOfWeekRow(
                 dayState.enabled -> colorResource(id = R.color.textDarkest)
                 else -> colorResource(id = R.color.textDark)
             }
-            var dayModifier = Modifier
+            val dayContentDescription =
+                dayState.contentDescription + " " + pluralStringResource(
+                    id = R.plurals.a11y_calendar_day_event_count,
+                    dayState.indicatorCount,
+                    dayState.indicatorCount
+                )
+
+            var columnModifier = Modifier
                 .width(32.dp)
-                .height(32.dp)
-                .clip(RoundedCornerShape(32.dp))
-                .clickable { selectedDayChanged(dayState.date) }
-            if (dayState.date == selectedDay) {
-                dayModifier = dayModifier
-                    .background(
-                        color = Color(ThemePrefs.buttonColor),
-                        shape = RoundedCornerShape(500.dp),
-                    )
+                .wrapContentHeight()
+
+            if (dayState.today && dayState.enabled && todayFocusRequester != null) {
+                columnModifier = columnModifier
+                    .focusRequester(todayFocusRequester)
+                    .focusable()
             }
-            dayModifier = dayModifier.wrapContentHeight(align = Alignment.CenterVertically)
+
             Column(
-                Modifier
-                    .width(32.dp)
-                    .wrapContentHeight()
+                columnModifier
+                    .testTag(dayState.dayNumber.toString())
+                    .selectable(dayState.date == selectedDay) {
+                        selectedDayChanged(dayState.date)
+                    }
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = dayContentDescription
+                        role = Role.Button
+                    }
             ) {
-                val dayContentDescription =
-                    dayState.contentDescription + " " + pluralStringResource(
-                        id = R.plurals.a11y_calendar_day_event_count,
-                        dayState.indicatorCount,
-                        dayState.indicatorCount
-                    )
+                var dayModifier = Modifier
+                    .width(32.dp)
+                    .height(32.dp)
+                    .clip(RoundedCornerShape(32.dp))
+
+                if (dayState.date == selectedDay) {
+                    dayModifier = dayModifier
+                        .background(
+                            color = Color(ThemePrefs.buttonColor),
+                            shape = RoundedCornerShape(500.dp),
+                        )
+                }
+
                 Text(
                     text = dayState.dayNumber.toString(),
                     fontSize = 16.sp,
                     color = textColor,
-                    modifier = dayModifier.semantics {
-                        contentDescription = dayContentDescription
-                    },
-                    textAlign = TextAlign.Center,
+                    modifier = dayModifier
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                        .clearAndSetSemantics { },
+                    textAlign = TextAlign.Center
                 )
                 Row(
                     Modifier
@@ -426,7 +489,9 @@ fun DaysOfWeekRow(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     repeat(dayState.indicatorCount) {
-                        EventIndicator(modifier = Modifier.clearAndSetSemantics { testTag = "eventIndicator$it" })
+                        EventIndicator(modifier = Modifier.clearAndSetSemantics {
+                            testTag = "eventIndicator$it"
+                        })
                     }
                 }
             }

@@ -447,6 +447,8 @@
     <string name="cancel_editing_comment">Cancel·la l\'edició del comentari</string>
     <string name="skip">Omet</string>
 
+    <string name="collapseGradePanel">Contrau el tauler de notes</string>
+    <string name="expandGradePanel">Desplega el tauler de notes</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Puntuació personalitzada %1$s</string>
 
@@ -511,22 +513,7 @@
     <string name="colorPickerDialogMessage">Aquesta és la configuració del vostre color personal. Cap altre usuari no veurà aquest color per a l\'assignatura.</string>
     <string name="colorPickerError">En aquest moment, no s\'ha pogut establir el color de l\'assignatura.</string>
 
-    <string name="contentDescriptionColorCottonCandy">Rosa</string>
-    <string name="contentDescriptionColorBarbie">Rosa fort</string>
-    <string name="contentDescriptionColorBarneyPurple">Violeta</string>
-    <string name="contentDescriptionColorEggplant">Porpra</string>
-    <string name="contentDescriptionColorUltramarine">Blau fosc</string>
-    <string name="contentDescriptionColorOcean11">Blau</string>
-    <string name="contentDescriptionColorCyan">Cian</string>
-    <string name="contentDescriptionColorAquaMarine">Blau cel</string>
-    <string name="contentDescriptionColorEmeraldGreen">Verd maragda</string>
-    <string name="contentDescriptionColorFreshCutLawn">Verd</string>
-    <string name="contentDescriptionColorChartreuse">Verd groguenc</string>
-    <string name="contentDescriptionColorSunFlower">Groc</string>
-    <string name="contentDescriptionColorTangerine">Taronja</string>
-    <string name="contentDescriptionColorBloodOrange">Taronja fosc</string>
-    <string name="contentDescriptionColorSriracha">Vermell</string>
-    <string name="launch_link_in_external_browser">Inicia l\'enllaç al navegador extern</string>
+                                                                <string name="launch_link_in_external_browser">Inicia l\'enllaç al navegador extern</string>
     <string name="contentDescriptionSelectedFile">Fitxer seleccionat</string>
     <string name="contentDescriptionFileIcon">Icona de fitxer</string>
     <string name="contentDescriptionExpandPage">Desplega la pàgina</string>
@@ -612,6 +599,7 @@
     <string name="discussion_details">Informació sobre el fòrum</string>
     <string name="discussions_pinned">Ancorat</string>
     <string name="discussions_unpinned">Fòrums</string>
+    <string name="discussions_close">Tanca per a comentaris</string>
     <string name="discussions_closed">Tancat per als comentaris</string>
     <string name="discussions_open">Obre per a comentaris</string>
     <string name="discussions_pin">Ancora</string>
@@ -852,6 +840,7 @@
     <string name="errorUpdatingFile">S\'ha produït un error en actualitzar aquest fitxer</string>
     <string name="errorUpdatingFolder">S\'ha produït un error en actualitzar aquesta carpeta</string>
 
+    <string name="errorEmptyTitle">El títol no pot quedar en blanc</string>
     <string name="toDoEmpty">Ja no s\'ha de fer res més.\n Que tingueu bon dia.</string>
     <string name="toDoNoSubmissions">No hi ha cap entrega que s\'hagi de qualificar per a aquesta activitat.</string>
     <string name="errorToDoRouteFailed">S\'ha produït un error en provar de veure aquest element de tasques pendents.</string>

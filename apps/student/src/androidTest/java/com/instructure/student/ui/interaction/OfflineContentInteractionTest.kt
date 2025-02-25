@@ -18,7 +18,11 @@
 package com.instructure.student.ui.interaction
 
 import android.text.format.Formatter
+import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -32,14 +36,16 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.StorageUtils
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class OfflineContentInteractionTest : StudentTest() {
+class OfflineContentInteractionTest : StudentComposeTest() {
 
     @Inject
     lateinit var storageUtils: StorageUtils
@@ -367,11 +373,28 @@ class OfflineContentInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
         dashboardPage.waitForRender()
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openOfflineSyncSettingsPage()
+        settingsPage.clickOnSettingsItem("Synchronization")
         offlineSyncSettingsPage.clickWifiOnlySwitch()
         offlineSyncSettingsPage.clickTurnOff()
         Espresso.pressBack()
         Espresso.pressBack()
         dashboardPage.openGlobalManageOfflineContentPage()
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheck(
+                SpeakableTextPresentCheck::class.java
+            ),
+            AccessibilityCheckResultUtils.matchesViews(
+                ViewMatchers.withParent(
+                    ViewMatchers.withClassName(
+                        Matchers.equalTo(ComposeView::class.java.name)
+                    )
+                )
+            )
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
     }
 }

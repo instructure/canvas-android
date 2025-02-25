@@ -15,7 +15,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.type.EnrollmentType
 import org.junit.Test
 
-abstract class InboxComposeInteractionTest: CanvasComposeTest() {
+abstract class InboxComposeInteractionTest : CanvasComposeTest() {
 
     private val inboxPage = InboxPage()
     private val inboxComposePage = InboxComposePage(composeTestRule)
@@ -55,8 +55,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Teachers")
         recipientPickerPage.pressLabel(getTeachers().first().name)
@@ -83,8 +82,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Teachers")
         recipientPickerPage.pressLabel(getTeachers().first().name)
@@ -92,6 +90,8 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         inboxComposePage.typeSubject("Test Subject")
         inboxComposePage.typeBody("Test Body")
         inboxComposePage.pressSendButton()
+
+        composeTestRule.waitForIdle()
 
         inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed("Test Subject")
@@ -120,8 +120,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Teachers")
         recipientPickerPage.pressLabel(getTeachers().first().name)
@@ -160,8 +159,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("All in ${data.courses.values.first().name}")
         recipientPickerPage.pressDone()
@@ -198,8 +196,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Teachers")
         recipientPickerPage.pressLabel("All in Teachers")
@@ -230,8 +227,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Teachers")
         recipientPickerPage.pressLabel(getTeachers().first().name)
@@ -247,6 +243,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
                 data
             )
         }
+        composeTestRule.waitForIdle()
 
         inboxPage.filterInbox("Sent")
         inboxPage.assertConversationDisplayed("Test Subject")
@@ -258,9 +255,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
 
         inboxComposePage.assertContextSelected(getFirstCourse().name)
     }
@@ -280,8 +275,7 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressCourseSelector()
-        selectContextPage.selectContext(getFirstCourse().name)
+        selectContext()
         inboxComposePage.pressAddRecipient()
         recipientPickerPage.pressLabel("Teachers")
         recipientPickerPage.pressLabel(getTeachers().first().name)
@@ -332,6 +326,16 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
         inboxComposePage.assertAlertDialog()
     }
 
+    @Test
+    fun assertInboxSignatureIsPopulated() {
+        val data = initData()
+        data.inboxSignature = "Test Signature"
+        goToInboxCompose(data)
+        composeTestRule.waitForIdle()
+
+        inboxComposePage.assertBodyText("\n\n---\nTest Signature")
+    }
+
     private fun addAttachmentToConversation(attachmentName: String, conversation: Conversation, mockCanvas: MockCanvas) {
         val attachment = createHtmlAttachment(attachmentName, mockCanvas)
         val newMessageList = listOf(conversation.messages.first().copy(attachments = listOf(attachment)))
@@ -375,4 +379,9 @@ abstract class InboxComposeInteractionTest: CanvasComposeTest() {
     abstract fun getFirstCourse(): Course
 
     abstract fun getSentConversation(): Conversation?
+
+    open fun selectContext() {
+        inboxComposePage.pressCourseSelector()
+        selectContextPage.selectContext(getFirstCourse().name)
+    }
 }

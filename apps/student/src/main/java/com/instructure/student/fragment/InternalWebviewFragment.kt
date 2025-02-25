@@ -38,11 +38,30 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isValid
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
+import com.instructure.canvasapi2.utils.weave.StatusCallbackError
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.OnBackStackChangedEvent
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentWebviewBinding
@@ -57,6 +76,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     val binding by viewBinding(FragmentWebviewBinding::bind)
 
+    @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(
         default = CanvasContext.emptyUserContext(),
         key = Const.CANVAS_CONTEXT
@@ -127,7 +147,7 @@ open class InternalWebviewFragment : ParentFragment() {
         canvasWebViewWrapper.webView.canvasWebViewClientCallback =
             object : CanvasWebView.CanvasWebViewClientCallback {
                 override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                    openMedia(canvasContext, url, filename)
+                    openMedia(canvasContext, url, filename, null)
                 }
 
                 override fun onPageFinishedCallback(webView: WebView, url: String) {
@@ -273,7 +293,7 @@ open class InternalWebviewFragment : ParentFragment() {
     override fun applyTheme() = with(binding) {
         toolbar.title = title()
         toolbar.setupAsBackButton(this@InternalWebviewFragment)
-        if (canvasContext.type != CanvasContext.Type.COURSE || canvasContext.type != CanvasContext.Type.GROUP) {
+        if (canvasContext.type != CanvasContext.Type.COURSE && canvasContext.type != CanvasContext.Type.GROUP) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         } else {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)

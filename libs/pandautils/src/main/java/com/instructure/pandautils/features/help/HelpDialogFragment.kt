@@ -23,7 +23,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -40,7 +40,7 @@ import javax.inject.Inject
 @PageView(url = "help")
 @ScreenView(SCREEN_VIEW_HELP)
 @AndroidEntryPoint
-class HelpDialogFragment : DialogFragment() {
+class HelpDialogFragment : BaseCanvasDialogFragment() {
 
     private val viewModel: HelpDialogViewModel by viewModels()
 
@@ -49,7 +49,7 @@ class HelpDialogFragment : DialogFragment() {
 
     @Suppress("unused")
     @PageViewUrl
-    private fun makePageViewUrl() = "help.instructure.com"
+    fun makePageViewUrl() = "help.instructure.com"
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -78,25 +78,18 @@ class HelpDialogFragment : DialogFragment() {
             is HelpDialogAction.ReportProblem -> helpDialogFragmentBehavior.reportProblem()
             is HelpDialogAction.RateTheApp -> helpDialogFragmentBehavior.rateTheApp()
             is HelpDialogAction.AskInstructor -> helpDialogFragmentBehavior.askInstructor()
-            // External URL, but we handle within the app
-            is HelpDialogAction.SubmitFeatureIdea -> {
-                // Before custom help links, we were handling request a feature ourselves and
-                // we decided to keep that functionality instead of loading up the URL
-
-                // Let the user open their favorite mail client
-                val intent = populateMailIntent(action)
-                startActivity(Intent.createChooser(intent, getString(R.string.sendMail)))
-            }
             is HelpDialogAction.Phone -> {
                 // Support phone links: https://community.canvaslms.com/docs/DOC-12664-4214610054
                 val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse(action.url) }
                 startActivity(intent)
             }
+
             is HelpDialogAction.SendMail -> {
                 // Support mailto links: https://community.canvaslms.com/docs/DOC-12664-4214610054
                 val intent = Intent(Intent.ACTION_SENDTO).apply { data = Uri.parse(action.url) }
                 startActivity(intent)
             }
+
             is HelpDialogAction.OpenExternalBrowser -> {
                 // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
                 // to the external browser
@@ -106,18 +99,6 @@ class HelpDialogFragment : DialogFragment() {
             // External URL
             is HelpDialogAction.OpenWebView -> helpDialogFragmentBehavior.openWebView(action.url, action.title)
         }
-    }
-
-    private fun populateMailIntent(action: HelpDialogAction.SubmitFeatureIdea): Intent {
-        // Let the user open their favorite mail client
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "message/rfc822"
-
-        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(action.recipient))
-        intent.putExtra(Intent.EXTRA_SUBJECT, action.subject)
-        intent.putExtra(Intent.EXTRA_TEXT, action.emailBody)
-
-        return intent
     }
 
     override fun onDestroyView() {

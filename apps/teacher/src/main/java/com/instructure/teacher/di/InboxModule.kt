@@ -19,13 +19,18 @@ package com.instructure.teacher.di
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.teacher.features.inbox.compose.TeacherInboxComposeRepository
+import com.instructure.teacher.features.inbox.details.TeacherInboxDetailsBehavior
 import com.instructure.teacher.features.inbox.list.TeacherInboxRepository
 import com.instructure.teacher.features.inbox.list.TeacherInboxRouter
 import dagger.Module
@@ -53,14 +58,27 @@ class InboxModule {
         inboxApi: InboxApi.InboxInterface,
         coursesApi: CourseAPI.CoursesInterface,
         groupsApi: GroupAPI.GroupInterface,
-        progressApi: ProgressAPI.ProgressInterface
+        progressApi: ProgressAPI.ProgressInterface,
+        inboxSettingsManager: InboxSettingsManager,
+        featuresApi: FeaturesAPI.FeaturesInterface
     ): InboxRepository {
-        return TeacherInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+        return TeacherInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager, featuresApi)
     }
 
     @Provides
-    fun provideInboxComposeRepository(): InboxComposeRepository {
-        return TeacherInboxComposeRepository()
+    fun provideInboxComposeRepository(
+        coursesApi: CourseAPI.CoursesInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        recipientApi: RecipientAPI.RecipientInterface,
+        inboxApi: InboxApi.InboxInterface,
+        inboxSettingsManager: InboxSettingsManager
+    ): InboxComposeRepository {
+        return TeacherInboxComposeRepository(coursesApi, featuresApi, recipientApi, inboxApi, inboxSettingsManager)
+    }
+
+    @Provides
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return TeacherInboxDetailsBehavior()
     }
 
 }

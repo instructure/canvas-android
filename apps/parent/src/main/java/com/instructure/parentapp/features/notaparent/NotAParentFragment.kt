@@ -25,14 +25,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.analytics.SCREEN_VIEW_NOT_A_PARENT
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.util.ParentLogoutTask
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@ScreenView(SCREEN_VIEW_NOT_A_PARENT)
 @AndroidEntryPoint
-class NotAParentFragment : Fragment() {
+class NotAParentFragment : BaseCanvasFragment() {
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +51,10 @@ class NotAParentFragment : Fragment() {
             setContent {
                 NotAParentScreen(
                     returnToLoginClick = {
-                        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                        ParentLogoutTask(
+                            LogoutTask.Type.LOGOUT,
+                            alarmScheduler = alarmScheduler
+                            ).execute()
                     },
                     onStudentClick = {
                         openStore("com.instructure.candroid")

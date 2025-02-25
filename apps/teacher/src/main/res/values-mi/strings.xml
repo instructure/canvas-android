@@ -445,6 +445,8 @@
     <string name="cancel_editing_comment">Whakakore korero whakatika</string>
     <string name="skip">Tīpoka</string>
 
+    <string name="collapseGradePanel">Tiango Paepae Koeke</string>
+    <string name="expandGradePanel">Roha Paepae Kōeke</string>
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Tikanga kaute %1$s</string>
 
@@ -509,22 +511,7 @@
     <string name="colorPickerDialogMessage">Ko tēnei tō tae tautuhinga. Ko koe anake ka kite i tēnei tae mo te akoranga</string>
     <string name="colorPickerError">Kaore e taea te whakatau te tae o te akoranga i tēnei wā</string>
 
-    <string name="contentDescriptionColorCottonCandy">Māwhero</string>
-    <string name="contentDescriptionColorBarbie">māwhero wera</string>
-    <string name="contentDescriptionColorBarneyPurple">puru</string>
-    <string name="contentDescriptionColorEggplant">Waiporoporo</string>
-    <string name="contentDescriptionColorUltramarine">Kikorangi pouri</string>
-    <string name="contentDescriptionColorOcean11">Kikorangi</string>
-    <string name="contentDescriptionColorCyan">Kawariki</string>
-    <string name="contentDescriptionColorAquaMarine">Aqua puru</string>
-    <string name="contentDescriptionColorEmeraldGreen">Emerara matomato</string>
-    <string name="contentDescriptionColorFreshCutLawn">Kākāriki</string>
-    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
-    <string name="contentDescriptionColorSunFlower">Kōwhai</string>
-    <string name="contentDescriptionColorTangerine">Ārani</string>
-    <string name="contentDescriptionColorBloodOrange">Ārani pouri</string>
-    <string name="contentDescriptionColorSriracha">whero</string>
-    <string name="launch_link_in_external_browser">Hono whakarewa i roto i te pūtirotiro waho</string>
+                                                                <string name="launch_link_in_external_browser">Hono whakarewa i roto i te pūtirotiro waho</string>
     <string name="contentDescriptionSelectedFile">Kōnae kua tīpakohia</string>
     <string name="contentDescriptionFileIcon">Icon kōnae</string>
     <string name="contentDescriptionExpandPage">Whakawhānui i te whārangi</string>
@@ -610,6 +597,7 @@
     <string name="discussion_details">Kōrerorero Taipitopito</string>
     <string name="discussions_pinned">Kua pinea</string>
     <string name="discussions_unpinned">Ngā Kōrerorero</string>
+    <string name="discussions_close">Katia mō ngā Kōrero</string>
     <string name="discussions_closed">Kua kati mo ngā kōrero</string>
     <string name="discussions_open">Whakatuwheratia mō ngā kōrerorero</string>
     <string name="discussions_pin">Pine</string>
@@ -850,6 +838,7 @@
     <string name="errorUpdatingFile">He hapa i puta i te wa e whakahou ana i tēnei kōnae</string>
     <string name="errorUpdatingFolder">He hapa i puta i te wa e whakahou ana i tēnei kōpaki</string>
 
+    <string name="errorEmptyTitle">Ko te taitara kaore e taea te waatea</string>
     <string name="toDoEmpty">Kaore atu anō he mahi!\n Kia pai tō rā.</string>
     <string name="toDoNoSubmissions">Kaore he tukunga hei kōeke mo tēnei whakataunga.</string>
     <string name="errorToDoRouteFailed">He hapa i puta i te wā e tiro ana i tēnei Hei Mahi tuemi.</string>

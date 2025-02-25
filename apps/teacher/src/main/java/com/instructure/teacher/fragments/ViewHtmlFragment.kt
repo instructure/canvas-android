@@ -115,7 +115,8 @@ class ViewHtmlFragment : InternalWebViewFragment() {
             }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.textLightest))
         } else if (isTablet && toolbarColor != 0) {
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.textLightest))
+            val textColor = if (toolbarColor == ThemePrefs.primaryColor) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.textLightest)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, textColor)
         } else {
             super.setupToolbar(courseColor)
         }
