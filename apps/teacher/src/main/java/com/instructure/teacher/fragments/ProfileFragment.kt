@@ -28,7 +28,11 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentProfileBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
@@ -62,7 +66,7 @@ class ProfileFragment : BaseFragment() {
 
     private fun setupToolbar() = with(binding) {
         toolbar.setupMenu(R.menu.menu_settings_edit, menuItemCallback)
-        if (!isTablet) toolbar.setupBackButtonAsBackPressedOnly(this@ProfileFragment)
+        toolbar.setupBackButtonAsBackPressedOnly(this@ProfileFragment)
         titleTextView.adoptToolbarStyle(toolbar)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toolbar.requestAccessibilityFocus()
