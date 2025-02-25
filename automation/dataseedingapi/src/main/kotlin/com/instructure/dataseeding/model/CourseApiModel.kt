@@ -50,6 +50,11 @@ data class CreateCourse(
         val settings: CourseSettings? = null
 )
 
+data class UpdateCourse(
+        @SerializedName("syllabus_body")
+        val syllabusBody: String? = null
+)
+
 data class CourseSettings(
         @SerializedName("restrict_quantitative_data")
         var restrictQuantitativeData: Boolean = false,
@@ -57,6 +62,11 @@ data class CourseSettings(
 
 data class CreateCourseWrapper(
         val course: CreateCourse,
+        val offer: Boolean = true
+)
+
+data class UpdateCourseWrapper(
+        val course: UpdateCourse,
         val offer: Boolean = true
 )
 

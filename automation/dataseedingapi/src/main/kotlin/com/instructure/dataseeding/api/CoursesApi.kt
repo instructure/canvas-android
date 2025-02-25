@@ -22,6 +22,8 @@ import com.instructure.dataseeding.model.CourseSettings
 import com.instructure.dataseeding.model.CreateCourse
 import com.instructure.dataseeding.model.CreateCourseWrapper
 import com.instructure.dataseeding.model.FavoriteApiModel
+import com.instructure.dataseeding.model.UpdateCourse
+import com.instructure.dataseeding.model.UpdateCourseWrapper
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
@@ -37,6 +39,9 @@ object CoursesApi {
 
         @POST("accounts/self/courses")
         fun createCourse(@Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
+
+        @PUT("courses/{courseId}")
+        fun updateCourse(@Path("courseId") courseId: Long, @Body updateCourseApiModel: UpdateCourseWrapper): Call<CourseApiModel>
 
         @POST("accounts/{account_id}/courses")
         fun createCourseInSubAccount(@Path("account_id") accountId: Long, @Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
@@ -124,6 +129,13 @@ object CoursesApi {
     ): CourseSettings {
         return adminCoursesService
             .updateCourseSettings(courseId, params)
+            .execute()
+            .body()!!
+    }
+
+    fun updateCourse(courseId: Long, syllabusBody: String?) : CourseApiModel {
+        return adminCoursesService
+            .updateCourse(courseId, UpdateCourseWrapper(UpdateCourse(syllabusBody)))
             .execute()
             .body()!!
     }
