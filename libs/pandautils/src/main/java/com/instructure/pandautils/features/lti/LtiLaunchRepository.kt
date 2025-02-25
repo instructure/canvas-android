@@ -18,17 +18,26 @@ package com.instructure.pandautils.features.lti
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.LTITool
 
 class LtiLaunchRepository(
     private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
-    private val assignmentApi: AssignmentAPI.AssignmentInterface
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
+    private val oAuthInterface: OAuthAPI.OAuthInterface
 ) {
     suspend fun getLtiFromAuthenticationUrl(url: String, ltiTool: LTITool?): LTITool {
         val params = RestParams(isForceReadFromNetwork = true)
         return ltiTool?.let {
             assignmentApi.getExternalToolLaunchUrl(ltiTool.courseId, ltiTool.id, ltiTool.assignmentId, restParams = params).dataOrNull
         } ?: launchDefinitionsApi.getLtiFromAuthenticationUrl(url, RestParams(isForceReadFromNetwork = true)).dataOrThrow
+    }
+
+    suspend fun authenticateUrl(url: String): String {
+        return oAuthInterface.getAuthenticatedSession(
+            url,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrNull?.sessionUrl ?: url
     }
 }
