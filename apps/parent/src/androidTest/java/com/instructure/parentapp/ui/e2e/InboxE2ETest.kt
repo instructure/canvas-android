@@ -414,6 +414,7 @@ class InboxE2ETest: ParentComposeTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testComposeMessageShortcutsE2E() {
+
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, parents = 1, courses = 2, syllabusBody = "Syllabus body")
         val course = data.coursesList[0]
@@ -421,8 +422,11 @@ class InboxE2ETest: ParentComposeTest() {
         val parent = data.parentsList[0]
         val teacher = data.teachersList[0]
         val student = data.studentsList[0]
+        Log.d(PREPARATION_TAG, "Creating a Front Page for ${courseWithFrontPage.name} course.")
         PagesApi.createCoursePage(courseWithFrontPage.id, teacher.token, frontPage = true, editingRoles = "public")
+        Log.d(PREPARATION_TAG, "Setting up ${course.name} course to have summary.")
         CoursesApi.updateCourseSettings(course.id, mapOf("syllabus_course_summary" to true))
+        Log.d(PREPARATION_TAG, "Setting the Front Page for ${courseWithFrontPage.name} course.")
         CoursesApi.updateCourse(courseWithFrontPage.id, courseWithFrontPage.copy(homePage = "wiki"))
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token)
         val testEvent = CalendarEventApi.createCalendarEvent(
@@ -448,67 +452,56 @@ class InboxE2ETest: ParentComposeTest() {
         ) {
             coursesPage.clickCourseItem(course.name)
         }
-        composeTestRule.waitForIdle()
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Click assignment ${testAssignment.name}.")
         courseDetailsPage.clickAssignment(testAssignment.name)
-        composeTestRule.waitForIdle()
 
         val expectedSubjectAssignment = "Regarding: ${student.name}, Assignment - ${testAssignment.name}"
         Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectAssignment' as subject.")
         assignmentDetailsPage.clickComposeMessageFAB()
-        composeTestRule.waitForIdle()
         inboxComposeMessagePage.assertSubjectText(expectedSubjectAssignment)
 
         Log.d(STEP_TAG, "Go back to course details.")
         inboxComposeMessagePage.pressBackButton()
         inboxComposeMessagePage.pressExitConfirmationButton()
         Espresso.pressBack()
-        composeTestRule.waitForIdle()
 
         val expectedSubjectGrades = "Regarding: ${student.shortName}, Grades"
         Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectGrades' as subject.")
         courseDetailsPage.clickComposeMessageFAB()
-        composeTestRule.waitForIdle()
         inboxComposeMessagePage.assertSubjectText(expectedSubjectGrades)
 
         Log.d(STEP_TAG, "Go back to course details and select 'Syllabus' tab.")
         inboxComposeMessagePage.pressBackButton()
         inboxComposeMessagePage.pressExitConfirmationButton()
-        composeTestRule.waitForIdle()
         courseDetailsPage.selectTab("SYLLABUS")
 
         val expectedSubjectSyllabus = "Regarding: ${student.shortName}, Syllabus"
         Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectSyllabus' as subject.")
         courseDetailsPage.clickComposeMessageFAB()
-        composeTestRule.waitForIdle()
         inboxComposeMessagePage.assertSubjectText(expectedSubjectSyllabus)
 
         Log.d(STEP_TAG, "Go back to course details and select 'Summary' tab.")
         inboxComposeMessagePage.pressBackButton()
         inboxComposeMessagePage.pressExitConfirmationButton()
-        composeTestRule.waitForIdle()
         courseDetailsPage.selectTab("SUMMARY")
 
         val expectedSubjectSummary = "Regarding: ${student.shortName}, Summary"
         Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectSummary' as subject.")
         courseDetailsPage.clickComposeMessageFAB()
-        composeTestRule.waitForIdle()
         inboxComposeMessagePage.assertSubjectText(expectedSubjectSummary)
 
         Log.d(STEP_TAG, "Go back to course list and select a course with 'Front Page' as home page.")
         inboxComposeMessagePage.pressBackButton()
         inboxComposeMessagePage.pressExitConfirmationButton()
         Espresso.pressBack()
-        composeTestRule.waitForIdle()
         coursesPage.clickCourseItem(courseWithFrontPage.name)
         courseDetailsPage.selectTab("FRONT PAGE")
 
         val expectedSubjectFrontPage = "Regarding: ${student.shortName}, Front Page"
         Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectFrontPage' as subject.")
         courseDetailsPage.clickComposeMessageFAB()
-        composeTestRule.waitForIdle()
         inboxComposeMessagePage.assertSubjectText(expectedSubjectFrontPage)
 
         Log.d(STEP_TAG, "Go to Calendar and click on ${testEvent.title} event.")
@@ -517,12 +510,10 @@ class InboxE2ETest: ParentComposeTest() {
         Espresso.pressBack()
         dashboardPage.clickCalendarBottomMenu()
         calendarScreenPage.clickOnItem(testEvent.title.orEmpty())
-        composeTestRule.waitForIdle()
 
         val expectedSubjectEvent = "Regarding: ${student.name}, Event - ${testEvent.title}"
         Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectEvent' as subject.")
         calendarEventDetailsPage.clickComposeMessageFAB()
-        composeTestRule.waitForIdle()
         inboxComposeMessagePage.assertSubjectText(expectedSubjectEvent)
         inboxComposeMessagePage.typeBody("This is a test message.")
         inboxComposeMessagePage.pressSendButton()
@@ -530,7 +521,6 @@ class InboxE2ETest: ParentComposeTest() {
         val expectedMessage =
             "This is a test message.\n\nRegarding: ${student.name}, https://${CanvasNetworkAdapter.canvasDomain}/courses/${course.id}/calendar_events/${testEvent.id}"
         Log.d(STEP_TAG, "Go to Inbox and assert the sent message's body is $expectedMessage.")
-        composeTestRule.waitForIdle()
         Espresso.pressBack()
         dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickInbox()

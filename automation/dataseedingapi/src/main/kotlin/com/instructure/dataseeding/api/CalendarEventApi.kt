@@ -26,7 +26,7 @@ import retrofit2.http.Query
 object CalendarEventApi {
 
     interface CalendarEventService {
-        @POST("calendar_events/")
+        @POST("calendar_events")
         fun createCalendarEvent(
             @Query("calendar_event[context_code]") contextCode: String,
             @Query(value = "calendar_event[title]", encoded = true) title: String,
