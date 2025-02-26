@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Mai i konei, ka kite koe i nga Taipitopito Tukunga.</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Pāwhiri ki konei kia kite i te Tukunga &amp; Nga korero mo te rubric</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Kōeke: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Meneti</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Tīpako Akoranga rōpū ranei</string>
     <string name="inboxClearFilter">Ūkui</string>
     <string name="a11y_courseFilterContentDescription">Tātari akoranga: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Kōwhiringa pouakamēra: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">whiriwhiri</string>
     <string name="a11y_itemSelectedSwipeForActions">Kua tohua te korerorero. Kua whakahohehia te aratau whiriwhiri. Whakatere mo nga mahi.</string>
     <string name="a11y_conversationSelected">Kua tohua te korerorero</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Ētahi atu Taupānga</string>
     <string name="offline_content_canvas_student">Canvas Ākonga</string>
     <string name="offline_content_remaining">E toe ana</string>
+    <string name="offline_content_storage_info_a11y_description">Mōhiohio Rokiroki: %s o %s Kua whakamahia, Ētahi atu Taupānga %d%%, Ākonga Canvas %d%%, Toe %d%%</string>
     <string name="offline_content_all_courses">Ngā akoranga katoa</string>
     <string name="offline_content_sync">Tukutahi</string>
     <string name="offline_content_selected">%d Kua tīpakohia</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Tukutahi</string>
     <string name="offline_content_sync_loading_title">E uta ana ....</string>
     <string name="offline_content_sync_loading_message">Kia mau, tatou kei te whakarite mea mo koe.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Kua tiakina nga tautuhinga tukutahi tuimotu. Ka timata te tukutahi i muri tata nei.</string>
     <string name="content_description_expand_content">Roha ihirangi</string>
+    <string name="content_description_expand_content_with_param">Roha ihirangi, %s</string>
     <string name="content_description_collapse_content">Tiango ihirangi</string>
+    <string name="content_description_collapse_content_with_param">Tiango ihirangi, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Ina whakahohea te waahanga Tukutahi Ihirangi Aunoa, ko nga ihirangi kua tikiakehia ka whakawhirinaki ki nga tautuhinga kua whakarārangihia i raro nei. Ahakoa kaore i tuwhera te tono, ka mau tonu te tukutahitanga ihirangi. Karekau he tukutahitanga mena kua weto te tautuhinga. Ko nga mea kua oti te tango ake ka kore e tangohia.</string>
     <string name="syncSettings_syncFrequencyTitle">Auautanga Tukutahi</string>
     <string name="syncSettings_autoContentSyncTitle">Tukutahi Ihirangi Aunoa</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Kaore i tāngia</string>
     <string name="discussionMenuRefresh">Whakahouhia</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Peke ki tēnei rā</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Peke ki tenei ra, ko te ra kua tohua ko %s, ko tenei ra %s</string>
     <string name="a11y_calendarSwitchToMonthView">Huri ki te tirohanga marama</string>
     <string name="a11y_calendarSwitchToWeekView">Hurihia ki te tirohanga wiki</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Hurihia te tirohanga marama me te wiki</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Maramataka kei te tirohanga marama</string>
+    <string name="a11y_calendarWeekView">Maramataka kei te tirohanga wiki</string>
+    <string name="a11y_calendarSwitchedToWeekView">Kua huri te maramataka ki te tirohanga wiki</string>
+    <string name="a11y_calendarSwitchedToMonthView">Kua huri te Maramataka ki te tirohanga marama</string>
     <string name="calendarNoEvents">Kaore he tauwhāinga i tēnei rā!</string>
     <string name="calendarNoEventsDescription">Ko te āhua nei he rā pai ki te whakatā me te whakahou anō.</string>
     <string name="userCalendarToDo">Hei Mahi</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Ka taea noa e koe te kowhiri ki te %d maramataka.</string>
     <string name="calendarFilterTitle">Ngā Maramataka</string>
     <string name="calendarFiltersFailed">I rahua te uta i nga whiriwhiringa</string>
+    <string name="a11y_eventCreatedAnnouncement">Takahanga %s i tutuki pai.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Takahanga %s i pai te whakahou.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Ki te mahi %s i pai te hanga.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Ki te mahi %s i pai te whakahou.</string>
     <string name="todoScreenTitle">Hei Mahi</string>
     <string name="todoDateLabel">Rā</string>
     <string name="todoDescriptionLabel">Whakāhuatanga</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Ngā whakataunga (%d)</string>
     <string name="smartSearchPageGroupTitle">Ngā whārangi(%d)</string>
     <string name="a11y_commentSentSuccess">I pai te tuku korero</string>
+    <string name="a11y_dragViewContentDescription">Whakaroha Kaituku</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Kōrerorero</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Kua takina</string>
+    <string name="a11y_unchecked">Kore i taki</string>
+    <string name="a11y_indeterminate">Kua takina tetahi waahanga</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Kua whakahōungia ngā tātari</string>
 </resources>
