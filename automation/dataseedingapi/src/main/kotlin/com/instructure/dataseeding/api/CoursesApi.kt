@@ -22,6 +22,7 @@ import com.instructure.dataseeding.model.CourseSettings
 import com.instructure.dataseeding.model.CreateCourse
 import com.instructure.dataseeding.model.CreateCourseWrapper
 import com.instructure.dataseeding.model.FavoriteApiModel
+import com.instructure.dataseeding.model.UpdateCourse
 import com.instructure.dataseeding.model.UpdateCourseWrapper
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
@@ -117,13 +118,6 @@ object CoursesApi {
             .execute()
     }
 
-    fun updateCourse(courseId: Long, course: CourseApiModel): CourseApiModel {
-        return adminCoursesService
-            .updateCourse(courseId, UpdateCourseWrapper(course))
-            .execute()
-            .body()!!
-    }
-
     fun addCourseToFavorites(courseId: Long, token: String): FavoriteApiModel
             = coursesService(token)
             .addCourseToFavorites(courseId)
@@ -134,6 +128,13 @@ object CoursesApi {
     ): CourseSettings {
         return adminCoursesService
             .updateCourseSettings(courseId, params)
+            .execute()
+            .body()!!
+    }
+
+    fun updateCourse(courseId: Long, updateCourse: UpdateCourse) : CourseApiModel {
+        return adminCoursesService
+            .updateCourse(courseId, UpdateCourseWrapper(updateCourse))
             .execute()
             .body()!!
     }

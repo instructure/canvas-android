@@ -33,6 +33,7 @@ import com.instructure.dataseeding.api.CalendarEventApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.model.UpdateCourse
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.parentapp.utils.ParentComposeTest
@@ -427,7 +428,7 @@ class InboxE2ETest: ParentComposeTest() {
         Log.d(PREPARATION_TAG, "Setting up ${course.name} course to have summary.")
         CoursesApi.updateCourseSettings(course.id, mapOf("syllabus_course_summary" to true))
         Log.d(PREPARATION_TAG, "Setting the Front Page for ${courseWithFrontPage.name} course.")
-        CoursesApi.updateCourse(courseWithFrontPage.id, courseWithFrontPage.copy(homePage = "wiki"))
+        CoursesApi.updateCourse(courseWithFrontPage.id, UpdateCourse(homePage = "wiki", syllabusBody = "Syllabus body"))
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token)
         val testEvent = CalendarEventApi.createCalendarEvent(
             teacher.token,

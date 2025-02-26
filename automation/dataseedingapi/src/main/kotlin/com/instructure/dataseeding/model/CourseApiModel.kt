@@ -51,6 +51,13 @@ data class CreateCourse(
         val settings: CourseSettings? = null
 )
 
+data class UpdateCourse(
+        @SerializedName("syllabus_body")
+        val syllabusBody: String? = null,
+        @SerializedName("default_view")
+        var homePage: String? = null
+)
+
 data class CourseSettings(
         @SerializedName("restrict_quantitative_data")
         var restrictQuantitativeData: Boolean = false,
@@ -62,7 +69,8 @@ data class CreateCourseWrapper(
 )
 
 data class UpdateCourseWrapper(
-        val course: CourseApiModel
+        val course: UpdateCourse,
+        val offer: Boolean = true
 )
 
 enum class Role {
