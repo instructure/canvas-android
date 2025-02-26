@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Du kan öppna inlämningsinformationen härifrån</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Klicka här om du vill se information om inlämningar och matriser</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Omdöme: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Välj kurs eller grupp</string>
     <string name="inboxClearFilter">Rensa</string>
     <string name="a11y_courseFilterContentDescription">Kursfilter: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Inkorgsurval: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">välj</string>
     <string name="a11y_itemSelectedSwipeForActions">Konversation markerad. Urvalsläget aktiverat. Navigera efter åtgärder.</string>
     <string name="a11y_conversationSelected">Konversation markerad</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Andra appar</string>
     <string name="offline_content_canvas_student">Canvas-student</string>
     <string name="offline_content_remaining">Återstående</string>
+    <string name="offline_content_storage_info_a11y_description">Lagringsinformation: %s av %s använda, andra appar %d%%, Canvas Student %d%%, kvar %d%%</string>
     <string name="offline_content_all_courses">Alla kurser</string>
     <string name="offline_content_sync">Synkronisera</string>
     <string name="offline_content_selected">%d Vald</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Synkronisera</string>
     <string name="offline_content_sync_loading_title">Läser in ...</string>
     <string name="offline_content_sync_loading_message">Vänta, vi förbereder åt dig.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Inställningar för offlinesynkronisering har sparats. Synkroniseringen startar inom kort i bakgrunden.</string>
     <string name="content_description_expand_content">Visa innehållet</string>
+    <string name="content_description_expand_content_with_param">Expandera innehåll, %s</string>
     <string name="content_description_collapse_content">Dölj innehållet</string>
+    <string name="content_description_collapse_content_with_param">Dölj innehåll, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Om automatisk innehållssynkronisering aktiveras laddas det valda innehållet ned baserat på nedanstående inställningar. Innehållssynkroniseringen sker även om programmet inte körs. Om inställningen är avstängd sker ingen synkronisering. Innehåll som redan laddats ned raderas inte.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkroniseringsfrekvens</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisk innehållssynkronisering</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Avpublicera</string>
     <string name="discussionMenuRefresh">Uppdatera</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Hoppa fram till i dag</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Hoppa till idag, vald dag är %s, idag är %s</string>
     <string name="a11y_calendarSwitchToMonthView">Växla till månadsvy</string>
     <string name="a11y_calendarSwitchToWeekView">Växla till veckovy</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Växla mellan månads- och veckovy</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Kalendern är i månadsvy</string>
+    <string name="a11y_calendarWeekView">Kalendern är i veckovy</string>
+    <string name="a11y_calendarSwitchedToWeekView">Kalendern växlad till veckovy</string>
+    <string name="a11y_calendarSwitchedToMonthView">Kalendern växlad till månadsvy</string>
     <string name="calendarNoEvents">Inga händelser idag!</string>
     <string name="calendarNoEventsDescription">Det verkar vara en bra dag för vila, avslappning och omladdning.</string>
     <string name="userCalendarToDo">Att göra</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Du kan endast välja upp till %d kalendrar.</string>
     <string name="calendarFilterTitle">Kalendrar</string>
     <string name="calendarFiltersFailed">Det gick inte att läsa in filter</string>
+    <string name="a11y_eventCreatedAnnouncement">Händelsen %s skapades.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Händelsen %s uppdaterades.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Att göra %s skapades.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Att göra %s uppdaterades.</string>
     <string name="todoScreenTitle">Att göra</string>
     <string name="todoDateLabel">Datum</string>
     <string name="todoDescriptionLabel">Beskrivning</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Uppgifter (%d)</string>
     <string name="smartSearchPageGroupTitle">Sidor (%d)</string>
     <string name="a11y_commentSentSuccess">Kommentaren skickades</string>
+    <string name="a11y_dragViewContentDescription">Expandera fack</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Konversationer</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Kontrollerad</string>
+    <string name="a11y_unchecked">Ej kontrollerad</string>
+    <string name="a11y_indeterminate">Delvis kontrollerad</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filtren har uppdaterats</string>
 </resources>

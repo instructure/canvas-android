@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">คุณสามารถเปิดรายละเอียดผลงานจัดส่ง (Submission details) ได้จากที่นี่</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">คลิกที่นี่เพื่อดูรายละเอียด ผลงานจัดส่งและเกณฑ์การให้คะแนน (Submission &amp; Rubric)</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">เกรด: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s นาที</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">เลือกบทเรียนหรือกลุ่ม</string>
     <string name="inboxClearFilter">ล้าง</string>
     <string name="a11y_courseFilterContentDescription">ตัวกรองบทเรียน: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">การเลือกกล่องจดหมาย %s</string>
     <string name="a11y_inboxEntryLongClickDescription">เลือก</string>
     <string name="a11y_itemSelectedSwipeForActions">การพูดคุยที่เลือก เปิดใช้งานโหมดเลือกรายการแล้ว ไปที่การดำเนินการ</string>
     <string name="a11y_conversationSelected">เลือกการพูดคุยแล้ว</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">แอพอื่น ๆ</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">ที่เหลือ</string>
+    <string name="offline_content_storage_info_a11y_description">ข้อมูลพื้นที่จัดเก็บ: %s จาก %s ที่ใช้, แอพอื่น ๆ %d%%, Canvas Student %d%%, เหลืออีก %d%%</string>
     <string name="offline_content_all_courses">บทเรียนทั้งหมด</string>
     <string name="offline_content_sync">ซิงค์</string>
     <string name="offline_content_selected">เลือก %d ไว้</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">ซิงค์</string>
     <string name="offline_content_sync_loading_title">กำลังโหลด...</string>
     <string name="offline_content_sync_loading_message">อดทนไว้ เรากำลังเตรียมการให้กับคุณ</string>
+    <string name="offline_content_a11y_sync_started_announcement">บันทึกค่าการซิงค์ออฟไลน์แล้ว การซิงค์จะเริ่มต้นในไม่ช้าโดยดำเนินการอยู่เบื้องหลัง</string>
     <string name="content_description_expand_content">ขยายเนื้อหา</string>
+    <string name="content_description_expand_content_with_param">ขยายเนื้อหา, %s</string>
     <string name="content_description_collapse_content">ย่อเนื้อหา</string>
+    <string name="content_description_collapse_content_with_param">ย่อเนื้อหา, %s</string>
     <string name="syncSettings_autoContentSyncDescription">การเปิดใช้การซิงค์เนื้อหาอัตโนมัติจะเป็นการจัดการการดาวน์โหลดเนื้อหาที่เลือกตามค่าปรับตั้งต่อไปนี้ การซิงค์เนื้อหาจะเกิดขึ้นแม้ว่าแอพพลิเคชั่นจะไม่เปิดทำงานอยู่ หากมีการปิดค่านี้ จะไม่มีการซิงค์ข้อมูลเกิดขึ้น เนื้อหาที่ดาวน์โหลดแล้วจะไม่ถูกลบทิ้ง</string>
     <string name="syncSettings_syncFrequencyTitle">ความถี่ในการซิงค์</string>
     <string name="syncSettings_autoContentSyncTitle">ซิงค์เนื้อหาอัตโนมัติ</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">เลิกเผยแพร่</string>
     <string name="discussionMenuRefresh">รีเฟรช</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">ข้ามไปที่วันนี้</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">ข้ามไปวันนี้, วันที่เลือกคือ %s, วันนี้คือ %s</string>
     <string name="a11y_calendarSwitchToMonthView">สลับไปมุมมองเดือน</string>
     <string name="a11y_calendarSwitchToWeekView">สลับไปมุมมองสัปดาห์</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">สลับระหว่างมุมมองเดือนและสัปดาห์</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">ปฏิทินเป็นมุมมองเดือน</string>
+    <string name="a11y_calendarWeekView">ปฏิทินเป็นมุมมองสัปดาห์</string>
+    <string name="a11y_calendarSwitchedToWeekView">ปฏิทินสลับเป็นมุมมองสัปดาห์</string>
+    <string name="a11y_calendarSwitchedToMonthView">ปฏิทินสลับไปมุมมองเดือน</string>
     <string name="calendarNoEvents">ไม่มีกิจกรรมในวันนี้!</string>
     <string name="calendarNoEventsDescription">ดูเหมือนนี่จะเป็นวันที่เหมาะสำหรับพัก ผ่อนคลายและเติมพลัง</string>
     <string name="userCalendarToDo">สิ่งที่ต้องทำ</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">คุณสามารถเลือกปฏิทินได้สูงสุด %d รายการเท่านั้น</string>
     <string name="calendarFilterTitle">ปฏิทิน</string>
     <string name="calendarFiltersFailed">ไม่สามารถโหลดตัวกรอง</string>
+    <string name="a11y_eventCreatedAnnouncement">จัดทำ %s สำหรับกิจกรรมเสร็จสิ้น</string>
+    <string name="a11y_eventUpdatedAnnouncement">อัพเดต %s สำหรับกิจกรรมเสร็จสิ้น</string>
+    <string name="a11y_toDoCreatedAnnouncement">จัดทำ %s สำหรับรายการที่ต้องดำเนินการเสร็จสิ้น</string>
+    <string name="a11y_toDoUpdatedAnnouncement">อัพเดต %s สำหรับรายการที่ต้องดำเนินการเสร็จสิ้น</string>
     <string name="todoScreenTitle">สิ่งที่ต้องทำ</string>
     <string name="todoDateLabel">วันที่</string>
     <string name="todoDescriptionLabel">รายละเอียด</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">ภารกิจ (%d)</string>
     <string name="smartSearchPageGroupTitle">หน้าเพจ (%d)</string>
     <string name="a11y_commentSentSuccess">ส่งความเห็นเสร็จสิ้น</string>
+    <string name="a11y_dragViewContentDescription">ขยายถาดรายการ</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">การพูดคุย</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">เลือกไว้</string>
+    <string name="a11y_unchecked">ไม่ได้เลือกไว้</string>
+    <string name="a11y_indeterminate">เลือกบางส่วน</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">อัพเดตตัวกรองแล้ว</string>
 </resources>
