@@ -19,6 +19,7 @@ import android.util.Log
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.UpdateCourse
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -54,7 +55,7 @@ class SyllabusE2ETest : ParentComposeTest() {
         val url = "https://mobileqa.beta.instructure.com/courses/${course.id}/assignments/${assignment.id}"
         val syllabusBody = "this is the syllabus body <a id=\"assignmentLink\" href=\"$url\">Assignment</a>"
 
-        CoursesApi.updateCourse(course.id, syllabusBody = syllabusBody)
+        CoursesApi.updateCourse(course.id, UpdateCourse(syllabusBody = syllabusBody))
 
         Log.d(STEP_TAG, "Login with user: ${parent.name}, login id: ${parent.loginId}.")
         tokenLogin(parent)

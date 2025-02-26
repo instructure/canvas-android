@@ -53,7 +53,9 @@ data class CreateCourse(
 
 data class UpdateCourse(
         @SerializedName("syllabus_body")
-        val syllabusBody: String? = null
+        val syllabusBody: String? = null,
+        @SerializedName("default_view")
+        var homePage: String? = null
 )
 
 data class CourseSettings(
@@ -69,10 +71,6 @@ data class CreateCourseWrapper(
 data class UpdateCourseWrapper(
         val course: UpdateCourse,
         val offer: Boolean = true
-)
-
-data class UpdateCourseWrapper(
-        val course: CourseApiModel
 )
 
 enum class Role {

@@ -132,9 +132,9 @@ object CoursesApi {
             .body()!!
     }
 
-    fun updateCourse(courseId: Long, syllabusBody: String?) : CourseApiModel {
+    fun updateCourse(courseId: Long, updateCourse: UpdateCourse) : CourseApiModel {
         return adminCoursesService
-            .updateCourse(courseId, UpdateCourseWrapper(UpdateCourse(syllabusBody)))
+            .updateCourse(courseId, UpdateCourseWrapper(updateCourse))
             .execute()
             .body()!!
     }
