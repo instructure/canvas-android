@@ -23,7 +23,8 @@
     tools:background="@color/backgroundLightest"
     tools:paddingStart="8dp"
     tools:paddingEnd="8dp"
-    tools:orientation="vertical">
+    tools:orientation="vertical"
+    android:id="@+id/composeWebViewWrapperPage">
 
     <LinearLayout
         android:id="@+id/themeSwitchButton"

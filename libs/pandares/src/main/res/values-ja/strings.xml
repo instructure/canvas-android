@@ -1165,6 +1165,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">「提出」の詳細はここで開くことができます</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">ここをクリックして提出 &amp; ルブリックの詳細を表示</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">評定：%s</string>
     <plurals name="minutes">
         <item quantity="other">%s 分</item>
@@ -1418,6 +1419,7 @@
     <string name="inboxContextSelectorTitle">コースまたはグループを選択する</string>
     <string name="inboxClearFilter">クリア</string>
     <string name="a11y_courseFilterContentDescription">コースフィルタ：%s</string>
+    <string name="a11y_mailboxSelectionContentDescription">メールボックスの選択：%s</string>
     <string name="a11y_inboxEntryLongClickDescription">選択する</string>
     <string name="a11y_itemSelectedSwipeForActions">会話が選択されました。選択モードが有効にされました。アクションに移動します。</string>
     <string name="a11y_conversationSelected">会話が選択されました</string>
@@ -1445,6 +1447,7 @@
     <string name="offline_content_other">その他アプリ</string>
     <string name="offline_content_canvas_student">Canvas 受講者</string>
     <string name="offline_content_remaining">残り</string>
+    <string name="offline_content_storage_info_a11y_description">ストレージ情報:%s / %s 使用済み、その他アプリ %d%%、Canvas 受講者 %d%%、残り %d%%</string>
     <string name="offline_content_all_courses">すべてのコース</string>
     <string name="offline_content_sync">同期化</string>
     <string name="offline_content_selected">%d が選択されました</string>
@@ -1464,8 +1467,11 @@
     <string name="offline_content_sync_dialog_positive">同期化</string>
     <string name="offline_content_sync_loading_title">読み込み中・・・</string>
     <string name="offline_content_sync_loading_message">少々お待ちください。今、準備をしています。</string>
+    <string name="offline_content_a11y_sync_started_announcement">オフライン同化設定が保存されました。まもなくバックグラウンドで同期が開始されます。</string>
     <string name="content_description_expand_content">コンテンツを拡大</string>
+    <string name="content_description_expand_content_with_param">コンテンツを展開、%s</string>
     <string name="content_description_collapse_content">コンテンツを折りたたむ</string>
+    <string name="content_description_collapse_content_with_param">コンテンツを折りたたむ、%s</string>
     <string name="syncSettings_autoContentSyncDescription">コンテンツの自動同期を有効にすると、選択したコンテンツのダウンロードが以下の設定に基づいて行われます。コンテンツの同期は、アプリケーションが起動していなくても行われます。この設定をオフにすると、同期は行われません。すでにダウンロードされているコンテンツは削除されません。</string>
     <string name="syncSettings_syncFrequencyTitle">同期の頻度</string>
     <string name="syncSettings_autoContentSyncTitle">コンテンツ自動同期</string>
@@ -1591,8 +1597,15 @@
     <string name="unpublishDialogPositiveButton">非公開</string>
     <string name="discussionMenuRefresh">更新</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">本日に移動</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">今日へジャンプ、選択した日は%s、今日は%s</string>
     <string name="a11y_calendarSwitchToMonthView">月表示に切り替える</string>
     <string name="a11y_calendarSwitchToWeekView">週表示に切り替える</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">月表示と週表示を切り替える</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s、%2$s、%3$s</string>
+    <string name="a11y_calendarMonthView">カレンダーは月表示です</string>
+    <string name="a11y_calendarWeekView">カレンダーは週表示です</string>
+    <string name="a11y_calendarSwitchedToWeekView">カレンダーが週表示に切り替わりました</string>
+    <string name="a11y_calendarSwitchedToMonthView">カレンダーが月表示に切り替わりました</string>
     <string name="calendarNoEvents">今日イベントはありません！</string>
     <string name="calendarNoEventsDescription">休息をとってリラックスし、充電するためにぴったりな日のようです。</string>
     <string name="userCalendarToDo">タスク</string>
@@ -1616,6 +1629,10 @@
     <string name="calendarFilterLimitSnackbar">選択できるのはカレンダーは%dまでです。</string>
     <string name="calendarFilterTitle">カレンダー</string>
     <string name="calendarFiltersFailed">フィルターの読み込みに失敗しました</string>
+    <string name="a11y_eventCreatedAnnouncement">イベント%sの作成に成功しました。</string>
+    <string name="a11y_eventUpdatedAnnouncement">イベント%sが更新されました。</string>
+    <string name="a11y_toDoCreatedAnnouncement">ToDo%sが正常に作成されました。</string>
+    <string name="a11y_toDoUpdatedAnnouncement">ToDo%sが正常に更新されました。</string>
     <string name="todoScreenTitle">タスク</string>
     <string name="todoDateLabel">日付</string>
     <string name="todoDescriptionLabel">説明</string>
@@ -1917,4 +1934,12 @@
     <string name="smartSearchAssignmentGroupTitle">課題 (%d)</string>
     <string name="smartSearchPageGroupTitle">ページ (%d)</string>
     <string name="a11y_commentSentSuccess">コメントは正常に送信されました</string>
+    <string name="a11y_dragViewContentDescription">引き出しを展開</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">メッセージ</string>
+    <string name="a11y_contentDescription_moduleItem">%s、%s</string>
+    <string name="a11y_checked">チェック済み</string>
+    <string name="a11y_unchecked">チェックなし</string>
+    <string name="a11y_indeterminate">一部チェック済み</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s、%2$s、%3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">フィルターが更新されました</string>
 </resources>
