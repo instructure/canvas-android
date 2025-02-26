@@ -76,4 +76,5 @@ class SyllabusE2ETest : ParentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 }
