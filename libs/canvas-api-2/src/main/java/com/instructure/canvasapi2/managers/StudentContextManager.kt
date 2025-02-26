@@ -23,7 +23,7 @@ interface StudentContextManager {
 
     fun getStudentContext(
         courseId: Long,
-        studentId: Long,
+        userId: Long,
         submissionPageSize: Int,
         forceNetwork: Boolean,
         callback: QLCallback<StudentContextCardQuery.Data>

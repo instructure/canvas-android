@@ -33,17 +33,20 @@ class FakeStudentContextManager : StudentContextManager {
 
     override fun getStudentContext(
         courseId: Long,
-        studentId: Long,
+        userId: Long,
         submissionPageSize: Int,
         forceNetwork: Boolean,
         callback: QLCallback<StudentContextCardQuery.Data>
     ) {
-        callback.onResponse(getStudentContextResponse(callback.nextCursor, courseId, studentId))
+        callback.onResponse(getStudentContextResponse(callback.nextCursor, courseId, userId))
     }
 
-    private fun getStudentContextResponse(nextCursor: String?, courseId: Long, studentId: Long): Response<StudentContextCardQuery.Data> {
+    private fun getStudentContextResponse(nextCursor: String?, courseId: Long, userId: Long): Response<StudentContextCardQuery.Data> {
         val course = MockCanvas.data.courses.values.first { it.id == courseId }
-        val student = MockCanvas.data.students.first { it.id == studentId }
+        var user = MockCanvas.data.students.firstOrNull { it.id == userId }
+
+        val isStudent = user != null
+        if (user == null) user = MockCanvas.data.teachers.first { it.id == userId }
 
         val mockData = StudentContextCardQuery.Data(
             AsCourse(
@@ -56,12 +59,12 @@ class FakeStudentContextManager : StudentContextManager {
                             "UserEdge",
                             StudentContextCardQuery.User(
                                 "User",
-                                student.id.toString(),
-                                student.name,
-                                student.shortName,
+                                user.id.toString(),
+                                user.name,
+                                user.shortName,
                                 null,
                                 null,
-                                student.email,
+                                user.email,
                                 mutableListOf(
                                     StudentContextCardQuery.Enrollment(
                                         "Enrollment",
@@ -79,7 +82,7 @@ class FakeStudentContextManager : StudentContextManager {
                 StudentContextCardQuery.Submissions(
                     "SubmissionConnection",
                     StudentContextCardQuery.PageInfo("PageInfo", "Mg", "MQ", false, false),
-                    getSubmissions(studentId)
+                    if (isStudent) getSubmissions(userId) else emptyList()
                 )
             )
         )
@@ -89,7 +92,7 @@ class FakeStudentContextManager : StudentContextManager {
         return Response.builder<StudentContextCardQuery.Data>(
             StudentContextCardQuery(
                 course.id.toString(),
-                student.id.toString(),
+                user.id.toString(),
                 10,
                 nextCursorInput
             )

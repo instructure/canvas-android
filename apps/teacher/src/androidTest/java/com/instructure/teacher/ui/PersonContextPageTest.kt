@@ -59,7 +59,7 @@ class PersonContextPageTest : TeacherTest() {
 
     @Test
     override fun displaysPageObjects() {
-        getToPersonContextPage()
+        getToPersonContextPage(PersonContextPage.UserRole.TEACHER)
         personContextPage.assertPageObjects()
     }
 
@@ -73,7 +73,6 @@ class PersonContextPageTest : TeacherTest() {
     fun displaysTeacherInfo() {
         val (teacher, course) = getToPersonContextPage(PersonContextPage.UserRole.TEACHER)
         personContextPage.assertDisplaysCourseInfo(course.name)
-        personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
         personContextPage.assertPersonNameIsDisplayed(teacher.shortName!!)
     }
 

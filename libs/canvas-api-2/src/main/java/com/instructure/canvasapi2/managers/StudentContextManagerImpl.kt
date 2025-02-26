@@ -22,14 +22,14 @@ import com.instructure.canvasapi2.enqueueQuery
 class StudentContextManagerImpl : StudentContextManager {
     override fun getStudentContext(
         courseId: Long,
-        studentId: Long,
+        userId: Long,
         submissionPageSize: Int,
         forceNetwork: Boolean,
         callback: QLCallback<StudentContextCardQuery.Data>
     ) {
         val query = StudentContextCardQuery.builder()
             .courseId(courseId.toString())
-            .studentId(studentId.toString())
+            .studentId(userId.toString())
             .pageSize(submissionPageSize)
             .nextCursor(callback.nextCursor)
             .build()
