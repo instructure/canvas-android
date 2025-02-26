@@ -174,7 +174,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
-    @Stub
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
     fun testAssignmentBeforeReminderE2E() {
 
