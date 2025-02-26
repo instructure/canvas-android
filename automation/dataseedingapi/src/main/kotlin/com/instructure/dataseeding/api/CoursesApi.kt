@@ -40,9 +40,6 @@ object CoursesApi {
         @POST("accounts/self/courses")
         fun createCourse(@Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
 
-        @PUT("courses/{courseId}")
-        fun updateCourse(@Path("courseId") courseId: Long, @Body updateCourseApiModel: UpdateCourseWrapper): Call<CourseApiModel>
-
         @POST("accounts/{account_id}/courses")
         fun createCourseInSubAccount(@Path("account_id") accountId: Long, @Body createCourseApiModel: CreateCourseWrapper): Call<CourseApiModel>
 
@@ -55,6 +52,8 @@ object CoursesApi {
         @PUT("courses/{course_id}/settings")
         fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>
 
+        @PUT("courses/{course_id}")
+        fun updateCourse(@Path("course_id") courseId: Long, @Body courseApiModel: UpdateCourseWrapper): Call<CourseApiModel>
     }
 
     private val adminCoursesService: CoursesService by lazy {

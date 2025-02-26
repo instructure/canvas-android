@@ -28,9 +28,9 @@ class EnabledTabsImpl(
         return when {
             pathSegments.last() == "grades" -> true
             pathSegments.last() == "discussion_topics" -> true
+            pathSegments.any { it.contains("external_tools") } -> true
             pathSegments.last() == Tab.SYLLABUS_ID -> tabs.any { relativePath == it.htmlUrl }
             pathSegments.size == 3 -> tabs.any { relativePath == it.htmlUrl }
-            pathSegments.contains("external_tools") && pathSegments.size == 4 -> tabs.any { relativePath == it.htmlUrl }
             else -> true
         }
     }

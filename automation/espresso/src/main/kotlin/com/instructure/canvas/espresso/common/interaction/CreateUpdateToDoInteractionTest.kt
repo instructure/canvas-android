@@ -18,7 +18,6 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
@@ -173,36 +172,34 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
     }
 
     @Test
-    @Stub("This test is flaky, depends on the time of day")
     fun assertUpdatedTime() {
         val data = initData()
         val user = getLoggedInUser()
-        val date = Date()
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 12)
+            set(Calendar.MINUTE, 15)
+        }
         data.addPlannable(
             name = "Test Todo",
             course = null,
             userId = user.id,
             type = PlannableType.PLANNER_NOTE,
-            date = date,
+            date = calendar.time,
             details = "Test Description"
         )
 
         goToEditToDo(data)
 
         composeTestRule.waitForIdle()
-        calendarToDoCreateUpdatePage.assertTime(activityRule.activity, date)
-        val calendar = Calendar.getInstance().apply {
-            time = date
-            add(Calendar.HOUR_OF_DAY, -1)
-            add(Calendar.MINUTE, 15)
-        }
-        calendarToDoCreateUpdatePage.selectTime(calendar)
+        calendarToDoCreateUpdatePage.assertTime(activityRule.activity, calendar.time)
+        val updatedCalendar = Calendar.getInstance().apply { add(Calendar.HOUR_OF_DAY, 1) }
+        calendarToDoCreateUpdatePage.selectTime(updatedCalendar)
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
         calendarScreenPage.clickOnItem("Test Todo")
         composeTestRule.waitForIdle()
-        calendarToDoDetailsPage.assertDate(activityRule.activity, calendar.time)
+        calendarToDoDetailsPage.assertDate(activityRule.activity, updatedCalendar.time)
     }
 
     @Test
@@ -298,7 +295,6 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.typeTodoTitle("New Title")
         calendarToDoCreateUpdatePage.assertSaveEnabled()
     }
-
 
     abstract fun goToCreateToDo(data: MockCanvas)
 
