@@ -32,7 +32,6 @@ import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
 import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
 import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
-import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -90,11 +89,6 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideScheduleRouter(): ScheduleRouter {
-        throw NotImplementedError()
-    }
-
-    @Provides
-    fun provideToolbarSetup(): ToolbarSetupBehavior {
         throw NotImplementedError()
     }
 
