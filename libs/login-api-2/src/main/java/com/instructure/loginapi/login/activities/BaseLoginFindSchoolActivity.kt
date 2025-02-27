@@ -54,6 +54,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
+import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 import java.util.regex.Pattern
@@ -99,6 +100,17 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
                 mDomainAdapter!!.setItems(domains)
                 mDomainAdapter!!.filter.filter(binding.domainInput!!.text.toString())
             }
+        }
+
+        override fun onFail(
+            call: Call<List<AccountDomain>>?,
+            error: Throwable,
+            response: Response<*>?
+        ) {
+            if (mDomainAdapter != null) {
+                mDomainAdapter!!.setItems(emptyList())
+            }
+            error.printStackTrace()
         }
     }
 

@@ -15,6 +15,10 @@
   ~
   -->
 <network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">canvas-web.inseng.test</domain>
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
     <debug-overrides>
         <trust-anchors>
             <certificates src="user"/>
