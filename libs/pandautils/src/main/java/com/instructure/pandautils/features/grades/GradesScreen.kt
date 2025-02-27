@@ -273,7 +273,8 @@ private fun GradesScreenContent(
                     Text(
                         text = stringResource(id = R.string.gradesBasedOnGraded),
                         fontSize = 16.sp,
-                        color = colorResource(id = R.color.textDarkest)
+                        color = colorResource(id = R.color.textDarkest),
+                        modifier = Modifier.testTag("basedOnGradedAssignmentsLabel")
                     )
                     Switch(
                         interactionSource = NoRippleInteractionSource(),
@@ -517,7 +518,8 @@ fun AssignmentItem(
                 Text(
                     text = uiState.dueDate,
                     color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    modifier = modifier.testTag("assignmentName")
                 )
                 if (uiState.submissionStateLabel != SubmissionStateLabel.NONE) {
                     Spacer(modifier = Modifier.width(4.dp))
@@ -557,7 +559,7 @@ fun AssignmentItem(
                     fontSize = 16.sp,
                     modifier = Modifier.semantics {
                         contentDescription = uiState.displayGrade.contentDescription
-                    }
+                    }.testTag("gradeText")
                 )
             }
         }
