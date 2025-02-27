@@ -24,15 +24,14 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.viewpager.widget.ViewPager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.StudentAssignee
@@ -49,25 +48,41 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesContinueDialog
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ActivityResult
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ExoAgent
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
 import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.postSticky
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
 import com.instructure.teacher.databinding.ActivitySpeedgraderBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryFragment
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
 import com.instructure.teacher.presenters.SpeedGraderPresenter
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.utils.isTalkbackEnabled
+import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.toast
 import com.instructure.teacher.view.AudioPermissionGrantedEvent
 import com.instructure.teacher.view.TabSelectedEvent
@@ -79,7 +94,7 @@ import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @PageView("courses/{courseId}/gradebook/speed_grader?assignment_id={assignmentId}")
@@ -205,6 +220,32 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             }
         })
         setupTutorialView()
+
+        setupToolbar(presenter!!.course, assignment)
+    }
+
+    private fun setupToolbar(course: Course, assignment: Assignment) = with(binding) {
+        gradingToolbar.setupBackButton(this@SpeedGraderActivity)
+
+        gradingToolbar.setupMenu(R.menu.menu_post_policies) {
+            when (it.itemId) {
+                R.id.menuPostPolicies -> {
+                    RouteMatcher.route(
+                        this@SpeedGraderActivity,
+                        PostPolicyFragment.makeRoute(presenter!!.course, assignment)
+                    )
+                }
+            }
+        }
+
+        if(isTablet) {
+            gradingToolbar.title = assignment.name
+        } else {
+            gradingToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
+            gradingToolbar.title = assignment.name
+            gradingToolbar.subtitle = course.name
+        }
+        ViewStyler.themeToolbarColored(this@SpeedGraderActivity, gradingToolbar, course.color, getColor(R.color.textLightest))
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
