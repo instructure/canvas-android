@@ -17,7 +17,15 @@
 
 package com.instructure.parentapp.utils
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
@@ -38,6 +46,7 @@ import com.instructure.parentapp.ui.pages.QrPairingPage
 import com.instructure.parentapp.ui.pages.StudentAlertSettingsPage
 import com.instructure.parentapp.ui.pages.SummaryPage
 import com.instructure.parentapp.ui.pages.compose.NotAParentPage
+import org.hamcrest.core.AllOf
 import org.junit.Rule
 
 
@@ -45,6 +54,8 @@ abstract class ParentComposeTest : ParentTest() {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
+
+    private lateinit var activityResult: Instrumentation.ActivityResult
 
     //Compose pages
     protected val alertsPage = AlertsPage(composeTestRule)
@@ -68,4 +79,29 @@ abstract class ParentComposeTest : ParentTest() {
     protected val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
+
+    protected fun goToCreateAccount(domain: String, pairingCode: String?, accountId: Long) {
+        activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, Intent().apply {
+            putExtra(
+                com.google.zxing.client.android.Intents.Scan.RESULT,
+                "canvas-parent://$domain/pair?code=$pairingCode&account_id=$accountId"
+            )
+        })
+        loginLandingPage.clickQRCodeButton()
+        composeTestRule.onNodeWithText("I don\'t have a Canvas account").performClick()
+
+        Intents.init()
+        try {
+            intending(
+                AllOf.allOf(
+                    IntentMatchers.anyIntent()
+                )
+            ).respondWith(activityResult)
+            qrPairingPage.tapNext()
+        } finally {
+            Intents.release()
+        }
+
+        composeTestRule.waitForIdle()
+    }
 }
