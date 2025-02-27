@@ -101,17 +101,6 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
                 mDomainAdapter!!.filter.filter(binding.domainInput!!.text.toString())
             }
         }
-
-        override fun onFail(
-            call: Call<List<AccountDomain>>?,
-            error: Throwable,
-            response: Response<*>?
-        ) {
-            if (mDomainAdapter != null) {
-                mDomainAdapter!!.setItems(emptyList())
-            }
-            error.printStackTrace()
-        }
     }
 
     @ColorInt
