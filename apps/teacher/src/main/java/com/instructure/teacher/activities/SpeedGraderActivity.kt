@@ -79,7 +79,6 @@ import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibrar
 import com.instructure.teacher.presenters.SpeedGraderPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.TeacherPrefs
-import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.utils.isTalkbackEnabled
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
@@ -238,13 +237,10 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             }
         }
 
-        if(isTablet) {
-            gradingToolbar.title = assignment.name
-        } else {
-            gradingToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
-            gradingToolbar.title = assignment.name
-            gradingToolbar.subtitle = course.name
-        }
+        gradingToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
+        gradingToolbar.title = assignment.name
+        gradingToolbar.subtitle = course.name
+
         ViewStyler.themeToolbarColored(this@SpeedGraderActivity, gradingToolbar, course.color, getColor(R.color.textLightest))
     }
 
