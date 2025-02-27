@@ -101,7 +101,8 @@ class RequestInterceptor : Interceptor {
 
         if (domain.isNotEmpty() && params.domain != null && domain != params.domain) {
             val uri = Uri.parse(domain)
-            val url = request.url.newBuilder().scheme(uri.scheme ?: "https").host(uri.host ?: "").build()
+            val url = request.url.newBuilder().scheme(uri.scheme ?: "https")
+                .host(uri.host ?: params.domain.removePrefix("https://")).build()
             request = request.newBuilder().url(url).build()
         }
 
