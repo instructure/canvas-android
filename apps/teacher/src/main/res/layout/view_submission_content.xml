@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         app:pclv_indeterminate="true"
-        app:pclv_override_color="@color/login_teacherAppTheme"/>
+        app:pclv_override_color="@color/login_teacherAppTheme" />
 
     <LinearLayout
         android:id="@+id/retryLoadingContainer"
@@ -42,28 +41,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_warning"/>
+            android:src="@drawable/ic_warning" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/error_loading_submission"/>
+            android:text="@string/error_loading_submission" />
 
         <Button
             android:id="@+id/retryLoadingButton"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_marginTop="48dp"
-            android:text="@string/retry"/>
+            android:text="@string/retry" />
 
     </LinearLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/speedGraderToolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
-        android:background="@color/backgroundLightest"
+        android:layout_height="wrap_content"
         android:accessibilityHeading="true"
+        android:background="@color/backgroundLightest"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/ToolBarPopupStyle">
 
@@ -71,19 +72,21 @@
             android:id="@+id/assigneeWrapperView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/userImageView"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:padding="4dp"
-                android:importantForAccessibility="no"/>
+                android:importantForAccessibility="no"
+                android:paddingTop="8dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="4dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -98,7 +101,7 @@
                     android:singleLine="true"
                     android:textColor="@color/textDarkest"
                     tools:ignore="Deprecated,RtlSymmetry"
-                    tools:text="This is a Title"/>
+                    tools:text="This is a Title" />
 
                 <TextView
                     android:id="@+id/subtitleTextView"
@@ -111,7 +114,22 @@
                     android:singleLine="true"
                     android:textColor="@color/textDarkest"
                     tools:ignore="Deprecated,RtlSymmetry"
-                    tools:text="This is a Subtitle"/>
+                    tools:text="This is a Subtitle" />
+
+                <TextView
+                    android:id="@+id/dueDateTextView"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingStart="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/textDark"
+                    android:visibility="gone"
+                    tools:ignore="Deprecated,RtlSymmetry"
+                    tools:text="Due: March 8, 2025, 11:59 PM"
+                    tools:visibility="visible" />
 
             </LinearLayout>
         </LinearLayout>
@@ -166,7 +184,7 @@
                     android:id="@+id/topDivider"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/backgroundMedium"/>
+                    android:background="@color/backgroundMedium" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -175,33 +193,33 @@
                     <com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
                         android:id="@+id/annotationToolbarLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                     <com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
                         android:id="@+id/inspectorCoordinatorLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                     <ImageView
                         android:id="@+id/commentsButton"
                         android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:padding="10dp"
                         android:background="@drawable/bg_annotation_comments"
                         android:clickable="true"
                         android:contentDescription="@string/sg_tab_comments"
                         android:elevation="2dp"
+                        android:padding="10dp"
                         android:visibility="gone"
                         app:srcCompat="@drawable/ic_discussion"
-                        tools:visibility="visible"
-                        app:tint="@color/white" />
+                        app:tint="@color/white"
+                        tools:visibility="visible" />
 
                     <FrameLayout
                         android:id="@+id/content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clipChildren="false"
-                        android:clipToPadding="false"/>
+                        android:clipToPadding="false" />
 
                     <FrameLayout
                         android:id="@+id/loadingContainer"
@@ -217,7 +235,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             app:pclv_override_color="@color/login_teacherAppTheme"
-                            app:pclv_progress="1"/>
+                            app:pclv_progress="1" />
 
                     </FrameLayout>
 
@@ -232,8 +250,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:orientation="vertical"
-            android:background="@color/backgroundLightestElevated">
+            android:background="@color/backgroundLightestElevated"
+            android:orientation="vertical">
 
             <FrameLayout
                 android:id="@+id/dragView"
@@ -244,12 +262,12 @@
                     android:id="@+id/bottomTabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:layout_marginEnd="12dp"
                     android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:minHeight="48dp"
                     app:tabIndicatorHeight="2dp"
                     app:tabPaddingEnd="4dp"
-                    app:tabPaddingStart="4dp"/>
+                    app:tabPaddingStart="4dp" />
 
                 <View
                     android:layout_width="36dp"
@@ -257,20 +275,20 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/handle_bar_drag_view"
-                    android:importantForAccessibility="yes"
-                    android:contentDescription="@string/a11y_dragViewContentDescription"/>
+                    android:contentDescription="@string/a11y_dragViewContentDescription"
+                    android:importantForAccessibility="yes" />
 
             </FrameLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/backgroundMedium"/>
+                android:background="@color/backgroundMedium" />
 
             <com.instructure.pandautils.views.ViewPagerNonSwipeable
                 android:id="@+id/bottomViewPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
@@ -278,11 +296,11 @@
 
     <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"
-        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:elevation="12dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:visibility="gone" />
 
 </RelativeLayout>
