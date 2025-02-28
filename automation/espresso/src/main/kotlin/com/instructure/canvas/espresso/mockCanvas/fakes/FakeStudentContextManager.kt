@@ -69,7 +69,7 @@ class FakeStudentContextManager : StudentContextManager {
                                     StudentContextCardQuery.Enrollment(
                                         "Enrollment",
                                         null,
-                                        EnrollmentType.STUDENTENROLLMENT,
+                                        if (isStudent) EnrollmentType.STUDENTENROLLMENT else EnrollmentType.TEACHERENROLLMENT,
                                         StudentContextCardQuery.Section("Section", course.name),
                                         StudentContextCardQuery.Grades("Grades", null, null, "F", 45.5, "F", 3.25, "F", 45.5, "F", 3.25)
                                     )
