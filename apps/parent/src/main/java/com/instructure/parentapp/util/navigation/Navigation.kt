@@ -329,7 +329,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     }
 
     fun canNavigate(activity: Activity?, url: String, navigateIfPossible: Boolean): Boolean {
-        val navController = activity?.findNavController(R.id.nav_host_fragment) ?: return false
+        val navController = runCatching { activity?.findNavController(R.id.nav_host_fragment) }.getOrNull() ?: return false
         val validatedUrl = UrlValidator(url, baseUrl).url
         val canNavigate = navController.graph.findNode(validatedUrl) != null
         if (navigateIfPossible) navigate(activity, validatedUrl)
