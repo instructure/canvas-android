@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,15 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.viewinterface
+package com.instructure.teacher.interfaces
 
-import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.pandautils.blueprint.SyncManager
 
-interface FileListView : SyncManager<FileFolder> {
-    fun folderCreationError()
-    fun folderCreationSuccess()
-    fun fileFolderDeleted(fileFolder: FileFolder)
-    fun fileFolderDeleteError(@StringRes message: Int)
+interface ConfirmDeleteFileCallback {
+    val onConfirmDeleteFile: (fileFolder: FileFolder) -> Unit
 }
