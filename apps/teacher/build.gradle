@@ -106,7 +106,7 @@ android {
                 mappingFileUploadEnabled false
             }
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
 
         debugMinify {
@@ -131,13 +131,13 @@ android {
             buildConfigField "boolean", "POINT_EIGHT", "false"
             buildConfigField "boolean", "POINT_NINE", "false"
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
-
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
                 strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
+
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
     }
 
@@ -296,6 +296,7 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP_CORE
+    implementation Libs.PENDO
 
     implementation Libs.CAMERA_VIEW
 

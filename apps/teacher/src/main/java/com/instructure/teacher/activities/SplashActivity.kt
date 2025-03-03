@@ -20,22 +20,30 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import com.instructure.pandautils.base.BaseCanvasActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.BecomeUserPermission
+import com.instructure.canvasapi2.models.CanvasColor
+import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivitySplashBinding
@@ -43,12 +51,11 @@ import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
 import dagger.hilt.android.AndroidEntryPoint
-import io.heap.autocapture.ViewAutocaptureSDK
-import io.heap.core.Heap
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import sdk.pendo.io.Pendo
 
 @AndroidEntryPoint
 class SplashActivity : BaseCanvasActivity() {
@@ -217,11 +224,9 @@ class SplashActivity : BaseCanvasActivity() {
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
         if (sendUsageMetrics) {
-            Heap.startRecording(applicationContext, BuildConfig.HEAP_APP_ID)
-            ViewAutocaptureSDK.register()
+            Pendo.startSession("", ApiPrefs.domain, emptyMap(), emptyMap())
         } else {
-            Heap.stopRecording()
-            ViewAutocaptureSDK.deregister()
+            Pendo.endSession()
         }
     }
 

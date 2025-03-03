@@ -162,6 +162,7 @@ dependencies {
     kapt Libs.ROOM_COMPILER
 
     implementation Libs.HEAP_CORE
+    implementation Libs.PENDO
 
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX

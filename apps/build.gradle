@@ -41,6 +41,9 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven {
+            url = uri("https://software.mobile.pendo.io/artifactory/androidx-release")
+        }
         mavenCentral()
         maven { url 'https://jitpack.io' }
         maven {

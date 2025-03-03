@@ -39,7 +39,6 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
@@ -52,6 +51,7 @@ import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
@@ -61,11 +61,10 @@ import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
-import io.heap.autocapture.ViewAutocaptureSDK
-import io.heap.core.Heap
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
+import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -180,11 +179,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
         if (sendUsageMetrics) {
-            Heap.startRecording(context.applicationContext, BuildConfig.HEAP_APP_ID)
-            ViewAutocaptureSDK.register()
+            Pendo.startSession("", ApiPrefs.domain, emptyMap(), emptyMap())
         } else {
-            Heap.stopRecording()
-            ViewAutocaptureSDK.deregister()
+            Pendo.endSession()
         }
     }
 

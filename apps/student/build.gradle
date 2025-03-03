@@ -110,7 +110,7 @@ android {
                 mappingFileUploadEnabled false
             }
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
 
         debugMinify {
@@ -135,7 +135,7 @@ android {
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
     }
 
@@ -319,6 +319,7 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP_CORE
+    implementation Libs.PENDO
 
     /* ROOM */
     implementation Libs.ROOM

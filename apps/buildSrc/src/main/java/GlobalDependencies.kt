@@ -166,6 +166,7 @@ object Libs {
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
     const val HEAP_CORE = "com.contentsquare.android:sdk:0.3.0"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.6+"
 
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
