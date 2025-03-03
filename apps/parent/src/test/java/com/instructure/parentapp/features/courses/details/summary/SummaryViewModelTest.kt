@@ -34,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -98,6 +99,36 @@ class SummaryViewModelTest {
         )
 
         assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Refresh data`() = runTest {
+        coEvery { repository.getCourse(any()) } returns Course(1)
+        coEvery { repository.getCalendarEvents("course_1", any()) } returns emptyList()
+
+        createViewModel()
+
+        val expected = SummaryUiState(
+            state = ScreenState.Empty,
+            items = emptyList(),
+            courseId = 1,
+            studentColor = 1
+        )
+        assertEquals(expected, viewModel.uiState.value)
+
+        val scheduleItems = listOf(ScheduleItem("Title 1"), ScheduleItem("Title 2"))
+        coEvery { repository.getCalendarEvents("course_1", any()) } returns scheduleItems
+
+        viewModel.refresh()
+
+        val expectedRefreshed = SummaryUiState(
+            state = ScreenState.Content,
+            items = scheduleItems,
+            courseId = 1,
+            studentColor = 1
+        )
+
+        assertEquals(expectedRefreshed, viewModel.uiState.value)
     }
 
     private fun createViewModel() {
