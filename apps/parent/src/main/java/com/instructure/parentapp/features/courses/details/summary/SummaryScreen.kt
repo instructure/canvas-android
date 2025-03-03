@@ -60,7 +60,6 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.contentDescriptionRes
 import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.pandautils.utils.iconRes
@@ -121,7 +120,13 @@ internal fun SummaryContent(
                 }
 
                 is ScreenState.Content -> {
-                    SummaryContentScreen(uiState.items, uiState.courseId, navigateToAssignmentDetails, navigateToCalendarEvent)
+                    SummaryContentScreen(
+                        uiState.items,
+                        uiState.courseId,
+                        uiState.studentColor,
+                        navigateToAssignmentDetails,
+                        navigateToCalendarEvent
+                    )
                 }
             }
         }
@@ -163,6 +168,7 @@ private fun SummaryEmptyScreen() {
 private fun SummaryContentScreen(
     items: List<ScheduleItem>,
     courseId: Long,
+    studentColor: Int,
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit
 ) {
@@ -171,7 +177,7 @@ private fun SummaryContentScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         items(items) {
-            ScheduleItemRow(it, courseId, navigateToAssignmentDetails, navigateToCalendarEvent)
+            ScheduleItemRow(it, courseId, studentColor, navigateToAssignmentDetails, navigateToCalendarEvent)
         }
     }
 }
@@ -180,6 +186,7 @@ private fun SummaryContentScreen(
 private fun ScheduleItemRow(
     scheduleItem: ScheduleItem,
     courseId: Long,
+    studentColor: Int,
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit
 ) {
@@ -212,7 +219,7 @@ private fun ScheduleItemRow(
         Icon(
             painter = painterResource(id = scheduleItem.iconRes),
             contentDescription = null,
-            tint = Color(CanvasContext.emptyCourseContext(courseId).color),
+            tint = Color(studentColor),
             modifier = Modifier
                 .padding(8.dp)
                 .size(24.dp)
