@@ -68,6 +68,7 @@
     <color name="backgroundDarkMode">#151D24</color>
     <color name="textOnColorDark">#273540</color>
     <color name="elevatedDarkColor">#242526</color>
+    <color name="darkStatusBarColor">#273540</color>
 
     <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
     <color name="switchThumbColor">#FFFFFF</color>
