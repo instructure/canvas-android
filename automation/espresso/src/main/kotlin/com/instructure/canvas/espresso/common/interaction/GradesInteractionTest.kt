@@ -19,11 +19,14 @@ package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.StubLandscape
+import com.instructure.canvas.espresso.StubTablet
+import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.GradesPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addGradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.pandautils.utils.orDefault
 import org.junit.Test
 
@@ -31,6 +34,7 @@ import org.junit.Test
 abstract class GradesInteractionTest : CanvasComposeTest() {
 
     private val gradesPage = GradesPage(composeTestRule)
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
 
     @Test
     fun groupHeaderCollapsesAndExpandsOnClick() {
@@ -87,7 +91,8 @@ abstract class GradesInteractionTest : CanvasComposeTest() {
     }
 
     @Test
-    @StubLandscape //Landscape works differently
+    @StubLandscape("Landscape works differently")
+    @StubTablet("Can't just stub tablet landscape currently")
     fun cardTextChangesWhenScrolled() {
         val data = initData()
         val course = data.courses.values.first()
@@ -123,15 +128,15 @@ abstract class GradesInteractionTest : CanvasComposeTest() {
     fun openAssignmentDetails() {
         val data = initData()
         val course = data.courses.values.first()
-        val assignment = data.assignments.values.find { it.dueAt == null }
+        val assignment = data.assignments.values.first { it.dueAt == null }
 
         goToGrades(data, course.name)
 
         composeTestRule.waitForIdle()
 
-        gradesPage.clickAssignment(assignment?.name.orEmpty())
+        gradesPage.clickAssignment(assignment.name.orEmpty())
 
-        // TODO: Check that the assignment details page is displayed
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
     @Test
