@@ -16,6 +16,7 @@
  */
 package com.instructure.parentapp.features.addstudent.qr
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -136,10 +138,13 @@ private fun QrPairingError(
         )
         OutlinedButton(
             modifier = Modifier.padding(top = 16.dp),
+            border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
+            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundLightest)),
             onClick = {
                 onRetryClicked()
                 actionHandler(AddStudentAction.ResetError)
-            }) {
+            }
+        ) {
             Text(
                 text = stringResource(id = R.string.retry),
                 color = colorResource(id = R.color.textDarkest),
