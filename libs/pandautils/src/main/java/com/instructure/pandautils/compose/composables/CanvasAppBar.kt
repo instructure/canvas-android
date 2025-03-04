@@ -16,7 +16,7 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -33,8 +33,10 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 
 /**
@@ -45,6 +47,7 @@ fun CanvasAppBar(
     title: String,
     navigationActionClick: () -> Unit,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     @DrawableRes navIconRes: Int = R.drawable.ic_close,
     navIconContentDescription: String = stringResource(id = R.string.close),
     actions: @Composable RowScope.() -> Unit = {},
@@ -53,7 +56,7 @@ fun CanvasAppBar(
 ) {
     TopAppBar(
         title = {
-            Row(
+            Column(
                 modifier = Modifier.semantics(mergeDescendants = true) {
                     isTraversalGroup = true
                     traversalIndex = -1f
@@ -61,6 +64,13 @@ fun CanvasAppBar(
                 }
             ) {
                 Text(text = title)
+                subtitle?.let {
+                    Text(text = subtitle,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        lineHeight = 16.sp
+                    )
+                }
             }
         },
         elevation = 2.dp,
@@ -85,5 +95,5 @@ fun CanvasAppBar(
 @Preview
 @Composable
 fun CanvasAppBarPreview() {
-    CanvasAppBar(title = "Title", navigationActionClick = {})
+    CanvasAppBar(title = "Title", subtitle = "Subtitle", navigationActionClick = {})
 }

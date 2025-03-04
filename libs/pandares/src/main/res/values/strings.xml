@@ -2018,4 +2018,9 @@
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Signature text</string>
     <string name="due_dateTime">Due: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Post policy</string>
+    <string name="late">Late</string>
+    <string name="a11y_contentDescription_expand">Expand</string>
+    <string name="missingTag">Missing</string>
 </resources>
