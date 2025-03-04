@@ -15,19 +15,29 @@
  */
 package com.instructure.parentapp.ui.interaction
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPairingCode
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.parentapp.utils.ParentComposeTest
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.core.AllOf
 import org.junit.Test
 
 @HiltAndroidTest
 class CreateAccountInteractionTest : ParentComposeTest() {
+
+    private lateinit var activityResult: Instrumentation.ActivityResult
 
     @Test
     fun testCreateAccountDisplayed() {
@@ -91,10 +101,31 @@ class CreateAccountInteractionTest : ParentComposeTest() {
     }
 
     private fun goToCreateAccount(data: MockCanvas) {
-        val domain = data.domain
         val student = data.students[0]
         val code = data.addPairingCode(student)
-        val accountId = 123L
-        goToCreateAccount(domain, code, accountId)
+        val accountId = "123L"
+
+        activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, Intent().apply {
+            putExtra(
+                com.google.zxing.client.android.Intents.Scan.RESULT,
+                "canvas-parent://${data.domain}/pair?code=$code&account_id=$accountId"
+            )
+        })
+        loginLandingPage.clickQRCodeButton()
+        composeTestRule.onNodeWithText("I don\'t have a Canvas account").performClick()
+
+        Intents.init()
+        try {
+            intending(
+                AllOf.allOf(
+                    IntentMatchers.anyIntent()
+                )
+            ).respondWith(activityResult)
+            qrPairingPage.tapNext()
+        } finally {
+            Intents.release()
+        }
+
+        composeTestRule.waitForIdle()
     }
 }

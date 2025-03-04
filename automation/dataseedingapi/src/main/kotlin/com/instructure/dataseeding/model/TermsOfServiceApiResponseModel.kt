@@ -17,7 +17,7 @@ package com.instructure.dataseeding.model
 
 import com.google.gson.annotations.SerializedName
 
-data class TermsOfServiceResponseModel(
+data class TermsOfServiceApiResponseModel(
         val id: Long = 0,
         @SerializedName("terms_type")
         val termsType: String? = null,
