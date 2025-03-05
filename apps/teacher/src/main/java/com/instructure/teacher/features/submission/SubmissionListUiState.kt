@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.features.submission
 
+import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -57,4 +58,14 @@ enum class SubmissionTag(@StringRes val text: Int, @DrawableRes val icon: Int? =
 sealed class SubmissionListAction {
     data object Refresh : SubmissionListAction()
     data class SubmissionClicked(val submissionId: Long) : SubmissionListAction()
+}
+
+sealed class SubmissionListViewModelAction {
+    data class RouteToSubmission(val courseId: Long,
+                                 val assignmentId: Long,
+                                 val selectedIdx: Int,
+                                 val anonymousGrading: Boolean? = null,
+                                 val filteredSubmissionIds: LongArray = longArrayOf(),
+                                 val filter: SubmissionListFilter? = null,
+                                 val filterValue: Double = 0.0) : SubmissionListViewModelAction()
 }

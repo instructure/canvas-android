@@ -61,14 +61,14 @@ import com.instructure.teacher.R
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 
 @Composable
-fun SubmissionListScreen(uiState: SubmissionListUiState) {
+fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: () -> Unit) {
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CanvasAppBar(
                 title = stringResource(R.string.submissions),
                 subtitle = uiState.assignmentName,
-                navigationActionClick = { /* TODO: Navigate back */ },
+                navigationActionClick = { navigationIconClick() },
                 navIconContentDescription = stringResource(R.string.back),
                 navIconRes = R.drawable.ic_back_arrow,
                 backgroundColor = uiState.courseColor,
@@ -113,14 +113,18 @@ private fun SubmissionListContent(
     val pullRefreshState = rememberPullRefreshState(refreshing = uiState.refreshing, onRefresh = {
         uiState.actionHandler(SubmissionListAction.Refresh)
     })
-    Box(modifier = Modifier.fillMaxSize().pullRefresh(pullRefreshState)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .pullRefresh(pullRefreshState)) {
         LazyColumn(modifier = modifier) {
             uiState.submissions.forEach { (titleRes, submissionList) ->
                 SubmissionListSection(
                     titleRes,
                     submissionList,
                     courseColor
-                )
+                ) {
+                    uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
+                }
             }
         }
 
@@ -140,20 +144,25 @@ private fun SubmissionListContent(
 private fun LazyListScope.SubmissionListSection(
     headerTitle: Int,
     submissions: List<SubmissionUiState>,
-    courseColor: Color
+    courseColor: Color,
+    itemClick: (Long) -> Unit
 ) {
     stickyHeader {
         SubmissionListHeader(titleRes = headerTitle)
     }
     items(submissions) {
-        SubmissionListItem(it, courseColor)
+        SubmissionListItem(it, courseColor, itemClick)
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SubmissionListItem(submissionListUiState: SubmissionUiState, courseColor: Color) {
-    Column(modifier = Modifier.clickable { }) {
+private fun SubmissionListItem(
+    submissionListUiState: SubmissionUiState,
+    courseColor: Color,
+    itemClick: (Long) -> Unit
+) {
+    Column(modifier = Modifier.clickable { itemClick(submissionListUiState.submissionId) }) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -315,5 +324,5 @@ fun SubmissionListScreenPreview() {
                 )
             )
         ) {}
-    )
+    ) {}
 }

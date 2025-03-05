@@ -24,19 +24,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.withArgs
+import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.features.submission.SubmissionListScreen
 import com.instructure.teacher.features.submission.SubmissionListViewModel
+import com.instructure.teacher.features.submission.SubmissionListViewModelAction
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
@@ -72,8 +79,32 @@ class AssignmentSubmissionListFragment : BaseCanvasFragment() {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 CanvasTheme {
-                    SubmissionListScreen(uiState)
+                    SubmissionListScreen(uiState) {
+                        requireActivity().onBackPressed()
+                    }
                 }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.collectOneOffEvents(viewModel.events, this::handleActions)
+    }
+
+    private fun handleActions(action: SubmissionListViewModelAction) {
+        when (action) {
+            is SubmissionListViewModelAction.RouteToSubmission -> {
+                val bundle = SpeedGraderActivity.makeBundle(
+                    action.courseId,
+                    action.assignmentId,
+                    action.selectedIdx,
+                    action.anonymousGrading,
+                    action.filteredSubmissionIds,
+                    action.filter,
+                    action.filterValue
+                )
+                RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
         }
     }

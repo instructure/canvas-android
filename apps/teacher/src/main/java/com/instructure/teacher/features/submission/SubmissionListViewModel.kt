@@ -27,16 +27,20 @@ import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.features.smartsearch.SmartSearchViewModelAction
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.utils.getState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,6 +71,9 @@ class SubmissionListViewModel @Inject constructor(
     )
     val uiState: StateFlow<SubmissionListUiState>
         get() = _uiState.asStateFlow()
+
+    private val _events = Channel<SubmissionListViewModelAction>()
+    val events = _events.receiveAsFlow()
 
     init {
         viewModelScope.launch {
@@ -179,7 +186,18 @@ class SubmissionListViewModel @Inject constructor(
             }
 
             is SubmissionListAction.SubmissionClicked -> {
-                // Handle click
+                val submissions = _uiState.value.submissions.map { it.value }.flatten()
+                val selected = submissions.indexOfFirst { it.submissionId == action.submissionId }
+                viewModelScope.launch {
+                    _events.send(SubmissionListViewModelAction.RouteToSubmission(
+                        courseId = course.id,
+                        assignmentId = assignment.id,
+                        selectedIdx = selected,
+                        anonymousGrading = assignment.anonymousGrading,
+                        filteredSubmissionIds = submissions.map { it.submissionId }.toLongArray(),
+                        filter = _uiState.value.filter,
+                    ))
+                }
             }
         }
     }
