@@ -113,7 +113,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/detailsLabel" />
 
-            <androidx.appcompat.widget.SwitchCompat
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/showSummarySwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,6 +125,7 @@
                 android:minHeight="48dp"
                 app:layout_constraintBaseline_toBaselineOf="@id/showSummaryLabel"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:theme="@style/Theme.Material3.DayNight"
                 tools:checked="true" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
