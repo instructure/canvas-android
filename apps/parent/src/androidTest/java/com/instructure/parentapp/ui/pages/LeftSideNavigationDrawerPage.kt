@@ -86,4 +86,9 @@ class LeftSideNavigationDrawerPage: BasePage(R.id.drawer_layout) {
         Espresso.pressBack()
     }
 
+    fun assertUserLoggedIn(email: String) {
+        onViewWithId(R.id.navigationButtonHolder).click()
+        onViewWithText(email).assertDisplayed()
+        Espresso.pressBack()
+    }
 }
