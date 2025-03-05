@@ -23,6 +23,7 @@
         <import type="android.view.View" />
 
         <import type="com.instructure.canvasapi2.managers.NotificationPreferencesManager" />
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
 
         <variable
             name="itemViewModel"
@@ -48,7 +49,7 @@
             android:layout_marginStart="16dp"
             android:checked="@{itemViewModel.checked}"
             android:onClick="@{() -> itemViewModel.onCheckedChanged(toggle.isChecked())}"
-            app:themeSwitch="@{@color/backgroundInfo}"
+            app:themeSwitch="@{ThemePrefs.INSTANCE.brandColor}"
             app:theme="@style/Theme.Material3.DayNight" />
 
         <LinearLayout

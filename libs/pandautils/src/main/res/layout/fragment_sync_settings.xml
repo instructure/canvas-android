@@ -25,6 +25,7 @@
             type="com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewModel" />
 
         <import type="android.view.View" />
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
     </data>
 
     <LinearLayout
@@ -57,7 +58,7 @@
             android:text="@string/syncSettings_autoContentSyncTitle"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            app:themeSwitch="@{@color/backgroundInfo}"
+            app:themeSwitch="@{ThemePrefs.INSTANCE.brandColor}"
             app:theme="@style/Theme.Material3.DayNight" />
 
         <com.google.android.material.divider.MaterialDivider
@@ -144,7 +145,7 @@
                 android:text="@string/syncSettings_wifiOnlyTitle"
                 android:textColor="@color/textDarkest"
                 android:textSize="16sp"
-                app:themeSwitch="@{@color/backgroundInfo}"
+                app:themeSwitch="@{ThemePrefs.INSTANCE.brandColor}"
                 app:theme="@style/Theme.Material3.DayNight" />
 
             <com.google.android.material.divider.MaterialDivider

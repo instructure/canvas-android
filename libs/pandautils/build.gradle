@@ -221,6 +221,7 @@ dependencies {
 
     api Libs.COMPOSE_BOM
     api Libs.COMPOSE_MATERIAL
+    api Libs.COMPOSE_MATERIAL_3
     api Libs.COMPOSE_MATERIAL_ICONS
     api Libs.COMPOSE_PREVIEW
     debugApi Libs.COMPOSE_TOOLING
