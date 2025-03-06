@@ -17,6 +17,12 @@ package com.instructure.parentapp.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.Espresso
+import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -42,7 +48,9 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @E2E
     @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE_DETAILS, TestCategory.E2E, SecondaryFeatureCategory.SUMMARY)
     fun testCourseDetailsSummaryE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -69,7 +77,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         Log.d(PREPARATION_TAG,"Seed a published quiz because it should be displayed on the Summary Page.")
         val testPublishedQuiz = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, listOf())
 
-        Log.d(PREPARATION_TAG, "Update ${course.name} course to set Syllabus as Home Page (with some syllabus body) and enable 'Show Course Summary' setting to make the Sumary tab displayed in the Parent app.")
+        Log.d(PREPARATION_TAG, "Update ${course.name} course to set Syllabus as Home Page (with some syllabus body) and enable 'Show Course Summary' setting to make the Summary Tab displayed in the Parent app.")
         CoursesApi.updateCourse(course.id, UpdateCourse(syllabusBody = "Test syllabus body...", homePage = "syllabus", showSummary = 1))
 
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
@@ -85,12 +93,12 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'SUMMARY' tab has been selected.")
         courseDetailsPage.assertTabSelected("SUMMARY")
 
-        Log.d(STEP_TAG, "Assert that all the' ${assignment.name}' assignment, '${testPublishedQuiz.title}' quiz and '${testCalendarEvent.title}' calendar event items are displayed on the Summary Page. ")
+        Log.d(STEP_TAG, "Assert that the' ${assignment.name}' assignment, '${testPublishedQuiz.title}' quiz and '${testCalendarEvent.title}' calendar event items are all displayed on the Summary Page. ")
         summaryPage.assertItemDisplayed(assignment.name)
         summaryPage.assertItemDisplayed(testCalendarEvent.title.orEmpty())
         summaryPage.assertItemDisplayed(testPublishedQuiz.title)
 
-        Log.d(STEP_TAG, "Select '${assignment.name}' Summary item (assignment) to navigate to the Assignment Details Page.")
+        Log.d(STEP_TAG, "Select '${assignment.name}' (assignment) Summary item to navigate to the Assignment Details Page.")
         summaryPage.selectItem(assignment.name)
 
         Log.d(STEP_TAG, "Assert that the Assignment Details Page is loaded successfully.")
