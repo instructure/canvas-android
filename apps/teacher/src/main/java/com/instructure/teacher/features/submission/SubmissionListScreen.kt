@@ -16,10 +16,9 @@
  */
 package com.instructure.teacher.features.submission
 
-import androidx.annotation.StringRes
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -30,7 +29,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -55,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.teacher.R
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
@@ -112,12 +111,28 @@ private fun SubmissionListContent(
     val pullRefreshState = rememberPullRefreshState(refreshing = uiState.refreshing, onRefresh = {
         uiState.actionHandler(SubmissionListAction.Refresh)
     })
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .pullRefresh(pullRefreshState)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
         LazyColumn(modifier = modifier) {
+            item {
+                SearchBar(
+                    icon = R.drawable.ic_search_white_24dp,
+                    searchQuery = uiState.searchQuery,
+                    tintColor = colorResource(R.color.textDarkest),
+                    placeholder = stringResource(R.string.search),
+                    collapsable = false,
+                    onSearch = {
+                        uiState.actionHandler(SubmissionListAction.Search(it))
+                    },
+                    onClear = {
+                        uiState.actionHandler(SubmissionListAction.Search(""))
+                    })
+            }
             item { Header(uiState.headerTitle) }
-            items(uiState.submissions) { submission ->
+            items(uiState.submissions, key = { it.submissionId }) { submission ->
                 SubmissionListItem(submission, courseColor) {
                     uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
                 }
@@ -233,88 +248,116 @@ private fun SubmissionTag(tag: SubmissionTag, hasDivider: Boolean) {
 
 }
 
-@Composable
-private fun SubmissionListHeader(@StringRes titleRes: Int) {
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { }
-                .padding(vertical = 8.dp, horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(titleRes),
-                fontSize = 14.sp,
-                color = colorResource(id = R.color.textDark),
-                fontWeight = FontWeight.SemiBold
-            )
-            Icon(
-                modifier = Modifier.width(12.dp),
-                painter = painterResource(id = R.drawable.ic_arrow_down),
-                contentDescription = stringResource(R.string.a11y_contentDescription_expand),
-                tint = colorResource(id = R.color.textDarkest)
-            )
-        }
-        CanvasDivider()
-    }
-
-}
-
 @Preview
 @Composable
 fun SubmissionListScreenPreview() {
     SubmissionListScreen(
         SubmissionListUiState(
-            "Test course",
+            "Test assignment",
             courseColor = Color.Magenta,
             headerTitle = "All Submissions",
             filter = SubmissionListFilter.GRADED,
             submissions = listOf(
-                    SubmissionUiState(
-                        1,
-                        "Test User",
-                        "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                        listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
-                        null
-                    ),
-                    SubmissionUiState(
-                        2,
-                        "Test User 2",
-                        "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                        listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
-                        null
-                    ),
-                    SubmissionUiState(
-                        3,
-                        "Test User 3",
-                        "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                        listOf(SubmissionTag.NOT_SUBMITTED),
-                        null
-                    ),
-                    SubmissionUiState(
-                        4,
-                        "Test User 4",
-                        "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                        listOf(SubmissionTag.MISSING),
-                        null
-                    ),
-                    SubmissionUiState(
-                        5,
-                        "Test User 5",
-                        "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                        listOf(SubmissionTag.GRADED),
-                        "100%"
-                    ),
-                    SubmissionUiState(
-                        6,
-                        "Test User 6",
-                        "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                        listOf(SubmissionTag.EXCUSED),
-                        "Excused"
-                    )
+                SubmissionUiState(
+                    1,
+                    "Test User",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                    null
+                ),
+                SubmissionUiState(
+                    2,
+                    "Test User 2",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                    null
+                ),
+                SubmissionUiState(
+                    3,
+                    "Test User 3",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.NOT_SUBMITTED),
+                    null
+                ),
+                SubmissionUiState(
+                    4,
+                    "Test User 4",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.MISSING),
+                    null
+                ),
+                SubmissionUiState(
+                    5,
+                    "Test User 5",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.GRADED),
+                    "100%"
+                ),
+                SubmissionUiState(
+                    6,
+                    "Test User 6",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.EXCUSED),
+                    "Excused"
                 )
+            )
+        ) {}
+    ) {}
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SubmissionListScreenDarkPreview() {
+    SubmissionListScreen(
+        SubmissionListUiState(
+            "Test assignment",
+            courseColor = Color.Magenta,
+            headerTitle = "All Submissions",
+            filter = SubmissionListFilter.GRADED,
+            submissions = listOf(
+                SubmissionUiState(
+                    1,
+                    "Test User",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                    null
+                ),
+                SubmissionUiState(
+                    2,
+                    "Test User 2",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                    null
+                ),
+                SubmissionUiState(
+                    3,
+                    "Test User 3",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.NOT_SUBMITTED),
+                    null
+                ),
+                SubmissionUiState(
+                    4,
+                    "Test User 4",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.MISSING),
+                    null
+                ),
+                SubmissionUiState(
+                    5,
+                    "Test User 5",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.GRADED),
+                    "100%"
+                ),
+                SubmissionUiState(
+                    6,
+                    "Test User 6",
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.EXCUSED),
+                    "Excused"
+                )
+            )
         ) {}
     ) {}
 }

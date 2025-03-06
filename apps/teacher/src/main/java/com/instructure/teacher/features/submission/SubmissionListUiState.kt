@@ -28,6 +28,7 @@ data class SubmissionListUiState(
     val assignmentName: String,
     val courseColor: Color,
     val headerTitle: String,
+    val searchQuery: String = "",
     val filter: SubmissionListFilter = SubmissionListFilter.ALL,
     val sections: List<CanvasContext> = emptyList(),
     val submissions: List<SubmissionUiState> = emptyList(),
@@ -58,6 +59,7 @@ enum class SubmissionTag(@StringRes val text: Int, @DrawableRes val icon: Int? =
 sealed class SubmissionListAction {
     data object Refresh : SubmissionListAction()
     data class SubmissionClicked(val submissionId: Long) : SubmissionListAction()
+    data class Search(val query: String) : SubmissionListAction()
 }
 
 sealed class SubmissionListViewModelAction {

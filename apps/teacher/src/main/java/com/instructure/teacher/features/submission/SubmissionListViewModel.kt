@@ -105,7 +105,8 @@ class SubmissionListViewModel @Inject constructor(
                 // which students haven't submitted yet
                 SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
             }
-        }.map { getSubmissionUiState(it) }
+        }.filter { it.assignee.name.contains(uiState.value.searchQuery, true) }
+            .map { getSubmissionUiState(it) }
 
         _uiState.update { it.copy(submissions = submissionUiStates, loading = false, refreshing = false) }
     }
@@ -176,6 +177,11 @@ class SubmissionListViewModel @Inject constructor(
                         filter = _uiState.value.filter,
                     ))
                 }
+            }
+
+            is SubmissionListAction.Search -> {
+                _uiState.update { it.copy(searchQuery = action.query) }
+                filterData()
             }
         }
     }
