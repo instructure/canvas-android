@@ -93,7 +93,7 @@ sealed class SubmissionDetailsContentType {
 
     data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment, val isStudioEnabled: Boolean, val quiz: Quiz? = null, val studioLTITool: LTITool? = null, val isObserver: Boolean = false, val ltiTool: LTITool? = null) : SubmissionDetailsContentType()
     object NoneContent : SubmissionDetailsContentType()
-    data class ExternalToolContent(val canvasContext: CanvasContext, val ltiTool: LTITool?, val title: String, val ltiType: LtiType = LtiType.EXTERNAL_TOOL) : SubmissionDetailsContentType()
+    data class ExternalToolContent(val canvasContext: CanvasContext, val ltiTool: LTITool?, val title: String, val ltiType: LtiType = LtiType.EXTERNAL_TOOL, val ltiUrl: String? = null) : SubmissionDetailsContentType()
     object OnPaperContent : SubmissionDetailsContentType()
     data class UnsupportedContent(val assignmentId: Long) : SubmissionDetailsContentType()
     data class OtherAttachmentContent(val attachment: Attachment) : SubmissionDetailsContentType()

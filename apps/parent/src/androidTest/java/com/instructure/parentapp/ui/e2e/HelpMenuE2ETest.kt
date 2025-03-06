@@ -50,7 +50,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Open 'Help' menu.")
         leftSideNavigationDrawerPage.clickHelpMenu()

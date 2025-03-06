@@ -25,6 +25,7 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.ThemedColor
@@ -58,6 +59,8 @@ class ManageStudentsScreenTest {
 
         composeTestRule.onNodeWithText("You are not observing any students.")
             .assertIsDisplayed()
+        composeTestRule.onNodeWithTag("EmptyContent")
+            .performScrollToNode(hasText("Retry"))
         composeTestRule.onNodeWithText("Retry")
             .assertIsDisplayed()
             .assertHasClickAction()

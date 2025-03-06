@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">U kunt inleverdetails hier openen</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Hier klikken voor details inlevering en rubriek</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Cijfer: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuut</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Cursus of groep selecteren</string>
     <string name="inboxClearFilter">Wissen</string>
     <string name="a11y_courseFilterContentDescription">Cursusfilter: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Mailboxselectie: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">selecteer</string>
     <string name="a11y_itemSelectedSwipeForActions">Gesprek geselecteerd. Selectiemodus is geactiveerd. voor acties</string>
     <string name="a11y_conversationSelected">Gesprek geselecteerd.</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Andere apps</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">Resterend</string>
+    <string name="offline_content_storage_info_a11y_description">Opslaginfo: %s van %s gebruikt, andere apps %d%%, Canvas Student %d%%, resterend %d%%</string>
     <string name="offline_content_all_courses">Alle cursussen</string>
     <string name="offline_content_sync">Synchroniseren</string>
     <string name="offline_content_selected">%d geselecteerd</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Synchroniseren</string>
     <string name="offline_content_sync_loading_title">Bezig met laden...</string>
     <string name="offline_content_sync_loading_message">Een ogenblikje, we zetten het voor je klaar.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Instellingen voor offline-synchronisatie zijn opgeslagen. Synchronisatie begint binnenkort op de achtergrond.</string>
     <string name="content_description_expand_content">Inhoud uitvouwen</string>
+    <string name="content_description_expand_content_with_param">Inhoud uitvouwen, %s</string>
     <string name="content_description_collapse_content">Inhoud samenvouwen</string>
+    <string name="content_description_collapse_content_with_param">Inhoud samenvouwen, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Door Automatisch synchroniseren van content in te schakelen wordt de geselecteerde content gedownload op basis van de onderstaande instellingen. De contentsynchronisatie vindt ook plaats als de applicatie niet wordt uitgevoerd. Als de instelling wordt uitgeschakeld, wordt er geen synchronisatie uitgevoerd. De reeds gedownloade content wordt niet verwijderd.</string>
     <string name="syncSettings_syncFrequencyTitle">Synchronisatiefrequentie</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisch synchroniseren van content</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Publicatie ongedaan maken</string>
     <string name="discussionMenuRefresh">Vernieuwen</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Naar vandaag springen</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Ga naar vandaag, de geselecteerde dag is %s, vandaag is het %s</string>
     <string name="a11y_calendarSwitchToMonthView">Naar maandweergave overschakelen</string>
     <string name="a11y_calendarSwitchToWeekView">Naar weekweergave overschakelen</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Schakel tussen maand- en weekweergave</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Kalender is in maandweergave</string>
+    <string name="a11y_calendarWeekView">Kalender is in weekweergave</string>
+    <string name="a11y_calendarSwitchedToWeekView">Kalender is overgeschakeld naar weekweergave</string>
+    <string name="a11y_calendarSwitchedToMonthView">Kalender is overgeschakeld naar maandweergave</string>
     <string name="calendarNoEvents">Vandaag geen gebeurtenissen!</string>
     <string name="calendarNoEventsDescription">Dat lijkt een prima dag om lekker uit te rusten, te relaxen en de batterij op te laden.</string>
     <string name="userCalendarToDo">Takenlijst</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Je kunt niet meer dan %d kalenders selecteren.</string>
     <string name="calendarFilterTitle">Kalenders</string>
     <string name="calendarFiltersFailed">Laden van filters mislukt.</string>
+    <string name="a11y_eventCreatedAnnouncement">Evenement %s is gemaakt.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Evenement %s is bijgewerkt.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Lijst met opdrachten %s is gemaakt.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Lijst met opdrachten %s is bijgewerkt.</string>
     <string name="todoScreenTitle">Takenlijst</string>
     <string name="todoDateLabel">Datum</string>
     <string name="todoDescriptionLabel">Beschrijving</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Opdrachten (%d)</string>
     <string name="smartSearchPageGroupTitle">Pagina\'s (%d)</string>
     <string name="a11y_commentSentSuccess">Opmerking verzonden</string>
+    <string name="a11y_dragViewContentDescription">Lade uitvouwen</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Gesprekken</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Gecontroleerd</string>
+    <string name="a11y_unchecked">Niet-gecontroleerd</string>
+    <string name="a11y_indeterminate">Gedeeltelijk gecontroleerd</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filters zijn bijgewerkt</string>
 </resources>

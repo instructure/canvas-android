@@ -31,17 +31,15 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
-import com.instructure.pandautils.utils.ToolbarSetupBehavior
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @PageView(url = "profile/communication")
 @ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @AndroidEntryPoint
 class EmailNotificationPreferencesFragment : BaseCanvasFragment() {
-
-    @Inject
-    lateinit var toolbarSetupBehavior: ToolbarSetupBehavior
 
     private val viewModel: EmailNotificationPreferencesViewModel by viewModels()
 
@@ -58,7 +56,8 @@ class EmailNotificationPreferencesFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarSetupBehavior.setupToolbar(binding.toolbar)
+        binding.toolbar.setupAsBackButton { requireActivity().onBackPressed() }
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)

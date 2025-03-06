@@ -365,11 +365,6 @@
             android:name=".widget.NotificationViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <service
-            android:name=".service.StudentPageViewService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
-
         <!-- End of Widget Items -->
 
         <provider

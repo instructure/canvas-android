@@ -130,11 +130,11 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
     @Test
     fun testMessageOverflowMenuDeleteMessageButtonWithConfirm() {
         val data = initData()
-        val conversation = getConversations(data).last()
+        val conversation = getConversations(data).first()
         goToInboxDetails(data, conversation)
         composeTestRule.waitForIdle()
 
-        val message = conversation.messages[2]
+        val message = conversation.messages.first()
         inboxDetailsPage.pressOverflowMenuItemForMessage(message.body.orEmpty(), "Delete")
         inboxDetailsPage.assertDeleteMessageAlertDialog()
         inboxDetailsPage.pressAlertButton("Delete")

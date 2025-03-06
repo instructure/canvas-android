@@ -20,9 +20,13 @@ package com.instructure.parentapp.ui.compose.notaparent
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.parentapp.features.notaparent.NotAParentScreen
 import org.junit.Rule
@@ -48,9 +52,12 @@ class NotAParentScreenTest {
 
         composeTestRule.onNodeWithText("Not a parent?").assertIsDisplayed()
         composeTestRule.onNodeWithText("We couldn't find any students associated with your account").assertIsDisplayed()
+
+        scrollToText("Return to login")
         composeTestRule.onNodeWithText("Return to login")
             .assertIsDisplayed()
             .assertHasClickAction()
+        scrollToText("Are you a student or teacher?")
         composeTestRule.onNodeWithText("Are you a student or teacher?")
             .assertIsDisplayed()
             .assertHasClickAction()
@@ -68,12 +75,21 @@ class NotAParentScreenTest {
             )
         }
 
+        scrollToText("Are you a student or teacher?")
+
         composeTestRule.onNodeWithText("Are you a student or teacher?").performClick()
         composeTestRule.onNodeWithText("STUDENT")
+            .performScrollTo()
             .assertIsDisplayed()
             .assertHasClickAction()
         composeTestRule.onNodeWithText("TEACHER")
+            .performScrollTo()
             .assertIsDisplayed()
             .assertHasClickAction()
+    }
+
+    private fun scrollToText(text: String) {
+        composeTestRule.onNodeWithTag("NotAParentScreen")
+            .performScrollToNode(hasText(text))
     }
 }

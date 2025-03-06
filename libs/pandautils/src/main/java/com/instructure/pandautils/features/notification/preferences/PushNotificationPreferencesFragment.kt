@@ -20,25 +20,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTIFICATION_PREFERENCES
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
-import com.instructure.pandautils.utils.ToolbarSetupBehavior
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_NOTIFICATION_PREFERENCES)
 @PageView(url = "profile/communication")
 @AndroidEntryPoint
 class PushNotificationPreferencesFragment : BaseCanvasFragment() {
-
-    @Inject
-    lateinit var toolbarSetupBehavior: ToolbarSetupBehavior
 
     private val viewModel: PushNotificationPreferencesViewModel by viewModels()
 
@@ -55,7 +53,8 @@ class PushNotificationPreferencesFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarSetupBehavior.setupToolbar(binding.toolbar)
+        binding.toolbar.setupAsBackButton { requireActivity().onBackPressed() }
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)

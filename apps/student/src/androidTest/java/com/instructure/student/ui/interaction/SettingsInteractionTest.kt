@@ -132,7 +132,7 @@ class SettingsInteractionTest : StudentComposeTest() {
         setUpAndSignIn(offlineEnabled = true)
 
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.assertOfflineContentDisplayed()
+        settingsPage.assertSettingsItemDisplayed("Synchronization")
     }
 
     // Mock a single student and course, sign in, then navigate to the dashboard.

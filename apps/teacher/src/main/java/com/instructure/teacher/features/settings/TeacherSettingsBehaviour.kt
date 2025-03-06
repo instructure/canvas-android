@@ -37,6 +37,7 @@ class TeacherSettingsBehaviour : SettingsBehaviour {
             }
             return mapOf(
                 R.string.preferences to preferencesList,
+                R.string.inboxSettingsTitle to listOf(SettingsItem.INBOX_SIGNATURE),
                 R.string.legal to listOf(
                     SettingsItem.ABOUT,
                     SettingsItem.LEGAL

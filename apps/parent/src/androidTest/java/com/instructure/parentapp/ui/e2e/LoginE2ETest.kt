@@ -57,7 +57,7 @@ class LoginE2ETest : ParentComposeTest() {
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu (to be able to log out).")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Log out with '${student.name}' student.")
         leftSideNavigationDrawerPage.logout()
@@ -97,7 +97,7 @@ class LoginE2ETest : ParentComposeTest() {
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu (to be able to log out).")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickSwitchUsers()
@@ -116,7 +116,7 @@ class LoginE2ETest : ParentComposeTest() {
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent2)
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu (to be able to log out).")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickSwitchUsers()
@@ -137,7 +137,7 @@ class LoginE2ETest : ParentComposeTest() {
         dashboardPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu (to be able to log out).")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickSwitchUsers()
@@ -177,7 +177,7 @@ class LoginE2ETest : ParentComposeTest() {
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
 
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu (to be able to log out).")
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Log out with '${parent.name}' student.")
         leftSideNavigationDrawerPage.logout()

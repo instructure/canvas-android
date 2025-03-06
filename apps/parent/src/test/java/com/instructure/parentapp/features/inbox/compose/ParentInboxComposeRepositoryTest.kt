@@ -1,11 +1,15 @@
 package com.instructure.parentapp.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.User
@@ -33,14 +37,18 @@ class ParentInboxComposeRepositoryTest {
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
+    private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
+    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
     private val studentId = 1L
 
     private val inboxComposeRepository = ParentInboxComposeRepository(
         courseAPI,
         parentPrefs,
+        featuresApi,
         recipientAPI,
         inboxAPI,
+        inboxSettingsManager,
     )
 
     @Before
@@ -125,7 +133,7 @@ class ParentInboxComposeRepositoryTest {
 
         coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Success(expected)
 
-        val result = inboxComposeRepository.getRecipients("", course, true).dataOrThrow
+        val result = inboxComposeRepository.getRecipients("", course.contextId, true).dataOrThrow
 
         assertEquals(expected, result)
     }
@@ -134,7 +142,7 @@ class ParentInboxComposeRepositoryTest {
     fun `Get recipients with error`() = runTest {
         coEvery { recipientAPI.getFirstPageRecipientListNoSyntheticContexts(any(), any(), any()) } returns DataResult.Fail()
 
-        inboxComposeRepository.getRecipients("", Course(), true).dataOrThrow
+        inboxComposeRepository.getRecipients("", Course(id = 1L).contextId, true).dataOrThrow
     }
 
     @Test
@@ -153,5 +161,41 @@ class ParentInboxComposeRepositoryTest {
         coEvery { inboxAPI.createConversation(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
         inboxComposeRepository.createConversation(emptyList(), "", "", Course(), emptyList(), false).dataOrThrow
+    }
+
+    @Test
+    fun `Get signature returns empty string when feature is disabled`() = runTest {
+        val expected = InboxSignatureSettings("signature", true)
+
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(EnvironmentSettings(enableInboxSignatureBlock = false))
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns DataResult.Success(expected)
+
+        val result = inboxComposeRepository.getInboxSignature()
+
+        assertEquals("", result)
+    }
+
+    @Test
+    fun `Get signature successfully when use signature is true`() = runTest {
+        val expected = InboxSignatureSettings("signature", true)
+
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(EnvironmentSettings(enableInboxSignatureBlock = true))
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns DataResult.Success(expected)
+
+        val result = inboxComposeRepository.getInboxSignature()
+
+        assertEquals("signature", result)
+    }
+
+    @Test
+    fun `Get signature returns empty string when use signature is false`() = runTest {
+        val expected = InboxSignatureSettings("signature", false)
+
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(EnvironmentSettings(enableInboxSignatureBlock = true))
+        coEvery { inboxSettingsManager.getInboxSignatureSettings() } returns DataResult.Success(expected)
+
+        val result = inboxComposeRepository.getInboxSignature()
+
+        assertEquals("", result)
     }
 }

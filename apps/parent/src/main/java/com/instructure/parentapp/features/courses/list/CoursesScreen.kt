@@ -41,6 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -151,6 +154,9 @@ private fun CourseListItem(
                 actionHandler(CoursesAction.CourseTapped(uiState.courseId))
             }
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .semantics {
+                role = Role.Button
+            }
     ) {
         Text(
             text = uiState.courseName,

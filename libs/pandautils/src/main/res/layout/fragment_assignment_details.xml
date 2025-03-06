@@ -81,10 +81,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
+                        android:accessibilityHeading="true"
                         android:text="@{viewModel.data.assignmentName}"
                         android:textColor="@color/textDarkest"
                         android:textSize="22sp"
-                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Creative Machines and Innovative Instrumentation - ASTR 21400" />
 
@@ -261,13 +261,13 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_panda_locked"
                         android:visibility="@{viewModel.data.fullLocked ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lockedMessageTextView" />
+                        app:layout_constraintTop_toBottomOf="@id/reminderBottomDivider" />
 
                     <View
                         android:id="@+id/dueDivider"
@@ -275,6 +275,7 @@
                         android:layout_height=".5dp"
                         android:layout_marginTop="32dp"
                         android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/lockedMessageTextView" />
 
                     <TextView
@@ -283,11 +284,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
+                        android:accessibilityHeading="true"
                         android:text="@string/dueLabel"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
-                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/dueDivider" />
 
                     <TextView
@@ -329,11 +330,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
+                        android:accessibilityHeading="true"
                         android:text="@string/submission_types"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.submissionTypes.empty ? View.GONE : View.VISIBLE}"
-                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/reminderComposeView" />
 
                     <TextView
@@ -354,11 +355,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
+                        android:accessibilityHeading="true"
                         android:text="@string/allowedFileTypes"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.allowedFileTypes.empty ? View.GONE : View.VISIBLE}"
-                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/submissionTypesTextView" />
 
                     <TextView
@@ -379,11 +380,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
+                        android:accessibilityHeading="true"
                         android:text="@string/settings"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.quizDetails == null ? View.GONE : View.VISIBLE}"
-                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/allowedFileTypesTextView" />
 
                     <TextView
@@ -427,11 +428,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
+                        android:accessibilityHeading="true"
                         android:text="@string/attempts"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.attemptsViewData == null ? View.GONE : View.VISIBLE}"
-                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/quizAllowedAttemptsTextView" />
 
                     <TextView
@@ -472,11 +473,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginTop="24dp"
+                        android:accessibilityHeading="true"
                         android:text="@string/description"
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
-                        android:accessibilityHeading="true"
                         app:layout_constraintTop_toBottomOf="@id/descriptionDivider" />
 
                     <ImageView

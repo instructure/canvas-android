@@ -74,7 +74,7 @@ object ConversationListEndpoint : Endpoint(
                     else -> { // We need to filter out "sent" messages for "ALL"
                         data.conversations.values.toList().filter {
                             // Filter out "sent and archived" messages for "ALL"
-                            it.messages.first().authorId != request.user!!.id &&
+                            it.messages.firstOrNull()?.authorId != request.user!!.id &&
                                 it.workflowState != Conversation.WorkflowState.ARCHIVED
                         }
                     }
@@ -83,7 +83,7 @@ object ConversationListEndpoint : Endpoint(
                 response = response.map {c ->
                     // Make sure audience does not include caller
                     // TODO: Monologues?  Should we assume that we don't do them?
-                    c.copy(audience = c.messages[0].participatingUserIds.filter {id -> id != request.user!!.id})
+                    c.copy(audience = c.messages.firstOrNull()?.participatingUserIds?.filter {id -> id != request.user!!.id})
                 }
 
                 request.successResponse(response)
@@ -168,7 +168,7 @@ object ConversationEndpoint : Endpoint(
                             val updatedConversation = conversation.copy(
                                     messages = newMessages,
                                     messageCount = newMessages.count(),
-                                    lastMessage = newMessages.last().body
+                                    lastMessage = newMessages.lastOrNull()?.body
                             )
 
                             data.conversations[conversationId] = updatedConversation
@@ -227,7 +227,7 @@ object ConversationEndpoint : Endpoint(
             println("okhttp: user = ${request.user}")
             when {
                 data.conversations.containsKey(conversationId) -> {
-                    var conversation = data.conversations[conversationId]!!
+                    val conversation = data.conversations[conversationId]!!
 
                     // Mark as read if conversation is currently unread
                     if(conversation.workflowState == Conversation.WorkflowState.UNREAD) {

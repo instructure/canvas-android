@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
-import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -29,7 +28,6 @@ import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,7 +37,6 @@ import java.util.Date
 
 @HiltAndroidTest
 class AlertsInteractionTest : ParentComposeTest() {
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
 
     @Test
     fun dismissAlert() {

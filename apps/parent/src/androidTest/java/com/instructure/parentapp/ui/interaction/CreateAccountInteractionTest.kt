@@ -53,8 +53,11 @@ class CreateAccountInteractionTest : ParentComposeTest() {
         composeTestRule.waitUntil { !createAccountPage.isLoading() }
         createAccountPage.clickCreateAccountButton()
 
+        createAccountPage.scrollToText("Please enter full name")
         composeTestRule.onNodeWithText("Please enter full name").assertIsDisplayed()
+        createAccountPage.scrollToText("Please enter an email address")
         composeTestRule.onNodeWithText("Please enter an email address").assertIsDisplayed()
+        createAccountPage.scrollToText("Password is required")
         composeTestRule.onNodeWithText("Password is required").assertIsDisplayed()
     }
 
@@ -66,8 +69,11 @@ class CreateAccountInteractionTest : ParentComposeTest() {
         createAccountPage.fillInvalidData()
         createAccountPage.clickCreateAccountButton()
 
+        createAccountPage.scrollToText("Please enter full name")
         composeTestRule.onNodeWithText("Please enter full name").assertIsDisplayed()
+        createAccountPage.scrollToText("Please enter a valid email address")
         composeTestRule.onNodeWithText("Please enter a valid email address").assertIsDisplayed()
+        createAccountPage.scrollToText("Password must contain at least 8 characters")
         composeTestRule.onNodeWithText("Password must contain at least 8 characters")
             .assertIsDisplayed()
     }

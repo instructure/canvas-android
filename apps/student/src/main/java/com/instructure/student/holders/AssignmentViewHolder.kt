@@ -18,14 +18,13 @@ package com.instructure.student.holders
 
 import android.content.Context
 import android.view.View
-import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.student.R
@@ -79,13 +78,7 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         description.setTextForVisibility(descriptionText)
 
-        itemView.accessibilityDelegate = object : View.AccessibilityDelegate() {
-            override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
-                super.onInitializeAccessibilityNodeInfo(host, info)
-
-                info.className = Button::class.java.name
-            }
-        }
+        itemView.accessibilityClassName("android.widget.Button")
     }
 
     companion object {

@@ -1219,6 +1219,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Tutaj można otworzyć szczegóły przesyłki</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Kliknij tutaj, aby wyświetlić szczegóły dot. przesyłania materiałów i kryteriów ocen</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Ocena: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s min</item>
@@ -1487,6 +1488,7 @@
     <string name="inboxContextSelectorTitle">Wybierz kurs lub grupę</string>
     <string name="inboxClearFilter">Wyczyść</string>
     <string name="a11y_courseFilterContentDescription">Filtr kursów: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Wybór skrzynki pocztowej: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">wybierz</string>
     <string name="a11y_itemSelectedSwipeForActions">Wybrano rozmowę. Aktywowano tryb wyboru. Nawiguj, aby wybrać działania.</string>
     <string name="a11y_conversationSelected">Wybrano rozmowę.</string>
@@ -1514,6 +1516,7 @@
     <string name="offline_content_other">Inne aplikacje</string>
     <string name="offline_content_canvas_student">Uczestnik Canvas</string>
     <string name="offline_content_remaining">Pozostało</string>
+    <string name="offline_content_storage_info_a11y_description">Informacje o pamięci: Użycie %s z %s, inne aplikacje %d%%, uczestnik Canvas %d%%, pozostało %d%%</string>
     <string name="offline_content_all_courses">Wszystkie kursy</string>
     <string name="offline_content_sync">Synchronizacja</string>
     <string name="offline_content_selected">%d wybrano</string>
@@ -1533,8 +1536,11 @@
     <string name="offline_content_sync_dialog_positive">Synchronizacja</string>
     <string name="offline_content_sync_loading_title">Wczytywanie...</string>
     <string name="offline_content_sync_loading_message">Chwileczkę, wszystko będzie niedługo gotowe.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Zapisano ustawienia synchronizacji offline. Synchronizacja rozpocznie się wkrótce w tle.</string>
     <string name="content_description_expand_content">Rozwiń zawartość</string>
+    <string name="content_description_expand_content_with_param">Rozwiń zawartość, %s</string>
     <string name="content_description_collapse_content">Zwiń zawartość</string>
+    <string name="content_description_collapse_content_with_param">Zwiń zawartość, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Włączenie automatycznej synchronizacji zawartości pozwoli pobierać wybraną zawartość w oparciu o poniższe ustawienia. Synchronizacja zawartości będzie się odbywać, nawet jeśli aplikacja nie zostanie włączona. Jeśli funkcja jest wyłączona, synchronizacja nie będzie działać. Pobrana już zawartość nie zostanie usunięta.</string>
     <string name="syncSettings_syncFrequencyTitle">Częstotliwość synchronizacji</string>
     <string name="syncSettings_autoContentSyncTitle">Automatyczna synchronizacja zawartości</string>
@@ -1669,8 +1675,15 @@
     <string name="unpublishDialogPositiveButton">Cofnij publikowanie</string>
     <string name="discussionMenuRefresh">Odśwież</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Przejdź do dnia bieżącego</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Przejdź do dzisiaj, wybrany dzień to %s, dziś jest %s</string>
     <string name="a11y_calendarSwitchToMonthView">Przełącz na widok miesiąca</string>
     <string name="a11y_calendarSwitchToWeekView">Przełącz na widok tygodnia</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Przełącz między widokiem miesiąca i tygodnia</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Kalendarz w widoku miesiąca</string>
+    <string name="a11y_calendarWeekView">Kalendarz w widoku tygodnia</string>
+    <string name="a11y_calendarSwitchedToWeekView">Przełączono kalendarz na widok tygodnia</string>
+    <string name="a11y_calendarSwitchedToMonthView">Przełączono kalendarz na widok miesiąca</string>
     <string name="calendarNoEvents">Brak wydarzeń na dziś!</string>
     <string name="calendarNoEventsDescription">Wygląda to na świetny dzień do odpoczynku, relaksu i regeneracji.</string>
     <string name="userCalendarToDo">Lista zadań</string>
@@ -1694,6 +1707,10 @@
     <string name="calendarFilterLimitSnackbar">Można wybrać maks. %d kalendarzy.</string>
     <string name="calendarFilterTitle">Kalendarze</string>
     <string name="calendarFiltersFailed">Nie udało się wczytać filtrów</string>
+    <string name="a11y_eventCreatedAnnouncement">Wydarzenie %s zostało pomyślnie utworzone.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Wydarzenie %s zostało pomyślnie zaktualizowane.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Utworzono zadanie %s.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Zaktualizowano zadanie %s.</string>
     <string name="todoScreenTitle">Lista zadań</string>
     <string name="todoDateLabel">Data</string>
     <string name="todoDescriptionLabel">Opis</string>
@@ -2010,4 +2027,12 @@
     <string name="smartSearchAssignmentGroupTitle">Zadania (%d)</string>
     <string name="smartSearchPageGroupTitle">Strony (%d)</string>
     <string name="a11y_commentSentSuccess">Komentarz przesłany pomyślnie</string>
+    <string name="a11y_dragViewContentDescription">Rozwiń panel boczny</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Rozmowy</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Zaznaczone</string>
+    <string name="a11y_unchecked">Niezaznaczone</string>
+    <string name="a11y_indeterminate">Częściowo zaznaczone</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Zaktualizowano filtry</string>
 </resources>

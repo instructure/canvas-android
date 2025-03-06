@@ -313,6 +313,7 @@
     <string name="assignments_list">Liosta Tascanna</string>
     <string name="syllabus">Siollabas</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dátaí Dlite Iolracha</string>
     <string name="everyone">Gach duine</string>
@@ -446,6 +447,8 @@
     <string name="save_comment">Sábháil ráiteas</string>
     <string name="cancel_editing_comment">Cealaigh an ráiteas eagarthóireachta</string>
     <string name="skip">Scipeáil</string>
+    <string name="collapseGradePanel">Laghdaigh Painéal na Marcanna</string>
+    <string name="expandGradePanel">Leathnaigh Painéal na Marcanna</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Scór saincheaptha %1$s</string>
@@ -837,6 +840,7 @@
     <string name="errorDeletingFolder">Tharla earráid agus an fillteán seo a scriosadh</string>
     <string name="errorUpdatingFile">Tharla earráid agus an comhad seo a nuashonrú</string>
     <string name="errorUpdatingFolder">Tharla earráid agus an fillteán seo a nuashonrú</string>
+    <string name="errorEmptyTitle">Ní féidir leis an teideal a bheith bán</string>
 
     <string name="toDoEmpty">Níl aon rud níos mó le déanamh!\n Bain taitneamh as do lá.</string>
     <string name="toDoNoSubmissions">Níl aon uaslódálacha le marcáil don tasc seo.</string>
@@ -883,6 +887,6 @@
     <string name="no_grade">Gan mharc</string>
     <string name="excuse">Ná bac le</string>
     <string name="speed_grader_overgraded_by">Rómharcáilte ag %s</string>
-
     <string name="error_unpublishable_module_item">Ní féidir é a dhífhoilsiú %s má tá uaslódálacha mac léinn ann</string>
+
 </resources>

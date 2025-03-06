@@ -15,21 +15,26 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.StudentContextCardQuery
-import com.instructure.canvasapi2.StudentContextCardQuery.*
+import com.instructure.canvasapi2.StudentContextCardQuery.Analytics
+import com.instructure.canvasapi2.StudentContextCardQuery.AsCourse
+import com.instructure.canvasapi2.StudentContextCardQuery.Data
+import com.instructure.canvasapi2.StudentContextCardQuery.Permissions
+import com.instructure.canvasapi2.StudentContextCardQuery.Submission
+import com.instructure.canvasapi2.StudentContextCardQuery.User
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitQLPaginated
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.teacher.viewinterface.StudentContextView
 import com.instructure.pandautils.blueprint.FragmentPresenter
+import com.instructure.teacher.viewinterface.StudentContextView
 
 
 class StudentContextPresenter(
         private val studentId: Long,
-        private val courseId: Long
+        private val courseId: Long,
+        private val studentContextManager: StudentContextManager
 ) : FragmentPresenter<StudentContextView>() {
 
     private lateinit var student: User
@@ -61,7 +66,7 @@ class StudentContextPresenter(
             awaitQLPaginated<Data> {
                 onRequest {
                     viewCallback?.showLoadMoreIndicator(true)
-                    StudentContextManager.getStudentContext(courseId, studentId, SUBMISSION_PAGE_SIZE, forceNetwork, it)
+                    studentContextManager.getStudentContext(courseId, studentId, SUBMISSION_PAGE_SIZE, forceNetwork, it)
                 }
 
                 onResponse { data ->

@@ -195,6 +195,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
     private fun saveToDo() {
         _uiState.update { it.copy(saving = true) }
         viewModelScope.tryLaunch {
+            val update = plannerItem != null
             plannerItem?.let { plannerItem ->
                 repository.updateToDo(
                     id = plannerItem.plannable.id,
@@ -212,6 +213,12 @@ class CreateUpdateToDoViewModel @Inject constructor(
                 )
             }
             _uiState.update { it.copy(saving = false, canNavigateBack = true) }
+            val announceEvent = if (update) {
+                CreateUpdateToDoViewModelAction.AnnounceToDoUpdate(uiState.value.title)
+            } else {
+                CreateUpdateToDoViewModelAction.AnnounceToDoCreation(uiState.value.title)
+            }
+            _events.send(announceEvent)
             _events.send(
                 CreateUpdateToDoViewModelAction.RefreshCalendarDays(
                     listOfNotNull(plannerItem?.plannable?.todoDate?.toDate()?.toLocalDate(), uiState.value.date)

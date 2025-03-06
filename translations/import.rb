@@ -92,10 +92,6 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
       language = language.gsub('sv+instk12', 'sv+SE+instk12')
     end
 
-    if language.eql? 'en'
-      puts "Skipping redundant 'en' resource"
-      next
-    end
     project = File.basename(file, '.*')
     res_dir = resource_dirs[project]
     if res_dir.nil?

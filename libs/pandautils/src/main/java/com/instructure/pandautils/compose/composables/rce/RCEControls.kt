@@ -30,11 +30,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -42,7 +41,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -81,21 +79,24 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_undo,
             contentDescription = R.string.rce_contentDescription_undo,
-            active = false
+            active = false,
+            selectable = false
         ) {
             onActionClick(RCEAction.UNDO)
         }
         ActionButton(
             iconRes = R.drawable.ic_rce_redo,
             contentDescription = R.string.rce_contentDescription_redo,
-            active = false
+            active = false,
+            selectable = false
         ) {
             onActionClick(RCEAction.REDO)
         }
         ActionButton(
             iconRes = R.drawable.ic_rce_format_bold,
             contentDescription = R.string.rce_contentDescription_bold,
-            active = rceState.bold
+            active = rceState.bold,
+            selectable = true
         ) {
             onActionClick(RCEAction.BOLD)
         }
@@ -103,7 +104,8 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_format_italic,
             contentDescription = R.string.rce_contentDescription_italic,
-            active = rceState.italic
+            active = rceState.italic,
+            selectable = true
         ) {
             onActionClick(RCEAction.ITALIC)
         }
@@ -111,7 +113,8 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_format_underlined,
             contentDescription = R.string.rce_contentDescription_underline,
-            active = rceState.underline
+            active = rceState.underline,
+            selectable = true
         ) {
             onActionClick(RCEAction.UNDERLINE)
         }
@@ -119,7 +122,8 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_format_color_text,
             contentDescription = R.string.rce_contentDescription_format_text_color,
-            active = rceState.colorPicker
+            active = rceState.colorPicker,
+            selectable = true
         ) {
             onActionClick(RCEAction.COLOR_PICKER)
         }
@@ -127,7 +131,8 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_format_list_bulleted,
             contentDescription = R.string.rce_contentDescription_insert_bullets,
-            active = rceState.bulletedList
+            active = rceState.bulletedList,
+            selectable = true
         ) {
             onActionClick(RCEAction.BULLETED_LIST)
         }
@@ -135,7 +140,8 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_format_list_numbered,
             contentDescription = R.string.rce_contentDescription_insert_numbers,
-            active = rceState.numberedList
+            active = rceState.numberedList,
+            selectable = true
         ) {
             onActionClick(RCEAction.NUMBERED_LIST)
         }
@@ -143,7 +149,8 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_insert_photo,
             contentDescription = R.string.rce_contentDescription_insert_photo,
-            active = false
+            active = false,
+            selectable = false
         ) {
             onActionClick(RCEAction.INSERT_IMAGE)
         }
@@ -151,7 +158,8 @@ fun RCETextControls(
         ActionButton(
             iconRes = R.drawable.ic_rce_insert_link,
             contentDescription = R.string.rce_contentDescription_insert_link,
-            active = false
+            active = false,
+            selectable = false
         ) {
             onActionClick(RCEAction.INSERT_LINK)
         }
@@ -202,7 +210,7 @@ fun RCEColorControls(modifier: Modifier = Modifier, onColorClick: (Int) -> Unit)
                 .clickable { onColorClick(R.color.rce_pickerBlack) }
                 .semantics(mergeDescendants = true) {
                     contentDescription =
-                        context.getString(R.string.rce_contentDescription_color_white)
+                        context.getString(R.string.rce_contentDescription_color_black)
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -264,13 +272,24 @@ fun ActionButton(
     @DrawableRes iconRes: Int,
     @StringRes contentDescription: Int,
     active: Boolean,
+    selectable: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     IconButton(
         modifier = modifier
             .size(48.dp)
-            .background(colorResource(id = if (active) R.color.backgroundDarkest else R.color.backgroundLightest)),
+            .background(colorResource(id = if (active) R.color.backgroundDarkest else R.color.backgroundLightest))
+            .then(
+                if (selectable) {
+                    Modifier.selectable(
+                        selected = active,
+                        onClick = onClick
+                    )
+                } else {
+                    Modifier
+                }
+            ),
         onClick = onClick
     ) {
         Icon(

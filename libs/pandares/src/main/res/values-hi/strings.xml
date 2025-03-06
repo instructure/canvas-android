@@ -1180,6 +1180,7 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
     <string name="a11y_gradeCellContentDescriptionHint">आप यहां से सबमिशन विवरण खोल सकते हैं</string>
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">सबमिशन और रुब्रिक विवरण देखने के लिए यहाँ क्लिक करें</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">ग्रेड: %s</string>
 
     <plurals name="minutes">
@@ -1449,6 +1450,7 @@
     <string name="inboxContextSelectorTitle">कोई पाठ्यक्रम या ग्रुप चुनें</string>
     <string name="inboxClearFilter">साफ़ करें</string>
     <string name="a11y_courseFilterContentDescription">पाठ्यक्रम फ़िल्टर: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">मेलबॉक्स चयन: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">चयन करें</string>
     <string name="a11y_itemSelectedSwipeForActions">बातचीत चयनित। चयन मोड सक्रिय किया गया। कार्रवाइयों के लिए नेविगेट करें।</string>
     <string name="a11y_conversationSelected">बातचीत चयनित</string>
@@ -1476,6 +1478,7 @@
     <string name="offline_content_other">अन्य ऐप्स</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">शेष</string>
+    <string name="offline_content_storage_info_a11y_description">भंडारण जानकारी: %s का %s प्रयुक्त, अन्य ऐप्स %d%%, Canvas Student %d%%, शेष %d%%</string>
     <string name="offline_content_all_courses">सभी पाठ्यक्रम</string>
     <string name="offline_content_sync">सिंक करें</string>
     <string name="offline_content_selected">%d चुना गया</string>
@@ -1495,8 +1498,11 @@
     <string name="offline_content_sync_dialog_positive">सिंक करें</string>
     <string name="offline_content_sync_loading_title">लोड किया जा रहा है...</string>
     <string name="offline_content_sync_loading_message">थोड़ा इंतज़ार करें, हम आपके लिए चीज़ें तैयार कर रहे हैं।</string>
+    <string name="offline_content_a11y_sync_started_announcement">ऑफ़लाइन सिंक सेटिंग्स सहेज ली गई हैं। शीघ्र ही पृष्ठभूमि में सिंक प्रारंभ हो जाएगा।</string>
     <string name="content_description_expand_content">सामग्री बढ़ाएं</string>
+    <string name="content_description_expand_content_with_param">सामग्री बढ़ाएं, %s</string>
     <string name="content_description_collapse_content">सामग्री संक्षिप्त करें</string>
+    <string name="content_description_collapse_content_with_param">सामग्री संक्षिप्त करें, %s</string>
     <string name="syncSettings_autoContentSyncDescription">ऑटो कंटेंट सिंक को सक्षम करने से नीचे दी गई सेटिंग्स के आधार पर चयनित सामग्री डाउनलोड की जाएगी। ऐप्लिकेशन के नहीं चलने पर भी सामग्री का सिंक्रनाइज़ेशन किया जाएगा। सेटिंग के बंद किए जाने पर कोई सिंक्रनाइज़ेशन नहीं होगा। पहले से डाउनलोड की गई सामग्री को मिटाया नहीं जाएगा।</string>
     <string name="syncSettings_syncFrequencyTitle">सिंक आवृत्ति</string>
     <string name="syncSettings_autoContentSyncTitle">ऑटो कॉन्टेंट सिंक</string>
@@ -1625,8 +1631,15 @@
     <string name="unpublishDialogPositiveButton">अप्रकाशित करें</string>
     <string name="discussionMenuRefresh">रीफ़्रेश करें</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">सीधे आज पर जाएं</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">आज पर जाएं, चयनित दिन %s है, आज %s है</string>
     <string name="a11y_calendarSwitchToMonthView">माह व्यू पर स्विच करें</string>
     <string name="a11y_calendarSwitchToWeekView">सप्ताह व्यू पर स्विच करें</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">महीने और सप्ताह व्यू के बीच स्विच करें</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">कैलेंडर माह व्यू में है</string>
+    <string name="a11y_calendarWeekView">कैलेंडर सप्ताह व्यू में है</string>
+    <string name="a11y_calendarSwitchedToWeekView">कैलेंडर सप्ताह व्यू पर स्विच किया गया</string>
+    <string name="a11y_calendarSwitchedToMonthView">कैलेंडर माह व्यू पर स्विच किया गया</string>
     <string name="calendarNoEvents">आज कोई घटना नहीं है!</string>
     <string name="calendarNoEventsDescription">आज का दिन आराम, विश्राम करने और नई ऊर्जा पाने के लिए अच्छा लग रहा है।</string>
     <string name="userCalendarToDo">करने के लिए</string>
@@ -1650,6 +1663,10 @@
     <string name="calendarFilterLimitSnackbar">आप केवल %d कैलेंडर तक का चयन कर सकते हैं|</string>
     <string name="calendarFilterTitle">कैलेंडर</string>
     <string name="calendarFiltersFailed">फ़िल्टर लोड करने में विफल</string>
+    <string name="a11y_eventCreatedAnnouncement">घटना %s सफलतापूर्वक बनाई गई।</string>
+    <string name="a11y_eventUpdatedAnnouncement">घटना %s सफलतापूर्वक अपडेट की गई।</string>
+    <string name="a11y_toDoCreatedAnnouncement">करने के लिए %s सफलतापूर्वक बनाया गया।</string>
+    <string name="a11y_toDoUpdatedAnnouncement">करने के लिए %s सफलतापूर्वक अपडेट किया गया।</string>
     <string name="todoScreenTitle">करने के लिए</string>
     <string name="todoDateLabel">तिथि</string>
     <string name="todoDescriptionLabel">विवरण</string>
@@ -1956,4 +1973,12 @@
     <string name="smartSearchAssignmentGroupTitle">असाइनमेंट (%d)</string>
     <string name="smartSearchPageGroupTitle">पेज (%d)</string>
     <string name="a11y_commentSentSuccess">टिप्पणी सफलतापूर्वक भेजी गई</string>
+    <string name="a11y_dragViewContentDescription">ड्रॉर बढ़ाएं</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">बातचीत</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">चिह्नित किया गया</string>
+    <string name="a11y_unchecked">अचिह्नित किया गया</string>
+    <string name="a11y_indeterminate">आंशिक रूप से चिह्नित किया गया</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">फ़िल्टर अपडेट किए गए हैं</string>
 </resources>

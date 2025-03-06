@@ -26,12 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ALERTS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.parentapp.R
+import com.instructure.pandautils.utils.showSnackbar
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -67,14 +66,17 @@ class AlertsFragment : BaseCanvasFragment() {
                     navigation.navigate(activity, it)
                 }
             }
+
             is AlertsViewModelAction.NavigateToGlobalAnnouncement -> {
                 navigation.navigate(activity, navigation.globalAnnouncementRoute(action.alertId))
             }
+
             is AlertsViewModelAction.ShowSnackbar -> {
-                Snackbar.make(requireView(), action.message, Snackbar.LENGTH_SHORT).apply {
-                    action.action?.let { setAction(it) { action.actionCallback?.invoke() } }
-                    setActionTextColor(resources.getColor(R.color.white, resources.newTheme()))
-                }.show()
+                view?.showSnackbar(
+                    message = action.message,
+                    actionTextRes = action.action,
+                    actionCallback = action.actionCallback
+                )
             }
         }
     }

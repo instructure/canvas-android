@@ -19,7 +19,6 @@ package com.instructure.parentapp.features.managestudents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -47,7 +47,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -86,7 +89,9 @@ internal fun StudentColorPickerDialog(
                     text = stringResource(id = R.string.selectStudentColor),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .semantics { heading() }
                 )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -94,28 +99,28 @@ internal fun StudentColorPickerDialog(
                 ) {
                     items(userColors) {
                         val colorContentDescription = stringResource(id = it.contentDescriptionRes)
-                        val selectedContentDescription = stringResource(id = R.string.selectedListItem, colorContentDescription)
+                        val isSelected = selected == it
                         Box(
                             modifier = Modifier
                                 .size(48.dp)
                                 .let { modifier ->
-                                    if (selected == it) {
-                                        modifier
-                                            .border(3.dp, Color(it.color.color()), CircleShape)
-                                            .semantics {
-                                                contentDescription = selectedContentDescription
-                                            }
+                                    if (isSelected) {
+                                        modifier.border(3.dp, Color(it.color.color()), CircleShape)
                                     } else {
-                                        modifier.semantics {
-                                            contentDescription = colorContentDescription
-                                        }
+                                        modifier
                                     }
                                 }
                                 .padding(8.dp)
                                 .clip(shape = CircleShape)
                                 .background(color = Color(it.color.color()))
-                                .clickable {
+                                .selectable(
+                                    selected = isSelected
+                                ) {
                                     selected = it
+                                }
+                                .semantics {
+                                    contentDescription = colorContentDescription
+                                    role = Role.RadioButton
                                 }
                         )
                     }
@@ -186,7 +191,7 @@ fun StudentColorPickerDialogPreview() {
             contentDescriptionRes = 0
         )
     }
-    
+
     StudentColorPickerDialog(
         initialUserColor = colors.first(),
         userColors = colors,

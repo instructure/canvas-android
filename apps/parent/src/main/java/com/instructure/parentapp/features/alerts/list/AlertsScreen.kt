@@ -44,6 +44,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,6 +55,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,6 +73,7 @@ import com.instructure.pandautils.utils.drawableId
 import java.util.Date
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AlertsScreen(
     uiState: AlertsUiState,
@@ -155,7 +159,7 @@ fun AlertsListContent(
 ) {
     LazyColumn(
         state = lazyListState,
-        modifier = modifier
+        modifier = modifier.testTag("alertsList")
     ) {
         items(uiState.alerts, key = { it.alertId }) { alert ->
             AlertsListItem(
@@ -165,6 +169,14 @@ fun AlertsListContent(
                 modifier = Modifier.animateItem()
             )
             Spacer(modifier = Modifier.size(8.dp))
+        }
+    }
+    LaunchedEffect(uiState.addedItemIndex) {
+        if (uiState.addedItemIndex != -1) {
+            val firstVisibleIndex = lazyListState.firstVisibleItemIndex
+            if (uiState.addedItemIndex < firstVisibleIndex && firstVisibleIndex > 0) {
+                lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex - 1)
+            }
         }
     }
 }
@@ -238,8 +250,12 @@ fun AlertsListItem(
             )
         }
         .padding(8.dp)
-        .testTag("alertItem"),
-        verticalAlignment = Alignment.CenterVertically) {
+        .testTag("alertItem")
+        .semantics {
+            role = Role.Button
+        },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Row(modifier = Modifier.align(Alignment.Top)) {
             if (alert.unread) {
                 Box(

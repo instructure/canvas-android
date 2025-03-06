@@ -29,9 +29,13 @@ import androidx.compose.ui.test.performTextInput
 class CreateAccountPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertCreateAccountDisplayed() {
+        scrollToText("Full Name")
         composeTestRule.onNodeWithText("Full Name").assertIsDisplayed()
+        scrollToText("Email Address")
         composeTestRule.onNodeWithText("Email Address").assertIsDisplayed()
+        scrollToText("Password")
         composeTestRule.onNodeWithText("Password").assertIsDisplayed()
+        scrollToText("Create Account")
         composeTestRule.onNodeWithText("Create Account").assertIsDisplayed()
     }
 
@@ -47,11 +51,16 @@ class CreateAccountPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickCreateAccountButton() {
+        scrollToText("Create Account")
         composeTestRule.onNodeWithText("Create Account").performScrollTo().performClick()
     }
 
     fun isLoading(): Boolean {
         composeTestRule.waitForIdle()
         return composeTestRule.onNodeWithTag("loading").isDisplayed()
+    }
+
+    fun scrollToText(text: String) {
+        composeTestRule.onNodeWithText(text, useUnmergedTree = true).performScrollTo()
     }
 }

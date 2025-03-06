@@ -15,11 +15,10 @@
  */
 package com.instructure.pandautils.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
 
 /**
  * Base class for all Canvas Fragments that contains cross-cutting concerns like analytics.
@@ -35,9 +34,9 @@ open class BaseCanvasFragment : Fragment(), PageViewWindowFocus, PageViewPrerequ
         delegate.completePageViewPrerequisite(prerequisite)
     }
 
-    override fun onAttach(context: Context) {
-        delegate.onAttach(context)
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        delegate.onCreate()
+        super.onCreate(savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

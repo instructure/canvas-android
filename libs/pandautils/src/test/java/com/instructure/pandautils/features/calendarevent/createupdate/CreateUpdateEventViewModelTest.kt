@@ -192,6 +192,7 @@ class CreateUpdateEventViewModelTest {
 
         val expectedEvent = CreateUpdateEventViewModelAction.RefreshCalendar
         Assert.assertEquals(expectedEvent, events.last())
+        Assert.assertEquals(CreateUpdateEventViewModelAction.AnnounceEventCreation("Title"), events[events.size - 2])
     }
 
     @Test
@@ -206,7 +207,7 @@ class CreateUpdateEventViewModelTest {
 
         every { savedStateHandle.get<ScheduleItem>(CreateUpdateEventFragment.SCHEDULE_ITEM) } returns event
         coEvery { repository.updateEvent(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns listOf(
-            event.copy(startAt = LocalDateTime.now(clock).plusDays(1).toApiString())
+            event.copy(title = "Updated", startAt = LocalDateTime.now(clock).plusDays(1).toApiString())
         )
 
         createViewModel()
@@ -241,6 +242,7 @@ class CreateUpdateEventViewModelTest {
             )
         )
         Assert.assertEquals(expectedEvent, events.last())
+        Assert.assertEquals(CreateUpdateEventViewModelAction.AnnounceEventUpdate("Updated"), events[events.size - 2])
     }
 
     @Test

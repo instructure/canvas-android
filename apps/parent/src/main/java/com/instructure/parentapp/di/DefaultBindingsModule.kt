@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.di
 
+import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
@@ -31,7 +32,6 @@ import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
 import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
 import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
-import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -93,11 +93,6 @@ class DefaultBindingsModule {
     }
 
     @Provides
-    fun provideToolbarSetup(): ToolbarSetupBehavior {
-        throw NotImplementedError()
-    }
-
-    @Provides
     fun provideShareExtensionRouter(): ShareExtensionRouter {
         throw NotImplementedError()
     }
@@ -114,6 +109,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideSmartSearchRouter(): SmartSearchRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideAppInfo(): PandataInfo.AppKey {
         throw NotImplementedError()
     }
 }

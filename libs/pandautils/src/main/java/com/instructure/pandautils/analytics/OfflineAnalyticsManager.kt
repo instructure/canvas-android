@@ -11,7 +11,7 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.hilt.android.qualifiers.ApplicationContext

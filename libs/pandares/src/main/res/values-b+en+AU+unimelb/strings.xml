@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Click here to view Submission &amp; Rubric details</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Grade: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Select Subject or Group</string>
     <string name="inboxClearFilter">Clear</string>
     <string name="a11y_courseFilterContentDescription">Subject filter: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Mailbox selection: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">select</string>
     <string name="a11y_itemSelectedSwipeForActions">Conversation selected. Selection mode activated. Navigate for actions.</string>
     <string name="a11y_conversationSelected">Conversation selected</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Other Apps</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">Remaining</string>
+    <string name="offline_content_storage_info_a11y_description">Storage Info: %s of %s Used, Other Apps %d%%, Canvas Student %d%%, Remaining %d%%</string>
     <string name="offline_content_all_courses">All Subjects</string>
     <string name="offline_content_sync">Sync</string>
     <string name="offline_content_selected">%d Selected</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Sync</string>
     <string name="offline_content_sync_loading_title">Loading...</string>
     <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Offline sync settings have been saved. Sync will start shortly in the background.</string>
     <string name="content_description_expand_content">Expand content</string>
+    <string name="content_description_expand_content_with_param">Expand content, %s</string>
     <string name="content_description_collapse_content">Collapse content</string>
+    <string name="content_description_collapse_content_with_param">Collapse content, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronisation will happen even if the application is not running. If the setting is switched off, then no synchronisation will happen. The already downloaded content will not be deleted.</string>
     <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
     <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Unpublish</string>
     <string name="discussionMenuRefresh">Refresh</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Jump to Today, selected day is %s, today is %s</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
     <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Switch between month and week view</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Calendar is in month view</string>
+    <string name="a11y_calendarWeekView">Calendar is in week view</string>
+    <string name="a11y_calendarSwitchedToWeekView">Calendar switched to week view</string>
+    <string name="a11y_calendarSwitchedToMonthView">Calendar switched to month view</string>
     <string name="calendarNoEvents">No Events Today!</string>
     <string name="calendarNoEventsDescription">It looks like a great day to rest, relax, and recharge.</string>
     <string name="userCalendarToDo">To Do</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">You can only select up to %d calendars.</string>
     <string name="calendarFilterTitle">Calendars</string>
     <string name="calendarFiltersFailed">Failed to load filters</string>
+    <string name="a11y_eventCreatedAnnouncement">Event %s successfully created.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Event %s successfully updated.</string>
+    <string name="a11y_toDoCreatedAnnouncement">To do %s successfully created.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">To do %s successfully updated.</string>
     <string name="todoScreenTitle">To Do</string>
     <string name="todoDateLabel">Date</string>
     <string name="todoDescriptionLabel">Description</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Assignments (%d)</string>
     <string name="smartSearchPageGroupTitle">Pages (%d)</string>
     <string name="a11y_commentSentSuccess">Comment sent successfully</string>
+    <string name="a11y_dragViewContentDescription">Expand Drawer</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Conversations</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Checked</string>
+    <string name="a11y_unchecked">Unchecked</string>
+    <string name="a11y_indeterminate">Partially checked</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
 </resources>

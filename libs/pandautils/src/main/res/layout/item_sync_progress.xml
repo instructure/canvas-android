@@ -43,7 +43,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:accessibilityLiveRegion="polite">
 
             <TextView
                 android:id="@+id/syncProgressTitle"
@@ -64,14 +65,14 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:contentDescription="@string/a11y_contentDescription_syncDashboardNotificationDismiss"
+                android:onClick="@{() -> itemViewModel.onDismiss.invoke()}"
                 android:src="@drawable/ic_close"
                 android:visibility="@{itemViewModel.data.progressState == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
-                app:tint="@{itemViewModel.data.progressState == ProgressState.ERROR ? R.color.textLightest : R.color.white}"
                 app:accessibleTouchTarget="@{true}"
                 app:layout_constraintBottom_toBottomOf="@id/syncProgressTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/syncProgressTitle"
-                android:onClick="@{() -> itemViewModel.onDismiss.invoke()}"/>
+                app:tint="@{itemViewModel.data.progressState == ProgressState.ERROR ? R.color.textLightest : R.color.white}" />
 
             <TextView
                 android:id="@+id/syncProgressSubtitle"

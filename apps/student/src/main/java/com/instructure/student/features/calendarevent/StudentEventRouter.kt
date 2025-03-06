@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.student.router.RouteMatcher
 
 class StudentEventRouter(private val activity: FragmentActivity) : EventRouter {
@@ -29,4 +30,6 @@ class StudentEventRouter(private val activity: FragmentActivity) : EventRouter {
         val route = CreateUpdateEventFragment.makeRoute(scheduleItem)
         RouteMatcher.route(activity, route)
     }
+
+    override fun navigateToComposeMessageScreen(options: InboxComposeOptions) = Unit
 }

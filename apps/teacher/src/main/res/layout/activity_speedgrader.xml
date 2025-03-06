@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -14,61 +13,78 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.instructure.teacher.view.SubmissionContentViewPager
-        android:id="@+id/submissionContentPager"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/gradingToolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:accessibilityHeading="true"
+        android:elevation="6dp"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:ignore="UnusedAttribute" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/commentLibraryFragmentContainer"
+    <FrameLayout
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/swipeTutorialView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/transparentWhite"
-        android:clickable="true"
-        android:visibility="gone"
-        tools:layout_marginTop="64dp"
-        tools:visibility="visible">
+        <com.instructure.teacher.view.SubmissionContentViewPager
+            android:id="@+id/submissionContentPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/tutorialCard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:elevation="16dp"
-            app:cardBackgroundColor="@color/licorice"
-            app:cardCornerRadius="4dp">
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/commentLibraryFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-            <TextView
-                style="@style/TextFont.Regular"
+        <RelativeLayout
+            android:id="@+id/swipeTutorialView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparentWhite"
+            android:clickable="true"
+            android:visibility="gone"
+            tools:layout_marginTop="64dp"
+            tools:visibility="visible">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tutorialCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@string/tutorialSwipeMessage"
-                android:textColor="@color/white"
-                android:textSize="16sp"/>
-        </androidx.cardview.widget.CardView>
+                android:layout_centerInParent="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:elevation="16dp"
+                app:cardBackgroundColor="@color/licorice"
+                app:cardCornerRadius="4dp">
 
-        <com.instructure.teacher.view.TutorialSwipeView
-            android:layout_width="@dimen/speedGraderTutorialSwipeWidth"
-            android:layout_height="@dimen/speedGraderTutorialTouchSize"
-            android:layout_below="@+id/tutorialCard"
-            android:layout_centerHorizontal="true"
-            app:tsv_color="@color/borderSuccess"/>
+                <TextView
+                    style="@style/TextFont.Regular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="@string/tutorialSwipeMessage"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
 
-    </RelativeLayout>
+            <com.instructure.teacher.view.TutorialSwipeView
+                android:layout_width="@dimen/speedGraderTutorialSwipeWidth"
+                android:layout_height="@dimen/speedGraderTutorialTouchSize"
+                android:layout_below="@+id/tutorialCard"
+                android:layout_centerHorizontal="true"
+                app:tsv_color="@color/borderSuccess" />
 
-</FrameLayout>
+        </RelativeLayout>
+
+    </FrameLayout>
+</LinearLayout>

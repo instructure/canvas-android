@@ -19,11 +19,17 @@ package com.instructure.parentapp.features.calendarevent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.parentapp.util.navigation.Navigation
 
 class ParentEventRouter(private val activity: FragmentActivity, private val navigation: Navigation) : EventRouter {
 
     override fun openEditEvent(scheduleItem: ScheduleItem) {
         navigation.navigate(activity, navigation.updateEventRoute(scheduleItem))
+    }
+
+    override fun navigateToComposeMessageScreen(options: InboxComposeOptions) {
+        val route = navigation.inboxComposeRoute(options)
+        navigation.navigate(activity, route)
     }
 }

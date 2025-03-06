@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Ou ka ouvri detay Soumisyon yo la a</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Klike la pou ka wè Soumisyon &amp; detay Ribrik yo</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Klas: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minit</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Seleksyone Kou oswa Gwoup</string>
     <string name="inboxClearFilter">Efase</string>
     <string name="a11y_courseFilterContentDescription">Filtè kou: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Seleksyon bwat mesaj: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">seleksyone</string>
     <string name="a11y_itemSelectedSwipeForActions">Konvèsasyon seleksyone. Mòd seleksyon aktive. Navige pou aksyon.</string>
     <string name="a11y_conversationSelected">Konvèsasyon seleksyone</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Lòt Aplikasyon</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">Rete</string>
+    <string name="offline_content_storage_info_a11y_description">Enfo sou Estokaj: %s sou %s itilize, Lòt Aplikasyon %d%%, Canvas Student %d%%, Rete %d%%</string>
     <string name="offline_content_all_courses">Tout Kou</string>
     <string name="offline_content_sync">Sync</string>
     <string name="offline_content_selected">%d Seleksyone</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Sync</string>
     <string name="offline_content_sync_loading_title">Chajman...</string>
     <string name="offline_content_sync_loading_message">Talè, n\ ap prepare bagay yo pou ou.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Paramèt senkwonizasyon san koneksyon yo sovgade. Senkwonizasyon an ap kòmanse nan yon moman an kachèt.</string>
     <string name="content_description_expand_content">Elaji kontni</string>
+    <string name="content_description_expand_content_with_param">Elaji kontni, %s</string>
     <string name="content_description_collapse_content">Ratresi kontni</string>
+    <string name="content_description_collapse_content_with_param">Retresi kontni, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Aktivasyon senkwonizasyon Kontni Otomatik la ap gen pou telechaje kontni ki seleksyone a an fonksyon de paramèt ki anba yo. Senkwonizasyon kontni an ap fèt menm si aplikasyon an pa ekzekite. Si reglaj la dezaktive, pa gen senkwonizasyon k ap fèt. Kontni ki deja telechaje a pa p efase.</string>
     <string name="syncSettings_syncFrequencyTitle">Frekans Senkwonizasyon</string>
     <string name="syncSettings_autoContentSyncTitle">Senkwonizasyon Kontni Otomatik</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Pa Pibliye</string>
     <string name="discussionMenuRefresh">Aktyalize</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Ale nan Jodi a</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Sote al nan Jodi a, jou seleksyone a se %s, jodi a se %s</string>
     <string name="a11y_calendarSwitchToMonthView">Chanje a afichaj pa mwa</string>
     <string name="a11y_calendarSwitchToWeekView">Chanje a afichaj pa semenn</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Pase de afichaj pa mwa a afichaj pa semèn</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Kalandriye a afiche pa mwa</string>
+    <string name="a11y_calendarWeekView">Kalandriye a afiche pa semèn</string>
+    <string name="a11y_calendarSwitchedToWeekView">Kalandriye a chanje a afichaj pa semèn</string>
+    <string name="a11y_calendarSwitchedToMonthView">Kalandriye a chanje a afichaj pa mwa</string>
     <string name="calendarNoEvents">Pa gen Aktivite Jodi a!</string>
     <string name="calendarNoEventsDescription">Sanble yon bon jou pou repoze w, amize w epi mete enèji.</string>
     <string name="userCalendarToDo">Pou Fè</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Ou sèlman ka seleksyone jiska %d kalandriye.</string>
     <string name="calendarFilterTitle">Kalandriye</string>
     <string name="calendarFiltersFailed">Echwe nan chajman filtè yo</string>
+    <string name="a11y_eventCreatedAnnouncement">Evènman %s kreye avèk siksè.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Evènman %s aktyalize avèk siksè.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Tach %s kreye avèk siksè.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Tach %s aktyalize avèk siksè.</string>
     <string name="todoScreenTitle">Pou Fè</string>
     <string name="todoDateLabel">Dat</string>
     <string name="todoDescriptionLabel">Deskripsyon</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Sesyon (%d)</string>
     <string name="smartSearchPageGroupTitle">Paj (%d)</string>
     <string name="a11y_commentSentSuccess">Kòmantè ale avèk siksè</string>
+    <string name="a11y_dragViewContentDescription">Agrandi Tiwa</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Konvèsasyon</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Tcheke</string>
+    <string name="a11y_unchecked">Pa tcheke</string>
+    <string name="a11y_indeterminate">Tcheke pasyèlman</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filtè yo aktyalize</string>
 </resources>

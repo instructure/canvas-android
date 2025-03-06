@@ -181,10 +181,12 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
 
             override fun routeInternallyCallback(url: String) {
                 // Handle return button in external tools. Links to course homepage should close the tool.
-                if (url == contextLink()) {
-                    ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
-                } else {
-                    webViewRouter.routeInternally(url)
+                if (isAdded) {
+                    if (url == contextLink()) {
+                        ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
+                    } else {
+                        webViewRouter.routeInternally(url)
+                    }
                 }
             }
         }

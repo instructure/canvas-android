@@ -386,6 +386,14 @@ class InboxComposeScreenTest {
         }
     }
 
+    @Test
+    fun testComposeScreenWithSignatureLoading() {
+        setComposeScreen(getUiState(signatureLoading = true))
+
+        composeTestRule.onNode(hasTestTag("SignatureLoading"))
+            .assertIsDisplayed()
+    }
+
     private fun getUiState(
         selectedContext: CanvasContext? = null,
         selectedRecipients: List<Recipient> = emptyList(),
@@ -394,7 +402,8 @@ class InboxComposeScreenTest {
         subject: String = "",
         body: String = "",
         attachments: List<Attachment> = emptyList(),
-        showConfirmationDialog: Boolean = false
+        showConfirmationDialog: Boolean = false,
+        signatureLoading: Boolean = false
     ): InboxComposeUiState {
         return InboxComposeUiState(
             selectContextUiState = SelectContextUiState(selectedCanvasContext = selectedContext),
@@ -406,7 +415,8 @@ class InboxComposeScreenTest {
             body = TextFieldValue(body),
             attachments = attachments.map { AttachmentCardItem(it, AttachmentStatus.UPLOADED, false) },
             screenState = ScreenState.Data,
-            showConfirmationDialog = showConfirmationDialog
+            showConfirmationDialog = showConfirmationDialog,
+            signatureLoading = signatureLoading
         )
     }
 }

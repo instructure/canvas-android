@@ -15,6 +15,7 @@
  */
 package com.instructure.student.features.settings
 
+import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsItem
@@ -49,8 +50,13 @@ class StudentSettingsBehaviour(
 
             return mapOf(
                 R.string.preferences to preferencesList,
+                R.string.inboxSettingsTitle to listOf(SettingsItem.INBOX_SIGNATURE),
                 R.string.offlineContent to listOf(SettingsItem.OFFLINE_SYNCHRONIZATION),
                 R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
             )
         }
+
+    override fun isInboxSignatureEnabledForRole(settings: EnvironmentSettings?): Boolean {
+        return !(settings?.disableInboxSignatureBlockForStudents ?: false)
+    }
 }
