@@ -66,6 +66,25 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
         isUnsupportedFeature = true
     }
 
+    override fun applyTheme() {
+        super.applyTheme()
+        updateToolbarButton()
+    }
+
+    private fun updateToolbarButton() {
+        try {
+            if (getCanvasWebView()?.url?.endsWith("/take") == true) {
+                binding.toolbar.setupAsBackButton(this)
+            } else {
+                binding.toolbar.setupAsCloseButton {
+                    activity?.supportFragmentManager?.popBackStack()
+                }
+            }
+        } catch (e: IllegalStateException) {
+            // Ignore, the user left the fragment
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Anything that relies on intent data belongs here
@@ -137,6 +156,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 getCanvasLoading()?.visibility = View.GONE
+                updateToolbarButton()
             }
         }
     }
