@@ -104,14 +104,15 @@
                 android:paddingEnd="16dp"
                 android:minHeight="48dp">
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/acceptSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onCheckedChanged="@{(checkbox, checked) -> viewModel.checkedChanged(checked)}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:theme="@style/Theme.Material3.DayNight" />
 
                 <TextView
                     android:layout_width="0dp"
