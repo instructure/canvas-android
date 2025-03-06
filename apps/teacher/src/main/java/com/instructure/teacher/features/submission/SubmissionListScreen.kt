@@ -40,6 +40,10 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -60,6 +64,8 @@ import com.instructure.teacher.features.assignment.submission.SubmissionListFilt
 
 @Composable
 fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: () -> Unit) {
+    var showFilterDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
@@ -72,7 +78,9 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                 backgroundColor = uiState.courseColor,
                 textColor = colorResource(id = R.color.textLightest),
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        showFilterDialog = true
+                    }) {
                         Icon(
                             painter = painterResource(
                                 id = if (uiState.filter != SubmissionListFilter.ALL || uiState.sections.isNotEmpty()) {
@@ -97,6 +105,18 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
             )
         }
     ) { padding ->
+        if (showFilterDialog) {
+            SubmissionListFilters(
+                uiState.filter,
+                uiState.filterValue,
+                uiState.courseColor,
+                uiState.assignmentName,
+                uiState.actionHandler
+            ) {
+                showFilterDialog = false
+            }
+        }
+
         SubmissionListContent(uiState, Modifier.padding(padding), uiState.courseColor)
     }
 }
@@ -247,6 +267,7 @@ private fun SubmissionTag(tag: SubmissionTag, hasDivider: Boolean) {
     }
 
 }
+
 
 @Preview
 @Composable

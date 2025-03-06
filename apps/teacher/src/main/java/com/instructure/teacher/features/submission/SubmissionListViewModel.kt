@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.R
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
@@ -56,7 +57,8 @@ class SubmissionListViewModel @Inject constructor(
         ?: throw IllegalArgumentException("Course must be passed to SubmissionListViewModel")
     private var filter: SubmissionListFilter =
         savedStateHandle["filter"] ?: SubmissionListFilter.ALL
-    private var filterValue: Double = 0.0
+    private var filterValue: Double? = 0.0
+    private var searchQuery: String = ""
 
     private var submissions: List<GradeableStudentSubmission> = emptyList()
 
@@ -66,6 +68,7 @@ class SubmissionListViewModel @Inject constructor(
             courseColor = Color(course.color),
             filter = filter,
             headerTitle = getHeaderTitle(filter, filterValue),
+            searchQuery = "",
             actionHandler = this::handleAction
         )
     )
@@ -96,19 +99,57 @@ class SubmissionListViewModel @Inject constructor(
         val submissionUiStates = submissions.filter {
             when (filter) {
                 SubmissionListFilter.ALL -> true
-                SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
-                SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
-                SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED)  && it.isGradeMatchesCurrentSubmission} ?: false
-                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
-                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
+                SubmissionListFilter.LATE -> it.submission?.let {
+                    assignment.getState(
+                        it,
+                        true
+                    ) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE,
+                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE
+                    )
+                } ?: false
+
+                SubmissionListFilter.NOT_GRADED -> it.submission?.let {
+                    assignment.getState(
+                        it,
+                        true
+                    ) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
+                    ) || !it.isGradeMatchesCurrentSubmission
+                } ?: false
+
+                SubmissionListFilter.GRADED -> it.submission?.let {
+                    assignment.getState(
+                        it,
+                        true
+                    ) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED,
+                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE,
+                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING,
+                        AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED
+                    ) && it.isGradeMatchesCurrentSubmission
+                } ?: false
+
+                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue.orDefault() }
+                    ?: false
+
+                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue.orDefault() }
+                    ?: false
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
                 // which students haven't submitted yet
                 SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
             }
-        }.filter { it.assignee.name.contains(uiState.value.searchQuery, true) }
+        }.filter { it.assignee.name.contains(searchQuery, true) }
             .map { getSubmissionUiState(it) }
 
-        _uiState.update { it.copy(submissions = submissionUiStates, loading = false, refreshing = false) }
+        _uiState.update {
+            it.copy(
+                submissions = submissionUiStates,
+                loading = false,
+                refreshing = false
+            )
+        }
     }
 
     private fun getSubmissionUiState(submission: GradeableStudentSubmission): SubmissionUiState {
@@ -168,19 +209,36 @@ class SubmissionListViewModel @Inject constructor(
                 val submissions = _uiState.value.submissions
                 val selected = submissions.indexOfFirst { it.submissionId == action.submissionId }
                 viewModelScope.launch {
-                    _events.send(SubmissionListViewModelAction.RouteToSubmission(
-                        courseId = course.id,
-                        assignmentId = assignment.id,
-                        selectedIdx = selected,
-                        anonymousGrading = assignment.anonymousGrading,
-                        filteredSubmissionIds = submissions.map { it.submissionId }.toLongArray(),
-                        filter = _uiState.value.filter,
-                    ))
+                    _events.send(
+                        SubmissionListViewModelAction.RouteToSubmission(
+                            courseId = course.id,
+                            assignmentId = assignment.id,
+                            selectedIdx = selected,
+                            anonymousGrading = assignment.anonymousGrading,
+                            filteredSubmissionIds = submissions.map { it.submissionId }
+                                .toLongArray(),
+                            filter = _uiState.value.filter,
+                        )
+                    )
                 }
             }
 
             is SubmissionListAction.Search -> {
+                searchQuery = action.query
                 _uiState.update { it.copy(searchQuery = action.query) }
+                filterData()
+            }
+
+            is SubmissionListAction.SetFilters -> {
+                filter = action.filter
+                filterValue = action.filterValue
+                _uiState.update {
+                    it.copy(
+                        filter = action.filter,
+                        filterValue = action.filterValue,
+                        headerTitle = getHeaderTitle(action.filter, action.filterValue)
+                    )
+                }
                 filterData()
             }
         }
@@ -197,10 +255,15 @@ class SubmissionListViewModel @Inject constructor(
                     else -> {
                         try {
                             if (assignment.gradingType == Assignment.PERCENT_TYPE) {
-                                val value: Double = submission.grade?.removeSuffix("%")?.toDouble() as Double
+                                val value: Double =
+                                    submission.grade?.removeSuffix("%")?.toDouble() as Double
                                 NumberHelper.doubleToPercentage(value, 2)
                             } else {
-                                NumberHelper.formatDecimal(submission.grade?.toDouble() as Double, 2, true)
+                                NumberHelper.formatDecimal(
+                                    submission.grade?.toDouble() as Double,
+                                    2,
+                                    true
+                                )
                             }
                         } catch (e: Exception) {
                             submission.grade ?: "-"
@@ -208,15 +271,17 @@ class SubmissionListViewModel @Inject constructor(
                     }
                 }
             }
+
             else -> "-"
         }
     }
 
-    private fun getHeaderTitle(filter: SubmissionListFilter, filterValue: Double): String {
+    private fun getHeaderTitle(filter: SubmissionListFilter, filterValue: Double?): String {
         return when (filter) {
             SubmissionListFilter.ALL -> {
                 resources.getString(R.string.all_submissions)
             }
+
             SubmissionListFilter.LATE -> resources.getString(R.string.submitted_late)
             SubmissionListFilter.MISSING -> resources.getString(R.string.havent_submitted_yet)
             SubmissionListFilter.NOT_GRADED -> resources.getString(R.string.havent_been_graded)
@@ -224,13 +289,14 @@ class SubmissionListViewModel @Inject constructor(
             SubmissionListFilter.BELOW_VALUE -> {
                 resources.getString(
                     R.string.scored_less_than_value,
-                    NumberHelper.formatDecimal(filterValue, 2, true)
+                    NumberHelper.formatDecimal(filterValue.orDefault(), 2, true)
                 )
             }
+
             SubmissionListFilter.ABOVE_VALUE -> {
                 resources.getString(
                     R.string.scored_more_than_value,
-                    NumberHelper.formatDecimal(filterValue, 2, true)
+                    NumberHelper.formatDecimal(filterValue.orDefault(), 2, true)
                 )
             }
         }

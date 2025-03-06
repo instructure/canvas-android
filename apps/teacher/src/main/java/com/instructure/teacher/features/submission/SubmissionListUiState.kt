@@ -30,6 +30,7 @@ data class SubmissionListUiState(
     val headerTitle: String,
     val searchQuery: String = "",
     val filter: SubmissionListFilter = SubmissionListFilter.ALL,
+    val filterValue: Double? = null,
     val sections: List<CanvasContext> = emptyList(),
     val submissions: List<SubmissionUiState> = emptyList(),
     val loading: Boolean = false,
@@ -46,7 +47,11 @@ data class SubmissionUiState(
     val grade: String? = null
 )
 
-enum class SubmissionTag(@StringRes val text: Int, @DrawableRes val icon: Int? = null, @ColorRes val color: Int? = null) {
+enum class SubmissionTag(
+    @StringRes val text: Int,
+    @DrawableRes val icon: Int? = null,
+    @ColorRes val color: Int? = null
+) {
     SUBMITTED(R.string.submitted, R.drawable.ic_complete, R.color.textSuccess),
     LATE(R.string.late, R.drawable.ic_clock, R.color.textWarning),
     MISSING(R.string.missingTag, R.drawable.ic_no, R.color.textDanger),
@@ -60,14 +65,17 @@ sealed class SubmissionListAction {
     data object Refresh : SubmissionListAction()
     data class SubmissionClicked(val submissionId: Long) : SubmissionListAction()
     data class Search(val query: String) : SubmissionListAction()
+    data class SetFilters(val filter: SubmissionListFilter, val filterValue: Double?) : SubmissionListAction()
 }
 
 sealed class SubmissionListViewModelAction {
-    data class RouteToSubmission(val courseId: Long,
-                                 val assignmentId: Long,
-                                 val selectedIdx: Int,
-                                 val anonymousGrading: Boolean? = null,
-                                 val filteredSubmissionIds: LongArray = longArrayOf(),
-                                 val filter: SubmissionListFilter? = null,
-                                 val filterValue: Double = 0.0) : SubmissionListViewModelAction()
+    data class RouteToSubmission(
+        val courseId: Long,
+        val assignmentId: Long,
+        val selectedIdx: Int,
+        val anonymousGrading: Boolean? = null,
+        val filteredSubmissionIds: LongArray = longArrayOf(),
+        val filter: SubmissionListFilter? = null,
+        val filterValue: Double = 0.0
+    ) : SubmissionListViewModelAction()
 }
