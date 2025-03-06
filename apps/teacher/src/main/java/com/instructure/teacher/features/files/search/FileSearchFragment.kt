@@ -17,12 +17,14 @@
 package com.instructure.teacher.features.files.search
 
 import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.interactions.MasterDetailInteractions
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
@@ -45,8 +47,13 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentFileSearchBinding
+import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
+import com.instructure.teacher.fragments.EditFileFolderFragment
 import com.instructure.teacher.holders.FileFolderViewHolder
+import com.instructure.teacher.interfaces.ConfirmDeleteFileCallback
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.viewMedia
+import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.pandautils.utils.ColorUtils as PandaColorUtils
 
 @ScreenView(SCREEN_VIEW_FILE_SEARCH)
@@ -55,17 +62,37 @@ class FileSearchFragment : BaseSyncFragment<
         FileSearchPresenter,
         FileSearchView,
         FileFolderViewHolder,
-        FileSearchAdapter>(), FileSearchView {
+        FileSearchAdapter>(), FileSearchView, ConfirmDeleteFileCallback {
 
     private val binding by viewBinding(FragmentFileSearchBinding::bind)
 
     var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private val searchAdapter by lazy {
-        FileSearchAdapter(requireContext(), canvasContext.color, presenter) {
+        FileSearchAdapter(requireContext(), canvasContext.color, presenter, callback = {
             val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.color, presenter.canvasContext, R.drawable.ic_document)
             viewMedia(requireActivity(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.color, editableFile)
+        }, menuCallback = { fileFolder, view ->
+            showOptionMenu(fileFolder, view)
+        })
+    }
+
+    private fun showOptionMenu(item: FileFolder, anchorView: View) {
+        val popup = PopupMenu(requireContext(), anchorView)
+        popup.inflate(R.menu.menu_file_list_item)
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.edit -> {
+                    val bundle = EditFileFolderFragment.makeBundle(item, presenter.usageRights, presenter.licenses, presenter.canvasContext.id)
+                    RouteMatcher.route(requireActivity(), Route(EditFileFolderFragment::class.java, canvasContext, bundle))
+                }
+                R.id.delete -> withRequireNetwork { ConfirmDeleteFileFolderDialog.show(childFragmentManager, item) }
+            }
+            true
         }
+
+        popup.show()
     }
 
     override fun layoutResId() = R.layout.fragment_file_search
@@ -91,6 +118,16 @@ class FileSearchFragment : BaseSyncFragment<
     override fun onRefreshFinished() {
         binding.progressBar.setInvisible()
     }
+
+    override val onConfirmDeleteFile: (fileFolder: FileFolder) -> Unit
+        get() = { presenter.deleteFileFolder(it) }
+
+    override fun fileFolderDeleted(fileFolder: FileFolder) {
+        presenter.data.remove(fileFolder)
+        checkIfEmpty()
+    }
+
+    override fun fileFolderDeleteError(message: Int) = toast(message)
 
     private fun setupViews() = with(binding) {
         themeSearchBar()

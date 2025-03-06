@@ -227,9 +227,6 @@
         </provider>
 
         <service
-            android:name=".services.FileDownloadService"
-            android:foregroundServiceType="dataSync" />
-        <service
             android:name="com.instructure.pandautils.services.NotoriousUploadService"
             android:foregroundServiceType="dataSync" />
 

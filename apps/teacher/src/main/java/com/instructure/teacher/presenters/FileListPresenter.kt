@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.blueprint.SyncPresenter
+import com.instructure.teacher.R
 import com.instructure.teacher.viewinterface.FileListView
 import kotlinx.coroutines.Job
 
@@ -36,6 +37,7 @@ class FileListPresenter(var currentFolder: FileFolder, val mCanvasContext: Canva
 
     private var apiCalls: Job? = null
     private var createFolderCall: Job? = null
+    private var deleteFileFolderJob: Job? = null
 
     var usageRights: Boolean = false
     var licenses: ArrayList<License> = ArrayList()
@@ -89,6 +91,24 @@ class FileListPresenter(var currentFolder: FileFolder, val mCanvasContext: Canva
         }
     }
 
+    fun deleteFileFolder(fileFolder: FileFolder) {
+        deleteFileFolderJob = tryWeave {
+            viewCallback?.onRefreshStarted()
+            val deletedFileFolder =
+                if (fileFolder.isFile) {
+                    awaitApi<FileFolder> { FileFolderManager.deleteFile(fileFolder.id, it) }
+                } else {
+                    awaitApi { FileFolderManager.deleteFolder(fileFolder.id, it) }
+                }
+
+            viewCallback?.onRefreshFinished()
+            viewCallback?.fileFolderDeleted(deletedFileFolder)
+        } catch {
+            viewCallback?.onRefreshFinished()
+            viewCallback?.fileFolderDeleteError(if (fileFolder.isFile) R.string.errorDeletingFile else R.string.errorDeletingFolder)
+        }
+    }
+
     override fun compare(item1: FileFolder, item2: FileFolder) = item1.compareTo(item2)
 
     override fun refresh(forceNetwork: Boolean) {
@@ -100,5 +120,6 @@ class FileListPresenter(var currentFolder: FileFolder, val mCanvasContext: Canva
     override fun onDestroyed() {
         apiCalls?.cancel()
         createFolderCall?.cancel()
+        deleteFileFolderJob?.cancel()
     }
 }

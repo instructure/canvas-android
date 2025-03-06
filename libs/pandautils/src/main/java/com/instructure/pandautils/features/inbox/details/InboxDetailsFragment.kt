@@ -43,6 +43,7 @@ import com.instructure.pandautils.features.inbox.details.composables.InboxDetail
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -64,6 +65,9 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
 
     @Inject
     lateinit var sharedEvents: InboxSharedEvents
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,6 +110,7 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
             }
             is InboxDetailsFragmentAction.UrlSelected -> {
                 try {
+                    if (webViewRouter.canRouteInternally(action.url, true)) return
                     val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
                     activity?.startActivity(urlIntent)
                 } catch (e: ActivityNotFoundException) {
