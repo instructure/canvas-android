@@ -33,6 +33,10 @@ import org.junit.Test
 @HiltAndroidTest
 class FontPageE2ETest : ParentComposeTest() {
 
+    override fun displaysPageObjects() = Unit
+
+    override fun enableAndConfigureAccessibilityChecks() = Unit
+
     @Test
     fun testFrontPageE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -77,8 +81,4 @@ class FontPageE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Assert that the Assignment Details Page is loaded successfully.")
         assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
-
-    override fun displaysPageObjects() = Unit
-
-    override fun enableAndConfigureAccessibilityChecks() = Unit
 }
