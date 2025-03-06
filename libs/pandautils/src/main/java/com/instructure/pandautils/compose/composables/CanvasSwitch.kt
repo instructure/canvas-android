@@ -53,14 +53,26 @@ fun CanvasSwitch(
             checkedIconColor = color,
             uncheckedIconColor = colorResource(R.color.switchIconColor),
             checkedBorderColor = Color.Transparent,
-            uncheckedBorderColor = Color.Transparent
+            uncheckedBorderColor = Color.Transparent,
+            disabledUncheckedTrackColor = colorResource(R.color.switchTrackColor).copy(alpha = 0.5f),
+            disabledUncheckedBorderColor = Color.Transparent,
+            disabledUncheckedThumbColor = colorResource(R.color.switchThumbColor),
+            disabledUncheckedIconColor = colorResource(R.color.switchIconColor).copy(alpha = 0.5f),
+            disabledCheckedTrackColor = colorResource(R.color.switchTrackColor).copy(alpha = 0.5f),
+            disabledCheckedBorderColor = Color.Transparent,
+            disabledCheckedThumbColor = colorResource(R.color.switchThumbColor),
+            disabledCheckedIconColor = colorResource(R.color.switchIconColor).copy(alpha = 0.5f),
         ),
         thumbContent = {
             Icon(
                 modifier = Modifier.padding(4.dp),
                 painter = painterResource(if (checked) R.drawable.ic_checkmark else R.drawable.ic_close),
                 contentDescription = null,
-                tint = if (checked) color else colorResource(R.color.switchIconColor)
+                tint = when {
+                    !enabled -> colorResource(R.color.switchIconColor).copy(alpha = 0.5f)
+                    checked -> color
+                    else -> colorResource(R.color.switchIconColor)
+                }
             )
         },
         modifier = modifier,
@@ -80,4 +92,46 @@ fun CanvasSwitchPreviewOn() {
 fun CanvasSwitchPreviewOff() {
     ContextKeeper.appContext = LocalContext.current
     CanvasSwitch(checked = false, onCheckedChange = null)
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, showBackground = true, backgroundColor = 0xFF0F1316)
+@Composable
+fun CanvasSwitchPreviewOnDarkMode() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasSwitch(checked = true, onCheckedChange = null)
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, showBackground = true, backgroundColor = 0xFF0F1316)
+@Composable
+fun CanvasSwitchPreviewOffDarkMode() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasSwitch(checked = false, onCheckedChange = null)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CanvasSwitchPreviewOnDisabled() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasSwitch(checked = true, onCheckedChange = null, enabled = false)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CanvasSwitchPreviewOffDisabled() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasSwitch(checked = false, onCheckedChange = null, enabled = false)
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, showBackground = true, backgroundColor = 0xFF0F1316)
+@Composable
+fun CanvasSwitchPreviewOnDisabledDarkMode() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasSwitch(checked = true, onCheckedChange = null, enabled = false)
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, showBackground = true, backgroundColor = 0xFF0F1316)
+@Composable
+fun CanvasSwitchPreviewOffDisabledDarkMode() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasSwitch(checked = false, onCheckedChange = null, enabled = false)
 }
