@@ -29,6 +29,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/textDarkest"
         android:elevation="6dp"
+        android:accessibilityHeading="true"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
         tools:targetApi="lollipop" />

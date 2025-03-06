@@ -488,7 +488,6 @@ class ModuleInteractionTest : StudentTest() {
     // Module can't be accessed unless all prerequisites have been fulfilled
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION)
-
     fun testModules_moduleLockedWithUnfulfilledPrerequisite() {
         // Basic mock setup
         val data = getToCourseModules(studentCount = 1, courseCount = 1)

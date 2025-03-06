@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.ui.pages
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasTestTag
@@ -24,11 +25,15 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import com.instructure.canvasapi2.models.Course
 import com.instructure.composeTest.hasSiblingWithText
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.espresso.assertTextColor
 import com.instructure.pandares.R
 
 
@@ -57,12 +62,18 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertEmptyContentDisplayed() {
-        composeTestRule.onNodeWithText("No Courses")
+        composeTestRule.onNodeWithText("No Courses", useUnmergedTree = true)
+            .performScrollTo()
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText("Your student’s courses might not be published yet.")
+        composeTestRule.onNodeWithText("Your student’s courses might not be published yet.", useUnmergedTree = true)
+            .performScrollTo()
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag(R.drawable.ic_panda_book.toString())
             .assertIsDisplayed()
+    }
+
+    fun assertCourseLabelTextColor(course: CourseApiModel, expectedTextColor: Long) {
+        composeTestRule.onNodeWithText(course.name).assertTextColor(Color(expectedTextColor))
     }
 
     fun assertGradeTextDisplayed(courseName: String, gradeText: String) {
@@ -89,5 +100,9 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
             .performScrollTo()
             .assertIsDisplayed()
             .performClick()
+    }
+
+    fun refresh() {
+        composeTestRule.onRoot().performTouchInput { swipeDown() }
     }
 }

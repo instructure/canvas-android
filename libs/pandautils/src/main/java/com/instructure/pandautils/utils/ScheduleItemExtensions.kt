@@ -16,8 +16,8 @@
  */
 package com.instructure.pandautils.utils
 
-import android.net.Uri
 import android.content.Context
+import android.net.Uri
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.toSimpleDate
@@ -32,6 +32,17 @@ val ScheduleItem.iconRes: Int
             this.assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_QUIZ).orDefault() -> R.drawable.ic_quiz
             this.assignment?.getSubmissionTypes()?.contains(SubmissionType.DISCUSSION_TOPIC).orDefault() -> R.drawable.ic_discussion
             else -> R.drawable.ic_assignment
+        }
+    }
+
+val ScheduleItem.contentDescriptionRes: Int
+    get() {
+        return when {
+            this.type == "event" -> R.string.a11y_summaryEventContentDescription
+            this.assignment?.lockedForUser.orDefault() -> R.string.a11y_summaryLockedContentDescription
+            this.assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_QUIZ).orDefault() -> R.string.a11y_summaryQuizContentDescription
+            this.assignment?.getSubmissionTypes()?.contains(SubmissionType.DISCUSSION_TOPIC).orDefault() -> R.string.a11y_summaryDiscussionContentDescription
+            else -> R.string.a11y_summaryAssignmentContentDescription
         }
     }
 

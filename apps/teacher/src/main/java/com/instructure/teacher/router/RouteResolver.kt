@@ -20,6 +20,7 @@ import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
@@ -226,6 +227,8 @@ object RouteResolver {
             fragment = CreateUpdateToDoFragment.newInstance(route)
         } else if (CreateUpdateEventFragment::class.java.isAssignableFrom(cls)) {
             fragment = CreateUpdateEventFragment.newInstance(route)
+        } else if (InboxSignatureFragment::class.java.isAssignableFrom(cls)) {
+            fragment = InboxSignatureFragment()
         } else if (ModuleProgressionFragment::class.java.isAssignableFrom(cls)) {
             fragment = ModuleProgressionFragment.newInstance(route.copy(canvasContext = canvasContext))
         } else if (FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls)) {

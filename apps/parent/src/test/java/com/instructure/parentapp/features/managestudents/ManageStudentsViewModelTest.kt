@@ -218,7 +218,7 @@ class ManageStudentsViewModelTest {
     }
 
     @Test
-    fun `Save student color`() {
+    fun `Save student color`() = runTest {
         val expectedUiState = ManageStudentsUiState(
             colorPickerDialogUiState = ColorPickerDialogUiState(),
             studentListItems = listOf(
@@ -235,16 +235,23 @@ class ManageStudentsViewModelTest {
         coEvery { repository.getStudents(any()) } returns listOf(User(id = 1, shortName = "Student 1"))
         coEvery { repository.saveStudentColor(any(), any()) } returns "#000000"
         every { ContextCompat.getColor(context, any()) } answers { firstArg() }
+        every { context.getString(R.string.manageStudentsColorSavedSuccessfully) } returns "Color saved successfully"
 
         createViewModel()
+
+        val events = mutableListOf<ManageStudentsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
 
         viewModel.handleAction(ManageStudentsAction.StudentColorChanged(1L, selectedUserColor))
 
         Assert.assertEquals(expectedUiState, viewModel.uiState.value)
+        Assert.assertEquals(ManageStudentsViewModelAction.AccessibilityAnnouncement("Color saved successfully"), events.last())
     }
 
     @Test
-    fun `Save student color error`() {
+    fun `Save student color error`() = runTest {
         val expectedUiState = ManageStudentsUiState(
             colorPickerDialogUiState = ColorPickerDialogUiState(isSavingColorError = true),
             studentListItems = listOf(
@@ -261,12 +268,19 @@ class ManageStudentsViewModelTest {
         coEvery { repository.getStudents(any()) } returns listOf(User(id = 1, shortName = "Student 1"))
         every { ContextCompat.getColor(context, any()) } answers { firstArg() }
         coEvery { repository.saveStudentColor(any(), any()) } throws Exception()
+        every { context.getString(R.string.errorSavingColor) } returns "Error saving color"
 
         createViewModel()
+
+        val events = mutableListOf<ManageStudentsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
 
         viewModel.handleAction(ManageStudentsAction.StudentColorChanged(1L, selectedUserColor))
 
         Assert.assertEquals(expectedUiState, viewModel.uiState.value)
+        Assert.assertEquals(ManageStudentsViewModelAction.AccessibilityAnnouncement("Error saving color"), events.last())
     }
 
     @Test

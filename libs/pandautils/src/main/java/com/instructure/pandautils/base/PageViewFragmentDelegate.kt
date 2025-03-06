@@ -15,23 +15,30 @@
  */
 package com.instructure.pandautils.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.pageview.PageViewVisibilityTracker
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocusListener
-import com.instructure.pandautils.analytics.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
+import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
+import com.instructure.pandautils.analytics.pageview.PageViewVisibilityTracker
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocusListener
+import com.instructure.pandautils.di.PageViewEntryPoint
 import com.instructure.pandautils.utils.AppType
+import dagger.hilt.android.EarlyEntryPoints
 
 class PageViewFragmentDelegate<T>(
-    private val fragment: T
+    private val fragment: T,
 ) where T : Fragment, T : PageViewWindowFocus, T : PageViewPrerequisites {
 
     private val visibilityTracker = PageViewVisibilityTracker()
-    private val pageViewAnnotationProcessor = PageViewAnnotationProcessor(fragment::class.java, fragment)
+    private val pageViewAnnotationProcessor by lazy {
+        val pageViewUtils = EarlyEntryPoints.get(
+            fragment.requireActivity().applicationContext,
+            PageViewEntryPoint::class.java
+        ).pageViewUtils()
+        PageViewAnnotationProcessor(fragment::class.java, fragment, pageViewUtils)
+    }
 
     fun completePageViewPrerequisite(prerequisite: String) {
         if (visibilityTracker.trackCustom(prerequisite, true, fragment)) {
@@ -39,7 +46,7 @@ class PageViewFragmentDelegate<T>(
         }
     }
 
-    fun onAttach(context: Context) {
+    fun onCreate() {
         visibilityTracker.addCustomConditions(fragment.beforePageViewPrerequisites())
         if (AppConfigProvider.appConfig?.appType == AppType.TEACHER) {
             ScreenViewAnnotationProcessor.processScreenView(fragment::class.java)
@@ -64,10 +71,12 @@ class PageViewFragmentDelegate<T>(
 
     @Deprecated("See description in superclass")
     fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if (visibilityTracker.trackUserHint(isVisibleToUser, fragment)) {
-            pageViewAnnotationProcessor.startEvent()
-        } else {
-            pageViewAnnotationProcessor.stopEvent()
+        if (fragment.isAdded) {
+            if (visibilityTracker.trackUserHint(isVisibleToUser, fragment)) {
+                pageViewAnnotationProcessor.startEvent()
+            } else {
+                pageViewAnnotationProcessor.stopEvent()
+            }
         }
     }
 

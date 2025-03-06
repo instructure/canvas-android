@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -68,6 +69,7 @@ import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -83,6 +85,8 @@ fun CalendarScreen(
     navigationActionClick: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
+    val todayFocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -95,6 +99,15 @@ fun CalendarScreen(
                         actionHandler(CalendarAction.SnackbarDismissed)
                     }
                 }
+            }
+        }
+        val todayTapped = calendarScreenUiState.calendarUiState.todayTapped
+        LaunchedEffect(todayTapped) {
+            if (todayTapped) {
+                focusManager.clearFocus(true)
+                delay(200)
+                todayFocusRequester.requestFocus()
+                actionHandler(CalendarAction.TodayTapHandled)
             }
         }
         Scaffold(
@@ -154,7 +167,7 @@ fun CalendarScreen(
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
                     Column {
-                        Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth())
+                        Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth(), todayFocusRequester)
                         CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler, Modifier.testTag("calendarEvents"))
                     }
                 }

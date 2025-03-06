@@ -1254,6 +1254,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">يمكنك فتح تفاصيل الإرسال من هنا</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">انقر هنا لعرض تفاصيل الإرسال والروبرك</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">الدرجة: %s</string>
     <plurals name="minutes">
         <item quantity="zero">%s من الدقائق</item>
@@ -1532,6 +1533,7 @@
     <string name="inboxContextSelectorTitle">حدد مساقًا أو مجموعة</string>
     <string name="inboxClearFilter">مسح</string>
     <string name="a11y_courseFilterContentDescription">عامل تصفية المساق: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">تحديد علبة البريد: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">تحديد</string>
     <string name="a11y_itemSelectedSwipeForActions">تم تحديد المحادثة. تم تنشيط وضع التحديد. تنقل للوصول إلى الإجراءات.</string>
     <string name="a11y_conversationSelected">تم تحديد المحادثة</string>
@@ -1559,6 +1561,7 @@
     <string name="offline_content_other">تطبيقات أخرى</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">المتبقي</string>
+    <string name="offline_content_storage_info_a11y_description">معلومات سعة التخزين: تم استخدام %s من %s، التطبيقات الأخرى %d%%، Canvas Student %d%%، المتبقي %d%%</string>
     <string name="offline_content_all_courses">جميع المساقات</string>
     <string name="offline_content_sync">مزامنة</string>
     <string name="offline_content_selected">تم تحديد %d</string>
@@ -1578,8 +1581,11 @@
     <string name="offline_content_sync_dialog_positive">مزامنة</string>
     <string name="offline_content_sync_loading_title">جارٍ التحميل...</string>
     <string name="offline_content_sync_loading_message">مهلاً، نحن نجهز لك الأشياء.</string>
+    <string name="offline_content_a11y_sync_started_announcement">تم حفظ إعدادات المزامنة دون اتصال ستبدأ المزامنة بعد قليل في الخلفية.</string>
     <string name="content_description_expand_content">توسيع المحتوى</string>
+    <string name="content_description_expand_content_with_param">توسيع المحتوى، %s</string>
     <string name="content_description_collapse_content">طي المحتوى</string>
+    <string name="content_description_collapse_content_with_param">طي المحتوى، %s</string>
     <string name="syncSettings_autoContentSyncDescription">سيؤدي تمكين مزامنة المحتوى التلقائية إلى تنزيل المحتوى المحدد بناءً على الإعدادات أدناه. ستحدث مزامنة المحتوى حتى لو لم يكن يعمل التطبيق. إذا تم إيقاف تشغيل الإعداد، فلن تحدث المزامنة. لن يتم حذف المحتوى الذي تم تنزيله بالفعل.</string>
     <string name="syncSettings_syncFrequencyTitle">تكرار المزامنة</string>
     <string name="syncSettings_autoContentSyncTitle">مزامنة المحتوى التلقائية</string>
@@ -1720,8 +1726,15 @@
     <string name="unpublishDialogPositiveButton">إلغاء النشر</string>
     <string name="discussionMenuRefresh">تحديث</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">ابدأ اليوم</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">انتقل إلى اليوم، اليوم المحدد هو %s، اليوم هو %s</string>
     <string name="a11y_calendarSwitchToMonthView">التبديل إلى طريقة عرض الشهر</string>
     <string name="a11y_calendarSwitchToWeekView">التبديل إلى طريقة عرض الأسبوع</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">التبديل بين طريقة عرض الشهر والأسبوع</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s، %2$s، %3$s</string>
+    <string name="a11y_calendarMonthView">التقويم بطريقة عرض الشهر</string>
+    <string name="a11y_calendarWeekView">التقويم بطريقة عرض الأسبوع</string>
+    <string name="a11y_calendarSwitchedToWeekView">تم تبديل التقويم إلى طريقة عرض الأسبوع</string>
+    <string name="a11y_calendarSwitchedToMonthView">تم تبديل التقويم إلى طريقة عرض الشهر</string>
     <string name="calendarNoEvents">لا توجد أحداث اليوم!</string>
     <string name="calendarNoEventsDescription">يبدو أنه يوم رائع للراحة والاسترخاء وتجديد النشاط.</string>
     <string name="userCalendarToDo">قائمة المهام</string>
@@ -1745,6 +1758,10 @@
     <string name="calendarFilterLimitSnackbar">يمكنك تحديد ما يصل إلى %d من التقويمات بحد أقصى.</string>
     <string name="calendarFilterTitle">التقويمات</string>
     <string name="calendarFiltersFailed">تعذر تحميل عوامل التصفية</string>
+    <string name="a11y_eventCreatedAnnouncement">تم إنشاء الحدث %s بنجاح.</string>
+    <string name="a11y_eventUpdatedAnnouncement">تم تحديث الحدث %s بنجاح.</string>
+    <string name="a11y_toDoCreatedAnnouncement">تم إنشاء قائمة المهام %s بنجاح.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">تم تحديث قائمة المهام %s بنجاح.</string>
     <string name="todoScreenTitle">قائمة المهام</string>
     <string name="todoDateLabel">التاريخ</string>
     <string name="todoDescriptionLabel">الوصف</string>
@@ -2071,4 +2088,12 @@
     <string name="smartSearchAssignmentGroupTitle">المهام (%d)</string>
     <string name="smartSearchPageGroupTitle">الصفحات (%d)</string>
     <string name="a11y_commentSentSuccess">تم إرسال التعليق بنجاح</string>
+    <string name="a11y_dragViewContentDescription">توسيع الدرج</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">المحادثات</string>
+    <string name="a11y_contentDescription_moduleItem">%s، %s</string>
+    <string name="a11y_checked">تم التحديد</string>
+    <string name="a11y_unchecked">تم إلغاء التحديد</string>
+    <string name="a11y_indeterminate">تم التحديد جزئيًا</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s، %2$s، %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">تم تحديث عوامل التصفية</string>
 </resources>

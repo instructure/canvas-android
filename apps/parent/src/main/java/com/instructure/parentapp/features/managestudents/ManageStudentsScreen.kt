@@ -30,7 +30,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -51,7 +53,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -105,7 +109,7 @@ internal fun ManageStudentsScreen(
                         buttonClick = {
                             actionHandler(ManageStudentsAction.Refresh)
                         },
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
                     )
                 } else {
                     StudentListContent(
@@ -233,6 +237,7 @@ private fun StudentListItem(
                 .testTag("studentColor")
                 .semantics(mergeDescendants = true) {
                     contentDescription = changeColorContentDescription
+                    role = Role.Button
                 }
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },

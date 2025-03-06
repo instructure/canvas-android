@@ -30,6 +30,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -50,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -142,6 +145,22 @@ internal fun EventScreen(
                         .padding(padding)
                         .fillMaxSize(),
                 )
+            },
+            floatingActionButton = {
+                if (eventUiState.isMessageFabEnabled) {
+                    FloatingActionButton(
+                        backgroundColor = Color(color = eventUiState.toolbarUiState.toolbarColor),
+                        onClick = {
+                            actionHandler(EventAction.OnMessageFabClicked)
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_chat),
+                            tint = Color(ThemePrefs.buttonTextColor),
+                            contentDescription = stringResource(id = R.string.sendMessageAboutEvent)
+                        )
+                    }
+                }
             },
             modifier = modifier
         )

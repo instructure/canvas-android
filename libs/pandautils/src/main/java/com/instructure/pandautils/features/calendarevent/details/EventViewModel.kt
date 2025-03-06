@@ -62,7 +62,8 @@ class EventViewModel @Inject constructor(
     private val htmlContentFormatter: HtmlContentFormatter,
     private val apiPrefs: ApiPrefs,
     private val themePrefs: ThemePrefs,
-    private val reminderManager: ReminderManager
+    private val reminderManager: ReminderManager,
+    private val eventViewModelBehavior: EventViewModelBehavior
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EventUiState())
@@ -151,7 +152,8 @@ class EventViewModel @Inject constructor(
                 address = scheduleItem.locationAddress.orEmpty(),
                 formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty()),
                 isSeriesEvent = scheduleItem.isRecurring,
-                isSeriesHead = scheduleItem.seriesHead
+                isSeriesHead = scheduleItem.seriesHead,
+                isMessageFabEnabled = eventViewModelBehavior.shouldShowMessageFab && scheduleItem.contextType == CanvasContext.Type.COURSE
             )
         }
     }
@@ -222,6 +224,13 @@ class EventViewModel @Inject constructor(
 
             is EventAction.OnReminderDeleteClicked -> viewModelScope.launch {
                 showDeleteReminderConfirmationDialog(action.context, action.reminderId, themePrefs.textButtonColor)
+            }
+
+            is EventAction.OnMessageFabClicked -> viewModelScope.launch {
+                scheduleItem?.let {
+                    val options = eventViewModelBehavior.getInboxComposeOptions(CanvasContext.fromContextCode(it.contextCode, it.contextName), it)
+                    _events.send(EventViewModelAction.NavigateToComposeMessageScreen(options))
+                }
             }
         }
     }

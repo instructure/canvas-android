@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.instructure.canvasapi2.models.CanvasContext
@@ -49,6 +50,7 @@ import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListTodoBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 
@@ -199,7 +201,7 @@ class ToDoListFragment : ParentFragment() {
         val choices = arrayOf(getString(R.string.favoritedCoursesLabel))
         var checkedItem = choices.indexOf(getString(recyclerAdapter?.getFilterMode()?.titleId ?: NoFilter.titleId))
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAccentDialogTheme)
                 .setTitle(R.string.filterByEllipsis)
                 .setSingleChoiceItems(choices, checkedItem) { _, index ->
                     checkedItem = index
@@ -214,6 +216,7 @@ class ToDoListFragment : ParentFragment() {
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
             dialog.listView.children<AppCompatCheckedTextView>().forEach { checkbox ->
                 checkbox.compoundDrawableTintList = ColorStateList.valueOf(ThemePrefs.brandColor)
+                checkbox.accessibilityClassName(RadioButton::class.java.name)
             }
         }
 

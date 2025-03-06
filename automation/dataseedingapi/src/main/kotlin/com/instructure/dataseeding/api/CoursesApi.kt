@@ -22,6 +22,8 @@ import com.instructure.dataseeding.model.CourseSettings
 import com.instructure.dataseeding.model.CreateCourse
 import com.instructure.dataseeding.model.CreateCourseWrapper
 import com.instructure.dataseeding.model.FavoriteApiModel
+import com.instructure.dataseeding.model.UpdateCourse
+import com.instructure.dataseeding.model.UpdateCourseWrapper
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
@@ -50,6 +52,8 @@ object CoursesApi {
         @PUT("courses/{course_id}/settings")
         fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>
 
+        @PUT("courses/{course_id}")
+        fun updateCourse(@Path("course_id") courseId: Long, @Body courseApiModel: UpdateCourseWrapper): Call<CourseApiModel>
     }
 
     private val adminCoursesService: CoursesService by lazy {
@@ -124,6 +128,13 @@ object CoursesApi {
     ): CourseSettings {
         return adminCoursesService
             .updateCourseSettings(courseId, params)
+            .execute()
+            .body()!!
+    }
+
+    fun updateCourse(courseId: Long, updateCourse: UpdateCourse) : CourseApiModel {
+        return adminCoursesService
+            .updateCourse(courseId, UpdateCourseWrapper(updateCourse))
             .execute()
             .body()!!
     }

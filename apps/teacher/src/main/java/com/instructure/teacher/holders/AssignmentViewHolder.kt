@@ -18,8 +18,6 @@ package com.instructure.teacher.holders
 
 import android.content.Context
 import android.view.View
-import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Button
 import android.widget.TextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +25,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -95,12 +94,6 @@ class AssignmentViewHolder(private val binding: AdapterAssignmentBinding) : Recy
                 R.string.not_published
             )
 
-        assignmentLayout.accessibilityDelegate = object : View.AccessibilityDelegate() {
-            override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
-                super.onInitializeAccessibilityNodeInfo(host, info)
-
-                info.className = Button::class.java.name
-            }
-        }
+        assignmentLayout.accessibilityClassName("android.widget.Button")
     }
 }

@@ -25,6 +25,7 @@ class ParentSettingsBehaviour(private val selectedStudentHolder: SelectedStudent
     override val settingsItems: Map<Int, List<SettingsItem>>
         get() = mapOf(
             R.string.preferences to listOf(SettingsItem.APP_THEME),
+            R.string.inboxSettingsTitle to listOf(SettingsItem.INBOX_SIGNATURE),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         )
 

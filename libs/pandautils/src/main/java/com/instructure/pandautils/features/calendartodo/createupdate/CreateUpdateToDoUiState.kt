@@ -62,4 +62,6 @@ sealed class CreateUpdateToDoAction {
 sealed class CreateUpdateToDoViewModelAction {
     data class RefreshCalendarDays(val days: List<LocalDate>) : CreateUpdateToDoViewModelAction()
     data object NavigateBack : CreateUpdateToDoViewModelAction()
+    data class AnnounceToDoCreation(val title: String) : CreateUpdateToDoViewModelAction()
+    data class AnnounceToDoUpdate(val title: String) : CreateUpdateToDoViewModelAction()
 }

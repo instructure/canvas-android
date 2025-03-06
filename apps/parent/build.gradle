@@ -41,7 +41,7 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode 55
+        versionCode 56
         versionName "4.0.0"
 
         buildConfigField "boolean", "IS_TESTING", "false"
@@ -113,7 +113,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
         }

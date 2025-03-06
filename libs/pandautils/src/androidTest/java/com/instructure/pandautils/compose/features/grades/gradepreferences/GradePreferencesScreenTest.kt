@@ -68,9 +68,9 @@ class GradePreferencesScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithTag("toolbar")
+        composeTestRule.onNodeWithTag("GradePreferencesToolbar")
             .assertIsDisplayed()
-        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("Close")))
+        composeTestRule.onNode(hasParent(hasTestTag("GradePreferencesToolbar")).and(hasContentDescription("Close")))
             .assertIsDisplayed()
             .assertHasClickAction()
         composeTestRule.onNodeWithText("Grade Preferences")

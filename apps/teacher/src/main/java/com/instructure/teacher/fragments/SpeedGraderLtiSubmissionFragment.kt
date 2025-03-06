@@ -21,6 +21,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
@@ -33,9 +36,16 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderLtiSubmissionBinding
 import com.instructure.teacher.view.ExternalToolContent
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION)
+@AndroidEntryPoint
 class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
+
+    @Inject
+    lateinit var oAuthInterface: OAuthAPI.OAuthInterface
 
     private val binding by viewBinding(FragmentSpeedGraderLtiSubmissionBinding::bind)
 
@@ -68,7 +78,12 @@ class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
 
             override fun routeInternallyCallback(url: String) = Unit
         }
-        binding.webView.loadUrl(url)
+        lifecycleScope.launch {
+            val authenticatedUrl =
+                oAuthInterface.getAuthenticatedSession(url, RestParams()).dataOrNull?.sessionUrl
+                    ?: url
+            binding.webView.loadUrl(authenticatedUrl)
+        }
     }
 
     companion object {

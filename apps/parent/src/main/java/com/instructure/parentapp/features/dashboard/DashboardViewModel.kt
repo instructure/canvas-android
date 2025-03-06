@@ -111,6 +111,16 @@ class DashboardViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            inboxCountUpdater.increaseInboxCountFlow.collect { increaseBy ->
+                _data.update { data ->
+                    data.copy(
+                        unreadCount = data.unreadCount + increaseBy
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
             alertCountUpdater.shouldRefreshAlertCountFlow.collect { shouldUpdate ->
                 if (shouldUpdate) {
                     updateAlertCount()
@@ -212,6 +222,10 @@ class DashboardViewModel @Inject constructor(
 
         _data.update { data ->
             data.copy(
+                studentSelectorContentDescription = getStudentSelectorContentDescription(
+                    data.studentSelectorExpanded,
+                    selectedStudent?.shortName.orEmpty()
+                ),
                 studentItems = studentItemsWithAddStudent,
                 selectedStudent = selectedStudent
             )
@@ -243,6 +257,10 @@ class DashboardViewModel @Inject constructor(
         _data.update {
             it.copy(
                 studentSelectorExpanded = false,
+                studentSelectorContentDescription = getStudentSelectorContentDescription(
+                    false,
+                    student.shortName.orEmpty()
+                ),
                 selectedStudent = student,
                 studentItems = it.studentItems.map { item ->
                     if (item is AddStudentItemViewModel) {
@@ -279,9 +297,29 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    private fun openLtiTool(ltiViewData: LaunchDefinitionViewData?) {
+        ltiViewData?.let {
+            viewModelScope.launch {
+                _events.send(DashboardViewModelAction.OpenLtiTool(it.url, it.name))
+            }
+        }
+    }
+
+    private fun getStudentSelectorContentDescription(expanded: Boolean, selectedStudentName: String) = context.getString(
+        R.string.a11y_studentSelectorContentDescription,
+        context.getString(if (expanded) R.string.a11y_studentSelectorCollapse else R.string.a11y_studentSelectorExpand),
+        selectedStudentName
+    )
+
     fun toggleStudentSelector() {
         _data.update {
-            it.copy(studentSelectorExpanded = !it.studentSelectorExpanded)
+            it.copy(
+                studentSelectorExpanded = !it.studentSelectorExpanded,
+                studentSelectorContentDescription = getStudentSelectorContentDescription(
+                    !it.studentSelectorExpanded,
+                    it.selectedStudent?.shortName.orEmpty()
+                )
+            )
         }
     }
 
@@ -299,13 +337,5 @@ class DashboardViewModel @Inject constructor(
     fun openStudio() {
         val studioLaunchDefinition = _data.value.launchDefinitionViewData.find { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         openLtiTool(studioLaunchDefinition)
-    }
-
-    private fun openLtiTool(ltiViewData: LaunchDefinitionViewData?) {
-        ltiViewData?.let {
-            viewModelScope.launch {
-                _events.send(DashboardViewModelAction.OpenLtiTool(it.url, it.name))
-            }
-        }
     }
 }

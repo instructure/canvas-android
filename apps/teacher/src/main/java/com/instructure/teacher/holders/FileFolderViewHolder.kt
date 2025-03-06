@@ -17,11 +17,13 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
@@ -29,7 +31,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.AdapterFileFolderBinding
 
 class FileFolderViewHolder(private val binding: AdapterFileFolderBinding) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: FileFolder, iconColor: Int, context: Context, callback: (FileFolder) -> Unit) = with(binding) {
+    fun bind(item: FileFolder, iconColor: Int, context: Context, callback: (FileFolder) -> Unit, menuCallback: (FileFolder, View) -> Unit) = with(binding) {
         fileFolderLayout.onClick { callback(item) }
         fileIconOrImage.setPublishedStatus(item) // Locked files are "unpublished"
 
@@ -72,5 +74,7 @@ class FileFolderViewHolder(private val binding: AdapterFileFolderBinding) : Recy
             fileSize.text = ""
             fileIconOrImage.setIcon(R.drawable.ic_folder_solid, iconColor)
         }
+
+        overflowButton.onClick { menuCallback(item, binding.overflowButton) }
     }
 }

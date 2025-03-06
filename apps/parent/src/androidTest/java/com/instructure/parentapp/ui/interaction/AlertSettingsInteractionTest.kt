@@ -44,9 +44,9 @@ class AlertSettingsInteractionTest : ParentComposeTest() {
             null
         )
         goToAlertSettings(data)
-        alertSettingsPage.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, true)
-        alertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_MISSING)
-        alertSettingsPage.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, false)
+        studentAlertSettingsPage.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, true)
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_MISSING)
+        studentAlertSettingsPage.assertSwitchThreshold(AlertType.ASSIGNMENT_MISSING, false)
     }
 
     @Test
@@ -60,65 +60,65 @@ class AlertSettingsInteractionTest : ParentComposeTest() {
             "50"
         )
         goToAlertSettings(data)
-        alertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "50%")
-        alertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_LOW)
-        alertSettingsPage.tapThresholdNeverButton()
-        alertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Never")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "50%")
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_LOW)
+        studentAlertSettingsPage.tapThresholdNeverButton()
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Never")
     }
 
     @Test
     fun createSwitchThreshold() {
         val data = initData()
         goToAlertSettings(data)
-        alertSettingsPage.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, false)
-        alertSettingsPage.clickThreshold(AlertType.COURSE_ANNOUNCEMENT)
-        alertSettingsPage.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, true)
+        studentAlertSettingsPage.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, false)
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_ANNOUNCEMENT)
+        studentAlertSettingsPage.assertSwitchThreshold(AlertType.COURSE_ANNOUNCEMENT, true)
     }
 
     @Test
     fun createPercentageThreshold() {
         val data = initData()
         goToAlertSettings(data)
-        alertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Never")
-        alertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
-        alertSettingsPage.enterThreshold("101")
-        alertSettingsPage.assertThresholdDialogError()
-        alertSettingsPage.enterThreshold("50")
-        alertSettingsPage.assertThresholdDialogNotError()
-        alertSettingsPage.tapThresholdSaveButton()
-        alertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "50%")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Never")
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("101")
+        studentAlertSettingsPage.assertThresholdDialogError()
+        studentAlertSettingsPage.enterThreshold("50")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "50%")
     }
 
     @Test
     fun minThreshold() {
         val data = initData()
         goToAlertSettings(data)
-        alertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
-        alertSettingsPage.enterThreshold("50")
-        alertSettingsPage.tapThresholdSaveButton()
-        alertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
-        alertSettingsPage.enterThreshold("49")
-        alertSettingsPage.assertThresholdDialogError()
-        alertSettingsPage.enterThreshold("51")
-        alertSettingsPage.assertThresholdDialogNotError()
-        alertSettingsPage.tapThresholdSaveButton()
-        alertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "51%")
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
+        studentAlertSettingsPage.enterThreshold("50")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("49")
+        studentAlertSettingsPage.assertThresholdDialogError()
+        studentAlertSettingsPage.enterThreshold("51")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "51%")
     }
 
     @Test
     fun maxThreshold() {
         val data = initData()
         goToAlertSettings(data)
-        alertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
-        alertSettingsPage.enterThreshold("50")
-        alertSettingsPage.tapThresholdSaveButton()
-        alertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
-        alertSettingsPage.enterThreshold("51")
-        alertSettingsPage.assertThresholdDialogError()
-        alertSettingsPage.enterThreshold("49")
-        alertSettingsPage.assertThresholdDialogNotError()
-        alertSettingsPage.tapThresholdSaveButton()
-        alertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "49%")
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("50")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
+        studentAlertSettingsPage.enterThreshold("51")
+        studentAlertSettingsPage.assertThresholdDialogError()
+        studentAlertSettingsPage.enterThreshold("49")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "49%")
     }
 
     @Test
@@ -126,10 +126,10 @@ class AlertSettingsInteractionTest : ParentComposeTest() {
         val data = initData()
         goToAlertSettings(data)
         composeTestRule.waitForIdle()
-        alertSettingsPage.clickOverflowMenu()
-        alertSettingsPage.clickDeleteStudent()
-        alertSettingsPage.tapDeleteStudentButton()
-        manageStudentsPage.assertStudentItemNotDisplayed(data.students.first())
+        studentAlertSettingsPage.clickOverflowMenu()
+        studentAlertSettingsPage.clickDeleteStudent()
+        studentAlertSettingsPage.clickDeleteStudentButton()
+        manageStudentsPage.assertStudentItemNotDisplayed(data.students.first().shortName!!)
     }
 
     private fun initData(): MockCanvas {
@@ -146,9 +146,9 @@ class AlertSettingsInteractionTest : ParentComposeTest() {
         val parent = data.parents[0]
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickManageStudents()
-        manageStudentsPage.tapStudent(data.students.first().shortName!!)
+        manageStudentsPage.clickStudent(data.students.first().shortName!!)
     }
 
     override fun enableAndConfigureAccessibilityChecks() {

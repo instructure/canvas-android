@@ -25,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +44,9 @@ fun ListHeaderItem(text: String, modifier: Modifier = Modifier) {
             .background(colorResource(id = R.color.backgroundLight))
             .padding(horizontal = 16.dp)
             .wrapContentHeight(align = Alignment.CenterVertically)
+            .semantics {
+                heading()
+            }
     )
 }
 

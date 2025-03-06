@@ -59,7 +59,6 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.router.EnabledTabs
-import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
 import io.heap.autocapture.ViewAutocaptureSDK
@@ -78,10 +77,14 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     @Inject
     lateinit var enabledTabs: EnabledTabs
 
+    @Inject
+    lateinit var pandataAppKey: PandataInfo.AppKey
+
     private var loadInitialDataJob: Job? = null
 
     abstract fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
     abstract fun updateUnreadCount(unreadCount: Int)
+    abstract fun increaseUnreadCount(increaseBy: Int)
     abstract fun updateNotificationCount(notificationCount: Int)
     abstract fun initialCoreDataLoadingComplete()
 
@@ -137,7 +140,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             if (ApiPrefs.pandataInfo?.isValid != true) {
                 try {
                     ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
-                        PandataManager.getToken(StudentPageViewService.pandataAppKey, it)
+                        PandataManager.getToken(pandataAppKey, it)
                     }
                 } catch (ignore: Throwable) {
                     Logger.w("Unable to refresh pandata info")
@@ -262,6 +265,10 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         } catch {
 
         }
+    }
+
+    override fun updateUnreadCountOffline(increaseBy: Int) {
+        increaseUnreadCount(increaseBy)
     }
 
     override fun invalidateNotificationCount() {

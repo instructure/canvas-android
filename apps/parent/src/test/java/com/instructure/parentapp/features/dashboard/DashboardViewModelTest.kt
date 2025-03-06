@@ -82,7 +82,8 @@ class DashboardViewModelTest {
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
     private val inboxCountUpdaterFlow = MutableSharedFlow<Boolean>()
-    private val inboxCountUpdater: InboxCountUpdater = TestInboxCountUpdater(inboxCountUpdaterFlow)
+    private val increaseInboxCountFlow = MutableSharedFlow<Int>()
+    private val inboxCountUpdater: InboxCountUpdater = TestInboxCountUpdater(inboxCountUpdaterFlow, increaseInboxCountFlow)
     private val alertCountUpdaterFlow = MutableSharedFlow<Boolean>()
     private val alertCountUpdater: AlertCountUpdater = TestAlertCountUpdater(alertCountUpdaterFlow)
     private val analytics: Analytics = mockk(relaxed = true)
@@ -96,6 +97,11 @@ class DashboardViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
+        every { context.getString(R.string.a11y_studentSelectorExpand) } returns "expand"
+        every { context.getString(R.string.a11y_studentSelectorCollapse) } returns "collapse"
+        every { context.getString(R.string.a11y_studentSelectorContentDescription, any(), any()) } answers {
+            "Tap to ${secondArg<Array<Any>>()[0]} student selector, selected student is: ${secondArg<Array<Any>>()[1]}"
+        }
     }
 
     @After
@@ -234,13 +240,23 @@ class DashboardViewModelTest {
 
     @Test
     fun `Toggle student selector`() {
+        coEvery { repository.getStudents(any()) } returns listOf(User(shortName = "Short Name"))
+
         createViewModel()
 
         viewModel.toggleStudentSelector()
         assertTrue(viewModel.data.value.studentSelectorExpanded)
+        assertEquals(
+            "Tap to collapse student selector, selected student is: Short Name",
+            viewModel.data.value.studentSelectorContentDescription
+        )
 
         viewModel.toggleStudentSelector()
         assertFalse(viewModel.data.value.studentSelectorExpanded)
+        assertEquals(
+            "Tap to expand student selector, selected student is: Short Name",
+            viewModel.data.value.studentSelectorContentDescription
+        )
     }
 
     @Test
@@ -255,6 +271,21 @@ class DashboardViewModelTest {
 
         coEvery { repository.getUnreadCounts() } returns 1
         inboxCountUpdaterFlow.emit(true)
+
+        assertEquals(1, viewModel.data.value.unreadCount)
+    }
+
+    @Test
+    fun `Update unread count when the increase unread count flow triggers an update`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents(any()) } returns students
+        coEvery { repository.getUnreadCounts() } returns 0
+
+        createViewModel()
+
+        assertEquals(0, viewModel.data.value.unreadCount)
+
+        increaseInboxCountFlow.emit(1)
 
         assertEquals(1, viewModel.data.value.unreadCount)
     }

@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -70,6 +71,7 @@ class EventViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val reminderManager: ReminderManager = mockk(relaxed = true)
+    private val eventViewModelBehavior: EventViewModelBehavior = mockk(relaxed = true)
 
     private lateinit var viewModel: EventViewModel
 
@@ -535,7 +537,41 @@ class EventViewModelTest {
         }
     }
 
+    @Test
+    fun `Send message`() = runTest {
+        val event = scheduleItem.copy(contextCode = "course_1", contextName = "Course")
+        val canvasContext = CanvasContext.fromContextCode("course_1", "Course")
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns event
+        val options = InboxComposeOptions()
+        every { eventViewModelBehavior.getInboxComposeOptions(canvasContext, event) } returns options
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.OnMessageFabClicked)
+
+        coVerify {
+            eventViewModelBehavior.getInboxComposeOptions(canvasContext, event)
+        }
+
+        val expectedEvent = EventViewModelAction.NavigateToComposeMessageScreen(options)
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
     private fun createViewModel() {
-        viewModel = EventViewModel(savedStateHandle, context, eventRepository, htmlContentFormatter, apiPrefs, themePrefs, reminderManager)
+        viewModel = EventViewModel(
+            savedStateHandle,
+            context,
+            eventRepository,
+            htmlContentFormatter,
+            apiPrefs,
+            themePrefs,
+            reminderManager,
+            eventViewModelBehavior
+        )
     }
 }

@@ -35,6 +35,7 @@ data class CalendarUiState(
     val bodyUiState: CalendarBodyUiState,
     val scrollToPageOffset: Int = 0,
     val pendingSelectedDay: LocalDate? = null, // Temporary selected date when the calendar is animating to a new month
+    val todayTapped: Boolean = false
 )
 
 data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String, val loadingMonths: Boolean = false)
@@ -115,6 +116,7 @@ sealed class CalendarAction {
     data object AddEventTapped : CalendarAction()
     data object RefreshCalendar : CalendarAction()
     data object PullToRefresh : CalendarAction()
+    data object TodayTapHandled : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {

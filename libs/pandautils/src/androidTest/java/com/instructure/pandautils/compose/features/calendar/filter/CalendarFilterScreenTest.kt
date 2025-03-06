@@ -27,7 +27,7 @@ import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onChild
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -107,22 +107,22 @@ class CalendarFilterScreenTest {
             ), actionHandler = {}) {}
         }
 
-        composeTestRule.onNodeWithText("User 1").assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNodeWithText("User 1").onChild().assertIsOff()
+        composeTestRule.onNodeWithContentDescription("User 1").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("User 1").assertIsOff()
 
         val courseHeader = composeTestRule.onNodeWithText("Courses")
         courseHeader.assertIsDisplayed()
-        composeTestRule.onNodeWithText("Course 1").assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNodeWithText("Course 1").onChild().assertIsOn()
-        composeTestRule.onNodeWithText("Course 2").assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNodeWithText("Course 2").onChild().assertIsOff()
+        composeTestRule.onNodeWithContentDescription("Course 1").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("Course 1").assertIsOn()
+        composeTestRule.onNodeWithContentDescription("Course 2").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("Course 2").assertIsOff()
 
         val groupHeader = composeTestRule.onNodeWithText("Groups")
         groupHeader.assertIsDisplayed()
-        composeTestRule.onNodeWithText("Group 1").assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNodeWithText("Group 1").onChild().assertIsOff()
-        composeTestRule.onNodeWithText("Group 2").assertIsDisplayed().assertHasClickAction()
-        composeTestRule.onNodeWithText("Group 2").onChild().assertIsOn()
+        composeTestRule.onNodeWithContentDescription("Group 1").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("Group 1").assertIsOff()
+        composeTestRule.onNodeWithContentDescription("Group 2").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("Group 2").assertIsOn()
     }
 
     @Test
@@ -261,7 +261,7 @@ class CalendarFilterScreenTest {
             ), actionHandler = { actions.add(it) }) {}
         }
 
-        composeTestRule.onNodeWithText("Course 1").performClick()
+        composeTestRule.onNodeWithContentDescription("Course 1").performClick()
 
         assertEquals(CalendarFilterAction.ToggleFilter("course_1"), actions.last())
     }

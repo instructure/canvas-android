@@ -26,8 +26,9 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.utils.isNotUser
 import com.instructure.pandautils.blueprint.SyncPresenter
+import com.instructure.pandautils.utils.isNotUser
+import com.instructure.teacher.R
 import kotlinx.coroutines.Job
 
 class FileSearchPresenter(val canvasContext: CanvasContext) :
@@ -36,6 +37,7 @@ class FileSearchPresenter(val canvasContext: CanvasContext) :
     private var apiCall: Job? = null
 
     private var createFolderCall: Job? = null
+    private var deleteFileFolderJob: Job? = null
 
     private var loadedUsageRights = false
 
@@ -85,6 +87,24 @@ class FileSearchPresenter(val canvasContext: CanvasContext) :
         }
     }
 
+    fun deleteFileFolder(fileFolder: FileFolder) {
+        deleteFileFolderJob = tryWeave {
+            viewCallback?.onRefreshStarted()
+            val deletedFileFolder =
+                if (fileFolder.isFile) {
+                    awaitApi<FileFolder> { FileFolderManager.deleteFile(fileFolder.id, it) }
+                } else {
+                    awaitApi { FileFolderManager.deleteFolder(fileFolder.id, it) }
+                }
+
+            viewCallback?.onRefreshFinished()
+            viewCallback?.fileFolderDeleted(deletedFileFolder)
+        } catch {
+            viewCallback?.onRefreshFinished()
+            viewCallback?.fileFolderDeleteError(if (fileFolder.isFile) R.string.errorDeletingFile else R.string.errorDeletingFolder)
+        }
+    }
+
     override fun compare(item1: FileFolder, item2: FileFolder): Int {
         val name1: String = if (item1.displayName.isValid()) item1.displayName!! else item1.name.orEmpty()
         val name2: String = if (item2.displayName.isValid()) item2.displayName!! else item2.name.orEmpty()
@@ -100,6 +120,7 @@ class FileSearchPresenter(val canvasContext: CanvasContext) :
     override fun onDestroyed() {
         apiCall?.cancel()
         createFolderCall?.cancel()
+        deleteFileFolderJob?.cancel()
     }
 
     companion object {

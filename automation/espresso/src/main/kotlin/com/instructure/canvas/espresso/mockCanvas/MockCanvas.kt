@@ -309,6 +309,9 @@ class MockCanvas {
 
     val pairingCodes = mutableMapOf<String, User>()
 
+    var inboxSignature = ""
+    var signatureEnabled = true
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -697,7 +700,8 @@ fun MockCanvas.addCourseCalendarEvent(
 
 fun MockCanvas.addUserCalendarEvent(
     userId: Long,
-    date: String,
+    startDate: String,
+    endDate: String?,
     title: String,
     description: String,
     isImportantDate: Boolean = false,
@@ -710,10 +714,10 @@ fun MockCanvas.addUserCalendarEvent(
         title = title,
         description = description,
         itemType = ScheduleItem.Type.TYPE_CALENDAR,
-        isAllDay = true,
-        allDayAt = date,
-        startAt = date,
-        endAt = date,
+        isAllDay = endDate == null,
+        allDayAt = startDate,
+        startAt = startDate,
+        endAt = endDate,
         contextCode = "user_$userId",
         contextName = "User $userId",
         importantDates = isImportantDate,

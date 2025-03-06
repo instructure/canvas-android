@@ -18,6 +18,7 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.pandautils.features.lti.LtiLaunchRepository
 import dagger.Module
 import dagger.Provides
@@ -31,8 +32,9 @@ class LtiLaunchModule {
     @Provides
     fun provideLtiLaunchRepository(
         launchDefinitionsInterface: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
-        assignmentApi: AssignmentAPI.AssignmentInterface
+        assignmentApi: AssignmentAPI.AssignmentInterface,
+        oAuthInterface: OAuthAPI.OAuthInterface
     ): LtiLaunchRepository {
-        return LtiLaunchRepository(launchDefinitionsInterface, assignmentApi)
+        return LtiLaunchRepository(launchDefinitionsInterface, assignmentApi, oAuthInterface)
     }
 }

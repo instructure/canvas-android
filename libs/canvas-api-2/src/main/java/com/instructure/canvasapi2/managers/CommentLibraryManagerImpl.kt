@@ -56,8 +56,6 @@ class CommentLibraryManagerImpl : CommentLibraryManager {
             .nextCursor(nextCursor)
             .build()
 
-        callback.enqueueQuery(query) {
-            cachePolicy = HttpCachePolicy.NETWORK_FIRST
-        }
+        callback.enqueueQuery(query, forceNetwork = true)
     }
 }

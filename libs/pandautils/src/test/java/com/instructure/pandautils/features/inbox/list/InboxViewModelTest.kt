@@ -22,7 +22,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -224,9 +223,9 @@ class InboxViewModelTest {
         viewModel.itemViewModels.value!![0].onClick(View(context))
 
         val events = mutableListOf<Event<InboxAction>>()
-        viewModel.events.observeForever(Observer {
+        viewModel.events.observeForever {
             events.add(it)
-        })
+        }
 
         assertTrue(events.any { it.peekContent() == InboxAction.OpenConversation(conversation, InboxApi.Scope.INBOX) })
     }
@@ -241,9 +240,9 @@ class InboxViewModelTest {
         viewModel.itemViewModels.value!![0].onAvatarClick(View(context))
 
         val events = mutableListOf<Event<InboxAction>>()
-        viewModel.events.observeForever(Observer {
+        viewModel.events.observeForever {
             events.add(it)
-        })
+        }
 
         assertTrue(events.any { it.peekContent() == InboxAction.AvatarClickedCallback(conversation, InboxApi.Scope.INBOX) })
     }
@@ -318,6 +317,7 @@ class InboxViewModelTest {
         assertTrue(viewModel.itemViewModels.value!![0].data.unread)
         assertTrue(viewModel.itemViewModels.value!![1].data.unread)
         coVerify { inboxRepository.batchUpdateConversations(any(), eq("mark_as_unread")) }
+        assertEquals(InboxAction.UpdateUnreadCountOffline(2), viewModel.events.value!!.peekContent())
     }
 
     @Test
@@ -327,7 +327,6 @@ class InboxViewModelTest {
             DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))), // We need an other call for the scope change
             DataResult.Success(emptyList())
         )
-        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
 
         viewModel = createViewModel()
         viewModel.data.observe(lifecycleOwner) {}
@@ -338,6 +337,7 @@ class InboxViewModelTest {
 
         assertTrue(viewModel.itemViewModels.value!!.isEmpty())
         coVerify { inboxRepository.batchUpdateConversations(any(), eq("mark_as_unread")) }
+        assertEquals(InboxAction.UpdateUnreadCountOffline(2), viewModel.events.value!!.peekContent())
     }
 
     @Test
@@ -356,6 +356,7 @@ class InboxViewModelTest {
         assertFalse(viewModel.itemViewModels.value!![0].data.unread)
         assertFalse(viewModel.itemViewModels.value!![1].data.unread)
         coVerify { inboxRepository.batchUpdateConversations(any(), eq("mark_as_read")) }
+        assertEquals(InboxAction.UpdateUnreadCountOffline(-2), viewModel.events.value!!.peekContent())
     }
 
     @Test
@@ -376,6 +377,7 @@ class InboxViewModelTest {
 
         assertTrue(viewModel.itemViewModels.value!!.isEmpty())
         coVerify { inboxRepository.batchUpdateConversations(any(), eq("mark_as_read")) }
+        assertEquals(InboxAction.UpdateUnreadCountOffline(-2), viewModel.events.value!!.peekContent())
     }
 
     @Test
@@ -386,6 +388,11 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever {
+            events.add(it)
+        }
+
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.deleteSelected()
@@ -393,6 +400,33 @@ class InboxViewModelTest {
         assertEquals(1, viewModel.itemViewModels.value!!.size)
         assertEquals(2, viewModel.itemViewModels.value!![0].data.id)
         coVerify { inboxRepository.batchUpdateConversations(any(), eq("destroy")) }
+
+        assertFalse(events.any { it.peekContent() is InboxAction.UpdateUnreadCountOffline })
+    }
+
+    @Test
+    fun `Remove selected unread items from the list when deleted`() {
+        coEvery { inboxRepository.getConversations(any(), any(), any(), any()) }.returnsMany(
+            DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
+            DataResult.Success(emptyList())
+        )
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
+
+        viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever {
+            events.add(it)
+        }
+
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.itemViewModels.value!![0].onLongClick(View(context))
+        viewModel.deleteSelected()
+
+        assertEquals(1, viewModel.itemViewModels.value!!.size)
+        assertEquals(2, viewModel.itemViewModels.value!![0].data.id)
+        coVerify { inboxRepository.batchUpdateConversations(any(), eq("destroy")) }
+
+        assertTrue(events.any { it.peekContent() == InboxAction.UpdateUnreadCountOffline(-1) })
     }
 
     @Test
@@ -401,8 +435,14 @@ class InboxViewModelTest {
             DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2))),
             DataResult.Success(emptyList())
         )
+        every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
 
         viewModel = createViewModel()
+        val events = mutableListOf<Event<InboxAction>>()
+        viewModel.events.observeForever {
+            events.add(it)
+        }
+
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.itemViewModels.value!![1].onLongClick(View(context))
         viewModel.archiveSelected()
@@ -410,6 +450,7 @@ class InboxViewModelTest {
         assertEquals(1, viewModel.itemViewModels.value!!.size)
         assertEquals(1, viewModel.itemViewModels.value!![0].data.id)
         coVerify { inboxRepository.batchUpdateConversations(any(), eq("archive")) }
+        assertTrue(events.any { it.peekContent() == InboxAction.UpdateUnreadCountOffline(-1) })
     }
 
     @Test
@@ -679,9 +720,9 @@ class InboxViewModelTest {
 
         viewModel = createViewModel()
         val events = mutableListOf<Event<InboxAction>>()
-        viewModel.events.observeForever(Observer {
+        viewModel.events.observeForever {
             events.add(it)
-        })
+        }
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.archiveConversation(1)
 
@@ -742,9 +783,9 @@ class InboxViewModelTest {
 
         viewModel = createViewModel()
         val events = mutableListOf<Event<InboxAction>>()
-        viewModel.events.observeForever(Observer {
+        viewModel.events.observeForever {
             events.add(it)
-        })
+        }
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.UNREAD)
         viewModel.markConversationAsRead(1)
@@ -806,9 +847,9 @@ class InboxViewModelTest {
 
         viewModel = createViewModel()
         val events = mutableListOf<Event<InboxAction>>()
-        viewModel.events.observeForever(Observer {
+        viewModel.events.observeForever {
             events.add(it)
-        })
+        }
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
         viewModel.markConversationAsUnread(1)
@@ -853,9 +894,9 @@ class InboxViewModelTest {
 
         viewModel = createViewModel()
         val events = mutableListOf<Event<InboxAction>>()
-        viewModel.events.observeForever(Observer {
+        viewModel.events.observeForever {
             events.add(it)
-        })
+        }
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.unstarConversation(1)
@@ -898,9 +939,9 @@ class InboxViewModelTest {
 
         viewModel = createViewModel()
         val events = mutableListOf<Event<InboxAction>>()
-        viewModel.events.observeForever(Observer {
+        viewModel.events.observeForever {
             events.add(it)
-        })
+        }
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.unarchiveConversation(1)
@@ -913,6 +954,14 @@ class InboxViewModelTest {
             inboxRepository.updateConversation(1, Conversation.WorkflowState.READ, any())
             inboxRepository.updateConversation(1, Conversation.WorkflowState.ARCHIVED, any())
         }
+    }
+
+    @Test
+    fun `Inbox signature is fetched on init`() {
+        viewModel = createViewModel()
+        viewModel.data.observe(lifecycleOwner) {}
+
+        coVerify { inboxRepository.getInboxSignature() }
     }
 
     private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)

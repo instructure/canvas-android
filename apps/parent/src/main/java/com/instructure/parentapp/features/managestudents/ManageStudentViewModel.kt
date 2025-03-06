@@ -148,6 +148,10 @@ class ManageStudentViewModel @Inject constructor(
                         }
                     )
                 }
+
+                viewModelScope.launch {
+                    _events.send(ManageStudentsViewModelAction.AccessibilityAnnouncement(context.getString(R.string.manageStudentsColorSavedSuccessfully)))
+                }
             } else {
                 showSavingError()
             }
@@ -175,6 +179,10 @@ class ManageStudentViewModel @Inject constructor(
                 )
             )
         }
+
+        viewModelScope.launch {
+            _events.send(ManageStudentsViewModelAction.AccessibilityAnnouncement(context.getString(R.string.errorSavingColor)))
+        }
     }
 
     fun handleAction(action: ManageStudentsAction) {
@@ -192,6 +200,7 @@ class ManageStudentViewModel @Inject constructor(
                     _events.send(ManageStudentsViewModelAction.AddStudent)
                 }
             }
+
             is ManageStudentsAction.ShowColorPickerDialog -> _uiState.update {
                 it.copy(
                     colorPickerDialogUiState = it.colorPickerDialogUiState.copy(

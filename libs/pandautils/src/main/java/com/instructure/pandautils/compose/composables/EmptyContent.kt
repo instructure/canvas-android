@@ -52,7 +52,7 @@ fun EmptyContent(
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.testTag("EmptyContent")
     ) {
         Image(
             painter = painterResource(id = imageRes),

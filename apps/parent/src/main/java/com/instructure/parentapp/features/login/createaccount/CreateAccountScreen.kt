@@ -107,7 +107,8 @@ internal fun CreateAccountScreen(
                     modifier = Modifier
                         .padding(padding)
                         .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState()),
+                        .verticalScroll(rememberScrollState())
+                        .testTag("CreateAccountScreen"),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

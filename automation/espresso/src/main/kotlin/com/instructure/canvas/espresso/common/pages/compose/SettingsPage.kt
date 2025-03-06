@@ -16,7 +16,6 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -39,12 +38,32 @@ import com.instructure.pandautils.utils.AppTheme
 
 class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
-    fun assertSettingsItemDisplayed(title: String) {
-        composeTestRule.onNode(
-            hasTestTag("settingsItem").and(hasAnyDescendant(hasText(title))),
-            useUnmergedTree = true
-        )
-            .assertIsDisplayed()
+    fun assertSettingsItemDisplayed(title: String, subtitle: String? = null) {
+        retry(catchBlock = {
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            val y = device.displayHeight / 2
+            val x = device.displayWidth / 2
+            device.swipe(
+                x,
+                y,
+                x,
+                0,
+                10
+            )
+        }) {
+            composeTestRule.onNode(
+                hasTestTag("settingsItem").and(hasAnyDescendant(hasText(title))),
+                useUnmergedTree = true
+            )
+                .assertIsDisplayed()
+            if (subtitle != null) {
+                composeTestRule.onNode(
+                    hasTestTag("settingsItem").and(hasAnyDescendant(hasText(subtitle))),
+                    useUnmergedTree = true
+                )
+                    .assertIsDisplayed()
+            }
+        }
     }
 
     fun clickOnSettingsItem(title: String) {
@@ -103,49 +122,8 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
             .performClick()
     }
 
-    fun clickOnSyncSettingsItem() {
-        retry(catchBlock = {
-            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-            val y = device.displayHeight / 2
-            val x = device.displayWidth / 2
-            device.swipe(
-                x,
-                y,
-                x,
-                0,
-                10
-            )
-        }) {
-            composeTestRule.onNode(
-                hasTestTag("syncSettingsItem"),
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-                .performClick()
-        }
-    }
-
     fun clickOnSubscribeButton() {
         onViewWithText("Subscribe").click()
-    }
-
-    fun assertOfflineContentDisplayed() {
-        retry(catchBlock = {
-            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-            val y = device.displayHeight / 2
-            val x = device.displayWidth / 2
-            device.swipe(
-                x,
-                y,
-                x,
-                0,
-                10
-            )
-        }) {
-            composeTestRule.onNode(
-                hasTestTag("syncSettingsItem"),
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-        }
     }
 
     fun assertOfflineSyncSettingsStatus(status: String) {
@@ -167,8 +145,9 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertOfflineContentNotDisplayed() {
         composeTestRule.onNode(
-            hasTestTag("syncSettingsItem"),
+            hasTestTag("settingsItem").and(hasAnyDescendant(hasText("Synchronization"))),
             useUnmergedTree = true
-        ).assertIsNotDisplayed()
+        )
+            .assertDoesNotExist()
     }
 }

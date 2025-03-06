@@ -363,6 +363,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
             is InboxAction.ConfirmDelete -> deleteSelected(action.count)
             is InboxAction.AvatarClickedCallback -> inboxRouter.avatarClicked(action.conversation, action.scope)
             InboxAction.DismissSnackbar -> confirmationSnackbar?.dismiss()
+            is InboxAction.UpdateUnreadCountOffline -> onUnreadCountInvalidated?.updateUnreadCountOffline(action.increaseBy)
         }
     }
 
@@ -476,4 +477,5 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
 
 interface OnUnreadCountInvalidated {
     fun invalidateUnreadCount()
+    fun updateUnreadCountOffline(increaseBy: Int)
 }

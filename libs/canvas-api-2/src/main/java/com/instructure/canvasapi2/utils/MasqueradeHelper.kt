@@ -114,7 +114,7 @@ object MasqueradeHelper {
                             cleanupMasquerading(ContextKeeper.appContext)
                             // isMasquerading is already set so this will set the masqueradeUser
                             ApiPrefs.user = response.body()
-                            ApiPrefs.isFirstMasqueradingStart = true
+                            ApiPrefs.webViewAuthenticationTimestamp = 0 // Reset the timestamp so the WebViews will authenticate for the new user
                             restartApplication(startingClass)
                         }
                     }

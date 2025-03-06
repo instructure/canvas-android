@@ -17,33 +17,35 @@
 package com.instructure.teacher.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
-import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
+import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CONFIRM_DELETE_FILE_FOLDER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasAppCompatDialogFragment
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.teacher.R
-import com.instructure.pandautils.utils.BlindSerializableArg
-import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.dismissExisting
+import com.instructure.teacher.R
+import com.instructure.teacher.interfaces.ConfirmDeleteFileCallback
 
 @ScreenView(SCREEN_VIEW_CONFIRM_DELETE_FILE_FOLDER)
 class ConfirmDeleteFileFolderDialog : BaseCanvasAppCompatDialogFragment() {
 
-    private var deleteCallback: (() -> Unit)? by BlindSerializableArg()
-    private var isFile: Boolean by BooleanArg(false)
+    private var deleteCallback: ((FileFolder) -> Unit)? = null
+    private var fileFolder: FileFolder by ParcelableArg()
 
     init { retainInstance = true }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val dialog = AlertDialog.Builder(requireContext())
-                .setTitle(if (isFile) R.string.deleteFile else R.string.deleteFolder)
-                .setMessage(if (isFile) R.string.deleteFileMessage else R.string.deleteFolderMessage)
-                .setPositiveButton(R.string.delete, { _, _ -> deleteCallback?.invoke() })
-                .setNegativeButton(R.string.cancel, null)
+                .setTitle(if (fileFolder.isFile) R.string.deleteFile else R.string.deleteFolder)
+                .setMessage(if (fileFolder.isFile) R.string.deleteFileMessage else R.string.deleteFolderMessage)
+                .setPositiveButton(R.string.delete) { _, _ -> deleteCallback?.invoke(fileFolder) }
+            .setNegativeButton(R.string.cancel, null)
                 .create()
         return dialog.apply {
             setOnShowListener {
@@ -53,18 +55,29 @@ class ConfirmDeleteFileFolderDialog : BaseCanvasAppCompatDialogFragment() {
         }
     }
 
-    override fun onDestroyView() {
+    override fun onDetach() {
         deleteCallback = null
-        // Fix for rotation bug
-        dialog?.let { if (retainInstance) it.setDismissMessage(null) }
-        super.onDestroyView()
+        super.onDetach()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        deleteCallback = getDeleteCallback()
+    }
+
+    private fun getDeleteCallback(): ((FileFolder) -> Unit)? {
+        val parent = parentFragment
+        return if (parent is ConfirmDeleteFileCallback) {
+            parent.onConfirmDeleteFile
+        } else {
+            null
+        }
     }
 
     companion object {
-        fun show(manager: FragmentManager, isFile: Boolean, listener: () -> Unit) = ConfirmDeleteFileFolderDialog().apply {
+        fun show(manager: FragmentManager, fileFolder: FileFolder) = ConfirmDeleteFileFolderDialog().apply {
             manager.dismissExisting<ConfirmDeleteFileFolderDialog>()
-            deleteCallback = listener
-            this.isFile = isFile
+            this.fileFolder = fileFolder
             show(manager, javaClass.simpleName)
         }
     }

@@ -32,7 +32,6 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
-import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -50,6 +49,7 @@ import com.instructure.loginapi.login.adapter.DomainAdapter
 import com.instructure.loginapi.login.databinding.ActivityFindSchoolBinding
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler

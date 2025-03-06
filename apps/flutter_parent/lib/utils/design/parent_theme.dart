@@ -175,10 +175,13 @@ class _ParentThemeState extends State<ParentTheme> {
   bool get isDarkHC => isDarkMode && isHC;
 
   /// Returns a Parent App theme that ignores student color
-  ThemeData get defaultTheme => _buildTheme(getColorVariantForCurrentState(StudentColorSet.electric));
+  ThemeData get defaultTheme => _buildTheme(getColorVariantForCurrentState(StudentColorSet.electric), isDarkMode);
+
+  /// Returns a light Parent App theme that ignores student color
+  ThemeData get defaultLightTheme => _buildTheme(getColorVariantForCurrentState(StudentColorSet.electric), false);
 
   /// Returns a Parent App theme styled with the color of the currently selected student
-  ThemeData get studentTheme => _buildTheme(studentColor);
+  ThemeData get studentTheme => _buildTheme(studentColor, isDarkMode);
 
   /// Create a preferred size divider that can be used as the bottom of an app bar
   PreferredSize _appBarDivider(Color color) => PreferredSize(
@@ -238,7 +241,7 @@ class _ParentThemeState extends State<ParentTheme> {
   /// The green 'success' color appropriate for the current light/dark/HC mode
   Color get successColor => getColorVariantForCurrentState(StudentColorSet.shamrock);
 
-  ThemeData _buildTheme(Color themeColor) {
+  ThemeData _buildTheme(Color themeColor, bool isDarkMode) {
     var textTheme = _buildTextTheme(onSurfaceColor);
 
     // Use single text color for all styles in high-contrast mode
@@ -270,7 +273,7 @@ class _ParentThemeState extends State<ParentTheme> {
         : IconThemeData(color: ParentColors.licorice);
     var dividerColor = isHC ? onSurfaceColor : isDarkMode ? ParentColors
         .licorice : ParentColors.tiara;
-    var dialogBackgroundColor = isDarkMode ? Colors.black : Colors.white;
+    var dialogBackgroundColor = isDarkMode ? ParentColors.licorice : ParentColors.tiara;
 
     var swatch = ParentColors.makeSwatch(themeColor);
 
@@ -293,10 +296,6 @@ class _ParentThemeState extends State<ParentTheme> {
       buttonTheme: ButtonThemeData(
           height: 48, minWidth: 120, textTheme: ButtonTextTheme.primary),
       fontFamily: 'Lato',
-      dialogTheme: DialogTheme(
-        backgroundColor: dialogBackgroundColor,
-        surfaceTintColor: Colors.white,
-      ),
       tabBarTheme: TabBarTheme(
         labelStyle: primaryTextTheme.titleMedium?.copyWith(fontSize: 14),
         labelColor: primaryTextTheme.titleMedium?.color,

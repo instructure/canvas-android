@@ -22,6 +22,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsRouter
+import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.AppType
 import com.instructure.teacher.fragments.FeatureFlagsFragment
@@ -67,5 +68,12 @@ class TeacherSettingsRouter(private val activity: FragmentActivity) : SettingsRo
 
     override fun navigateToRateApp() {
         RatingDialog.showRateDialog(activity, AppType.TEACHER)
+    }
+
+    override fun navigateToInboxSignature() {
+        RouteMatcher.route(
+            activity,
+            Route(null, InboxSignatureFragment::class.java)
+        )
     }
 }

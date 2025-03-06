@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
@@ -33,13 +34,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.isVisible
+import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
@@ -92,9 +92,10 @@ import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
-import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -113,7 +114,6 @@ import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
-import com.instructure.teacher.services.TeacherPageViewService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
@@ -147,10 +147,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     lateinit var featureFlagProvider: FeatureFlagProvider
 
     @Inject
-    lateinit var oAuthApi: OAuthAPI.OAuthInterface
+    lateinit var alarmScheduler: AlarmScheduler
 
     @Inject
-    lateinit var alarmScheduler: AlarmScheduler
+    lateinit var webViewAuthenticator: WebViewAuthenticator
+
+    @Inject
+    lateinit var pandataAppKey: PandataInfo.AppKey
 
     private var selectedTab = 0
     private var drawerItemSelectedJob: Job? = null
@@ -253,7 +256,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             if (ApiPrefs.pandataInfo?.isValid != true) {
                 try {
                     ApiPrefs.pandataInfo = awaitApi<PandataInfo> {
-                        PandataManager.getToken(TeacherPageViewService.pandataAppKey, it)
+                        PandataManager.getToken(pandataAppKey, it)
                     }
                 } catch (ignore: Throwable) {
                     Logger.w("Unable to refresh pandata info")
@@ -264,22 +267,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         fetchFeatureFlags()
 
         requestNotificationsPermission()
-
-        if (ApiPrefs.isFirstMasqueradingStart) {
-            loadAuthenticatedSession()
-            ApiPrefs.isFirstMasqueradingStart = false
-        }
     }
 
-    private fun loadAuthenticatedSession() {
-        lifecycleScope.launch {
-            oAuthApi.getAuthenticatedSession(
-                ApiPrefs.fullDomain,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull?.sessionUrl?.let {
-                loadUrlIntoHeadlessWebView(this@InitActivity, it)
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 
     private fun requestNotificationsPermission() {
@@ -402,6 +394,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 R.id.navigationDrawerSettings -> {
                     RouteMatcher.route(this@InitActivity, Route(SettingsFragment::class.java, ApiPrefs.user))
                 }
+                R.id.navigationDrawerItem_closeDrawer -> {
+                    closeNavigationDrawer()
+                }
             }
         }
     }
@@ -437,6 +432,36 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItemHelp.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemStartMasquerading.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItemCloseDrawer.setOnClickListener(navDrawerOnClick)
+        listOf(
+            navigationDrawerItemFiles,
+            navigationDrawerItemGauge,
+            navigationDrawerItemArc,
+            navigationDrawerItemMastery,
+            navigationDrawerItemChangeUser,
+            navigationDrawerItemHelp,
+            navigationDrawerItemLogout,
+            navigationDrawerSettings,
+            navigationDrawerItemStartMasquerading,
+            navigationDrawerItemStopMasquerading,
+            navigationDrawerItemCloseDrawer
+        ).forEach {
+            it.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                override fun onInitializeAccessibilityNodeInfo(
+                    host: View,
+                    info: AccessibilityNodeInfo
+                ) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    info.className = "android.widget.Button"
+                }
+            }
+        }
+
+        binding.drawerLayout.addDrawerListener(object : SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                setCloseDrawerVisibility()
+            }
+        })
 
         // Set up Color Overlay setting
         setUpColorOverlaySwitch()
@@ -519,6 +544,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     override fun invalidateUnreadCount() {
         presenter?.updateUnreadCount()
+    }
+
+    override fun updateUnreadCountOffline(increaseBy: Int) {
+        updateInboxUnreadCount(binding.bottomBar.getOrCreateBadge(R.id.tab_inbox).number + increaseBy)
     }
 
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) = with(binding) {
@@ -740,6 +769,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
+    }
+
+    private fun setCloseDrawerVisibility() {
+        navigationDrawerBinding.navigationDrawerItemCloseDrawer.setVisible(isAccessibilityEnabled(this))
     }
 
     //endregion

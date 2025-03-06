@@ -60,6 +60,15 @@ open class PersonContextPage : BasePage(R.id.studentContextPage) {
     }
 
     /**
+     * Asserts the display of course information.
+     *
+     * @param courseNameText The course's name to assert.
+     */
+    fun assertDisplaysCourseInfo(courseNameText: String) {
+        courseName.assertHasText(courseNameText)
+    }
+
+    /**
      * Asserts the section name view based on the user role.
      *
      * @param userRole The user role.

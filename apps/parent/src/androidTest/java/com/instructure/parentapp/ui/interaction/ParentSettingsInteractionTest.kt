@@ -54,7 +54,7 @@ class ParentSettingsInteractionTest : SettingsInteractionTest() {
         val parent = data.parents.first()
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickSettings()
     }
 

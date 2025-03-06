@@ -35,4 +35,6 @@ interface SettingsRouter {
 
     fun navigateToRateApp() = Unit
 
+    fun navigateToInboxSignature() = Unit
+
 }

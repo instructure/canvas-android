@@ -82,7 +82,7 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
     fun selectFrequency(frequency: String) {
         composeTestRule.onNodeWithText("Frequency").performScrollTo().performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(frequency).performClick()
+        composeTestRule.onNodeWithText(frequency, useUnmergedTree = true).performClick()
         composeTestRule.waitForIdle()
     }
 

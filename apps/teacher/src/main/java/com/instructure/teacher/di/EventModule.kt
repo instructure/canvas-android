@@ -19,11 +19,14 @@ package com.instructure.teacher.di
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior
 import com.instructure.teacher.features.calendarevent.TeacherEventRouter
+import com.instructure.teacher.features.calendarevent.TeacherEventViewModelBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -32,5 +35,15 @@ class EventModule {
     @Provides
     fun provideEventRouter(activity: FragmentActivity): EventRouter {
         return TeacherEventRouter(activity)
+    }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class EventViewModelModule {
+
+    @Provides
+    fun provideEventViewModelBehavior(): EventViewModelBehavior {
+        return TeacherEventViewModelBehavior()
     }
 }

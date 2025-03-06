@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.parentapp.features.alerts.settings.AlertSettingsScreen
 import com.instructure.parentapp.features.alerts.settings.AlertSettingsUiState
-import com.instructure.parentapp.ui.pages.AlertSettingsPage
+import com.instructure.parentapp.ui.pages.StudentAlertSettingsPage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,7 +40,7 @@ class AlertSettingsScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val page = AlertSettingsPage(composeTestRule)
+    private val page = StudentAlertSettingsPage(composeTestRule)
 
     @Test
     fun assertLoading() {
@@ -268,19 +268,7 @@ class AlertSettingsScreenTest {
 
         page.clickOverflowMenu()
         page.clickDeleteStudent()
-        composeTestRule.onNodeWithTag("deleteDialogTitle")
-            .assertExists()
-            .assertTextEquals("Delete")
-        composeTestRule.onNodeWithText("This will unpair and remove all enrollments for this student from you account.")
-            .assertExists()
-        composeTestRule.onNodeWithTag("deleteConfirmButton")
-            .assertTextEquals("Delete")
-            .assertExists()
-            .assertHasClickAction()
-        composeTestRule.onNodeWithTag("deleteCancelButton")
-            .assertTextEquals("Cancel")
-            .assertExists()
-            .assertHasClickAction()
+        page.assertDeleteStudentDialogDetails()
     }
 
     @Test

@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Podes abrir detalhes de Submissão a partir daqui</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Clique aqui para ver os detalhes da submissão e da rubrica</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nota: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Selecionar Disciplina ou Grupo</string>
     <string name="inboxClearFilter">Limpar</string>
     <string name="a11y_courseFilterContentDescription">Filtro da disciplina: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Seleção da caixa de correio: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">selecionar</string>
     <string name="a11y_itemSelectedSwipeForActions">Conversação selecionada. Modo de selecção ativado. Navegar para ações.</string>
     <string name="a11y_conversationSelected">Conversação selecionada.</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Outras aplicações</string>
     <string name="offline_content_canvas_student">Aluno Canvas</string>
     <string name="offline_content_remaining">Restante</string>
+    <string name="offline_content_storage_info_a11y_description">Informações de armazenamento: %s De %s Usados, Outras Aplicações %d%%, Canvas Student %d%%, Restantes %d%%</string>
     <string name="offline_content_all_courses">Todas as disciplinas</string>
     <string name="offline_content_sync">Sincronizar</string>
     <string name="offline_content_selected">%d Selecionado</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Sincronizar</string>
     <string name="offline_content_sync_loading_title">A carregar...</string>
     <string name="offline_content_sync_loading_message">Aguente firme, estamos a preparar tudo para si.</string>
+    <string name="offline_content_a11y_sync_started_announcement">As definições de sincronização offline foram guardadas. A sincronização começará em breve em segundo plano.</string>
     <string name="content_description_expand_content">Expandir conteúdo</string>
+    <string name="content_description_expand_content_with_param">Expandir conteúdo, %s</string>
     <string name="content_description_collapse_content">Recolher conteúdo</string>
+    <string name="content_description_collapse_content_with_param">Recolher conteúdos, %s</string>
     <string name="syncSettings_autoContentSyncDescription">A ativação da Sincronização automática de conteúdos encarregar-se-á de descarregar o conteúdo selecionado com base nas definições abaixo. A sincronização de conteúdos ocorrerá mesmo que a aplicação não esteja a ser executada. Se a definição estiver desativada, não será efetuada qualquer sincronização. O conteúdo já transferido não será eliminado.</string>
     <string name="syncSettings_syncFrequencyTitle">Frequência de sincronização</string>
     <string name="syncSettings_autoContentSyncTitle">Sincronização automática de conteúdos</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Anular publicação</string>
     <string name="discussionMenuRefresh">Atualizar</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Saltar para hoje</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Ir para Hoje, o dia selecionado é %s, hoje é %s</string>
     <string name="a11y_calendarSwitchToMonthView">Mudar para a vista mensal</string>
     <string name="a11y_calendarSwitchToWeekView">Mudar para a vista semanal</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Alternar entre a visualização mensal e semanal</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">O calendário está na vista mensal</string>
+    <string name="a11y_calendarWeekView">O calendário está na vista semanal</string>
+    <string name="a11y_calendarSwitchedToWeekView">Calendário alterado para vista semanal</string>
+    <string name="a11y_calendarSwitchedToMonthView">Calendário alterado para vista mensal</string>
     <string name="calendarNoEvents">Nenhum evento hoje!</string>
     <string name="calendarNoEventsDescription">Parece um ótimo dia para descansar, relaxar e recarregar.</string>
     <string name="userCalendarToDo">A Fazer</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Só é possível selecionar um máximo de %d calendários.</string>
     <string name="calendarFilterTitle">Calendários</string>
     <string name="calendarFiltersFailed">Falha ao carregar filtros</string>
+    <string name="a11y_eventCreatedAnnouncement">Evento %s criado com êxito.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Evento %s atualizado com êxito.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Para fazer %s criado com êxito.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Para fazer %s atualização com êxito.</string>
     <string name="todoScreenTitle">A Fazer</string>
     <string name="todoDateLabel">Data</string>
     <string name="todoDescriptionLabel">Descrição</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Tarefas (%d)</string>
     <string name="smartSearchPageGroupTitle">Páginas (%d)</string>
     <string name="a11y_commentSentSuccess">Comentário enviado com êxito</string>
+    <string name="a11y_dragViewContentDescription">Expandir gaveta</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Conversas</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Verificado</string>
+    <string name="a11y_unchecked">Não verificado</string>
+    <string name="a11y_indeterminate">Parcialmente verificado</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Os filtros foram atualizados</string>
 </resources>

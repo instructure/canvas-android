@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Gallwch chi agor manylion Cyflwyniad fan hyn</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Cliciwch yma i weld y manylion Cyflwyniad a Chyfarwyddyd Sgorio</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Gradd: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Munud</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Dewiswch Gwrs neu Grŵp</string>
     <string name="inboxClearFilter">Clirio</string>
     <string name="a11y_courseFilterContentDescription">Hidlydd cwrs: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Dewis blwch post: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">dewis</string>
     <string name="a11y_itemSelectedSwipeForActions">Sgwrs wedi’i dewis. Modd dewis ar waith. Llywio ar gyfer camau gweithredu.</string>
     <string name="a11y_conversationSelected">Sgwrs wedi’i dewis</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Apiau Eraill</string>
     <string name="offline_content_canvas_student">Myfyriwr Canvas</string>
     <string name="offline_content_remaining">Yn Weddill</string>
+    <string name="offline_content_storage_info_a11y_description">Gwybodaeth Storio: %s o %s a Ddefnyddiwyd, Apiau eraill %d%%, Canvas Student %d%%, Yn weddill %d%%</string>
     <string name="offline_content_all_courses">Pob Cwrs</string>
     <string name="offline_content_sync">Cysoni</string>
     <string name="offline_content_selected">%d Wedi dewis</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Cysoni</string>
     <string name="offline_content_sync_loading_title">Wrthi’n llwytho...</string>
     <string name="offline_content_sync_loading_message">Arhoswch, rydym ni’n cael pethau’n barod i chi.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Gosodiadau cysoni all-lein wedi cael eu cadw. Bydd cysoni yn dechrau’n fuan yn y cefndir</string>
     <string name="content_description_expand_content">Ehangu cynnwys</string>
+    <string name="content_description_expand_content_with_param">Ehangu cynnwys, %s</string>
     <string name="content_description_collapse_content">Crebachu cynnwys</string>
+    <string name="content_description_collapse_content_with_param">Crebachu cynnwys, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Bydd galluogi Cysoni Cynnwys Awtomatig yn gofalu am lwytho’r cynnwys sydd wedi’i ddewis i lawr yn seiliedig ar y gosodiadau isod. Bydd cysoni cynnwys yn digwydd hyd yn oed os nad yw’r rhaglen yn rhedeg. Os yw’r gosodiadau wedi’i ddiffodd ni fydd cysoni’n digwydd. Ni fydd cynnwys sydd eisoes wedi’i lwytho i lawr yn cael ei ddileu.</string>
     <string name="syncSettings_syncFrequencyTitle">Amlder Cysoni</string>
     <string name="syncSettings_autoContentSyncTitle">Cysoni Cynnwys Awtomatig</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Dad-gyhoeddi</string>
     <string name="discussionMenuRefresh">Adnewyddu</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Neidio i Heddiw</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Neidio i Heddiw, y diwrnod a ddewiswyd yw %s, heddiw yw %s</string>
     <string name="a11y_calendarSwitchToMonthView">Newid i wedd mis</string>
     <string name="a11y_calendarSwitchToWeekView">Newid i wedd wythnos</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Newid rhwng gwedd mis a gwedd wythnos</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Calendr ar wedd mis</string>
+    <string name="a11y_calendarWeekView">Calendr ar wedd wythnos</string>
+    <string name="a11y_calendarSwitchedToWeekView">Calendr wedi’i newid i wedd wythnos</string>
+    <string name="a11y_calendarSwitchedToMonthView">Calendr wedi’i newid i wedd mis</string>
     <string name="calendarNoEvents">Dim Digwyddiadau Heddiw!</string>
     <string name="calendarNoEventsDescription">Mae’n edrych fel diwrnod gwych i orffwys, ymlacio a dod at eich hun.</string>
     <string name="userCalendarToDo">Tasgau i’w Gwneud</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Dim ond hyd at %d calendr y gallwch chi eu dewis.</string>
     <string name="calendarFilterTitle">Calendrau</string>
     <string name="calendarFiltersFailed">Wedi methu llwytho’r hidlyddion</string>
+    <string name="a11y_eventCreatedAnnouncement">Wedi llwyddo i greu %s digwyddiad.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Wedi llwyddo i ddiweddaru %s digwyddiad.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Wedi llwyddo i greu %s i’w wneud.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Wedi llwyddo diweddaru %s i’w wneud</string>
     <string name="todoScreenTitle">Tasgau i’w Gwneud</string>
     <string name="todoDateLabel">Dyddiad</string>
     <string name="todoDescriptionLabel">Disgrifiad</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Aseiniadau (%d)</string>
     <string name="smartSearchPageGroupTitle">Tudalennau (%d)</string>
     <string name="a11y_commentSentSuccess">Wedi llwyddo i anfon y sylw</string>
+    <string name="a11y_dragViewContentDescription">Ehangu Drôr</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Sgyrsiau</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Wedi’i wirio</string>
+    <string name="a11y_unchecked">Heb ei wirio</string>
+    <string name="a11y_indeterminate">Wedi’i wirio’n rhannol</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Hidlyddion wedi’u diweddaru</string>
 </resources>

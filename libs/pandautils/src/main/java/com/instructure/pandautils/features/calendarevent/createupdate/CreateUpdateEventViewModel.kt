@@ -469,6 +469,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             val rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString().orEmpty()
             val contextCode = selectContextUiState.selectedCanvasContext?.contextId.orEmpty()
 
+            val updated = scheduleItem != null
             val result = scheduleItem?.let {
                 repository.updateEvent(
                     eventId = it.id,
@@ -499,6 +500,14 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             _uiState.update { it.copy(saving = false, canNavigateBack = true) }
+
+            val announceEvent = if (updated) {
+                CreateUpdateEventViewModelAction.AnnounceEventUpdate(result.first().title.orEmpty())
+            } else {
+                CreateUpdateEventViewModelAction.AnnounceEventCreation(result.first().title.orEmpty())
+            }
+            _events.send(announceEvent)
+
             if (rrule.isNotEmpty() || !scheduleItem?.rrule.isNullOrEmpty()) {
                 _events.send(CreateUpdateEventViewModelAction.RefreshCalendar)
             } else {

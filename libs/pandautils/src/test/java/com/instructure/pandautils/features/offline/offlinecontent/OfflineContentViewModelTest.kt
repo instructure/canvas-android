@@ -33,6 +33,7 @@ import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.EmptyCourseContentViewModel
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
@@ -164,7 +165,12 @@ class OfflineContentViewModelTest {
     fun `Storage info maps correctly`() {
         mockStorageInfoData()
 
-        val expected = StorageInfo(10, 20, "Used 2000 kb of 10000 kb")
+        val expected = StorageInfo(
+            10,
+            20,
+            "Used 2000 kb of 10000 kb",
+            "Storage Info: 2000 kb of 10000 kb used, Other Apps 10%, Canvas Student 10%, Remaining 80%"
+        )
 
         Assert.assertEquals(expected, viewModel.data.value?.storageInfo)
     }
@@ -173,7 +179,12 @@ class OfflineContentViewModelTest {
     fun `Storage info calculates on toggle selection`() {
         mockStorageInfoData()
 
-        val expected = StorageInfo(10, 33, "Used 3300 kb of 10000 kb")
+        val expected = StorageInfo(
+            10,
+            33,
+            "Used 3300 kb of 10000 kb",
+            "Storage Info: 3300 kb of 10000 kb used, Other Apps 10%, Canvas Student 23%, Remaining 67%"
+        )
 
         viewModel.toggleSelection()
 
@@ -184,7 +195,12 @@ class OfflineContentViewModelTest {
     fun `Storage info calculates on course selection`() {
         mockStorageInfoData()
 
-        val expected = StorageInfo(10, 29, "Used 2900 kb of 10000 kb")
+        val expected = StorageInfo(
+            10,
+            29,
+            "Used 2900 kb of 10000 kb",
+            "Storage Info: 2900 kb of 10000 kb used, Other Apps 10%, Canvas Student 19%, Remaining 71%"
+        )
 
         viewModel.data.value?.courseItems?.first()?.apply {
             onCheckedChanged.invoke(true, this)
@@ -197,7 +213,12 @@ class OfflineContentViewModelTest {
     fun `Storage info calculates on tab selection`() {
         mockStorageInfoData()
 
-        val expected = StorageInfo(10, 21, "Used 2100 kb of 10000 kb")
+        val expected = StorageInfo(
+            10,
+            21,
+            "Used 2100 kb of 10000 kb",
+            "Storage Info: 2100 kb of 10000 kb used, Other Apps 10%, Canvas Student 11%, Remaining 79%"
+        )
 
         viewModel.data.value?.courseItems?.first()?.data?.tabs?.first()?.apply {
             onCheckedChanged.invoke(true, this)
@@ -210,7 +231,12 @@ class OfflineContentViewModelTest {
     fun `Storage info calculates on file selection`() {
         mockStorageInfoData()
 
-        val expected = StorageInfo(10, 22, "Used 2200 kb of 10000 kb")
+        val expected = StorageInfo(
+            10,
+            22,
+            "Used 2200 kb of 10000 kb",
+            "Storage Info: 2200 kb of 10000 kb used, Other Apps 10%, Canvas Student 12%, Remaining 78%"
+        )
 
         viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.apply {
             onCheckedChanged.invoke(true, this)
@@ -415,14 +441,22 @@ class OfflineContentViewModelTest {
     }
 
     @Test
-    fun `Move back on sync`() {
+    fun `Announce sync started and move back on sync`() {
         createViewModel()
+
+        val events = mutableListOf<Event<OfflineContentAction>>()
+        viewModel.events.observeForever {
+            events.add(it)
+        }
 
         viewModel.onSyncClicked()
 
         (viewModel.events.value?.getContentIfNotHandled() as OfflineContentAction.Dialog).positiveCallback.invoke()
 
-        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Back)
+        Assert.assertEquals(
+            listOf(OfflineContentAction.AnnounceSyncStarted, OfflineContentAction.Back),
+            events.takeLast(2).map { it.peekContent() }
+        )
     }
 
     @Test
@@ -556,6 +590,11 @@ class OfflineContentViewModelTest {
             context.getString(R.string.offline_content_storage_info, any(), any())
         } answers {
             "Used ${secondArg<Array<Any>>().first()} of ${secondArg<Array<Any>>().last()}"
+        }
+        every {
+            context.getString(R.string.offline_content_storage_info_a11y_description, any(), any(), any(), any(), any())
+        } answers {
+            "Storage Info: ${secondArg<Array<Any>>()[0]} of ${secondArg<Array<Any>>()[1]} used, Other Apps ${secondArg<Array<Any>>()[2]}%, Canvas Student ${secondArg<Array<Any>>()[3]}%, Remaining ${secondArg<Array<Any>>()[4]}%"
         }
 
         createViewModel()

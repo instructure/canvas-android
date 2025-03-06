@@ -18,10 +18,12 @@
 package com.instructure.parentapp.ui.compose.login.createaccount
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.parentapp.features.login.createaccount.CreateAccountScreen
@@ -47,9 +49,13 @@ class CreateAccountScreenTest {
             )
         }
 
+        scrollToText("Full Name")
         composeTestRule.onNodeWithText("Full Name").assertIsDisplayed()
+        scrollToText("Email Address")
         composeTestRule.onNodeWithText("Email Address").assertIsDisplayed()
+        scrollToText("Password")
         composeTestRule.onNodeWithText("Password").assertIsDisplayed()
+        scrollToText("Create Account")
         composeTestRule.onNodeWithText("Create Account").assertIsDisplayed()
         composeTestRule.onNodeWithText("By tapping \'Create Account\', you agree to the Terms of Service and acknowledge the Privacy Policy")
             .assertIsDisplayed()
@@ -70,9 +76,13 @@ class CreateAccountScreenTest {
             )
         }
 
+        scrollToText("Full Name")
         composeTestRule.onNodeWithText("Full Name").assertIsDisplayed()
+        scrollToText("Email Address")
         composeTestRule.onNodeWithText("Email Address").assertIsDisplayed()
+        scrollToText("Password")
         composeTestRule.onNodeWithText("Password").assertIsDisplayed()
+        scrollToText("Create Account")
         composeTestRule.onNodeWithText("Create Account").assertIsDisplayed()
         composeTestRule.onNodeWithText("View the Privacy Policy").assertIsDisplayed()
     }
@@ -120,9 +130,18 @@ class CreateAccountScreenTest {
             )
         }
 
+        scrollToText("Create Account")
         composeTestRule.onNodeWithText("Create Account").performClick()
+        scrollToText("Full Name")
         composeTestRule.onNodeWithText("Please enter full name").assertIsDisplayed()
+        scrollToText("Email Address")
         composeTestRule.onNodeWithText("Please enter an email address").assertIsDisplayed()
+        scrollToText("Password")
         composeTestRule.onNodeWithText("Password is required").assertIsDisplayed()
+    }
+
+    private fun scrollToText(text: String) {
+        composeTestRule.onNodeWithTag("CreateAccountScreen")
+            .performScrollToNode(hasText(text))
     }
 }

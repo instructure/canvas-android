@@ -57,6 +57,7 @@ class GradeableStudentSubmissionViewHolder(private val binding: AdapterGradeable
                 val description = context.getString(R.string.a11y_viewSubmissionAction)
                 val customClick = AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id, description)
                 info.addAction(customClick)
+                info.className = "android.widget.Button"
             }
         }
 

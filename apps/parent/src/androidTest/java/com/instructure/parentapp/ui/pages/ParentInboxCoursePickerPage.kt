@@ -23,6 +23,6 @@ import androidx.compose.ui.test.performClick
 
 class ParentInboxCoursePickerPage(private val composeTestRule: ComposeTestRule) {
     fun selectCourseWithUser(courseName: String, observedUserName: String) {
-        composeTestRule.onNode(hasAnyChild(hasText(courseName)).and(hasAnyChild(hasText(observedUserName)))).performClick()
+        composeTestRule.onNode(hasAnyChild(hasText(courseName)).and(hasAnyChild(hasText("for $observedUserName")))).performClick()
     }
 }

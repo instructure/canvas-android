@@ -122,7 +122,7 @@ class SpeedGraderE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Click on '${student.name}' student's avatar and assert if it's navigating to the Student Context Page.")
         assignmentSubmissionListPage.clickOnStudentAvatar(student.name)
-        studentContextPage.assertDisplaysStudentInfo(student)
+        studentContextPage.assertDisplaysStudentInfo(student.shortName, student.loginId)
         studentContextPage.assertDisplaysCourseInfo(course)
         studentContextPage.assertStudentGrade("--")
         studentContextPage.assertStudentSubmission("1")

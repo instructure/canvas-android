@@ -22,6 +22,7 @@ import com.instructure.pandautils.features.notification.preferences.PushNotifica
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
+import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
@@ -180,6 +181,7 @@ object RouteResolver {
             cls.isA<FeatureFlagsFragment>() -> FeatureFlagsFragment()
             cls.isA<RemoteConfigParamsFragment>() -> RemoteConfigParamsFragment()
             cls.isA<SmartSearchFragment>() -> SmartSearchFragment.newInstance(route)
+            cls.isA<InboxSignatureFragment>() -> InboxSignatureFragment()
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

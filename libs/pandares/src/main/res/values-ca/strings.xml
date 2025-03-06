@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Podeu obrir Informació de l’entrega des d\'aquí</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Feu clic aquí per visualitzar la informació de l’entrega i la rúbrica</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nota: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
@@ -1442,6 +1443,7 @@
     <string name="inboxContextSelectorTitle">Seleccioneu una assignatura o un grup</string>
     <string name="inboxClearFilter">Suprimeix</string>
     <string name="a11y_courseFilterContentDescription">Filtre de l’assignatura: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Selecció de bústia: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">seleccionada</string>
     <string name="a11y_itemSelectedSwipeForActions">S’ha seleccionat la conversa. S’ha activat el mode de selecció. Navegueu per cercar accions.</string>
     <string name="a11y_conversationSelected">S’ha seleccionat la conversa</string>
@@ -1469,6 +1471,7 @@
     <string name="offline_content_other">Altres aplicacions</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">Restant</string>
+    <string name="offline_content_storage_info_a11y_description">Informació sobre l’emmagatzematge: %s de %s utilitzat, altres aplicacions %d%%, estudiants del Canvas %d%%, restant %d%%</string>
     <string name="offline_content_all_courses">Totes les assignatures</string>
     <string name="offline_content_sync">Sincronitza</string>
     <string name="offline_content_selected">S’ha seleccionat %d</string>
@@ -1488,8 +1491,11 @@
     <string name="offline_content_sync_dialog_positive">Sincronitza</string>
     <string name="offline_content_sync_loading_title">S\'està carregant&#8230;</string>
     <string name="offline_content_sync_loading_message">Un moment, us ho estem preparant.</string>
+    <string name="offline_content_a11y_sync_started_announcement">S’ha desat la configuració de la sincronització sense connexió. S’iniciarà en breu la sincronització en segon pla.</string>
     <string name="content_description_expand_content">Desplega el contingut</string>
+    <string name="content_description_expand_content_with_param">Desplega el contingut, %s</string>
     <string name="content_description_collapse_content">Contrau el contingut</string>
+    <string name="content_description_collapse_content_with_param">Redueix el contingut, %s</string>
     <string name="syncSettings_autoContentSyncDescription">En activar la sincronització automàtica del contingut es baixarà el contingut seleccionat segons les opcions de configuració indicades a continuació. Se sincronitzarà el contingut encara que l’aplicació no s’estigui executant. Si el paràmetre està desactivat no es durà a terme la sincronització. No se suprimirà el contingut que ja s’hagi baixat.</string>
     <string name="syncSettings_syncFrequencyTitle">Freqüència de sincronització</string>
     <string name="syncSettings_autoContentSyncTitle">Sincronització automàtica del contingut</string>
@@ -1618,8 +1624,15 @@
     <string name="unpublishDialogPositiveButton">Anul·la’n la publicació</string>
     <string name="discussionMenuRefresh">Actualitza-ho</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Salta a Avui</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Salteu a Avui, el dia seleccionat és %s, avui és %s.</string>
     <string name="a11y_calendarSwitchToMonthView">Canvia a la visualització mensual</string>
     <string name="a11y_calendarSwitchToWeekView">Canvia a la visualització setmanal</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Canvieu entre la visualització mensual i setmanal.</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">El calendari està en la visualització mensual.</string>
+    <string name="a11y_calendarWeekView">El calendari està en la visualització setmanal.</string>
+    <string name="a11y_calendarSwitchedToWeekView">El calendari ha canviat a la visualització setmanal.</string>
+    <string name="a11y_calendarSwitchedToMonthView">El calendari ha canviat a la visualització mensual.</string>
     <string name="calendarNoEvents">Avui no hi ha cap esdeveniment.</string>
     <string name="calendarNoEventsDescription">Sembla un dia fabulós per descansar, relaxar-se i carregar piles.</string>
     <string name="userCalendarToDo">Tasques pendents</string>
@@ -1643,6 +1656,10 @@
     <string name="calendarFilterLimitSnackbar">Només podeu seleccionar %d calendaris, com a màxim.</string>
     <string name="calendarFilterTitle">Calendaris</string>
     <string name="calendarFiltersFailed">No s’han pogut carregar els filtres</string>
+    <string name="a11y_eventCreatedAnnouncement">S\'ha creat correctament l\'esdeveniment %s.</string>
+    <string name="a11y_eventUpdatedAnnouncement">S\'ha actualitzat correctament l\'esdeveniment %s.</string>
+    <string name="a11y_toDoCreatedAnnouncement">S\'ha creat correctament la llista de tasques pendents %s.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">S\'ha actualitzat correctament la llista de tasques pendents %s.</string>
     <string name="todoScreenTitle">Tasques pendents</string>
     <string name="todoDateLabel">Data</string>
     <string name="todoDescriptionLabel">Descripció</string>
@@ -1949,4 +1966,12 @@
     <string name="smartSearchAssignmentGroupTitle">Activitats (%d)</string>
     <string name="smartSearchPageGroupTitle">Pàgines (%d)</string>
     <string name="a11y_commentSentSuccess">S\'ha enviat el comentari correctament</string>
+    <string name="a11y_dragViewContentDescription">Desplega el calaix</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Converses</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Marcat</string>
+    <string name="a11y_unchecked">Desmarcat</string>
+    <string name="a11y_indeterminate">Marcat parcialment</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">S’han actualitzat els filtres.</string>
 </resources>

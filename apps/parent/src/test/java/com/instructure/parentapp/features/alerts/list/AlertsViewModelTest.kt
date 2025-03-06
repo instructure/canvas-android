@@ -433,7 +433,7 @@ class AlertsViewModelTest {
             R.string.alertDismissErrorMessage,
             (events.last() as AlertsViewModelAction.ShowSnackbar).message
         )
-        assertEquals(expected, viewModel.uiState.value)
+        assertEquals(expected.copy(addedItemIndex = 0), viewModel.uiState.value)
     }
 
     @Test
@@ -507,7 +507,82 @@ class AlertsViewModelTest {
 
         (events.last() as AlertsViewModelAction.ShowSnackbar).actionCallback?.invoke()
 
+        assertEquals(expected.copy(addedItemIndex = 0), viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Undo dismissal with unread state resets alert as read`() = runTest {
+        val student = User(1L)
+        every { student.studentColor } returns 1
+
+        val alerts = listOf(
+            Alert(
+                id = 1,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-03T00:00:00Z")
+                ),
+                title = "Alert 1",
+                workflowState = AlertWorkflowState.UNREAD,
+                alertType = AlertType.ASSIGNMENT_MISSING,
+                htmlUrl = "https://example.com/alert1",
+                contextId = 1L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 1L,
+                observerId = 1L,
+                userId = 2L
+            )
+        )
+
+        coEvery { repository.getAlertsForStudent(student.id, any()) } returns alerts
+        coEvery { repository.updateAlertWorkflow(any(), any()) } returns mockk()
+
+        createViewModel()
+        selectedStudentFlow.emit(student)
+
+        val expected = AlertsUiState(
+            isLoading = false,
+            isError = false,
+            alerts = alerts.map {
+                AlertsItemUiState(
+                    alertId = it.id,
+                    contextId = it.contextId,
+                    title = it.title,
+                    alertType = it.alertType,
+                    date = it.actionDate,
+                    observerAlertThreshold = null,
+                    lockedForUser = it.lockedForUser,
+                    unread = true,
+                    htmlUrl = it.htmlUrl
+                )
+            }.sortedByDescending { it.date },
+            studentColor = 1
+        )
+
         assertEquals(expected, viewModel.uiState.value)
+
+        viewModel.handleAction(AlertsAction.DismissAlert(1L))
+        assertEquals(emptyList<AlertsItemUiState>(), viewModel.uiState.value.alerts)
+
+        val events = mutableListOf<AlertsViewModelAction>()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(
+            R.string.alertDismissMessage,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).message
+        )
+        assertEquals(
+            R.string.alertDismissAction,
+            (events.last() as AlertsViewModelAction.ShowSnackbar).action
+        )
+
+        (events.last() as AlertsViewModelAction.ShowSnackbar).actionCallback?.invoke()
+
+        assertEquals(expected.copy(alerts = listOf(expected.alerts.first().copy(unread = false))), viewModel.uiState.value)
+        coVerify { repository.updateAlertWorkflow(1L, AlertWorkflowState.READ) }
     }
 
     @Test

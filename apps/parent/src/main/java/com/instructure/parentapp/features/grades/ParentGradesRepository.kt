@@ -20,6 +20,8 @@ package com.instructure.parentapp.features.grades
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Assignment.Companion.getGradingTypeFromAPIString
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
@@ -46,7 +48,9 @@ class ParentGradesRepository(
             assignmentApi.getNextPageAssignmentGroupListWithAssignmentsForObserver(it, params)
         }.map {
             it.map { group ->
-                val filteredAssignments = group.assignments.filter { assignment -> assignment.published }
+                val filteredAssignments = group.assignments
+                    .filter { assignment -> assignment.published }
+                    .filter { assignment -> getGradingTypeFromAPIString(assignment.gradingType.orEmpty()) != Assignment.GradingType.NOT_GRADED }
                 group.copy(assignments = filteredAssignments).toAssignmentGroup(studentId)
             }
         }.dataOrThrow

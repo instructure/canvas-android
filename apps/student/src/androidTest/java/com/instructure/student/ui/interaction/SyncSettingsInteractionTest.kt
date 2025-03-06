@@ -105,6 +105,6 @@ class SyncSettingsInteractionTest : StudentComposeTest() {
         tokenLogin(data.domain, token, student)
         dashboardPage.waitForRender()
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.clickOnSyncSettingsItem()
+        settingsPage.clickOnSettingsItem("Synchronization")
     }
 }

@@ -29,7 +29,6 @@ import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
@@ -148,19 +147,19 @@ class ElementaryCourseViewModel @Inject constructor(
     private suspend fun createTabs(canvasContext: CanvasContext, tabs: List<Tab>): List<ElementaryCourseTab> {
         val prefix =
             if (canvasContext.isCourse) "${apiPrefs.fullDomain}/courses/${canvasContext.id}?embed=true" else "${apiPrefs.fullDomain}/groups/${canvasContext.id}?embed=true"
-        return tabs.map {
-            val drawable = getIconDrawable(it.tabId)
-            val url = when (it.tabId) {
+        return tabs.map { tab ->
+            val drawable = getIconDrawable(tab.tabId)
+            val url = when (tab.tabId) {
                 Tab.HOME_ID -> "$prefix#home"
                 Tab.SCHEDULE_ID -> "$prefix#schedule"
                 Tab.MODULES_ID -> "$prefix#modules"
                 Tab.GRADES_ID -> "$prefix#grades"
                 Tab.RESOURCES_ID -> "$prefix#resources"
-                else -> it.htmlUrl ?: ""
+                else -> tab.htmlUrl?.let { "${apiPrefs.fullDomain}${it}?embedded=true" } ?: ""
             }
 
             val authenticatedUrl = oauthManager.getAuthenticatedSessionAsync(url).await().dataOrNull?.sessionUrl
-            ElementaryCourseTab(it.tabId, drawable, it.label, authenticatedUrl ?: url)
+            ElementaryCourseTab(tab.tabId, drawable, tab.label, authenticatedUrl ?: url)
 
         }
     }

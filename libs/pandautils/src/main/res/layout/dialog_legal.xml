@@ -35,10 +35,10 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_document" />
+            app:srcCompat="@drawable/ic_admin" />
 
         <TextView
             android:id="@+id/privacyPolicyLabel"
@@ -63,8 +63,8 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:importantForAccessibility="no"
             app:srcCompat="@drawable/ic_document" />
 
@@ -91,10 +91,10 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_document" />
+            app:srcCompat="@drawable/ic_github" />
 
         <TextView
             android:id="@+id/openSourceLabel"
