@@ -16,6 +16,11 @@
 package com.instructure.parentapp.ui.e2e
 
 import android.util.Log
+import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.model.SubmissionType
@@ -30,14 +35,16 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SyllabusE2ETest : ParentComposeTest() {
+class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
-
+    
+    @E2E
     @Test
-    fun testSyllabusE2E() {
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.E2E)
+    fun testCourseDetailsSyllabusE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, parents = 1, courses = 1)
