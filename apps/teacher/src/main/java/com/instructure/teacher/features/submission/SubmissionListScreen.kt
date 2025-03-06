@@ -17,7 +17,7 @@
 package com.instructure.teacher.features.submission
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -117,14 +116,12 @@ private fun SubmissionListContent(
         .fillMaxSize()
         .pullRefresh(pullRefreshState)) {
         LazyColumn(modifier = modifier) {
-            uiState.submissions.forEach { (titleRes, submissionList) ->
-                SubmissionListSection(
-                    titleRes,
-                    submissionList,
-                    courseColor
-                ) {
+            item { Header(uiState.headerTitle) }
+            items(uiState.submissions) { submission ->
+                SubmissionListItem(submission, courseColor) {
                     uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
                 }
+                CanvasDivider()
             }
         }
 
@@ -137,21 +134,22 @@ private fun SubmissionListContent(
             contentColor = uiState.courseColor
         )
     }
-
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-private fun LazyListScope.SubmissionListSection(
-    headerTitle: Int,
-    submissions: List<SubmissionUiState>,
-    courseColor: Color,
-    itemClick: (Long) -> Unit
-) {
-    stickyHeader {
-        SubmissionListHeader(titleRes = headerTitle)
-    }
-    items(submissions) {
-        SubmissionListItem(it, courseColor, itemClick)
+@Composable
+private fun Header(title: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(R.color.backgroundLight))
+    ) {
+        Text(
+            text = title,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.textDarkest),
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 14.dp)
+        )
     }
 }
 
@@ -198,7 +196,6 @@ private fun SubmissionListItem(
                 fontWeight = FontWeight.SemiBold
             )
         }
-        CanvasDivider()
     }
 
 }
@@ -272,9 +269,9 @@ fun SubmissionListScreenPreview() {
         SubmissionListUiState(
             "Test course",
             courseColor = Color.Magenta,
-            SubmissionListFilter.GRADED,
-            submissions = mapOf(
-                R.string.submitted to listOf(
+            headerTitle = "All Submissions",
+            filter = SubmissionListFilter.GRADED,
+            submissions = listOf(
                     SubmissionUiState(
                         1,
                         "Test User",
@@ -288,9 +285,7 @@ fun SubmissionListScreenPreview() {
                         "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                         listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
                         null
-                    )
-                ),
-                R.string.not_submitted to listOf(
+                    ),
                     SubmissionUiState(
                         3,
                         "Test User 3",
@@ -304,9 +299,7 @@ fun SubmissionListScreenPreview() {
                         "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                         listOf(SubmissionTag.MISSING),
                         null
-                    )
-                ),
-                R.string.graded to listOf(
+                    ),
                     SubmissionUiState(
                         5,
                         "Test User 5",
@@ -322,7 +315,6 @@ fun SubmissionListScreenPreview() {
                         "Excused"
                     )
                 )
-            )
         ) {}
     ) {}
 }

@@ -27,11 +27,9 @@ import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.features.smartsearch.SmartSearchViewModelAction
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.utils.getState
@@ -56,8 +54,9 @@ class SubmissionListViewModel @Inject constructor(
         ?: throw IllegalArgumentException("Assignment must be passed to SubmissionListViewModel")
     private val course: Course = savedStateHandle["course"]
         ?: throw IllegalArgumentException("Course must be passed to SubmissionListViewModel")
-    private val filter: SubmissionListFilter =
+    private var filter: SubmissionListFilter =
         savedStateHandle["filter"] ?: SubmissionListFilter.ALL
+    private var filterValue: Double = 0.0
 
     private var submissions: List<GradeableStudentSubmission> = emptyList()
 
@@ -66,6 +65,7 @@ class SubmissionListViewModel @Inject constructor(
             assignmentName = assignment.name.orEmpty(),
             courseColor = Color(course.color),
             filter = filter,
+            headerTitle = getHeaderTitle(filter, filterValue),
             actionHandler = this::handleAction
         )
     )
@@ -89,47 +89,25 @@ class SubmissionListViewModel @Inject constructor(
             forceNetwork
         )
 
-        val groups = mutableMapOf(
-            R.string.submitted to mutableListOf<SubmissionUiState>(),
-            R.string.not_submitted to mutableListOf<SubmissionUiState>(),
-            R.string.graded to mutableListOf<SubmissionUiState>()
-        )
+        filterData()
+    }
 
-        submissions.forEach {
-            when {
-                it.submission?.let {
-                    assignment.getState(it, true) in listOf(
-                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
-                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
-                    ) || !it.isGradeMatchesCurrentSubmission
-                } == true -> {
-                    groups[R.string.submitted] =
-                        (groups[R.string.submitted]?.plus(getSubmissionUiState(it)))?.toMutableList()
-                            ?: mutableListOf(getSubmissionUiState(it))
-                }
-
-                it.submission?.workflowState == "unsubmitted" || it.submission == null -> {
-                    groups[R.string.not_submitted] =
-                        (groups[R.string.not_submitted]?.plus(getSubmissionUiState(it)))?.toMutableList()
-                            ?: mutableListOf(getSubmissionUiState(it))
-                }
-
-                it.submission?.let {
-                    assignment.getState(it, true) in listOf(
-                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED,
-                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE,
-                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING,
-                        AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED
-                    ) && it.isGradeMatchesCurrentSubmission
-                } == true -> {
-                    groups[R.string.graded] =
-                        (groups[R.string.graded]?.plus(getSubmissionUiState(it)))?.toMutableList()
-                            ?: mutableListOf(getSubmissionUiState(it))
-                }
+    private fun filterData() {
+        val submissionUiStates = submissions.filter {
+            when (filter) {
+                SubmissionListFilter.ALL -> true
+                SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
+                SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
+                SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED)  && it.isGradeMatchesCurrentSubmission} ?: false
+                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
+                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
+                // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
+                // which students haven't submitted yet
+                SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
             }
-        }
+        }.map { getSubmissionUiState(it) }
 
-        _uiState.update { it.copy(submissions = groups, loading = false, refreshing = false) }
+        _uiState.update { it.copy(submissions = submissionUiStates, loading = false, refreshing = false) }
     }
 
     private fun getSubmissionUiState(submission: GradeableStudentSubmission): SubmissionUiState {
@@ -186,7 +164,7 @@ class SubmissionListViewModel @Inject constructor(
             }
 
             is SubmissionListAction.SubmissionClicked -> {
-                val submissions = _uiState.value.submissions.map { it.value }.flatten()
+                val submissions = _uiState.value.submissions
                 val selected = submissions.indexOfFirst { it.submissionId == action.submissionId }
                 viewModelScope.launch {
                     _events.send(SubmissionListViewModelAction.RouteToSubmission(
@@ -225,6 +203,30 @@ class SubmissionListViewModel @Inject constructor(
                 }
             }
             else -> "-"
+        }
+    }
+
+    private fun getHeaderTitle(filter: SubmissionListFilter, filterValue: Double): String {
+        return when (filter) {
+            SubmissionListFilter.ALL -> {
+                resources.getString(R.string.all_submissions)
+            }
+            SubmissionListFilter.LATE -> resources.getString(R.string.submitted_late)
+            SubmissionListFilter.MISSING -> resources.getString(R.string.havent_submitted_yet)
+            SubmissionListFilter.NOT_GRADED -> resources.getString(R.string.havent_been_graded)
+            SubmissionListFilter.GRADED -> resources.getString(R.string.graded)
+            SubmissionListFilter.BELOW_VALUE -> {
+                resources.getString(
+                    R.string.scored_less_than_value,
+                    NumberHelper.formatDecimal(filterValue, 2, true)
+                )
+            }
+            SubmissionListFilter.ABOVE_VALUE -> {
+                resources.getString(
+                    R.string.scored_more_than_value,
+                    NumberHelper.formatDecimal(filterValue, 2, true)
+                )
+            }
         }
     }
 }

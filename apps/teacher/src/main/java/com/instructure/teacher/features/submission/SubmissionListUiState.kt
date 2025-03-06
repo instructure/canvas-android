@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.submission
 
-import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -28,9 +27,10 @@ import com.instructure.teacher.features.assignment.submission.SubmissionListFilt
 data class SubmissionListUiState(
     val assignmentName: String,
     val courseColor: Color,
+    val headerTitle: String,
     val filter: SubmissionListFilter = SubmissionListFilter.ALL,
     val sections: List<CanvasContext> = emptyList(),
-    val submissions: Map<Int, List<SubmissionUiState>> = emptyMap(),
+    val submissions: List<SubmissionUiState> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
     val error: Boolean = false,
