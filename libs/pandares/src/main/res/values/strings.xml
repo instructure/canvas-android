@@ -1794,6 +1794,7 @@
     <string name="navigationDrawerLogOut">Log Out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
+    <string name="noStudentsRefresh">Refresh</string>
     <string name="noGrade">No Grade</string>
     <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
     <string name="parentNoCourses">No Courses</string>
