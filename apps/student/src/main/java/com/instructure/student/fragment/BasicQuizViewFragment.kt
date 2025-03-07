@@ -58,31 +58,13 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     private var quiz: Quiz? by NullableParcelableArg()
     @get:PageViewUrlParam("quizId")
     var quizId: Long by LongArg()
+    private var isTakingQuiz = false
 
     override fun title(): String = getString(R.string.quizzes)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isUnsupportedFeature = true
-    }
-
-    override fun applyTheme() {
-        super.applyTheme()
-        updateToolbarButton()
-    }
-
-    private fun updateToolbarButton() {
-        try {
-            if (getCanvasWebView()?.url?.endsWith("/take") == true) {
-                binding.toolbar.setupAsBackButton(this)
-            } else {
-                binding.toolbar.setupAsCloseButton {
-                    activity?.supportFragmentManager?.popBackStack()
-                }
-            }
-        } catch (e: IllegalStateException) {
-            // Ignore, the user left the fragment
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -156,7 +138,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 getCanvasLoading()?.visibility = View.GONE
-                updateToolbarButton()
+                isTakingQuiz = url.contains("/take")
             }
         }
     }
@@ -243,7 +225,14 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
         quizDetailsJob?.cancel()
     }
 
-    override fun handleBackPressed() = getCanvasWebView()?.handleGoBack() ?: false
+    override fun handleBackPressed(): Boolean {
+        return if (!isTakingQuiz) {
+            activity?.supportFragmentManager?.popBackStack()
+            true
+        } else {
+            getCanvasWebView()?.handleGoBack() ?: false
+        }
+    }
 
     companion object {
 
