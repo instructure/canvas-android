@@ -68,7 +68,6 @@
     <string name="submissionDeleted">Uaslódáil Scriosta</string>
     <string name="missingSubmissionLabel">ar Iarraidh</string>
     <string name="gradedSubmissionLabel">Marcáilte</string>
-
     <string name="reminderTitle">Meabhrúchán</string>
     <string name="reminderDescription">Cuir fógraí meabhrúcháin dáta dlite faoin tasc seo leis ar an ngléas seo.</string>
     <string name="a11y_addReminder">Cuir meabhrúchán leis</string>
@@ -107,6 +106,8 @@
     <string name="deleteReminderTitle">Scrios Meabhrúchán</string>
     <string name="deleteReminderMessage">An bhfuil tú cinnte gur mhaith leat an meabhrúchán seo a scriosadh?</string>
     <string name="reminderPermissionNotGrantedError">Ní mór duit cead aláram beacht a chumasú don ghníomh seo</string>
+    <string name="notificationPermissionNotGrantedError">Ní mór duit cead fógra a chumasú don ghníomh seo</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Níl réamhamharc ar fáil do URLanna a úsáideann \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Cuir isteach URL bailí</string>
@@ -417,7 +418,6 @@
     <string name="forwardMessage">Cuir Teachtaireacht ar Aghaidh</string>
     <string name="addMorePeopleToMessage">Cuir faighteoir eile leis. Ní féidir teachtaireachtaí a sheoltar chugat féin amháin a sheoladh.</string>
     <string name="selectRecipients">Roghnaigh Faighteoirí</string>
-
     <string name="course">Cúrsa</string>
     <string name="all_recipients_in_selected_context">Gach in: %1$s</string>
     <string name="selectCourseOrGroup">Roghnaigh cúrsa nó grúpa</string>
@@ -449,6 +449,7 @@
         <item quantity="one">An líon seo daoine: %d</item>
         <item quantity="other">An líon seo daoine: %d</item>
     </plurals>
+
     <plurals name="people_count">
         <item quantity="one">%d duine</item>
         <item quantity="other">%d daoine</item>
@@ -938,6 +939,7 @@
     <string name="colorPickerDialogMessage">Déan do chúrsa a phearsantú trí dhath nua a shocrú.</string>
     <string name="colorPickerError">Níorbh fhéidir dath an chúrsa a shocrú ag an am seo.</string>
 
+
     <string name="courseFavorited">Cúrsa %s, is fearr.</string>
     <string name="courseNotFavorited">Cúrsa %s, ní fearr.</string>
     <string name="groupFavorited">Grúpa %s, is fearr.</string>
@@ -1179,6 +1181,7 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
     <string name="a11y_gradeCellContentDescriptionHint">Is féidir leat sonraí uaslódála a oscailt anseo</string>
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Cliceáil anseo chun Uaslódáil a fheiceáil &amp; Sonraí rúibrice</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Marc: %s</string>
 
     <plurals name="minutes">
@@ -1331,8 +1334,8 @@
     <string name="appThemeLight">Geall</string>
     <string name="appThemeDark">Dorcha</string>
     <string name="appThemeSystem">Mar an gcéanna le gléas</string>
-
     <string name="appThemeAuto">Córas</string>
+
     <string name="themeSelectorTitle">Tá Canvas ar fáil anois i dtéama dorcha</string>
     <string name="themeSelectorDescription">Roghnaigh téama aipe</string>
     <string name="themeSelectorLightTheme">Téama geall</string>
@@ -1448,6 +1451,7 @@
     <string name="inboxContextSelectorTitle">Roghnaigh Cúrsa nó Grúpa</string>
     <string name="inboxClearFilter">Glan</string>
     <string name="a11y_courseFilterContentDescription">Scagaire cúrsa: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Roghnú bosca poist: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">roghnaigh</string>
     <string name="a11y_itemSelectedSwipeForActions">Comhrá roghnaithe. Modh roghnaithe gníomhachtaithe. Déan nascleanúint le haghaidh gníomhartha.</string>
     <string name="a11y_conversationSelected">Comhrá roghnaithe</string>
@@ -1623,6 +1627,7 @@
     <string name="publishDialogPositiveButton">Foilsigh</string>
     <string name="unpublishDialogPositiveButton">Dífhoilsiú</string>
     <string name="discussionMenuRefresh">Athnuaigh</string>
+
     <string name="a11y_contentDescriptionCalendarJumpToToday">Léim go Inniu</string>
     <string name="a11y_calendarSwitchToMonthView">Malartaigh go hamharc na míosa</string>
     <string name="a11y_calendarSwitchToWeekView">Malartaigh go hamharc na seachtaine</string>
@@ -1649,6 +1654,7 @@
     <string name="calendarFilterLimitSnackbar">Ní féidir leat ach suas le %d féilire a roghnú.</string>
     <string name="calendarFilterTitle">Féilirí</string>
     <string name="calendarFiltersFailed">Theip ar lodáil na scagairí</string>
+
     <string name="todoScreenTitle">Le Déanamh</string>
     <string name="todoDateLabel">Dáta</string>
     <string name="todoDescriptionLabel">Cur síos</string>
@@ -1664,11 +1670,14 @@
     <string name="createToDoDetailsLabel">Details</string>
     <string name="todoSaveErrorMessage">Tharla earráid agus an Le Déanamh seo á shábháil. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="selectCalendarScreenTitle">Roghnaigh Féilire</string>
+
     <string name="errorContentRetryButton">Bain triail eile as</string>
+
     <string name="eventLocationLabel">Suíomh</string>
     <string name="eventAddressLabel">Seoladh</string>
     <string name="eventDetailsLabel">Sonraí</string>
     <string name="errorLoadingEvent">Tharla fadhb agus an t-imeacht seo á lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
+    <string name="errorLoadingTodo">Tharla fadhb agus an le déanamh seo á lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="eventDeleteConfirmationTitle">Scrios Imeacht?</string>
     <string name="eventDeleteConfirmationText">Scriosfaidh sé seo d\'imeacht go buan.</string>
     <string name="eventDeleteErrorMessage">Tharla earráid agus an t-imeacht seo á scriosadh. Seiceáil do cheangal agus bain triail eile as.</string>
@@ -1686,6 +1695,7 @@
     <string name="eventDeleteScopeFollowing">Seo agus gach imeacht ina dhiaidh</string>
     <string name="calendarAddToDo">Cuir Le Déanamh</string>
     <string name="calendarAddEvent">Cuir Imeacht leis</string>
+
     <string name="createEventScreenTitle">Imeacht Nua</string>
     <string name="editEventScreenTitle">Cuir Imeacht in Eagar</string>
     <string name="createEventTitleHint">Cuir teideal leis</string>
@@ -1752,6 +1762,7 @@
     <string name="a11y_calendarCloseAddActions">Dún gníomhartha</string>
     <string name="a11y_calendarActionsOpen">Gníomhartha oscailte. Déan nascleanúint ar aghaidh le haghaidh gníomhartha</string>
     <string name="a11y_calendarActionsClosed">Gníomhaíochtaí dúnta</string>
+
     <!--Parent-->
     <string name="screenTitleAlerts">Foláirimh</string>
     <string name="screenTitleCalendar">Féilire</string>
@@ -1891,6 +1902,26 @@
     <string name="openTheQuizButton">Oscail an Tráth na gCeist</string>
     <string name="newQuizSubmissionTitle">Uaslódáil Quiz</string>
     <string name="newQuizSubmissionSubtitle">Osclaítear an tráth na gceist seo i mbrabhsálaí gréasáin. Roghnaigh "Oscail an Tráth na gCeist" chun dul ar aghaidh.</string>
+    <string name="haveCanvasAccount">Tá cuntas Canvas agam</string>
+    <string name="notHaveCanvasAccount">Níl cuntas Canvas agam</string>
+    <string name="createAccFullName">Ainm iomlán</string>
+    <string name="createAccEmail">Seoladh Ríomhphoist</string>
+    <string name="createAccPassword">Pasfhocal</string>
+    <string name="createAccButton">Cruthaigh Cuntas</string>
+    <string name="createAccAlreadyHaveAccount">An bhfuil cuntas agat cheana féin?</string>
+    <string name="createAccSignIn">Sínigh isteach</string>
+    <string name="createAccShowPassword">Taispeáin pasfhocal</string>
+    <string name="createAccHidePassword">Folaigh pasfhocal</string>
+    <string name="createAccEnterFullName">Cuir isteach ainm iomlán</string>
+    <string name="createAccEnterEmail">Cuir isteach seoladh ríomhphoist</string>
+    <string name="createAccEnterValidEmail">Cuir isteach seoladh ríomhphoist bailí</string>
+    <string name="createAccEnterPassword">Tá pasfhocal ag teastáil</string>
+    <string name="createAccPasswordTooShort">Caithfidh 8 gcarachtar ar a laghad a bheith sa phasfhocal</string>
+    <string name="createAccErrorCreatingAccount">Tharla earráid agus do chuntas á chruthú. Seiceáil do nasc idirlín agus bain triail eile as.</string>
+    <string name="createAccErrorEmailAlreadyInUse">Tá an seoladh ríomhphoist seo in úsáid cheana féin.</string>
+    <string name="createAccErrorPairingCode">Tá an cód péireála seo imithe in éag nó in úsáid cheana. Bain triail eile as le ceann nua.</string>
+    <string name="createAccTosAndPrivacy">Trí \'Cruthaigh Cuntas\' a thapáil, aontaíonn tú leis an <annotation url="tos">Téarmaí Seirbhíse</annotation> agus aitheantas a thabhairt don <annotation url="privacy">Pholasaí Príobháideachais</annotation></string>
+    <string name="createAccViewPrivacy">Féach ar an <annotation url="privacy">bPolasaí Príobháideachais</annotation></string>
     <string name="route_not_available">Díchumasaíodh an leathanach sin don chúrsa seo</string>
     <string name="reminderTitleAfterDueDate">Tar éis Dáta Dlite (%1$s)</string>
     <string name="reminderNotificationTitleFor">Meabhrúchán don tasc: %1$s</string>
@@ -1918,4 +1949,21 @@
     <string name="smartSearchLoadingSubtitle">Táimid ag obair go dian chun na meaitseanna is fearr a aimsiú do do chuardach. Ní bheidh sé seo i bhfad! Go raibh maith agat as d’fhoighne.</string>
     <string name="smartSearchEmptyTitle">Níl Meaitseáil Foirfe ann</string>
     <string name="smartSearchEmptyMessage">Ní thángamar go díreach ar an méid atá á lorg agat. B\'fhéidir déan iarracht rud éigin eile a chuardach?</string>
+    <string name="webAccessLimitedMessage">Tá idirghníomhaíochtaí ar an leathanach seo teoranta ag d\'institiúid.</string>
+    <string name="contentDescription_filter">Scagairí</string>
+    <string name="smartSearchAnnouncementsTitle">Fógraí</string>
+    <string name="smartSearchAssignmentsTitle">Tascanna</string>
+    <string name="smartSearchDiscussionTopicsTitle">Topaicí pléite</string>
+    <string name="smartSearchPagesTitle">Leathanaigh</string>
+    <string name="resultTypeTitle">Cineál toraidh</string>
+    <string name="searchPreferencesTitle">Sainroghanna Cuardaigh</string>
+    <string name="sortByTitle">Sórtáil de réir</string>
+    <string name="sortByRelevanceTitle">Ábharthacht</string>
+    <string name="sortByTypeTitle">Cineál</string>
+    <string name="smartSearchAnnouncementGroupTitle">Fógraí (%d)</string>
+    <string name="smartSearchDiscussionGroupTitle">Topaic Phléite (%d)</string>
+    <string name="smartSearchAssignmentGroupTitle">Tascanna (%d)</string>
+    <string name="smartSearchPageGroupTitle">Leathanaigh (%d)</string>
+    <string name="a11y_commentSentSuccess">D\'éirigh leis an ráiteas a sheoladh</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Comhráite</string>
 </resources>

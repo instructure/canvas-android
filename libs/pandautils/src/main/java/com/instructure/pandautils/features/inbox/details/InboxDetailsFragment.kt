@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.inbox.details
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -42,10 +43,12 @@ import com.instructure.pandautils.features.inbox.details.composables.InboxDetail
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -62,6 +65,9 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
 
     @Inject
     lateinit var sharedEvents: InboxSharedEvents
+
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,10 +110,11 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
             }
             is InboxDetailsFragmentAction.UrlSelected -> {
                 try {
+                    if (webViewRouter.canRouteInternally(action.url, true)) return
                     val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
                     activity?.startActivity(urlIntent)
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), R.string.inboxMessageFailedToOpenUrl, Toast.LENGTH_SHORT).show()
+                } catch (e: ActivityNotFoundException) {
+                    toast(R.string.inboxMessageFailedToOpenUrl)
                 }
             }
             is InboxDetailsFragmentAction.OpenAttachment -> {

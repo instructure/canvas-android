@@ -26,13 +26,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="120dp"
         android:layout_height="90dp"
-        android:onClick="@{() -> itemViewModel.onStudentClick()}">
+        android:contentDescription="@{@string/a11y_studentSelectorSelectStudent(itemViewModel.studentItemViewData.studentName)}"
+        android:onClick="@{() -> itemViewModel.onStudentClick()}"
+        app:accessibilityClassName='@{"android.widget.Button"}'>
 
         <ImageView
             android:id="@+id/student_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@null"
+            app:avatarTint="@{@color/backgroundLightestElevated}"
             app:layout_constraintBottom_toTopOf="@id/student_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

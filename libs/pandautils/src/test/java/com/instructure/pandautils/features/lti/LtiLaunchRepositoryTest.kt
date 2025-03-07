@@ -18,21 +18,34 @@ package com.instructure.pandautils.features.lti
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class LtiLaunchRepositoryTest {
 
     private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface = mockk(relaxed = true)
     private val assignmentApi = mockk<AssignmentAPI.AssignmentInterface>()
+    private val oAuthInterface = mockk<OAuthAPI.OAuthInterface>()
 
-    private val repository = LtiLaunchRepository(launchDefinitionsApi, assignmentApi)
+    private val repository = LtiLaunchRepository(launchDefinitionsApi, assignmentApi, oAuthInterface)
+
+    @Before
+    fun setup() {
+        val urlCaptor = slot<String>()
+        coEvery { oAuthInterface.getAuthenticatedSession(capture(urlCaptor), any()) } answers {
+            DataResult.Success(AuthenticatedSession(sessionUrl = urlCaptor.captured))
+        }
+    }
 
     @Test
     fun `Get lti from authentication url throws exception when fails`() = runTest {
@@ -93,5 +106,30 @@ class LtiLaunchRepositoryTest {
 
         coVerify { assignmentApi.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) }
         coVerify { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) }
+    }
+
+    @Test
+    fun `Get authenticated url returns data when successful`() = runTest {
+        val urlCaptor = slot<String>()
+        coEvery { oAuthInterface.getAuthenticatedSession(capture(urlCaptor), any()) } answers {
+            DataResult.Success(AuthenticatedSession(sessionUrl = urlCaptor.captured + "/authenticated"))
+        }
+
+        val url = "https://www.instructure.com"
+
+        val result = repository.authenticateUrl(url)
+
+        assertEquals("$url/authenticated", result)
+    }
+
+    @Test
+    fun `Get authenticated url returns original url if request fails`() = runTest {
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+
+        val url = "https://www.instructure.com"
+
+        val result = repository.authenticateUrl(url)
+
+        assertEquals(url, result)
     }
 }

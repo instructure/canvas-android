@@ -26,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.BasicUser
@@ -61,10 +62,11 @@ object ProfileUtils {
         imageView: ImageView,
         name: String?,
         url: String?,
+        @ColorInt avatarTint: Int? = null,
         @Dimension altAvatarBorderWidth: Int = imageView.context.resources.getDimension(R.dimen.avatar_border_width_thin).toInt()
     ) {
         if (shouldLoadAltAvatarImage(url)) {
-            imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), altAvatarBorderWidth))
+            imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), altAvatarBorderWidth, avatarTint))
         } else {
             imageView.loadCircularImage(url, R.drawable.recipient_avatar_placeholder) {
                 imageView.setImageDrawable(createAvatarDrawable(imageView.context, name.orEmpty(), altAvatarBorderWidth))
@@ -72,7 +74,7 @@ object ProfileUtils {
         }
     }
 
-    fun createAvatarDrawable(context: Context, userName: String, @Dimension borderWidth: Int): Drawable {
+    fun createAvatarDrawable(context: Context, userName: String, @Dimension borderWidth: Int, @ColorInt backgroundColor: Int? = null): Drawable {
         val initials = getUserInitials(userName)
         val color = ContextCompat.getColor(context, R.color.textDark)
         return TextDrawable.builder()
@@ -85,7 +87,7 @@ object ProfileUtils {
             .withBorder(borderWidth)
             .withBorderColor(color)
             .endConfig()
-            .buildRound(initials, Color.WHITE)
+            .buildRound(initials, backgroundColor ?: Color.WHITE)
     }
 
     /**

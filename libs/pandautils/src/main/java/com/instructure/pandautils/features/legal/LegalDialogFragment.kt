@@ -32,6 +32,7 @@ import com.instructure.pandautils.databinding.DialogLegalBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.descendants
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -82,14 +83,14 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
 
         binding.termsOfUse.accessibilityClassName(Button::class.java.name)
 
-        binding.privacyPolicy.setOnClickListener {
+        binding.privacyPolicy.onClickWithRequireNetwork {
             legalRouter.routeToPrivacyPolicy()
             dialog.dismiss()
         }
 
         binding.privacyPolicy.accessibilityClassName(Button::class.java.name)
 
-        binding.openSource.setOnClickListener {
+        binding.openSource.onClickWithRequireNetwork {
             legalRouter.routeToOpenSource()
             dialog.dismiss()
         }

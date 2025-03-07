@@ -27,34 +27,33 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.instructure.canvasapi2.models.User
 
 
 class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
 
-    fun assertStudentItemDisplayed(user: User) {
-        composeTestRule.onNodeWithText(user.shortName.orEmpty())
+    fun assertStudentItemDisplayed(studentShortName: String) {
+        composeTestRule.onNodeWithText(studentShortName)
             .assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag("studentListItem") and hasAnyChild(hasText(user.shortName.orEmpty())), true)
+        composeTestRule.onNode(hasTestTag("studentListItem") and hasAnyChild(hasText(studentShortName)), true)
             .assertIsDisplayed()
             .assertHasClickAction()
     }
 
-    fun assertStudentItemNotDisplayed(user: User) {
-        composeTestRule.onNodeWithText(user.shortName.orEmpty())
+    fun assertStudentItemNotDisplayed(studentShortName: String) {
+        composeTestRule.onNodeWithText(studentShortName)
             .assertDoesNotExist()
-        composeTestRule.onNode(hasTestTag("studentListItem") and hasAnyChild(hasText(user.shortName.orEmpty())), true)
+        composeTestRule.onNode(hasTestTag("studentListItem") and hasAnyChild(hasText(studentShortName)), true)
             .assertDoesNotExist()
     }
 
-    fun tapStudent(name: String) {
-        composeTestRule.onNodeWithText(name)
+    fun clickStudent(studentShortName: String) {
+        composeTestRule.onNodeWithText(studentShortName)
             .assertIsDisplayed()
             .performClick()
     }
 
-    fun tapStudentColor(name: String) {
-        composeTestRule.onNode(hasTestTag("studentColor") and hasAnySibling(hasText(name)), true)
+    fun tapStudentColor(studentShortName: String) {
+        composeTestRule.onNode(hasTestTag("studentColor") and hasAnySibling(hasText(studentShortName)), true)
             .assertIsDisplayed()
             .performClick()
     }
@@ -70,5 +69,9 @@ class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
 
     fun tapAddStudent() {
         composeTestRule.onNodeWithTag("addStudentButton").performClick()
+    }
+
+    fun assertToolbarTitle() {
+        composeTestRule.onNodeWithText("Manage Students").assertIsDisplayed()
     }
 }

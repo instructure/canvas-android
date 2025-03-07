@@ -199,7 +199,7 @@ class GradeCellStateTest : Assert() {
             score = 0.0
         )
         val expected = baseGradedState.copy(
-            accentColor = 0xFF6A7883.toInt(),
+            accentColor = 0xFF66717C.toInt(),
             graphPercent = 1.0f,
             showIncompleteIcon = true,
             grade = "Incomplete",

@@ -21,7 +21,6 @@ import androidx.core.os.ConfigurationCompat
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import java.io.File
 
@@ -83,7 +82,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var isStudentView by BooleanPref()
     var isMasqueradingFromQRCode by BooleanPref()
     var masqueradeId by LongPref(-1L)
-    var isFirstMasqueradingStart by BooleanPref()
     internal var masqueradeDomain by StringPref()
     internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user", false)
 
@@ -147,6 +145,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     val showElementaryView
         get() = canvasForElementary && elementaryDashboardEnabledOverride
 
+    var webViewAuthenticationTimestamp by LongPref(0)
+
     /**
      * clearAllData is required for logout.
      * Clears all data including credentials and cache.
@@ -156,8 +156,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
         // Clear preferences
         clearPrefs()
 
-        // Clear PageView session ID
-        PageViewUtils.session.clear()
         pandataInfo = null
 
         // Clear http cache

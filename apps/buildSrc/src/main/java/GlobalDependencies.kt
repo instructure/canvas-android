@@ -161,7 +161,6 @@ object Libs {
     const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"
     const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.6"
     const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.1.2"
-    const val PAPERDB = "io.github.pilgr:paperdb:2.7.2"
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"

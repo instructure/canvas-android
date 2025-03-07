@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Du kan åpne Detaljer om innlevering her</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Klikk her for å se detaljer om Innlevering og Vurderingsveiledning</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Vurdering: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minutt</item>
@@ -1442,6 +1443,7 @@
     <string name="inboxContextSelectorTitle">Velg Emne eller gruppe</string>
     <string name="inboxClearFilter">Tøm</string>
     <string name="a11y_courseFilterContentDescription">Velg filter: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Postkassevalg: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">velg</string>
     <string name="a11y_itemSelectedSwipeForActions">Samtale valgt. Valgmodus aktivert. Naviger etter handlinger.</string>
     <string name="a11y_conversationSelected">Samtaler valgt</string>
@@ -1469,6 +1471,7 @@
     <string name="offline_content_other">Andre apper</string>
     <string name="offline_content_canvas_student">Canvas-student</string>
     <string name="offline_content_remaining">Resterende</string>
+    <string name="offline_content_storage_info_a11y_description">Lagringsinfo: %s av %s brukt, Andre apper %d%%, Canvas Student %d%%, Gjenværende %d%%</string>
     <string name="offline_content_all_courses">Alle åpne emner</string>
     <string name="offline_content_sync">Synkroniser</string>
     <string name="offline_content_selected">%d er valgt</string>
@@ -1488,8 +1491,11 @@
     <string name="offline_content_sync_dialog_positive">Synkroniser</string>
     <string name="offline_content_sync_loading_title">Laster&#8230;</string>
     <string name="offline_content_sync_loading_message">Vent litt, vi gjør alt klart for deg.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Innstillinger for frakoblet synkronisering er lagret. Synkronisering vil start snarte i bakgrunnen.</string>
     <string name="content_description_expand_content">Utvid innhold</string>
+    <string name="content_description_expand_content_with_param">Vis innhold, %s</string>
     <string name="content_description_collapse_content">Skjul innhold</string>
+    <string name="content_description_collapse_content_with_param">Skjul innhold, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Aktivering av Automatisk synkronisering av innhold vil ta seg av nedlasting av det valgte innholdet basert på følgende innstillinger. Synkronisering av innhold vil skje selv om applikasjonen ikke kjører. Hvis innstillingen er slått av, vil det ikke skje noen synkronisering. Det allerede nedlastede innholdet vil ikke bli slettet.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkroniseringsfrekvens</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisk synkronisering av innhold</string>
@@ -1618,8 +1624,15 @@
     <string name="unpublishDialogPositiveButton">Avpubliser</string>
     <string name="discussionMenuRefresh">Oppdater</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Hopp til i dag</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Hopp til i dag, valgt dag er %s, i dag er %s</string>
     <string name="a11y_calendarSwitchToMonthView">Bytt til månedlig visning</string>
     <string name="a11y_calendarSwitchToWeekView">Bytt til ukentlig visning</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Veksle mellom måneds- og ukesvisning</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Kalender er i månedsvisning</string>
+    <string name="a11y_calendarWeekView">Kalender er i ukesvisning</string>
+    <string name="a11y_calendarSwitchedToWeekView">Kalender endret til ukesvisning</string>
+    <string name="a11y_calendarSwitchedToMonthView">Kalender endret til månedsvisning</string>
     <string name="calendarNoEvents">Ingen hendelser i dag!</string>
     <string name="calendarNoEventsDescription">Det ser ut som dette er en flott dag til å slappe av og lade batteriene.</string>
     <string name="userCalendarToDo">Å gjøre</string>
@@ -1643,6 +1656,10 @@
     <string name="calendarFilterLimitSnackbar">Du kan bare velge opptil %d kalendere.</string>
     <string name="calendarFilterTitle">Kalendere</string>
     <string name="calendarFiltersFailed">Kunne ikke laste inn filtre</string>
+    <string name="a11y_eventCreatedAnnouncement">Hendelsen %s ble opprettet.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Hendelsen %s ble oppdatert</string>
+    <string name="a11y_toDoCreatedAnnouncement">Gjøremålet %s ble opprettet.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Gjøremålet %s ble oppdatert</string>
     <string name="todoScreenTitle">Å gjøre</string>
     <string name="todoDateLabel">Dato</string>
     <string name="todoDescriptionLabel">Beskrivelse</string>
@@ -1949,4 +1966,12 @@
     <string name="smartSearchAssignmentGroupTitle">Oppgaver (%d)</string>
     <string name="smartSearchPageGroupTitle">Sider (%d)</string>
     <string name="a11y_commentSentSuccess">Kommentaren ble sendt</string>
+    <string name="a11y_dragViewContentDescription">Vis skuff</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Samtaler</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Avmerket</string>
+    <string name="a11y_unchecked">Ikke avmerket</string>
+    <string name="a11y_indeterminate">Delvis avmerket</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filtre er oppdatert</string>
 </resources>

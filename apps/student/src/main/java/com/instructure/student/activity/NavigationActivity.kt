@@ -112,10 +112,11 @@ import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
-import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.post
 import com.instructure.pandautils.utils.postSticky
@@ -212,13 +213,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     lateinit var alarmScheduler: AlarmScheduler
 
     @Inject
-    lateinit var oAuthApi: OAuthAPI.OAuthInterface
-
-    @Inject
     lateinit var offlineAnalyticsManager: OfflineAnalyticsManager
 
     @Inject
     lateinit var enabledCourseTabs: EnabledTabs
+
+    @Inject
+    lateinit var webViewAuthenticator: WebViewAuthenticator
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -291,6 +292,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     val fragment = SettingsFragment.newInstance(route)
                     addFragment(fragment, route)
                 }
+                R.id.navigationDrawerItem_closeDrawer -> {
+                    closeNavigationDrawer()
+                }
             }
         }
     }
@@ -325,6 +329,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 
     private fun checkAppUpdates() {
@@ -402,11 +407,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         scheduleAlarms()
-
-        if (ApiPrefs.isFirstMasqueradingStart) {
-            loadAuthenticatedSession()
-            ApiPrefs.isFirstMasqueradingStart = false
-        }
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {
@@ -415,17 +415,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 offlineAnalyticsManager.offlineModeEnded()
             } else {
                 offlineAnalyticsManager.offlineModeStarted()
-            }
-        }
-    }
-
-    private fun loadAuthenticatedSession() {
-        lifecycleScope.launch {
-            oAuthApi.getAuthenticatedSession(
-                ApiPrefs.fullDomain,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrNull?.sessionUrl?.let {
-                loadUrlIntoHeadlessWebView(this@NavigationActivity, it)
             }
         }
     }
@@ -636,6 +625,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemCloseDrawer.setOnClickListener(mNavigationDrawerItemClickListener)
             listOf(
                 navigationDrawerItemFiles,
                 navigationDrawerItemGauge,
@@ -647,7 +637,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 navigationDrawerItemLogout,
                 navigationDrawerSettings,
                 navigationDrawerItemStartMasquerading,
-                navigationDrawerItemStopMasquerading
+                navigationDrawerItemStopMasquerading,
+                navigationDrawerItemCloseDrawer
             ).forEach {
                 it.accessibilityDelegate = object : View.AccessibilityDelegate() {
                     override fun onInitializeAccessibilityNodeInfo(
@@ -698,6 +689,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 invalidateOptionsMenu()
+                setCloseDrawerVisibility()
             }
 
             override fun onDrawerClosed(drawerView: View) {
@@ -1271,6 +1263,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         updateBottomBarBadge(R.id.bottomNavigationInbox, unreadCount, R.plurals.a11y_inboxUnreadCount)
     }
 
+    override fun increaseUnreadCount(increaseBy: Int) {
+        updateUnreadCount(binding.bottomBar.getOrCreateBadge(R.id.bottomNavigationInbox).number + increaseBy)
+    }
+
     override fun updateNotificationCount(notificationCount: Int) {
         updateBottomBarBadge(R.id.bottomNavigationNotifications, notificationCount, R.plurals.a11y_notificationsUnreadCount)
     }
@@ -1337,6 +1333,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
+    }
+
+    private fun setCloseDrawerVisibility() {
+        navigationDrawerBinding.navigationDrawerItemCloseDrawer.setVisible(isAccessibilityEnabled(this))
     }
 
     companion object {

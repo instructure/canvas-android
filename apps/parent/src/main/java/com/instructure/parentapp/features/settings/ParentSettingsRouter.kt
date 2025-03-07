@@ -16,6 +16,12 @@
  */
 package com.instructure.parentapp.features.settings
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.settings.SettingsRouter
+import com.instructure.parentapp.util.navigation.Navigation
 
-class ParentSettingsRouter : SettingsRouter
+class ParentSettingsRouter(private val navigation: Navigation, private val activity: FragmentActivity) : SettingsRouter {
+    override fun navigateToInboxSignature() {
+        navigation.navigate(activity, navigation.inboxSignatureSettings)
+    }
+}

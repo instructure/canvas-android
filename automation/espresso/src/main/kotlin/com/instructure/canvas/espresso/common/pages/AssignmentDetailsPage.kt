@@ -18,8 +18,10 @@ package com.instructure.canvas.espresso.common.pages
 
 import android.view.View
 import android.widget.ScrollView
+import androidx.test.espresso.AmbiguousViewMatcherException
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
@@ -30,6 +32,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
@@ -141,7 +144,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun assertAssignmentLocked() {
         if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.assignmentDetailsPage)).swipeUp()
-        onView(withId(R.id.lockedMessageTextView)).assertDisplayed()
+        onView(withId(R.id.lockedMessageTextView)).scrollTo().assertDisplayed()
         onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked by the module")))
     }
 
@@ -211,13 +214,16 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSelectedAttempt(attemptNumber: Int) {
-        if(attemptNumber != 1) {
-            assertAttemptInformation()
+        try {
             onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)), withText("Attempt $attemptNumber"))).assertDisplayed()
         }
-        else {
-            assertNoAttemptSpinner()
-            onView(allOf(withId(R.id.attemptTitle), withParent(withId(R.id.attemptView)), withText("Attempt $attemptNumber"))).assertDisplayed()
+        catch(e: Exception) { // We need to check 'attemptView' if we don't find 'attemptTitle' under 'attemptSpinner' because if no 'attemptSpinner', the 'attemptTitle' will be placed under 'attemptView'.
+            when (e) {
+                is AmbiguousViewMatcherException, is NoMatchingViewException ->
+                    onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptView)), withText("Attempt $attemptNumber"))).assertDisplayed()
+                else -> throw e  // Re-throw other exceptions to avoid absorption of valid expections
+            }
+
         }
     }
 
@@ -235,7 +241,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(allOf(withId(R.id.attemptTitle), withText("Attempt $attemptNumber"))).click()
     }
 
-    private fun assertAttemptInformation() {
+    fun assertAttemptInformation() {
         waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
         waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
     }
@@ -279,6 +285,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun clickSubmissionAndRubric() {
         onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).click()
+    }
+
+    fun clickComposeMessageFAB() {
+        onView(withContentDescription("Send a message about this assignment")).click()
     }
 
     //OfflineMethod

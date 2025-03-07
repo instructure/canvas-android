@@ -1181,6 +1181,7 @@
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
     <string name="a11y_gradeCellContentDescriptionHint">Anda dapat membuka detail Penyerahan dari sini</string>
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Klik di sini untuk melihat detail Penyerahan &amp; Rubrik</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nilai: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Menit</item>
@@ -1445,6 +1446,7 @@
     <string name="inboxContextSelectorTitle">Pilih Kursus atau Grup</string>
     <string name="inboxClearFilter">Kosongkan</string>
     <string name="a11y_courseFilterContentDescription">Filter Kursus: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Pemilihan Kotak Surat: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">pilih</string>
     <string name="a11y_itemSelectedSwipeForActions">Percakapan dipilih. Mode seleksi diaktifkan. Navigasikan untuk tindakan.</string>
     <string name="a11y_conversationSelected">Percakapan dipilih</string>
@@ -1471,6 +1473,7 @@
     <string name="offline_content_other">Aplikasi Lain</string>
     <string name="offline_content_canvas_student">Canvas Student</string>
     <string name="offline_content_remaining">Tersisa</string>
+    <string name="offline_content_storage_info_a11y_description">Informasi Penyimpanan: %s dari %s Digunakan, App Lain %d%%, Siswa Canvas %d%%, Tersisa %d%%</string>
     <string name="offline_content_all_courses">Semua Kursus</string>
     <string name="offline_content_sync">Sinkronkan</string>
     <string name="offline_content_selected">%d Dipilih</string>
@@ -1490,8 +1493,11 @@
     <string name="offline_content_sync_dialog_positive">Sinkronkan</string>
     <string name="offline_content_sync_loading_title">Memuat...</string>
     <string name="offline_content_sync_loading_message">Jangan ke mana-mana, kami sedang menyiapkannya untuk Anda.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Pengaturan sinkronisasi offline sudah disimpan. Sinkronisasi akan segera dimulai di latar belakang.</string>
     <string name="content_description_expand_content">Buka konten</string>
+    <string name="content_description_expand_content_with_param">Buka konten, %s</string>
     <string name="content_description_collapse_content">Tutup konten</string>
+    <string name="content_description_collapse_content_with_param">Tutup konten, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Mengaktifkan Sinkronisasi Konten Otomatis akan menangani pengunduhan dari konten yang dipilih berdasarkan pengaturan di bawah. Sinkronisasi konten akan terjadi walaupun aplikasi tidak berjalan. Jika pengaturan dimatikan, sinkronisasi tidak akan terjadi. Konten yang sudah diunduh tidak akan dihapus.</string>
     <string name="syncSettings_syncFrequencyTitle">Frekuensi Sinkronisasi</string>
     <string name="syncSettings_autoContentSyncTitle">Sinkronisasi Konten Otomatis</string>
@@ -1620,8 +1626,15 @@
     <string name="unpublishDialogPositiveButton">Batalkan Terbit</string>
     <string name="discussionMenuRefresh">Muat Ulang</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Lompat ke Hari Ini</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Lompat ke Hari Ini, hari yang dipilih adalah %s, hari ini adalah %s</string>
     <string name="a11y_calendarSwitchToMonthView">Ganti ke tampilan bulan</string>
     <string name="a11y_calendarSwitchToWeekView">Ganti ke tampilan minggu</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Alihkan antara tampilan bulan dan minggu</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Kalender dalam tampilan bulan</string>
+    <string name="a11y_calendarWeekView">Kalender dalam tampilan minggu</string>
+    <string name="a11y_calendarSwitchedToWeekView">Kalender dialihkan ke tampilan minggu</string>
+    <string name="a11y_calendarSwitchedToMonthView">Kalender dialihkan ke tampilan bulan</string>
     <string name="calendarNoEvents">Tidak Ada Acara Hari Ini!</string>
     <string name="calendarNoEventsDescription">Sepertinya hari ini sangat cocok untuk beristirahat, santai, dan menyegarkan diri.</string>
     <string name="userCalendarToDo">To Do</string>
@@ -1645,6 +1658,10 @@
     <string name="calendarFilterLimitSnackbar">Anda dapat memilih hingga %d kalender.</string>
     <string name="calendarFilterTitle">Kalender</string>
     <string name="calendarFiltersFailed">Gagal memuat filter</string>
+    <string name="a11y_eventCreatedAnnouncement">Acara %s berhasil dibuat.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Acara %s berhasil diperbarui.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Harus Dilakukan %s berhasil dibuat.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Harus Dilakukan %s berhasil diperbarui.</string>
     <string name="todoScreenTitle">To Do</string>
     <string name="todoDateLabel">Tanggal</string>
     <string name="todoDescriptionLabel">Deskripsi</string>
@@ -1951,4 +1968,12 @@
     <string name="smartSearchAssignmentGroupTitle">Tugas (%d)</string>
     <string name="smartSearchPageGroupTitle">Halaman (%d)</string>
     <string name="a11y_commentSentSuccess">Komentar berhasil dikirim</string>
+    <string name="a11y_dragViewContentDescription">Buka Laci</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Percakapan</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Diperiksa</string>
+    <string name="a11y_unchecked">Centang dihapus</string>
+    <string name="a11y_indeterminate">Dicentang parsial</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filter telah diperbarui</string>
 </resources>

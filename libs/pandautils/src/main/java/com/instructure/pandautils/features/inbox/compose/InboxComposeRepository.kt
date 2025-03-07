@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContextPermission
@@ -29,25 +30,29 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import kotlinx.coroutines.withTimeoutOrNull
 
 abstract class InboxComposeRepository(
     private val courseAPI: CourseAPI.CoursesInterface,
     private val recipientAPI: RecipientAPI.RecipientInterface,
     private val inboxAPI: InboxApi.InboxInterface,
+    private val inboxSettingsManager: InboxSettingsManager
 ) {
     abstract suspend fun getCourses(forceRefresh: Boolean = false): DataResult<List<Course>>
 
     abstract suspend fun getGroups(forceRefresh: Boolean = false): DataResult<List<Group>>
 
+    abstract suspend fun isInboxSignatureFeatureEnabled(): Boolean
+
     open suspend fun getRecipients(
         searchQuery: String,
-        context: CanvasContext,
+        contextId: String,
         forceRefresh: Boolean
     ): DataResult<List<Recipient>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return recipientAPI.getFirstPageRecipientListNoSyntheticContexts(
             searchQuery = searchQuery,
-            context = context.contextId,
+            context = contextId,
             restParams = params,
         ).depaginate {
             recipientAPI.getNextPageRecipientList(it, params)
@@ -103,6 +108,19 @@ abstract class InboxComposeRepository(
 
         return permissionResponse.map {
             it.send_messages_all
+        }
+    }
+
+    suspend fun getInboxSignature(): String {
+        // Just to ensure we won't show the loading forever if there is an issue with the network connection
+        val inboxSignatureSettings = withTimeoutOrNull(3000) {
+            if (isInboxSignatureFeatureEnabled()) inboxSettingsManager.getInboxSignatureSettings() else null
+        }?.dataOrNull
+
+        return if (inboxSignatureSettings != null && inboxSignatureSettings.useSignature && inboxSignatureSettings.signature.isNotBlank()) {
+            inboxSignatureSettings.signature
+        } else {
+            ""
         }
     }
 }

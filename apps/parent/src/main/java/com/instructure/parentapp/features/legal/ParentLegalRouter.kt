@@ -16,21 +16,33 @@
  */
 package com.instructure.parentapp.features.legal
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import com.instructure.pandautils.features.legal.LegalRouter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.launchCustomTab
+import com.instructure.parentapp.R
+import com.instructure.parentapp.features.webview.HtmlContentActivity
 
-class ParentLegalRouter(private val context: Context) : LegalRouter {
+class ParentLegalRouter(private val activity: Activity) : LegalRouter {
 
     override fun routeToTermsOfService(html: String) {
-        context.launchCustomTab("http://www.canvaslms.com/policies/terms-of-use", ThemePrefs.primaryColor)
+        if (html.isNotBlank()) {
+            val intent = HtmlContentActivity.createIntent(
+                activity,
+                activity.getString(R.string.termsOfUse),
+                html,
+                true
+            )
+            activity.startActivity(intent)
+        } else {
+            activity.launchCustomTab("http://www.canvaslms.com/policies/terms-of-use", ThemePrefs.primaryColor)
+        }
     }
 
     override fun routeToPrivacyPolicy() {
-        context.launchCustomTab("https://www.instructure.com/policies/product-privacy-policy", ThemePrefs.primaryColor)
+        activity.launchCustomTab("https://www.instructure.com/policies/product-privacy-policy", ThemePrefs.primaryColor)
     }
 
     override fun routeToOpenSource() {
@@ -38,6 +50,6 @@ class ParentLegalRouter(private val context: Context) : LegalRouter {
             Intent.ACTION_VIEW,
             Uri.parse("https://github.com/instructure/canvas-android")
         )
-        context.startActivity(intent)
+        activity.startActivity(intent)
     }
 }

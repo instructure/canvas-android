@@ -305,7 +305,7 @@ object ApiEndpoint : Endpoint(
         Segment("environment") to Endpoint(
             response = {
                 GET {
-                    request.successResponse(mapOf("calendar_contexts_limit" to 20))
+                    request.successResponse(mapOf("calendar_contexts_limit" to 20, "enable_inbox_signature_block" to true))
                 }
             }
         )

@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Þú getur opnað upplýsingar um skil héðan</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Smelltu hér til að skoða Skil &amp; upplýsingar um matskvarða</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Einkunn: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Mínúta</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Veldu námskeið eða hóp</string>
     <string name="inboxClearFilter">Hreinsa</string>
     <string name="a11y_courseFilterContentDescription">Námskeiðssía: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Pósthólfaval: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">velja</string>
     <string name="a11y_itemSelectedSwipeForActions">Samræða valin. Valhamur virkjaður. Skoða fyrir aðgerðir.</string>
     <string name="a11y_conversationSelected">Samræða valin</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Önnur smáforrit</string>
     <string name="offline_content_canvas_student">Canvas nemandi</string>
     <string name="offline_content_remaining">Eftir</string>
+    <string name="offline_content_storage_info_a11y_description">Geymsluupplýsingar: %s af %s notað, önnur forrit %d%%, Canvas nemandi %d%%, eftir %d%%</string>
     <string name="offline_content_all_courses">Öll námskeið</string>
     <string name="offline_content_sync">Samhæfa</string>
     <string name="offline_content_selected">%d Valið</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Samhæfa</string>
     <string name="offline_content_sync_loading_title">Hleður...</string>
     <string name="offline_content_sync_loading_message">Bíddu við, við erum að gera hlutina tilbúna fyrir þig.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Samþættingarstillingar utan nets hafa verið vistaðar. Samþætting hefst innan stundar í bakgrunninum.</string>
     <string name="content_description_expand_content">Víkka efni</string>
+    <string name="content_description_expand_content_with_param">Víkka efni, %s</string>
     <string name="content_description_collapse_content">Fella saman efni</string>
+    <string name="content_description_collapse_content_with_param">Fella saman efni, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Með því að virkja sjálfvirka samstillingu efnis mun hún sjá um að hlaða niður völdu efni byggt á stillingunum hér að neðan. Samstilling efnis mun gerast jafnvel þótt forritið sé ekki í gangi. Ef slökkt er á stillingunni mun engin samstilling eiga sér stað. Efni sem þegar hefur verið hlaðið niður verður ekki eytt.</string>
     <string name="syncSettings_syncFrequencyTitle">Samstillingartíðni</string>
     <string name="syncSettings_autoContentSyncTitle">Sjálfvirk samstilling efnis</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Fela</string>
     <string name="discussionMenuRefresh">Glæða</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Fara á daginn í dag</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Fara í daginn í dag, valinn dagur er %s, í dag er %s</string>
     <string name="a11y_calendarSwitchToMonthView">Skipta yfir í mánaðaryfirlit</string>
     <string name="a11y_calendarSwitchToWeekView">Skipta yfir í vikuyfirlit</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Skiptu á milli mánaðar- og vikuyfirlits</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Dagatal er í mánaðaryfirliti</string>
+    <string name="a11y_calendarWeekView">Dagatal er í vikuyfirliti</string>
+    <string name="a11y_calendarSwitchedToWeekView">Dagatali skipt yfir í vikuyfirlit</string>
+    <string name="a11y_calendarSwitchedToMonthView">Dagatali skipt yfir í mánaðaryfirlit</string>
     <string name="calendarNoEvents">Engir viðburðir í dag!</string>
     <string name="calendarNoEventsDescription">Þetta virðist vera góður dagur til að hvílast, slaka á og hlaða batteríin.</string>
     <string name="userCalendarToDo">Verkefnalisti</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Þú getur aðeins valið allt að %d dagatöl.</string>
     <string name="calendarFilterTitle">Dagatöl</string>
     <string name="calendarFiltersFailed">Tókst ekki að hlaða inn síum</string>
+    <string name="a11y_eventCreatedAnnouncement">Viðburður %s stofnaður.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Viðburður %s uppfærður.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Verkefni %s stofnað.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Verkefni %s uppfært.</string>
     <string name="todoScreenTitle">Verkefnalisti</string>
     <string name="todoDateLabel">Dagsetning</string>
     <string name="todoDescriptionLabel">Lýsing</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Verkefni (%d)</string>
     <string name="smartSearchPageGroupTitle">Síður (%d)</string>
     <string name="a11y_commentSentSuccess">Athugasemd send</string>
+    <string name="a11y_dragViewContentDescription">Víkka skúffu</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Samræður</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Athugað</string>
+    <string name="a11y_unchecked">Ekki athugað</string>
+    <string name="a11y_indeterminate">Athugað að hluta</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Síur hafa verið uppfærðar</string>
 </resources>

@@ -18,10 +18,10 @@
 <resources>
 
     <!-- InstUI colors - We should use these colors to build standard UI elements -->
-    <color name="ash">#6A7883</color>
+    <color name="ash">#66717C</color>
     <color name="backgroundMasquerade">#BF32A4</color>
     <color name="backgroundDanger">#E62429</color>
-    <color name="backgroundDark">#6A7883</color>
+    <color name="backgroundDark">#66717C</color>
     <color name="backgroundDarkest">#273540</color>
     <color name="backgroundGrouped">#FFFFFF</color>
     <color name="backgroundGroupedCell">#FFFFFF</color>
@@ -35,7 +35,7 @@
     <color name="barney">#BF32A4</color>
     <color name="borderMasquerade">#BF32A4</color>
     <color name="borderDanger">#E62429</color>
-    <color name="borderDark">#6A7883</color>
+    <color name="borderDark">#66717C</color>
     <color name="borderDarkest">#273540</color>
     <color name="borderInfo">#2B7ABC</color>
     <color name="borderLight">#F2F4F4</color>
@@ -52,7 +52,7 @@
     <color name="shamrock">#03893D</color>
     <color name="textMasquerade">#BF32A4</color>
     <color name="textDanger">#E62429</color>
-    <color name="textDark">#6A7883</color>
+    <color name="textDark">#66717C</color>
     <color name="textDarkest">#273540</color>
     <color name="textPlaceholder">#9EA6AD</color>
     <color name="textInfo">#2B7ABC</color>
@@ -68,6 +68,7 @@
     <color name="backgroundDarkMode">#151D24</color>
     <color name="textOnColorDark">#273540</color>
     <color name="elevatedDarkColor">#242526</color>
+    <color name="darkStatusBarColor">#273540</color>
 
     <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
     <color name="switchThumbColor">#FFFFFF</color>

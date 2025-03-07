@@ -44,7 +44,7 @@ import javax.inject.Inject
 class LtiLaunchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: LtiLaunchRepository,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
 ) : ViewModel() {
 
     private val ltiUrl: String? = savedStateHandle.get<String>(LtiLaunchFragment.LTI_URL)
@@ -122,10 +122,11 @@ class LtiLaunchViewModel @Inject constructor(
 
     private fun launchLti(url: String) {
         viewModelScope.launch {
+            val authenticatedUrl = repository.authenticateUrl(url)
             if (openInternally || Assignment.internalLtiTools.any { url.contains(it) }) {
-                _events.send(LtiLaunchAction.LoadLtiWebView(url))
+                _events.send(LtiLaunchAction.LoadLtiWebView(authenticatedUrl))
             } else {
-                _events.send(LtiLaunchAction.LaunchCustomTab(url))
+                _events.send(LtiLaunchAction.LaunchCustomTab(authenticatedUrl))
             }
             _state.value = ViewState.Success
         }

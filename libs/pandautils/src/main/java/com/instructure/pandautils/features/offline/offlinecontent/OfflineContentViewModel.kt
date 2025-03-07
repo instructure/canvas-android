@@ -423,7 +423,8 @@ class OfflineContentViewModel @Inject constructor(
             offlineAnalyticsManager.reportOfflineSyncStarted()
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
-            _events.postValue(Event(OfflineContentAction.Back))
+            _events.value = Event(OfflineContentAction.AnnounceSyncStarted)
+            _events.value = Event(OfflineContentAction.Back)
         }
     }
 

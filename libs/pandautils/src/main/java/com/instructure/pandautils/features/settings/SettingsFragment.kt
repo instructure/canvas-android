@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
@@ -44,6 +45,7 @@ import com.instructure.pandautils.features.legal.LegalDialogFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.showNoConnectionDialog
 import com.instructure.pandautils.utils.showThemed
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,6 +57,12 @@ class SettingsFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var settingsRouter: SettingsRouter
+
+    @Inject
+    lateinit var sharedEvents: SettingsSharedEvents
+
+    @Inject
+    lateinit var firebaseCrashlytics: FirebaseCrashlytics
 
     private val viewModel: SettingsViewModel by viewModels()
 
@@ -94,15 +102,20 @@ class SettingsFragment : BaseCanvasFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (appThemeChange) {
-            val w = requireView().measuredWidth
-            val h = requireView().measuredHeight
-            val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            requireView().draw(canvas)
-            outState.putParcelable("bitmap", bitmap)
-            outState.putInt("xPos", xPos)
-            outState.putInt("yPos", yPos)
-            outState.putInt("scrollValue", scrollValue)
+            try {
+                val w = requireView().measuredWidth
+                val h = requireView().measuredHeight
+                val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565)
+                outState.putParcelable("bitmap", bitmap)
+                outState.putInt("xPos", xPos)
+                outState.putInt("yPos", yPos)
+                outState.putInt("scrollValue", scrollValue)
+                val canvas = Canvas(bitmap)
+                requireView().draw(canvas)
+            } catch (e: Exception) {
+                // If the Bitmap is too big to serialize we just ignore the animation
+                firebaseCrashlytics.recordException(e)
+            }
         }
     }
 
@@ -135,6 +148,7 @@ class SettingsFragment : BaseCanvasFragment() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         binding.settingsComposeView.apply {
             setContent {
@@ -157,6 +171,8 @@ class SettingsFragment : BaseCanvasFragment() {
                 yPos = action.yPos
                 appThemeChange = true
             }
+
+            SettingsViewModelAction.ShowOfflineDialog -> showNoConnectionDialog(requireContext())
         }
     }
 
@@ -219,6 +235,10 @@ class SettingsFragment : BaseCanvasFragment() {
                 settingsRouter.navigateToRateApp()
             }
 
+            SettingsItem.INBOX_SIGNATURE -> {
+                settingsRouter.navigateToInboxSignature()
+            }
+
             else -> {
 
             }
@@ -231,6 +251,14 @@ class SettingsFragment : BaseCanvasFragment() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setData(Uri.parse(googleCalendarLink))
         startActivity(intent)
+    }
+
+    private fun handleSharedViewModelAction(action: SettingsSharedAction) {
+        when (action) {
+            is SettingsSharedAction.UpdateSignatureSettings -> {
+                viewModel.updateSignatureSettings(action.enabled)
+            }
+        }
     }
 
     companion object {

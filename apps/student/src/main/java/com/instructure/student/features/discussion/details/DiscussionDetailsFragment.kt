@@ -63,7 +63,6 @@ import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
@@ -636,7 +635,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 withContext(Dispatchers.IO){ discussionTopic?.views?.forEach { it.init(discussionTopic!!, it, repository.isOnline()) } }
             }
 
-            if (discussionTopic == null || discussionTopic?.views?.isEmpty() == true && DiscussionCaching(discussionTopicHeader.id).isEmpty()) {
+            if (discussionTopic == null || discussionTopic?.views?.isEmpty() == true) {
                 // Nothing to display
                 discussionProgressBar.setGone()
                 discussionTopicRepliesTitle.setGone()

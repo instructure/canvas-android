@@ -14,11 +14,13 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="android.view.View" />
+
         <import type="com.instructure.canvasapi2.utils.Pronouns" />
 
         <variable
@@ -56,128 +58,146 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> viewModel.toggleStudentSelector()}"
+                    app:contentInsetStart="0dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingEnd="16dp">
+                        android:layout_height="match_parent">
+
+                        <FrameLayout
+                            android:id="@+id/student_selector"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:accessibilityLiveRegion="polite"
+                            android:accessibilityTraversalAfter="@id/navigationButtonHolder"
+                            android:contentDescription="@{viewModel.data.studentSelectorContentDescription}"
+                            android:onClick="@{() -> viewModel.toggleStudentSelector()}"
+                            app:accessibilityClassName='@{"android.widget.Button"}'>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/selected_student_container"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="12dp"
+                                app:visible="@{viewModel.data.selectedStudent != null}">
+
+                                <ImageView
+                                    android:id="@+id/student_image"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_marginTop="16dp"
+                                    android:contentDescription="@null"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:userAvatar="@{viewModel.data.selectedStudent.avatarUrl}"
+                                    app:userName="@{viewModel.data.selectedStudent.name}" />
+
+                                <TextView
+                                    android:id="@+id/student_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="@{Pronouns.INSTANCE.span(viewModel.data.selectedStudent.shortName, viewModel.data.selectedStudent.pronouns)}"
+                                    android:textColor="@color/textLightest"
+                                    app:layout_constraintEnd_toStartOf="@id/student_selector_arrow"
+                                    app:layout_constraintHorizontal_chainStyle="packed"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/student_image" />
+
+                                <ImageView
+                                    android:id="@+id/student_selector_arrow"
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:layout_marginStart="8dp"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_arrow_down"
+                                    app:layout_constraintBottom_toBottomOf="@id/student_name"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toEndOf="@id/student_name"
+                                    app:layout_constraintTop_toTopOf="@id/student_name"
+                                    app:rotationAnim="@{viewModel.data.studentSelectorExpanded ? -180 : 0}"
+                                    app:tint="@color/textLightest" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </FrameLayout>
 
                         <FrameLayout
                             android:id="@+id/navigationButtonHolder"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="start"
+                            android:layout_gravity="start|top"
                             android:layout_marginBottom="4dp"
+                            android:foreground="?attr/selectableItemBackground"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
-                            android:foreground="?attr/selectableItemBackground">
+                            android:paddingStart="16dp"
+                            app:accessibilityClassName='@{"android.widget.Button"}'>
 
                             <ImageView
                                 android:id="@+id/navigationButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
-                                android:src="@drawable/ic_hamburger"
                                 android:importantForAccessibility="no"
-                                app:tint="@color/textLightest"/>
+                                android:src="@drawable/ic_hamburger"
+                                app:tint="@color/textLightest" />
 
                             <TextView
                                 android:id="@+id/unreadCountBadge"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="start|top"
-                                android:layout_marginTop="8dp"
                                 android:layout_marginStart="12dp"
+                                android:layout_marginTop="8dp"
                                 android:background="@drawable/bg_button_full_rounded_filled"
                                 android:gravity="center"
-                                android:textSize="10sp"
+                                android:importantForAccessibility="no"
                                 android:textColor="@color/textDarkest"
+                                android:textSize="10sp"
                                 android:visibility="gone"
-                                android:importantForAccessibility="no"/>
+                                tools:visibility="visible" />
 
                         </FrameLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/selected_student_container"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="12dp"
-                            app:visible="@{viewModel.data.selectedStudent != null}">
-
-                            <ImageView
-                                android:id="@+id/student_image"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginTop="16dp"
-                                android:contentDescription="@null"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:userAvatar="@{viewModel.data.selectedStudent.avatarUrl}"
-                                app:userName="@{viewModel.data.selectedStudent.name}" />
-
-                            <TextView
-                                android:id="@+id/student_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@{Pronouns.INSTANCE.span(viewModel.data.selectedStudent.shortName, viewModel.data.selectedStudent.pronouns)}"
-                                android:textColor="@color/textLightest"
-                                app:layout_constraintEnd_toStartOf="@id/student_selector_arrow"
-                                app:layout_constraintHorizontal_chainStyle="packed"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/student_image" />
-
-                            <ImageView
-                                android:id="@+id/student_selector_arrow"
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:layout_marginStart="8dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_arrow_down"
-                                app:layout_constraintBottom_toBottomOf="@id/student_name"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/student_name"
-                                app:layout_constraintTop_toTopOf="@id/student_name"
-                                app:rotationAnim="@{viewModel.data.studentSelectorExpanded ? -180 : 0}"
-                                app:tint="@color/textLightest" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <FrameLayout
                             android:id="@+id/todayButtonHolder"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="end"
+                            android:layout_gravity="end|top"
+                            android:accessibilityTraversalBefore="@id/student_selector"
+                            android:contentDescription="@string/a11y_contentDescriptionCalendarJumpToToday"
+                            android:foreground="?attr/selectableItemBackground"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
-                            android:foreground="?attr/selectableItemBackground"
+                            android:paddingEnd="16dp"
                             android:visibility="gone"
-                            android:contentDescription="@string/a11y_contentDescriptionCalendarJumpToToday">
+                            app:accessibilityClassName='@{"android.widget.Button"}'
+                            tools:visibility="visible">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="end"
                                 android:layout_marginTop="16dp"
-                                android:src="@drawable/ic_calendar_day"
                                 android:importantForAccessibility="no"
-                                app:tint="@color/textLightest"/>
+                                android:src="@drawable/ic_calendar_day"
+                                app:tint="@color/textLightest" />
 
                             <TextView
                                 android:id="@+id/todayButtonText"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="end|center_vertical"
-                                android:gravity="center"
                                 android:layout_marginTop="6dp"
-                                android:textSize="9sp"
+                                android:gravity="center"
+                                android:importantForAccessibility="no"
                                 android:textColor="@color/textLightest"
-                                android:importantForAccessibility="no"/>
+                                android:textSize="9sp" />
 
                         </FrameLayout>
 
@@ -246,6 +266,7 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="false"
             app:headerLayout="@layout/navigation_drawer_header_layout"
+            app:itemMaxLines="2"
             app:menu="@menu/nav_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
