@@ -236,6 +236,14 @@ private fun SubmissionListItem(
                 color = courseColor,
                 fontWeight = FontWeight.SemiBold
             )
+            if (submissionListUiState.hidden) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_eye_off),
+                    contentDescription = stringResource(R.string.a11y_hidden),
+                    tint = colorResource(id = R.color.textDanger),
+                    modifier = Modifier.size(24.dp).padding(start = 8.dp).testTag("hiddenIcon")
+                )
+            }
         }
     }
 
@@ -384,7 +392,8 @@ fun SubmissionListScreenDarkPreview() {
                     "Test User 6",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.EXCUSED),
-                    "Excused"
+                    "Excused",
+                    hidden = true
                 )
             )
         ) {}

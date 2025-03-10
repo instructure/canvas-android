@@ -172,7 +172,8 @@ class SubmissionListViewModel @Inject constructor(
             userName = submission.assignee.name,
             avatarUrl = if (submission.assignee is StudentAssignee) (submission.assignee as StudentAssignee).student.avatarUrl else null,
             tags = getTags(submission.submission),
-            grade = getGrade(submission.submission)
+            grade = getGrade(submission.submission),
+            hidden = submission.submission?.let { it.postedAt == null } ?: false
         )
     }
 
