@@ -357,6 +357,36 @@ class InboxComposeViewModelTest {
     }
 
     @Test
+    fun `Check if Compose content had been changed`() {
+        val viewModel = getViewModel()
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("")))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("")))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(InboxComposeActionHandler.SendIndividualChanged(true))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.SendIndividualChanged(false))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        val recipient = Recipient(stringId = "1")
+        viewModel.handleAction(InboxComposeActionHandler.AddRecipient(recipient))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.RemoveRecipient(recipient))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course()))
+        assertEquals(true, viewModel.composeContentHasChanged())
+    }
+
+    @Test
     fun `Attachment selector dialog opens`() = runTest {
         val viewmodel = getViewModel()
 
