@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class SubmissionListViewModel @Inject constructor(
@@ -69,6 +70,7 @@ class SubmissionListViewModel @Inject constructor(
         SubmissionListUiState(
             assignmentName = assignment.name.orEmpty(),
             courseColor = Color(course.color),
+            anonymousGrading = assignment.anonymousGrading,
             filter = filter,
             headerTitle = getHeaderTitle(filter, filterValue),
             searchQuery = "",
@@ -152,6 +154,7 @@ class SubmissionListViewModel @Inject constructor(
                 (it.assignee as? StudentAssignee)?.student?.enrollments?.any { it.courseSectionId in selectedSectionIds }
                     ?: false
             }
+            .shuffled(Random(1234))
             .map { getSubmissionUiState(it) }
 
         _uiState.update {

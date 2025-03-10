@@ -30,6 +30,7 @@ data class SubmissionListUiState(
     val assignmentName: String,
     val courseColor: Color,
     val headerTitle: String,
+    val anonymousGrading: Boolean,
     val searchQuery: String = "",
     val filter: SubmissionListFilter = SubmissionListFilter.ALL,
     val filterValue: Double? = null,

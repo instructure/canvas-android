@@ -139,23 +139,25 @@ private fun SubmissionListContent(
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(modifier = modifier) {
-            item {
-                SearchBar(
-                    icon = R.drawable.ic_search_white_24dp,
-                    searchQuery = uiState.searchQuery,
-                    tintColor = colorResource(R.color.textDarkest),
-                    placeholder = stringResource(R.string.search),
-                    collapsable = false,
-                    onSearch = {
-                        uiState.actionHandler(SubmissionListAction.Search(it))
-                    },
-                    onClear = {
-                        uiState.actionHandler(SubmissionListAction.Search(""))
-                    })
+            if (!uiState.anonymousGrading) {
+                item {
+                    SearchBar(
+                        icon = R.drawable.ic_search_white_24dp,
+                        searchQuery = uiState.searchQuery,
+                        tintColor = colorResource(R.color.textDarkest),
+                        placeholder = stringResource(R.string.search),
+                        collapsable = false,
+                        onSearch = {
+                            uiState.actionHandler(SubmissionListAction.Search(it))
+                        },
+                        onClear = {
+                            uiState.actionHandler(SubmissionListAction.Search(""))
+                        })
+                }
             }
             item { Header(uiState.headerTitle) }
             items(uiState.submissions, key = { it.submissionId }) { submission ->
-                SubmissionListItem(submission, courseColor) {
+                SubmissionListItem(submission, courseColor, uiState.anonymousGrading) {
                     uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
                 }
                 CanvasDivider()
@@ -195,6 +197,7 @@ private fun Header(title: String) {
 private fun SubmissionListItem(
     submissionListUiState: SubmissionUiState,
     courseColor: Color,
+    anonymousGrading: Boolean,
     itemClick: (Long) -> Unit
 ) {
     Column(modifier = Modifier.clickable { itemClick(submissionListUiState.submissionId) }) {
@@ -208,12 +211,13 @@ private fun SubmissionListItem(
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .size(36.dp),
+                anonymous = anonymousGrading,
                 imageUrl = submissionListUiState.avatarUrl,
                 name = submissionListUiState.userName,
             )
             Column {
                 Text(
-                    text = submissionListUiState.userName,
+                    text = if (anonymousGrading) stringResource(R.string.anonymousStudentLabel) else submissionListUiState.userName,
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
                     color = colorResource(id = R.color.textDarkest),
@@ -280,6 +284,7 @@ fun SubmissionListScreenPreview() {
             courseColor = Color.Magenta,
             headerTitle = "All Submissions",
             filter = SubmissionListFilter.GRADED,
+            anonymousGrading = false,
             submissions = listOf(
                 SubmissionUiState(
                     1,
@@ -335,6 +340,7 @@ fun SubmissionListScreenDarkPreview() {
         SubmissionListUiState(
             "Test assignment",
             courseColor = Color.Magenta,
+            anonymousGrading = false,
             headerTitle = "All Submissions",
             filter = SubmissionListFilter.GRADED,
             submissions = listOf(
