@@ -104,6 +104,14 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                             tint = colorResource(id = R.color.textLightest)
                         )
                     }
+
+                    IconButton(onClick = { uiState.actionHandler(SubmissionListAction.SendMessage) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_mail),
+                            contentDescription = stringResource(R.string.a11y_sendMessage),
+                            tint = colorResource(id = R.color.textLightest)
+                        )
+                    }
                 }
             )
         }

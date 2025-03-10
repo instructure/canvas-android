@@ -24,6 +24,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
@@ -272,6 +274,19 @@ class SubmissionListViewModel @Inject constructor(
                     )
                 }
             }
+
+            is SubmissionListAction.SendMessage -> {
+                viewModelScope.launch {
+                    _events.send(
+                        SubmissionListViewModelAction.SendMessage(
+                            contextCode = course.contextId,
+                            contextName = course.name,
+                            recipients = getRecipients(),
+                            subject = _uiState.value.headerTitle + " " + resources.getString(R.string.on) + " " + assignment.name
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -329,6 +344,18 @@ class SubmissionListViewModel @Inject constructor(
                     R.string.scored_more_than_value,
                     NumberHelper.formatDecimal(filterValue.orDefault(), 2, true)
                 )
+            }
+        }
+    }
+
+    private fun getRecipients() : List<Recipient> {
+        val filteredSubmissions = submissions.filter {
+            _uiState.value.submissions.any { submission -> submission.submissionId == it.id }
+        }
+        return filteredSubmissions.map { submission ->
+            when(val assignee = submission.assignee) {
+                is StudentAssignee -> Recipient.from(assignee.student)
+                is GroupAssignee -> Recipient.from(assignee.group)
             }
         }
     }

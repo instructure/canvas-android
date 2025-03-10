@@ -33,6 +33,10 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LI
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.withArgs
@@ -109,36 +113,30 @@ class AssignmentSubmissionListFragment : BaseCanvasFragment() {
             }
 
             is SubmissionListViewModelAction.ShowPostPolicy -> {
-                RouteMatcher.route(requireActivity(), PostPolicyFragment.makeRoute(action.course, action.assignment))
+                RouteMatcher.route(
+                    requireActivity(),
+                    PostPolicyFragment.makeRoute(action.course, action.assignment)
+                )
+            }
+
+            is SubmissionListViewModelAction.SendMessage -> {
+                val options = InboxComposeOptions.buildNewMessage().copy(
+                    defaultValues = InboxComposeOptionsDefaultValues(
+                        contextCode = action.contextCode,
+                        contextName = action.contextName,
+                        recipients = action.recipients,
+                        subject = action.subject
+                    ),
+                    disabledFields = InboxComposeOptionsDisabledFields(
+                        isContextDisabled = true,
+                        isSubjectDisabled = true
+                    )
+                )
+                val route = InboxComposeFragment.makeRoute(options)
+                RouteMatcher.route(requireActivity(), route)
             }
         }
     }
-
-    private fun setupListeners() {
-//TODO: Implement this
-//        addMessage.setOnClickListener {
-//            val options = InboxComposeOptions.buildNewMessage().copy(
-//                defaultValues = InboxComposeOptionsDefaultValues(
-//                    contextCode = course.contextId,
-//                    contextName = course.name,
-//                    recipients = presenter.getRecipients(),
-//                    subject = filterTitle.text.toString() + " " + getString(R.string.on) + " " + assignment.name
-//                ),
-//                disabledFields = InboxComposeOptionsDisabledFields(
-//                    isContextDisabled = true,
-//                    isSubjectDisabled = true
-//                )
-//            )
-//            val route = InboxComposeFragment.makeRoute(options)
-//            RouteMatcher.route(requireActivity(), route)
-//        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setupListeners()
-    }
-
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -167,7 +165,8 @@ class AssignmentSubmissionListFragment : BaseCanvasFragment() {
 
     companion object {
         private val ASSIGNMENT = "assignment"
-        @JvmStatic val FILTER_TYPE = "filter_type"
+        @JvmStatic
+        val FILTER_TYPE = "filter_type"
 
         fun newInstance(course: Course, args: Bundle): AssignmentSubmissionListFragment {
             args.putParcelable("course", course)

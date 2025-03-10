@@ -22,6 +22,7 @@ import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.Section
 import com.instructure.teacher.R
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
@@ -70,8 +71,14 @@ sealed class SubmissionListAction {
     data object Refresh : SubmissionListAction()
     data class SubmissionClicked(val submissionId: Long) : SubmissionListAction()
     data class Search(val query: String) : SubmissionListAction()
-    data class SetFilters(val filter: SubmissionListFilter, val filterValue: Double?, val selectedSections: List<Long>) : SubmissionListAction()
+    data class SetFilters(
+        val filter: SubmissionListFilter,
+        val filterValue: Double?,
+        val selectedSections: List<Long>
+    ) : SubmissionListAction()
+
     data object ShowPostPolicy : SubmissionListAction()
+    data object SendMessage : SubmissionListAction()
 }
 
 sealed class SubmissionListViewModelAction {
@@ -85,5 +92,13 @@ sealed class SubmissionListViewModelAction {
         val filterValue: Double = 0.0
     ) : SubmissionListViewModelAction()
 
-    data class ShowPostPolicy(val course: Course, val assignment: Assignment) : SubmissionListViewModelAction()
+    data class ShowPostPolicy(val course: Course, val assignment: Assignment) :
+        SubmissionListViewModelAction()
+
+    data class SendMessage(
+        val contextCode: String,
+        val contextName: String,
+        val recipients: List<Recipient>,
+        val subject: String
+    ) : SubmissionListViewModelAction()
 }
