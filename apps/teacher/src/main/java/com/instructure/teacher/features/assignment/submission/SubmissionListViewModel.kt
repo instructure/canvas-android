@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.submission
+package com.instructure.teacher.features.assignment.submission
 
 import android.content.res.Resources
 import androidx.compose.ui.graphics.Color
@@ -34,8 +34,6 @@ import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.R
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.utils.getState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -55,12 +53,12 @@ class SubmissionListViewModel @Inject constructor(
     private val submissionListRepository: AssignmentSubmissionRepository
 ) : ViewModel() {
 
-    private val assignment: Assignment = savedStateHandle["assignment"]
+    private val assignment: Assignment = savedStateHandle[SubmissionListFragment.ASSIGNMENT]
         ?: throw IllegalArgumentException("Assignment must be passed to SubmissionListViewModel")
-    private val course: Course = savedStateHandle["course"]
+    private val course: Course = savedStateHandle[SubmissionListFragment.COURSE]
         ?: throw IllegalArgumentException("Course must be passed to SubmissionListViewModel")
     private var filter: SubmissionListFilter =
-        savedStateHandle["filter"] ?: SubmissionListFilter.ALL
+        savedStateHandle[SubmissionListFragment.FILTER_TYPE] ?: SubmissionListFilter.ALL
     private var filterValue: Double? = 0.0
     private var searchQuery: String = ""
 

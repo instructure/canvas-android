@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.submission
+package com.instructure.teacher.features.assignment.submission
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,7 +48,6 @@ import com.instructure.pandautils.compose.composables.CheckboxText
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.teacher.R
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 
 @Composable
 fun SubmissionListFilters(

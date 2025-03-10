@@ -55,7 +55,8 @@ fun CheckboxText(
                 onCheckedChanged(it)
             },
             colors = CheckboxDefaults.colors(
-                checkedColor = color
+                checkedColor = color,
+                uncheckedColor = color
             )
         )
         Text(

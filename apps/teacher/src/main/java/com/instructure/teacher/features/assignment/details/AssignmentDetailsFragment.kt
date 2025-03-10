@@ -52,7 +52,6 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
@@ -64,7 +63,7 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
@@ -429,8 +428,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     }
 
     private fun navigateToSubmissions(course: Course, assignment: Assignment, filter: SubmissionListFilter) {
-        val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
-        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
+        val args = SubmissionListFragment.makeBundle(assignment, filter)
+        RouteMatcher.route(requireActivity(), Route(null, SubmissionListFragment::class.java, course, args))
     }
 
     override fun onResume() {

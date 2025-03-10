@@ -45,9 +45,6 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
-import com.instructure.teacher.features.submission.SubmissionListScreen
-import com.instructure.teacher.features.submission.SubmissionListViewModel
-import com.instructure.teacher.features.submission.SubmissionListViewModelAction
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,13 +54,10 @@ import org.greenrobot.eventbus.ThreadMode
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST)
 @AndroidEntryPoint
-class AssignmentSubmissionListFragment : BaseCanvasFragment() {
+class SubmissionListFragment : BaseCanvasFragment() {
 
     private val viewModel: SubmissionListViewModel by viewModels()
     private var course: Course by ParcelableArg(Course())
-
-    private var needToForceNetwork = false
-
 
     override fun onStart() {
         super.onStart()
@@ -141,36 +135,35 @@ class AssignmentSubmissionListFragment : BaseCanvasFragment() {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
-
+        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizGraded(event: QuizSubmissionGradedEvent) {
-
+        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onSubmissionCommentUpdated(event: SubmissionCommentsUpdated) {
-        event.once(AssignmentSubmissionListFragment::class.java.simpleName) {
-            needToForceNetwork = true
-        }
+        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubmissionFilterChanged(event: SubmissionFilterChangedEvent) {
+        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
     }
 
     companion object {
-        private val ASSIGNMENT = "assignment"
-        @JvmStatic
-        val FILTER_TYPE = "filter_type"
+        const val ASSIGNMENT = "assignment"
+        const val FILTER_TYPE = "filter_type"
+        const val COURSE = "course"
 
-        fun newInstance(course: Course, args: Bundle): AssignmentSubmissionListFragment {
-            args.putParcelable("course", course)
-            return AssignmentSubmissionListFragment().withArgs(args).apply {
+        fun newInstance(course: Course, args: Bundle): SubmissionListFragment {
+            args.putParcelable(COURSE, course)
+            return SubmissionListFragment().withArgs(args).apply {
                 this.course = course
             }
         }
@@ -181,8 +174,8 @@ class AssignmentSubmissionListFragment : BaseCanvasFragment() {
 
         fun makeBundle(assignment: Assignment, filter: SubmissionListFilter): Bundle {
             val args = Bundle()
-            args.putSerializable("filter", filter)
-            args.putParcelable("assignment", assignment)
+            args.putSerializable(FILTER_TYPE, filter)
+            args.putParcelable(ASSIGNMENT, assignment)
             return args
         }
     }

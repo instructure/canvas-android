@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.submission
+package com.instructure.teacher.features.assignment.submission
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -63,7 +63,6 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.teacher.R
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 
 @Composable
 fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: () -> Unit) {

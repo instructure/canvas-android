@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.submission
+package com.instructure.teacher.features.assignment.submission
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.Section
 import com.instructure.teacher.R
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 
 data class SubmissionListUiState(
     val assignmentName: String,
