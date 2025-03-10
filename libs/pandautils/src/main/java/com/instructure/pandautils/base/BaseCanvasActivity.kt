@@ -18,10 +18,12 @@ package com.instructure.pandautils.base
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.instructure.pandautils.utils.LocaleUtils
-import com.instructure.pandautils.analytics.PageViewAnnotationProcessor
 import com.instructure.pandautils.analytics.ScreenViewAnnotationProcessor
+import com.instructure.pandautils.analytics.pageview.PageViewAnnotationProcessor
+import com.instructure.pandautils.di.PageViewEntryPoint
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.showMasqueradeNotification
+import dagger.hilt.android.EarlyEntryPoints
 
 /**
  * Base activity for all Canvas activities that contains cross-cutting concerns like analytics, locale and masquerading.
@@ -29,7 +31,13 @@ import com.instructure.pandautils.utils.showMasqueradeNotification
  */
 open class BaseCanvasActivity : AppCompatActivity() {
 
-    private val pageViewAnnotationProcessor = PageViewAnnotationProcessor(this::class.java, this)
+    private val pageViewAnnotationProcessor by lazy {
+        val pageViewUtils = EarlyEntryPoints.get(
+            applicationContext,
+            PageViewEntryPoint::class.java
+        ).pageViewUtils()
+        PageViewAnnotationProcessor(this::class.java, this, pageViewUtils)
+    }
 
     override fun attachBaseContext(base: Context?) {
         val newBase = if (base != null) LocaleUtils.wrapContext(base) else base

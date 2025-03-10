@@ -44,7 +44,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
   String? maxValue;
   String? minValue;
 
-  final int _disabledAlpha = 80;
+  final int _disabledAlpha = 90;
 
   static final UniqueKey okButtonKey = UniqueKey(); // For testing
 
@@ -173,13 +173,13 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
           actions: <Widget>[
             TextButton(
                 child: Text(L10n(context).cancel.toUpperCase()),
-                style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
+                style: TextButton.styleFrom(disabledForegroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
                 onPressed: () {
                   Navigator.of(context).pop(null);
                 }),
             TextButton(
                 child: Text(L10n(context).never.toUpperCase()),
-                style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
+                style: TextButton.styleFrom(disabledForegroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
                 onPressed: () async {
                   if (_threshold == null) {
                     // Threshold is already disabled
@@ -194,7 +194,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
             TextButton(
               key: okButtonKey,
               child: Text(L10n(context).ok),
-              style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
+              style: TextButton.styleFrom(disabledForegroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
               onPressed: _disableButtons
                   ? null
                   : () async {

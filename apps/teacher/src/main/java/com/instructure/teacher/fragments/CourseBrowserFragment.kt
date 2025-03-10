@@ -275,11 +275,6 @@ class CourseBrowserFragment : BaseSyncFragment<
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {
-                        // if the user is a designer we don't want to let them look at LTI tools (like attendance)
-                        if ((presenter.canvasContext as? Course)?.isDesigner == true) {
-                            toast(R.string.errorIsDesigner)
-                            return@CourseBrowserAdapter
-                        }
                         val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
                         if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                             val args = AttendanceListFragment.makeBundle(tab)

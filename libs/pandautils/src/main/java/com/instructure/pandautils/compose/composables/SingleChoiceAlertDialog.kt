@@ -42,7 +42,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -150,7 +153,9 @@ private fun ChoiceList(
                             onClick = {
                                 onItemSelected(index)
                             }
-                        ),
+                        )
+                    .semantics(mergeDescendants = true) { selected = item == items.getOrNull(selectedIndex) }
+                    .clearAndSetSemantics { contentDescription = item },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(

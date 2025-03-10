@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Tukaj lahko odprete podrobnosti o oddaji</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Kliknite tukaj za ogled oddaje in podrobnosti o ocenjevalnem vodniku</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Ocena: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuta</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Izberite predmet ali skupino</string>
     <string name="inboxClearFilter">Počisti</string>
     <string name="a11y_courseFilterContentDescription">Filter predmetov: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Izbira nabiralnika: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">izbira</string>
     <string name="a11y_itemSelectedSwipeForActions">Pogovor je izbran. Aktiviran je način izbire. Pomaknite se za izbiro dejanja.</string>
     <string name="a11y_conversationSelected">Pogovor je izbran</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Druge aplikacije</string>
     <string name="offline_content_canvas_student">Študent v sistemu Canvas</string>
     <string name="offline_content_remaining">Preostalo</string>
+    <string name="offline_content_storage_info_a11y_description">Informacije o shrambi: Uporabljeno %s od %s, druge aplikacije %d%%, Canvas Student %d%%, preostalo %d%%</string>
     <string name="offline_content_all_courses">Vsi predmeti</string>
     <string name="offline_content_sync">Sinhronizacija</string>
     <string name="offline_content_selected">Izbrana je možnost %d</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Sinhronizacija</string>
     <string name="offline_content_sync_loading_title">Nalaganje ...</string>
     <string name="offline_content_sync_loading_message">Počakajte, za vas pripravljamo stvari.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Nastavitve sinhronizacije brez povezave so bile shranjene. Sinhronizacija se bo kmalu začela v ozadju.</string>
     <string name="content_description_expand_content">Razširi vsebino</string>
+    <string name="content_description_expand_content_with_param">Razširi vsebino, %s</string>
     <string name="content_description_collapse_content">Strni vsebino</string>
+    <string name="content_description_collapse_content_with_param">Strni vsebino, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Če omogočite samodejno sinhronizacijo vsebine, boste omogočili prenos izbrane vsebine na podlagi spodnjih nastavitev. Sinhronizacija vsebine bo izvedena tudi, če aplikacija ni zagnana. Če je nastavitev izklopljena, sinhronizacija ne bo izvedena. Že prenesena vsebina ne bo odstranjena.</string>
     <string name="syncSettings_syncFrequencyTitle">Pogostost sinhronizacije</string>
     <string name="syncSettings_autoContentSyncTitle">Samodejna sinhronizacija vsebine</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Ne objavi</string>
     <string name="discussionMenuRefresh">Osveži</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Preskoči na danes</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Preskoči na danes, izbrani dan je %s, danes je %s</string>
     <string name="a11y_calendarSwitchToMonthView">Preklopi na mesečni pogled</string>
     <string name="a11y_calendarSwitchToWeekView">Preklopi na tedenski pogled</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Preklopi med mesečnim in tedenskim pogledom</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Koledar je v mesečnem pogledu</string>
+    <string name="a11y_calendarWeekView">Koledar je v tedenskem pogledu</string>
+    <string name="a11y_calendarSwitchedToWeekView">Koledar preklopljen na tedenski pogled</string>
+    <string name="a11y_calendarSwitchedToMonthView">Koledar preklopljen na mesečni pogled</string>
     <string name="calendarNoEvents">Danes ni dogodkov.</string>
     <string name="calendarNoEventsDescription">Videti je, da je to krasen dan za počitek, sprostitev in regeneracijo.</string>
     <string name="userCalendarToDo">Čakajoča opravila</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Izberete lahko največ %d koledarjev.</string>
     <string name="calendarFilterTitle">Koledarji</string>
     <string name="calendarFiltersFailed">Nalaganje filtrov ni uspelo</string>
+    <string name="a11y_eventCreatedAnnouncement">Dogodek %s uspešno ustvarjen.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Dogodek %s uspešno posodobljen.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Seznam opravil %s uspešno ustvarjen.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Seznam opravil %s uspešno posodobljen.</string>
     <string name="todoScreenTitle">Čakajoča opravila</string>
     <string name="todoDateLabel">Datum</string>
     <string name="todoDescriptionLabel">Opis</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Naloge (%d)</string>
     <string name="smartSearchPageGroupTitle">Strani (%d)</string>
     <string name="a11y_commentSentSuccess">Komentar je bil uspešno poslan</string>
+    <string name="a11y_dragViewContentDescription">Razširi predal</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Pogovori</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Preverjeno</string>
+    <string name="a11y_unchecked">Nepreverjeno</string>
+    <string name="a11y_indeterminate">Delno preverjeno</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Filtri so posodobljeni</string>
 </resources>

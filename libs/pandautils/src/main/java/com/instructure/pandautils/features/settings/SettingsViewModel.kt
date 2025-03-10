@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.settings
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -27,10 +28,13 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -54,7 +58,9 @@ class SettingsViewModel @Inject constructor(
     private val colorKeeper: ColorKeeper,
     private val themePrefs: ThemePrefs,
     private val apiPrefs: ApiPrefs,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val settingsRepository: SettingsRepository,
+    private val networkStateProvider: NetworkStateProvider
 ) :
     ViewModel() {
 
@@ -74,34 +80,48 @@ class SettingsViewModel @Inject constructor(
     private val scrollValue = savedStateHandle.get<Int>("scrollValue") ?: 0
 
     init {
+        _uiState.update { it.copy(loading = true) }
+
         val items = settingsBehaviour.settingsItems.filter {
             if (it.value.contains(SettingsItem.OFFLINE_SYNCHRONIZATION)) {
                 offlineEnabled
             } else {
                 true
             }
-        }
-        if (items.any { it.value.contains(SettingsItem.OFFLINE_SYNCHRONIZATION) }) {
-            viewModelScope.launch {
-                syncSettingsFacade.getSyncSettingsListenable().asFlow()
-                    .collectLatest { syncSettings ->
-                        _uiState.update {
-                            it.copy(
-                                offlineState = if (syncSettings?.autoSyncEnabled == true) {
-                                    syncSettings.syncFrequency.readable
-                                } else {
-                                    R.string.syncSettings_manualDescription
-                                }
-                            )
-                        }
-                    }
-            }
-        }
+        }.mapValues { entry -> entry.value.map { SettingsItemUiState(it) } }
         _uiState.update {
             it.copy(
                 items = items,
                 scrollValue = scrollValue
             )
+        }
+
+        viewModelScope.tryLaunch {
+            val inboxSignatureState = settingsRepository.getInboxSignatureState()
+            if (inboxSignatureState == InboxSignatureState.HIDDEN) {
+                _uiState.update { it.copy(items = it.items.minus(R.string.inboxSettingsTitle)) }
+            } else {
+                inboxSignatureState.textRes?.let {
+                    changeSettingsItemSubtitle(SettingsItem.INBOX_SIGNATURE, it)
+                }
+            }
+            _uiState.update { it.copy(loading = false) }
+        } catch {
+            _uiState.update { it.copy(loading = false) }
+        }
+
+        if (items.any { item -> item.value.any { it.item == SettingsItem.OFFLINE_SYNCHRONIZATION } }) {
+            viewModelScope.launch {
+                syncSettingsFacade.getSyncSettingsListenable().asFlow()
+                    .collectLatest { syncSettings ->
+                        val offlineSyncSubtitle = if (syncSettings?.autoSyncEnabled == true) {
+                            syncSettings.syncFrequency.readable
+                        } else {
+                            R.string.syncSettings_manualDescription
+                        }
+                        changeSettingsItemSubtitle(SettingsItem.OFFLINE_SYNCHRONIZATION, offlineSyncSubtitle)
+                    }
+            }
         }
     }
 
@@ -134,7 +154,11 @@ class SettingsViewModel @Inject constructor(
 
             is SettingsAction.ItemClicked -> {
                 viewModelScope.launch {
-                    _events.send(SettingsViewModelAction.Navigate(action.settingsItem))
+                    if (networkStateProvider.isOnline() || action.settingsItem.availableOffline) {
+                        _events.send(SettingsViewModelAction.Navigate(action.settingsItem))
+                    } else {
+                        _events.send(SettingsViewModelAction.ShowOfflineDialog)
+                    }
                 }
             }
         }
@@ -157,6 +181,29 @@ class SettingsViewModel @Inject constructor(
             it.copy(
                 appTheme = appTheme.ordinal,
             )
+        }
+    }
+
+    private fun changeSettingsItemSubtitle(item: SettingsItem, @StringRes subtitle: Int) {
+        _uiState.update { uiState ->
+            uiState.copy(
+                items = uiState.items.mapValues { entry ->
+                    entry.value.map {
+                        if (it.item == item) {
+                            it.copy(subtitleRes = subtitle)
+                        } else {
+                            it
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    fun updateSignatureSettings(enabled: Boolean) {
+        viewModelScope.launch {
+            val state = if (enabled) InboxSignatureState.ENABLED else InboxSignatureState.DISABLED
+            changeSettingsItemSubtitle(SettingsItem.INBOX_SIGNATURE, state.textRes!!)
         }
     }
 }

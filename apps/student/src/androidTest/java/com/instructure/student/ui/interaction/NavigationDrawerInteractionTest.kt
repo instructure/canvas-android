@@ -19,7 +19,6 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -157,7 +156,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
         signInStudent()
 
         leftSideNavigationDrawerPage.clickHelpMenu()
-        helpPage.launchGuides()
+        helpPage.clickSearchGuidesLabel()
         canvasWebViewPage.assertTitle(R.string.searchGuides)
     }
 
@@ -191,7 +190,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
                 )
             )
             Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-            helpPage.shareYourLove()
+            helpPage.clickShareLoveLabel()
             Intents.intended(expectedIntent)
         } finally {
             Intents.release()

@@ -25,6 +25,7 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.parentapp.features.alerts.list.AlertsItemUiState
@@ -202,6 +203,7 @@ class AlertsScreenTest {
         }
 
         items.forEach {
+            composeTestRule.onNodeWithTag("alertsList").performScrollToNode(hasText(it.title))
             composeTestRule.onNodeWithText(it.title).assertIsDisplayed()
             composeTestRule.onNodeWithText(parseAlertType(it.alertType, it.observerAlertThreshold)).assertIsDisplayed()
             composeTestRule.onNodeWithText(parseDate(it.date!!)).assertIsDisplayed()

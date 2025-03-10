@@ -54,8 +54,12 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
+import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
+import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
@@ -93,6 +97,7 @@ import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.fragments.EditFileFolderFragment
 import com.instructure.teacher.fragments.EditQuizDetailsFragment
+import com.instructure.teacher.fragments.FeatureFlagsFragment
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
@@ -263,6 +268,12 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(ModuleProgressionFragment::class.java)
         fullscreenFragments.add(ToDoFragment::class.java)
         fullscreenFragments.add(EventFragment::class.java)
+        fullscreenFragments.add(SettingsFragment::class.java)
+        fullscreenFragments.add(EmailNotificationPreferencesFragment::class.java)
+        fullscreenFragments.add(PushNotificationPreferencesFragment::class.java)
+        fullscreenFragments.add(FeatureFlagsFragment::class.java)
+        fullscreenFragments.add(RemoteConfigParamsFragment::class.java)
+        fullscreenFragments.add(InboxSignatureFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)

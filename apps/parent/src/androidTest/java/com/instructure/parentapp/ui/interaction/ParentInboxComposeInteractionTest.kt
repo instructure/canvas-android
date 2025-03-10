@@ -10,7 +10,10 @@ import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -23,11 +26,14 @@ import com.instructure.parentapp.ui.pages.DashboardPage
 import com.instructure.parentapp.ui.pages.ParentInboxCoursePickerPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
 import com.instructure.parentapp.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 import org.junit.Test
 
 @HiltAndroidTest
+@UninstallModules(GraphQlApiModule::class)
 class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     override val isTesting = BuildConfig.IS_TESTING
 
@@ -37,6 +43,10 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     private val inboxPage = InboxPage()
     private val inboxComposePage = InboxComposePage(composeTestRule)
     private val inboxCoursePickerPage = ParentInboxCoursePickerPage(composeTestRule)
+
+    @BindValue
+    @JvmField
+    val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
 
     @Test
     fun testParentComposeDefaultValues() {
@@ -54,12 +64,12 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.clickInbox()
 
         inboxPage.pressNewMessageButton()
 
-        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = "for ${getObservedStudent().shortName ?: getObservedStudent().name}")
+        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = getObservedStudent().shortName ?: getObservedStudent().name)
 
         composeTestRule.waitUntil { !inboxComposePage.isRecipientsLoading() }
 
@@ -73,12 +83,12 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
         val token = data.tokenFor(parent)!!
         tokenLogin(data.domain, token, parent)
 
-        dashboardPage.openNavigationDrawer()
+        dashboardPage.openLeftSideMenu()
         dashboardPage.clickInbox()
 
         inboxPage.pressNewMessageButton()
 
-        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = "for ${getObservedStudent().shortName ?: getObservedStudent().name}")
+        inboxCoursePickerPage.selectCourseWithUser(getFirstCourse().name, observedUserName = getObservedStudent().shortName ?: getObservedStudent().name)
 
         composeTestRule.waitUntil { !inboxComposePage.isRecipientsLoading() }
         inboxComposePage.removeAllRecipients()

@@ -18,8 +18,11 @@
 package com.instructure.pandautils.features.calendarevent.details
 
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
 interface EventRouter {
 
     fun openEditEvent(scheduleItem: ScheduleItem)
+
+    fun navigateToComposeMessageScreen(options: InboxComposeOptions)
 }

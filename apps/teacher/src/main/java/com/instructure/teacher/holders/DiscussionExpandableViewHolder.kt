@@ -17,7 +17,10 @@ package com.instructure.teacher.holders
 
 import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.pandautils.utils.hasSpokenFeedback
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 import com.instructure.teacher.presenters.DiscussionListPresenter
@@ -47,14 +50,20 @@ class DiscussionExpandableViewHolder(private val binding: ViewholderHeaderExpand
 
         groupName.text = title
 
-        holder.itemView.setOnClickListener {
-            val animationType = if (mIsExpanded) R.animator.rotation_from_0_to_neg90 else R.animator.rotation_from_neg90_to_0
-            mIsExpanded = !mIsExpanded
-            val flipAnimator = AnimatorInflater.loadAnimator(context, animationType) as ObjectAnimator
-            flipAnimator.target = collapseIcon
-            flipAnimator.duration = 200
-            flipAnimator.start()
-            callback(group)
+        val a11yManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        // Expand/collapse is disabled when TalkBack is enabled, so we prevent TalkBack announcing that functionality by not adding a click listener
+        if (!a11yManager.hasSpokenFeedback) {
+            holder.itemView.setOnClickListener {
+                val animationType =
+                    if (mIsExpanded) R.animator.rotation_from_0_to_neg90 else R.animator.rotation_from_neg90_to_0
+                mIsExpanded = !mIsExpanded
+                val flipAnimator =
+                    AnimatorInflater.loadAnimator(context, animationType) as ObjectAnimator
+                flipAnimator.target = collapseIcon
+                flipAnimator.duration = 200
+                flipAnimator.start()
+                callback(group)
+            }
         }
     }
 }

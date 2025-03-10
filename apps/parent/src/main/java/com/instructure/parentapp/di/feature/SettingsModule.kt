@@ -16,14 +16,17 @@
  */
 package com.instructure.parentapp.di.feature
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRouter
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import com.instructure.parentapp.features.settings.ParentSettingsBehaviour
 import com.instructure.parentapp.features.settings.ParentSettingsRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.components.SingletonComponent
 
 @Module
@@ -34,9 +37,14 @@ class SettingsModule {
     fun provideSettingsBehaviour(selectedStudentHolder: SelectedStudentHolder): SettingsBehaviour {
         return ParentSettingsBehaviour(selectedStudentHolder)
     }
+}
+
+@Module
+@InstallIn(FragmentComponent::class)
+class SettingsFragmentModule {
 
     @Provides
-    fun provideSettingsRouter(): SettingsRouter {
-        return ParentSettingsRouter()
+    fun provideSettingsRouter(navigation: Navigation, activity: FragmentActivity): SettingsRouter {
+        return ParentSettingsRouter(navigation, activity)
     }
 }

@@ -33,6 +33,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.FileFolderManager
@@ -44,9 +45,9 @@ import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
-import com.instructure.canvasapi2.utils.pageview.PageViewUtils
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
@@ -54,6 +55,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.analytics.pageview.PageViewUtils
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
@@ -107,6 +109,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     @Inject
     lateinit var fileListRepository: FileListRepository
+
+    @Inject
+    lateinit var pageViewUtils: PageViewUtils
 
     private val binding by viewBinding(FragmentFileListBinding::bind)
 
@@ -185,7 +190,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         if (folder != null) {
             configureViews()
         } else {
-            tryWeave {
+            lifecycleScope.tryLaunch {
                 folder = if (folderId != 0L) {
                     // If folderId is valid, get folder by ID
                     fileListRepository.getFolder(folderId, true)
@@ -283,7 +288,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     }
 
     private fun recordFilePreviewEvent(file: FileFolder) {
-        PageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
+        pageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")
     }
 
     override fun applyTheme() {

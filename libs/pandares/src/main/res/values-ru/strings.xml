@@ -1219,6 +1219,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Вы можете открыть информацию об отправке здесь</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Нажмите здесь, чтобы просмотреть информацию об отправке и рубрике</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Оценка: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s минута</item>
@@ -1487,6 +1488,7 @@
     <string name="inboxContextSelectorTitle">Выбрать курс или группу</string>
     <string name="inboxClearFilter">Очистить</string>
     <string name="a11y_courseFilterContentDescription">Фильтр по курсам: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Выбор почтового ящика: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">выбрать</string>
     <string name="a11y_itemSelectedSwipeForActions">Обсуждение выбрано. Активирован режим выбора. Перейти к действиям.</string>
     <string name="a11y_conversationSelected">Выбранное обсуждение</string>
@@ -1514,6 +1516,7 @@
     <string name="offline_content_other">Другие приложения</string>
     <string name="offline_content_canvas_student">Студент Canvas</string>
     <string name="offline_content_remaining">Остается</string>
+    <string name="offline_content_storage_info_a11y_description">Информация о хранилище: %s из %s используется, другие приложения %d%%, учащийся Canvas %d%%, остается %d%%</string>
     <string name="offline_content_all_courses">Все курсы</string>
     <string name="offline_content_sync">Синхронизировать</string>
     <string name="offline_content_selected">%d выбрано</string>
@@ -1533,8 +1536,11 @@
     <string name="offline_content_sync_dialog_positive">Синхронизировать</string>
     <string name="offline_content_sync_loading_title">Выполняется загрузка...</string>
     <string name="offline_content_sync_loading_message">Спокойно, мы готовим все для вас.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Настройки автономной синхронизации сохранены. Сейчас начнется синхронизация в фоновом режиме.</string>
     <string name="content_description_expand_content">Развернуть содержание</string>
+    <string name="content_description_expand_content_with_param">Развернуть содержимое, %s</string>
     <string name="content_description_collapse_content">Свернуть содержание</string>
+    <string name="content_description_collapse_content_with_param">Свернуть содержимое, %s</string>
     <string name="syncSettings_autoContentSyncDescription">При включении функции автоматической синхронизации содержимого будет выполнена загрузка выбранного содержимого на основе приведенных ниже настроек. Синхронизация содержимого будет происходить, даже если приложение не запущено. Если этот параметр выключен, синхронизация не будет выполняться. Уже загруженное содержимое не будет удаляться.</string>
     <string name="syncSettings_syncFrequencyTitle">Синхронизация частоты</string>
     <string name="syncSettings_autoContentSyncTitle">Автоматическая синхронизация контента</string>
@@ -1669,8 +1675,15 @@
     <string name="unpublishDialogPositiveButton">Отменить публикацию</string>
     <string name="discussionMenuRefresh">Обновить</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Перейти к сегодняшнему дню</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Перейти к сегодняшнему дню, выбранный день - %s, сегодня %s</string>
     <string name="a11y_calendarSwitchToMonthView">Переключиться на представление за месяц</string>
     <string name="a11y_calendarSwitchToWeekView">Переключиться на представление за неделю</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Переключение между отображением месяца и недели</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Календарь находится в режиме помесячного представления</string>
+    <string name="a11y_calendarWeekView">Календарь находится в режиме понедельного представления</string>
+    <string name="a11y_calendarSwitchedToWeekView">Календарь переключен к понедельному представлению</string>
+    <string name="a11y_calendarSwitchedToMonthView">Календарь переключен к помесячному представлению</string>
     <string name="calendarNoEvents">На сегодня события отсутствуют!</string>
     <string name="calendarNoEventsDescription">Похоже, что сегодня можно отдохнуть, расслабиться и набраться сил.</string>
     <string name="userCalendarToDo">Задачи</string>
@@ -1694,6 +1707,10 @@
     <string name="calendarFilterLimitSnackbar">Вы может выбрать не более %d календарей.</string>
     <string name="calendarFilterTitle">Календари</string>
     <string name="calendarFiltersFailed">Не удалось загрузить фильтры</string>
+    <string name="a11y_eventCreatedAnnouncement">Событие %s успешно создано.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Событие %s успешно обновлено.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Задание %s успешно создано.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Задание %s успешно обновлено.</string>
     <string name="todoScreenTitle">Задачи</string>
     <string name="todoDateLabel">Дата</string>
     <string name="todoDescriptionLabel">Описание</string>
@@ -2010,4 +2027,12 @@
     <string name="smartSearchAssignmentGroupTitle">Задания (%d)</string>
     <string name="smartSearchPageGroupTitle">Страницы (%d)</string>
     <string name="a11y_commentSentSuccess">Комментарий успешно отправлен</string>
+    <string name="a11y_dragViewContentDescription">Развернуть панель</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Обсуждения</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Проверено</string>
+    <string name="a11y_unchecked">Со снятой галочкой</string>
+    <string name="a11y_indeterminate">Частично проверено</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Фильтры были обновлены</string>
 </resources>

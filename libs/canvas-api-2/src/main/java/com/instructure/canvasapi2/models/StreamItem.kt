@@ -94,14 +94,25 @@ data class StreamItem(
         @SerializedName("user_id")
         val userId: Long = -1,
         val user: User = User(),
-        val excused: Boolean = false
+        val excused: Boolean = false,
+        @SerializedName("latest_messages")
+        val latestMessages: List<Message> = ArrayList(),
 ) : CanvasModel<StreamItem>() {
     // We want opposite of natural sorting order of date since we want the newest one to come first
     override val comparisonDate get() = updatedDate
 
     val gradedDate get() = graded_at.toDate()
     val submittedDate get() = submittedAt.toDate()
-    val updatedDate get() = updatedAt.toDate()
+    val updatedDate: Date?
+        get() {
+            if (getStreamItemType() == Type.CONVERSATION && latestMessages.isNotEmpty()) {
+                return latestMessages
+                    .filter { it.createdAt.toDate() != null }
+                    .maxBy { it.createdAt.toDate()!! }
+                    .createdAt.toDate()
+            }
+            return updatedAt.toDate()
+        }
 
     // Helper fields
     @IgnoredOnParcel
@@ -186,7 +197,7 @@ data class StreamItem(
         return message
     }
 
-    fun getStreamItemType(): Type? = typeFromString(type)
+    fun getStreamItemType(): Type = typeFromString(type)
 
     private fun typeFromString(type: String): Type = when {
         type.lowercase(Locale.getDefault()) == "conversation" -> Type.CONVERSATION

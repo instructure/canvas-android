@@ -16,10 +16,13 @@
  */
 package com.instructure.teacher.viewinterface
 
+import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.pandautils.blueprint.SyncManager
 
 interface FileListView : SyncManager<FileFolder> {
     fun folderCreationError()
     fun folderCreationSuccess()
+    fun fileFolderDeleted(fileFolder: FileFolder)
+    fun fileFolderDeleteError(@StringRes message: Int)
 }

@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Desde aquí puede abrir los detalles de Entrega</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Haga clic aquí para ver detalles de Entregas y rúbricas</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Calificación: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Seleccionar Curso o Grupo</string>
     <string name="inboxClearFilter">Eliminar</string>
     <string name="a11y_courseFilterContentDescription">Filtro de curso: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Selección del buzón de correo: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">seleccionar</string>
     <string name="a11y_itemSelectedSwipeForActions">Conversación seleccionada. Modo de selección activado. Desplazarse por las acciones.</string>
     <string name="a11y_conversationSelected">Conversación seleccionada</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Otras aplicaciones</string>
     <string name="offline_content_canvas_student">Estudiante de Canvas</string>
     <string name="offline_content_remaining">Restante</string>
+    <string name="offline_content_storage_info_a11y_description">Información de almacenamiento: Se usó %s de %s. Otras aplicaciones usaron %d%%, el estudiante de Canvas usó %d%%, quedan %d%%</string>
     <string name="offline_content_all_courses">Todos los cursos</string>
     <string name="offline_content_sync">Sincronización</string>
     <string name="offline_content_selected">%d seleccionado/a</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Sincronización</string>
     <string name="offline_content_sync_loading_title">Cargando...</string>
     <string name="offline_content_sync_loading_message">Aguarde un momento. Estamos preparando todo para usted.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Se guardaron las configuraciones de sincronización fuera de línea. La sincronización se iniciará en breve en segundo plano.</string>
     <string name="content_description_expand_content">Expandir contenido</string>
+    <string name="content_description_expand_content_with_param">Expandir contenido, %s</string>
     <string name="content_description_collapse_content">Contraer contenido</string>
+    <string name="content_description_collapse_content_with_param">Colapsar contenido, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Habilitar la sincronización automática de contenido se ocupará de descargar el contenido seleccionado en función de las configuraciones siguientes. La sincronización de contenido se realizará incluso si la aplicación no se está ejecutando. Si la configuración está desactivada, no se realizará ninguna sincronización. El contenido ya descargado no se eliminará.</string>
     <string name="syncSettings_syncFrequencyTitle">Frecuencia de sincronización</string>
     <string name="syncSettings_autoContentSyncTitle">Sincronización automática de contenido</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Cancelar publicación</string>
     <string name="discussionMenuRefresh">Actualizar</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Saltar a hoy</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Saltar a Hoy. El día seleccionado es %s, hoy es %s</string>
     <string name="a11y_calendarSwitchToMonthView">Cambiar a vista mensual</string>
     <string name="a11y_calendarSwitchToWeekView">Cambiar a vista semanal</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Cambiar entre la vista de mes y semana</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">El calendario está en la vista de mes</string>
+    <string name="a11y_calendarWeekView">El calendario está en la vista de semana</string>
+    <string name="a11y_calendarSwitchedToWeekView">El calendario cambió a la vista de semana</string>
+    <string name="a11y_calendarSwitchedToMonthView">El calendario cambió a la vista de mes</string>
     <string name="calendarNoEvents">¡No hay ningún evento hoy!</string>
     <string name="calendarNoEventsDescription">Este parece ser un día excelente para descansar, relajarse y recargar energías.</string>
     <string name="userCalendarToDo">Por hacer</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Solo puede seleccionar hasta %d calendarios.</string>
     <string name="calendarFilterTitle">Calendarios</string>
     <string name="calendarFiltersFailed">Error al cargar los filtros</string>
+    <string name="a11y_eventCreatedAnnouncement">El evento %s se creó de forma satisfactoria.</string>
+    <string name="a11y_eventUpdatedAnnouncement">El evento %s se actualizó de forma satisfactoria.</string>
+    <string name="a11y_toDoCreatedAnnouncement">“Por hacer” %s se creó de forma satisfactoria.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">“Por hacer” %s se actualizó de forma satisfactoria.</string>
     <string name="todoScreenTitle">Por hacer</string>
     <string name="todoDateLabel">Fecha</string>
     <string name="todoDescriptionLabel">Descripción</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Tareas (%d)</string>
     <string name="smartSearchPageGroupTitle">Páginas (%d)</string>
     <string name="a11y_commentSentSuccess">Comentario enviado con éxito</string>
+    <string name="a11y_dragViewContentDescription">Expandir cajón</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Mensajería</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Comprobado</string>
+    <string name="a11y_unchecked">Sin comprobar</string>
+    <string name="a11y_indeterminate">Comprobado de forma parcial</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Se actualizaron los filtros</string>
 </resources>

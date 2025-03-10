@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Voit avata tehtävän palautustiedot täältä</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Napsauta tästä tarkastellaksesi lähetystä &amp; Rubriikin tiedot</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Arvosana: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minuutti</item>
@@ -1441,6 +1442,7 @@
     <string name="inboxContextSelectorTitle">Valitse kurssi tai ryhmä</string>
     <string name="inboxClearFilter">Tyhjennä</string>
     <string name="a11y_courseFilterContentDescription">Kurssisuodatin: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Postilaatikon valinta: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">valitse</string>
     <string name="a11y_itemSelectedSwipeForActions">Keskustelu valittu. Valintatila aktivoitu. Siirry toimintoihin.</string>
     <string name="a11y_conversationSelected">Keskustelu valittu.</string>
@@ -1468,6 +1470,7 @@
     <string name="offline_content_other">Muut sovellukset</string>
     <string name="offline_content_canvas_student">Canvas-opiskelija</string>
     <string name="offline_content_remaining">Jäljelle jäänyt</string>
+    <string name="offline_content_storage_info_a11y_description">Tallennustilan tiedot: %s/%s Käytetty, muut sovellukset %d%%, Canvas Student %d%%, jäljellä %d%%</string>
     <string name="offline_content_all_courses">Kaikki kurssit</string>
     <string name="offline_content_sync">Synkronointi</string>
     <string name="offline_content_selected">%d Valittu:</string>
@@ -1487,8 +1490,11 @@
     <string name="offline_content_sync_dialog_positive">Synkronointi</string>
     <string name="offline_content_sync_loading_title">Ladataan...</string>
     <string name="offline_content_sync_loading_message">Pysyttele täällä, valmistamme täällä kaikkea sinulle. </string>
+    <string name="offline_content_a11y_sync_started_announcement">Offline-synkronoinnin asetukset on tallennettu. Synkronointi alkaa pian taustalla.</string>
     <string name="content_description_expand_content">Laajenna sisältöä.</string>
+    <string name="content_description_expand_content_with_param">Laajenna sisältöä, %s</string>
     <string name="content_description_collapse_content">Kutista sisältöä.</string>
+    <string name="content_description_collapse_content_with_param">Kutista sisältöä, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Automaattisen sisällön synkronisoinnin ottamisellal käyttöön huolehditaan valitun sisällön latauksesta alla olevien asetusten perusteella. Sisällön synkronisointi tapahtuu myös silloin, kun sovellus ei ole käynnissä jos asetukset on kytketty pois päältä, synkronisointia ei tapahdu. Jo ladattua sisältöä ei poisteta.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkronoinnin tiheys</string>
     <string name="syncSettings_autoContentSyncTitle">Automaattinen sisällön synkronisointi</string>
@@ -1617,8 +1623,15 @@
     <string name="unpublishDialogPositiveButton">Peruuta julkaisu</string>
     <string name="discussionMenuRefresh">Päivitä</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Siirry tähän päivään</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Siirry kohtaan Tänään, valittu päivämäärä on %s, tänään on %s</string>
     <string name="a11y_calendarSwitchToMonthView">Vaihda kuukausinäkymään</string>
     <string name="a11y_calendarSwitchToWeekView">Vaihda viikkonäkymään</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Siirry kuukausi- ja viikkonäyttöön</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Kalenteri on kuukausinäkymässä</string>
+    <string name="a11y_calendarWeekView">Kalenteri on viikkonäkymässä</string>
+    <string name="a11y_calendarSwitchedToWeekView">Kalenteri vaihdettu viikkonäkymään</string>
+    <string name="a11y_calendarSwitchedToMonthView">Kalenteri vaihdettu kuukausinäkymään</string>
     <string name="calendarNoEvents">Ei tapahtumia tänään!</string>
     <string name="calendarNoEventsDescription">Näyttää olevan hyvä päivä levätä, rentoutua ja latautua.</string>
     <string name="userCalendarToDo">Tehtävälista</string>
@@ -1642,6 +1655,10 @@
     <string name="calendarFilterLimitSnackbar">Voit valita enintään %d kalenteria.</string>
     <string name="calendarFilterTitle">Kalenterit</string>
     <string name="calendarFiltersFailed">Suodattimien lataus epäonnistui</string>
+    <string name="a11y_eventCreatedAnnouncement">Tapahtuman %s luonti onnistui.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Tapahtuman %s päivitys onnistui.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Tehtävälistan %s luonti onnistui.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Tehtävälistan %s päivitys onnistui.</string>
     <string name="todoScreenTitle">Tehtävälista</string>
     <string name="todoDateLabel">Päivämäärä</string>
     <string name="todoDescriptionLabel">Kuvaus</string>
@@ -1948,4 +1965,12 @@
     <string name="smartSearchAssignmentGroupTitle">Tehtävät (%d)</string>
     <string name="smartSearchPageGroupTitle">Sivut (%d)</string>
     <string name="a11y_commentSentSuccess">Kommentin lähetys onnistui</string>
+    <string name="a11y_dragViewContentDescription">Laajenna navigointilaatikkoa</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Keskustelut</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Tarkistettu</string>
+    <string name="a11y_unchecked">Ei valittu</string>
+    <string name="a11y_indeterminate">Osittain tarkistettu</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Suodattimet on päivitetty</string>
 </resources>

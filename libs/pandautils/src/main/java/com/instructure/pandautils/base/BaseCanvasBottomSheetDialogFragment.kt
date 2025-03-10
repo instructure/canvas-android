@@ -16,11 +16,10 @@
 
 package com.instructure.pandautils.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.instructure.canvasapi2.utils.pageview.PageViewWindowFocus
+import com.instructure.pandautils.analytics.pageview.PageViewWindowFocus
 import com.instructure.pandautils.utils.showMasqueradeNotification
 
 open class BaseCanvasBottomSheetDialogFragment : BottomSheetDialogFragment(), PageViewWindowFocus, PageViewPrerequisites {
@@ -40,9 +39,9 @@ open class BaseCanvasBottomSheetDialogFragment : BottomSheetDialogFragment(), Pa
         delegate.completePageViewPrerequisite(prerequisite)
     }
 
-    override fun onAttach(context: Context) {
-        delegate.onAttach(context)
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        delegate.onCreate()
+        super.onCreate(savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

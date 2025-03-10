@@ -17,7 +17,14 @@
 
 package com.instructure.dataseeding.api
 
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CommunicationChannel
+import com.instructure.dataseeding.model.CreateUser
+import com.instructure.dataseeding.model.OAuthToken
+import com.instructure.dataseeding.model.PairingCodeResponseModel
+import com.instructure.dataseeding.model.Pseudonym
+import com.instructure.dataseeding.model.User
+import com.instructure.dataseeding.model.UserSettingsApiModel
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -52,6 +59,9 @@ object UserApi {
         @PUT("users/{userId}/settings")
         fun putSelfSettings(@Path("userId") userId: Long, @Body body: UserSettingsApiModel): Call<UserSettingsApiModel>
 
+        @POST("users/{userId}/observer_pairing_codes")
+        fun postGeneratePairingCode(@Path("userId") userId: Long): Call<PairingCodeResponseModel>
+
     }
 
     private val userAdminService: UserService by lazy {
@@ -61,6 +71,10 @@ object UserApi {
     fun putSelfSettings(userId: Long,
                         requestApiModel: UserSettingsApiModel) {
          userAdminService.putSelfSettings(userId, requestApiModel).execute()
+    }
+
+    fun postGeneratePairingCode(userId: Long): PairingCodeResponseModel {
+        return userAdminService.postGeneratePairingCode(userId).execute().body()!!
     }
 
     fun createCanvasUser(

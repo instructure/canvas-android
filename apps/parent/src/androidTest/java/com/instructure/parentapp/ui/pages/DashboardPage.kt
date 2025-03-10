@@ -50,7 +50,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
         onViewWithText(user.email.orEmpty()).assertDisplayed()
     }
 
-    fun openNavigationDrawer() {
+    fun openLeftSideMenu() {
         onViewWithId(R.id.navigationButtonHolder).click()
     }
 

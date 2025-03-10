@@ -55,6 +55,7 @@ sealed class InboxAction {
     object CreateNewMessage : InboxAction()
     object FailedToLoadNextPage : InboxAction()
     object UpdateUnreadCount : InboxAction()
+    data class UpdateUnreadCountOffline(val increaseBy: Int) : InboxAction()
     data class OpenContextFilterSelector(val canvasContexts: List<CanvasContext>) : InboxAction()
     object RefreshFailed : InboxAction()
     data class ConfirmDelete(val count: Int) : InboxAction()

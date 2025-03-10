@@ -156,7 +156,7 @@ class SpeedGraderPage : BasePage() {
                 Matchers.allOf(
                     ViewMatchers.withContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description),
                     ViewMatchers.isCompletelyDisplayed(),
-                    ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.speedGraderToolbar))
+                    ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.gradingToolbar))
                 )
             ).click()
         } catch (e: NoMatchingViewException) {}

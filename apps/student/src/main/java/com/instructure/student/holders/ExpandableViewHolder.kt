@@ -21,9 +21,9 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.view.View
 import android.view.accessibility.AccessibilityManager
-import android.view.accessibility.AccessibilityNodeInfo
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.hasSpokenFeedback
 import com.instructure.student.R
 import com.instructure.student.databinding.ViewholderHeaderExpandableBinding
@@ -58,12 +58,7 @@ class ExpandableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 flipAnimator.start()
             }
 
-            root.accessibilityDelegate = object : View.AccessibilityDelegate() {
-                override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
-                    super.onInitializeAccessibilityNodeInfo(host, info)
-                    info.className = "android.widget.Button"
-                }
-            }
+            root.accessibilityClassName("android.widget.Button")
         }
     }
 
