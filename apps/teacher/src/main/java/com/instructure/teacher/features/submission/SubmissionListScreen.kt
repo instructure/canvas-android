@@ -94,7 +94,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                         )
                     }
 
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { uiState.actionHandler(SubmissionListAction.ShowPostPolicy) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_eye),
                             contentDescription = stringResource(R.string.a11y_contentDescription_postPolicy),

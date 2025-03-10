@@ -257,6 +257,17 @@ class SubmissionListViewModel @Inject constructor(
                 }
                 filterData()
             }
+
+            is SubmissionListAction.ShowPostPolicy -> {
+                viewModelScope.launch {
+                    _events.send(
+                        SubmissionListViewModelAction.ShowPostPolicy(
+                            course = course,
+                            assignment = assignment
+                        )
+                    )
+                }
+            }
         }
     }
 

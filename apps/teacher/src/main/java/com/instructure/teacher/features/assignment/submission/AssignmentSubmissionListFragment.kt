@@ -40,6 +40,7 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.submission.SubmissionListScreen
 import com.instructure.teacher.features.submission.SubmissionListViewModel
 import com.instructure.teacher.features.submission.SubmissionListViewModelAction
@@ -105,6 +106,10 @@ class AssignmentSubmissionListFragment : BaseCanvasFragment() {
                     action.filterValue
                 )
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
+            }
+
+            is SubmissionListViewModelAction.ShowPostPolicy -> {
+                RouteMatcher.route(requireActivity(), PostPolicyFragment.makeRoute(action.course, action.assignment))
             }
         }
     }
