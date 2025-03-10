@@ -57,6 +57,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.EmptyContent
+import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.teacher.R
@@ -119,7 +122,28 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
             }
         }
 
-        SubmissionListContent(uiState, Modifier.padding(padding), uiState.courseColor)
+        when {
+            uiState.loading -> {
+                Loading(modifier = Modifier.fillMaxSize())
+            }
+            uiState.error -> {
+                ErrorContent(
+                    errorMessage = stringResource(R.string.errorLoadingSubmission),
+                    retryClick = { uiState.actionHandler(SubmissionListAction.Refresh) },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            uiState.submissions.isEmpty() -> {
+                EmptyContent(
+                    emptyMessage = stringResource(R.string.no_submissions),
+                    imageRes = R.drawable.ic_panda_nocourses,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+            else -> {
+                SubmissionListContent(uiState, Modifier.padding(padding), uiState.courseColor)
+            }
+        }
     }
 }
 
@@ -396,6 +420,36 @@ fun SubmissionListScreenDarkPreview() {
                     hidden = true
                 )
             )
+        ) {}
+    ) {}
+}
+
+@Preview
+@Composable
+private fun SubmissionListErrorPreview() {
+    SubmissionListScreen(
+        SubmissionListUiState(
+            "Test assignment",
+            courseColor = Color.Magenta,
+            anonymousGrading = false,
+            headerTitle = "All Submissions",
+            filter = SubmissionListFilter.GRADED,
+            error = true
+        ) {}
+    ) {}
+}
+
+@Preview
+@Composable
+private fun SubmissionListEmptyPreview() {
+    SubmissionListScreen(
+        SubmissionListUiState(
+            "Test assignment",
+            courseColor = Color.Magenta,
+            anonymousGrading = false,
+            headerTitle = "All Submissions",
+            filter = SubmissionListFilter.GRADED,
+            submissions = emptyList()
         ) {}
     ) {}
 }
