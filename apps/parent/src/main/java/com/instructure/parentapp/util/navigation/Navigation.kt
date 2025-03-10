@@ -56,7 +56,8 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val globalAnnouncementDetails = "$baseUrl/account_notifications/{$announcementId}"
     private val assignmentDetails = "$baseUrl/courses/{${Const.COURSE_ID}}/assignments/{${Const.ASSIGNMENT_ID}}"
     private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
-    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
+    private val inboxDetailsInternal = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}/{${InboxDetailsFragment.UNREAD}}"
+    private val inboxDetailsDeepLink = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
     private val calendarEvent = "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
     private val createEvent = "$baseUrl/create-event/{${CreateUpdateEventFragment.INITIAL_DATE}}"
     private val updateEvent = "$baseUrl/update-event/{${CreateUpdateEventFragment.SCHEDULE_ITEM}}"
@@ -83,7 +84,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private fun splashRoute(qrCodeMasqueradeId: Long) = "$baseUrl/splash/$qrCodeMasqueradeId"
     fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
     fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
-    fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
+    fun inboxDetailsRoute(conversationId: Long, unread: Boolean) = "$baseUrl/conversations/$conversationId/$unread"
     fun createAccount(domain: String, accountId: String, pairingCode: String) = "$baseUrl/account_creation?pairing_code=$pairingCode&domain=$domain&accountId=$accountId"
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
     fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
@@ -130,13 +131,23 @@ class Navigation(apiPrefs: ApiPrefs) {
                     nullable = false
                 }
             }
-            fragment<InboxDetailsFragment>(inboxDetails) {
+            fragment<InboxDetailsFragment>(inboxDetailsDeepLink) {
                 argument(InboxDetailsFragment.CONVERSATION_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
                 deepLink {
-                    uriPattern = inboxDetails
+                    uriPattern = inboxDetailsDeepLink
+                }
+            }
+            fragment<InboxDetailsFragment>(inboxDetailsInternal) {
+                argument(InboxDetailsFragment.CONVERSATION_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(InboxDetailsFragment.UNREAD) {
+                    type = NavType.BoolType
+                    nullable = false
                 }
             }
             fragment<ManageStudentsFragment>(manageStudents)
