@@ -20,7 +20,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
-import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Section
 import com.instructure.teacher.R
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 
@@ -31,7 +31,8 @@ data class SubmissionListUiState(
     val searchQuery: String = "",
     val filter: SubmissionListFilter = SubmissionListFilter.ALL,
     val filterValue: Double? = null,
-    val sections: List<CanvasContext> = emptyList(),
+    val sections: List<Section> = emptyList(),
+    val selectedSections: List<Long> = emptyList(),
     val submissions: List<SubmissionUiState> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
@@ -65,7 +66,7 @@ sealed class SubmissionListAction {
     data object Refresh : SubmissionListAction()
     data class SubmissionClicked(val submissionId: Long) : SubmissionListAction()
     data class Search(val query: String) : SubmissionListAction()
-    data class SetFilters(val filter: SubmissionListFilter, val filterValue: Double?) : SubmissionListAction()
+    data class SetFilters(val filter: SubmissionListFilter, val filterValue: Double?, val selectedSections: List<Long>) : SubmissionListAction()
 }
 
 sealed class SubmissionListViewModelAction {

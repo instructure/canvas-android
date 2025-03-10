@@ -40,9 +40,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CheckboxText
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.teacher.R
@@ -54,6 +56,8 @@ fun SubmissionListFilters(
     filterValue: Double?,
     courseColor: Color,
     assignmentName: String,
+    sections: List<CanvasContext>,
+    selectedSections: List<Long>,
     actionHandler: (SubmissionListAction) -> Unit,
     dismiss: () -> Unit
 ) {
@@ -67,6 +71,8 @@ fun SubmissionListFilters(
             )
         }.orEmpty())
     }
+    var selectedSections by remember { mutableStateOf(selectedSections) }
+    var error by remember { mutableStateOf(false) }
     FullScreenDialog(onDismissRequest = { dismiss() }) {
         Scaffold(topBar = {
             CanvasAppBar(
@@ -82,13 +88,22 @@ fun SubmissionListFilters(
                 actions = {
                     TextButton(
                         onClick = {
-                            actionHandler(
-                                SubmissionListAction.SetFilters(
-                                    selectedFilter,
-                                    selectedFilterValue.toDoubleOrNull()
+                            if (selectedFilter in listOf(
+                                    SubmissionListFilter.BELOW_VALUE,
+                                    SubmissionListFilter.ABOVE_VALUE
+                                ) && selectedFilterValue.isEmpty()
+                            ) {
+                                error = true
+                            } else {
+                                actionHandler(
+                                    SubmissionListAction.SetFilters(
+                                        selectedFilter,
+                                        selectedFilterValue.toDoubleOrNull(),
+                                        selectedSections
+                                    )
                                 )
-                            )
-                            dismiss()
+                                dismiss()
+                            }
                         }) {
                         Text(
                             text = stringResource(R.string.done),
@@ -106,15 +121,7 @@ fun SubmissionListFilters(
                     .padding(padding)
                     .verticalScroll(rememberScrollState())
             ) {
-                CanvasDivider()
-                Text(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = stringResource(R.string.submissionFilter),
-                    fontSize = 14.sp,
-                    color = colorResource(id = R.color.textDark),
-                    fontWeight = FontWeight.SemiBold
-                )
-                CanvasDivider()
+                Header(text = stringResource(R.string.submissionFilter))
                 FilterItem(
                     text = stringResource(R.string.all_submissions),
                     selected = selectedFilter == SubmissionListFilter.ALL,
@@ -170,14 +177,18 @@ fun SubmissionListFilters(
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp, vertical = 8.dp),
                         value = selectedFilterValue,
-                        onValueChange = { selectedFilterValue = it },
+                        onValueChange = {
+                            error = false
+                            selectedFilterValue = it
+                        },
                         label = { Text(stringResource(R.string.score)) },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             textColor = colorResource(R.color.textDarkest)
                         ),
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
-                        )
+                        ),
+                        isError = error
                     )
                 }
                 FilterItem(
@@ -195,19 +206,55 @@ fun SubmissionListFilters(
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp, vertical = 8.dp),
                         value = selectedFilterValue,
-                        onValueChange = { selectedFilterValue = it },
+                        onValueChange = {
+                            error = false
+                            selectedFilterValue = it
+                        },
                         label = { Text(stringResource(R.string.score)) },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             textColor = colorResource(R.color.textDarkest)
                         ),
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
-                        )
+                        ),
+                        isError = error
                     )
+                }
+                if (sections.isNotEmpty()) {
+                    Header(text = stringResource(R.string.filterBySection))
+
+                    sections.forEach { section ->
+                        CheckboxText(
+                            text = section.name.orEmpty(),
+                            selected = selectedSections.contains(section.id),
+                            color = courseColor,
+                            onCheckedChanged = {
+                                selectedSections = if (it) {
+                                    selectedSections + section.id
+                                } else {
+                                    selectedSections - section.id
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun Header(text: String) {
+    CanvasDivider()
+    Text(
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        text = text,
+        fontSize = 14.sp,
+        color = colorResource(id = R.color.textDark),
+        fontWeight = FontWeight.SemiBold
+    )
+    CanvasDivider()
 }
 
 @Composable

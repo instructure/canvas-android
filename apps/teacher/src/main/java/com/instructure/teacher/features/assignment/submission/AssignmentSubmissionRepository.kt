@@ -18,11 +18,13 @@
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
@@ -32,7 +34,8 @@ import com.instructure.canvasapi2.utils.intersectBy
 class AssignmentSubmissionRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val sectionApi: SectionAPI.SectionsInterface
 ) {
 
     suspend fun getGradeableStudentSubmissions(
@@ -129,5 +132,12 @@ class AssignmentSubmissionRepository(
         }
 
         return groupSubs + individualSubs
+    }
+
+    suspend fun getSections(courseId: Long, forceNetwork: Boolean): List<Section> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        return sectionApi.getFirstPageSectionsList(courseId, params).depaginate {
+            sectionApi.getNextPageSectionsList(it, params)
+        }.dataOrThrow
     }
 }

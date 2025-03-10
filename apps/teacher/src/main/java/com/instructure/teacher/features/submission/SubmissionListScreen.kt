@@ -83,7 +83,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                     }) {
                         Icon(
                             painter = painterResource(
-                                id = if (uiState.filter != SubmissionListFilter.ALL || uiState.sections.isNotEmpty()) {
+                                id = if (uiState.filter != SubmissionListFilter.ALL || uiState.selectedSections.isNotEmpty()) {
                                     R.drawable.ic_filter_filled
                                 } else {
                                     R.drawable.ic_filter_outline
@@ -111,6 +111,8 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                 uiState.filterValue,
                 uiState.courseColor,
                 uiState.assignmentName,
+                uiState.sections,
+                uiState.selectedSections,
                 uiState.actionHandler
             ) {
                 showFilterDialog = false

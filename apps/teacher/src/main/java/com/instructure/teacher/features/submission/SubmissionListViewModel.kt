@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -61,6 +62,8 @@ class SubmissionListViewModel @Inject constructor(
     private var searchQuery: String = ""
 
     private var submissions: List<GradeableStudentSubmission> = emptyList()
+    private var sections: List<Section> = emptyList()
+    private val selectedSectionIds = mutableSetOf<Long>()
 
     private val _uiState = MutableStateFlow(
         SubmissionListUiState(
@@ -91,7 +94,8 @@ class SubmissionListViewModel @Inject constructor(
             course.id,
             forceNetwork
         )
-
+        sections = submissionListRepository.getSections(course.id, forceNetwork)
+        _uiState.update { it.copy(sections = sections) }
         filterData()
     }
 
@@ -140,7 +144,14 @@ class SubmissionListViewModel @Inject constructor(
                 // which students haven't submitted yet
                 SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
             }
-        }.filter { it.assignee.name.contains(searchQuery, true) }
+        }
+            .filter { it.assignee.name.contains(searchQuery, true) }
+            .filter {
+                if (selectedSectionIds.isEmpty()) return@filter true
+
+                (it.assignee as? StudentAssignee)?.student?.enrollments?.any { it.courseSectionId in selectedSectionIds }
+                    ?: false
+            }
             .map { getSubmissionUiState(it) }
 
         _uiState.update {
@@ -217,7 +228,9 @@ class SubmissionListViewModel @Inject constructor(
                             anonymousGrading = assignment.anonymousGrading,
                             filteredSubmissionIds = submissions.map { it.submissionId }
                                 .toLongArray(),
-                            filter = _uiState.value.filter,
+                            filter = filter,
+                            filterValue = filterValue.orDefault(
+                            )
                         )
                     )
                 }
@@ -232,10 +245,13 @@ class SubmissionListViewModel @Inject constructor(
             is SubmissionListAction.SetFilters -> {
                 filter = action.filter
                 filterValue = action.filterValue
+                selectedSectionIds.clear()
+                selectedSectionIds.addAll(action.selectedSections)
                 _uiState.update {
                     it.copy(
                         filter = action.filter,
                         filterValue = action.filterValue,
+                        selectedSections = action.selectedSections,
                         headerTitle = getHeaderTitle(action.filter, action.filterValue)
                     )
                 }
