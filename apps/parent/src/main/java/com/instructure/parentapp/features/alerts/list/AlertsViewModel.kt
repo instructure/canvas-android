@@ -165,7 +165,8 @@ class AlertsViewModel @Inject constructor(
                 uiState.copy(
                     alerts = uiState.alerts.map { alertItem ->
                         if (alertItem.alertId == alertId) alertItem.copy(unread = false) else alertItem
-                    }
+                    },
+                    addedItemIndex = -1
                 )
             }
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
@@ -176,20 +177,21 @@ class AlertsViewModel @Inject constructor(
     }
 
     private suspend fun dismissAlert(alertId: Long) {
-        fun resetAlert(alert: AlertsItemUiState) {
+        fun resetAlert(alert: AlertsItemUiState, unreadState: Boolean) {
             val alerts = _uiState.value.alerts.toMutableList()
-            alerts.add(alert)
+            alerts.add(alert.copy(unread = unreadState))
             alerts.sortByDescending { it.date }
             viewModelScope.launch {
                 _uiState.update { it.copy(alerts = alerts) }
                 alertCountUpdater.updateShouldRefreshAlertCount(true)
+                _uiState.update { it.copy(addedItemIndex = alerts.indexOf(alert)) }
             }
         }
 
         val alerts = _uiState.value.alerts.toMutableList()
         val alert = alerts.find { it.alertId == alertId } ?: return
         alerts.removeIf { it.alertId == alertId }
-        _uiState.update { it.copy(alerts = alerts) }
+        _uiState.update { it.copy(alerts = alerts, addedItemIndex = -1) }
 
         try {
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.DISMISSED)
@@ -197,11 +199,8 @@ class AlertsViewModel @Inject constructor(
             _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissMessage, R.string.alertDismissAction) {
                 viewModelScope.launch {
                     try {
-                        repository.updateAlertWorkflow(
-                            alert.alertId,
-                            if (alert.unread) AlertWorkflowState.UNREAD else AlertWorkflowState.READ
-                        )
-                        resetAlert(alert)
+                        repository.updateAlertWorkflow(alert.alertId, AlertWorkflowState.READ)
+                        resetAlert(alert, false)
                     } catch (e: Exception) {
                         _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissActionErrorMessage, null, null))
                     }
@@ -209,7 +208,7 @@ class AlertsViewModel @Inject constructor(
             })
         } catch (e: Exception) {
             _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissErrorMessage, null, null))
-            resetAlert(alert)
+            resetAlert(alert, alert.unread)
         }
     }
 

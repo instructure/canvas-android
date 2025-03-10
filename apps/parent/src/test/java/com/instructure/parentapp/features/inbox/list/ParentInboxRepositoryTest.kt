@@ -15,9 +15,11 @@ package com.instructure.parentapp.features.inbox.list/*
  */
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.utils.DataResult
@@ -33,9 +35,11 @@ class ParentInboxRepositoryTest {
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val groupsApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
+    private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
+    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
     private val inboxRepository =
-        ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+        ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi, inboxSettingsManager, featuresApi)
 
     @Test
     fun `Get contexts returns only valid courses`() = runTest {

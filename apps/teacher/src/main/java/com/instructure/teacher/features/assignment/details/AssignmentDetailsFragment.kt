@@ -18,6 +18,7 @@ package com.instructure.teacher.features.assignment.details
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.webkit.WebView
+import android.widget.Button
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
 import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPrettyPrintString
@@ -42,6 +43,7 @@ import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.loadHtmlWithIframes
@@ -177,6 +179,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         configureDescription(assignment)
         configureSubmissionDonuts(assignment)
         configureViewDiscussionButton(assignment)
+
+        dueLayout.accessibilityClassName(Button::class.java.name)
     }
 
     // region Configure Assignment
@@ -255,11 +259,6 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             // External tool
             submissionTypesArrowIcon.setVisible()
             submissionTypesLayout.onClickWithRequireNetwork {
-                // If the user is a designer we don't want to let them look at LTI tools
-                if (course.isDesigner) {
-                    toast(R.string.errorIsDesigner)
-                    return@onClickWithRequireNetwork
-                }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
                     val route = LtiLaunchFragment.makeRoute(course, ltiUrl, assignment.name!!, assignmentLti = true, openInternally = assignment.ltiToolType().openInternally)
@@ -345,6 +344,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         gradedChart.setSelectedColor(ThemePrefs.brandColor)
         gradedChart.setCenterText(gradedStudents.toString())
         gradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_graded).format(gradedStudents, totalStudents)
+        gradedWrapper.accessibilityClassName(Button::class.java.name)
         gradedProgressBar.setGone()
         gradedChart.invalidate()
 
@@ -354,6 +354,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         ungradedChart.setCenterText(needsGradingCount.toString())
         ungradedLabel.text = requireContext().resources.getQuantityText(R.plurals.needsGradingNoQuantity, needsGradingCount)
         ungradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_needs_grading).format(needsGradingCount, totalStudents)
+        ungradedWrapper.accessibilityClassName(Button::class.java.name)
         ungradedProgressBar.setGone()
         ungradedChart.invalidate()
 
@@ -363,9 +364,9 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         notSubmittedChart.setCenterText(notSubmitted.toString())
 
         notSubmittedWrapper.contentDescription = getString(R.string.content_description_submission_donut_unsubmitted).format(notSubmitted, totalStudents)
+        notSubmittedWrapper.accessibilityClassName(Button::class.java.name)
         notSubmittedProgressBar.setGone()
         notSubmittedChart.invalidate()
-
 
         // Only show graded dial if the assignment submission type is not online
         if (!presenter.mAssignment.isOnlineSubmissionType) {

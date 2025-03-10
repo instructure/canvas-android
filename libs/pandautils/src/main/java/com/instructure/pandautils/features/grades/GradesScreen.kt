@@ -29,6 +29,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +43,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -64,17 +68,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -88,6 +99,7 @@ import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
+import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.drawableId
 import kotlinx.coroutines.launch
 
@@ -183,11 +195,14 @@ private fun GradePreferencesDialog(
             actionHandler(GradesAction.HideGradePreferences)
         }
     ) {
+        val context = LocalContext.current
+        val gradePreferencesUpdatedAnnouncement = stringResource(R.string.a11y_gradesFilterUpdatedAnnouncement)
         GradePreferencesScreen(
             uiState = uiState.gradePreferencesUiState,
             onPreferenceChangeSaved = { gradingPeriod, sortBy ->
                 actionHandler(GradesAction.GradePreferencesUpdated(gradingPeriod, sortBy))
                 actionHandler(GradesAction.HideGradePreferences)
+                announceAccessibilityText(context, gradePreferencesUpdatedAnnouncement)
             },
             navigationActionClick = {
                 actionHandler(GradesAction.HideGradePreferences)
@@ -196,7 +211,7 @@ private fun GradePreferencesDialog(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun GradesScreenContent(
     uiState: GradesUiState,
@@ -242,11 +257,15 @@ private fun GradesScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 32.dp, end = 32.dp, bottom = 16.dp)
-                        .clickable(
+                        .toggleable(
+                            value = uiState.onlyGradedAssignmentsSwitchEnabled,
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
                             actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(!uiState.onlyGradedAssignmentsSwitchEnabled))
+                        }
+                        .semantics {
+                            role = Role.Switch
                         },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -254,7 +273,8 @@ private fun GradesScreenContent(
                     Text(
                         text = stringResource(id = R.string.gradesBasedOnGraded),
                         fontSize = 16.sp,
-                        color = colorResource(id = R.color.textDarkest)
+                        color = colorResource(id = R.color.textDarkest),
+                        modifier = Modifier.testTag("basedOnGradedAssignmentsLabel")
                     )
                     Switch(
                         interactionSource = NoRippleInteractionSource(),
@@ -266,7 +286,11 @@ private fun GradesScreenContent(
                             checkedThumbColor = Color(uiState.canvasContextColor),
                             uncheckedTrackColor = colorResource(id = R.color.textDark)
                         ),
-                        modifier = Modifier.height(24.dp)
+                        modifier = Modifier
+                            .height(24.dp)
+                            .semantics {
+                                invisibleToUser()
+                            }
                     )
                 }
 
@@ -277,11 +301,23 @@ private fun GradesScreenContent(
 
             uiState.items.forEach {
                 stickyHeader {
+                    val headerContentDescription = stringResource(
+                        if (it.expanded) {
+                            R.string.content_description_collapse_content_with_param
+                        } else {
+                            R.string.content_description_expand_content_with_param
+                        }, it.name
+                    )
                     Column(
                         modifier = Modifier
                             .background(colorResource(id = R.color.backgroundLightest))
                             .clickable {
                                 actionHandler(GradesAction.GroupHeaderClick(it.id))
+                            }
+                            .semantics {
+                                heading()
+                                contentDescription = headerContentDescription
+                                role = Role.Button
                             }
                     ) {
                         Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
@@ -296,7 +332,10 @@ private fun GradesScreenContent(
                             Text(
                                 text = it.name,
                                 color = colorResource(id = R.color.textDark),
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
+                                modifier = Modifier.semantics {
+                                    invisibleToUser()
+                                }
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Icon(
@@ -401,8 +440,11 @@ private fun GradesCard(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .clickable {
+                .selectable(!uiState.gradePreferencesUiState.isDefault) {
                     actionHandler(GradesAction.ShowGradePreferences)
+                }
+                .semantics {
+                    role = Role.Button
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -434,6 +476,7 @@ private fun EmptyContent() {
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AssignmentItem(
     uiState: AssignmentUiState,
@@ -448,6 +491,10 @@ fun AssignmentItem(
                 actionHandler(GradesAction.AssignmentClick(uiState.id))
             }
             .padding(12.dp)
+            .semantics {
+                role = Role.Button
+                testTag = "assignmentItem"
+            }
     ) {
         Spacer(modifier = Modifier.width(12.dp))
         Icon(
@@ -467,13 +514,12 @@ fun AssignmentItem(
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            FlowRow {
                 Text(
                     text = uiState.dueDate,
                     color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    modifier = modifier.testTag("assignmentName")
                 )
                 if (uiState.submissionStateLabel != SubmissionStateLabel.NONE) {
                     Spacer(modifier = Modifier.width(4.dp))
@@ -483,6 +529,7 @@ fun AssignmentItem(
                             .width(1.dp)
                             .clip(RoundedCornerShape(1.dp))
                             .background(colorResource(id = R.color.borderMedium))
+                            .align(Alignment.CenterVertically)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
@@ -491,6 +538,7 @@ fun AssignmentItem(
                         tint = colorResource(id = uiState.submissionStateLabel.colorRes),
                         modifier = Modifier
                             .size(16.dp)
+                            .align(Alignment.CenterVertically)
                             .semantics {
                                 drawableId = uiState.submissionStateLabel.iconRes
                             }
@@ -511,7 +559,7 @@ fun AssignmentItem(
                     fontSize = 16.sp,
                     modifier = Modifier.semantics {
                         contentDescription = uiState.displayGrade.contentDescription
-                    }
+                    }.testTag("gradeText")
                 )
             }
         }

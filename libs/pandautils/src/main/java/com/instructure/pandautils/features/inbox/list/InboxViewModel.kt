@@ -126,6 +126,8 @@ class InboxViewModel @Inject constructor(
                 inboxRepository.getCanvasContexts().dataOrNull?.let {
                     canvasContexts = it
                 }
+                // Just prefetch this so we don't have to show a loading on the compose screen, we don't need to do anything with the result
+                inboxRepository.getInboxSignature()
             } catch (e: Exception) {
                 e.printStackTrace()
                 if (_itemViewModels.value?.isNotEmpty() == true) {
@@ -257,43 +259,48 @@ class InboxViewModel @Inject constructor(
 
     fun markAsReadSelected() {
         performBatchOperation("mark_as_read") { ids, progress ->
+            val unreadCountIncreasedBy = getUnreadCountDiff(ids, unread = false)
             if (scope == InboxApi.Scope.UNREAD) {
                 removeItemsAndSilentUpdate(ids, progress)
             } else {
                 updateItems(ids, unread = false)
             }
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
-            _events.value = Event(InboxAction.UpdateUnreadCount)
+            sendUpdateUnreadCountOfflineEvent(unreadCountIncreasedBy)
         }
     }
 
     fun markAsUnreadSelected() {
         performBatchOperation("mark_as_unread") { ids, progress ->
+            val unreadCountIncreasedBy = getUnreadCountDiff(ids, unread = true)
             if (scope == InboxApi.Scope.ARCHIVED) {
                 removeItemsAndSilentUpdate(ids, progress)
             } else {
                 updateItems(ids, unread = true)
             }
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
-            _events.value = Event(InboxAction.UpdateUnreadCount)
+            sendUpdateUnreadCountOfflineEvent(unreadCountIncreasedBy)
         }
     }
 
     fun deleteSelected() {
         performBatchOperation("destroy") { ids, progress ->
+            val unreadCountIncreasedBy = getUnreadCountDiff(ids, unread = false)
             removeItemsAndSilentUpdate(ids, progress)
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxDeletedConfirmation, ids.size)))
-            _events.value = Event(InboxAction.UpdateUnreadCount)
+            sendUpdateUnreadCountOfflineEvent(unreadCountIncreasedBy)
         }
     }
 
     fun archiveSelected() {
         performBatchOperation("archive") { ids, progress ->
+            var unreadCountIncreasedBy = 0
             if (scope != InboxApi.Scope.STARRED) {
+                unreadCountIncreasedBy = getUnreadCountDiff(ids, unread = false)
                 removeItemsAndSilentUpdate(ids, progress)
             }
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, ids.size)))
-            _events.value = Event(InboxAction.UpdateUnreadCount)
+            sendUpdateUnreadCountOfflineEvent(unreadCountIncreasedBy)
         }
     }
 
@@ -301,6 +308,12 @@ class InboxViewModel @Inject constructor(
         performBatchOperation("mark_as_read") { ids, progress ->
             removeItemsAndSilentUpdate(ids, progress)
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnarchivedConfirmation, ids.size)))
+        }
+    }
+
+    private fun sendUpdateUnreadCountOfflineEvent(unreadCountIncreasedBy: Int) {
+        if (unreadCountIncreasedBy != 0) {
+            _events.value = Event(InboxAction.UpdateUnreadCountOffline(unreadCountIncreasedBy))
         }
     }
 
@@ -555,5 +568,19 @@ class InboxViewModel @Inject constructor(
     fun confirmDelete() {
         val selectedCount = _itemViewModels.value?.count { it.selected } ?: 1
         _events.value = Event(InboxAction.ConfirmDelete(selectedCount))
+    }
+
+    private fun getUnreadCountDiff(ids: Set<Long>, unread: Boolean): Int {
+        var diff = 0
+        _itemViewModels.value?.forEach {
+            if (ids.contains(it.data.id)) {
+                if (unread && !it.data.unread) {
+                    diff++
+                } else if (!unread && it.data.unread) {
+                    diff--
+                }
+            }
+        }
+        return diff
     }
 }

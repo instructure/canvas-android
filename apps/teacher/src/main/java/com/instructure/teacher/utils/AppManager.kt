@@ -17,9 +17,14 @@
 package com.instructure.teacher.utils
 
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerFactory
+import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import dagger.hilt.android.HiltAndroidApp
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -31,7 +36,21 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
 
+    @Inject
+    lateinit var workManager: WorkManager
+
     override fun getWorkManagerFactory(): WorkerFactory = workerFactory
 
     override fun getScheduler(): AlarmScheduler = alarmScheduler
+
+    override fun onCreate() {
+        super.onCreate()
+        schedulePandataUpload()
+    }
+
+    private fun schedulePandataUpload() {
+        val workRequest = PeriodicWorkRequestBuilder<PageViewUploadWorker>(15, TimeUnit.MINUTES)
+            .build()
+        workManager.enqueueUniquePeriodicWork("pageView-teacher", ExistingPeriodicWorkPolicy.KEEP, workRequest)
+    }
 }

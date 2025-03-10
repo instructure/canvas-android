@@ -24,8 +24,10 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
 import com.instructure.canvas.espresso.common.pages.LoginLandingPage
 import com.instructure.canvas.espresso.common.pages.LoginSignInPage
@@ -35,7 +37,6 @@ import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.ui.pages.AboutPage
 import com.instructure.teacher.ui.pages.AnnouncementsListPage
 import com.instructure.teacher.ui.pages.AssigneeListPage
 import com.instructure.teacher.ui.pages.AssignmentDetailsPage
@@ -59,7 +60,6 @@ import com.instructure.teacher.ui.pages.EditSyllabusPage
 import com.instructure.teacher.ui.pages.FileListPage
 import com.instructure.teacher.ui.pages.HelpPage
 import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
-import com.instructure.teacher.ui.pages.LegalPage
 import com.instructure.teacher.ui.pages.ModulesPage
 import com.instructure.teacher.ui.pages.NavDrawerPage
 import com.instructure.teacher.ui.pages.NotATeacherPage

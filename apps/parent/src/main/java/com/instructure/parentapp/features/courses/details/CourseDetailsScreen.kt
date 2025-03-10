@@ -228,6 +228,8 @@ private fun CourseDetailsScreenContent(
                         uiState.tabs.forEachIndexed { index, tab ->
                             Tab(
                                 selected = pagerState.currentPage == index,
+                                selectedContentColor = colorResource(id = R.color.textLightest),
+                                unselectedContentColor = colorResource(id = R.color.textLightest),
                                 onClick = {
                                     coroutineScope.launch {
                                         pagerState.animateScrollToPage(index)

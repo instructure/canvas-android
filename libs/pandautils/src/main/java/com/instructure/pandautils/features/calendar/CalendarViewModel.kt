@@ -41,6 +41,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -267,6 +268,7 @@ class CalendarViewModel @Inject constructor(
             bodyUiState = calendarStateMapper.createBodyUiState(expanded, selectedDay, jumpToToday, scrollToPageOffset, eventIndicators),
             scrollToPageOffset = scrollToPageOffset,
             pendingSelectedDay = pendingSelectedDay,
+            todayTapped = jumpToToday
         )
     }
 
@@ -425,6 +427,11 @@ class CalendarViewModel @Inject constructor(
                 clearAndReloadCalendar()
             }
             CalendarAction.PullToRefresh -> refreshCalendar()
+            CalendarAction.TodayTapHandled -> _uiState.update {
+                it.copy(
+                    calendarUiState = it.calendarUiState.copy(todayTapped = false)
+                )
+            }
         }
     }
 

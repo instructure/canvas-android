@@ -1183,6 +1183,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Bạn có thể mở chi tiết Bài Nộp từ đây</string>
 
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Nhấp vào đây để xem chi tiết Bài Nộp &amp; Bảng Đánh Giá Theo Tiêu Chí</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Lớp: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Phút</item>
@@ -1442,6 +1443,7 @@
     <string name="inboxContextSelectorTitle">Chọn Khóa Học hoặc Nhóm</string>
     <string name="inboxClearFilter">Xóa bỏ</string>
     <string name="a11y_courseFilterContentDescription">Bộ lọc khóa học: %s</string>
+    <string name="a11y_mailboxSelectionContentDescription">Lựa chọn hộp thư: %s</string>
     <string name="a11y_inboxEntryLongClickDescription">chọn</string>
     <string name="a11y_itemSelectedSwipeForActions">Đã chọn cuộc trò chuyện. Đã kích hoạt chế độ lựa chọn. Điều hướng để thực hiện thao tác.</string>
     <string name="a11y_conversationSelected">Đã chọn cuộc trò chuyện</string>
@@ -1469,6 +1471,7 @@
     <string name="offline_content_other">Các Ứng Dụng Khác</string>
     <string name="offline_content_canvas_student">Sinh Viên Canvas</string>
     <string name="offline_content_remaining">Còn lại</string>
+    <string name="offline_content_storage_info_a11y_description">Thông Tin Lưu Trữ: %s trên %s Đã Sử Dụng, Ứng Dụng Khác %d%%, Canvas Student %d%%, Còn lại %d%%</string>
     <string name="offline_content_all_courses">Tất Cả Khóa Học</string>
     <string name="offline_content_sync">Đồng bộ</string>
     <string name="offline_content_selected">Đã Chọn %d</string>
@@ -1488,8 +1491,11 @@
     <string name="offline_content_sync_dialog_positive">Đồng bộ</string>
     <string name="offline_content_sync_loading_title">Đang tải...</string>
     <string name="offline_content_sync_loading_message">Hãy chờ nhé, chúng tôi đang chuẩn bị mọi thứ cho bạn.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Cài đặt đồng bộ ngoại tuyến đã được lưu. Quá trình đồng bộ sẽ sớm bắt đầu trong nền.</string>
     <string name="content_description_expand_content">Mở rộng nội dung</string>
+    <string name="content_description_expand_content_with_param">Mở rộng nội dung, %s</string>
     <string name="content_description_collapse_content">Thu gọn nội dung</string>
+    <string name="content_description_collapse_content_with_param">Thu gọn nội dung, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Bật chức năng Tự Động Đồng Bộ Nội Dung sẽ xử lý việc tải xuống các nội dung được chọn dựa theo cài đặt dưới đây. Thao tác đồng bộ nội dung sẽ diễn ra ngay cả khi ứng dụng không chạy. Nếu tắt cài đặt thì quá trình đồng bộ sẽ không diễn ra. Nội dung đã được tải xuống sẽ không bị xóa.</string>
     <string name="syncSettings_syncFrequencyTitle">Tần Suất Đồng Bộ</string>
     <string name="syncSettings_autoContentSyncTitle">Tự Động Đồng Bộ Nội Dung</string>
@@ -1618,8 +1624,15 @@
     <string name="unpublishDialogPositiveButton">Hủy Phát Hành</string>
     <string name="discussionMenuRefresh">Làm Mới</string>
     <string name="a11y_contentDescriptionCalendarJumpToToday">Chuyển Đến Hôm Nay</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Nhảy tới ngày Hôm Nay, ngày được chọn là %s, hôm nay là %s</string>
     <string name="a11y_calendarSwitchToMonthView">Chuyển sang chế độ xem dạng tháng</string>
     <string name="a11y_calendarSwitchToWeekView">Chuyển sang chế độ xem dạng tuần</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Đổi giữa chế độ xem tháng và ngày</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Lịch đang ở chế độ xem dạng tháng</string>
+    <string name="a11y_calendarWeekView">Lịch đang ở chế độ xem dạng tuần</string>
+    <string name="a11y_calendarSwitchedToWeekView">Lịch đã chuyển sang chế độ xem dạng tuần</string>
+    <string name="a11y_calendarSwitchedToMonthView">Lịch đã chuyển sang chế độ xem dạng tháng</string>
     <string name="calendarNoEvents">Không Có Sự Kiện Hôm Nay!</string>
     <string name="calendarNoEventsDescription">Có vẻ là một ngày tuyệt vời để nghỉ ngơi, thư giãn và hồi sức.</string>
     <string name="userCalendarToDo">Cần Làm</string>
@@ -1643,6 +1656,10 @@
     <string name="calendarFilterLimitSnackbar">Bạn chỉ có thể chọn tối đa %d lịch.</string>
     <string name="calendarFilterTitle">Lịch</string>
     <string name="calendarFiltersFailed">Không tải được bộ lọc</string>
+    <string name="a11y_eventCreatedAnnouncement">Sự kiện %s đã được tạo thành công.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Sự kiện %s đã được cập nhật thành công.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Danh sách những việc cần làm %s đã được tạo thành công.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Danh sách những việc cần làm %s đã được cập nhật thành công.</string>
     <string name="todoScreenTitle">Cần Làm</string>
     <string name="todoDateLabel">Ngày</string>
     <string name="todoDescriptionLabel">Mô Tả</string>
@@ -1949,4 +1966,12 @@
     <string name="smartSearchAssignmentGroupTitle">Bài Tập (%d)</string>
     <string name="smartSearchPageGroupTitle">Trang (%d)</string>
     <string name="a11y_commentSentSuccess">Đã gửi bình luận thành công</string>
+    <string name="a11y_dragViewContentDescription">Mở Rộng Ngăn Kéo</string>
+    <string name="a11y_inboxRecyclerViewContentDescription">Cuộc Trò Chuyện</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Đã kiểm tra</string>
+    <string name="a11y_unchecked">Chưa kiểm tra</string>
+    <string name="a11y_indeterminate">Đã kiểm tra một phần</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Bộ lọc đã được cập nhật</string>
 </resources>

@@ -16,32 +16,16 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.StudentContextCardQuery
-import com.instructure.canvasapi2.enqueueQuery
 
-object StudentContextManager {
+interface StudentContextManager {
 
     fun getStudentContext(
         courseId: Long,
-        studentId: Long,
+        userId: Long,
         submissionPageSize: Int,
         forceNetwork: Boolean,
         callback: QLCallback<StudentContextCardQuery.Data>
-    ) {
-        val query = StudentContextCardQuery.builder()
-            .courseId(courseId.toString())
-            .studentId(studentId.toString())
-            .pageSize(submissionPageSize)
-            .nextCursor(callback.nextCursor)
-            .build()
-
-        callback.enqueueQuery(query) {
-            if (forceNetwork) {
-                cachePolicy = HttpCachePolicy.NETWORK_ONLY
-            }
-        }
-    }
-
+    )
 }

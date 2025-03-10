@@ -38,9 +38,9 @@ class SubmissionContentAdapter(
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         return SubmissionContentView(
             context = container.context,
-            mStudentSubmission = mStudentSubmissions[position],
-            mAssignment = mAssignment,
-            mCourse = mCourse,
+            studentSubmission = mStudentSubmissions[position],
+            assignment = mAssignment,
+            course = mCourse,
             initialTabIndex = initialTabIdx
         ).apply {
             container.addView(this)

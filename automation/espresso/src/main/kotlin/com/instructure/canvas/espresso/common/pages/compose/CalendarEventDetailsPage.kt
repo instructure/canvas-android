@@ -24,6 +24,7 @@ import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -118,5 +119,9 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
     fun confirmDelete() {
         composeTestRule.onNodeWithText("Delete").performClick()
         composeTestRule.waitForIdle()
+    }
+
+    fun clickComposeMessageFAB() {
+        composeTestRule.onNodeWithContentDescription("Send a message about this event").performClick()
     }
 }

@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.StudentContextCardQuery.Analytics
 import com.instructure.canvasapi2.StudentContextCardQuery.AsCourse
 import com.instructure.canvasapi2.StudentContextCardQuery.Submission
 import com.instructure.canvasapi2.StudentContextCardQuery.User
+import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Recipient
@@ -70,12 +71,17 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.StudentContextView
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class StudentContextFragment : PresenterFragment<StudentContextPresenter, StudentContextView>(), StudentContextView {
+
+    @Inject
+    lateinit var studentContextManager: StudentContextManager
 
     private val binding by viewBinding(FragmentStudentContextBinding::bind)
 
@@ -110,7 +116,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         return inflater.inflate(R.layout.fragment_student_context, container, false)
     }
 
-    override fun getPresenterFactory() = StudentContextPresenterFactory(mStudentId, mCourseId)
+    override fun getPresenterFactory() = StudentContextPresenterFactory(mStudentId, mCourseId, studentContextManager)
 
     override fun onRefreshStarted() = with(binding) {
         toolbar.setGone()

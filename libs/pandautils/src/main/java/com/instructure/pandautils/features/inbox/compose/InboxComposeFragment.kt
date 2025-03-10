@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.inbox.compose
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -52,6 +53,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
@@ -129,8 +131,12 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
                 sharedEvents.sendEvent(lifecycleScope, InboxSharedAction.RefreshListScreen)
             }
             is InboxComposeViewModelAction.UrlSelected -> {
-                val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
-                activity?.startActivity(urlIntent)
+                try {
+                    val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(action.url))
+                    activity?.startActivity(urlIntent)
+                } catch (e: ActivityNotFoundException) {
+                    toast(R.string.inboxMessageFailedToOpenUrl)
+                }
             }
         }
     }

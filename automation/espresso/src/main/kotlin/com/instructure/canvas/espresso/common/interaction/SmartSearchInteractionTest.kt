@@ -180,14 +180,14 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
         smartSearchPage.assertItemDisplayed("Test Announcement for query", "Announcement")
         smartSearchPage.assertItemDisplayed("Test Assignment for query", "Assignment")
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
 
         smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.PAGES)
         smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.DISCUSSION_TOPICS)
         smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.ANNOUNCEMENTS)
         smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.ASSIGNMENTS)
 
-        smartSearchPreferencesPage.toggleFilter(SmartSearchFilter.PAGES)
+        smartSearchPreferencesPage.clickOnFilter(SmartSearchFilter.PAGES)
         smartSearchPreferencesPage.applyFilters()
 
         smartSearchPage.assertItemNotDisplayed("Test Page for query", "Page")
@@ -195,11 +195,11 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
         smartSearchPage.assertItemDisplayed("Test Announcement for query", "Announcement")
         smartSearchPage.assertItemDisplayed("Test Assignment for query", "Assignment")
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
 
         smartSearchPreferencesPage.assertFilterNotChecked(SmartSearchFilter.PAGES)
 
-        smartSearchPreferencesPage.toggleFilter(SmartSearchFilter.ASSIGNMENTS)
+        smartSearchPreferencesPage.clickOnFilter(SmartSearchFilter.ASSIGNMENTS)
         smartSearchPreferencesPage.applyFilters()
 
         smartSearchPage.assertItemNotDisplayed("Test Page for query", "Page")
@@ -207,7 +207,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
         smartSearchPage.assertItemDisplayed("Test Announcement for query", "Announcement")
         smartSearchPage.assertItemNotDisplayed("Test Assignment for query", "Assignment")
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
         smartSearchPreferencesPage.toggleAll()
         smartSearchPreferencesPage.applyFilters()
 
@@ -216,7 +216,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
         smartSearchPage.assertItemDisplayed("Test Announcement for query", "Announcement")
         smartSearchPage.assertItemDisplayed("Test Assignment for query", "Assignment")
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
         smartSearchPreferencesPage.toggleAll()
         smartSearchPreferencesPage.applyFilters()
 
@@ -260,7 +260,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
         smartSearchPreferencesPage.selectTypeSortType()
         smartSearchPreferencesPage.applyFilters()
 
@@ -300,7 +300,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
         smartSearchPreferencesPage.selectTypeSortType()
         smartSearchPreferencesPage.applyFilters()
 
@@ -357,7 +357,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
         smartSearchPreferencesPage.selectTypeSortType()
         smartSearchPreferencesPage.applyFilters()
 
@@ -366,7 +366,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
         smartSearchPage.assertGroupHeaderDisplayed(SmartSearchContentType.ANNOUNCEMENT)
         smartSearchPage.assertGroupHeaderDisplayed(SmartSearchContentType.ASSIGNMENT)
 
-        smartSearchPage.openFilters()
+        smartSearchPage.clickOnFilters()
         smartSearchPreferencesPage.selectRelevanceSortType()
         smartSearchPreferencesPage.applyFilters()
 

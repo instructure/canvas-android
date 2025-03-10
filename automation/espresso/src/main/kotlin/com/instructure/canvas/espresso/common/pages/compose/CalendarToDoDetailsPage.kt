@@ -16,7 +16,6 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasContentDescription
@@ -29,13 +28,12 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.espresso.assertTextColor
 import java.util.Date
 
 class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertPageTitle(pageTitle: String) {
-        composeTestRule.onNode(hasTestTag("todoDetailsPageTitle") and hasText(pageTitle)).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("todoDetailsPageTitle") and hasText(pageTitle), useUnmergedTree = true).assertIsDisplayed()
     }
 
     fun assertTitle(title: String) {
