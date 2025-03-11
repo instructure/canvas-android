@@ -15,6 +15,7 @@
  */
 package com.instructure.parentapp.di.feature
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
 import com.instructure.parentapp.features.lti.ParentLtiLaunchFragmentBehavior
 import com.instructure.parentapp.util.ParentPrefs
@@ -28,7 +29,7 @@ import dagger.hilt.android.components.FragmentComponent
 class LtiLaunchModule {
 
     @Provides
-    fun provideLtiLaunchFragmentBehavior(parentPrefs: ParentPrefs): LtiLaunchFragmentBehavior {
-        return ParentLtiLaunchFragmentBehavior(parentPrefs)
+    fun provideLtiLaunchFragmentBehavior(parentPrefs: ParentPrefs, activity: FragmentActivity): LtiLaunchFragmentBehavior {
+        return ParentLtiLaunchFragmentBehavior(parentPrefs, activity)
     }
 }
