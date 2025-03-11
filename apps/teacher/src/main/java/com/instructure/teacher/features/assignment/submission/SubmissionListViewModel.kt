@@ -154,8 +154,11 @@ class SubmissionListViewModel @Inject constructor(
                 (it.assignee as? StudentAssignee)?.student?.enrollments?.any { it.courseSectionId in selectedSectionIds }
                     ?: false
             }
-            .shuffled(Random(1234))
             .map { getSubmissionUiState(it) }
+
+        if (assignment.anonymousGrading) {
+            submissions = submissions.shuffled(Random(1234))
+        }
 
         _uiState.update {
             it.copy(
@@ -173,38 +176,33 @@ class SubmissionListViewModel @Inject constructor(
             avatarUrl = if (submission.assignee is StudentAssignee) (submission.assignee as StudentAssignee).student.avatarUrl else null,
             tags = getTags(submission.submission),
             grade = getGrade(submission.submission),
-            hidden = submission.submission?.let { it.postedAt == null } ?: false
+            hidden = submission.submission?.let { it.postedAt == null } ?: false,
+            assigneeId = submission.assignee.id
         )
     }
 
     private fun getTags(submission: Submission?): List<SubmissionTag> {
         val tags = mutableListOf<SubmissionTag>()
 
-        if (submission == null || submission.workflowState == "unsubmitted") {
-            tags.add(SubmissionTag.NOT_SUBMITTED)
-        } else {
-            if (submission.late) {
-                tags.add(SubmissionTag.LATE)
-            }
+        when {
+            submission == null -> tags.add(SubmissionTag.NOT_SUBMITTED)
+            submission.missing -> tags.add(SubmissionTag.MISSING)
+            submission.workflowState == "unsubmitted" -> tags.add(SubmissionTag.NOT_SUBMITTED)
+            else -> {
+                if (!submission.late && !submission.excused && !submission.isGraded) {
+                    tags.add(SubmissionTag.SUBMITTED)
+                }
+                if (submission.late) {
+                    tags.add(SubmissionTag.LATE)
+                }
 
-            if (!submission.late && !submission.excused && !submission.isGraded) {
-                tags.add(SubmissionTag.SUBMITTED)
-            }
-
-            if (submission.missing) {
-                tags.add(SubmissionTag.MISSING)
-            }
-
-            if (submission.excused) {
-                tags.add(SubmissionTag.EXCUSED)
-            }
-
-            if (submission.isGraded) {
-                tags.add(SubmissionTag.GRADED)
-            }
-
-            if (!submission.isGraded && !submission.excused) {
-                tags.add(SubmissionTag.NEEDS_GRADING)
+                if (submission.excused) {
+                    tags.add(SubmissionTag.EXCUSED)
+                } else if (submission.isGraded) {
+                    tags.add(SubmissionTag.GRADED)
+                } else {
+                    tags.add(SubmissionTag.NEEDS_GRADING)
+                }
             }
         }
 
@@ -285,6 +283,12 @@ class SubmissionListViewModel @Inject constructor(
                     )
                 }
             }
+
+            is SubmissionListAction.AvatarClicked -> {
+                viewModelScope.launch {
+                    _events.send(SubmissionListViewModelAction.RouteToUser(action.userId, course.id))
+                }
+            }
         }
     }
 
@@ -346,12 +350,12 @@ class SubmissionListViewModel @Inject constructor(
         }
     }
 
-    private fun getRecipients() : List<Recipient> {
+    private fun getRecipients(): List<Recipient> {
         val filteredSubmissions = submissions.filter {
             _uiState.value.submissions.any { submission -> submission.submissionId == it.id }
         }
         return filteredSubmissions.map { submission ->
-            when(val assignee = submission.assignee) {
+            when (val assignee = submission.assignee) {
                 is StudentAssignee -> Recipient.from(assignee.student)
                 is GroupAssignee -> Recipient.from(assignee.group)
             }

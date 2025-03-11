@@ -13,7 +13,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package com.instructure.teacher.features.assignment.submission
+ */
+package com.instructure.teacher.features.assignment.submission
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -30,6 +31,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.intersectBy
+import java.util.Locale
 
 class AssignmentSubmissionRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
@@ -85,6 +87,9 @@ class AssignmentSubmissionRepository(
                 students.map {
                     GradeableStudentSubmission(StudentAssignee(it), submissionMap[it.id])
                 }
+            }.sortedBy {
+                (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(
+                    Locale.getDefault())
             }
 
         return allSubmissions

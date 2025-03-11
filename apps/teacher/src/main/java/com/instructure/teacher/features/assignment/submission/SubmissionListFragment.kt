@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.activities.SpeedGraderActivity
+import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
@@ -128,6 +129,11 @@ class SubmissionListFragment : BaseCanvasFragment() {
                 )
                 val route = InboxComposeFragment.makeRoute(options)
                 RouteMatcher.route(requireActivity(), route)
+            }
+
+            is SubmissionListViewModelAction.RouteToUser -> {
+                val bundle = StudentContextFragment.makeBundle(action.userId, action.courseId)
+                RouteMatcher.route(requireActivity(), Route(StudentContextFragment::class.java, null, bundle))
             }
         }
     }

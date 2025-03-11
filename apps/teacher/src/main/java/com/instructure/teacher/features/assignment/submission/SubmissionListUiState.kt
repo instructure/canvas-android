@@ -45,6 +45,7 @@ data class SubmissionListUiState(
 
 data class SubmissionUiState(
     val submissionId: Long,
+    val assigneeId: Long,
     val userName: String,
     val avatarUrl: String?,
     val tags: List<SubmissionTag>,
@@ -78,6 +79,7 @@ sealed class SubmissionListAction {
 
     data object ShowPostPolicy : SubmissionListAction()
     data object SendMessage : SubmissionListAction()
+    data class AvatarClicked(val userId: Long) : SubmissionListAction()
 }
 
 sealed class SubmissionListViewModelAction {
@@ -100,4 +102,6 @@ sealed class SubmissionListViewModelAction {
         val recipients: List<Recipient>,
         val subject: String
     ) : SubmissionListViewModelAction()
+
+    data class RouteToUser(val userId: Long, val courseId: Long) : SubmissionListViewModelAction()
 }

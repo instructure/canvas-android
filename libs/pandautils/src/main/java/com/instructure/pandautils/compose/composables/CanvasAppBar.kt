@@ -34,6 +34,7 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +69,9 @@ fun CanvasAppBar(
                     Text(text = subtitle,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        lineHeight = 16.sp
+                        lineHeight = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
@@ -95,5 +98,5 @@ fun CanvasAppBar(
 @Preview
 @Composable
 fun CanvasAppBarPreview() {
-    CanvasAppBar(title = "Title", subtitle = "Subtitle", navigationActionClick = {})
+    CanvasAppBar(title = "Title", subtitle = "Subtitle that is really really really long to make sure it does not fit into one line", navigationActionClick = {})
 }

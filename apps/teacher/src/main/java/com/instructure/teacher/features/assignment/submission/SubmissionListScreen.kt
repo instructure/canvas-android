@@ -80,9 +80,11 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                 backgroundColor = uiState.courseColor,
                 textColor = colorResource(id = R.color.textLightest),
                 actions = {
-                    IconButton(onClick = {
-                        showFilterDialog = true
-                    }) {
+                    IconButton(
+                        modifier = Modifier.testTag("filterButton"),
+                        onClick = {
+                            showFilterDialog = true
+                        }) {
                         Icon(
                             painter = painterResource(
                                 id = if (uiState.filter != SubmissionListFilter.ALL || uiState.selectedSections.isNotEmpty()) {
@@ -96,7 +98,9 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                         )
                     }
 
-                    IconButton(onClick = { uiState.actionHandler(SubmissionListAction.ShowPostPolicy) }) {
+                    IconButton(
+                        modifier = Modifier.testTag("postPolicyButton"),
+                        onClick = { uiState.actionHandler(SubmissionListAction.ShowPostPolicy) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_eye),
                             contentDescription = stringResource(R.string.a11y_contentDescription_postPolicy),
@@ -104,7 +108,9 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                         )
                     }
 
-                    IconButton(onClick = { uiState.actionHandler(SubmissionListAction.SendMessage) }) {
+                    IconButton(
+                        modifier = Modifier.testTag("addMessageButton"),
+                        onClick = { uiState.actionHandler(SubmissionListAction.SendMessage) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_mail),
                             contentDescription = stringResource(R.string.a11y_sendMessage),
@@ -133,6 +139,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
             uiState.loading -> {
                 Loading(modifier = Modifier.fillMaxSize())
             }
+
             uiState.error -> {
                 ErrorContent(
                     errorMessage = stringResource(R.string.errorLoadingSubmission),
@@ -140,6 +147,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             uiState.submissions.isEmpty() -> {
                 EmptyContent(
                     emptyMessage = stringResource(R.string.no_submissions),
@@ -147,6 +155,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                     modifier = Modifier.fillMaxSize(),
                 )
             }
+
             else -> {
                 SubmissionListContent(uiState, Modifier.padding(padding), uiState.courseColor)
             }
@@ -169,7 +178,7 @@ private fun SubmissionListContent(
             .fillMaxSize()
             .pullRefresh(pullRefreshState)
     ) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(modifier = modifier.testTag("submissionList")) {
             if (!uiState.anonymousGrading) {
                 item {
                     SearchBar(
@@ -188,9 +197,15 @@ private fun SubmissionListContent(
             }
             item { Header(uiState.headerTitle) }
             items(uiState.submissions, key = { it.submissionId }) { submission ->
-                SubmissionListItem(submission, courseColor, uiState.anonymousGrading) {
-                    uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
-                }
+                SubmissionListItem(submission,
+                    courseColor,
+                    uiState.anonymousGrading,
+                    avatarClick = {
+                        uiState.actionHandler(SubmissionListAction.AvatarClicked(it))
+                    },
+                    itemClick = {
+                        uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
+                    })
                 CanvasDivider()
             }
         }
@@ -229,19 +244,23 @@ private fun SubmissionListItem(
     submissionListUiState: SubmissionUiState,
     courseColor: Color,
     anonymousGrading: Boolean,
-    itemClick: (Long) -> Unit
+    itemClick: (Long) -> Unit,
+    avatarClick: (Long) -> Unit
 ) {
     Column(modifier = Modifier.clickable { itemClick(submissionListUiState.submissionId) }) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .testTag("submissionListItem"),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             UserAvatar(
                 modifier = Modifier
                     .padding(end = 16.dp)
-                    .size(36.dp),
+                    .size(36.dp)
+                    .testTag("userAvatar")
+                    .clickable { avatarClick(submissionListUiState.assigneeId) },
                 anonymous = anonymousGrading,
                 imageUrl = submissionListUiState.avatarUrl,
                 name = submissionListUiState.userName,
@@ -254,7 +273,7 @@ private fun SubmissionListItem(
                     color = colorResource(id = R.color.textDarkest),
                     fontWeight = FontWeight.SemiBold
                 )
-                FlowRow {
+                FlowRow(modifier = Modifier.padding(end = 8.dp)) {
                     submissionListUiState.tags.forEach { tag ->
                         SubmissionTag(tag, tag != submissionListUiState.tags.last())
                     }
@@ -272,7 +291,10 @@ private fun SubmissionListItem(
                     painter = painterResource(id = R.drawable.ic_eye_off),
                     contentDescription = stringResource(R.string.a11y_hidden),
                     tint = colorResource(id = R.color.textDanger),
-                    modifier = Modifier.size(24.dp).padding(start = 8.dp).testTag("hiddenIcon")
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(start = 8.dp)
+                        .testTag("hiddenIcon")
                 )
             }
         }
@@ -327,12 +349,14 @@ fun SubmissionListScreenPreview() {
             submissions = listOf(
                 SubmissionUiState(
                     1,
+                    1,
                     "Test User",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
                     null
                 ),
                 SubmissionUiState(
+                    2,
                     2,
                     "Test User 2",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
@@ -341,12 +365,14 @@ fun SubmissionListScreenPreview() {
                 ),
                 SubmissionUiState(
                     3,
+                    3,
                     "Test User 3",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.NOT_SUBMITTED),
                     null
                 ),
                 SubmissionUiState(
+                    4,
                     4,
                     "Test User 4",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
@@ -355,12 +381,14 @@ fun SubmissionListScreenPreview() {
                 ),
                 SubmissionUiState(
                     5,
+                    5,
                     "Test User 5",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.GRADED),
                     "100%"
                 ),
                 SubmissionUiState(
+                    6,
                     6,
                     "Test User 6",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
@@ -385,12 +413,14 @@ fun SubmissionListScreenDarkPreview() {
             submissions = listOf(
                 SubmissionUiState(
                     1,
+                    1,
                     "Test User",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                    listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING, SubmissionTag.MISSING, SubmissionTag.EXCUSED, SubmissionTag.NOT_SUBMITTED),
                     null
                 ),
                 SubmissionUiState(
+                    2,
                     2,
                     "Test User 2",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
@@ -399,12 +429,14 @@ fun SubmissionListScreenDarkPreview() {
                 ),
                 SubmissionUiState(
                     3,
+                    3,
                     "Test User 3",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.NOT_SUBMITTED),
                     null
                 ),
                 SubmissionUiState(
+                    4,
                     4,
                     "Test User 4",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
@@ -413,12 +445,14 @@ fun SubmissionListScreenDarkPreview() {
                 ),
                 SubmissionUiState(
                     5,
+                    5,
                     "Test User 5",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.GRADED),
                     "100%"
                 ),
                 SubmissionUiState(
+                    6,
                     6,
                     "Test User 6",
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
