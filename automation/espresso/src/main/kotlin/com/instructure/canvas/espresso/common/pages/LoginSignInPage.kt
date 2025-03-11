@@ -35,10 +35,10 @@ import org.hamcrest.CoreMatchers.containsString
 @Suppress("unused")
 class LoginSignInPage: BasePage() {
 
-    private val EMAIL_FIELD_CSS = "input[name=\"pseudonym_session[unique_id]\"]"
-    private val PASSWORD_FIELD_CSS = "input[name=\"pseudonym_session[password]\"]"
-    private val LOGIN_BUTTON_CSS = "button[type=\"submit\"]"
-    private val FORGOT_PASSWORD_BUTTON_CSS = "a[class=\"forgot-password flip-to-back\"]"
+    private val EMAIL_FIELD_CSS = "input[id=\"username\"]"
+    private val PASSWORD_FIELD_CSS = "input[id=\"password\"]"
+    private val LOGIN_BUTTON_CSS = "button[data-testid=\"login-button\"]"
+    private val FORGOT_PASSWORD_BUTTON_CSS = "a[href*='forgot-password']"
     private val AUTHORIZE_BUTTON_CSS = "button[type=\"submit\"]"
     private val LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[class='error']"
 
