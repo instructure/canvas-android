@@ -209,7 +209,7 @@ class LoginE2ETest : TeacherTest() {
         loginLandingPage.clickCanvasNetworkButton()
 
         Log.d(ASSERTION_TAG, "Assert that the Canvas Network Page has been displayed.")
-        loginSignInPage.assertPageObjects()
+        canvasNetworkSignInPage.assertPageObjects()
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {

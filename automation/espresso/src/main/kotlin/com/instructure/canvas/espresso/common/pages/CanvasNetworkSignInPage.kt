@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
-import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.clearElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
 import androidx.test.espresso.web.webdriver.Locator
@@ -30,17 +28,13 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.loginapi.login.R
-import org.hamcrest.CoreMatchers.containsString
 
-@Suppress("unused")
-class LoginSignInPage: BasePage() {
+class CanvasNetworkSignInPage: BasePage() {
 
-    private val EMAIL_FIELD_CSS = "input[name=\"pseudonym_session[unique_id]\"]"
-    private val PASSWORD_FIELD_CSS = "input[name=\"pseudonym_session[password]\"]"
-    private val LOGIN_BUTTON_CSS = "button[type=\"submit\"]"
-    private val FORGOT_PASSWORD_BUTTON_CSS = "a[class=\"forgot-password flip-to-back\"]"
-    private val AUTHORIZE_BUTTON_CSS = "button[type=\"submit\"]"
-    private val LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[class='error']"
+    private val EMAIL_FIELD_CSS = "input[id=\"username\"]"
+    private val PASSWORD_FIELD_CSS = "input[id=\"password\"]"
+    private val LOGIN_BUTTON_CSS = "button[data-testid=\"login-button\"]"
+    private val FORGOT_PASSWORD_BUTTON_CSS = "a[href*='forgot-password']"
 
     private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
     private val toolbar by OnViewWithId(R.id.toolbar, autoAssert = false)
@@ -61,14 +55,6 @@ class LoginSignInPage: BasePage() {
 
     private fun forgotPasswordButton(): Web.WebInteraction<*> {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, FORGOT_PASSWORD_BUTTON_CSS))
-    }
-
-    private fun authorizeButton(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, AUTHORIZE_BUTTON_CSS))
-    }
-
-    private fun loginErrorMessageHolder(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, LOGIN_ERROR_MESSAGE_HOLDER_CSS))
     }
 
     //endregion
@@ -101,14 +87,6 @@ class LoginSignInPage: BasePage() {
 
     private fun clickLoginButton() {
         loginButton().perform(webClick())
-    }
-
-    fun clickForgotPasswordButton() {
-        forgotPasswordButton().perform(webClick())
-    }
-
-    fun assertLoginErrorMessage(errorMessage: String) {
-        loginErrorMessageHolder().check(webMatches(getText(), containsString(errorMessage)))
     }
 
     fun loginAs(user: CanvasUserApiModel) {
