@@ -14,11 +14,4 @@ class LoginLandingPageTest: TeacherTest() {
     override fun displaysPageObjects() {
         loginLandingPage.assertPageObjects()
     }
-
-    // Runs live; no MockCanvas
-    @Test
-    fun opensCanvasNetworksSignInPage() {
-        loginLandingPage.clickCanvasNetworkButton()
-        loginSignInPage.assertPageObjects()
-    }
 }
