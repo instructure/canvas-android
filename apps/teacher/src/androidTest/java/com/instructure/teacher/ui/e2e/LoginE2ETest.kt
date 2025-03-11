@@ -20,6 +20,7 @@ import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.SeedApi
@@ -197,6 +198,16 @@ class LoginE2ETest : TeacherTest() {
                 "Assert that the invalid credentials error message is displayed.")
         loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
+    }
+
+    // Runs live; no MockCanvas
+    @Test
+    @E2E
+    @Stub
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun opensCanvasNetworksSignInPage() {
+        loginLandingPage.clickCanvasNetworkButton()
+        loginSignInPage.assertPageObjects()
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
