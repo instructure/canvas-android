@@ -175,6 +175,7 @@ class InboxComposeViewModel @Inject constructor(
                                 )
                             )
                         }
+                        initialState = initialState.copy(recipientPickerUiState = uiState.value.recipientPickerUiState)
                     }
                 }
             }
