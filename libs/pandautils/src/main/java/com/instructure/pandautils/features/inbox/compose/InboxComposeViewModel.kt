@@ -67,6 +67,7 @@ class InboxComposeViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val options = savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS)
+    private var initialState: InboxComposeUiState
 
     private val debouncedInnerSearch = debounce<String>(waitMs = 200, coroutineScope = viewModelScope) { searchQuery ->
         val contextId = uiState.value.selectContextUiState.selectedCanvasContext?.contextId ?: return@debounce
@@ -98,7 +99,19 @@ class InboxComposeViewModel @Inject constructor(
         if (options != null) {
             initFromOptions(options)
         }
+        initialState = uiState.value
         loadSignature()
+    }
+
+    fun composeContentHasChanged(): Boolean {
+        return uiState.value.let {
+            it.selectContextUiState.selectedCanvasContext != initialState.selectContextUiState.selectedCanvasContext ||
+            it.recipientPickerUiState.selectedRecipients != initialState.recipientPickerUiState.selectedRecipients ||
+            it.sendIndividual != initialState.sendIndividual ||
+            it.subject.text != initialState.subject.text ||
+            it.body.text != initialState.body.text ||
+            it.attachments != initialState.attachments
+        }
     }
 
     private fun initFromOptions(options: InboxComposeOptions?) {
@@ -162,6 +175,7 @@ class InboxComposeViewModel @Inject constructor(
                                 )
                             )
                         }
+                        initialState = initialState.copy(recipientPickerUiState = uiState.value.recipientPickerUiState)
                     }
                 }
             }
@@ -419,6 +433,7 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { it.copy(
                     body = TextFieldValue(it.body.text.plus(signatureFooter))
                 ) }
+                initialState = initialState.copy(body = TextFieldValue(uiState.value.body.text))
             }
         }
     }
