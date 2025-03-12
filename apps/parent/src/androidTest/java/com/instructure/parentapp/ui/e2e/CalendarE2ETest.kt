@@ -21,6 +21,14 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.dataseeding.api.CalendarEventApi
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
+import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.espresso.getDateInCanvasCalendarFormat
 import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.parentapp.utils.ParentComposeTest
@@ -31,6 +39,7 @@ import org.junit.Before
 import org.junit.Test
 import java.time.Year
 import java.util.Calendar
+import java.util.Date
 
 @HiltAndroidTest
 class CalendarE2ETest : ParentComposeTest() {
@@ -239,7 +248,6 @@ class CalendarE2ETest : ParentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 2, parents = 1, courses = 2)
-        val student = data.studentsList[0]
         val course = data.coursesList[0]
         val parent = data.parentsList[0]
 
@@ -324,5 +332,86 @@ class CalendarE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         calendarScreenPage.assertItemDetails(newEventTitle, parent.name, currentDate)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E)
+    fun testChangeStudentCalendarsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, parents = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val student2 = data.studentsList[1]
+        val parent = data.parentsList[0]
+        val teacher = data.teachersList[0]
+
+        val retrofitClient = CanvasNetworkAdapter.createAdminRetrofitClient("mobileqa.beta.instructure.com")
+        val coursesService = retrofitClient.create(CoursesApi.CoursesService::class.java)
+        val enrollmentsService = retrofitClient.create(EnrollmentsApi.EnrollmentsService::class.java)
+        val course = CoursesApi.createCourse(coursesService = coursesService)
+        val course2 = CoursesApi.createCourse(coursesService = coursesService)
+
+        Log.d(PREPARATION_TAG,"Enroll '${student.name}' student, '${teacher.name}' teacher and '${parent.name}' parent to '${course.name}' course.")
+        EnrollmentsApi.enrollUser(course.id, student.id, STUDENT_ENROLLMENT, enrollmentsService)
+        EnrollmentsApi.enrollUser(course.id, teacher.id, TEACHER_ENROLLMENT, enrollmentsService)
+        EnrollmentsApi.enrollUserAsObserver(course.id, parent.id, student.id)
+
+        Log.d(PREPARATION_TAG,"Enroll '${student.name}' student, '${teacher.name}' teacher and '${parent.name}' parent to '${course2.name}' course.")
+        EnrollmentsApi.enrollUser(course2.id, student2.id, STUDENT_ENROLLMENT, enrollmentsService)
+        EnrollmentsApi.enrollUser(course2.id, teacher.id, TEACHER_ENROLLMENT, enrollmentsService)
+        EnrollmentsApi.enrollUserAsObserver(course2.id, parent.id, student2.id)
+
+        Log.d(PREPARATION_TAG, "Seed a calendar event for '${course.name}' (where '${student.name}' student is enrolled but '${student2.name}' student isn't.)")
+        val testEventFirstStudent = CalendarEventApi.createCalendarEvent(
+            teacher.token,
+            CanvasContext.makeContextId(CanvasContext.Type.COURSE, course.id),
+            "First Student Test Event",
+            Date().toApiString()
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a calendar event for '${course2.name}' (where '${student2.name}' student is enrolled but '${student.name}' student isn't.)")
+        val testEventSecondStudent = CalendarEventApi.createCalendarEvent(
+            teacher.token,
+            CanvasContext.makeContextId(CanvasContext.Type.COURSE, course2.id),
+            "Second Student Test Event",
+            Date().toApiString()
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        dashboardPage.clickCalendarBottomMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testEventFirstStudent.title}' is displayed only.")
+        calendarScreenPage.assertItemDisplayed(testEventFirstStudent.title.orEmpty())
+        calendarScreenPage.assertItemNotDisplayed(testEventSecondStudent.title.orEmpty())
+
+        Log.d(STEP_TAG, "Open the student selector.")
+        dashboardPage.openStudentSelector()
+
+        val selectedShortName = if (student.sortableName < student2.sortableName) {
+            student.shortName
+        } else {
+            student2.shortName
+        }
+
+        val otherStudentName = if (selectedShortName == student.shortName) {
+            student2.shortName
+        } else {
+            student.shortName
+        }
+
+        Log.d(STEP_TAG, "Select the other student which was not initially selected (default selection is based on 'sortable' name alphabetic order).")
+        dashboardPage.selectStudent(otherStudentName)
+
+        Log.d(ASSERTION_TAG, "Assert that now the selected student became '$otherStudentName' student, the one which was not selected initially.")
+        dashboardPage.assertSelectedStudent(otherStudentName)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testEventSecondStudent.title}' is displayed only.")
+        calendarScreenPage.assertItemDisplayed(testEventSecondStudent.title.orEmpty())
+        calendarScreenPage.assertItemNotDisplayed(testEventFirstStudent.title.orEmpty())
     }
 }
