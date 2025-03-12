@@ -54,7 +54,7 @@ fun<GROUP: GroupedListViewGroup<GROUP_ITEM>, GROUP_ITEM: GroupedListViewGroupIte
     state: GroupedListViewState<GROUP>,
     headerView: (@Composable () -> Unit)? = null,
     groupHeaderView: @Composable (GROUP, () -> Unit) -> Unit = { group, onClick -> GroupedListGroupHeaderView(group, onClick) },
-    itemView: @Composable (GROUP_ITEM) -> Unit,
+    itemView: @Composable (GROUP_ITEM, Modifier) -> Unit,
     modifier: Modifier = Modifier,
     actionHandler: (GroupedListViewEvent<GROUP, GROUP_ITEM>) -> Unit
 ) {
@@ -71,7 +71,12 @@ fun<GROUP: GroupedListViewGroup<GROUP_ITEM>, GROUP_ITEM: GroupedListViewGroupIte
 
                 if (group.isExpanded) {
                   items(group.items) { item ->
-                        itemView(item)
+                        itemView(
+                            item,
+                            Modifier.clickable {
+                                actionHandler(GroupedListViewEvent.ItemClicked(item))
+                            }
+                        )
                     }
                 }
             }
@@ -172,8 +177,8 @@ private fun GroupedListViewPreview() {
         groupHeaderView = { group, onClick ->
             GroupedListGroupHeaderView(group, onClick)
         },
-        itemView = {
-            Text("Item ${it.id}")
+        itemView = { item, _ ->
+            Text("Item ${item.id}")
         },
         actionHandler = {}
     )

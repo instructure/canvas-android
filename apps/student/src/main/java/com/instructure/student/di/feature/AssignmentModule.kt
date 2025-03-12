@@ -27,6 +27,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -41,6 +42,7 @@ import com.instructure.student.features.assignments.details.StudentAssignmentDet
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsSubmissionHandler
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
+import com.instructure.student.features.assignments.list.StudentAssignmentListRouter
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import dagger.Module
@@ -60,6 +62,11 @@ class AssignmentFragmentModule {
     @Provides
     fun provideAssignmentDetailsBehaviour(router: AssignmentDetailsRouter): AssignmentDetailsBehaviour {
         return StudentAssignmentDetailsBehaviour(router)
+    }
+
+    @Provides
+    fun provideAssignmentListRouter(): AssignmentListRouter {
+        return StudentAssignmentListRouter()
     }
 }
 @Module

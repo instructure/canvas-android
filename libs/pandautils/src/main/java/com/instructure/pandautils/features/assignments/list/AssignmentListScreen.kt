@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupedListView
+import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getSubmissionStateLabel
@@ -53,27 +54,30 @@ import java.util.Date
 @Composable
 fun AssignmentListScreen(
     state: AssignmentListUiState,
-    contextColor: Color
+    contextColor: Color,
+    actionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
-    AssignmentListContentView(state, contextColor)
+    AssignmentListContentView(state, contextColor, actionHandler)
 }
 
 @Composable
 private fun AssignmentListContentView(
     state: AssignmentListUiState,
-    contextColor: Color
+    contextColor: Color,
+    actionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
     GroupedListView(
         state = state.listState,
-        itemView = { AssignmentListItemView(it, contextColor) },
-    ) { }
+        itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
+        actionHandler = actionHandler
+    )
 }
 
 @Composable
-private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor: Color) {
+private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor: Color, modifier: Modifier) {
     val assignment = item.assignment
     Row(
-        modifier = Modifier
+        modifier = modifier
             .background(colorResource(R.color.backgroundLightest))
             .padding(vertical = 8.dp)
     ) {

@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
@@ -35,15 +36,20 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "assignments")
 @AndroidEntryPoint
 class AssignmentListFragment: BaseCanvasFragment() {
     private val viewModel: AssignmentListViewModel by viewModels()
+
+    @Inject
+    lateinit var assignmentListRouter: AssignmentListRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,7 +63,21 @@ class AssignmentListFragment: BaseCanvasFragment() {
                 val uiState by viewModel.uiState.collectAsState()
                 val contextColor = Color(uiState.course.color)
 
-                AssignmentListScreen(uiState, contextColor)
+                viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
+                AssignmentListScreen(uiState, contextColor, viewModel::handleListEvent)
+            }
+        }
+    }
+
+    private fun handleAction(action: AssignmentListFragmentEvent) {
+        when (action) {
+            is AssignmentListFragmentEvent.NavigateToAssignment -> {
+                assignmentListRouter.routeToAssignmentDetails(requireActivity(), action.canvasContext, action.assignmentId)
+            }
+
+            AssignmentListFragmentEvent.NavigateBack -> {
+                requireActivity().onBackPressed()
             }
         }
     }

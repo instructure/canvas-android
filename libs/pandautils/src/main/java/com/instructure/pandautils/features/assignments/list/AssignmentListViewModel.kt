@@ -21,13 +21,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +42,9 @@ class AssignmentListViewModel @Inject constructor(
 ): ViewModel() {
     private val _uiState = MutableStateFlow(AssignmentListUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _events = Channel<AssignmentListFragmentEvent>()
+    val events = _events.receiveAsFlow()
 
     private val courseId: Long? = savedStateHandle.get<Long>(Const.COURSE_ID)
 
@@ -72,6 +79,37 @@ class AssignmentListViewModel @Inject constructor(
             }
         } else {
             _uiState.update { it.copy(state = ScreenState.Error) }
+        }
+    }
+
+    fun handleListEvent(event: GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) {
+        when (event) {
+            is GroupedListViewEvent.GroupClicked -> {
+                _uiState.update {
+                    it.copy(
+                        listState = it.listState.copy(
+                            groups = it.listState.groups.map { group ->
+                                if (group.id == event.group.id) {
+                                    AssignmentGroupState(
+                                        group.id as? Long ?: 0,
+                                        group.title,
+                                        group.items,
+                                        !group.isExpanded
+                                    )
+                                } else {
+                                    group
+                                }
+                            }
+                        )
+                    )
+                }
+            }
+
+            is GroupedListViewEvent.ItemClicked -> {
+                viewModelScope.launch {
+                    _events.send(AssignmentListFragmentEvent.NavigateToAssignment(uiState.value.course, event.groupItem.assignment.id))
+                }
+            }
         }
     }
 }

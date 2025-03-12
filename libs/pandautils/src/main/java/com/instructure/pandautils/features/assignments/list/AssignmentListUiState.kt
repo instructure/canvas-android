@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.assignments.list
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.compose.composables.GroupedListViewGroup
 import com.instructure.pandautils.compose.composables.GroupedListViewGroupItem
@@ -31,5 +32,9 @@ class AssignmentGroupItemState(
     val assignment: Assignment,
     val showAssignmentDetails: Boolean = false,
     val showSubmissionDetails: Boolean = false
-
 ): GroupedListViewGroupItem(assignment.id)
+
+sealed class AssignmentListFragmentEvent {
+    data class NavigateToAssignment(val canvasContext: CanvasContext, val assignmentId: Long): AssignmentListFragmentEvent()
+    data object NavigateBack: AssignmentListFragmentEvent()
+}
