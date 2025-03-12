@@ -70,7 +70,6 @@ import com.instructure.teacher.ui.pages.ProfileSettingsPage
 import com.instructure.teacher.ui.pages.PushNotificationsPage
 import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
-import com.instructure.teacher.ui.pages.QuizSubmissionListPage
 import com.instructure.teacher.ui.pages.RemoteConfigSettingsPage
 import com.instructure.teacher.ui.pages.SpeedGraderCommentsPage
 import com.instructure.teacher.ui.pages.SpeedGraderFilesPage
@@ -136,7 +135,6 @@ abstract class TeacherTest : CanvasTest() {
     val peopleListPage = PeopleListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val quizDetailsPage = QuizDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
-    val quizSubmissionListPage = QuizSubmissionListPage()
     val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderFilesPage = SpeedGraderFilesPage()
     val speedGraderGradePage = SpeedGraderGradePage()
