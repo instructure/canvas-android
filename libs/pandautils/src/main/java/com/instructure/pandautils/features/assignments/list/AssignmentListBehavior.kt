@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,13 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.courses.details.summary
+package com.instructure.pandautils.features.assignments.list
 
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.pandautils.utils.ScreenState
+import com.instructure.canvasapi2.models.Assignment
 
-data class SummaryUiState (
-    val state: ScreenState = ScreenState.Loading,
-    val courseId: Long = 0,
-    val items: List<ScheduleItem> = emptyList()
-)
+interface AssignmentListBehavior {
+    fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState
+}

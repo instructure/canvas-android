@@ -45,6 +45,7 @@ import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHiddenFields
+import com.instructure.pandautils.utils.ScreenState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -414,7 +415,7 @@ class InboxComposeScreenTest {
             subject = TextFieldValue(subject),
             body = TextFieldValue(body),
             attachments = attachments.map { AttachmentCardItem(it, AttachmentStatus.UPLOADED, false) },
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             showConfirmationDialog = showConfirmationDialog,
             signatureLoading = signatureLoading
         )

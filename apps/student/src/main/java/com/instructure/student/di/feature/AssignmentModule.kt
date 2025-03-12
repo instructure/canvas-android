@@ -26,12 +26,14 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
+import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.assignments.StudentAssignmentListBehavior
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsBehaviour
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsColorProvider
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRepository
@@ -49,7 +51,7 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class AssignmentDetailsFragmentModule {
+class AssignmentFragmentModule {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
         return StudentAssignmentDetailsRouter()
@@ -62,7 +64,7 @@ class AssignmentDetailsFragmentModule {
 }
 @Module
 @InstallIn(ViewModelComponent::class)
-class AssignmentDetailsModule {
+class AssignmentModule {
 
     @Provides
     fun provideAssignmentDetailsLocalDataSource(
@@ -101,5 +103,10 @@ class AssignmentDetailsModule {
     @Provides
     fun provideAssignmentDetailsColorProvider(colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
         return StudentAssignmentDetailsColorProvider(colorKeeper)
+    }
+
+    @Provides
+    fun provideAssignmentListBehavior(): AssignmentListBehavior {
+        return StudentAssignmentListBehavior()
     }
 }

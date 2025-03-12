@@ -17,6 +17,7 @@ import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOp
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.features.inbox.compose.composables.RecipientPickerScreen
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.orDefault
 import org.junit.Rule
 import org.junit.Test
@@ -137,7 +138,7 @@ class RecipientPickerScreenTest {
     @Test
     fun testRecipientsRecipientScreenAllOption() {
         setTestScreen(getUiState(
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             screenOption = RecipientPickerScreenOption.Recipients,
             selectedRole = EnrollmentType.STUDENTENROLLMENT,
             canSendToAll = true
@@ -151,7 +152,7 @@ class RecipientPickerScreenTest {
     @Test
     fun testRecipientsRoleScreenSearch() {
         setTestScreen(getUiState(
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             screenOption = RecipientPickerScreenOption.Roles,
             searchValue = TextFieldValue("Student")
         ))
@@ -183,7 +184,7 @@ class RecipientPickerScreenTest {
     @Test
     fun testRecipientsRecipientScreenSearch() {
         setTestScreen(getUiState(
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             screenOption = RecipientPickerScreenOption.Recipients,
             selectedRole = EnrollmentType.STUDENTENROLLMENT,
             searchValue = TextFieldValue("Teacher")
@@ -211,7 +212,7 @@ class RecipientPickerScreenTest {
     fun testSelectedRecipients() {
         setTestScreen(
             getUiState(
-                screenState = ScreenState.Data,
+                screenState = ScreenState.Content,
                 screenOption = RecipientPickerScreenOption.Recipients,
                 selectedRole = EnrollmentType.STUDENTENROLLMENT,
                 selectedRecipients = listOf(Recipient(stringId = "1", name = "Student 1"))
@@ -247,7 +248,7 @@ class RecipientPickerScreenTest {
 
     private fun getUiState(
         screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
-        screenState: ScreenState = ScreenState.Data,
+        screenState: ScreenState = ScreenState.Content,
         canSendToAll: Boolean = false,
         selectedRole: EnrollmentType? = null,
         selectedRecipients: List<Recipient> = emptyList(),

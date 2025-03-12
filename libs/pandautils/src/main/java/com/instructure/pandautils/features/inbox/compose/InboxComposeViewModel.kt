@@ -33,6 +33,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.launchWithLoadingDelay
@@ -433,7 +434,7 @@ class InboxComposeViewModel @Inject constructor(
             try {
                 val contextId = context.contextId + getEnrollmentTypeString(selectedRole)
                 recipients = getRecipientList(searchQuery, contextId, forceRefresh).dataOrThrow
-                if (recipients.isEmpty().not()) { newState = ScreenState.Data }
+                if (recipients.isEmpty().not()) { newState = ScreenState.Content }
             } catch (e: Exception) {
                 newState = ScreenState.Error
             }
@@ -515,7 +516,7 @@ class InboxComposeViewModel @Inject constructor(
                 } catch (e: IllegalStateException) {
                     sendScreenResult(context.getString(R.string.failed_to_send_message))
                 } finally {
-                    _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
+                    _uiState.update { uiState.value.copy(screenState = ScreenState.Content) }
                 }
             }
         }
@@ -546,7 +547,7 @@ class InboxComposeViewModel @Inject constructor(
                 } catch (e: IllegalStateException) {
                     sendScreenResult(context.getString(R.string.failed_to_send_message))
                 } finally {
-                    _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
+                    _uiState.update { uiState.value.copy(screenState = ScreenState.Content) }
                 }
             }
         }
