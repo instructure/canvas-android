@@ -143,6 +143,6 @@ class AssignmentSubmissionRepository(
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         return sectionApi.getFirstPageSectionsList(courseId, params).depaginate {
             sectionApi.getNextPageSectionsList(it, params)
-        }.dataOrThrow
+        }.dataOrNull ?: emptyList()
     }
 }

@@ -57,7 +57,7 @@ fun SubmissionListFilters(
     courseColor: Color,
     assignmentName: String,
     sections: List<CanvasContext>,
-    selectedSections: List<Long>,
+    initialSelectedSections: List<Long>,
     actionHandler: (SubmissionListAction) -> Unit,
     dismiss: () -> Unit
 ) {
@@ -71,7 +71,7 @@ fun SubmissionListFilters(
             )
         }.orEmpty())
     }
-    var selectedSections by remember { mutableStateOf(selectedSections) }
+    val selectedSections by remember { mutableStateOf(initialSelectedSections.toMutableSet()) }
     var error by remember { mutableStateOf(false) }
     FullScreenDialog(onDismissRequest = { dismiss() }) {
         Scaffold(topBar = {
@@ -99,7 +99,7 @@ fun SubmissionListFilters(
                                     SubmissionListAction.SetFilters(
                                         selectedFilter,
                                         selectedFilterValue.toDoubleOrNull(),
-                                        selectedSections
+                                        selectedSections.toList()
                                     )
                                 )
                                 dismiss()
@@ -108,9 +108,7 @@ fun SubmissionListFilters(
                         Text(
                             text = stringResource(R.string.done),
                             color = colorResource(R.color.textLightest),
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            fontWeight = FontWeight.SemiBold
+                            fontSize = 14.sp
                         )
                     }
                 }
@@ -229,10 +227,10 @@ fun SubmissionListFilters(
                             selected = selectedSections.contains(section.id),
                             color = courseColor,
                             onCheckedChanged = {
-                                selectedSections = if (it) {
-                                    selectedSections + section.id
+                                if (selectedSections.contains(section.id)) {
+                                    selectedSections.remove(section.id)
                                 } else {
-                                    selectedSections - section.id
+                                    selectedSections.add(section.id)
                                 }
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -265,7 +263,9 @@ private fun FilterItem(
     onClick: () -> Unit
 ) {
     RadioButtonText(
-        modifier = Modifier.fillMaxWidth().testTag("filterItem"),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("filterItem"),
         text = text,
         selected = selected,
         color = courseColor,

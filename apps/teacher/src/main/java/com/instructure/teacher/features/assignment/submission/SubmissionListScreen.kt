@@ -195,7 +195,10 @@ private fun SubmissionListContent(
                         })
                 }
             }
-            item { Header(uiState.headerTitle) }
+            item {
+                Header(uiState.headerTitle)
+                CanvasDivider()
+            }
             items(uiState.submissions, key = { it.submissionId }) { submission ->
                 SubmissionListItem(submission,
                     courseColor,
@@ -230,7 +233,7 @@ private fun Header(title: String) {
     ) {
         Text(
             text = title,
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             color = colorResource(id = R.color.textDarkest),
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 14.dp)

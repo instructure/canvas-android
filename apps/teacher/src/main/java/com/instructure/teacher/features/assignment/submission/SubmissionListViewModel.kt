@@ -64,7 +64,7 @@ class SubmissionListViewModel @Inject constructor(
 
     private var submissions: List<GradeableStudentSubmission> = emptyList()
     private var sections: List<Section> = emptyList()
-    private val selectedSectionIds = mutableSetOf<Long>()
+    private var selectedSectionIds = listOf<Long>()
 
     private val _uiState = MutableStateFlow(
         SubmissionListUiState(
@@ -91,14 +91,18 @@ class SubmissionListViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceNetwork: Boolean = false) {
-        submissions = submissionListRepository.getGradeableStudentSubmissions(
-            assignment,
-            course.id,
-            forceNetwork
-        )
-        sections = submissionListRepository.getSections(course.id, forceNetwork)
-        _uiState.update { it.copy(sections = sections) }
-        filterData()
+        try {
+            submissions = submissionListRepository.getGradeableStudentSubmissions(
+                assignment,
+                course.id,
+                forceNetwork
+            )
+            sections = submissionListRepository.getSections(course.id, forceNetwork)
+            _uiState.update { it.copy(sections = sections) }
+            filterData()
+        } catch (e: Exception) {
+            _uiState.update { it.copy(error = true, loading = false, refreshing = false) }
+        }
     }
 
     private fun filterData() {
@@ -137,10 +141,10 @@ class SubmissionListViewModel @Inject constructor(
                     ) && it.isGradeMatchesCurrentSubmission
                 } ?: false
 
-                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue.orDefault() }
+                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { !it.excused && it.isGraded && it.score >= filterValue.orDefault() }
                     ?: false
 
-                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue.orDefault() }
+                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { !it.excused && it.isGraded && it.score < filterValue.orDefault() }
                     ?: false
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
                 // which students haven't submitted yet
@@ -247,8 +251,7 @@ class SubmissionListViewModel @Inject constructor(
             is SubmissionListAction.SetFilters -> {
                 filter = action.filter
                 filterValue = action.filterValue
-                selectedSectionIds.clear()
-                selectedSectionIds.addAll(action.selectedSections)
+                selectedSectionIds = action.selectedSections
                 _uiState.update {
                     it.copy(
                         filter = action.filter,
