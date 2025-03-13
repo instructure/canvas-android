@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,8 +56,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -93,6 +92,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.NoRippleInteractionSource
+import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
@@ -256,6 +256,7 @@ private fun GradesScreenContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .defaultMinSize(minHeight = 48.dp)
                         .padding(start = 32.dp, end = 32.dp, bottom = 16.dp)
                         .toggleable(
                             value = uiState.onlyGradedAssignmentsSwitchEnabled,
@@ -276,16 +277,13 @@ private fun GradesScreenContent(
                         color = colorResource(id = R.color.textDarkest),
                         modifier = Modifier.testTag("basedOnGradedAssignmentsLabel")
                     )
-                    Switch(
+                    CanvasSwitch(
                         interactionSource = NoRippleInteractionSource(),
                         checked = uiState.onlyGradedAssignmentsSwitchEnabled,
                         onCheckedChange = {
                             actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(it))
                         },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = Color(uiState.canvasContextColor),
-                            uncheckedTrackColor = colorResource(id = R.color.textDark)
-                        ),
+                        color = Color(uiState.canvasContextColor),
                         modifier = Modifier
                             .height(24.dp)
                             .semantics {

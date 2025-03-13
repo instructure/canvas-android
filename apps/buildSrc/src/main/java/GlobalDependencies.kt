@@ -185,6 +185,7 @@ object Libs {
     const val COMPOSE_UI = "androidx.compose.ui:ui-android"
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
+    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"

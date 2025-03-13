@@ -58,6 +58,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     private var quiz: Quiz? by NullableParcelableArg()
     @get:PageViewUrlParam("quizId")
     var quizId: Long by LongArg()
+    private var isTakingQuiz = false
 
     override fun title(): String = getString(R.string.quizzes)
 
@@ -137,6 +138,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 getCanvasLoading()?.visibility = View.GONE
+                isTakingQuiz = url.contains("/take")
             }
         }
     }
@@ -223,7 +225,14 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
         quizDetailsJob?.cancel()
     }
 
-    override fun handleBackPressed() = getCanvasWebView()?.handleGoBack() ?: false
+    override fun handleBackPressed(): Boolean {
+        return if (!isTakingQuiz) {
+            activity?.supportFragmentManager?.popBackStack()
+            true
+        } else {
+            getCanvasWebView()?.handleGoBack() ?: false
+        }
+    }
 
     companion object {
 
