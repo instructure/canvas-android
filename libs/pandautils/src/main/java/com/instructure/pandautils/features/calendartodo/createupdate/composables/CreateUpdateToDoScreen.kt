@@ -417,7 +417,7 @@ private fun TitleInput(
                     if (title.isEmpty()) {
                         Text(
                             text = stringResource(id = R.string.createToDoTitleHint),
-                            color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
+                            color = colorResource(id = R.color.textDark),
                             fontSize = 16.sp
                         )
                     }
@@ -433,9 +433,9 @@ private fun TitleInput(
                 .semantics {
                     contentDescription = hintText
                 },
-            cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
+            cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
             textStyle = MaterialTheme.typography.body1.copy(
-                color = colorResource(id = R.color.textDark),
+                color = colorResource(id = R.color.textDarkest),
             ),
             maxLines = 2
         )
