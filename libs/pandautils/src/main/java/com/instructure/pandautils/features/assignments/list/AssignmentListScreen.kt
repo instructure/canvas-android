@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.assignments.list
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,7 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.instructure.pandautils.R
+import com.instructure.pandares.R
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
@@ -254,7 +255,10 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                         AssignmentDivider()
                     }
                     Text(
-                        "${assignment.pointsPossible.toFormattedString()} points",
+                        stringResource(
+                            R.string.assignmentListMaxpoints,
+                            assignment.pointsPossible.toFormattedString()
+                        ),
                         color = contextColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -273,8 +277,9 @@ private fun AssignmentNeedsGradingChip(count: Int, contextColor: Color) {
             .clip(RoundedCornerShape(100.dp))
             .background(contextColor)
     ) {
+        Log.d("AssignmentNeedsGradingChip", "count: ${stringResource(R.string.needsGradingCount, count.toString())}")
         Text(
-            stringResource(R.string.needsGrading, count),
+            stringResource(R.string.needsGradingCount, count),
             modifier = Modifier
                 .padding(4.dp),
             color = colorResource(R.color.textLightest),
