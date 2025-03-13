@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
-import com.instructure.parentapp.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.heap.autocapture.ViewAutocaptureSDK
@@ -78,13 +77,13 @@ class SplashViewModel @Inject constructor(
             }
 
             val sendUsageMetrics = repository.getSendUsageMetrics()
-            if (sendUsageMetrics) {
-                heap.startRecording(context, BuildConfig.HEAP_APP_ID)
-                viewAutocaptureSDK.register()
-            } else {
-                heap.stopRecording()
-                viewAutocaptureSDK.deregister()
-            }
+//            if (sendUsageMetrics) {
+//                heap.startRecording(context, BuildConfig.HEAP_APP_ID)
+//                viewAutocaptureSDK.register()
+//            } else {
+//                heap.stopRecording()
+//                viewAutocaptureSDK.deregister()
+//            }
 
             val students = repository.getStudents()
             if (students.isEmpty() && apiPrefs.canBecomeUser == false) {

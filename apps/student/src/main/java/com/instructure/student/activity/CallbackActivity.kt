@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UnreadCountManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Account
-import com.instructure.canvasapi2.models.BecomeUserPermission
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.LaunchDefinition
@@ -65,6 +64,7 @@ import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
 import sdk.pendo.io.Pendo
+import java.security.MessageDigest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -95,7 +95,11 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
-            setupHeapTracking()
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
+
+            val account = awaitApi<Account> { UserManager.getSelfAccount(true, it) }
+
+            setupPendoTracking(account)
 
             // Get enabled tabs
             enabledTabs.initTabs()
@@ -105,8 +109,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
                     ApiPrefs.canBecomeUser = true
                 } else try {
-                    val account = awaitApi<Account> { UserManager.getSelfAccount(true, it) }
-                    val permission = awaitApi<BecomeUserPermission> { UserManager.getBecomeUserPermission(true, account.id, it) }
+                    val permission = awaitApi { UserManager.getBecomeUserPermission(true, account.id, it) }
                     ApiPrefs.canBecomeUser = permission.becomeUser
                 } catch (e: StatusCallbackError) {
                     if (e.response?.code() == 401) ApiPrefs.canBecomeUser = false
@@ -167,19 +170,21 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             getUnreadNotificationCount()
 
-            featureFlagProvider.fetchEnvironmentFeatureFlags()
-
             initialCoreDataLoadingComplete()
         } catch {
             initialCoreDataLoadingComplete()
         }
     }
 
-    private suspend fun setupHeapTracking() {
+    private suspend fun setupPendoTracking(account: Account) {
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
         if (sendUsageMetrics) {
-            Pendo.startSession("", ApiPrefs.domain, emptyMap(), emptyMap())
+            val visitorSha = ApiPrefs.user?.id?.toString()?.toByteArray()
+                ?.let { MessageDigest.getInstance("SHA-256").digest(it).joinToString(separator = "") { eachByte -> "%02x".format(eachByte) } }
+            val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
+            val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
+            Pendo.startSession(visitorSha, account.uuid.orEmpty(), visitorData, accountData)
         } else {
             Pendo.endSession()
         }

@@ -329,6 +329,9 @@ dependencies {
     testImplementation Libs.HAMCREST
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
 }
 
 // Comment out this line if the reporting logic starts going wonky.
