@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
@@ -65,7 +66,7 @@ class AssignmentListFragment: BaseCanvasFragment() {
 
                 viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
-                AssignmentListScreen(uiState, contextColor, viewModel::handleListEvent)
+                AssignmentListScreen(title(), uiState, contextColor, viewModel::handleAction, viewModel::handleListEvent)
             }
         }
     }
@@ -84,6 +85,10 @@ class AssignmentListFragment: BaseCanvasFragment() {
 
     private fun applyTheme() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+    }
+
+    private fun title(): String {
+        return getString(R.string.assignmentListTitle)
     }
 
     companion object {

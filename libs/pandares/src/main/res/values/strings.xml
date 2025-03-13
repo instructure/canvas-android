@@ -2022,4 +2022,5 @@
     <string name="noDueDate">No Due Date</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGrading">%1$s Needs Grading</string>
+    <string name="assignmentListTitle">Assignment list</string>
 </resources>

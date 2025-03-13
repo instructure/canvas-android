@@ -17,10 +17,12 @@
 package com.instructure.pandautils.features.assignments.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +31,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,9 +45,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.EmptyContent
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.GroupedListView
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.utils.ScreenState
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.orDefault
@@ -53,23 +63,93 @@ import java.util.Date
 
 @Composable
 fun AssignmentListScreen(
+    title: String,
     state: AssignmentListUiState,
     contextColor: Color,
-    actionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
+    screenActionHandler: (AssignmentListScreenEvent) -> Unit,
+    listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
-    AssignmentListContentView(state, contextColor, actionHandler)
+    Scaffold(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        topBar = {
+            AppBar(
+                title,
+                state,
+                screenActionHandler
+            )
+        },
+        content = { paddingValues ->
+            AssignmentListWrapper(state, contextColor, Modifier.padding(paddingValues), screenActionHandler, listActionHandler)
+        }
+    )
+}
+
+@Composable
+private fun AppBar(
+    title: String,
+    state: AssignmentListUiState,
+    screenActionHandler: (AssignmentListScreenEvent) -> Unit
+) {
+    CanvasThemedAppBar(
+        title = title,
+        subtitle = state.subtitle,
+        actions = {
+
+        },
+        backgroundColor = Color(state.course.color),
+        contentColor = Color(color = ThemePrefs.primaryTextColor),
+        navigationActionClick = { screenActionHandler(AssignmentListScreenEvent.NavigateBack) }
+    )
+}
+
+@Composable
+private fun AssignmentListWrapper(
+    state: AssignmentListUiState,
+    contextColor: Color,
+    modifier: Modifier = Modifier,
+    screenActionHandler: (AssignmentListScreenEvent) -> Unit,
+    listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
+) {
+    when (state.state) {
+        ScreenState.Loading -> {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(colorResource(R.color.backgroundLightest))
+            ) {
+                Loading()
+            }
+        }
+        ScreenState.Content -> {
+            AssignmentListContentView(state, contextColor, screenActionHandler, listActionHandler)
+        }
+        ScreenState.Empty -> {
+            EmptyContent(
+                emptyMessage = stringResource(R.string.noAssignments),
+                imageRes = R.drawable.ic_panda_nodiscussions
+            )
+        }
+        ScreenState.Error -> {
+            ErrorContent(
+                errorMessage = stringResource(R.string.errorLoadingAssignment),
+            )
+        }
+    }
 }
 
 @Composable
 private fun AssignmentListContentView(
     state: AssignmentListUiState,
     contextColor: Color,
-    actionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
+    screenActionHandler: (AssignmentListScreenEvent) -> Unit,
+    listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
     GroupedListView(
         state = state.listState,
         itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
-        actionHandler = actionHandler
+        actionHandler = listActionHandler
     )
 }
 

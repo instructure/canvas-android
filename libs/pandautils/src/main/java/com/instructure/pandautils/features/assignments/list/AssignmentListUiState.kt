@@ -11,7 +11,7 @@ import com.instructure.pandautils.utils.ScreenState
 data class AssignmentListUiState(
     val title: String = "",
     val course: Course = Course(),
-    val subTitle: String? = null,
+    val subtitle: String = "",
     val state: ScreenState = ScreenState.Loading,
     val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList())
 )
@@ -37,4 +37,8 @@ class AssignmentGroupItemState(
 sealed class AssignmentListFragmentEvent {
     data class NavigateToAssignment(val canvasContext: CanvasContext, val assignmentId: Long): AssignmentListFragmentEvent()
     data object NavigateBack: AssignmentListFragmentEvent()
+}
+
+sealed class AssignmentListScreenEvent {
+    data object NavigateBack: AssignmentListScreenEvent()
 }

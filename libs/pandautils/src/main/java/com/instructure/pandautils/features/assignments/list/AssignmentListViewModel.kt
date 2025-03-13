@@ -60,6 +60,7 @@ class AssignmentListViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         state = ScreenState.Content,
+                        subtitle = course.name,
                         course = course,
                         listState = GroupedListViewState(
                             assignmentGroups.map { group ->
@@ -108,6 +109,16 @@ class AssignmentListViewModel @Inject constructor(
             is GroupedListViewEvent.ItemClicked -> {
                 viewModelScope.launch {
                     _events.send(AssignmentListFragmentEvent.NavigateToAssignment(uiState.value.course, event.groupItem.assignment.id))
+                }
+            }
+        }
+    }
+
+    fun handleAction(action: AssignmentListScreenEvent) {
+        when (action) {
+            AssignmentListScreenEvent.NavigateBack -> {
+                viewModelScope.launch {
+                    _events.send(AssignmentListFragmentEvent.NavigateBack)
                 }
             }
         }
