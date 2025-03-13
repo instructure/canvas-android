@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
@@ -100,6 +101,11 @@ class AssignmentListFragment: BaseCanvasFragment() {
             route.paramsHash[RouterParams.COURSE_ID]?.let {
                 route.arguments.putLong(Const.COURSE_ID, it.toLong())
             }
+            return AssignmentListFragment().withArgs(route.arguments)
+        }
+
+        fun newInstance(canvasContext: CanvasContext, route: Route): AssignmentListFragment {
+            route.arguments.putLong(Const.COURSE_ID, canvasContext.id)
             return AssignmentListFragment().withArgs(route.arguments)
         }
 

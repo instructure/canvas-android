@@ -26,15 +26,12 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
-import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignments.StudentAssignmentListBehavior
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsBehaviour
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsColorProvider
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsRepository
@@ -42,7 +39,6 @@ import com.instructure.student.features.assignments.details.StudentAssignmentDet
 import com.instructure.student.features.assignments.details.StudentAssignmentDetailsSubmissionHandler
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
-import com.instructure.student.features.assignments.list.StudentAssignmentListRouter
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import dagger.Module
@@ -53,7 +49,7 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class AssignmentFragmentModule {
+class AssignmentDetailsFragmentModule {
     @Provides
     fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
         return StudentAssignmentDetailsRouter()
@@ -63,16 +59,10 @@ class AssignmentFragmentModule {
     fun provideAssignmentDetailsBehaviour(router: AssignmentDetailsRouter): AssignmentDetailsBehaviour {
         return StudentAssignmentDetailsBehaviour(router)
     }
-
-    @Provides
-    fun provideAssignmentListRouter(): AssignmentListRouter {
-        return StudentAssignmentListRouter()
-    }
 }
 @Module
 @InstallIn(ViewModelComponent::class)
-class AssignmentModule {
-
+class AssignmentDetailsViewModelModule {
     @Provides
     fun provideAssignmentDetailsLocalDataSource(
         courseFacade: CourseFacade,
@@ -110,10 +100,5 @@ class AssignmentModule {
     @Provides
     fun provideAssignmentDetailsColorProvider(colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
         return StudentAssignmentDetailsColorProvider(colorKeeper)
-    }
-
-    @Provides
-    fun provideAssignmentListBehavior(): AssignmentListBehavior {
-        return StudentAssignmentListBehavior()
     }
 }

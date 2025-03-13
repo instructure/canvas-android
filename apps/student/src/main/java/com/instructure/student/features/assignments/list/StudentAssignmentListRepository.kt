@@ -20,6 +20,8 @@ package com.instructure.student.features.assignments.list
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -27,19 +29,19 @@ import com.instructure.student.features.assignments.list.datasource.AssignmentLi
 import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
 import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 
-class AssignmentListRepository(
+class StudentAssignmentListRepository(
     localDataSource: AssignmentListLocalDataSource,
     networkDataSource: AssignmentListNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider
-) : Repository<AssignmentListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
+) : Repository<AssignmentListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), AssignmentListRepository {
 
     suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
         scopeToStudent: Boolean,
         forceNetwork: Boolean
-    ): List<AssignmentGroup> {
+    ): DataResult<List<AssignmentGroup>> {
         return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(
             courseId,
             gradingPeriodId,
@@ -48,21 +50,21 @@ class AssignmentListRepository(
         )
     }
 
-    suspend fun getAssignmentGroupsWithAssignments(
+    override suspend fun getAssignments(
         courseId: Long,
-        isRefresh: Boolean
-    ): List<AssignmentGroup> {
-        return dataSource().getAssignmentGroupsWithAssignments(courseId, isRefresh)
+        forceRefresh: Boolean
+    ): DataResult<List<AssignmentGroup>> {
+        return dataSource().getAssignmentGroupsWithAssignments(courseId, forceRefresh)
     }
 
     suspend fun getGradingPeriodsForCourse(
         courseId: Long,
         isRefresh: Boolean
-    ): List<GradingPeriod> {
+    ): DataResult<List<GradingPeriod>> {
         return dataSource().getGradingPeriodsForCourse(courseId, isRefresh)
     }
 
-    suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course? {
-        return dataSource().getCourseWithGrade(courseId, forceNetwork)
+    override suspend fun getCourse(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
+        return dataSource().getCourseWithGrade(courseId, forceRefresh)
     }
 }

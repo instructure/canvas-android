@@ -16,27 +16,12 @@
  */
 package com.instructure.pandautils.features.assignments.list
 
-import com.instructure.canvasapi2.apis.AssignmentAPI
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.depaginate
 
-class AssignmentListRepository(
-    private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val courseApi: CourseAPI.CoursesInterface
-) {
-    suspend fun getAssignments(courseId: Long, forceRefresh: Boolean = false): DataResult<List<AssignmentGroup>> {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-        return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams).depaginate {
-            assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, restParams)
-        }
-    }
+interface AssignmentListRepository {
+    suspend fun getAssignments(courseId: Long, forceRefresh: Boolean = false): DataResult<List<AssignmentGroup>>
 
-    suspend fun getCourse(courseId: Long): DataResult<Course> {
-        val restParams = RestParams()
-        return courseApi.getCourse(courseId, restParams)
-    }
+    suspend fun getCourse(courseId: Long, forceRefresh: Boolean = false): DataResult<Course>
 }

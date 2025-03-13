@@ -14,14 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.features.assignments
+package com.instructure.teacher.features.assignment.list
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 
-class StudentAssignmentListBehavior: AssignmentListBehavior {
+class TeacherAssignmentListBehavior: AssignmentListBehavior {
     override fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState {
-        return AssignmentGroupItemState(assignment, showSubmissionDetails = true)
+        return AssignmentGroupItemState(assignment, showAssignmentDetails = true)
     }
 }
