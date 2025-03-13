@@ -95,11 +95,11 @@ class InboxComposeViewModel @Inject constructor(
     }
 
     init {
+        initialState = uiState.value
         loadContexts()
         if (options != null) {
             initFromOptions(options)
         }
-        initialState = uiState.value
         loadSignature()
     }
 
