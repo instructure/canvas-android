@@ -146,6 +146,7 @@ class InboxComposeViewModel @Inject constructor(
                     hiddenBodyMessage = options.hiddenBodyMessage,
                 )
             }
+            initialState = uiState.value
             context?.let {
                 viewModelScope.launch {
                     if (!options.autoSelectRecipientsFromRoles.isNullOrEmpty()) {
