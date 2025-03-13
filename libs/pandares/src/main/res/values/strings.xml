@@ -2024,4 +2024,6 @@
     <string name="a11y_contentDescription_expand">Expand</string>
     <string name="missingTag">Missing</string>
     <string name="submissionFilter">Submission Filter</string>
+    <string name="submissionMessageSubject">%1$s on %2$s</string>
+    <string name="all">All</string>
 </resources>

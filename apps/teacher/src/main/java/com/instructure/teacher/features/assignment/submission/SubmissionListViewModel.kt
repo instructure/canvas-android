@@ -106,10 +106,10 @@ class SubmissionListViewModel @Inject constructor(
     }
 
     private fun filterData() {
-        val submissionUiStates = submissions.filter {
+        val submissionUiStates = submissions.filter { submission ->
             when (filter) {
                 SubmissionListFilter.ALL -> true
-                SubmissionListFilter.LATE -> it.submission?.let {
+                SubmissionListFilter.LATE -> submission.submission?.let {
                     assignment.getState(
                         it,
                         true
@@ -119,7 +119,7 @@ class SubmissionListViewModel @Inject constructor(
                     )
                 } ?: false
 
-                SubmissionListFilter.NOT_GRADED -> it.submission?.let {
+                SubmissionListFilter.NOT_GRADED -> submission.submission?.let {
                     assignment.getState(
                         it,
                         true
@@ -129,7 +129,7 @@ class SubmissionListViewModel @Inject constructor(
                     ) || !it.isGradeMatchesCurrentSubmission
                 } ?: false
 
-                SubmissionListFilter.GRADED -> it.submission?.let {
+                SubmissionListFilter.GRADED -> submission.submission?.let {
                     assignment.getState(
                         it,
                         true
@@ -141,14 +141,14 @@ class SubmissionListViewModel @Inject constructor(
                     ) && it.isGradeMatchesCurrentSubmission
                 } ?: false
 
-                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { !it.excused && it.isGraded && it.score >= filterValue.orDefault() }
+                SubmissionListFilter.ABOVE_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score >= filterValue.orDefault() }
                     ?: false
 
-                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { !it.excused && it.isGraded && it.score < filterValue.orDefault() }
+                SubmissionListFilter.BELOW_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score < filterValue.orDefault() }
                     ?: false
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
                 // which students haven't submitted yet
-                SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
+                SubmissionListFilter.MISSING -> submission.submission?.workflowState == "unsubmitted" || submission.submission == null
             }
         }
             .filter { it.assignee.name.contains(searchQuery, true) }
@@ -281,7 +281,7 @@ class SubmissionListViewModel @Inject constructor(
                             contextCode = course.contextId,
                             contextName = course.name,
                             recipients = getRecipients(),
-                            subject = _uiState.value.headerTitle + " " + resources.getString(R.string.on) + " " + assignment.name
+                            subject = resources.getString(R.string.submissionMessageSubject, _uiState.value.headerTitle, assignment.name)
                         )
                     )
                 }

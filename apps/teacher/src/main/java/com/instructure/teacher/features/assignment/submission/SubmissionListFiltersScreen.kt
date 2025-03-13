@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.features.assignment.submission
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,9 +40,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
@@ -52,6 +55,32 @@ import com.instructure.teacher.R
 
 @Composable
 fun SubmissionListFilters(
+    filter: SubmissionListFilter,
+    filterValue: Double?,
+    courseColor: Color,
+    assignmentName: String,
+    sections: List<CanvasContext>,
+    initialSelectedSections: List<Long>,
+    actionHandler: (SubmissionListAction) -> Unit,
+    dismiss: () -> Unit
+) {
+
+    FullScreenDialog(onDismissRequest = { dismiss() }) {
+        SubmissionFilterScreenContent(
+            filter = filter,
+            filterValue = filterValue,
+            courseColor = courseColor,
+            assignmentName = assignmentName,
+            sections = sections,
+            initialSelectedSections = initialSelectedSections,
+            actionHandler = actionHandler,
+            dismiss = dismiss
+        )
+    }
+}
+
+@Composable
+private fun SubmissionFilterScreenContent(
     filter: SubmissionListFilter,
     filterValue: Double?,
     courseColor: Color,
@@ -73,8 +102,9 @@ fun SubmissionListFilters(
     }
     val selectedSections by remember { mutableStateOf(initialSelectedSections.toMutableSet()) }
     var error by remember { mutableStateOf(false) }
-    FullScreenDialog(onDismissRequest = { dismiss() }) {
-        Scaffold(topBar = {
+    Scaffold(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        topBar = {
             CanvasAppBar(
                 title = stringResource(R.string.preferences),
                 subtitle = assignmentName,
@@ -114,128 +144,136 @@ fun SubmissionListFilters(
                 }
             )
         }) { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Header(text = stringResource(R.string.submissionFilter))
-                FilterItem(
-                    text = stringResource(R.string.all_submissions),
-                    selected = selectedFilter == SubmissionListFilter.ALL,
-                    courseColor = courseColor,
-                    onClick = {
-                        selectedFilter = SubmissionListFilter.ALL
-                    }
-                )
-                FilterItem(
-                    text = stringResource(R.string.submitted_late),
-                    selected = selectedFilter == SubmissionListFilter.LATE,
-                    courseColor = courseColor,
-                    onClick = {
-                        selectedFilter = SubmissionListFilter.LATE
-                    }
-                )
-                FilterItem(
-                    text = stringResource(R.string.needsGrading),
-                    selected = selectedFilter == SubmissionListFilter.NOT_GRADED,
-                    courseColor = courseColor,
-                    onClick = {
-                        selectedFilter = SubmissionListFilter.NOT_GRADED
-                    }
-                )
-                FilterItem(
-                    text = stringResource(R.string.not_submitted),
-                    selected = selectedFilter == SubmissionListFilter.MISSING,
-                    courseColor = courseColor,
-                    onClick = {
-                        selectedFilter = SubmissionListFilter.MISSING
-                    }
-                )
-                FilterItem(
-                    text = stringResource(R.string.graded),
-                    selected = selectedFilter == SubmissionListFilter.GRADED,
-                    courseColor = courseColor,
-                    onClick = {
-                        selectedFilter = SubmissionListFilter.GRADED
-                    }
-                )
-                FilterItem(
-                    text = stringResource(R.string.scored_less_than),
-                    selected = selectedFilter == SubmissionListFilter.BELOW_VALUE,
-                    courseColor = courseColor,
-                    onClick = {
-                        selectedFilterValue = ""
-                        selectedFilter = SubmissionListFilter.BELOW_VALUE
-                    }
-                )
-                if (selectedFilter == SubmissionListFilter.BELOW_VALUE) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp, vertical = 8.dp),
-                        value = selectedFilterValue,
-                        onValueChange = {
-                            error = false
-                            selectedFilterValue = it
-                        },
-                        label = { Text(stringResource(R.string.score)) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = colorResource(R.color.textDarkest)
-                        ),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
-                        ),
-                        isError = error
-                    )
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Header(text = stringResource(R.string.submissionFilter))
+            FilterItem(
+                text = stringResource(R.string.all_submissions),
+                selected = selectedFilter == SubmissionListFilter.ALL,
+                courseColor = courseColor,
+                onClick = {
+                    selectedFilter = SubmissionListFilter.ALL
                 }
-                FilterItem(
-                    text = stringResource(R.string.scored_more_than),
-                    selected = selectedFilter == SubmissionListFilter.ABOVE_VALUE,
-                    courseColor = courseColor,
-                    onClick = {
-                        selectedFilterValue = ""
-                        selectedFilter = SubmissionListFilter.ABOVE_VALUE
-                    }
-                )
-                if (selectedFilter == SubmissionListFilter.ABOVE_VALUE) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp, vertical = 8.dp),
-                        value = selectedFilterValue,
-                        onValueChange = {
-                            error = false
-                            selectedFilterValue = it
-                        },
-                        label = { Text(stringResource(R.string.score)) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = colorResource(R.color.textDarkest)
-                        ),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
-                        ),
-                        isError = error
-                    )
+            )
+            FilterItem(
+                text = stringResource(R.string.submitted_late),
+                selected = selectedFilter == SubmissionListFilter.LATE,
+                courseColor = courseColor,
+                onClick = {
+                    selectedFilter = SubmissionListFilter.LATE
                 }
-                if (sections.isNotEmpty()) {
-                    Header(text = stringResource(R.string.filterBySection))
+            )
+            FilterItem(
+                text = stringResource(R.string.needsGrading),
+                selected = selectedFilter == SubmissionListFilter.NOT_GRADED,
+                courseColor = courseColor,
+                onClick = {
+                    selectedFilter = SubmissionListFilter.NOT_GRADED
+                }
+            )
+            FilterItem(
+                text = stringResource(R.string.not_submitted),
+                selected = selectedFilter == SubmissionListFilter.MISSING,
+                courseColor = courseColor,
+                onClick = {
+                    selectedFilter = SubmissionListFilter.MISSING
+                }
+            )
+            FilterItem(
+                text = stringResource(R.string.graded),
+                selected = selectedFilter == SubmissionListFilter.GRADED,
+                courseColor = courseColor,
+                onClick = {
+                    selectedFilter = SubmissionListFilter.GRADED
+                }
+            )
+            FilterItem(
+                text = stringResource(R.string.scored_less_than),
+                selected = selectedFilter == SubmissionListFilter.BELOW_VALUE,
+                courseColor = courseColor,
+                onClick = {
+                    selectedFilterValue = ""
+                    selectedFilter = SubmissionListFilter.BELOW_VALUE
+                }
+            )
+            if (selectedFilter == SubmissionListFilter.BELOW_VALUE) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                    value = selectedFilterValue,
+                    onValueChange = {
+                        error = false
+                        selectedFilterValue = it
+                    },
+                    label = { Text(stringResource(R.string.score)) },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = colorResource(R.color.textDarkest),
+                        focusedBorderColor = colorResource(R.color.textDarkest),
+                        unfocusedBorderColor = colorResource(R.color.textDark),
+                        focusedLabelColor = colorResource(R.color.textDarkest),
+                        unfocusedLabelColor = colorResource(R.color.textDark),
+                        cursorColor = colorResource(R.color.textDarkest),
+                    ),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    isError = error
+                )
+            }
+            FilterItem(
+                text = stringResource(R.string.scored_more_than),
+                selected = selectedFilter == SubmissionListFilter.ABOVE_VALUE,
+                courseColor = courseColor,
+                onClick = {
+                    selectedFilterValue = ""
+                    selectedFilter = SubmissionListFilter.ABOVE_VALUE
+                }
+            )
+            if (selectedFilter == SubmissionListFilter.ABOVE_VALUE) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                    value = selectedFilterValue,
+                    onValueChange = {
+                        error = false
+                        selectedFilterValue = it
+                    },
+                    label = { Text(stringResource(R.string.score)) },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = colorResource(R.color.textDarkest),
+                        focusedBorderColor = colorResource(R.color.textDarkest),
+                        unfocusedBorderColor = colorResource(R.color.textDark),
+                        focusedLabelColor = colorResource(R.color.textDarkest),
+                        unfocusedLabelColor = colorResource(R.color.textDark)
+                    ),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    isError = error
+                )
+            }
+            if (sections.isNotEmpty()) {
+                Header(text = stringResource(R.string.filterBySection))
 
-                    sections.forEach { section ->
-                        CheckboxText(
-                            text = section.name.orEmpty(),
-                            selected = selectedSections.contains(section.id),
-                            color = courseColor,
-                            onCheckedChanged = {
-                                if (selectedSections.contains(section.id)) {
-                                    selectedSections.remove(section.id)
-                                } else {
-                                    selectedSections.add(section.id)
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+                sections.forEach { section ->
+                    CheckboxText(
+                        text = section.name.orEmpty(),
+                        selected = selectedSections.contains(section.id),
+                        color = courseColor,
+                        onCheckedChanged = {
+                            if (selectedSections.contains(section.id)) {
+                                selectedSections.remove(section.id)
+                            } else {
+                                selectedSections.add(section.id)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
@@ -272,5 +310,35 @@ private fun FilterItem(
         onClick = {
             onClick()
         }
+    )
+}
+
+@Preview
+@Composable
+private fun SubmissionFilterScreenPreview() {
+    SubmissionFilterScreenContent(
+        filter = SubmissionListFilter.ALL,
+        filterValue = null,
+        courseColor = Color.Black,
+        assignmentName = "Assignment Name",
+        sections = listOf(Section(id = 1, name = "Section 1"), Section(id = 2, name = "Section 2")),
+        initialSelectedSections = listOf(1L),
+        actionHandler = {},
+        dismiss = {}
+    )
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+private fun SubmissionFilterScreenDarkPreview() {
+    SubmissionFilterScreenContent(
+        filter = SubmissionListFilter.ABOVE_VALUE,
+        filterValue = 12.0,
+        courseColor = Color.Blue,
+        assignmentName = "Assignment Name",
+        sections = listOf(Section(id = 1, name = "Section 1"), Section(id = 2, name = "Section 2")),
+        initialSelectedSections = listOf(2L),
+        actionHandler = {},
+        dismiss = {}
     )
 }

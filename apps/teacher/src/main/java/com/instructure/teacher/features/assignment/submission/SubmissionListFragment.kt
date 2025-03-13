@@ -38,7 +38,9 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
@@ -89,6 +91,7 @@ class SubmissionListFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewStyler.setStatusBarDark(requireActivity(), course.color)
         lifecycleScope.collectOneOffEvents(viewModel.events, this::handleActions)
     }
 

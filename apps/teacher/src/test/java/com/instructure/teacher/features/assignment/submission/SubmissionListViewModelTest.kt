@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.teacher.R
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -47,7 +48,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.util.Date
-import com.instructure.teacher.R
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SubmissionListViewModelTest {
@@ -679,11 +679,23 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Refresh action`() = runTest {
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns emptyList()
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any(),
+                any(),
+                any()
+            )
+        } returns emptyList()
 
         val viewModel = createViewModel()
 
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns submissions
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any(),
+                any(),
+                any()
+            )
+        } returns submissions
         viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
 
         coVerify {
@@ -729,7 +741,13 @@ class SubmissionListViewModelTest {
     @Test
     fun `Set filters update uiState`() {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(SubmissionListAction.SetFilters(SubmissionListFilter.ABOVE_VALUE, 5.0, listOf(1L)))
+        viewModel.uiState.value.actionHandler(
+            SubmissionListAction.SetFilters(
+                SubmissionListFilter.ABOVE_VALUE,
+                5.0,
+                listOf(1L)
+            )
+        )
 
         assertEquals(SubmissionListFilter.ABOVE_VALUE, viewModel.uiState.value.filter)
         assertEquals(5.0, viewModel.uiState.value.filterValue)
@@ -744,7 +762,12 @@ class SubmissionListViewModelTest {
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
-            assertEquals(SubmissionListViewModelAction.ShowPostPolicy(course = Course(1L), assignment = Assignment(1L)), events.last())
+            assertEquals(
+                SubmissionListViewModelAction.ShowPostPolicy(
+                    course = Course(1L),
+                    assignment = Assignment(1L)
+                ), events.last()
+            )
         }
     }
 
@@ -757,24 +780,44 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(SubmissionListAction.SetFilters(SubmissionListFilter.NOT_GRADED, null, emptyList()))
+        viewModel.uiState.value.actionHandler(
+            SubmissionListAction.SetFilters(
+                SubmissionListFilter.NOT_GRADED,
+                null,
+                emptyList()
+            )
+        )
 
         viewModel.uiState.value.actionHandler(SubmissionListAction.SendMessage)
 
-        val expectedRecipients = listOf(submissions[0], submissions[1], submissions[2], submissions[6]).map {
-            Recipient.from((it.assignee as StudentAssignee).student)
-        }
+        val expectedRecipients =
+            listOf(submissions[0], submissions[1], submissions[2], submissions[6]).map {
+                Recipient.from((it.assignee as StudentAssignee).student)
+            }
 
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
-            assertEquals(SubmissionListViewModelAction.SendMessage(course.contextId, course.name, expectedRecipients, assignment.name.orEmpty()), events.last())
+            assertEquals(
+                SubmissionListViewModelAction.SendMessage(
+                    course.contextId,
+                    course.name,
+                    expectedRecipients,
+                    assignment.name.orEmpty()
+                ), events.last()
+            )
         }
     }
 
     @Test
     fun `Complete incomplete grades`() = runTest {
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any(),
+                any(),
+                any()
+            )
+        } returns listOf(
             GradeableStudentSubmission(
                 assignee = StudentAssignee(
                     student = User(1L, name = "Student 1"),
@@ -826,7 +869,19 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Percentage grade`() = runTest {
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+        every { savedStateHandle.get<Assignment>(SubmissionListFragment.ASSIGNMENT) } returns Assignment(
+            1L,
+            name = "Assignment 1",
+            gradingType = "percent",
+            submissionTypesRaw = listOf("online_text_entry")
+        )
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any(),
+                any(),
+                any()
+            )
+        } returns listOf(
             GradeableStudentSubmission(
                 assignee = StudentAssignee(
                     student = User(1L, name = "Student 1"),
@@ -860,7 +915,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 null,
                 listOf(SubmissionTag.GRADED),
-                "85.123%",
+                "85.12%",
                 true
             ),
             SubmissionUiState(
@@ -896,12 +951,95 @@ class SubmissionListViewModelTest {
         assertEquals(SubmissionListFilter.ALL, viewModel.uiState.value.filter)
     }
 
+    @Test
+    fun `Anonymous grading`() = runTest {
+        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Student 1"),
+                ),
+                submission = Submission(
+                    id = 1L,
+                    attempt = 1L,
+                    grade = "85.123%",
+                    score = 85.123
+                ),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(2L, name = "Student 2"),
+                ),
+                submission = Submission(
+                    id = 2L,
+                    attempt = 1L,
+                    grade = "10%",
+                    score = 10.0
+                ),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(3L, name = "Student 3"),
+                ),
+                submission = Submission(
+                    id = 3L,
+                    attempt = 1L,
+                    grade = "10%",
+                    score = 10.0
+                ),
+            )
+        )
+
+        every { savedStateHandle.get<Assignment>(SubmissionListFragment.ASSIGNMENT) } returns Assignment(
+            1L,
+            name = "Assignment 1",
+            anonymousGrading = true,
+            submissionTypesRaw = listOf("online_text_entry")
+        )
+
+        val viewModel = createViewModel()
+
+        val excepted = listOf(
+            SubmissionUiState(
+                1L,
+                1L,
+                "Student 1",
+                null,
+                listOf(SubmissionTag.GRADED),
+                "85.123%",
+                true
+            ),
+            SubmissionUiState(
+                2L,
+                2L,
+                "Student 2",
+                null,
+                listOf(SubmissionTag.GRADED),
+                "10%",
+                true
+            ),
+            SubmissionUiState(
+                3L,
+                3L,
+                "Student 3",
+                null,
+                listOf(SubmissionTag.GRADED),
+                "10%",
+                true
+            )
+        )
+
+        excepted.forEach {
+            assert(viewModel.uiState.value.submissions.contains(it))
+        }
+        assertEquals(true, viewModel.uiState.value.anonymousGrading)
+    }
+
     private fun createViewModel(): SubmissionListViewModel {
         return SubmissionListViewModel(savedStateHandle, resources, submissionListRepository)
     }
 
     private fun setupString() {
-        every { resources.getString(R.string.complete_grade)} returns "Complete"
-        every { resources.getString(R.string.incomplete_grade)} returns "Incomplete"
+        every { resources.getString(R.string.complete_grade) } returns "Complete"
+        every { resources.getString(R.string.incomplete_grade) } returns "Incomplete"
     }
 }
