@@ -19,7 +19,6 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'io.heap.gradle'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -295,7 +294,6 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
-    implementation Libs.HEAP_CORE
     implementation Libs.PENDO
 
     implementation Libs.CAMERA_VIEW

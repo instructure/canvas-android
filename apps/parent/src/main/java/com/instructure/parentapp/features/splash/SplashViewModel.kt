@@ -27,13 +27,14 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.SHA256
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.heap.autocapture.ViewAutocaptureSDK
-import io.heap.core.Heap
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
 
@@ -43,8 +44,7 @@ class SplashViewModel @Inject constructor(
     private val repository: SplashRepository,
     private val apiPrefs: ApiPrefs,
     private val colorKeeper: ColorKeeper,
-    private val heap: Heap,
-    private val viewAutocaptureSDK: ViewAutocaptureSDK,
+    private val featureFlagProvider: FeatureFlagProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -62,6 +62,8 @@ class SplashViewModel @Inject constructor(
             val user = repository.getSelf()
             user?.let { saveUserInfo(it) }
 
+            val account = repository.getAccount()
+
             val colors = repository.getColors()
             colors?.let { colorKeeper.addToCache(it) }
 
@@ -77,13 +79,20 @@ class SplashViewModel @Inject constructor(
             }
 
             val sendUsageMetrics = repository.getSendUsageMetrics()
-//            if (sendUsageMetrics) {
-//                heap.startRecording(context, BuildConfig.HEAP_APP_ID)
-//                viewAutocaptureSDK.register()
-//            } else {
-//                heap.stopRecording()
-//                viewAutocaptureSDK.deregister()
-//            }
+            if (sendUsageMetrics) {
+                val userIdSha = user?.id.toString().SHA256()
+                val visitorData = mapOf(
+                    "id" to userIdSha,
+                    "locale" to ApiPrefs.effectiveLocale,
+                )
+                val accountData = mapOf(
+                    "id" to account?.uuid,
+                    "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
+                )
+                Pendo.startSession(userIdSha, account?.uuid, visitorData, accountData)
+            } else {
+                Pendo.endSession()
+            }
 
             val students = repository.getStudents()
             if (students.isEmpty() && apiPrefs.canBecomeUser == false) {

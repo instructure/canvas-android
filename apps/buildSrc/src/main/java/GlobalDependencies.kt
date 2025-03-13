@@ -35,7 +35,6 @@ object Versions {
     const val GLIDE_VERSION = "4.16.0"
     const val RETROFIT = "2.11.0"
     const val OKHTTP = "4.12.0"
-    const val HEAP = "1.10.6"
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.8.3"
@@ -165,7 +164,6 @@ object Libs {
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
-    const val HEAP_CORE = "com.contentsquare.android:sdk:0.3.0"
     const val PENDO = "sdk.pendo.io:pendoIO:3.6+"
 
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
@@ -201,5 +199,4 @@ object Plugins {
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
-    const val HEAP = "io.heap.gradle:io.heap.gradle.gradle.plugin:0.5.0"
 }

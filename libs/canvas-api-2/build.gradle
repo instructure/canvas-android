@@ -161,7 +161,6 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
 
-    implementation Libs.HEAP_CORE
     implementation Libs.PENDO
 
     implementation Libs.ANDROIDX_WORK_MANAGER
