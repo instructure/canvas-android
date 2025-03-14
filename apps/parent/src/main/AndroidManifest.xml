@@ -44,6 +44,15 @@
         android:theme="@style/CanvasMaterialTheme_Default"
         tools:overrideLibrary="com.instructure.canvasapi">
 
+        <activity android:name="sdk.pendo.io.activities.PendoGateActivity" android:launchMode="singleInstance" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="pendo-94903f5a"/>
+            </intent-filter>
+        </activity>
+
         <!-- Activities -->
         <activity
             android:name=".features.login.LoginActivity"
