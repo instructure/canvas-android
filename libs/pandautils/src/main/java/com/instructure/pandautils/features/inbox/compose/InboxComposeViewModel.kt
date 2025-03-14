@@ -604,10 +604,10 @@ class InboxComposeViewModel @Inject constructor(
 
     private fun getEnrollmentTypeString(enrollmentType: EnrollmentType?): String {
         return when (enrollmentType) {
-            EnrollmentType.STUDENTENROLLMENT -> "_students"
-            EnrollmentType.TEACHERENROLLMENT -> "_teachers"
-            EnrollmentType.TAENROLLMENT -> "_tas"
-            EnrollmentType.OBSERVERENROLLMENT -> "_observers"
+            EnrollmentType.StudentEnrollment -> "_students"
+            EnrollmentType.TeacherEnrollment -> "_teachers"
+            EnrollmentType.TaEnrollment -> "_tas"
+            EnrollmentType.ObserverEnrollment -> "_observers"
             else -> ""
         }
     }
