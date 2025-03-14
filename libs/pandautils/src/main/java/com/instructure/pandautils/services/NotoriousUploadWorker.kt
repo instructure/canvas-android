@@ -27,39 +27,45 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.hilt.work.HiltWorker
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
-import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NotoriousUploader
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlin.random.Random
 
-class NotoriousUploadWorker(
-    private val context: Context,
-    workerParams: WorkerParameters
+@HiltWorker
+class NotoriousUploadWorker @AssistedInject constructor(
+    @Assisted private val context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val notificationManager: NotificationManager,
+    private val submissionApi: SubmissionAPI.SubmissionInterface
 ) : CoroutineWorker(context, workerParams) {
-
-    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private lateinit var builder: NotificationCompat.Builder
 
     private val mediaCommentId = inputData.getLong(Const.ID, -1L)
@@ -110,7 +116,7 @@ class NotoriousUploadWorker(
             }
         }
 
-        val name = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsName)
+        val name = context.getString(R.string.notificationChannelNameFileUploadsName)
         val description = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsDescription)
 
         // Create the channel and add the group
@@ -161,24 +167,31 @@ class NotoriousUploadWorker(
     }
 
     private suspend fun handleSuccess(result: NotoriousResult): Result {
-        val assignment = assignment ?: return Result.failure()
-        // Create course context
+        val mediaId = result.id ?: return handleFailure(null)
+        val assignment = assignment ?: return handleFailure(null)
+        val mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType)
         val course = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, assignment.courseId, Const.COURSE)
 
-        val mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType)
-        return try {
-            broadcastSubmission(awaitApi {
-                SubmissionManager.postMediaSubmissionComment(
-                    course, assignment.id, studentId, result.id!!, mediaType, attemptId, isGroupComment, it
-                )
-            })
-        } catch (e: Throwable) {
-            if (!APIHelper.hasNetworkConnection()) {
-                onNoNetwork()
-            } else {
-                uploadError(e)
+        val params = RestParams(domain = ApiPrefs.overrideDomains[course.id])
+        val postMediaSubmissionCommentResult = submissionApi.postMediaSubmissionComment(
+            courseId = course.id,
+            assignmentId = assignment.id,
+            userId = studentId,
+            attemptId = attemptId,
+            mediaId = mediaId,
+            commentType = mediaType,
+            isGroupComment = isGroupComment,
+            restParams = params
+        )
+
+        return when (postMediaSubmissionCommentResult) {
+            is DataResult.Success -> {
+                broadcastSubmission(postMediaSubmissionCommentResult.dataOrThrow)
             }
-            Result.failure()
+
+            is DataResult.Fail -> {
+                handleFailure(postMediaSubmissionCommentResult.failure)
+            }
         }
     }
 
@@ -212,12 +225,6 @@ class NotoriousUploadWorker(
         )
         LocalBroadcastManager.getInstance(context).sendBroadcast(mediaUploadIntent)
         return Result.success()
-    }
-
-    private fun onNoNetwork() {
-        sendErrorBroadcast()
-        builder.setContentText(context.getString(R.string.noNetwork)).setOngoing(false)
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
     private fun uploadError(e: Throwable) {
@@ -289,6 +296,7 @@ class NotoriousUploadWorker(
 
             val workRequest = OneTimeWorkRequest.Builder(NotoriousUploadWorker::class.java)
                 .setInputData(data)
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                 .build()
 
             WorkManager.getInstance(context).enqueue(workRequest)
