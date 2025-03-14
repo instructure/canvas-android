@@ -17,11 +17,62 @@
 package com.instructure.student.features.assignments.list
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
 
 class StudentAssignmentListBehavior: AssignmentListBehavior {
     override fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState {
         return AssignmentGroupItemState(assignment, showSubmissionDetails = true)
+    }
+
+    override fun getAssignmentListFilterState(gradingPeriods: List<GradingPeriod>): AssignmentListFilterState {
+       val groups = mutableListOf(
+            AssignmentListFilterGroup(
+                title = "Assignment filter",
+                options = listOf(
+                    AssignmentListFilterOption.NotYetSubmitted,
+                    AssignmentListFilterOption.ToBeGraded,
+                    AssignmentListFilterOption.Graded,
+                    AssignmentListFilterOption.Other,
+                ),
+                selectedOptions = listOf(
+                    AssignmentListFilterOption.NotYetSubmitted,
+                    AssignmentListFilterOption.ToBeGraded,
+                    AssignmentListFilterOption.Graded,
+                    AssignmentListFilterOption.Other,
+                ),
+                groupType = AssignmentListFilterGroupType.MultiChoice
+            ),
+            AssignmentListFilterGroup(
+                title = "Grouped By",
+                options = listOf(
+                    AssignmentListGroupByOption.DueDate,
+                    AssignmentListGroupByOption.AssignmentGroup,
+                ),
+                selectedOptions = listOf(AssignmentListGroupByOption.DueDate),
+                groupType = AssignmentListFilterGroupType.SingleChoice
+            ),
+        )
+        if (gradingPeriods.size > 1) {
+            val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null)
+            groups.add(
+                AssignmentListFilterGroup(
+                    title = "Grading Period",
+                    options = listOf(allGradingPeriod) + gradingPeriods.map {
+                        AssignmentListFilterOption.GradingPeriod(it)
+                     },
+                    selectedOptions = listOf(allGradingPeriod),
+                    groupType = AssignmentListFilterGroupType.SingleChoice
+                )
+            )
+        }
+
+        return AssignmentListFilterState(groups)
     }
 }

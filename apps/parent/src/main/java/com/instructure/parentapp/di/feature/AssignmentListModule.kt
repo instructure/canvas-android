@@ -17,6 +17,7 @@
 package com.instructure.parentapp.di.feature
 
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import dagger.Module
 import dagger.Provides
@@ -38,6 +39,11 @@ class AssignmentListFragmentModule {
 class AssignmentListModule {
     @Provides
     fun provideAssignmentListBehavior(): AssignmentListBehavior {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideAssignmentListRepository(): AssignmentListRepository {
         throw NotImplementedError()
     }
 }

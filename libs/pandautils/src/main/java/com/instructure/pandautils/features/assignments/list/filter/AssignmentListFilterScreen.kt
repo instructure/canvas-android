@@ -14,14 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.assignments.list
+package com.instructure.pandautils.features.assignments.list.filter
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import androidx.compose.runtime.Composable
 
-interface AssignmentListBehavior {
-    fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState
+@Composable
+fun AssignmentListFilterScreen(
+    state: AssignmentListFilterState,
+    onFilterChange: (AssignmentListFilterState) -> Unit
+) {
 
-    fun getAssignmentListFilterState(gradingPeriods: List<GradingPeriod>): AssignmentListFilterState
+}
+
+@Composable
+private fun AssignmentListFilterGroup(
+    group: AssignmentListFilterGroup,
+    onFilterChange: (AssignmentListFilterGroup) -> Unit
+) {
+
 }
