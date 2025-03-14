@@ -23,6 +23,10 @@ import com.apollographql.apollo3.api.Mutation
 import com.apollographql.apollo3.api.Query
 import com.apollographql.apollo3.api.json.JsonReader
 import com.apollographql.apollo3.api.json.JsonWriter
+import com.apollographql.apollo3.cache.http.HttpFetchPolicy
+import com.apollographql.apollo3.cache.http.httpCache
+import com.apollographql.apollo3.cache.http.httpExpireTimeout
+import com.apollographql.apollo3.cache.http.httpFetchPolicy
 import com.apollographql.apollo3.network.okHttpClient
 import com.instructure.canvasapi2.type.DateTime
 import com.instructure.canvasapi2.type.GraphQLID
@@ -44,14 +48,14 @@ class QLClientConfig {
     /** The [OkHttpClient] to use for this request. Defaults to the client obtained from [CanvasRestAdapter.getOkHttpClient]
      * with a supplementary interceptor to add an additional header. It is recommended to use this default client as it
      * has several useful behaviors such as request logging, read timeouts, and auth/user-agent/referrer header injection. */
-    var httpClient: OkHttpClient = CanvasRestAdapter.okHttpClient
+    private var httpClient: OkHttpClient = CanvasRestAdapter.okHttpClient
         .newBuilder()
         .addInterceptor { chain ->
             chain.proceed(chain.request().newBuilder().addHeader("GraphQL-Metrics", "true").build())
         }
         .build()
 
-//    var cachePolicy: HttpCachePolicy.Policy = cacheFirstPolicy
+    var fetchPolicy: HttpFetchPolicy = HttpFetchPolicy.CacheFirst
 
     /** Builds a new [ApolloClient] based on the current config values. */
     fun buildClient(): ApolloClient {
@@ -61,18 +65,9 @@ class QLClientConfig {
             .addCustomScalarAdapter(DateTime.type, timeAdapter)
             .addCustomScalarAdapter(URL.type, stringAdapter)
             .addCustomScalarAdapter(GraphQLID.type, stringAdapter)
-        //.httpCache(cache)
-        //.defaultHttpCachePolicy(cachePolicy)
-
-//        val builder = ApolloClient.builder()
-//            .serverUrl(url)
-//            .okHttpClient(httpClient)
-//            .addCustomTypeAdapter(CustomType.DATETIME, timeAdapter)
-//            .addCustomTypeAdapter(CustomType.URL, stringAdapter)
-//            .addCustomTypeAdapter(CustomType.ID, stringAdapter)
-//            .httpCache(cache)
-//            .defaultHttpCachePolicy(cachePolicy)
-
+            .httpCache(cacheFile, CACHE_SIZE)
+            .httpFetchPolicy(fetchPolicy)
+            .httpExpireTimeout(TimeUnit.HOURS.toMillis(1))
 
         return builder.build()
     }
@@ -86,8 +81,6 @@ class QLClientConfig {
         /** Cache configuration */
         private const val CACHE_SIZE = 10L * 1024 * 1024 // 10MB disk cache
         private val cacheFile = File(ContextKeeper.appContext.cacheDir, "apolloCache/")
-//        private val cache = ApolloHttpCache(DiskLruHttpCacheStore(cacheFile, CACHE_SIZE))
-//        private val cacheFirstPolicy: HttpCachePolicy.ExpirePolicy = HttpCachePolicy.CACHE_FIRST.expireAfter(1, TimeUnit.HOURS)
 
         /** Type adapter for Dates */
         private val timeAdapter: Adapter<Date?> = object : Adapter<Date?> {
@@ -125,7 +118,7 @@ class QLClientConfig {
             block: QLClientConfig.() -> Unit = {}
         ): ApolloResponse<DATA> {
             val config = QLClientConfig()
-//            if (forceNetwork) config.cachePolicy = HttpCachePolicy.NETWORK_ONLY
+            if (forceNetwork) config.fetchPolicy = HttpFetchPolicy.NetworkOnly
             config.block()
             val result = config.buildClient().query(query).execute()
             return result

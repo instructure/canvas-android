@@ -16,24 +16,20 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.cache.http.httpCache
 import com.instructure.canvasapi2.InboxSettingsQuery
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.UpdateInboxSettingsMutation
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
-import java.util.concurrent.TimeUnit
 
 class InboxSettingsManagerImpl : InboxSettingsManager {
 
     override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): DataResult<InboxSignatureSettings> {
         return try {
             val query = InboxSettingsQuery()
-            val inboxSettingsData = QLClientConfig.enqueueQuery(query) {
-                if (forceNetwork) {
-//                    cachePolicy = HttpCachePolicy.NETWORK_FIRST.expireAfter(1, TimeUnit.HOURS)
-                }
-            }.dataAssertNoErrors
+            val inboxSettingsData = QLClientConfig.enqueueQuery(query, forceNetwork).dataAssertNoErrors
             val inboxSignatureSettings = InboxSignatureSettings(
                 inboxSettingsData.myInboxSettings?.signature.orEmpty(),
                 inboxSettingsData.myInboxSettings?.useSignature ?: false,
@@ -63,7 +59,7 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
 
             val mutationResult = QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
 
-//            QLClientConfig().buildClient().clearHttpCache()
+            QLClientConfig().buildClient().httpCache.clearAll()
 
             return DataResult.Success(
                 InboxSignatureSettings(
