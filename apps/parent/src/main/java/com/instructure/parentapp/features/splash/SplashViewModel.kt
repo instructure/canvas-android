@@ -83,7 +83,7 @@ class SplashViewModel @Inject constructor(
                 val userIdSha = user?.id.toString().SHA256()
                 val visitorData = mapOf(
                     "id" to userIdSha,
-                    "locale" to ApiPrefs.effectiveLocale,
+                    "locale" to apiPrefs.effectiveLocale,
                 )
                 val accountData = mapOf(
                     "id" to account?.uuid,
