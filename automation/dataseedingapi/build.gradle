@@ -61,7 +61,7 @@ tasks.named('compileKotlin') {
         jvmTarget = '17'
     }
     dependsOn addPrivateData
-    dependsOn generateTestServiceApolloSources
+    dependsOn generateApolloSources
 }
 
 task customClean {

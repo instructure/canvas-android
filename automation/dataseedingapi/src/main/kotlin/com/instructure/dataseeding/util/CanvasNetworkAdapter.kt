@@ -17,7 +17,8 @@
 
 package com.instructure.dataseeding.util
 
-import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.network.okHttpClient
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -82,7 +83,7 @@ object CanvasNetworkAdapter {
     }
 
     fun getApolloClient(token: String): ApolloClient {
-        return ApolloClient.builder()
+        return ApolloClient.Builder()
             .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
             .okHttpClient(okHttpClientForApollo(token))
             .build()
