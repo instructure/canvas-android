@@ -34,7 +34,7 @@ import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
 import com.instructure.teacher.ui.utils.seedAssignments
 import com.instructure.teacher.ui.utils.seedData
@@ -44,7 +44,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class AssignmentE2ETest : TeacherTest() {
+class AssignmentE2ETest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -107,15 +107,14 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentSubmissionListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Filter by section (the ${course.name} course).")
-        assignmentSubmissionListPage.clickFilterBySection()
+        assignmentSubmissionListPage.clickFilterButton()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Filter By...' section dialog details displayed correctly. Filter by the '${course.name}' (course) section.")
-        assignmentSubmissionListPage.assertSectionFilterDialogDetails()
         assignmentSubmissionListPage.filterBySection(course.name)
+        assignmentSubmissionListPage.clickFilterDialogOk()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is displayed as we set some filter. Assert that the filter label text is the 'All Submissions' text plus the '${course.name}' course name.")
-        assignmentSubmissionListPage.assertDisplaysClearFilter()
-        assignmentSubmissionListPage.assertFilterLabelText("All Submissions, ${course.name}")
+        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
 
         Log.d(STEP_TAG, "Open '${student.name}' student's submission.")
         assignmentSubmissionListPage.clickSubmission(student)
@@ -125,10 +124,11 @@ class AssignmentE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Navigate back to the Assignment Submission List Page and clear the filter.")
         Espresso.pressBack()
-        assignmentSubmissionListPage.clearFilter()
+        assignmentSubmissionListPage.clickFilterButton()
+        assignmentSubmissionListPage.filterBySection(course.name)
+        assignmentSubmissionListPage.clickFilterDialogOk()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is NOT displayed as we just cleared the filter. Assert that the filter label text 'All Submission'.")
-        assignmentSubmissionListPage.assertClearFilterGone()
         assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
 
         Log.d(STEP_TAG,"Navigate back to Assignment List Page, open the '${assignment[0].name}' assignment and publish it. Click on Save.")
@@ -428,7 +428,7 @@ class AssignmentE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Assert that ${submissionUploadInfo.fileName} file. Navigate to Comments Tab and ${commentUploadInfo.fileName} comment attachment is displayed.")
         speedGraderPage.selectCommentsTab()
-        assignmentSubmissionListPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
+        speedGraderPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
     }
 
 }

@@ -17,15 +17,35 @@
 
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.ToDoManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradeableStudent
+import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.ToDo
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.intersectBy
+import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitApis
+import com.instructure.canvasapi2.utils.weave.awaitPaginated
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.inParallel
+import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.events.ToDoListUpdatedEvent
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter.Companion.makeGroupSubmissions
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.viewinterface.ToDoView
-import com.instructure.pandautils.blueprint.SyncPresenter
 import org.greenrobot.eventbus.EventBus
 
 class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {
@@ -158,4 +178,37 @@ class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {
     override fun compare(item1: ToDo, item2: ToDo) = if (item1.id == item2.id) 0 else -1
 
     private fun containsNull(oldItem: Any?, newItem: Any?) = oldItem == null || newItem == null
+
+    private fun makeGroupSubmissions(students: List<User>, groups: List<Group>, submissions: List<Submission>): List<GradeableStudentSubmission> {
+        val userMap = students.associateBy { it.id }
+        val groupAssignees = groups.map { GroupAssignee(it, it.users.map { userMap[it.id] ?: it }) }
+
+        // Set up individual student assignees, if any
+        val individualIds = students.map { it.id } - groupAssignees.flatMap { it.students.map { it.id } }
+        val individualAssignees = individualIds
+            .map { userMap[it] }
+            .filterNotNull()
+            .map { StudentAssignee(it) }
+
+        // Divide submissions into group and individual submissions
+        val (groupedSubmissions, individualSubmissions) = submissions.partition { it.group?.id ?: 0L != 0L }
+        val studentSubmissionMap = individualSubmissions.associateBy { it.userId }
+        val groupSubmissionMap = groupedSubmissions
+            .groupBy { it.group!!.id }
+            .mapValues {
+                it.value.reduce { acc, submission ->
+                    acc.submissionComments = acc.submissionComments.intersectBy(submission.submissionComments) {
+                        "${it.authorId}|${it.comment}|${it.createdAt?.time}"
+                    }
+                    acc
+                }
+            }
+            .toMap()
+
+        // Set up GradeableStudentSubmissions
+        val groupSubs = groupAssignees.map { GradeableStudentSubmission(it, groupSubmissionMap[it.group.id]) }
+        val individualSubs = individualAssignees.map { GradeableStudentSubmission(it, studentSubmissionMap[it.student.id]) }
+
+        return groupSubs + individualSubs
+    }
 }

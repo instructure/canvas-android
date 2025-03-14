@@ -63,9 +63,9 @@ fun RecipientChip(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             UserAvatar(
-                recipient.avatarURL,
-                recipient.name ?: "",
-                Modifier
+                imageUrl = recipient.avatarURL,
+                name = recipient.name ?: "",
+                modifier = Modifier
                     .size(30.dp)
                     .padding(2.dp)
             )
