@@ -19,10 +19,15 @@ package com.instructure.student.features.lti
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.isUser
+import com.instructure.student.R
 
-class StudentLtiLaunchFragmentBehavior(canvasContext: CanvasContext) : LtiLaunchFragmentBehavior {
+class StudentLtiLaunchFragmentBehavior(canvasContext: CanvasContext, activity: FragmentActivity) : LtiLaunchFragmentBehavior {
     override val toolbarColor: Int = canvasContext.color
+
+    override val toolbarTextColor: Int = if (canvasContext.isUser) ThemePrefs.primaryTextColor else activity.getColor(R.color.textLightest)
 
     override fun closeLtiLaunchFragment(activity: FragmentActivity) {
         activity.supportFragmentManager.popBackStack()

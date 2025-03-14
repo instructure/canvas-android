@@ -63,6 +63,7 @@ import com.instructure.teacher.adapters.LongNameArrayAdapter
 import com.instructure.teacher.databinding.FragmentEditFilefolderBinding
 import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
 import com.instructure.teacher.factory.EditFilePresenterFactory
+import com.instructure.teacher.interfaces.ConfirmDeleteFileCallback
 import com.instructure.teacher.presenters.EditFileFolderPresenter
 import com.instructure.teacher.utils.formatOrDoubleDash
 import com.instructure.teacher.utils.setupCloseButton
@@ -76,7 +77,7 @@ import java.util.Locale
 class EditFileFolderFragment : BasePresenterFragment<
         EditFileFolderPresenter,
         EditFileView,
-        FragmentEditFilefolderBinding>(), EditFileView {
+        FragmentEditFilefolderBinding>(), EditFileView, ConfirmDeleteFileCallback {
 
     private var currentFileOrFolder: FileFolder by ParcelableArg()
     private var usageRightsEnabled: Boolean by BooleanArg()
@@ -94,8 +95,6 @@ class EditFileFolderFragment : BasePresenterFragment<
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
 
     private lateinit var updateFileFolder: FileFolder
-
-    val deleteCallback = { presenter.deleteFileFolder() }
 
     private val dateClickListener: (View, Boolean) -> Unit = { view, isLockDate ->
         DatePickerDialogFragment.getInstance(requireActivity().supportFragmentManager, if (isLockDate) lockDate else unlockDate) { year, month, dayOfMonth ->
@@ -185,7 +184,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         setupUsageRights()
 
         deleteWrapper.setOnClickListener {
-            ConfirmDeleteFileFolderDialog.show(childFragmentManager, presenter.isFile)
+            ConfirmDeleteFileFolderDialog.show(childFragmentManager, currentFileOrFolder)
         }
 
         if (!presenter.isFile) {
@@ -463,6 +462,9 @@ class EditFileFolderFragment : BasePresenterFragment<
      */
     private fun setupTimeCalendar(hour: Int, min: Int, date: Date? = null): Date =
             Calendar.getInstance().apply { time = date ?: Date(); set(Calendar.HOUR_OF_DAY, hour); set(Calendar.MINUTE, min) }.time
+
+    override val onConfirmDeleteFile: (fileFolder: FileFolder) -> Unit
+        get() = { presenter.deleteFileFolder() }
 
     companion object {
         private const val CURRENT_FILE_OR_FOLDER = "currentFileOrFolder"

@@ -18,13 +18,23 @@ package com.instructure.parentapp.ui.pages
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.performClick
 
 class SummaryPage(private val composeTestRule: ComposeTestRule) {
+
+    fun assertItemDisplayed(itemName: String) {
+        composeTestRule.onNode(hasTestTag("summaryItemName") and hasText(itemName), useUnmergedTree = true).assertIsDisplayed()
+    }
+
     fun assertItemDisplayed(itemName: String, date: String) {
         composeTestRule.onNode(hasText(itemName).and(hasAnySibling(hasText(date)))).assertIsDisplayed()
+    }
+
+    fun selectItem(itemName: String) {
+        composeTestRule.onNode(hasTestTag("summaryItemName") and hasText(itemName), useUnmergedTree = true).performClick()
     }
 
     fun selectItem(itemName: String, date: String) {

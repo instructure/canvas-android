@@ -317,10 +317,22 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
     }
 
     @Test
-    fun assertAlertDialogPopsOnExit() {
+    fun assertAlertDialogNotPopsOnExitWithoutModification() {
         val data = initData()
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
+
+        inboxComposePage.pressBackButton()
+        inboxPage.assertInboxEmpty()
+    }
+
+    @Test
+    fun assertAlertDialogPopsOnExitWithModification() {
+        val data = initData()
+        goToInboxCompose(data)
+        composeTestRule.waitForIdle()
+
+        inboxComposePage.typeBody("Test Body")
 
         inboxComposePage.pressBackButton()
         inboxComposePage.assertAlertDialog()
