@@ -16,43 +16,20 @@
 package com.instructure.teacher.ui.pages
 
 
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.Visibility
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withChild
-import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
-import com.instructure.canvas.espresso.withCustomConstraints
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.WaitForViewWithText
-import com.instructure.espresso.actions.ForceClick
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.getStringFromResource
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withDescendant
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withText
-import com.instructure.teacher.R
-import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.Matchers
 
 /**
  * Represents a page for managing assignment submissions.
@@ -62,28 +39,14 @@ import org.hamcrest.Matchers
  *
  * @constructor Creates an instance of the `AssignmentSubmissionListPage` class.
  */
-class AssignmentSubmissionListPage : BasePage() {
-
-    private val assignmentSubmissionListToolbar by OnViewWithId(R.id.assignmentSubmissionListToolbar)
-    private val assignmentSubmissionRecyclerView by OnViewWithId(R.id.submissionsRecyclerView)
-    private val assignmentSubmissionListFilterLabel by OnViewWithId(R.id.filterTitle)
-    private val assignmentSubmissionClearFilter by WaitForViewWithId(R.id.clearFilterTextView, false)
-    private val assignmentSubmissionFilterButton by OnViewWithId(R.id.submissionFilter, false)
-    private val assignmentSubmissionFilterBySubmissionsButton by WaitForViewWithText(R.string.filterSubmissionsLowercase)
-    private val assignmentSubmissionFilterBySectionButton by WaitForViewWithText(R.string.filterBySection)
-    private val assignmentSubmissionStatus by OnViewWithId(R.id.submissionStatus)
-    private val addMessageFAB by OnViewWithId(R.id.addMessage)
-    private val enableAnonymousGradingMenuItem by WaitForViewWithText(R.string.turnOnAnonymousGrading)
-    private val disableAnonymousGradingMenuItem by WaitForViewWithText(R.string.turnOffAnonymousGrading)
-    private val anonStatusView by WaitForViewWithId(R.id.anonGradingStatusView)
-    private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
+class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     /**
      * Assert displays no submissions view
      *
      */
     fun assertDisplaysNoSubmissionsView() {
-        onView(withText("No items") + withAncestor(R.id.emptyPandaView)).assertDisplayed()
+        composeTestRule.onNodeWithText("No submissions").assertIsDisplayed()
     }
 
     /**
@@ -92,7 +55,9 @@ class AssignmentSubmissionListPage : BasePage() {
      * @param canvasUser
      */
     fun assertHasStudentSubmission(canvasUser: CanvasUserApiModel) {
-        waitForViewWithText(canvasUser.name).assertDisplayed()
+        composeTestRule.onNodeWithText(canvasUser.name, useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     /**
@@ -100,7 +65,7 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun assertFilterLabelAllSubmissions() {
-        assignmentSubmissionListFilterLabel.assertHasText(R.string.all_submissions)
+        composeTestRule.onNodeWithText("All submissions").assertIsDisplayed()
     }
 
     /**
@@ -108,48 +73,7 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun clickOnPostPolicies() {
-        waitForViewWithId(R.id.menuPostPolicies).click()
-    }
-
-    /**
-     * Assert displays clear filter
-     *
-     */
-    fun assertDisplaysClearFilter() {
-        assignmentSubmissionClearFilter.assertDisplayed()
-    }
-
-    /**
-     * Assert clear filter gone
-     *
-     */
-    fun assertClearFilterGone() {
-        onView(withId(R.id.clearFilterTextView)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-    }
-
-    /**
-     * Clear the existing filter by clicking on the 'Clear filter' button.
-     */
-    fun clearFilter() {
-        assignmentSubmissionClearFilter.perform(ForceClick())
-    }
-
-    /**
-     * Assert student has grade
-     *
-     * @param grade
-     */
-    fun assertStudentHasGrade(grade: String) {
-        onView(withId(R.id.submissionGrade)).assertHasText(grade)
-    }
-
-    /**
-     * Click on student avatar.
-     *
-     * @param studentName
-     */
-    fun clickOnStudentAvatar(studentName: String) {
-        onView(withId(R.id.studentAvatar) + hasSibling(withChild(withId(R.id.studentName) + withText(studentName)))).click()
+        composeTestRule.onNodeWithTag("postPolicyButton").performClick()
     }
 
     /**
@@ -157,23 +81,7 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun clickFilterButton() {
-        assignmentSubmissionFilterButton.click()
-    }
-
-    /**
-     * Click filter submissions (types)
-     *
-     */
-    fun clickFilterSubmissions() {
-        assignmentSubmissionFilterBySubmissionsButton.click()
-    }
-
-    /**
-     * Click filter section(s)
-     *
-     */
-    fun clickFilterBySection() {
-        assignmentSubmissionFilterBySectionButton.click()
+        composeTestRule.onNodeWithTag("filterButton").performClick()
     }
 
     /**
@@ -182,8 +90,9 @@ class AssignmentSubmissionListPage : BasePage() {
      * @param student
      */
     fun clickSubmission(student: CanvasUserApiModel) {
-        waitForMatcherWithRefreshes(withText(student.name))
-        waitForViewWithText(student.name).click()
+        composeTestRule.onNodeWithText(student.name, useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
     }
 
     /**
@@ -192,9 +101,12 @@ class AssignmentSubmissionListPage : BasePage() {
      * @param student
      */
     fun clickSubmission(student: User) {
-        waitForMatcherWithRefreshes(withId(R.id.submissionsRecyclerView))
-        scrollRecyclerView(R.id.submissionsRecyclerView, student.name)
-        waitForViewWithText(student.name).click()
+        composeTestRule.onNode(
+            hasTestTag("submissionListItem").and(hasAnyChild(hasText(student.name))),
+            useUnmergedTree = true
+        )
+            .performScrollTo()
+            .performClick()
     }
 
     /**
@@ -202,7 +114,9 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun clickFilterSubmittedLate() {
-        waitForView(withText(R.string.submitted_late)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
+        composeTestRule.onNodeWithText("Submitted Late", useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
     }
 
     /**
@@ -210,16 +124,13 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun clickFilterUngraded() {
-        waitForView(withText(R.string.not_graded)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
-    }
-
-    /**
-     * Assert filter label text
-     *
-     * @param text
-     */
-    fun assertFilterLabelText(text: Int) {
-        assignmentSubmissionListFilterLabel.assertHasText(text)
+        composeTestRule.onNode(
+            hasTestTag("filterItem")
+                .and(hasAnyChild(hasText("Needs Grading"))),
+            useUnmergedTree = true
+        )
+            .performScrollTo()
+            .performClick()
     }
 
     /**
@@ -228,7 +139,7 @@ class AssignmentSubmissionListPage : BasePage() {
      * @param text
      */
     fun assertFilterLabelText(text: String) {
-        assignmentSubmissionListFilterLabel.assertHasText(text)
+        composeTestRule.onNodeWithText(text).assertIsDisplayed()
     }
 
 
@@ -238,7 +149,8 @@ class AssignmentSubmissionListPage : BasePage() {
      * @param expectedCount
      */
     fun assertHasSubmission(expectedCount: Int = 1) {
-        assignmentSubmissionRecyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
+        composeTestRule.onAllNodes(hasTestTag("submissionListItem"), useUnmergedTree = true)
+            .assertCountEquals(expectedCount)
     }
 
     /**
@@ -246,7 +158,8 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun assertHasNoSubmission() {
-        assignmentSubmissionRecyclerView.check(RecyclerViewItemCountAssertion(0))
+        composeTestRule.onAllNodes(hasTestTag("submissionListItem"), useUnmergedTree = true)
+            .assertCountEquals(0)
     }
 
     /**
@@ -254,7 +167,9 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun assertSubmissionStatusMissing() {
-        assignmentSubmissionStatus.assertHasText(R.string.submission_status_missing)
+        composeTestRule.onNodeWithText("Missing", useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     /**
@@ -262,7 +177,9 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun assertSubmissionStatusSubmitted() {
-        assignmentSubmissionStatus.assertHasText(R.string.submission_status_submitted)
+        composeTestRule.onNodeWithText("Submitted", useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     /**
@@ -270,7 +187,9 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun assertSubmissionStatusNotSubmitted() {
-        assignmentSubmissionStatus.assertHasText(R.string.submission_status_not_submitted)
+        composeTestRule.onNodeWithText("Not Submitted", useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     /**
@@ -278,7 +197,9 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun assertSubmissionStatusLate() {
-        assignmentSubmissionStatus.assertHasText(R.string.submission_status_late)
+        composeTestRule.onNodeWithText("Late", useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     /**
@@ -286,123 +207,58 @@ class AssignmentSubmissionListPage : BasePage() {
      *
      */
     fun clickAddMessage() {
-        addMessageFAB.click()
+        composeTestRule.onNodeWithTag("addMessageButton")
+            .performClick()
     }
 
-    /**
-     * Assert displays enable anonymous option
-     *
-     */
-    fun assertDisplaysEnableAnonymousOption() {
-        enableAnonymousGradingMenuItem.assertDisplayed()
-    }
-
-    /**
-     * Assert displays disable anonymous option
-     *
-     */
-    fun assertDisplaysDisableAnonymousOption() {
-        disableAnonymousGradingMenuItem.assertDisplayed()
-    }
-    /**
-
-    Clicks on the "Enable Anonymous Grading" option.
-     */
-    fun clickAnonymousOption() {
-        enableAnonymousGradingMenuItem.click()
-    }
-    /**
-
-    Asserts that the "Anonymous Grading" status view is displayed.
-     */
-    fun assertDisplaysAnonymousGradingStatus() {
-        anonStatusView.assertHasText(R.string.anonymousGradingLabel)
-    }
-    /**
-
-    Asserts that the "Anonymous Name" is displayed.
-     */
-    fun assertDisplaysAnonymousName() {
-        waitForViewWithId(R.id.studentName).assertHasText(R.string.anonymousStudentLabel)
-    }
     /**
 
     Clicks on the "OK" button in the filter dialog.
      */
     fun clickFilterDialogOk() {
-        waitForViewWithText(android.R.string.ok).click()
-    }
-    /**
-     *
-    * Asserts that the file with the given filename is displayed.
-    * @param fileName The name of the file.
-     */
-    fun assertFileDisplayed(fileName: String) {
-        val matcher =
-            Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
-        Espresso.onView(matcher).assertDisplayed()
-    }
-    /**
-
-    Asserts that the comment attachment with the given filename and display name is displayed.
-    @param fileName The name of the attachment file.
-    @param displayName The display name of the attachment.
-     */
-    fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
-        val commentMatcher = Matchers.allOf(
-            ViewMatchers.withId(R.id.commentHolder),
-            ViewMatchers.hasDescendant(
-                Matchers.allOf(
-                    ViewMatchers.withText(displayName),
-                    ViewMatchers.withId(R.id.userNameTextView)
-                )
-            ),
-            ViewMatchers.hasDescendant(
-                Matchers.allOf(
-                    ViewMatchers.withText(fileName),
-                    ViewMatchers.withId(R.id.attachmentNameTextView)
-                )
-            )
-        )
-        onView(commentMatcher).assertDisplayed()
+        composeTestRule.onNodeWithText("Done")
+            .performClick()
     }
 
-    /**
-     * Asserts that the grades are hidden for the student with the given name.
-     *
-     * @param studentName The name of the student.
-     */
+    fun filterBySection(name: String) {
+        composeTestRule.onNodeWithText(name, useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
+    }
+
     fun assertGradesHidden(studentName: String) {
-        onView(
-            allOf(
-                withId(R.id.studentName),
-                withText(studentName),
-                withAncestor(
-                    allOf(
-                        withId(R.id.submissionsRecyclerView),
-                        withDescendant(withId(R.id.hiddenIcon))
+        composeTestRule.onNode(
+            hasTestTag("hiddenIcon").and(
+                hasParent(
+                    hasTestTag("submissionListItem").and(
+                        hasAnyChild(hasText(studentName))
                     )
                 )
-            )
-        ).check(matches(isDisplayed()))
+            ), useUnmergedTree = true
+        )
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
-    /**
-     * Assert the 'Filter By..' (section) dialog details like title, subtitle, buttons.
-     */
-    fun assertSectionFilterDialogDetails() {
-        waitForView(withId(R.id.alertTitle) + withText(getStringFromResource(R.string.filterBy)) + withAncestor(R.id.topPanel)).assertDisplayed()
-        onView(withText(getStringFromResource(R.string.sections)) + withAncestor(R.id.customPanel)).assertDisplayed()
-        onView(withId(android.R.id.button2) + withText(getStringFromResource(R.string.cancel)) + withAncestor(R.id.buttonPanel)).assertDisplayed()
-        onView(withId(android.R.id.button1) + withText(getStringFromResource(R.string.ok)) + withAncestor(R.id.buttonPanel)).assertDisplayed()
+    fun clickFilterNotSubmitted() {
+        composeTestRule.onNodeWithText("Not Submitted", useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
     }
 
-    /**
-     * Filter by the given section name.
-     * @param sectionName: The section to filter by.
-     */
-    fun filterBySection(sectionName: String) {
-        waitForView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(sectionName) + withAncestor(R.id.customPanel))).click()
-        onView(withId(android.R.id.button1) + withText(getStringFromResource(R.string.ok)) + withAncestor(R.id.buttonPanel)).click()
+    fun clickOnStudentAvatar(name: String) {
+        composeTestRule.onNode(
+            hasTestTag("userAvatar").and(
+                hasParent(
+                    hasTestTag("submissionListItem").and(
+                        hasAnyChild(
+                            hasText(name)
+                        )
+                    )
+                )
+            ), useUnmergedTree = true
+        )
+            .performScrollTo()
+            .performClick()
     }
 }

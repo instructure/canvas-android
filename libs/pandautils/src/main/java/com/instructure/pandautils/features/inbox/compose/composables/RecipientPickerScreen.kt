@@ -314,9 +314,9 @@ private fun RoleRow(
             .padding(horizontal = 8.dp, vertical = 16.dp)
     ) {
         UserAvatar(
-            null,
-            name,
-            Modifier
+            imageUrl = null,
+            name = name,
+            modifier = Modifier
                 .size(36.dp)
                 .padding(2.dp)
         )
@@ -363,9 +363,9 @@ private fun RecipientRow(
             .padding(horizontal = 8.dp, vertical = 16.dp)
     ) {
         UserAvatar(
-            recipient.avatarURL,
-            recipient.name ?: "",
-            Modifier
+            imageUrl = recipient.avatarURL,
+            name = recipient.name ?: "",
+            modifier = Modifier
                 .size(36.dp)
                 .padding(2.dp)
         )

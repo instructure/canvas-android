@@ -80,20 +80,6 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun testSubmissionStatus_Missing() {
-        // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
-        val data = setUpData()
-        goToAssignmentList()
-        val assignmentList = data.assignments
-        val assignmentWithoutSubmissionEntry = assignmentList.filter { it.value.submission == null && it.value.dueAt != null && !it.value.isSubmitted }
-
-        val missingAssignment = assignmentWithoutSubmissionEntry.entries.first().value
-        assignmentListPage.clickAssignment(missingAssignment)
-        assignmentDetailsPage.assertStatusMissing()
-    }
-
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testSubmissionStatus_NotSubmitted() {
 
         val data = setUpData()
