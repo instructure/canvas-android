@@ -15,7 +15,7 @@ object CommentLibraryApi {
         val mutationCall = CreateCommentMutation(courseId.toString(), comment)
 
         CoroutineScope(Dispatchers.IO).launch {
-            apolloClient.mutation(mutationCall).execute()
+            apolloClient.mutation(mutationCall).executeV3()
         }
     }
 }

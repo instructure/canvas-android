@@ -15,8 +15,8 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.cache.http.httpCache
+import com.apollographql.apollo.api.Optional
+import com.apollographql.apollo.cache.http.httpCache
 import com.instructure.canvasapi2.InboxSettingsQuery
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.UpdateInboxSettingsMutation

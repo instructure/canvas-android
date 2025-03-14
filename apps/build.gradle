@@ -28,7 +28,7 @@ buildscript {
 
     dependencies {
         classpath Plugins.ANDROID_GRADLE_TOOLS
-        classpath Plugins.APOLLO_3
+        classpath Plugins.APOLLO
         classpath Plugins.GOOGLE_SERVICES
         classpath Plugins.KOTLIN
         classpath Plugins.FIREBASE_CRASHLYTICS

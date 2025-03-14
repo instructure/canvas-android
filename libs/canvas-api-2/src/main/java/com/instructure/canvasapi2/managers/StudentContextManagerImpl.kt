@@ -15,7 +15,7 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.StudentContextCardQuery
 

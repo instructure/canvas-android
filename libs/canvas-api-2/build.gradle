@@ -16,7 +16,7 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.apollographql.apollo3'
+apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'au.com.dius.pact'
@@ -81,10 +81,12 @@ android {
 }
 
 apollo {
-    packageName.set("com.instructure.canvasapi2")
-    mapScalar("URL", "kotlin.String")
-    mapScalar("DateTime", "java.util.Date")
-    mapScalar("ID", "kotlin.String")
+    service("canvas") {
+        packageName.set("com.instructure.canvasapi2")
+        mapScalar("URL", "kotlin.String")
+        mapScalar("DateTime", "java.util.Date")
+        mapScalar("ID", "kotlin.String")
+    }
 }
 
 dependencies {
@@ -117,13 +119,13 @@ dependencies {
     /* GraphQL */
     /* NOTE: Newer versions of OkHttp affect the encoding of square brackets in @Query names. We're excluding the
     * okhttp module here to avoid updating to a newer version until we're ready to handle the change. */
-    api(Libs.APOLLO_RUNTIME_3) {
+    api(Libs.APOLLO_RUNTIME) {
         exclude module: 'okhttp'
     }
-    api (Libs.APOLLO_API_3) {
+    api (Libs.APOLLO_API) {
         exclude module: 'okhttp'
     }
-    implementation (Libs.APOLLO_HTTP_CACHE_3) {
+    implementation (Libs.APOLLO_HTTP_CACHE) {
         exclude module: 'okhttp'
     }
 

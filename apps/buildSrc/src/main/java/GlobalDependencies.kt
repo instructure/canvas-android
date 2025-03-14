@@ -23,8 +23,7 @@ object Versions {
     const val GOOGLE_SERVICES = "4.4.2"
 
     /* Others */
-    const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
-    const val APOLLO_3 = "3.8.4"
+    const val APOLLO = "4.1.1"
     const val PSPDFKIT = "2024.3.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
@@ -54,9 +53,9 @@ object Libs {
     const val KOTLIN_COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.KOTLIN_COROUTINES}"
 
     /* Apollo/GraphQL */
-    const val APOLLO_RUNTIME_3 = "com.apollographql.apollo3:apollo-runtime:${Versions.APOLLO_3}"
-    const val APOLLO_API_3 = "com.apollographql.apollo3:apollo-api:${Versions.APOLLO_3}"
-    const val APOLLO_HTTP_CACHE_3 = "com.apollographql.apollo3:apollo-http-cache:${Versions.APOLLO_3}"
+    const val APOLLO_RUNTIME = "com.apollographql.apollo:apollo-runtime:${Versions.APOLLO}"
+    const val APOLLO_API = "com.apollographql.apollo:apollo-api:${Versions.APOLLO}"
+    const val APOLLO_HTTP_CACHE = "com.apollographql.apollo:apollo-http-cache:${Versions.APOLLO}"
 
     /* Androidx libraries */
     const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.9.0"
@@ -198,7 +197,6 @@ object Plugins {
     const val FIREBASE_CRASHLYTICS =  "com.google.firebase:firebase-crashlytics-gradle:2.9.2"
     const val ANDROID_GRADLE_TOOLS = "com.android.tools.build:gradle:${Versions.ANDROID_GRADLE_TOOLS}"
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
-    const val APOLLO_3 = "com.apollographql.apollo3:apollo-gradle-plugin:${Versions.APOLLO_3}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"

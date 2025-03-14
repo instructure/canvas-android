@@ -15,19 +15,19 @@
  */
 package com.instructure.canvasapi2
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Adapter
-import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.CustomScalarAdapters
-import com.apollographql.apollo3.api.Mutation
-import com.apollographql.apollo3.api.Query
-import com.apollographql.apollo3.api.json.JsonReader
-import com.apollographql.apollo3.api.json.JsonWriter
-import com.apollographql.apollo3.cache.http.HttpFetchPolicy
-import com.apollographql.apollo3.cache.http.httpCache
-import com.apollographql.apollo3.cache.http.httpExpireTimeout
-import com.apollographql.apollo3.cache.http.httpFetchPolicy
-import com.apollographql.apollo3.network.okHttpClient
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Adapter
+import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.api.CustomScalarAdapters
+import com.apollographql.apollo.api.Mutation
+import com.apollographql.apollo.api.Query
+import com.apollographql.apollo.api.json.JsonReader
+import com.apollographql.apollo.api.json.JsonWriter
+import com.apollographql.apollo.cache.http.HttpFetchPolicy
+import com.apollographql.apollo.cache.http.httpCache
+import com.apollographql.apollo.cache.http.httpExpireTimeout
+import com.apollographql.apollo.cache.http.httpFetchPolicy
+import com.apollographql.apollo.network.okHttpClient
 import com.instructure.canvasapi2.type.DateTime
 import com.instructure.canvasapi2.type.GraphQLID
 import com.instructure.canvasapi2.type.URL
@@ -120,7 +120,7 @@ class QLClientConfig {
             val config = QLClientConfig()
             if (forceNetwork) config.fetchPolicy = HttpFetchPolicy.NetworkOnly
             config.block()
-            val result = config.buildClient().query(query).execute()
+            val result = config.buildClient().query(query).executeV3()
             return result
         }
 
@@ -130,7 +130,7 @@ class QLClientConfig {
         ): ApolloResponse<DATA> {
             val config = QLClientConfig()
             config.block()
-            val result = config.buildClient().mutation(mutation).execute()
+            val result = config.buildClient().mutation(mutation).executeV3()
             return result
         }
     }
