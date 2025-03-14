@@ -15,6 +15,7 @@ object CommentLibraryApi {
         val mutationCall = CreateCommentMutation(courseId.toString(), comment)
 
         CoroutineScope(Dispatchers.IO).launch {
+            // Since we handle errors with exceptions, we keep the compat call of execute because the new doesn't throw exceptions
             apolloClient.mutation(mutationCall).executeV3()
         }
     }
