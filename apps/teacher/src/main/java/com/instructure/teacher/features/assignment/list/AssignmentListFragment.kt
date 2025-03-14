@@ -48,7 +48,7 @@ import com.instructure.teacher.databinding.FragmentAssignmentListBinding
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.factory.AssignmentListPresenterFactory
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.fragments.QuizDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
@@ -133,8 +133,8 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     override fun createAdapter(): AssignmentAdapter {
         return AssignmentAdapter(requireContext(), presenter, canvasContext.color) { assignment ->
             if (pairedWithSubmissions) {
-                val args = AssignmentSubmissionListFragment.makeBundle(assignment)
-                RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, canvasContext, args))
+                val args = SubmissionListFragment.makeBundle(assignment)
+                RouteMatcher.route(requireActivity(), Route(null, SubmissionListFragment::class.java, canvasContext, args))
             } else {
                 if (assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
                     val args = QuizDetailsFragment.makeBundle(assignment.quizId)

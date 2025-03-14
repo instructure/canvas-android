@@ -20,6 +20,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'io.heap.gradle'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
