@@ -15,16 +15,18 @@
  */
 package com.instructure.canvasapi2
 
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.CustomTypeAdapter
-import com.apollographql.apollo.api.CustomTypeValue
-import com.apollographql.apollo.api.Mutation
-import com.apollographql.apollo.api.Query
-import com.apollographql.apollo.api.cache.http.HttpCachePolicy
-import com.apollographql.apollo.cache.http.ApolloHttpCache
-import com.apollographql.apollo.cache.http.DiskLruHttpCacheStore
-import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.type.CustomType
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Adapter
+import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.CustomScalarAdapters
+import com.apollographql.apollo3.api.Mutation
+import com.apollographql.apollo3.api.Query
+import com.apollographql.apollo3.api.json.JsonReader
+import com.apollographql.apollo3.api.json.JsonWriter
+import com.apollographql.apollo3.network.okHttpClient
+import com.instructure.canvasapi2.type.DateTime
+import com.instructure.canvasapi2.type.GraphQLID
+import com.instructure.canvasapi2.type.URL
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
@@ -49,31 +51,28 @@ class QLClientConfig {
         }
         .build()
 
-    var cachePolicy: HttpCachePolicy.Policy = cacheFirstPolicy
-
-    /** Whether the request should be made without the authentication header. Default it false. */
-    @Suppress("MemberVisibilityCanBePrivate")
-    var ignoreAuthToken = false
+//    var cachePolicy: HttpCachePolicy.Policy = cacheFirstPolicy
 
     /** Builds a new [ApolloClient] based on the current config values. */
     fun buildClient(): ApolloClient {
-        val builder = ApolloClient.builder()
+        val builder = ApolloClient.Builder()
             .serverUrl(url)
             .okHttpClient(httpClient)
-            .addCustomTypeAdapter(CustomType.DATETIME, timeAdapter)
-            .addCustomTypeAdapter(CustomType.URL, stringAdapter)
-            .addCustomTypeAdapter(CustomType.ID, stringAdapter)
-            .httpCache(cache)
-            .defaultHttpCachePolicy(cachePolicy)
+            .addCustomScalarAdapter(DateTime.type, timeAdapter)
+            .addCustomScalarAdapter(URL.type, stringAdapter)
+            .addCustomScalarAdapter(GraphQLID.type, stringAdapter)
+        //.httpCache(cache)
+        //.defaultHttpCachePolicy(cachePolicy)
 
+//        val builder = ApolloClient.builder()
+//            .serverUrl(url)
+//            .okHttpClient(httpClient)
+//            .addCustomTypeAdapter(CustomType.DATETIME, timeAdapter)
+//            .addCustomTypeAdapter(CustomType.URL, stringAdapter)
+//            .addCustomTypeAdapter(CustomType.ID, stringAdapter)
+//            .httpCache(cache)
+//            .defaultHttpCachePolicy(cachePolicy)
 
-        /* The default httpClient has a request interceptor which automatically adds the authentication header, but
-        this behavior can be disabled if a RestParams object attached to the request specifies otherwise. */
-        if (ignoreAuthToken) builder.callFactory {
-            val restParams = RestParams(shouldIgnoreToken = ignoreAuthToken)
-            val request = it.newBuilder().tag(restParams).build()
-            httpClient.newCall(request)
-        }
 
         return builder.build()
     }
@@ -87,42 +86,59 @@ class QLClientConfig {
         /** Cache configuration */
         private const val CACHE_SIZE = 10L * 1024 * 1024 // 10MB disk cache
         private val cacheFile = File(ContextKeeper.appContext.cacheDir, "apolloCache/")
-        private val cache = ApolloHttpCache(DiskLruHttpCacheStore(cacheFile, CACHE_SIZE))
-        private val cacheFirstPolicy: HttpCachePolicy.ExpirePolicy = HttpCachePolicy.CACHE_FIRST.expireAfter(1, TimeUnit.HOURS)
+//        private val cache = ApolloHttpCache(DiskLruHttpCacheStore(cacheFile, CACHE_SIZE))
+//        private val cacheFirstPolicy: HttpCachePolicy.ExpirePolicy = HttpCachePolicy.CACHE_FIRST.expireAfter(1, TimeUnit.HOURS)
 
         /** Type adapter for Dates */
-        private val timeAdapter: CustomTypeAdapter<Date?> = object : CustomTypeAdapter<Date?> {
-            override fun encode(value: Date?): CustomTypeValue<*> = value?.let { CustomTypeValue.GraphQLString(it.toApiString().orEmpty()) } ?: CustomTypeValue.GraphQLNull
-            override fun decode(value: CustomTypeValue<*>) = value.value.toString().toDate()
+        private val timeAdapter: Adapter<Date?> = object : Adapter<Date?> {
+            override fun fromJson(reader: JsonReader, customScalarAdapters: CustomScalarAdapters): Date? =
+                if (reader.peek() == JsonReader.Token.NULL) {
+                    reader.nextNull()
+                    null
+                } else {
+                    reader.nextString().toDate()
+                }
+
+            override fun toJson(writer: JsonWriter, customScalarAdapters: CustomScalarAdapters, value: Date?) {
+                value?.let { writer.value(it.toApiString()) } ?: writer.nullValue()
+            }
         }
 
         /** Type adapter for fields that should be kept as Strings (e.g. Urls and IDs) */
-        private val stringAdapter: CustomTypeAdapter<String?> = object : CustomTypeAdapter<String?> {
-            override fun encode(value: String?) = value?.let { CustomTypeValue.GraphQLString(it) } ?: CustomTypeValue.GraphQLNull
-            override fun decode(value: CustomTypeValue<*>) = value.value.toString()
+        private val stringAdapter: Adapter<String?> = object : Adapter<String?> {
+            override fun fromJson(reader: JsonReader, customScalarAdapters: CustomScalarAdapters) =
+                if (reader.peek() == JsonReader.Token.NULL) {
+                    reader.nextNull()
+                    null
+                } else {
+                    reader.nextString()
+                }
+
+            override fun toJson(writer: JsonWriter, customScalarAdapters: CustomScalarAdapters, value: String?) {
+                value?.let { writer.value(it) } ?: writer.nullValue()
+            }
         }
 
+        suspend fun <DATA : Query.Data, T : Query<DATA>> enqueueQuery(
+            query: T,
+            forceNetwork: Boolean = false,
+            block: QLClientConfig.() -> Unit = {}
+        ): ApolloResponse<DATA> {
+            val config = QLClientConfig()
+//            if (forceNetwork) config.cachePolicy = HttpCachePolicy.NETWORK_ONLY
+            config.block()
+            val result = config.buildClient().query(query).execute()
+            return result
+        }
+
+        suspend fun <DATA : Mutation.Data, T : Mutation<DATA>> enqueueMutation(
+            mutation: T,
+            block: QLClientConfig.() -> Unit = {}
+        ): ApolloResponse<DATA> {
+            val config = QLClientConfig()
+            config.block()
+            val result = config.buildClient().mutation(mutation).execute()
+            return result
+        }
     }
-
-}
-
-/**
- * Calls the specified function [block] with a [QLClientConfig] instance as its receiver and enqueues the provided [Query] request.
- */
-fun <DATA, T : Query<*, DATA, *>> QLCallback<DATA>.enqueueQuery(query: T, forceNetwork: Boolean = false, block: QLClientConfig.() -> Unit = {} ) {
-    val config = QLClientConfig()
-    if (forceNetwork) config.cachePolicy = HttpCachePolicy.NETWORK_ONLY
-    config.block()
-    val call = config.buildClient().query(query)
-    addCall(call).enqueue(this)
-}
-
-/**
- * Calls the specified function [block] with a [QLClientConfig] instance as its receiver and enqueues the provided [Mutation] request.
- */
-fun <DATA, T : Mutation<*, DATA, *>> QLCallback<DATA>.enqueueMutation(mutation: T, block: QLClientConfig.() -> Unit = {} ) {
-    val builder = QLClientConfig()
-    builder.block()
-    val call = builder.buildClient().mutate(mutation)
-    addCall(call).enqueue(this)
 }

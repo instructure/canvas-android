@@ -16,54 +16,42 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.instructure.canvasapi2.*
-import com.instructure.canvasapi2.utils.weave.awaitQL
+import com.apollographql.apollo3.api.Optional
+import com.instructure.canvasapi2.HideAssignmentGradesForSectionsMutation
+import com.instructure.canvasapi2.HideAssignmentGradesMutation
+import com.instructure.canvasapi2.PostAssignmentGradesForSectionsMutation
+import com.instructure.canvasapi2.PostAssignmentGradesMutation
+import com.instructure.canvasapi2.QLClientConfig
 
 object PostPolicyManager {
 
-    suspend fun hideGradesAsync(assignmentId: Long) = awaitQL<HideAssignmentGradesMutation.Data> {
-        val mutation = HideAssignmentGradesMutation.builder()
-            .assignmentId(assignmentId.toString())
-            .build()
-
-        it.enqueueMutation(mutation)
+    suspend fun hideGradesAsync(assignmentId: Long): HideAssignmentGradesMutation.Data {
+        val mutation = HideAssignmentGradesMutation(assignmentId.toString())
+        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
     }
 
     suspend fun hideGradesForSectionsAsync(
         assignmentId: Long,
         sections: List<String>
-    ) = awaitQL<HideAssignmentGradesForSectionsMutation.Data> {
-        val mutation = HideAssignmentGradesForSectionsMutation.builder()
-            .assignmentId(assignmentId.toString())
-            .sectionIds(sections)
-            .build()
-
-        it.enqueueMutation(mutation)
+    ): HideAssignmentGradesForSectionsMutation.Data {
+        val mutation = HideAssignmentGradesForSectionsMutation(assignmentId.toString(), sections)
+        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
     }
 
     suspend fun postGradesAsync(
         assignmentId: Long,
         gradedOnly: Boolean
-    ) = awaitQL<PostAssignmentGradesMutation.Data> {
-        val mutation = PostAssignmentGradesMutation.builder()
-            .assignmentId(assignmentId.toString())
-            .gradedOnly(gradedOnly)
-            .build()
-
-        it.enqueueMutation(mutation)
+    ): PostAssignmentGradesMutation.Data {
+        val mutation = PostAssignmentGradesMutation(assignmentId.toString(), Optional.present(gradedOnly))
+        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
     }
 
     suspend fun postGradesForSectionsAsync(
         assignmentId: Long,
         gradedOnly: Boolean,
         sections: List<String>
-    ) = awaitQL<PostAssignmentGradesForSectionsMutation.Data> {
-        val mutation = PostAssignmentGradesForSectionsMutation.builder()
-            .assignmentId(assignmentId.toString())
-            .gradedOnly(gradedOnly)
-            .sectionIds(sections)
-            .build()
-
-        it.enqueueMutation(mutation)
+    ): PostAssignmentGradesForSectionsMutation.Data {
+        val mutation = PostAssignmentGradesForSectionsMutation(assignmentId.toString(), Optional.present(gradedOnly), sections)
+        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
     }
 }

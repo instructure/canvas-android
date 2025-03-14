@@ -467,12 +467,12 @@ fun RecipientPickerRolesScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
 
     val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
-    roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
+    roleRecipients[EnrollmentType.StudentEnrollment] = listOf(
         Recipient(name = "John Doe 1"),
         Recipient(name = "John Smith 1"),
     )
 
-    roleRecipients[EnrollmentType.TEACHERENROLLMENT] = listOf(
+    roleRecipients[EnrollmentType.TeacherEnrollment] = listOf(
         Recipient(name = "John Doe 2"),
         Recipient(name = "John Smith 2"),
     )
@@ -498,12 +498,12 @@ fun RecipientPickerRecipientsScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
 
     val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
-    roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
+    roleRecipients[EnrollmentType.StudentEnrollment] = listOf(
         Recipient(name = "John Doe 1"),
         Recipient(name = "John Smith 1"),
     )
 
-    roleRecipients[EnrollmentType.TEACHERENROLLMENT] = listOf(
+    roleRecipients[EnrollmentType.TeacherEnrollment] = listOf(
         Recipient(name = "John Doe 2"),
         Recipient(name = "John Smith 2"),
     )
@@ -515,10 +515,10 @@ fun RecipientPickerRecipientsScreenPreview() {
             screenOption = RecipientPickerScreenOption.Recipients,
             screenState = ScreenState.Data,
             searchValue = TextFieldValue(""),
-            selectedRole = EnrollmentType.TEACHERENROLLMENT,
-            selectedRecipients = listOf(roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first()),
+            selectedRole = EnrollmentType.TeacherEnrollment,
+            selectedRecipients = listOf(roleRecipients[EnrollmentType.TeacherEnrollment]!!.first()),
             recipientsByRole = roleRecipients,
-            recipientsToShow = roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!,
+            recipientsToShow = roleRecipients[EnrollmentType.TeacherEnrollment]!!,
         ),
         actionHandler = {}
     )
@@ -530,12 +530,12 @@ fun RecipientPickerSearchScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
 
     val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
-    roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
+    roleRecipients[EnrollmentType.StudentEnrollment] = listOf(
         Recipient(name = "John Doe 1"),
         Recipient(name = "John Smith 1"),
     )
 
-    roleRecipients[EnrollmentType.TEACHERENROLLMENT] = listOf(
+    roleRecipients[EnrollmentType.TeacherEnrollment] = listOf(
         Recipient(name = "John Doe 2"),
         Recipient(name = "John Smith 2"),
     )
@@ -547,11 +547,11 @@ fun RecipientPickerSearchScreenPreview() {
             screenOption = RecipientPickerScreenOption.Roles,
             screenState = ScreenState.Data,
             searchValue = TextFieldValue("John"),
-            selectedRecipients = listOf(roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first()),
+            selectedRecipients = listOf(roleRecipients[EnrollmentType.TeacherEnrollment]!!.first()),
             recipientsByRole = roleRecipients,
             recipientsToShow = listOf(
-                roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first(),
-                roleRecipients[EnrollmentType.STUDENTENROLLMENT]!!.first()
+                roleRecipients[EnrollmentType.TeacherEnrollment]!!.first(),
+                roleRecipients[EnrollmentType.StudentEnrollment]!!.first()
             )
         ),
         actionHandler = {}

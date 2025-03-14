@@ -16,12 +16,9 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.apollographql.apollo.api.cache.http.HttpCachePolicy
+import com.apollographql.apollo3.api.Optional
 import com.instructure.canvasapi2.CommentLibraryQuery
-import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.QLClientConfig
-import com.instructure.canvasapi2.enqueueQuery
-import com.instructure.canvasapi2.utils.weave.awaitQL
 
 class CommentLibraryManagerImpl : CommentLibraryManager {
 
@@ -31,31 +28,19 @@ class CommentLibraryManagerImpl : CommentLibraryManager {
         val commentBankItems = mutableListOf<String>()
 
         while (hasNextPage) {
-            val data = awaitQL { getCommentLibraryItems(userId, it, nextCursor) }
-            val user = data.user as CommentLibraryQuery.AsUser
-            val newItems =  user.commentBankItems?.edges?.mapNotNull {
-                it.node?.comment
+            val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
+            val query = CommentLibraryQuery(userId.toString(), QLClientConfig.GRAPHQL_PAGE_SIZE, nextCursorParam)
+            val data = QLClientConfig.enqueueQuery(query).data
+            val user = data?.user?.onUser
+            val newItems = user?.commentBankItems?.edges?.mapNotNull {
+                it?.node?.comment
             } ?: emptyList()
 
             commentBankItems.addAll(newItems)
-            hasNextPage = user.commentBankItems?.pageInfo?.isHasNextPage ?: false
-            nextCursor = user.commentBankItems?.pageInfo?.endCursor
+            hasNextPage = user?.commentBankItems?.pageInfo?.hasNextPage ?: false
+            nextCursor = user?.commentBankItems?.pageInfo?.endCursor
         }
 
         return commentBankItems
-    }
-
-    private fun getCommentLibraryItems(
-        userId: Long,
-        callback: QLCallback<CommentLibraryQuery.Data>,
-        nextCursor: String? = null
-    ) {
-        val query = CommentLibraryQuery.builder()
-            .userId(userId.toString())
-            .pageSize(QLClientConfig.GRAPHQL_PAGE_SIZE)
-            .nextCursor(nextCursor)
-            .build()
-
-        callback.enqueueQuery(query, forceNetwork = true)
     }
 }
