@@ -17,18 +17,16 @@
 package com.instructure.teacher.ui.e2e
 
 import android.util.Log
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
-import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -38,7 +36,7 @@ import com.instructure.espresso.ViewUtils
 import com.instructure.espresso.retry
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.pages.PersonContextPage
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
 import com.instructure.teacher.ui.utils.seedAssignments
 import com.instructure.teacher.ui.utils.seedData
@@ -47,7 +45,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SpeedGraderE2ETest : TeacherTest() {
+class SpeedGraderE2ETest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -150,11 +148,12 @@ class SpeedGraderE2ETest : TeacherTest() {
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
         Espresso.pressBack()
-        refresh()
+        composeTestRule.onNodeWithTag("submissionList").performTouchInput {
+            swipeDown()
+        }
 
         Log.d(STEP_TAG,"Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
-        assignmentSubmissionListPage.clickFilterSubmissions()
 
         Log.d(STEP_TAG,"Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
@@ -165,10 +164,9 @@ class SpeedGraderE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
-        assignmentSubmissionListPage.clickFilterSubmissions()
 
         Log.d(STEP_TAG,"Select 'Not Submitted' and click on 'OK'.")
-        onView(withText(R.string.not_submitted)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+        assignmentSubmissionListPage.clickFilterNotSubmitted()
         assignmentSubmissionListPage.clickFilterDialogOk()
 
         Log.d(STEP_TAG,"Assert that there is one submission displayed.")

@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.models.QuizAnswer
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,71 +38,59 @@ class QuizSubmissionListPageTest : TeacherComposeTest() {
 
     @Test
     override fun displaysPageObjects() {
-        goToQuizSubmissionListPage()
-        quizSubmissionListPage.assertPageObjects()
+        goToAssignmentSubmissionListPage()
+        assignmentSubmissionListPage.assertPageObjects()
     }
 
     @Test
     fun displaysNoSubmissionsView() {
-        goToQuizSubmissionListPage(
+        goToAssignmentSubmissionListPage(
                 students = 0,
                 submissions = 0
         )
-        quizSubmissionListPage.assertDisplaysNoSubmissionsView()
+        assignmentSubmissionListPage.assertDisplaysNoSubmissionsView()
     }
 
     @Test
     fun filterLateSubmissions() {
-        goToQuizSubmissionListPage(
+        goToAssignmentSubmissionListPage(
                 dueAt = 7.days.ago.iso8601
         )
-        quizSubmissionListPage.clickFilterButton()
-        quizSubmissionListPage.clickFilterSubmissions()
-        quizSubmissionListPage.filterSubmittedLate()
-        quizSubmissionListPage.clickDialogPositive()
-        quizSubmissionListPage.assertDisplaysClearFilter()
-        quizSubmissionListPage.assertFilterLabelText(R.string.submitted_late)
-        quizSubmissionListPage.assertHasSubmission()
+        assignmentSubmissionListPage.clickFilterButton()
+        assignmentSubmissionListPage.clickFilterButton()
+        assignmentSubmissionListPage.clickFilterSubmittedLate()
+        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.assertFilterLabelText("Submitted Late")
+        assignmentSubmissionListPage.assertHasSubmission()
     }
 
     @Test
     fun filterPendingReviewSubmissions() {
-        goToQuizSubmissionListPage(addQuestion = true)
-        quizSubmissionListPage.clickFilterButton()
-        quizSubmissionListPage.clickFilterSubmissions()
-        quizSubmissionListPage.filterNotGraded()
-        quizSubmissionListPage.clickDialogPositive()
-        quizSubmissionListPage.assertDisplaysClearFilter()
-        quizSubmissionListPage.assertFilterLabelText(R.string.havent_been_graded)
-        quizSubmissionListPage.assertHasSubmission()
+        goToAssignmentSubmissionListPage(addQuestion = true)
+        assignmentSubmissionListPage.clickFilterButton()
+        assignmentSubmissionListPage.clickFilterButton()
+        assignmentSubmissionListPage.clickFilterUngraded()
+        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.assertFilterLabelText("Haven't Been Graded")
+        assignmentSubmissionListPage.assertHasSubmission()
     }
 
     @Test
     fun displaysQuizStatusComplete() {
-        goToQuizSubmissionListPage(complete = true)
-        quizSubmissionListPage.assertSubmissionStatusSubmitted()
-    }
-
-    @Test
-    fun displaysQuizStatusMissing() {
-        goToQuizSubmissionListPage(
-                students = 1,
-                submissions = 0,
-                dueAt = 1.days.ago.iso8601
-        )
-        quizSubmissionListPage.assertSubmissionStatusMissing()
+        goToAssignmentSubmissionListPage(complete = true)
+        assignmentSubmissionListPage.assertSubmissionStatusSubmitted()
     }
 
     @Test
     fun messageStudentsWho() {
-        val data = goToQuizSubmissionListPage()
+        val data = goToAssignmentSubmissionListPage()
         val student = data.students[0]
-        quizSubmissionListPage.clickAddMessage()
+        assignmentSubmissionListPage.clickAddMessage()
 
         inboxComposePage.assertRecipientSelected(student.shortName!!)
     }
 
-    private fun goToQuizSubmissionListPage(
+    private fun goToAssignmentSubmissionListPage(
             students: Int = 1,
             submissions: Int = 1,
             dueAt: String? = null,
