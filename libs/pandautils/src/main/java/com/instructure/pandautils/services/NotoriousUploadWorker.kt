@@ -44,7 +44,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.FileUtils
@@ -64,7 +63,8 @@ class NotoriousUploadWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val notificationManager: NotificationManager,
-    private val submissionApi: SubmissionAPI.SubmissionInterface
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val localBroadcastManager: LocalBroadcastManager
 ) : CoroutineWorker(context, workerParams) {
     private lateinit var builder: NotificationCompat.Builder
 
@@ -117,7 +117,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
         }
 
         val name = context.getString(R.string.notificationChannelNameFileUploadsName)
-        val description = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsDescription)
+        val description = context.getString(R.string.notificationChannelNameFileUploadsDescription)
 
         // Create the channel and add the group
         val importance = NotificationManager.IMPORTANCE_HIGH
@@ -202,13 +202,13 @@ class NotoriousUploadWorker @AssistedInject constructor(
         notificationManager.notify(notificationId, builder.build())
 
         val intent = Intent(Const.SUBMISSION_COMMENT_SUBMITTED)
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+        localBroadcastManager.sendBroadcast(intent)
 
         // TODO: This is caught in ParentFragment, which we are moving away from as we integrate Mobius into more parts of the app.
         //       We'll want to change out this intent with something like FileUploadService.ALL_UPLOADS_COMPLETED, which is caught in the
         //       SubmissionFileUploadReceiver
         val successIntent = Intent(Const.UPLOAD_SUCCESS)
-        LocalBroadcastManager.getInstance(context).sendBroadcast(successIntent)
+        localBroadcastManager.sendBroadcast(successIntent)
 
         val uploadCompleteIntent = Intent(ALL_UPLOADS_COMPLETED)
         uploadCompleteIntent.putExtra(Const.SUBMISSION_ID, notificationId.toLong())
@@ -223,7 +223,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
             Const.SUBMISSION_COMMENT_LIST,
             ArrayList(submission.submissionComments)
         )
-        LocalBroadcastManager.getInstance(context).sendBroadcast(mediaUploadIntent)
+        localBroadcastManager.sendBroadcast(mediaUploadIntent)
         return Result.success()
     }
 
@@ -262,12 +262,10 @@ class NotoriousUploadWorker @AssistedInject constructor(
             putExtra(Const.ERROR, true)
             putExtra(Const.ID, mediaCommentId)
         }
-        LocalBroadcastManager.getInstance(context).sendBroadcast(errorIntent)
+        localBroadcastManager.sendBroadcast(errorIntent)
     }
 
     companion object {
-        private const val NOTIFICATION_ID = 777
-
         // Upload broadcasts, extended string to ensure unique strings across the device
         private const val BROADCAST_BASE = "com.instructure.pandautils.services"
         const val ALL_UPLOADS_COMPLETED = "$BROADCAST_BASE.ALL_UPLOADS_COMPLETED"
