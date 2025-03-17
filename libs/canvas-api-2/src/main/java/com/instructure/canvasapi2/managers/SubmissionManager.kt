@@ -217,7 +217,7 @@ object SubmissionManager {
     ) {
         val adapter = RestBuilder(callback)
         val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
-        val type = if (isLti) "basic_lti_launch" else "online_url"
+        val type = if (isLti) SubmissionAPI.BASIC_LTI_LAUNCH else SubmissionAPI.ONLINE_URL
 
         SubmissionAPI.postUrlSubmission(canvasContext.id, assignmentId, type, url, adapter, params, callback)
     }

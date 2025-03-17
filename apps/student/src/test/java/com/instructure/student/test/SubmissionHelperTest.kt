@@ -16,6 +16,7 @@
 
 import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -45,12 +46,13 @@ class SubmissionHelperTest {
     private val context: Context = mockk(relaxed = true)
     private val studentDb: StudentDb = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val workManager: WorkManager = mockk(relaxed = true)
 
     private lateinit var submissionHelper: SubmissionHelper
 
     @Before
     fun setup() {
-        submissionHelper = SubmissionHelper(context, studentDb, apiPrefs)
+        submissionHelper = SubmissionHelper(studentDb, apiPrefs, workManager)
 
         coEvery {
             studentDb.submissionDao().findSubmissionsByAssignmentId(any(), any())
