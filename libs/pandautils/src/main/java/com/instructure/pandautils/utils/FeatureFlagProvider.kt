@@ -20,7 +20,6 @@ import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
 
@@ -57,5 +56,9 @@ class FeatureFlagProvider(
 
     private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
         return apiPrefs.user?.id?.let { environmentFeatureFlags.findByUserId(it)?.featureFlags?.get(featureFlag) == true } ?: false
+    }
+
+    suspend fun checkAccountSurveyNotificationsFlag(): Boolean {
+        return checkEnvironmentFeatureFlag("account_survey_notifications")
     }
 }
