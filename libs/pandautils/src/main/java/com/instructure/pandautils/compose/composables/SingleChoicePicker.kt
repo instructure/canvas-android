@@ -17,6 +17,7 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -58,6 +59,9 @@ fun<T> SingleChoicePicker(
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .background(colorResource(R.color.backgroundLightest))
+                    .clickable {
+                        onItemSelected(item)
+                    }
             ) {
                 Spacer(modifier = Modifier.width(20.dp))
                 RadioButton(

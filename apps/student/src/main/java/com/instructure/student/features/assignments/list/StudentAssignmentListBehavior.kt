@@ -16,6 +16,8 @@
  */
 package com.instructure.student.features.assignments.list
 
+import android.content.res.Resources
+import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
@@ -25,47 +27,48 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
+import com.instructure.student.R
 
-class StudentAssignmentListBehavior: AssignmentListBehavior {
+class StudentAssignmentListBehavior(private val resources: Resources): AssignmentListBehavior {
     override fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState {
         return AssignmentGroupItemState(assignment, showSubmissionDetails = true)
     }
 
-    override fun getAssignmentListFilterState(gradingPeriods: List<GradingPeriod>): AssignmentListFilterState {
+    override fun getAssignmentListFilterState(@ColorInt contextColor: Int, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState {
        val groups = mutableListOf(
             AssignmentListFilterGroup(
-                title = "Assignment filter",
+                title = resources.getString(R.string.assignmentFilter),
                 options = listOf(
-                    AssignmentListFilterOption.NotYetSubmitted,
-                    AssignmentListFilterOption.ToBeGraded,
-                    AssignmentListFilterOption.Graded,
-                    AssignmentListFilterOption.Other,
+                    AssignmentListFilterOption.NotYetSubmitted(resources),
+                    AssignmentListFilterOption.ToBeGraded(resources),
+                    AssignmentListFilterOption.Graded(resources),
+                    AssignmentListFilterOption.Other(resources),
                 ),
                 selectedOptions = listOf(
-                    AssignmentListFilterOption.NotYetSubmitted,
-                    AssignmentListFilterOption.ToBeGraded,
-                    AssignmentListFilterOption.Graded,
-                    AssignmentListFilterOption.Other,
+                    AssignmentListFilterOption.NotYetSubmitted(resources),
+                    AssignmentListFilterOption.ToBeGraded(resources),
+                    AssignmentListFilterOption.Graded(resources),
+                    AssignmentListFilterOption.Other(resources),
                 ),
                 groupType = AssignmentListFilterGroupType.MultiChoice
             ),
             AssignmentListFilterGroup(
-                title = "Grouped By",
+                title = resources.getString(R.string.groupedBy),
                 options = listOf(
-                    AssignmentListGroupByOption.DueDate,
-                    AssignmentListGroupByOption.AssignmentGroup,
+                    AssignmentListGroupByOption.DueDate(resources),
+                    AssignmentListGroupByOption.AssignmentGroup(resources),
                 ),
-                selectedOptions = listOf(AssignmentListGroupByOption.DueDate),
+                selectedOptions = listOf(AssignmentListGroupByOption.DueDate(resources)),
                 groupType = AssignmentListFilterGroupType.SingleChoice
             ),
         )
-        if (gradingPeriods.size > 1) {
-            val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null)
+        if (gradingPeriods != null && gradingPeriods.size > 1) {
+            val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
             groups.add(
                 AssignmentListFilterGroup(
-                    title = "Grading Period",
+                    title = resources.getString(R.string.gradingPeriod),
                     options = listOf(allGradingPeriod) + gradingPeriods.map {
-                        AssignmentListFilterOption.GradingPeriod(it)
+                        AssignmentListFilterOption.GradingPeriod(it, resources)
                      },
                     selectedOptions = listOf(allGradingPeriod),
                     groupType = AssignmentListFilterGroupType.SingleChoice
@@ -73,6 +76,6 @@ class StudentAssignmentListBehavior: AssignmentListBehavior {
             )
         }
 
-        return AssignmentListFilterState(groups)
+        return AssignmentListFilterState(contextColor, groups)
     }
 }

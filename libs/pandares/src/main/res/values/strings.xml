@@ -2025,4 +2025,19 @@
     <string name="assignmentListTitle">Assignment list</string>
     <string name="assignmentListMaxpoints">%1$s points</string>
     <string name="noAssignments">No assignments</string>
+    <string name="assignmentGroup">Assignment Group</string>
+    <string name="assignmentType">Assignment Type</string>
+    <string name="dueDate">Due Date</string>
+    <string name="needsGrading">Needs Grading</string>
+    <string name="published">Published</string>
+    <string name="unpublished">Unpublished</string>
+    <string name="notYetSubmitted">Not Yet Submitted</string>
+    <string name="toBeGraded">To Be Graded</string>
+    <string name="graded">Graded</string>
+    <string name="other">Other</string>
+    <string name="a11y_filterAssignments">Filter Assignments</string>
+    <string name="assignmentFilter">Assignment filter</string>
+    <string name="groupedBy">Grouped By</string>
+    <string name="gradingPeriod">Grading Period</string>
+    <string name="gradePreferences">Grade Preferences</string>
 </resources>

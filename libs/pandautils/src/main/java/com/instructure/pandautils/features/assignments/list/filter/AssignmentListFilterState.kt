@@ -1,13 +1,18 @@
 package com.instructure.pandautils.features.assignments.list.filter
 
+import android.content.res.Resources
+import androidx.annotation.ColorInt
+import com.instructure.pandares.R
+
 data class AssignmentListFilterState(
-    val filterGroups: List<AssignmentListFilterGroup>,
+    @ColorInt val contextColor: Int = 0,
+    val filterGroups: List<AssignmentListFilterGroup> = emptyList(),
 )
 
 data class AssignmentListFilterGroup(
     val title: String,
-    val options: List<AssignmentListGroup>,
-    val selectedOptions: List<AssignmentListGroup>,
+    val options: List<AssignmentListGroupItem>,
+    val selectedOptions: List<AssignmentListGroupItem>,
     val groupType: AssignmentListFilterGroupType,
 )
 
@@ -21,22 +26,27 @@ enum class AssignmentListFilterGroupType {
     MultiChoice
 }
 
-abstract class AssignmentListGroup(val type: AssignmentListFilterType)
-
-sealed class AssignmentListGroupByOption: AssignmentListGroup(AssignmentListFilterType.GroupBy) {
-    data object AssignmentGroup: AssignmentListGroupByOption()
-    data object AssignmentType: AssignmentListGroupByOption()
-    data object DueDate: AssignmentListGroupByOption()
+abstract class AssignmentListGroupItem(val stringValue: String, val type: AssignmentListFilterType) {
+    final override fun toString(): String = stringValue
 }
 
-sealed class AssignmentListFilterOption: AssignmentListGroup(AssignmentListFilterType.Filter) {
-    data object NeedsGrading: AssignmentListFilterOption()
-    data object NotSubmitted: AssignmentListFilterOption()
-    data object Published: AssignmentListFilterOption()
-    data object Unpublished: AssignmentListFilterOption()
-    data class GradingPeriod(val period: com.instructure.canvasapi2.models.GradingPeriod?): AssignmentListFilterOption()
-    data object NotYetSubmitted: AssignmentListFilterOption()
-    data object ToBeGraded: AssignmentListFilterOption()
-    data object Graded: AssignmentListFilterOption()
-    data object Other: AssignmentListFilterOption()
+sealed class AssignmentListGroupByOption(stringValue: String): AssignmentListGroupItem(stringValue, AssignmentListFilterType.GroupBy) {
+    data class AssignmentGroup(val resources: Resources): AssignmentListGroupByOption(resources.getString(R.string.assignmentGroup))
+    data class AssignmentType(val resources: Resources): AssignmentListGroupByOption(resources.getString(R.string.assignmentType))
+    data class DueDate(val resources: Resources): AssignmentListGroupByOption(resources.getString(R.string.dueDate))
+}
+
+sealed class AssignmentListFilterOption(stringValue: String): AssignmentListGroupItem(stringValue, AssignmentListFilterType.Filter) {
+    data class NeedsGrading(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.needsGrading))
+    data class NotSubmitted(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.notSubmitted))
+    data class Published(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.published))
+    data class Unpublished(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.unpublished))
+    data class GradingPeriod(
+        val period: com.instructure.canvasapi2.models.GradingPeriod?,
+        val resources: Resources
+    ): AssignmentListFilterOption(period?.title ?: resources.getString(R.string.allGradingPeriods))
+    data class NotYetSubmitted(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.notYetSubmitted))
+    data class ToBeGraded(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.toBeGraded))
+    data class Graded(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.graded))
+    data class Other(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.other))
 }

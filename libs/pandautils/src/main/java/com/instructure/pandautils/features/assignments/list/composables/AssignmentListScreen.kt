@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandares.R
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
@@ -55,7 +57,9 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
+import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterScreen
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -74,19 +78,39 @@ fun AssignmentListScreen(
     screenActionHandler: (AssignmentListScreenEvent) -> Unit,
     listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
-    Scaffold(
-        backgroundColor = colorResource(id = R.color.backgroundLightest),
-        topBar = {
-            AppBar(
-                title,
-                state,
-                screenActionHandler
-            )
-        },
-        content = { paddingValues ->
-            AssignmentListWrapper(state, contextColor, Modifier.padding(paddingValues), screenActionHandler, listActionHandler)
+    CanvasTheme {
+        when (state.screenOption) {
+            AssignmentListScreenOption.List -> {
+                Scaffold(
+                    backgroundColor = colorResource(id = R.color.backgroundLightest),
+                    topBar = {
+                        AppBar(
+                            title,
+                            state,
+                            screenActionHandler
+                        )
+                    },
+                    content = { paddingValues ->
+                        AssignmentListWrapper(
+                            state,
+                            contextColor,
+                            Modifier.padding(paddingValues),
+                            screenActionHandler,
+                            listActionHandler
+                        )
+                    }
+                )
+            }
+
+            AssignmentListScreenOption.Filter -> {
+                AssignmentListFilterScreen(
+                    state.filterState,
+                    { screenActionHandler(AssignmentListScreenEvent.UpdateFilterState(it)) },
+                    { screenActionHandler(AssignmentListScreenEvent.CloseFilterScreen) }
+                )
+            }
         }
-    )
+    }
 }
 
 @Composable
@@ -99,7 +123,12 @@ private fun AppBar(
         title = title,
         subtitle = state.subtitle,
         actions = {
-
+            IconButton(onClick = { screenActionHandler(AssignmentListScreenEvent.OpenFilterScreen)}) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_filter),
+                    contentDescription = stringResource(R.string.a11y_filterAssignments)
+                )
+            }
         },
         backgroundColor = Color(state.course.color),
         contentColor = Color(color = ThemePrefs.primaryTextColor),
@@ -127,15 +156,23 @@ private fun AssignmentListWrapper(
                 Loading()
             }
         }
+
         ScreenState.Content -> {
-            AssignmentListContentView(state, contextColor, screenActionHandler, listActionHandler)
+            AssignmentListContentView(
+                state,
+                contextColor,
+                screenActionHandler,
+                listActionHandler
+            )
         }
+
         ScreenState.Empty -> {
             EmptyContent(
                 emptyMessage = stringResource(R.string.noAssignments),
                 imageRes = R.drawable.ic_panda_nodiscussions
             )
         }
+
         ScreenState.Error -> {
             ErrorContent(
                 errorMessage = stringResource(R.string.errorLoadingAssignment),

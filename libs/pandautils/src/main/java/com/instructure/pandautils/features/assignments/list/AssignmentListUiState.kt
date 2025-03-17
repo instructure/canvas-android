@@ -6,6 +6,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.compose.composables.GroupedListViewGroup
 import com.instructure.pandautils.compose.composables.GroupedListViewGroupItem
 import com.instructure.pandautils.compose.composables.GroupedListViewState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
 import com.instructure.pandautils.utils.ScreenState
 
 data class AssignmentListUiState(
@@ -13,7 +14,9 @@ data class AssignmentListUiState(
     val course: Course = Course(),
     val subtitle: String = "",
     val state: ScreenState = ScreenState.Loading,
-    val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList())
+    val screenOption: AssignmentListScreenOption = AssignmentListScreenOption.List,
+    val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList()),
+    val filterState: AssignmentListFilterState = AssignmentListFilterState()
 )
 
 class AssignmentGroupState(
@@ -41,4 +44,12 @@ sealed class AssignmentListFragmentEvent {
 
 sealed class AssignmentListScreenEvent {
     data object NavigateBack: AssignmentListScreenEvent()
+    data class UpdateFilterState(val filterState: AssignmentListFilterState): AssignmentListScreenEvent()
+    data object OpenFilterScreen: AssignmentListScreenEvent()
+    data object CloseFilterScreen: AssignmentListScreenEvent()
+}
+
+sealed class AssignmentListScreenOption {
+    data object List: AssignmentListScreenOption()
+    data object Filter: AssignmentListScreenOption()
 }

@@ -25,6 +25,7 @@ import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,7 +73,8 @@ class AssignmentListViewModel @Inject constructor(
                                     }
                                 )
                             }
-                        )
+                        ),
+                        filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, course.gradingPeriods)
                     )
                 }
             } catch {
@@ -120,6 +122,15 @@ class AssignmentListViewModel @Inject constructor(
                 viewModelScope.launch {
                     _events.send(AssignmentListFragmentEvent.NavigateBack)
                 }
+            }
+            is AssignmentListScreenEvent.UpdateFilterState -> {
+                _uiState.update { it.copy(filterState = action.filterState) }
+            }
+            AssignmentListScreenEvent.OpenFilterScreen -> {
+                _uiState.update { it.copy(screenOption = AssignmentListScreenOption.Filter) }
+            }
+            AssignmentListScreenEvent.CloseFilterScreen -> {
+                _uiState.update { it.copy(screenOption = AssignmentListScreenOption.List) }
             }
         }
     }
