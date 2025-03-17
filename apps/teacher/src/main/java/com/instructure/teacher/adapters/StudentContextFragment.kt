@@ -22,8 +22,8 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.TextView
+import com.instructure.canvasapi2.StudentContextCardQuery
 import com.instructure.canvasapi2.StudentContextCardQuery.Analytics
-import com.instructure.canvasapi2.StudentContextCardQuery.AsCourse
 import com.instructure.canvasapi2.StudentContextCardQuery.Submission
 import com.instructure.canvasapi2.StudentContextCardQuery.User
 import com.instructure.canvasapi2.managers.StudentContextManager
@@ -88,7 +88,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     private var mStudentId by LongArg()
     private var mCourseId by LongArg()
     private var mLaunchSubmissions by BooleanArg()
-    private var mNeedToForceNetwork = false
+    private var needToForceNetwork = false
     private var mHasLoaded = false
 
     @Suppress("unused")
@@ -96,7 +96,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
         event.once(javaClass.simpleName) {
             //force network call on resume
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
             mHasLoaded = false
         }
     }
@@ -135,7 +135,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
 
     override fun onReadySetGo(presenter: StudentContextPresenter) {
         if(!mHasLoaded) {
-            presenter.refresh(mNeedToForceNetwork)
+            presenter.refresh(needToForceNetwork)
             mHasLoaded = true
         }
     }
@@ -144,7 +144,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         binding.submissionListContainer.removeAllViewsInLayout()
     }
 
-    override fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean) = with(binding) {
+    override fun setData(course: StudentContextCardQuery.OnCourse, student: User, summary: Analytics?, isStudent: Boolean) = with(binding) {
         val courseBackgroundColor = CanvasContext.emptyCourseContext(course.id.toLong()).color
 
         setupScrollListener()
@@ -212,7 +212,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         } ?: lastActivityView.setGone()
 
         if (isStudent) {
-            val enrollmentGrades = student.enrollments.find { it.type == EnrollmentType.STUDENTENROLLMENT }?.grades
+            val enrollmentGrades = student.enrollments.find { it.type == EnrollmentType.StudentEnrollment }?.grades
 
             // Grade before posting
             val gradeBeforePostingText = enrollmentGrades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "--"
@@ -294,18 +294,18 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                 val threshold = scrollContent.height - loadMoreContainer.top
                 val bottomOffset = contentContainer.height + contentContainer.scrollY - scrollContent.bottom
                 if (scrollContent.height <= contentContainer.height) {
-                    presenter.loadMoreSubmissions()
+                    presenter.loadMoreSubmissions(needToForceNetwork)
                 } else if (triggered && (threshold + touchSlop + bottomOffset < 0)) {
                     triggered = false
                 } else if (!triggered && (threshold + bottomOffset > 0)) {
                     triggered = true
-                    presenter.loadMoreSubmissions()
+                    presenter.loadMoreSubmissions(needToForceNetwork)
                 }
             }
         }
     }
 
-    override fun addSubmissions(submissions: List<Submission>, course: AsCourse, student: User) {
+    override fun addSubmissions(submissions: List<Submission>, course: StudentContextCardQuery.OnCourse, student: User) {
         val courseColor = CanvasContext.emptyCourseContext(course.id.toLong()).color
         submissions.forEach { submission ->
             val view = StudentContextSubmissionView(requireContext(), submission, courseColor)

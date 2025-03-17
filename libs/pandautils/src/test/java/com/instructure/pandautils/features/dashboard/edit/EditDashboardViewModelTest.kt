@@ -562,6 +562,8 @@ class EditDashboardViewModelTest {
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Empty)
+        assertEquals(R.string.editDashboardNoResults, (viewModel.state.value as ViewState.Empty).emptyTitle)
+        assertEquals(R.string.editDashboardNoResultsMessage, (viewModel.state.value as ViewState.Empty).emptyMessage)
         assertEquals(0, data.size)
     }
 

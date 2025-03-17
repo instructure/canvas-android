@@ -31,6 +31,7 @@ import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SelectContextPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.teacher.activities.LoginActivity
+import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
 import com.instructure.teacher.ui.pages.ProgressPage
 
 import org.junit.Rule
@@ -52,4 +53,5 @@ abstract class TeacherComposeTest : TeacherTest() {
     val inboxComposePage = InboxComposePage(composeTestRule)
     val recipientPickerPage = RecipientPickerPage(composeTestRule)
     val selectContextPage = SelectContextPage(composeTestRule)
+    val assignmentSubmissionListPage = AssignmentSubmissionListPage(composeTestRule)
 }

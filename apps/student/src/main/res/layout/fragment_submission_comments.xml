@@ -56,6 +56,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:hint="@string/comment"
+            android:background="@color/transparent"
             app:boxBackgroundColor="@color/transparent"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp">
@@ -67,7 +68,8 @@
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="5"
                 android:minHeight="48dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:background="@color/transparent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
