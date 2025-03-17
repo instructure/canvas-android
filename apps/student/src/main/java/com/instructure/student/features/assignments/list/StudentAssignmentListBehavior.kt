@@ -26,6 +26,7 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
 import com.instructure.student.R
 
@@ -50,7 +51,8 @@ class StudentAssignmentListBehavior(private val resources: Resources): Assignmen
                     AssignmentListFilterOption.Graded(resources),
                     AssignmentListFilterOption.Other(resources),
                 ),
-                groupType = AssignmentListFilterGroupType.MultiChoice
+                groupType = AssignmentListFilterGroupType.MultiChoice,
+                filterType = AssignmentListFilterType.Filter
             ),
             AssignmentListFilterGroup(
                 title = resources.getString(R.string.groupedBy),
@@ -59,7 +61,8 @@ class StudentAssignmentListBehavior(private val resources: Resources): Assignmen
                     AssignmentListGroupByOption.AssignmentGroup(resources),
                 ),
                 selectedOptions = listOf(AssignmentListGroupByOption.DueDate(resources)),
-                groupType = AssignmentListFilterGroupType.SingleChoice
+                groupType = AssignmentListFilterGroupType.SingleChoice,
+                filterType = AssignmentListFilterType.GroupBy
             ),
         )
         if (gradingPeriods != null && gradingPeriods.size > 1) {
@@ -71,7 +74,8 @@ class StudentAssignmentListBehavior(private val resources: Resources): Assignmen
                         AssignmentListFilterOption.GradingPeriod(it, resources)
                      },
                     selectedOptions = listOf(allGradingPeriod),
-                    groupType = AssignmentListFilterGroupType.SingleChoice
+                    groupType = AssignmentListFilterGroupType.SingleChoice,
+                    filterType = AssignmentListFilterType.Filter
                 )
             )
         }

@@ -36,7 +36,7 @@ class StudentAssignmentListRepository(
     featureFlagProvider: FeatureFlagProvider
 ) : Repository<AssignmentListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), AssignmentListRepository {
 
-    suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
+    override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
         scopeToStudent: Boolean,
@@ -57,7 +57,7 @@ class StudentAssignmentListRepository(
         return dataSource().getAssignmentGroupsWithAssignments(courseId, forceRefresh)
     }
 
-    suspend fun getGradingPeriodsForCourse(
+    override suspend fun getGradingPeriodsForCourse(
         courseId: Long,
         isRefresh: Boolean
     ): DataResult<List<GradingPeriod>> {

@@ -14,6 +14,7 @@ data class AssignmentListFilterGroup(
     val options: List<AssignmentListGroupItem>,
     val selectedOptions: List<AssignmentListGroupItem>,
     val groupType: AssignmentListFilterGroupType,
+    val filterType: AssignmentListFilterType,
 )
 
 enum class AssignmentListFilterType {
@@ -26,17 +27,17 @@ enum class AssignmentListFilterGroupType {
     MultiChoice
 }
 
-abstract class AssignmentListGroupItem(val stringValue: String, val type: AssignmentListFilterType) {
+abstract class AssignmentListGroupItem(val stringValue: String) {
     final override fun toString(): String = stringValue
 }
 
-sealed class AssignmentListGroupByOption(stringValue: String): AssignmentListGroupItem(stringValue, AssignmentListFilterType.GroupBy) {
+sealed class AssignmentListGroupByOption(stringValue: String): AssignmentListGroupItem(stringValue) {
     data class AssignmentGroup(val resources: Resources): AssignmentListGroupByOption(resources.getString(R.string.assignmentGroup))
     data class AssignmentType(val resources: Resources): AssignmentListGroupByOption(resources.getString(R.string.assignmentType))
     data class DueDate(val resources: Resources): AssignmentListGroupByOption(resources.getString(R.string.dueDate))
 }
 
-sealed class AssignmentListFilterOption(stringValue: String): AssignmentListGroupItem(stringValue, AssignmentListFilterType.Filter) {
+sealed class AssignmentListFilterOption(stringValue: String): AssignmentListGroupItem(stringValue) {
     data class NeedsGrading(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.needsGrading))
     data class NotSubmitted(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.notSubmitted))
     data class Published(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.published))
