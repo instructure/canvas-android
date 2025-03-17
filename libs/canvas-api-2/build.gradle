@@ -81,12 +81,12 @@ android {
 }
 
 apollo {
-    useJavaBeansSemanticNaming = true
-    customTypeMapping = [
-            "URL" : "java.lang.String",
-            "DateTime": "java.util.Date",
-            "ID"  : "java.lang.String"
-    ]
+    service("canvas") {
+        packageName.set("com.instructure.canvasapi2")
+        mapScalar("URL", "kotlin.String")
+        mapScalar("DateTime", "java.util.Date")
+        mapScalar("ID", "kotlin.String")
+    }
 }
 
 dependencies {
@@ -122,7 +122,7 @@ dependencies {
     api(Libs.APOLLO_RUNTIME) {
         exclude module: 'okhttp'
     }
-    api (Libs.APOLLO_ANDROID_SUPPORT) {
+    api (Libs.APOLLO_API) {
         exclude module: 'okhttp'
     }
     implementation (Libs.APOLLO_HTTP_CACHE) {
