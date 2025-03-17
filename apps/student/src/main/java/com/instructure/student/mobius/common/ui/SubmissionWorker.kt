@@ -618,13 +618,13 @@ class SubmissionWorker @AssistedInject constructor(
             is DataResult.Success -> {
                 studentDb.submissionDao().deleteSubmissionById(submission.id)
                 if (!result.dataOrThrow.late) showConfetti()
-                return Result.success()
+                Result.success()
             }
 
             is DataResult.Fail -> {
                 studentDb.submissionDao().setSubmissionError(true, submission.id)
                 showErrorNotification(context, submission)
-                return Result.failure()
+                Result.failure()
             }
         }
     }
