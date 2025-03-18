@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
@@ -36,6 +37,38 @@ class TeacherAssignmentListRepository(
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams).depaginate {
              assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, restParams)
+        }
+    }
+
+    override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
+        courseId: Long,
+        gradingPeriodId: Long,
+        scopeToStudent: Boolean,
+        forceRefresh: Boolean
+    ): DataResult<List<AssignmentGroup>> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+
+        return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
+            courseId = courseId,
+            gradingPeriodId = gradingPeriodId,
+            scopeToStudent = scopeToStudent,
+            restParams = params
+        ).depaginate {
+            assignmentApi.getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(it, params)
+        }
+    }
+
+    override suspend fun getGradingPeriodsForCourse(
+        courseId: Long,
+        forceRefresh: Boolean
+    ): DataResult<List<GradingPeriod>> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+
+        val gradingPeriods = courseApi.getGradingPeriodsForCourse(courseId, params).dataOrNull?.gradingPeriodList
+        if (gradingPeriods != null) {
+            return DataResult.Success(gradingPeriods)
+        } else {
+            return DataResult.Fail()
         }
     }
 

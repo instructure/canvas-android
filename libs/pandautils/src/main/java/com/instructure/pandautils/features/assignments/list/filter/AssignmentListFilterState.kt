@@ -38,6 +38,8 @@ sealed class AssignmentListGroupByOption(stringValue: String): AssignmentListGro
 }
 
 sealed class AssignmentListFilterOption(stringValue: String): AssignmentListGroupItem(stringValue) {
+    data class AllStatusAssignments(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.allAssignments))
+    data class AllFilterAssignments(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.allAssignments))
     data class NeedsGrading(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.needsGrading))
     data class NotSubmitted(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.notSubmitted))
     data class Published(val resources: Resources): AssignmentListFilterOption(resources.getString(R.string.published))

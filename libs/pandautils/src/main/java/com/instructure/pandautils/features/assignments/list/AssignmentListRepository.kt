@@ -28,10 +28,10 @@ interface AssignmentListRepository {
         courseId: Long,
         gradingPeriodId: Long,
         scopeToStudent: Boolean,
-        forceNetwork: Boolean
+        forceRefresh: Boolean
     ): DataResult<List<AssignmentGroup>>
 
-    suspend fun getGradingPeriodsForCourse(courseId: Long, isRefresh: Boolean): DataResult<List<GradingPeriod>>
+    suspend fun getGradingPeriodsForCourse(courseId: Long, forceRefresh: Boolean): DataResult<List<GradingPeriod>>
 
     suspend fun getCourse(courseId: Long, forceRefresh: Boolean = false): DataResult<Course>
 }

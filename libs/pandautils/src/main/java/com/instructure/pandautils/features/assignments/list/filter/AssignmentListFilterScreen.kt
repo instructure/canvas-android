@@ -62,7 +62,7 @@ fun AssignmentListFilterScreen(
             state.filterGroups.forEach { group ->
                 AssignmentListFilterGroup(group, Color(state.contextColor)) {
                     onFilterChange(state.copy(filterGroups = state.filterGroups.map { g ->
-                        if (g.groupType == it.groupType) {
+                        if (g.title == it.title) {
                             it
                         } else {
                             g

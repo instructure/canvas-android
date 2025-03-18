@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.GroupedListViewState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
@@ -166,41 +167,73 @@ class AssignmentListViewModel @Inject constructor(
     private fun performFilters(): GroupedListViewState<AssignmentGroupState> {
         var groups: List<AssignmentGroupState> = emptyList()
 
-        val assignments = uiState.value.allAssignments
-        val filteredAssignments = mutableSetOf<Assignment>()
+        val allAssignments = uiState.value.allAssignments
+        var filteredAssignments = allAssignments.toSet()
         val filters = uiState.value.filterState.filterGroups.filter { it.filterType == AssignmentListFilterType.Filter }
         filters
-            .flatMap { it.selectedOptions }
-            .forEach { filter ->
-                when(filter) {
-                    is AssignmentListFilterOption.NeedsGrading -> {
-                        filteredAssignments += assignments.filter { it.needsGradingCount > 0 }
-                    }
-                    is AssignmentListFilterOption.NotSubmitted -> {
-                        filteredAssignments += assignments.filter { !it.isSubmitted }
-                    }
-                    is AssignmentListFilterOption.Published -> {
-                        filteredAssignments += assignments.filter { it.published }
-                    }
-                    is AssignmentListFilterOption.Unpublished -> {
-                        filteredAssignments += assignments.filter { !it.published }
-                    }
-                    is AssignmentListFilterOption.GradingPeriod -> {
-                        filteredAssignments += uiState.value.gradingPeriodsWithAssignments[filter.period].orEmpty()
-                    }
-                    is AssignmentListFilterOption.NotYetSubmitted -> {
-                        filteredAssignments += assignments.filter { !it.isSubmitted }
-                    }
-                    is AssignmentListFilterOption.ToBeGraded -> {
-                        filteredAssignments += assignments.filter { it.isSubmitted && !it.isGraded() }
-                    }
-                    is AssignmentListFilterOption.Graded -> {
-                        filteredAssignments += assignments.filter { it.isGraded() }
-                    }
-                    is AssignmentListFilterOption.Other -> {
-                        filteredAssignments += assignments.filterNot { !it.isSubmitted || it.isSubmitted && !it.isGraded() || it.isGraded() }
+            .forEach { filterGroup ->
+                val newFilteredAssignments = mutableSetOf<Assignment>()
+                filterGroup.selectedOptions.forEach { filter ->
+                    when (filter) {
+                        is AssignmentListFilterOption.AllStatusAssignments -> {
+                            newFilteredAssignments += filteredAssignments
+                        }
+
+                        is AssignmentListFilterOption.AllFilterAssignments -> {
+                            newFilteredAssignments += filteredAssignments
+                        }
+
+                        is AssignmentListFilterOption.NeedsGrading -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filter { it.needsGradingCount > 0 }
+                                    .toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.NotSubmitted -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filter { it.unpublishable }.toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.Published -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filter { it.published }.toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.Unpublished -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filter { !it.published }.toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.GradingPeriod -> {
+                            newFilteredAssignments +=
+                                uiState.value.gradingPeriodsWithAssignments[filter.period].orEmpty()
+                                    .toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.NotYetSubmitted -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filter { !it.isSubmitted }.toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.ToBeGraded -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filter { it.isSubmitted && !it.isGraded() }
+                                    .toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.Graded -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filter { it.isGraded() }.toMutableSet()
+                        }
+
+                        is AssignmentListFilterOption.Other -> {
+                            newFilteredAssignments +=
+                                filteredAssignments.filterNot { !it.isSubmitted || it.isSubmitted && !it.isGraded() || it.isGraded() }
+                                    .toMutableSet()
+                        }
                     }
                 }
+                filteredAssignments = newFilteredAssignments
             }
 
         val groupBy = uiState.value.filterState.filterGroups.firstOrNull { it.filterType == AssignmentListFilterType.GroupBy }?.selectedOptions?.firstOrNull()
@@ -218,10 +251,10 @@ class AssignmentListViewModel @Inject constructor(
             }
             is AssignmentListGroupByOption.AssignmentType -> {
                 val discussionsGroup = filteredAssignments.filter {
-                    Assignment.SubmissionType.ONLINE_QUIZ.apiString in it.submissionTypesRaw
+                    Assignment.SubmissionType.DISCUSSION_TOPIC.apiString in it.submissionTypesRaw
                 }.toSet()
                 val quizzesGroup = (filteredAssignments - discussionsGroup).filter {
-                    Assignment.SubmissionType.DISCUSSION_TOPIC.apiString in it.submissionTypesRaw
+                    Assignment.SubmissionType.ONLINE_QUIZ.apiString in it.submissionTypesRaw
                 }.toSet()
                 val assignmentGroup = filteredAssignments - discussionsGroup - quizzesGroup
 
@@ -272,13 +305,15 @@ class AssignmentListViewModel @Inject constructor(
                 )
             }
             else -> {
-                listOf(
-                    AssignmentGroupState(
-                        id = 0,
-                        title = "All Assignments",
-                        items = filteredAssignments.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
-                    )
-                )
+                filteredAssignments
+                    .groupBy { it.assignmentGroupId }
+                    .map { (key, value) ->
+                        AssignmentGroupState(
+                            id = key,
+                            title = uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty(),
+                            items = value.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        )
+                    }
             }
         }
         return GroupedListViewState(groups)

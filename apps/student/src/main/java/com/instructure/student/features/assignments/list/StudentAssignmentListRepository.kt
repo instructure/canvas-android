@@ -40,13 +40,13 @@ class StudentAssignmentListRepository(
         courseId: Long,
         gradingPeriodId: Long,
         scopeToStudent: Boolean,
-        forceNetwork: Boolean
+        forceRefresh: Boolean
     ): DataResult<List<AssignmentGroup>> {
         return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(
             courseId,
             gradingPeriodId,
             scopeToStudent,
-            forceNetwork
+            forceRefresh
         )
     }
 
@@ -59,9 +59,9 @@ class StudentAssignmentListRepository(
 
     override suspend fun getGradingPeriodsForCourse(
         courseId: Long,
-        isRefresh: Boolean
+        forceRefresh: Boolean
     ): DataResult<List<GradingPeriod>> {
-        return dataSource().getGradingPeriodsForCourse(courseId, isRefresh)
+        return dataSource().getGradingPeriodsForCourse(courseId, forceRefresh)
     }
 
     override suspend fun getCourse(courseId: Long, forceRefresh: Boolean): DataResult<Course> {

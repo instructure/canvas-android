@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.di
 
+import android.content.res.Resources
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
@@ -51,7 +52,7 @@ class AssignmentListViewModelModule {
     }
 
     @Provides
-    fun provideAssignmentListBehavior(): AssignmentListBehavior {
-        return TeacherAssignmentListBehavior()
+    fun provideAssignmentListBehavior(resources: Resources): AssignmentListBehavior {
+        return TeacherAssignmentListBehavior(resources)
     }
 }

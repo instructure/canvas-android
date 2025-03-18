@@ -16,12 +16,77 @@
  */
 package com.instructure.teacher.features.assignment.list
 
+import android.content.res.Resources
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
+import com.instructure.teacher.R
 
-class TeacherAssignmentListBehavior: AssignmentListBehavior {
+class TeacherAssignmentListBehavior(private val resources: Resources): AssignmentListBehavior {
     override fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState {
         return AssignmentGroupItemState(assignment, showAssignmentDetails = true)
+    }
+
+    override fun getAssignmentListFilterState(
+        contextColor: Int,
+        gradingPeriods: List<GradingPeriod>?
+    ): AssignmentListFilterState {
+        val groups = mutableListOf(
+            AssignmentListFilterGroup(
+                title = resources.getString(R.string.assignmentFilter),
+                options = listOf(
+                    AssignmentListFilterOption.AllFilterAssignments(resources),
+                    AssignmentListFilterOption.NeedsGrading(resources),
+                    AssignmentListFilterOption.NotSubmitted(resources),
+                ),
+                selectedOptions = listOf(AssignmentListFilterOption.AllFilterAssignments(resources)),
+                groupType = AssignmentListFilterGroupType.SingleChoice,
+                filterType = AssignmentListFilterType.Filter
+            ),
+            AssignmentListFilterGroup(
+                title = resources.getString(R.string.statusFilter),
+                options = listOf(
+                    AssignmentListFilterOption.AllStatusAssignments(resources),
+                    AssignmentListFilterOption.Published(resources),
+                    AssignmentListFilterOption.Unpublished(resources),
+                ),
+                selectedOptions = listOf(AssignmentListFilterOption.AllStatusAssignments(resources)),
+                groupType = AssignmentListFilterGroupType.SingleChoice,
+                filterType = AssignmentListFilterType.Filter
+            ),
+            AssignmentListFilterGroup(
+                title = resources.getString(R.string.groupedBy),
+                options = listOf(
+                    AssignmentListGroupByOption.AssignmentGroup(resources),
+                    AssignmentListGroupByOption.AssignmentType(resources),
+                ),
+                selectedOptions = listOf(AssignmentListGroupByOption.AssignmentGroup(resources)),
+                groupType = AssignmentListFilterGroupType.SingleChoice,
+                filterType = AssignmentListFilterType.GroupBy
+            ),
+        )
+        if (gradingPeriods != null && gradingPeriods.size > 1) {
+            val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
+            groups.add(
+                AssignmentListFilterGroup(
+                    title = resources.getString(R.string.gradingPeriod),
+                    options = listOf(allGradingPeriod) + gradingPeriods.map {
+                        AssignmentListFilterOption.GradingPeriod(it, resources)
+                    },
+                    selectedOptions = listOf(allGradingPeriod),
+                    groupType = AssignmentListFilterGroupType.SingleChoice,
+                    filterType = AssignmentListFilterType.Filter
+                )
+            )
+        }
+
+        return AssignmentListFilterState(contextColor, groups)
     }
 }
