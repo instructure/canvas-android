@@ -23,7 +23,7 @@ object Versions {
     const val GOOGLE_SERVICES = "4.4.2"
 
     /* Others */
-    const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
+    const val APOLLO = "4.1.1"
     const val PSPDFKIT = "2024.3.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
@@ -53,7 +53,7 @@ object Libs {
 
     /* Apollo/GraphQL */
     const val APOLLO_RUNTIME = "com.apollographql.apollo:apollo-runtime:${Versions.APOLLO}"
-    const val APOLLO_ANDROID_SUPPORT = "com.apollographql.apollo:apollo-android-support:${Versions.APOLLO}"
+    const val APOLLO_API = "com.apollographql.apollo:apollo-api:${Versions.APOLLO}"
     const val APOLLO_HTTP_CACHE = "com.apollographql.apollo:apollo-http-cache:${Versions.APOLLO}"
 
     /* Androidx libraries */

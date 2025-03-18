@@ -51,7 +51,7 @@ class ParentEventViewModelBehavior(
             disabledFields = options.disabledFields.copy(
                 isContextDisabled = true
             ),
-            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TeacherEnrollment),
             hiddenBodyMessage = resources.getString(
                 R.string.regardingHiddenMessage,
                 parentPrefs.currentStudent?.name.orEmpty(),
