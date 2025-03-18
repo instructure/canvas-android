@@ -40,7 +40,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
     ): AssignmentListFilterState {
         val groups = mutableListOf(
             AssignmentListFilterGroup(
-                groupIndex = 0,
+                groupId = 0,
                 title = resources.getString(R.string.assignmentFilter),
                 options = listOf(
                     AssignmentListFilterOption.AllFilterAssignments(resources),
@@ -52,7 +52,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
                 filterType = AssignmentListFilterType.Filter
             ),
             AssignmentListFilterGroup(
-                groupIndex = 1,
+                groupId = 1,
                 title = resources.getString(R.string.statusFilter),
                 options = listOf(
                     AssignmentListFilterOption.AllStatusAssignments(resources),
@@ -64,7 +64,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
                 filterType = AssignmentListFilterType.Filter
             ),
             AssignmentListFilterGroup(
-                groupIndex = 2,
+                groupId = 2,
                 title = resources.getString(R.string.groupedBy),
                 options = listOf(
                     AssignmentListGroupByOption.AssignmentGroup(resources),
@@ -79,7 +79,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
             val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
             groups.add(
                 AssignmentListFilterGroup(
-                    groupIndex = 4,
+                    groupId = 4,
                     title = resources.getString(R.string.gradingPeriod),
                     options = listOf(allGradingPeriod) + gradingPeriods.map {
                         AssignmentListFilterOption.GradingPeriod(it, resources)

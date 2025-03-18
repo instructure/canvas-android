@@ -25,10 +25,14 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListFilterEntity
 
 class TeacherAssignmentListRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val assignmentListFilterDao: AssignmentListFilterDao
 ): AssignmentListRepository {
     override suspend fun getAssignments(
         courseId: Long,
@@ -75,6 +79,46 @@ class TeacherAssignmentListRepository(
     override suspend fun getCourse(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
         val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
         return courseApi.getCourseWithGrade(courseId, restParams)
+    }
+
+    override suspend fun getSelectedOptions(
+        userDomain: String,
+        userId: Long,
+        contextId: Long,
+        groupId: Int
+    ): List<Int>? {
+        return assignmentListFilterDao.findAssignmentListFilter(userDomain, userId, contextId, groupId)?.selectedIndexes
+    }
+
+    override suspend fun updateSelectedOptions(
+        userDomain: String,
+        userId: Long,
+        contextId: Long,
+        state: AssignmentListFilterState
+    ) {
+        state.filterGroups.forEach { group ->
+            val entity = assignmentListFilterDao.findAssignmentListFilter(
+                userDomain,
+                userId,
+                contextId,
+                group.groupId
+            )
+            if (entity != null) {
+                assignmentListFilterDao.update(
+                    entity.copy(selectedIndexes = group.selectedOptionIndexes)
+                )
+            } else {
+                assignmentListFilterDao.insert(
+                    entity = AssignmentListFilterEntity(
+                        userDomain = userDomain,
+                        userId = userId,
+                        contextId = contextId,
+                        groupId = group.groupId,
+                        selectedIndexes = group.selectedOptionIndexes
+                    )
+                )
+            }
+        }
     }
 
 }
