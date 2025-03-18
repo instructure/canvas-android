@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.SHA256
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -83,7 +84,7 @@ class SplashViewModel @Inject constructor(
                 val accountData = mapOf(
                     "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
                 )
-                Pendo.startSession(user?.uuid.orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
+                Pendo.startSession(user?.uuid?.SHA256().orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
             } else {
                 Pendo.endSession()
             }

@@ -53,6 +53,7 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
@@ -186,7 +187,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         if (sendUsageMetrics) {
             val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
             val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
-            Pendo.startSession(user?.uuid.orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
+            Pendo.startSession(user?.uuid?.SHA256().orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
         } else {
             Pendo.endSession()
         }
