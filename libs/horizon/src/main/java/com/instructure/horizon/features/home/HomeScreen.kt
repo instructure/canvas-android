@@ -38,10 +38,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +56,7 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.HorizonTheme
 import com.instructure.horizon.MainNavigationRoute
 import com.instructure.horizon.R
+import com.instructure.horizon.design.Colors
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 
@@ -71,7 +70,7 @@ fun HomeScreen(parentNavController: NavHostController) {
     HorizonTheme {
         Scaffold(content = { padding ->
             HomeNavigation(navController, Modifier.padding(padding))
-        }, containerColor = colorResource(R.color.surface_pagePrimary), bottomBar = {
+        }, containerColor = Colors.Surface.pagePrimary(), bottomBar = {
             BottomNavigationBar(navController, currentDestination, parentNavController)
         })
     }
@@ -105,7 +104,7 @@ private fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = 8.dp) {
-        NavigationBar(containerColor = colorResource(R.color.surface_pageSecondary), tonalElevation = 8.dp, modifier = modifier) {
+        NavigationBar(containerColor = Colors.Surface.pageSecondary(), tonalElevation = 8.dp, modifier = modifier) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                 if (item.route == "ai") {
@@ -139,15 +138,15 @@ fun RowScope.SelectableNavigationItem(item: BottomNavItem, selected: Boolean, on
             Icon(painter = painterResource(if (selected) item.selectedIcon else item.icon), contentDescription = label)
         },
         label = {
-            val colorResource = if (selected) R.color.text_surfaceInverseSecondary else R.color.text_body
+            val color = if (selected) Colors.Text.surfaceInverseSecondary() else Colors.Text.body()
             val fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
-            Text(label, color = colorResource(colorResource), fontSize = 12.sp, fontWeight = fontWeight)
+            Text(label, color = color, fontSize = 12.sp, fontWeight = fontWeight)
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = colorResource(R.color.icon_surfaceInverseSecondary),
-            unselectedIconColor = colorResource(R.color.icon_medium),
-            selectedTextColor = colorResource(R.color.text_surfaceInverseSecondary),
-            unselectedTextColor = colorResource(R.color.text_body),
+            selectedIconColor = Colors.Icon.surfaceInverseSecondary(),
+            unselectedIconColor = Colors.Icon.medium(),
+            selectedTextColor = Colors.Text.surfaceInverseSecondary(),
+            unselectedTextColor = Colors.Text.body(),
             indicatorColor = Color.Transparent
         ),
         modifier = modifier
@@ -160,12 +159,7 @@ fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier:
         .requiredSize(48.dp)
         .weight(1f)
         .background(
-            brush = Brush.verticalGradient(
-                colors = listOf(
-                    colorResource(R.color.ai_gradient_start),
-                    colorResource(R.color.ai_gradient_end)
-                )
-            ),
+            brush = Colors.Surface.aiGradient(),
             shape = RoundedCornerShape(500.dp)
         )
         .clickable { onClick() }) {

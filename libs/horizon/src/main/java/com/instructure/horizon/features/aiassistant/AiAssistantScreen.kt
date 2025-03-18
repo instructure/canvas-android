@@ -25,12 +25,10 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.instructure.horizon.R
+import com.instructure.horizon.design.Colors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,12 +39,7 @@ fun AiAssistantScreen(navHostController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            colorResource(R.color.ai_gradient_start),
-                            colorResource(R.color.ai_gradient_end)
-                        )
-                    )
+                    brush = Colors.Surface.aiGradient()
                 )
         ) {
             Text(text = "Ai assistant Screen", modifier = Modifier.align(Alignment.Center), fontSize = 48.sp)
