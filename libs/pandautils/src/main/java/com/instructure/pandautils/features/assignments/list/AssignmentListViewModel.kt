@@ -100,7 +100,7 @@ class AssignmentListViewModel @Inject constructor(
                                 )
                             }
                         ),
-                        filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, course.gradingPeriods)
+                        filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, gradingPeriods)
                     )
                 }
 
@@ -239,9 +239,11 @@ class AssignmentListViewModel @Inject constructor(
                         }
 
                         is AssignmentListFilterOption.GradingPeriod -> {
-                            newFilteredAssignments +=
-                                uiState.value.gradingPeriodsWithAssignments[filter.period].orEmpty()
-                                    .toMutableSet()
+                            if (filter.period == null) {
+                                newFilteredAssignments += filteredAssignments
+                            } else {
+                                newFilteredAssignments += filteredAssignments.filter { uiState.value.gradingPeriodsWithAssignments[filter.period]?.contains(it).orDefault() }
+                            }
                         }
 
                         is AssignmentListFilterOption.NotYetSubmitted -> {

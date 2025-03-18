@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
@@ -88,6 +89,9 @@ class StudentAssignmentListRepository(
         state: AssignmentListFilterState
     ) {
         state.filterGroups.forEach { group ->
+            if (group.options.any { it is AssignmentListFilterOption.GradingPeriod }) {
+                return@forEach
+            }
             val entity = assignmentListFilterDao.findAssignmentListFilter(
                 userDomain,
                 userId,
