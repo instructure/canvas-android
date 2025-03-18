@@ -83,16 +83,6 @@ object SubmissionAPI {
 
         @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionComment(
-                @Path("courseId") courseId: Long,
-                @Path("assignmentId") assignmentId: Long,
-                @Path("userId") userId: Long,
-                @Query("comment[text_comment]") comment: String,
-                @Query("comment[group_comment]") isGroupComment: Boolean,
-                @Query("comment[file_ids][]") attachments: List<Long>
-        ): Call<Submission>
-
-        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
-        fun postSubmissionComment(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,
             @Path("userId") userId: Long,
@@ -114,13 +104,6 @@ object SubmissionAPI {
             @Tag restParams: RestParams
         ): DataResult<Submission>
 
-        @POST("{contextId}/assignments/{assignmentId}/submissions")
-        fun postTextSubmission(
-                @Path("contextId") contextId: Long,
-                @Path("assignmentId") assignmentId: Long,
-                @Query("submission[submission_type]") submissionType: String,
-                @Query(value = "submission[body]", encoded = true) text: String): Call<Submission>
-
         @POST("courses/{contextId}/assignments/{assignmentId}/submissions")
         suspend fun postTextSubmission(
             @Path("contextId") contextId: Long,
@@ -129,13 +112,6 @@ object SubmissionAPI {
             @Query(value = "submission[body]", encoded = true) text: String,
             @Tag restParams: RestParams
         ): DataResult<Submission>
-
-        @POST("{contextId}/assignments/{assignmentId}/submissions")
-        fun postUrlSubmission(
-                @Path("contextId") contextId: Long,
-                @Path("assignmentId") assignmentId: Long,
-                @Query("submission[submission_type]") submissionType: String,
-                @Query("submission[url]") url: String): Call<Submission>
 
         @POST("courses/{contextId}/assignments/{assignmentId}/submissions")
         suspend fun postUrlSubmission(
@@ -261,24 +237,12 @@ object SubmissionAPI {
         }
     }
 
-    fun postTextSubmission(contextId: Long, assignmentId: Long, text: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postTextSubmission(contextId, assignmentId, "online_text_entry", text)).enqueue(callback)
-    }
-
-    fun postUrlSubmission(contextId: Long, assignmentId: Long, submissionType: String, url: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postUrlSubmission(contextId, assignmentId, submissionType, url)).enqueue(callback)
-    }
-
     fun getLtiFromAuthenticationUrl(url: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<LTITool>) {
         callback.addCall(adapter.build(SubmissionInterface::class.java, params).getLtiFromAuthenticationUrl(url)).enqueue(callback)
     }
 
     fun postSubmissionGrade(courseId: Long, assignmentId: Long, userId: Long, assignmentScore: String, isExcused: Boolean, adapter: RestBuilder, callback: StatusCallback<Submission>, params: RestParams) {
         callback.addCall(adapter.build(SubmissionInterface::class.java, params).postSubmissionGrade(courseId, assignmentId, userId, assignmentScore, isExcused)).enqueue(callback)
-    }
-
-    fun postSubmissionComment(courseId: Long, assignmentID: Long, userID: Long, comment: String, isGroupMessage: Boolean, attachmentsIds: List<Long>, adapter: RestBuilder, callback: StatusCallback<Submission>, params: RestParams) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postSubmissionComment(courseId, assignmentID, userID, comment, isGroupMessage, attachmentsIds)).enqueue(callback)
     }
 
     fun postSubmissionComment(

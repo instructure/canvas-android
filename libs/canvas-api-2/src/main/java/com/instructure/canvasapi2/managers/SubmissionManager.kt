@@ -112,30 +112,6 @@ object SubmissionManager {
         commentText: String,
         isGroupMessage: Boolean,
         attachments: List<Long>,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams()
-        SubmissionAPI.postSubmissionComment(
-            courseId,
-            assignmentId,
-            userId,
-            commentText,
-            isGroupMessage,
-            attachments,
-            adapter,
-            callback,
-            params
-        )
-    }
-
-    fun postSubmissionComment(
-        courseId: Long,
-        assignmentId: Long,
-        userId: Long,
-        commentText: String,
-        isGroupMessage: Boolean,
-        attachments: List<Long>,
         callback: StatusCallback<Submission>,
         attemptId: Long?
     ) {
@@ -196,41 +172,12 @@ object SubmissionManager {
         SubmissionAPI.getSubmissionSummary(courseId, assignmentId, adapter, params, callback)
     }
 
-    fun postTextSubmission(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        text: String,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
-
-        SubmissionAPI.postTextSubmission(canvasContext.id, assignmentId, text, adapter, params, callback)
-    }
-
-    fun postUrlSubmission(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        url: String,
-        isLti: Boolean,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
-        val type = if (isLti) SubmissionAPI.BASIC_LTI_LAUNCH else SubmissionAPI.ONLINE_URL
-
-        SubmissionAPI.postUrlSubmission(canvasContext.id, assignmentId, type, url, adapter, params, callback)
-    }
-
     fun getLtiFromAuthenticationUrl(url: String, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         SubmissionAPI.getLtiFromAuthenticationUrl(url, adapter, params, callback)
     }
-
-    fun getLtiFromAuthenticationUrlAsync(url: String, forceNetwork: Boolean) =
-        apiAsync<LTITool> { getLtiFromAuthenticationUrl(url, it, forceNetwork) }
 
     fun postMediaSubmissionComment(
         canvasContext: CanvasContext,
@@ -297,14 +244,6 @@ object SubmissionManager {
             adapter,
             params
         )
-    }
-
-    fun postStudentAnnotationSubmissionAsync(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        annotatableAttachmentId: Long
-    ) = apiAsync {
-        postStudentAnnotationSubmission(canvasContext, assignmentId, annotatableAttachmentId, it)
     }
 
     fun markSubmissionAsReadAsync(
