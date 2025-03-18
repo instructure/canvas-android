@@ -20,10 +20,23 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionSummary
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
+import retrofit2.http.Tag
+import retrofit2.http.Url
 
 
 object SubmissionAPI {
@@ -131,6 +144,18 @@ object SubmissionAPI {
                 @Query("comment[media_comment_id]") mediaId: String,
                 @Query("comment[media_comment_type]") commentType: String,
                 @Query("comment[group_comment]") isGroupComment: Boolean): Call<Submission>
+
+        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
+        suspend fun postMediaSubmissionComment(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Path("userId") userId: Long,
+            @Query("comment[attempt]") attemptId: Long?,
+            @Query("comment[media_comment_id]") mediaId: String,
+            @Query("comment[media_comment_type]") commentType: String,
+            @Query("comment[group_comment]") isGroupComment: Boolean,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
 
         @POST("{contextId}/assignments/{assignmentId}/submissions")
         fun postMediaSubmission(
