@@ -20,6 +20,8 @@ package com.instructure.student.activity
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -64,7 +66,6 @@ import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
 import sdk.pendo.io.Pendo
-import java.security.MessageDigest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -78,6 +79,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     @Inject
     lateinit var pandataAppKey: PandataInfo.AppKey
+
+    @Inject
+    lateinit var userApi: UserAPI.UsersInterface
 
     private var loadInitialDataJob: Job? = null
 
@@ -97,9 +101,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         loadInitialDataJob = tryWeave {
             featureFlagProvider.fetchEnvironmentFeatureFlags()
 
-            val account = awaitApi<Account> { UserManager.getSelfAccount(true, it) }
-
-            setupPendoTracking(account)
+            setupPendoTracking()
 
             // Get enabled tabs
             enabledTabs.initTabs()
@@ -109,6 +111,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
                     ApiPrefs.canBecomeUser = true
                 } else try {
+                    val account = awaitApi<Account> { UserManager.getSelfAccount(true, it) }
                     val permission = awaitApi { UserManager.getBecomeUserPermission(true, account.id, it) }
                     ApiPrefs.canBecomeUser = permission.becomeUser
                 } catch (e: StatusCallbackError) {
@@ -176,15 +179,14 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         }
     }
 
-    private suspend fun setupPendoTracking(account: Account) {
+    private suspend fun setupPendoTracking() {
+        val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrNull
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
         if (sendUsageMetrics) {
-            val visitorSha = ApiPrefs.user?.id?.toString()?.toByteArray()
-                ?.let { MessageDigest.getInstance("SHA-256").digest(it).joinToString(separator = "") { eachByte -> "%02x".format(eachByte) } }
             val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
             val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
-            Pendo.startSession(visitorSha, account.uuid.orEmpty(), visitorData, accountData)
+            Pendo.startSession(user?.uuid.orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
         } else {
             Pendo.endSession()
         }

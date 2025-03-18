@@ -89,7 +89,7 @@ class SplashRepositoryTest {
     fun `Get self successfully returns data`() = runTest {
         val expected = User(id = 1L)
 
-        coEvery { userApi.getSelf(any()) } returns DataResult.Success(expected)
+        coEvery { userApi.getSelfWithUUID(any()) } returns DataResult.Success(expected)
 
         val result = repository.getSelf()
         assertEquals(expected, result)
@@ -97,7 +97,7 @@ class SplashRepositoryTest {
 
     @Test
     fun `Get self returns null when call fails`() = runTest {
-        coEvery { userApi.getSelf(any()) } returns DataResult.Fail()
+        coEvery { userApi.getSelfWithUUID(any()) } returns DataResult.Fail()
 
         val result = repository.getSelf()
         assertNull(result)
