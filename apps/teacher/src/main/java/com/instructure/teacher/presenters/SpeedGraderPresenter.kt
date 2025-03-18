@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.blueprint.Presenter
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
@@ -43,12 +44,10 @@ import com.instructure.teacher.features.assignment.submission.SubmissionListFilt
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.instructure.teacher.viewinterface.SpeedGraderView
-import com.instructure.pandautils.blueprint.Presenter
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.Locale
 
 class SpeedGraderPresenter(
     private var courseId: Long,
@@ -123,10 +122,7 @@ class SpeedGraderPresenter(
             )
             course = data.first
             assignment = data.second
-            val allSubmissions = repository.getGradeableStudentSubmissions(assignment, courseId, false).sortedBy {
-                (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(
-                    Locale.getDefault())
-            }
+            val allSubmissions = repository.getGradeableStudentSubmissions(assignment, courseId, false)
             submissions = allSubmissions.filter {
                 when (filter) {
                     SubmissionListFilter.ALL -> true

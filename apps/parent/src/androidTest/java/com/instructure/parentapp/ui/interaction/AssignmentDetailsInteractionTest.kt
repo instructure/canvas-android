@@ -395,7 +395,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
     }
 
     @Test
-    fun testSubmissionOpensInWebViewWhenAssigmentEnhancementsDisabled() {
+    fun testSubmissionOpensInWebViewWhenAssignmentEnhancementsDisabled() {
         val data = setupData()
         data.assignmentEnhancementsEnabled = false
         val course = data.courses.values.first()

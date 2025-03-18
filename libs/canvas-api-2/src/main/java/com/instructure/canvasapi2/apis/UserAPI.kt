@@ -72,6 +72,9 @@ object UserAPI {
         @GET("accounts/self")
         fun getAccount(): Call<Account>
 
+        @GET("accounts/self")
+        suspend fun getAccount(@Tag restParams: RestParams): DataResult<Account>
+
         @PUT("users/self/colors/{context_id}")
         fun setColor(@Path("context_id") contextId: String, @Query(value = "hexcode") color: String): Call<CanvasColor>
 
