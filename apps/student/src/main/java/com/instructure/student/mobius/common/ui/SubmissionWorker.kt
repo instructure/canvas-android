@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -536,7 +536,7 @@ class SubmissionWorker @AssistedInject constructor(
             )
             val postCommentResult = notoriousResult?.let { result ->
                 submissionApi.postMediaSubmissionComment(
-                    contextId = comment.canvasContext.id,
+                    courseId = comment.canvasContext.id,
                     assignmentId = comment.assignmentId,
                     userId = getUserId(),
                     mediaId = result.id!!,
