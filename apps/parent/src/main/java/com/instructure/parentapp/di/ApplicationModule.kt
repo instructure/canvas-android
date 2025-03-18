@@ -37,8 +37,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.time.Clock
 import javax.inject.Singleton
-import io.heap.autocapture.ViewAutocaptureSDK
-import io.heap.core.Heap
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -97,15 +95,5 @@ class ApplicationModule {
             calendarFilterDao,
             clock
         )
-    }
-
-    @Provides
-    fun provideHeap(): Heap {
-        return Heap
-    }
-
-    @Provides
-    fun provideViewAutocaptureSDK(): ViewAutocaptureSDK {
-        return ViewAutocaptureSDK
     }
 }

@@ -23,6 +23,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -34,6 +35,7 @@ import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.showNoConnectionDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -77,8 +79,12 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
         val dialog = builder.create()
 
         binding.termsOfUse.setOnClickListener {
-            legalRouter.routeToTermsOfService(html)
-            dialog.dismiss()
+            if (html.isBlank() && !APIHelper.hasNetworkConnection()) {
+                showNoConnectionDialog(requireContext())
+            } else {
+                legalRouter.routeToTermsOfService(html)
+                dialog.dismiss()
+            }
         }
 
         binding.termsOfUse.accessibilityClassName(Button::class.java.name)

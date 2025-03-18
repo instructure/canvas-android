@@ -36,6 +36,7 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.R
@@ -45,25 +46,43 @@ import dagger.assisted.AssistedInject
 import java.io.File
 import kotlin.random.Random
 
+private const val FALLBACK_FILE_NAME = "canvas_file"
+
 @HiltWorker
 class FileDownloadWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val fileDownloadApi: FileDownloadAPI
+    private val fileDownloadApi: FileDownloadAPI,
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    private val fileName = inputData.getString(INPUT_FILE_NAME) ?: ""
+    private val fileName = inputData.getString(INPUT_FILE_NAME)
     private val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
     private val notificationId = Random.nextInt()
 
-    private var notification: Notification = createNotification(notificationId, fileName, 0)
+    private var notification: Notification = createNotification(notificationId, fileName ?: "", 0)
 
     override suspend fun doWork(): Result {
         registerNotificationChannel(context)
 
-        val downloadFileName = createDownloadFileName(fileName)
+        val realFileName = if (fileName != null) {
+            fileName
+        } else {
+            val (courseId, fileId) = getCourseAndFileId(fileUrl)
+            if (courseId != -1L && fileId != -1L) {
+                val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams())
+                file.dataOrNull?.displayName ?: FALLBACK_FILE_NAME
+            } else if (fileId != -1L) {
+                val file = fileFolderApi.getUserFile(fileId, RestParams())
+                file.dataOrNull?.displayName ?: FALLBACK_FILE_NAME
+            } else {
+                FALLBACK_FILE_NAME
+            }
+        }
+
+        val downloadFileName = createDownloadFileName(realFileName)
 
         val downloadedFile =
             File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), downloadFileName)
@@ -80,7 +99,7 @@ class FileDownloadWorker @AssistedInject constructor(
                 .collect { downloadState ->
                     when (downloadState) {
                         is DownloadState.InProgress -> {
-                            notification = createNotification(notificationId, fileName, downloadState.progress)
+                            notification = createNotification(notificationId, realFileName, downloadState.progress)
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                                 setForeground(ForegroundInfo(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC))
                             } else {
@@ -94,13 +113,13 @@ class FileDownloadWorker @AssistedInject constructor(
 
                         is DownloadState.Success -> {
                             result = Result.success()
-                            updateNotificationComplete(notificationId, fileName)
+                            updateNotificationComplete(notificationId, realFileName)
                         }
                     }
                 }
         } catch (e: Exception) {
             result = Result.failure()
-            updateNotificationFailed(notificationId, fileName)
+            updateNotificationFailed(notificationId, realFileName)
         }
 
 
@@ -179,13 +198,19 @@ class FileDownloadWorker @AssistedInject constructor(
         notificationManager.notify(notificationId, notification)
     }
 
+    private fun getCourseAndFileId(fileUrl: String): Pair<Long, Long> {
+        val courseId = fileUrl.substringAfter("courses/", missingDelimiterValue = "-1").substringBefore("/files", missingDelimiterValue = "-1").toLong()
+        val fileId = fileUrl.substringAfter("files/", missingDelimiterValue = "-1").takeWhile { it.isDigit() }.toLong()
+        return Pair(courseId, fileId)
+    }
+
     companion object {
         const val INPUT_FILE_NAME = "fileName"
         const val INPUT_FILE_URL = "fileUrl"
 
         const val CHANNEL_ID = "uploadChannel"
 
-        fun createOneTimeWorkRequest(fileName: String, fileUrl: String): OneTimeWorkRequest {
+        fun createOneTimeWorkRequest(fileName: String?, fileUrl: String): OneTimeWorkRequest {
             val inputData = androidx.work.Data.Builder()
                 .putString(INPUT_FILE_NAME, fileName)
                 .putString(INPUT_FILE_URL, fileUrl)

@@ -63,6 +63,8 @@ class RatingDialog : BaseCanvasDialogFragment() {
 
     private lateinit var binding: DialogRatingBinding
 
+    private var selectedStars = 0
+
     /**
      * Called when the user hits the back button, this will delay the dialog from showing for 4 weeks
      *
@@ -72,6 +74,18 @@ class RatingDialog : BaseCanvasDialogFragment() {
         super.onCancel(dialog)
         Prefs.dateShowAgain = FOUR_WEEKS // Show again in 4 weeks
         Prefs.dateFirstLaunched = System.currentTimeMillis() // Reset the date_first_launched to be right now
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            selectedStars = savedInstanceState.getInt(KEY_STARS, 0)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_STARS, selectedStars)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -99,8 +113,6 @@ class RatingDialog : BaseCanvasDialogFragment() {
     }
 
     private fun setupViews(appType: AppType) = with(binding) {
-        var selectedStars = 0
-
         stars = listOf(star1, star2, star3, star4, star5)
 
         send.setOnClickListener {
@@ -157,6 +169,9 @@ class RatingDialog : BaseCanvasDialogFragment() {
         stars.forEach {
             it.setOnClickListener(starClickListener)
         }
+        if (selectedStars > 0) {
+            stars[selectedStars - 1].callOnClick()
+        }
     }
 
     private fun populateMailIntent(subject: String, title: String): Intent {
@@ -203,6 +218,7 @@ class RatingDialog : BaseCanvasDialogFragment() {
         private const val APP_TYPE = "app_type"
         private const val FOUR_WEEKS = 28
         private const val SIX_WEEKS = 42
+        private const val KEY_STARS = "key_stars"
 
         fun newInstance(appType: AppType): RatingDialog {
             return RatingDialog().withArgs {

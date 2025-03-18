@@ -29,6 +29,7 @@ import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.FrontPagePage
 import com.instructure.parentapp.ui.pages.HelpPage
 import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.parentapp.ui.pages.SyllabusPage
@@ -46,6 +47,7 @@ abstract class ParentTest : CanvasTest() {
     val helpPage = HelpPage()
     val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
     val syllabusPage = SyllabusPage()
+    val frontPagePage = FrontPagePage()
 
     // Common pages (it's common for all apps)
     val loginLandingPage = LoginLandingPage()
