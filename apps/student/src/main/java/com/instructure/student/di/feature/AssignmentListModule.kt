@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -73,13 +74,16 @@ class AssignmentListViewModelModule{
         localDataSource: AssignmentListLocalDataSource,
         networkDataSource: AssignmentListNetworkDataSource,
         networkStateProvider: NetworkStateProvider,
-        featureFlagProvider: FeatureFlagProvider
+        featureFlagProvider: FeatureFlagProvider,
+        assignmentListFilterDao: AssignmentListFilterDao
     ): AssignmentListRepository {
-        return StudentAssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        return StudentAssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, assignmentListFilterDao)
     }
 
     @Provides
-    fun provideAssignmentListBehavior(resources: Resources): AssignmentListBehavior {
+    fun provideAssignmentListBehavior(
+        resources: Resources
+    ): AssignmentListBehavior {
         return StudentAssignmentListBehavior(resources)
     }
 }

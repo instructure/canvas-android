@@ -40,34 +40,37 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
     ): AssignmentListFilterState {
         val groups = mutableListOf(
             AssignmentListFilterGroup(
+                groupIndex = 0,
                 title = resources.getString(R.string.assignmentFilter),
                 options = listOf(
                     AssignmentListFilterOption.AllFilterAssignments(resources),
                     AssignmentListFilterOption.NeedsGrading(resources),
                     AssignmentListFilterOption.NotSubmitted(resources),
                 ),
-                selectedOptions = listOf(AssignmentListFilterOption.AllFilterAssignments(resources)),
+                selectedOptionIndexes = (0..3).toList(),
                 groupType = AssignmentListFilterGroupType.SingleChoice,
                 filterType = AssignmentListFilterType.Filter
             ),
             AssignmentListFilterGroup(
+                groupIndex = 1,
                 title = resources.getString(R.string.statusFilter),
                 options = listOf(
                     AssignmentListFilterOption.AllStatusAssignments(resources),
                     AssignmentListFilterOption.Published(resources),
                     AssignmentListFilterOption.Unpublished(resources),
                 ),
-                selectedOptions = listOf(AssignmentListFilterOption.AllStatusAssignments(resources)),
+                selectedOptionIndexes = listOf(0),
                 groupType = AssignmentListFilterGroupType.SingleChoice,
                 filterType = AssignmentListFilterType.Filter
             ),
             AssignmentListFilterGroup(
+                groupIndex = 2,
                 title = resources.getString(R.string.groupedBy),
                 options = listOf(
                     AssignmentListGroupByOption.AssignmentGroup(resources),
                     AssignmentListGroupByOption.AssignmentType(resources),
                 ),
-                selectedOptions = listOf(AssignmentListGroupByOption.AssignmentGroup(resources)),
+                selectedOptionIndexes = listOf(0),
                 groupType = AssignmentListFilterGroupType.SingleChoice,
                 filterType = AssignmentListFilterType.GroupBy
             ),
@@ -76,11 +79,12 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
             val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
             groups.add(
                 AssignmentListFilterGroup(
+                    groupIndex = 4,
                     title = resources.getString(R.string.gradingPeriod),
                     options = listOf(allGradingPeriod) + gradingPeriods.map {
                         AssignmentListFilterOption.GradingPeriod(it, resources)
                     },
-                    selectedOptions = listOf(allGradingPeriod),
+                    selectedOptionIndexes = listOf(0),
                     groupType = AssignmentListFilterGroupType.SingleChoice,
                     filterType = AssignmentListFilterType.Filter
                 )

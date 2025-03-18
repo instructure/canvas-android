@@ -10,9 +10,10 @@ data class AssignmentListFilterState(
 )
 
 data class AssignmentListFilterGroup(
+    val groupId: Int,
     val title: String,
     val options: List<AssignmentListGroupItem>,
-    val selectedOptions: List<AssignmentListGroupItem>,
+    val selectedOptionIndexes: List<Int>,
     val groupType: AssignmentListFilterGroupType,
     val filterType: AssignmentListFilterType,
 )

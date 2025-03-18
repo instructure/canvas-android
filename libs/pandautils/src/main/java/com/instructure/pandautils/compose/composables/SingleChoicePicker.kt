@@ -42,7 +42,7 @@ fun<T> SingleChoicePicker(
     title: String,
     items: List<T>,
     contextColor: Color,
-    selectedItem: T,
+    selectedIndex: Int,
     onItemSelected: (T) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,7 +65,7 @@ fun<T> SingleChoicePicker(
             ) {
                 Spacer(modifier = Modifier.width(20.dp))
                 RadioButton(
-                    selected = item == selectedItem,
+                    selected = items.indexOf(item) == selectedIndex,
                     onClick = { onItemSelected(item) },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = contextColor,
@@ -90,7 +90,7 @@ private fun SingleChoicePickerPreview(){
         title = "Title",
         items = listOf("Item 1", "Item 2", "Item 3"),
         contextColor = Color.Blue,
-        selectedItem = "Item 1",
+        selectedIndex = 0,
         onItemSelected = {},
         modifier = Modifier
     )

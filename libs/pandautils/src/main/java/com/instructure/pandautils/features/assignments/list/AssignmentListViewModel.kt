@@ -21,18 +21,19 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.GroupedListViewState
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,6 +47,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AssignmentListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val apiPrefs: ApiPrefs,
     private val resources: Resources,
     private val repository: AssignmentListRepository,
     private val assignmentListBehavior: AssignmentListBehavior
@@ -101,6 +103,29 @@ class AssignmentListViewModel @Inject constructor(
                         filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, course.gradingPeriods)
                     )
                 }
+
+                uiState.value.filterState.filterGroups.forEach { group ->
+                    repository.getSelectedOptions(
+                        apiPrefs.fullDomain,
+                        apiPrefs.user?.id.orDefault(),
+                        course.id,
+                        group.groupId
+                    )?.let { selectedIndexes ->
+                        _uiState.update {
+                            it.copy(
+                                filterState = it.filterState.copy(
+                                    filterGroups = it.filterState.filterGroups.map { filterGroup ->
+                                        if (filterGroup.groupId == group.groupId) {
+                                            filterGroup.copy(selectedOptionIndexes = selectedIndexes)
+                                        } else {
+                                            filterGroup
+                                        }
+                                    }
+                                )
+                            )
+                        }
+                    }
+                }
             } catch {
                 _uiState.update { it.copy(state = ScreenState.Error) }
             }
@@ -154,6 +179,14 @@ class AssignmentListViewModel @Inject constructor(
                         listState = performFilters()
                     )
                 }
+                viewModelScope.launch {
+                    repository.updateSelectedOptions(
+                        apiPrefs.fullDomain,
+                        apiPrefs.user?.id.orDefault(),
+                        uiState.value.course.id,
+                        action.filterState
+                    )
+                }
             }
             AssignmentListScreenEvent.OpenFilterScreen -> {
                 _uiState.update { it.copy(screenOption = AssignmentListScreenOption.Filter) }
@@ -173,7 +206,8 @@ class AssignmentListViewModel @Inject constructor(
         filters
             .forEach { filterGroup ->
                 val newFilteredAssignments = mutableSetOf<Assignment>()
-                filterGroup.selectedOptions.forEach { filter ->
+                filterGroup.selectedOptionIndexes.forEach {
+                    val filter = filterGroup.options[it]
                     when (filter) {
                         is AssignmentListFilterOption.AllStatusAssignments -> {
                             newFilteredAssignments += filteredAssignments
@@ -236,7 +270,9 @@ class AssignmentListViewModel @Inject constructor(
                 filteredAssignments = newFilteredAssignments
             }
 
-        val groupBy = uiState.value.filterState.filterGroups.firstOrNull { it.filterType == AssignmentListFilterType.GroupBy }?.selectedOptions?.firstOrNull()
+        val groupByGroup = uiState.value.filterState.filterGroups.firstOrNull { it.filterType == AssignmentListFilterType.GroupBy }
+        val groupBy = groupByGroup?.options?.get(groupByGroup.selectedOptionIndexes.firstOrNull() ?: 0)
+            ?: AssignmentListGroupByOption.AssignmentGroup(resources)
         groups = when (groupBy) {
             is AssignmentListGroupByOption.AssignmentGroup -> {
                 filteredAssignments

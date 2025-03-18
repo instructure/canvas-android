@@ -42,7 +42,7 @@ fun<T> MultiChoicePicker(
     title: String,
     items: List<T>,
     contextColor: Color,
-    selectedItems: List<T>,
+    selectedIndexes: List<Int>,
     onItemChange: (T, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -60,12 +60,12 @@ fun<T> MultiChoicePicker(
                     .padding(vertical = 4.dp)
                     .background(colorResource(R.color.backgroundLightest))
                     .clickable {
-                        onItemChange(item, selectedItems.contains(item).not())
+                        onItemChange(item, selectedIndexes.contains(items.indexOf(item)).not())
                     }
             ) {
                 Spacer(modifier = Modifier.width(20.dp))
                 Checkbox(
-                    checked = selectedItems.contains(item),
+                    checked = selectedIndexes.contains(items.indexOf(item)),
                     onCheckedChange = { onItemChange(item, it) },
                     colors = CheckboxDefaults.colors(
                         checkedColor = contextColor,
@@ -90,7 +90,7 @@ private fun MultiChoicePickerPreview(){
         title = "Title",
         items = listOf("Item 1", "Item 2", "Item 3", "Item 4"),
         contextColor = Color.Blue,
-        selectedItems = listOf("Item 1", "Item 4"),
+        selectedIndexes = listOf(0, 3),
         onItemChange = {_, _ -> },
         modifier = Modifier
     )

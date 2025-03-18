@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.assignments.list.filter
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -85,13 +84,12 @@ private fun AssignmentListFilterGroup(
     ) {
         when (group.groupType) {
             AssignmentListFilterGroupType.SingleChoice -> {
-                Log.d("AssignmentListFilterScreen", "SingleChoicePicker: ${group.options}")
                 SingleChoicePicker(
                     title = group.title,
                     items = group.options,
                     contextColor = contextColor,
-                    selectedItem = group.selectedOptions.first(),
-                    onItemSelected = { onFilterChange(group.copy(selectedOptions = listOf(it))) },
+                    selectedIndex = group.selectedOptionIndexes.first(),
+                    onItemSelected = { onFilterChange(group.copy(selectedOptionIndexes = listOf(group.options.indexOf(it)))) },
                 )
             }
             AssignmentListFilterGroupType.MultiChoice -> {
@@ -99,14 +97,15 @@ private fun AssignmentListFilterGroup(
                     title = group.title,
                     items = group.options,
                     contextColor = contextColor,
-                    selectedItems = group.selectedOptions,
+                    selectedIndexes = group.selectedOptionIndexes,
                     onItemChange = { item, isSelected ->
-                        val newSelectedOptions = if (isSelected) {
-                            group.selectedOptions + item
+                        val index = group.options.indexOf(item)
+                        val newSelectedIndexes = if (isSelected) {
+                            group.selectedOptionIndexes + index
                         } else {
-                            group.selectedOptions - item
+                            group.selectedOptionIndexes - index
                         }
-                        onFilterChange(group.copy(selectedOptions = newSelectedOptions))
+                        onFilterChange(group.copy(selectedOptionIndexes = newSelectedIndexes))
                     },
                 )
             }
