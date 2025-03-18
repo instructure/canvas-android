@@ -628,12 +628,12 @@ class AssignmentsE2ETest: StudentComposeTest() {
         submissionDetailsPage.openComments()
 
         submissionDetailsPage.addAndSendVideoComment()
-        sleep(3000) // wait for video comment submission to propagate
+        sleep(5000) // wait for video comment submission to propagate
         submissionDetailsPage.assertVideoCommentDisplayed()
 
         Log.d(STEP_TAG,"Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
-        sleep(3000) // Wait for audio comment submission to propagate
+        sleep(5000) // Wait for audio comment submission to propagate
 
         Log.d(STEP_TAG,"Assert that the audio comment has been displayed.")
         submissionDetailsPage.assertAudioCommentDisplayed()

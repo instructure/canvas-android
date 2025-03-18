@@ -156,7 +156,7 @@ object SubmissionAPI {
                 @Query("comment[media_comment_type]") commentType: String,
                 @Query("comment[group_comment]") isGroupComment: Boolean): Call<Submission>
 
-        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
+        @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
         suspend fun postMediaSubmissionComment(
             @Path("contextId") contextId: Long,
             @Path("assignmentId") assignmentId: Long,

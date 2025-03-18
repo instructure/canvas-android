@@ -14,21 +14,21 @@
  *     limitations under the License.
  */package com.instructure.student.test
 
-import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.Const
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.mobius.common.ui.SubmissionWorker
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity
 import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
 import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
 import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
 import com.instructure.student.room.entities.daos.CreateSubmissionDao
-import com.instructure.student.util.Const
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -43,7 +43,6 @@ import java.io.File
 @RunWith(AndroidJUnit4::class)
 class SubmissionHelperTest {
 
-    private val context: Context = mockk(relaxed = true)
     private val studentDb: StudentDb = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
@@ -79,8 +78,8 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.TEXT_ENTRY.name
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.TEXT_ENTRY.name)
             })
         }
     }
@@ -105,8 +104,8 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.URL_ENTRY.name
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.URL_ENTRY.name)
             })
         }
     }
@@ -141,8 +140,8 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.FILE_ENTRY.name
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.FILE_ENTRY.name)
             })
         }
     }
@@ -188,8 +187,8 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.MEDIA_ENTRY.name
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.MEDIA_ENTRY.name)
             })
         }
     }
@@ -214,8 +213,8 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.STUDIO_ENTRY.name
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.STUDIO_ENTRY.name)
             })
         }
     }
@@ -244,8 +243,8 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.STUDENT_ANNOTATION.name
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.STUDENT_ANNOTATION.name)
             })
         }
     }
@@ -270,7 +269,7 @@ class SubmissionHelperTest {
         }
 
         verify(exactly = 0) {
-            context.startService(any())
+            workManager.enqueue(any<WorkRequest>())
         }
     }
 
@@ -295,8 +294,8 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.FILE_ENTRY.name
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.FILE_ENTRY.name)
             })
         }
     }
@@ -332,9 +331,11 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.COMMENT_ENTRY.name &&
-                        it.extras?.getLong(Const.ID) == 1L
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(
+                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.COMMENT_ENTRY.name
+                            && it.workSpec.input.getLong(Const.ID, -1) == 1L
+                )
             })
         }
     }
@@ -367,9 +368,11 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.COMMENT_ENTRY.name &&
-                        it.extras?.getLong(Const.ID) == 1L
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(
+                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.COMMENT_ENTRY.name
+                            && it.workSpec.input.getLong(Const.ID, -1) == 1L
+                )
             })
         }
     }
@@ -420,9 +423,11 @@ class SubmissionHelperTest {
         }
 
         verify {
-            context.startService(match {
-                it.action == SubmissionService.Action.COMMENT_ENTRY.name &&
-                        it.extras?.getLong(Const.ID) == 1L
+            workManager.enqueue(withArg<WorkRequest> {
+                assert(
+                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.COMMENT_ENTRY.name
+                            && it.workSpec.input.getLong(Const.ID, -1) == 1L
+                )
             })
         }
     }
