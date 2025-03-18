@@ -132,18 +132,6 @@ object SubmissionAPI {
                 @Query("comment[media_comment_type]") commentType: String,
                 @Query("comment[group_comment]") isGroupComment: Boolean): Call<Submission>
 
-        @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
-        suspend fun postMediaSubmissionComment(
-            @Path("contextId") contextId: Long,
-            @Path("assignmentId") assignmentId: Long,
-            @Path("userId") userId: Long,
-            @Query("comment[attempt]") attemptId: Long?,
-            @Query("comment[media_comment_id]") mediaId: String,
-            @Query("comment[media_comment_type]") commentType: String,
-            @Query("comment[group_comment]") isGroupComment: Boolean,
-            @Tag restParams: RestParams
-        ): DataResult<Submission>
-
         @POST("{contextId}/assignments/{assignmentId}/submissions")
         fun postMediaSubmission(
                 @Path("contextId") contextId: Long,
