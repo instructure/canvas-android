@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.assignments.list
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -96,6 +95,7 @@ class AssignmentListViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         state = ScreenState.Content,
+                        isRefreshing = false,
                         subtitle = course.name,
                         course = course,
                         allAssignments = allAssignment,
@@ -146,12 +146,10 @@ class AssignmentListViewModel @Inject constructor(
                     }
                 }
             } catch {
-                Log.d("AssignmentListViewModel", "Catch")
-                _uiState.update { it.copy(state = ScreenState.Error) }
+                _uiState.update { it.copy(state = ScreenState.Error, isRefreshing = false) }
             }
         } else {
-            Log.d("AssignmentListViewModel", "Course ID is null")
-            _uiState.update { it.copy(state = ScreenState.Error) }
+            _uiState.update { it.copy(state = ScreenState.Error, isRefreshing = false) }
         }
     }
 
@@ -228,6 +226,9 @@ class AssignmentListViewModel @Inject constructor(
             }
             is AssignmentListScreenEvent.ChangeOverflowMenuState -> {
                 _uiState.update { it.copy(overFlowItemsExpanded = action.expanded) }
+            }
+            AssignmentListScreenEvent.Refresh -> {
+                getAssignments(true)
             }
         }
     }

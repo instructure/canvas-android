@@ -32,10 +32,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -168,6 +172,7 @@ private fun AppBar(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun AssignmentListWrapper(
     state: AssignmentListUiState,
@@ -176,40 +181,59 @@ private fun AssignmentListWrapper(
     screenActionHandler: (AssignmentListScreenEvent) -> Unit,
     listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
-    when (state.state) {
-        ScreenState.Loading -> {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(colorResource(R.color.backgroundLightest))
-            ) {
-                Loading()
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = {
+            screenActionHandler(AssignmentListScreenEvent.Refresh)
+        }
+    )
+
+    Box(
+        modifier = modifier
+            .pullRefresh(pullRefreshState)
+    ) {
+        when (state.state) {
+            ScreenState.Loading -> {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLightest))
+                ) {
+                    Loading()
+                }
+            }
+
+            ScreenState.Content -> {
+                AssignmentListContentView(
+                    state,
+                    contextColor,
+                    screenActionHandler,
+                    listActionHandler
+                )
+            }
+
+            ScreenState.Empty -> {
+                EmptyContent(
+                    emptyMessage = stringResource(R.string.noAssignments),
+                    imageRes = R.drawable.ic_panda_nodiscussions
+                )
+            }
+
+            ScreenState.Error -> {
+                ErrorContent(
+                    errorMessage = stringResource(R.string.errorLoadingAssignment),
+                )
             }
         }
 
-        ScreenState.Content -> {
-            AssignmentListContentView(
-                state,
-                contextColor,
-                screenActionHandler,
-                listActionHandler
-            )
-        }
-
-        ScreenState.Empty -> {
-            EmptyContent(
-                emptyMessage = stringResource(R.string.noAssignments),
-                imageRes = R.drawable.ic_panda_nodiscussions
-            )
-        }
-
-        ScreenState.Error -> {
-            ErrorContent(
-                errorMessage = stringResource(R.string.errorLoadingAssignment),
-            )
-        }
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = state.isRefreshing,
+            state = pullRefreshState,
+            contentColor = Color(state.course.color),
+        )
     }
 }
 

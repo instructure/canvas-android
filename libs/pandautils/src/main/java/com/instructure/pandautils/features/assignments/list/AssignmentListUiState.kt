@@ -16,6 +16,7 @@ data class AssignmentListUiState(
     val course: Course = Course(),
     val subtitle: String = "",
     val state: ScreenState = ScreenState.Loading,
+    val isRefreshing: Boolean = false,
     val screenOption: AssignmentListScreenOption = AssignmentListScreenOption.List,
     val allAssignments: List<Assignment> = emptyList(),
     val gradingPeriods: List<GradingPeriod> = emptyList(),
@@ -66,6 +67,7 @@ sealed class AssignmentListScreenEvent {
     data class ExpandCollapseSearchBar(val expanded: Boolean): AssignmentListScreenEvent()
     data class SearchContentChanged(val query: String): AssignmentListScreenEvent()
     data class ChangeOverflowMenuState(val expanded: Boolean): AssignmentListScreenEvent()
+    data object Refresh: AssignmentListScreenEvent()
 }
 
 sealed class AssignmentListScreenOption {
