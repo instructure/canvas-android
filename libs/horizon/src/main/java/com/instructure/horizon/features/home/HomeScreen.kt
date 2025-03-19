@@ -123,7 +123,7 @@ private fun BottomNavigationBar(
         NavigationBar(containerColor = Colors.Surface.pageSecondary(), tonalElevation = 8.dp, modifier = modifier) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-                if (item.route == "ai") {
+                if (item.route == MainNavigationRoute.AiAssistant.route) {
                     AiAssistantItem(item, onClick = {
                         // This will be changed later because in this case we don't have the current screen in the background
                         mainNavController.navigate(item.route)
