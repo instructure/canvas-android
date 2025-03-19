@@ -83,6 +83,7 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
                     hasAnySibling(hasText(text))
                 )
         ).performClick()
+        Thread.sleep(1000)
         onView(withText(R.string.yes)).scrollTo().click()
     }
 

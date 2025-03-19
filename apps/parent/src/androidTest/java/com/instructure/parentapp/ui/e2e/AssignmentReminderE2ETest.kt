@@ -160,11 +160,12 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
     fun testAssignmentBeforeReminderE2E() {
-        Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
-        val student = data.studentsList[0]
-        val teacher = data.teachersList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, courses = 1, teachers = 1, parents = 1)
         val course = data.coursesList[0]
+        val parent = data.parentsList[0]
+        val teacher = data.teachersList[0]
         val futureDueDate = 2.days.fromNow
         val pastDueDate = 2.days.ago
 
@@ -174,8 +175,8 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days past due date.")
         val alreadyPastAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = pastDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
-        tokenLogin(student)
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
