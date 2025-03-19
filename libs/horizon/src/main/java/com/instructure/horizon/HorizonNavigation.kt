@@ -17,11 +17,13 @@ package com.instructure.horizon
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.features.home.HomeScreen
+import com.instructure.horizon.features.home.HomeViewModel
 
 sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
@@ -36,7 +38,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         startDestination = MainNavigationRoute.Home.route
     ) {
         composable(MainNavigationRoute.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(navController, hiltViewModel<HomeViewModel>())
         }
         composable(MainNavigationRoute.AiAssistant.route) {
             AiAssistantScreen(navController)

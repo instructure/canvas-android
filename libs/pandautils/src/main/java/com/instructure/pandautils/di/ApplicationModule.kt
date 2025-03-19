@@ -36,10 +36,10 @@ import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.WebViewAuthenticator
-import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -168,5 +168,10 @@ class ApplicationModule {
         apiPrefs: ApiPrefs
     ): WebViewAuthenticator {
         return WebViewAuthenticator(oAuthApi, apiPrefs)
+    }
+
+    @Provides
+    fun provideLocaleUtils(): LocaleUtils {
+        return LocaleUtils
     }
 }

@@ -23,6 +23,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +36,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -57,19 +61,32 @@ import com.instructure.horizon.HorizonTheme
 import com.instructure.horizon.MainNavigationRoute
 import com.instructure.horizon.R
 import com.instructure.horizon.design.Colors
+import com.instructure.horizon.design.molecules.Spinner
+import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 
 @Composable
-fun HomeScreen(parentNavController: NavHostController) {
+fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val activity = LocalContext.current.getActivityOrNull()
     if (activity != null) ViewStyler.setStatusBarColor(activity, R.color.surface_pagePrimary)
+
+    LaunchedEffect(key1 = uiState.theme) {
+        val theme = uiState.theme
+        if (theme != null && activity != null && !ThemePrefs.isThemeApplied) ThemePrefs.applyCanvasTheme(theme, activity)
+    }
     HorizonTheme {
         Scaffold(content = { padding ->
-            HomeNavigation(navController, Modifier.padding(padding))
+            if (uiState.initialDataLoading) {
+                Spinner(modifier = Modifier.fillMaxSize())
+            } else {
+                HomeNavigation(navController, Modifier.padding(padding))
+            }
         }, containerColor = Colors.Surface.pagePrimary(), bottomBar = {
             BottomNavigationBar(navController, currentDestination, parentNavController)
         })
@@ -175,5 +192,5 @@ fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier:
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(parentNavController = rememberNavController())
+    HomeScreen(parentNavController = rememberNavController(), viewModel = viewModel())
 }

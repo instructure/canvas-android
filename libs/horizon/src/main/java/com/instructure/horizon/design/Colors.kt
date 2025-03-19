@@ -17,8 +17,10 @@ package com.instructure.horizon.design
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import com.instructure.horizon.R
+import com.instructure.pandautils.utils.ThemePrefs
 
 object Colors {
     object PrimitivesBlue {
@@ -392,6 +394,8 @@ object Colors {
                 colorResource(R.color.ai_gradient_end)
             )
         )
+        @Composable
+        fun institution() = Color(ThemePrefs.brandColor)
     }
 
     object Text {

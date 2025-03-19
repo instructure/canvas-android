@@ -13,23 +13,8 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon
+package com.instructure.horizon.features.home
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.navigation.compose.rememberNavController
-import com.instructure.pandautils.base.BaseCanvasActivity
-import dagger.hilt.android.AndroidEntryPoint
+import com.instructure.canvasapi2.models.CanvasTheme
 
-@AndroidEntryPoint
-class HorizonActivity : BaseCanvasActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            HorizonTheme {
-                HorizonNavigation(rememberNavController())
-            }
-        }
-    }
-}
+data class HomeUiState(val initialDataLoading: Boolean = true, val theme: CanvasTheme? = null)

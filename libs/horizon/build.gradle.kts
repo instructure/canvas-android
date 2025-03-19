@@ -68,4 +68,7 @@ dependencies {
     implementation(Libs.ANDROIDX_ANNOTATION)
     implementation(Libs.ANDROIDX_APPCOMPAT)
     implementation(Libs.ANDROIDX_WEBKIT)
+
+    implementation(Libs.VIEW_MODEL)
+    implementation(Libs.HILT_COMPOSE_NAVIGATION)
 }
