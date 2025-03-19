@@ -38,6 +38,7 @@ import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
+import com.instructure.teacher.ui.espresso.TestAppManager
 import com.instructure.teacher.ui.pages.AnnouncementsListPage
 import com.instructure.teacher.ui.pages.AssigneeListPage
 import com.instructure.teacher.ui.pages.AssignmentDetailsPage
@@ -84,6 +85,7 @@ import com.instructure.teacher.ui.pages.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.WebViewLoginPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
+import org.junit.Before
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -150,6 +152,11 @@ abstract class TeacherTest : CanvasTest() {
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val updateFilePermissionsPage = UpdateFilePermissionsPage()
 
+    @Before
+    fun setupWorkerFactory() {
+        val application = activityRule.activity.application as TestAppManager?
+        application?.workerFactory = workerFactory
+    }
 }
 
 /*
