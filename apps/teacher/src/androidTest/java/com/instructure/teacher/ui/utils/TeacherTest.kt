@@ -154,7 +154,7 @@ abstract class TeacherTest : CanvasTest() {
 
     @Before
     fun setupWorkerFactory() {
-        val application = activityRule.activity.application as TestAppManager?
+        val application = activityRule.activity.application as? TestAppManager
         application?.workerFactory = workerFactory
     }
 }
