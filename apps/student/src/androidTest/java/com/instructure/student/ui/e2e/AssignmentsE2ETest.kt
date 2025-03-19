@@ -423,6 +423,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
 
+        sleep(3000) // wait for comments to load
         Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed as a comment.")
         submissionDetailsPage.assertCommentDisplayed(uploadInfo.fileName, student)
 

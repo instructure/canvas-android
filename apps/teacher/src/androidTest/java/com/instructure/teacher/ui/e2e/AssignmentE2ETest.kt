@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -41,6 +42,7 @@ import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import com.instructure.teacher.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
@@ -49,6 +51,13 @@ class AssignmentE2ETest : TeacherComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    @Rule
+    @JvmField
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+        android.Manifest.permission.RECORD_AUDIO,
+        android.Manifest.permission.CAMERA
+    )
 
     @E2E
     @Test
