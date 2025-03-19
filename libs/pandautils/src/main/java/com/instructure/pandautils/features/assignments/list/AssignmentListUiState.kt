@@ -45,6 +45,7 @@ class AssignmentGroupItemState(
 
 sealed class AssignmentListFragmentEvent {
     data class NavigateToAssignment(val canvasContext: CanvasContext, val assignmentId: Long): AssignmentListFragmentEvent()
+    data class UpdateStatusBarStyle(val canvasContext: CanvasContext): AssignmentListFragmentEvent()
     data object NavigateBack: AssignmentListFragmentEvent()
 }
 

@@ -25,12 +25,16 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.MultiChoicePicker
 import com.instructure.pandautils.compose.composables.SingleChoicePicker
 
@@ -40,15 +44,19 @@ fun AssignmentListFilterScreen(
     onFilterChange: (AssignmentListFilterState) -> Unit,
     onBackPressed: () -> Unit
 ) {
+    var filterState by remember { mutableStateOf(state) }
     Scaffold(
         topBar = {
-            CanvasAppBar(
+            CanvasThemedAppBar(
                 title = stringResource(R.string.gradePreferences),
+                subtitle = state.courseName,
                 backgroundColor = Color(state.contextColor),
-                textColor = colorResource(R.color.backgroundLightest),
+                contentColor = colorResource(R.color.backgroundLightest),
+                navIconRes = R.drawable.ic_close,
+                navIconContentDescription = stringResource(R.string.close),
                 navigationActionClick = { onBackPressed() },
                 actions = {
-                    TextButton({ onBackPressed() }) {
+                    TextButton({ onFilterChange(filterState); onBackPressed() }) {
                         Text(stringResource(R.string.done), color = colorResource(R.color.backgroundLightest))
                     }
                 }
@@ -61,15 +69,16 @@ fun AssignmentListFilterScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            state.filterGroups.forEach { group ->
+            filterState.filterGroups.forEach { group ->
                 AssignmentListFilterGroup(group, Color(state.contextColor)) {
-                    onFilterChange(state.copy(filterGroups = state.filterGroups.map { g ->
+                    val newState = filterState.copy(filterGroups = filterState.filterGroups.map { g ->
                         if (g.title == it.title) {
                             it
                         } else {
                             g
                         }
-                    }))
+                    })
+                    filterState = newState
                 }
             }
         }

@@ -36,6 +36,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
 
     override fun getAssignmentListFilterState(
         contextColor: Int,
+        courseName: String,
         gradingPeriods: List<GradingPeriod>?
     ): AssignmentListFilterState {
         val groups = mutableListOf(
@@ -91,6 +92,6 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
             )
         }
 
-        return AssignmentListFilterState(contextColor, groups)
+        return AssignmentListFilterState(contextColor, courseName, groups)
     }
 }

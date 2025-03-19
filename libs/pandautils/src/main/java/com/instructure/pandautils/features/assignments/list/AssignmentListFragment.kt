@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -37,7 +38,6 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.assignments.list.composables.AssignmentListScreen
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
@@ -59,8 +59,6 @@ class AssignmentListFragment: BaseCanvasFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        applyTheme()
-
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
@@ -82,11 +80,15 @@ class AssignmentListFragment: BaseCanvasFragment() {
             AssignmentListFragmentEvent.NavigateBack -> {
                 requireActivity().onBackPressed()
             }
+
+            is AssignmentListFragmentEvent.UpdateStatusBarStyle -> {
+                applyTheme(action.canvasContext.color)
+            }
         }
     }
 
-    private fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+    private fun applyTheme(@ColorInt color: Int) {
+        ViewStyler.setStatusBarDark(requireActivity(), color)
     }
 
     private fun title(): String {

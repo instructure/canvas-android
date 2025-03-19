@@ -37,7 +37,7 @@ class StudentAssignmentListBehavior(
         return AssignmentGroupItemState(assignment, showSubmissionDetails = true)
     }
 
-    override fun getAssignmentListFilterState(@ColorInt contextColor: Int, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState {
+    override fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState {
         val groups = mutableListOf(
             AssignmentListFilterGroup(
                 groupId = 0,
@@ -80,6 +80,6 @@ class StudentAssignmentListBehavior(
             )
         }
 
-        return AssignmentListFilterState(contextColor, groups)
+        return AssignmentListFilterState(contextColor, courseName, groups)
     }
 }

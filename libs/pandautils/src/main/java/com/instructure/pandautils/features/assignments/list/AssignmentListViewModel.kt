@@ -67,6 +67,10 @@ class AssignmentListViewModel @Inject constructor(
     private fun getAssignments(forceRefresh: Boolean = false) {
         if (courseId != null) {
             viewModelScope.tryLaunch {
+                val course = repository.getCourse(courseId).dataOrThrow
+                _events.send(AssignmentListFragmentEvent.UpdateStatusBarStyle(course))
+                _uiState.update { it.copy(course = course) }
+
                 val assignmentGroups = repository.getAssignments(courseId, forceRefresh).dataOrThrow
                 val gradingPeriods = repository.getGradingPeriodsForCourse(courseId, forceRefresh).dataOrThrow
                 val allAssignment = assignmentGroups.flatMap { it.assignments }
@@ -79,7 +83,6 @@ class AssignmentListViewModel @Inject constructor(
                     ).dataOrThrow
                         .flatMap { it.assignments }
                 }
-                val course = repository.getCourse(courseId).dataOrThrow
                 _uiState.update {
                     it.copy(
                         state = ScreenState.Content,
@@ -100,7 +103,7 @@ class AssignmentListViewModel @Inject constructor(
                                 )
                             }
                         ),
-                        filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, gradingPeriods)
+                        filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, course.name, gradingPeriods)
                     )
                 }
 
@@ -198,8 +201,6 @@ class AssignmentListViewModel @Inject constructor(
     }
 
     private fun performFilters(): GroupedListViewState<AssignmentGroupState> {
-        var groups: List<AssignmentGroupState> = emptyList()
-
         val allAssignments = uiState.value.allAssignments
         var filteredAssignments = allAssignments.toSet()
         val filters = uiState.value.filterState.filterGroups.filter { it.filterType == AssignmentListFilterType.Filter }
@@ -275,7 +276,7 @@ class AssignmentListViewModel @Inject constructor(
         val groupByGroup = uiState.value.filterState.filterGroups.firstOrNull { it.filterType == AssignmentListFilterType.GroupBy }
         val groupBy = groupByGroup?.options?.get(groupByGroup.selectedOptionIndexes.firstOrNull() ?: 0)
             ?: AssignmentListGroupByOption.AssignmentGroup(resources)
-        groups = when (groupBy) {
+        val groups = when (groupBy) {
             is AssignmentListGroupByOption.AssignmentGroup -> {
                 filteredAssignments
                     .groupBy { it.assignmentGroupId }
@@ -327,8 +328,8 @@ class AssignmentListViewModel @Inject constructor(
                 listOf(
                     AssignmentGroupState(
                         id = 0,
-                        title = resources.getString(R.string.undatedAssignments),
-                        items = undated.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        title = resources.getString(R.string.overdueAssignments),
+                        items = past.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
                     ),
                     AssignmentGroupState(
                         id = 1,
@@ -337,8 +338,8 @@ class AssignmentListViewModel @Inject constructor(
                     ),
                     AssignmentGroupState(
                         id = 2,
-                        title = resources.getString(R.string.overdueAssignments),
-                        items = past.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        title = resources.getString(R.string.undatedAssignments),
+                        items = undated.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
                     )
                 )
             }
@@ -353,7 +354,8 @@ class AssignmentListViewModel @Inject constructor(
                         )
                     }
             }
-        }
+        }.filter { it.items.isNotEmpty() }
+
         return GroupedListViewState(groups)
     }
 }

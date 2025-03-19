@@ -6,6 +6,7 @@ import com.instructure.pandares.R
 
 data class AssignmentListFilterState(
     @ColorInt val contextColor: Int = 0,
+    val courseName: String = "",
     val filterGroups: List<AssignmentListFilterGroup> = emptyList(),
 )
 

@@ -24,5 +24,5 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 interface AssignmentListBehavior {
     fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState
 
-    fun getAssignmentListFilterState(@ColorInt contextColor: Int, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState
+    fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState
 }
