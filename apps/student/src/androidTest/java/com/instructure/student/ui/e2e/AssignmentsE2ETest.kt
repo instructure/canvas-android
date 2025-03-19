@@ -430,7 +430,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val newComment = "My comment!!"
         Log.d(STEP_TAG,"Add a new comment ($newComment) and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
-        sleep(2000) // Give the comment time to propagate
+        sleep(6000) // Give the comment time to propagate
 
         Log.d(STEP_TAG,"Assert that $newComment is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
