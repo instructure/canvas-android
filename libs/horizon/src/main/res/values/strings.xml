@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+    <string name="horizon">Horizon</string>
     <string name="bottom_nav_home">Home</string>
     <string name="bottom_nav_learn">Learn</string>
     <string name="bottom_nav_skillspace">Skillspace</string>

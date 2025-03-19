@@ -22,8 +22,8 @@
             android:name=".HorizonActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false"
-            android:label="@string/canvas"
+            android:label="@string/horizon"
             android:launchMode="singleTask"
-            android:theme="@style/CanvasMaterialTheme_Default" />
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
     </application>
 </manifest>
