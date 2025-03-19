@@ -54,6 +54,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.GroupedListView
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
@@ -123,12 +124,24 @@ private fun AppBar(
         title = title,
         subtitle = state.subtitle,
         actions = {
-            IconButton(onClick = { screenActionHandler(AssignmentListScreenEvent.OpenFilterScreen)}) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_filter),
-                    contentDescription = stringResource(R.string.a11y_filterAssignments)
-                )
+            if (!state.searchBarExpanded) {
+                IconButton(onClick = { screenActionHandler(AssignmentListScreenEvent.OpenFilterScreen) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_filter),
+                        contentDescription = stringResource(R.string.a11y_filterAssignments)
+                    )
+                }
             }
+            SearchBar(
+                icon = R.drawable.ic_search_white_24dp,
+                tintColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),
+                placeholder = "Search Assignments",
+                onSearch = { screenActionHandler(AssignmentListScreenEvent.SearchContentChanged(it)) },
+                onExpand = {
+                    screenActionHandler(AssignmentListScreenEvent.ExpandCollapseSearchBar(it))
+                },
+                collapseOnSearch = true
+            )
         },
         backgroundColor = Color(state.course.color),
         contentColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),

@@ -48,7 +48,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
                     AssignmentListFilterOption.NeedsGrading(resources),
                     AssignmentListFilterOption.NotSubmitted(resources),
                 ),
-                selectedOptionIndexes = (0..3).toList(),
+                selectedOptionIndexes = (0..2).toList(),
                 groupType = AssignmentListFilterGroupType.SingleChoice,
                 filterType = AssignmentListFilterType.Filter
             ),

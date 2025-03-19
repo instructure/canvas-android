@@ -28,7 +28,6 @@ interface AssignmentListRepository {
     suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
-        scopeToStudent: Boolean,
         forceRefresh: Boolean
     ): DataResult<List<AssignmentGroup>>
 

@@ -44,13 +44,12 @@ class StudentAssignmentListRepository(
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
-        scopeToStudent: Boolean,
         forceRefresh: Boolean
     ): DataResult<List<AssignmentGroup>> {
         return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(
             courseId,
             gradingPeriodId,
-            scopeToStudent,
+            true,
             forceRefresh
         )
     }

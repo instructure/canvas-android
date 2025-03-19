@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.assignments.list
 
 import android.content.res.Resources
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -78,7 +79,6 @@ class AssignmentListViewModel @Inject constructor(
                     repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(
                         courseId,
                         gradingPeriod.id,
-                        false,
                         forceRefresh
                     ).dataOrThrow
                         .flatMap { it.assignments }
@@ -136,9 +136,11 @@ class AssignmentListViewModel @Inject constructor(
                     }
                 }
             } catch {
+                Log.d("AssignmentListViewModel", "Catch")
                 _uiState.update { it.copy(state = ScreenState.Error) }
             }
         } else {
+            Log.d("AssignmentListViewModel", "Course ID is null")
             _uiState.update { it.copy(state = ScreenState.Error) }
         }
     }
@@ -203,11 +205,23 @@ class AssignmentListViewModel @Inject constructor(
             AssignmentListScreenEvent.CloseFilterScreen -> {
                 _uiState.update { it.copy(screenOption = AssignmentListScreenOption.List) }
             }
+            is AssignmentListScreenEvent.ExpandCollapseSearchBar -> {
+                _uiState.update { it.copy(searchBarExpanded = action.expanded) }
+            }
+            is AssignmentListScreenEvent.SearchContentChanged -> {
+                _uiState.update { it.copy(searchQuery = action.query) }
+                _uiState.update {
+                    it.copy(
+                        listState = performFilters()
+                    )
+                }
+            }
         }
     }
 
     private fun performFilters(): GroupedListViewState<AssignmentGroupState> {
-        val allAssignments = uiState.value.allAssignments
+        val searchQuery = uiState.value.searchQuery
+        val allAssignments = uiState.value.allAssignments.filter { it.name?.contains(searchQuery, true).orDefault() }
         var filteredAssignments = allAssignments.toSet()
         val filters = uiState.value.filterState.filterGroups.filter { it.filterType == AssignmentListFilterType.Filter }
         filters

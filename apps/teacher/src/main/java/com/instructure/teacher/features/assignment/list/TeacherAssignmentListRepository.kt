@@ -48,7 +48,6 @@ class TeacherAssignmentListRepository(
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
-        scopeToStudent: Boolean,
         forceRefresh: Boolean
     ): DataResult<List<AssignmentGroup>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
@@ -56,7 +55,7 @@ class TeacherAssignmentListRepository(
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
             courseId = courseId,
             gradingPeriodId = gradingPeriodId,
-            scopeToStudent = scopeToStudent,
+            scopeToStudent = false,
             restParams = params
         ).depaginate {
             assignmentApi.getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(it, params)

@@ -22,7 +22,9 @@ data class AssignmentListUiState(
     val assignmentGroups: List<AssignmentGroup> = emptyList(),
     val gradingPeriodsWithAssignments: Map<GradingPeriod, List<Assignment>> = emptyMap(),
     val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList()),
-    val filterState: AssignmentListFilterState = AssignmentListFilterState()
+    val filterState: AssignmentListFilterState = AssignmentListFilterState(),
+    val searchQuery: String = "",
+    val searchBarExpanded: Boolean = false
 )
 
 class AssignmentGroupState(
@@ -54,6 +56,8 @@ sealed class AssignmentListScreenEvent {
     data class UpdateFilterState(val filterState: AssignmentListFilterState): AssignmentListScreenEvent()
     data object OpenFilterScreen: AssignmentListScreenEvent()
     data object CloseFilterScreen: AssignmentListScreenEvent()
+    data class ExpandCollapseSearchBar(val expanded: Boolean): AssignmentListScreenEvent()
+    data class SearchContentChanged(val query: String): AssignmentListScreenEvent()
 }
 
 sealed class AssignmentListScreenOption {
