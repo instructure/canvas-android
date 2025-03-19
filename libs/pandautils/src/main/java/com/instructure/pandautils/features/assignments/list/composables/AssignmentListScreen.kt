@@ -59,10 +59,10 @@ import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterScreen
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.ScreenState
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getSubmissionStateLabel
@@ -131,7 +131,7 @@ private fun AppBar(
             }
         },
         backgroundColor = Color(state.course.color),
-        contentColor = Color(color = ThemePrefs.primaryTextColor),
+        contentColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),
         navigationActionClick = { screenActionHandler(AssignmentListScreenEvent.NavigateBack) }
     )
 }
@@ -188,11 +188,37 @@ private fun AssignmentListContentView(
     screenActionHandler: (AssignmentListScreenEvent) -> Unit,
     listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
-    GroupedListView(
-        state = state.listState,
-        itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
-        actionHandler = listActionHandler
-    )
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(
+                stringResource(R.string.gradingPeriod),
+                color = colorResource(id = R.color.textDark),
+                fontSize = 14.sp,
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            val gradingPeriodGroup = state.filterState.filterGroups.firstOrNull { it.options.any { it is AssignmentListFilterOption.GradingPeriod } }
+            val selectedGradingPeriod = gradingPeriodGroup?.options?.get(gradingPeriodGroup.selectedOptionIndexes.firstOrNull().orDefault()) as? AssignmentListFilterOption.GradingPeriod
+            val gradingPeriodName = if (selectedGradingPeriod?.period != null) selectedGradingPeriod.stringValue else stringResource(R.string.all)
+            Text(
+                gradingPeriodName,
+                color = colorResource(id = R.color.textDarkest),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 22.sp,
+            )
+        }
+
+        GroupedListView(
+            state = state.listState,
+            itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
+            actionHandler = listActionHandler
+        )
+    }
 }
 
 @Composable

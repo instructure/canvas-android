@@ -2042,4 +2042,5 @@
     <string name="gradePreferences">Grade Preferences</string>
     <string name="allAssignments">All Assignments</string>
     <string name="statusFilter">Status Filter</string>
+    <string name="all">All</string>
 </resources>

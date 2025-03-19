@@ -76,6 +76,7 @@ fun<T> SingleChoicePicker(
 
                 Text(
                     item.toString(),
+                    color = colorResource(R.color.textDarkest),
                     fontSize = 16.sp
                 )
             }

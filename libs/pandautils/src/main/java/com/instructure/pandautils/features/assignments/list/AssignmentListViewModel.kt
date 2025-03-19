@@ -107,6 +107,12 @@ class AssignmentListViewModel @Inject constructor(
                     )
                 }
 
+                _uiState.update {
+                    it.copy(
+                        listState = performFilters()
+                    )
+                }
+
                 uiState.value.filterState.filterGroups.forEach { group ->
                     repository.getSelectedOptions(
                         apiPrefs.fullDomain,
@@ -243,7 +249,7 @@ class AssignmentListViewModel @Inject constructor(
                             if (filter.period == null) {
                                 newFilteredAssignments += filteredAssignments
                             } else {
-                                newFilteredAssignments += filteredAssignments.filter { uiState.value.gradingPeriodsWithAssignments[filter.period]?.contains(it).orDefault() }
+                                newFilteredAssignments += filteredAssignments.filter { uiState.value.gradingPeriodsWithAssignments[filter.period]?.map { it.id }?.contains(it.id).orDefault() }
                             }
                         }
 
