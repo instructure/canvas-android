@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -55,6 +56,7 @@ import com.instructure.pandautils.compose.composables.GroupedListView
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.LiveSearchBar
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
@@ -142,6 +144,23 @@ private fun AppBar(
                     screenActionHandler(AssignmentListScreenEvent.ExpandCollapseSearchBar(it))
                 },
             )
+            if (state.overFlowItems.isNotEmpty()) {
+                OverflowMenu(
+                    showMenu = state.overFlowItemsExpanded,
+                    onDismissRequest = { screenActionHandler(AssignmentListScreenEvent.ChangeOverflowMenuState(!state.overFlowItemsExpanded)) }
+                ) {
+                    state.overFlowItems.forEach { item ->
+                        DropdownMenuItem(
+                            onClick = {
+                                item.onClick()
+                                screenActionHandler(AssignmentListScreenEvent.ChangeOverflowMenuState(!state.overFlowItemsExpanded))
+                            },
+                        ) {
+                            Text(item.label)
+                        }
+                    }
+                }
+            }
         },
         backgroundColor = Color(state.course.color),
         contentColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),

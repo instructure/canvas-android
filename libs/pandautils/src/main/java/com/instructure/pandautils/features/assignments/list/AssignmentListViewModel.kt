@@ -18,13 +18,16 @@ package com.instructure.pandautils.features.assignments.list
 
 import android.content.res.Resources
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.GroupedListViewState
@@ -61,14 +64,21 @@ class AssignmentListViewModel @Inject constructor(
 
     private val courseId: Long? = savedStateHandle.get<Long>(Const.COURSE_ID)
 
+    var bookmarker = Bookmarker(true, Course(courseId ?: 0))
+
     init {
         getAssignments(false)
+    }
+
+    fun initOverFlowMenu(activity: FragmentActivity, fragment: AssignmentListFragment) {
+        _uiState.update { it.copy(overFlowItems = assignmentListBehavior.getOverFlowMenuItems(activity, fragment)) }
     }
 
     private fun getAssignments(forceRefresh: Boolean = false) {
         if (courseId != null) {
             viewModelScope.tryLaunch {
                 val course = repository.getCourse(courseId).dataOrThrow
+                bookmarker = Bookmarker(true, course)
                 _events.send(AssignmentListFragmentEvent.UpdateStatusBarStyle(course))
                 _uiState.update { it.copy(course = course) }
 
@@ -215,6 +225,9 @@ class AssignmentListViewModel @Inject constructor(
                         listState = performFilters()
                     )
                 }
+            }
+            is AssignmentListScreenEvent.ChangeOverflowMenuState -> {
+                _uiState.update { it.copy(overFlowItemsExpanded = action.expanded) }
             }
         }
     }

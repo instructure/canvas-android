@@ -17,10 +17,13 @@
 package com.instructure.teacher.features.assignment.list
 
 import android.content.res.Resources
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
+import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOverFlowItem
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
@@ -94,4 +97,6 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
 
         return AssignmentListFilterState(contextColor, courseName, groups)
     }
+
+    override fun getOverFlowMenuItems(activity: FragmentActivity, fragment: AssignmentListFragment): List<AssignmentListMenuOverFlowItem> = emptyList()
 }

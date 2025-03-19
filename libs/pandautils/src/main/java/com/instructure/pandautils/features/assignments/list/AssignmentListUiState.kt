@@ -24,7 +24,14 @@ data class AssignmentListUiState(
     val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList()),
     val filterState: AssignmentListFilterState = AssignmentListFilterState(),
     val searchQuery: String = "",
-    val searchBarExpanded: Boolean = false
+    val searchBarExpanded: Boolean = false,
+    val overFlowItemsExpanded: Boolean = false,
+    val overFlowItems: List<AssignmentListMenuOverFlowItem> = emptyList()
+)
+
+data class AssignmentListMenuOverFlowItem(
+    val label: String,
+    val onClick: () -> Unit
 )
 
 class AssignmentGroupState(
@@ -58,6 +65,7 @@ sealed class AssignmentListScreenEvent {
     data object CloseFilterScreen: AssignmentListScreenEvent()
     data class ExpandCollapseSearchBar(val expanded: Boolean): AssignmentListScreenEvent()
     data class SearchContentChanged(val query: String): AssignmentListScreenEvent()
+    data class ChangeOverflowMenuState(val expanded: Boolean): AssignmentListScreenEvent()
 }
 
 sealed class AssignmentListScreenOption {

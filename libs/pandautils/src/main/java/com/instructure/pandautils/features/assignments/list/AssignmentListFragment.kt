@@ -30,6 +30,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.interactions.bookmarks.Bookmarkable
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
@@ -48,11 +50,13 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 @PageView(url = "assignments")
 @AndroidEntryPoint
-class AssignmentListFragment: BaseCanvasFragment() {
+class AssignmentListFragment: BaseCanvasFragment(), Bookmarkable {
     private val viewModel: AssignmentListViewModel by viewModels()
 
     @Inject
     lateinit var assignmentListRouter: AssignmentListRouter
+
+    override val bookmark: Bookmarker by lazy { viewModel.bookmarker }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,6 +93,7 @@ class AssignmentListFragment: BaseCanvasFragment() {
 
     private fun applyTheme(@ColorInt color: Int) {
         ViewStyler.setStatusBarDark(requireActivity(), color)
+        viewModel.initOverFlowMenu(requireActivity(), this)
     }
 
     private fun title(): String {

@@ -18,10 +18,13 @@ package com.instructure.student.features.assignments.list
 
 import android.content.res.Resources
 import androidx.annotation.ColorInt
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
+import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOverFlowItem
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
@@ -29,6 +32,7 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
 import com.instructure.student.R
+import com.instructure.student.dialog.BookmarkCreationDialog
 
 class StudentAssignmentListBehavior(
     private val resources: Resources
@@ -81,5 +85,14 @@ class StudentAssignmentListBehavior(
         }
 
         return AssignmentListFilterState(contextColor, courseName, groups)
+    }
+
+    override fun getOverFlowMenuItems(activity: FragmentActivity, fragment: AssignmentListFragment): List<AssignmentListMenuOverFlowItem> {
+        return listOf(
+            AssignmentListMenuOverFlowItem(resources.getString(R.string.addBookmark)) {
+                val dialog = BookmarkCreationDialog.newInstance(activity, fragment, null)
+                dialog?.show(activity.supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
+            }
+        )
     }
 }
