@@ -28,7 +28,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
-import com.instructure.canvas.espresso.common.pages.ReminderPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
@@ -55,8 +54,6 @@ import java.util.Date
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : ParentComposeTest() {
     override fun displaysPageObjects() = Unit
-
-    private val reminderPage = ReminderPage(composeTestRule)
 
     @Test
     fun testSubmissionStatus_Missing() {
