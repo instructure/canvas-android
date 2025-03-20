@@ -91,6 +91,14 @@ class HtmlContentFragment : BaseCanvasFragment() {
                 webViewRouter.routeInternally(url)
             }
         }
+
+        canvasWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+            override fun shouldLaunchInternalWebViewFragment(url: String) = true
+
+            override fun launchInternalWebViewFragment(url: String) {
+                webViewRouter.launchInternalWebViewFragment(url, null)
+            }
+        }
     }
 
     companion object {
