@@ -94,7 +94,6 @@ class AssignmentListViewModel @Inject constructor(
                 }
                 _uiState.update {
                     it.copy(
-                        state = ScreenState.Content,
                         isRefreshing = false,
                         subtitle = course.name,
                         course = course,
@@ -140,9 +139,11 @@ class AssignmentListViewModel @Inject constructor(
                     }
                 }
 
+                val listState = performFilters()
                 _uiState.update {
                     it.copy(
-                        listState = performFilters()
+                        state = if (listState.groups.isEmpty()) ScreenState.Empty else ScreenState.Content,
+                        listState = listState
                     )
                 }
             } catch {
@@ -193,9 +194,11 @@ class AssignmentListViewModel @Inject constructor(
             }
             is AssignmentListScreenEvent.UpdateFilterState -> {
                 _uiState.update { it.copy(filterState = action.filterState) }
+                val listState = performFilters()
                 _uiState.update {
                     it.copy(
-                        listState = performFilters()
+                        state = if (listState.groups.isEmpty()) ScreenState.Empty else ScreenState.Content,
+                        listState = listState
                     )
                 }
                 viewModelScope.launch {
@@ -218,9 +221,11 @@ class AssignmentListViewModel @Inject constructor(
             }
             is AssignmentListScreenEvent.SearchContentChanged -> {
                 _uiState.update { it.copy(searchQuery = action.query) }
+                val listState = performFilters()
                 _uiState.update {
                     it.copy(
-                        listState = performFilters()
+                        state = if (listState.groups.isEmpty()) ScreenState.Empty else ScreenState.Content,
+                        listState = listState
                     )
                 }
             }

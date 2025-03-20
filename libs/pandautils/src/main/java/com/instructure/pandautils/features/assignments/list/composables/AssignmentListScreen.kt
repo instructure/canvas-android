@@ -209,22 +209,38 @@ private fun AssignmentListWrapper(
                 AssignmentListContentView(
                     state,
                     contextColor,
-                    screenActionHandler,
                     listActionHandler
                 )
             }
 
             ScreenState.Empty -> {
-                EmptyContent(
-                    emptyMessage = stringResource(R.string.noAssignments),
-                    imageRes = R.drawable.ic_panda_nodiscussions
-                )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLightest))
+                ){
+                    EmptyContent(
+                        emptyMessage = stringResource(R.string.noAssignments),
+                        imageRes = R.drawable.ic_panda_nodiscussions
+                    )
+                }
             }
 
             ScreenState.Error -> {
-                ErrorContent(
-                    errorMessage = stringResource(R.string.errorLoadingAssignment),
-                )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLightest))
+                ){
+                    ErrorContent(
+                        errorMessage = stringResource(R.string.errorLoadingAssignment),
+                        retryClick = { screenActionHandler(AssignmentListScreenEvent.Refresh) }
+                    )
+                }
             }
         }
 
@@ -241,7 +257,6 @@ private fun AssignmentListWrapper(
 private fun AssignmentListContentView(
     state: AssignmentListUiState,
     contextColor: Color,
-    screenActionHandler: (AssignmentListScreenEvent) -> Unit,
     listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
     Column {
