@@ -76,9 +76,9 @@ class AssignmentListViewModel @Inject constructor(
     private fun getAssignments(forceRefresh: Boolean = false) {
         if (courseId != null) {
             viewModelScope.tryLaunch {
-                val course = repository.getCourse(courseId).dataOrThrow
+                val course = repository.getCourse(courseId, forceRefresh).dataOrThrow
                 bookmarker = Bookmarker(true, course)
-                _events.send(AssignmentListFragmentEvent.UpdateStatusBarStyle(course))
+                viewModelScope.launch { _events.send(AssignmentListFragmentEvent.UpdateStatusBarStyle(course)) }
                 _uiState.update { it.copy(course = course) }
 
                 val assignmentGroups = repository.getAssignments(courseId, forceRefresh).dataOrThrow
