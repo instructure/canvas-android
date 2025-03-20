@@ -20,7 +20,6 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.canvasapi2.models.Submission
@@ -112,30 +111,6 @@ object SubmissionManager {
         commentText: String,
         isGroupMessage: Boolean,
         attachments: List<Long>,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams()
-        SubmissionAPI.postSubmissionComment(
-            courseId,
-            assignmentId,
-            userId,
-            commentText,
-            isGroupMessage,
-            attachments,
-            adapter,
-            callback,
-            params
-        )
-    }
-
-    fun postSubmissionComment(
-        courseId: Long,
-        assignmentId: Long,
-        userId: Long,
-        commentText: String,
-        isGroupMessage: Boolean,
-        attachments: List<Long>,
         callback: StatusCallback<Submission>,
         attemptId: Long?
     ) {
@@ -196,90 +171,11 @@ object SubmissionManager {
         SubmissionAPI.getSubmissionSummary(courseId, assignmentId, adapter, params, callback)
     }
 
-    fun postTextSubmission(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        text: String,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
-
-        SubmissionAPI.postTextSubmission(canvasContext.id, assignmentId, text, adapter, params, callback)
-    }
-
-    fun postUrlSubmission(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        url: String,
-        isLti: Boolean,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
-        val type = if (isLti) "basic_lti_launch" else "online_url"
-
-        SubmissionAPI.postUrlSubmission(canvasContext.id, assignmentId, type, url, adapter, params, callback)
-    }
-
     fun getLtiFromAuthenticationUrl(url: String, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         SubmissionAPI.getLtiFromAuthenticationUrl(url, adapter, params, callback)
-    }
-
-    fun getLtiFromAuthenticationUrlAsync(url: String, forceNetwork: Boolean) =
-        apiAsync<LTITool> { getLtiFromAuthenticationUrl(url, it, forceNetwork) }
-
-    fun postMediaSubmissionComment(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        studentId: Long,
-        mediaId: String,
-        mediaType: String,
-        attemptId: Long?,
-        isGroupComment: Boolean,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
-
-        SubmissionAPI.postMediaSubmissionComment(
-            canvasContext.id,
-            assignmentId,
-            studentId,
-            mediaId,
-            mediaType,
-            attemptId,
-            isGroupComment,
-            adapter,
-            params,
-            callback
-        )
-    }
-
-    fun postMediaSubmission(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        submissionType: String,
-        mediaId: String,
-        mediaType: String,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext)
-
-        SubmissionAPI.postMediaSubmission(
-            canvasContext.id,
-            assignmentId,
-            submissionType,
-            mediaId,
-            mediaType,
-            adapter,
-            params,
-            callback
-        )
     }
 
     fun postSubmissionAttachmentsSynchronous(
@@ -299,14 +195,6 @@ object SubmissionManager {
         )
     }
 
-    fun postStudentAnnotationSubmissionAsync(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        annotatableAttachmentId: Long
-    ) = apiAsync {
-        postStudentAnnotationSubmission(canvasContext, assignmentId, annotatableAttachmentId, it)
-    }
-
     fun markSubmissionAsReadAsync(
         courseId: Long,
         assignmentId: Long
@@ -315,24 +203,4 @@ object SubmissionManager {
         val params = RestParams(isForceReadFromNetwork = true)
         SubmissionAPI.markSubmissionAsRead(adapter, params, courseId, assignmentId, it)
     }
-
-    private fun postStudentAnnotationSubmission(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        annotatableAttachmentId: Long,
-        callback: StatusCallback<Submission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext, domain = ApiPrefs.overrideDomains[canvasContext.id])
-
-        SubmissionAPI.postStudentAnnotationSubmission(
-            canvasContext.id,
-            assignmentId,
-            annotatableAttachmentId,
-            adapter,
-            params,
-            callback
-        )
-    }
-
 }

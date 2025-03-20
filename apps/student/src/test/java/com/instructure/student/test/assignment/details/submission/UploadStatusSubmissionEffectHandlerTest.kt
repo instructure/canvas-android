@@ -15,14 +15,12 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
-import android.content.Context
 import com.instructure.canvasapi2.models.Course
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.spotify.mobius.functions.Consumer
@@ -38,7 +36,6 @@ import java.util.concurrent.Executors
 
 class UploadStatusSubmissionEffectHandlerTest : Assert() {
     private val submissionId = 123L
-    private val context: Context = mockk(relaxed = true)
     private val view: UploadStatusSubmissionView = mockk(relaxed = true)
     private val eventConsumer: Consumer<UploadStatusSubmissionEvent> = mockk(relaxed = true)
     private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
@@ -135,11 +132,6 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     @Test
     fun `RetrySubmission results in view call for submissionDeleted`() {
         val course = Course()
-
-        mockkObject(SubmissionService.Companion)
-        every {
-            submissionHelper.retryFileSubmission(any())
-        } returns Unit
 
         coEvery {
             studentDb.submissionDao().findSubmissionById(submissionId)?.canvasContext

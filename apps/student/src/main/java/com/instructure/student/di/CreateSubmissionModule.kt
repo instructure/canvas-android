@@ -14,14 +14,13 @@
  *     limitations under the License.
  */package com.instructure.student.di
 
-import android.content.Context
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
@@ -30,10 +29,10 @@ class CreateSubmissionModule {
 
     @Provides
     fun provideSubmissionHelper(
-        @ApplicationContext context: Context,
         studentDb: StudentDb,
-        apiPrefs: ApiPrefs
+        apiPrefs: ApiPrefs,
+        workManager: WorkManager
     ): SubmissionHelper {
-        return SubmissionHelper(context, studentDb, apiPrefs)
+        return SubmissionHelper(studentDb, apiPrefs, workManager)
     }
 }

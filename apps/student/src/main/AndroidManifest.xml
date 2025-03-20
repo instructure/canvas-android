@@ -232,11 +232,6 @@
         </activity>
 
         <service
-            android:name=".mobius.common.ui.SubmissionService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
-
-        <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"
             tools:node="merge" />

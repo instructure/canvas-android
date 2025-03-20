@@ -42,7 +42,6 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified
@@ -253,7 +252,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         val file: File = mockk()
         every { file.path } returns "Path"
 
-        mockkObject(SubmissionService)
         every {
             submissionHelper.startMediaSubmission(
                 course,
@@ -275,8 +273,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                 "Path"
             )
         }
-
-        confirmVerified(SubmissionService)
     }
 
     @Test

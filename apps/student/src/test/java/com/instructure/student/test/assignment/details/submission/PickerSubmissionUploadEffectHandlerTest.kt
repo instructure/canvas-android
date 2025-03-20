@@ -38,7 +38,6 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.Picker
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -342,9 +341,6 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
             mode = PickerSubmissionMode.MediaSubmission
         )
 
-        mockkObject(SubmissionService.Companion)
-        every { submissionHelper.startMediaSubmission(any(), any(), any(), any(), any()) } returns Unit
-
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 
         verify(timeout = 100) {
@@ -372,11 +368,6 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
             allowedExtensions = emptyList(),
             mode = PickerSubmissionMode.FileSubmission
         )
-
-        mockkObject(SubmissionService.Companion)
-        every {
-            submissionHelper.startFileSubmission(any(), any(), any(), any(), any())
-        } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 
@@ -406,11 +397,6 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
             mode = PickerSubmissionMode.CommentAttachment,
             attemptId = 1
         )
-
-        mockkObject(SubmissionService.Companion)
-        every {
-            submissionHelper.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
-        } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 

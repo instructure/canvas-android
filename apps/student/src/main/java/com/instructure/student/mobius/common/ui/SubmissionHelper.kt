@@ -15,9 +15,11 @@
  */
 package com.instructure.student.mobius.common.ui
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -31,18 +33,14 @@ import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
 import com.instructure.student.room.entities.CreateSubmissionEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.util.Date
 
 class SubmissionHelper(
-    private val context: Context,
     private val studentDb: StudentDb,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val workManager: WorkManager
 ) {
     fun startTextSubmission(
         canvasContext: CanvasContext,
@@ -66,11 +64,7 @@ class SubmissionHelper(
             }
         }
 
-        val bundle = Bundle().apply {
-            putLong(Const.SUBMISSION_ID, dbSubmissionId)
-        }
-
-        startService(context, SubmissionService.Action.TEXT_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.TEXT_ENTRY, submissionId = dbSubmissionId)
     }
 
     suspend fun saveDraft(
@@ -115,11 +109,7 @@ class SubmissionHelper(
             }
         }
 
-        val bundle = Bundle().apply {
-            putLong(Const.SUBMISSION_ID, dbSubmissionId)
-        }
-
-        startService(context, SubmissionService.Action.URL_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.URL_ENTRY, submissionId = dbSubmissionId)
     }
 
     fun startFileSubmission(
@@ -146,11 +136,7 @@ class SubmissionHelper(
             }
         }
 
-        val bundle = Bundle().apply {
-            putLong(Const.SUBMISSION_ID, dbSubmissionId)
-        }
-
-        startService(context, SubmissionService.Action.FILE_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.FILE_ENTRY, submissionId = dbSubmissionId)
     }
 
     fun retryFileSubmission(dbSubmissionId: Long) {
@@ -160,15 +146,8 @@ class SubmissionHelper(
 
         runBlocking { studentDb.submissionDao().setSubmissionError(false, submission.id) }
 
-        val bundle = Bundle().apply {
-            putLong(Const.SUBMISSION_ID, dbSubmissionId)
-        }
-
-        startService(
-            context,
-            if (submission.submissionType == Assignment.SubmissionType.MEDIA_RECORDING.apiString) SubmissionService.Action.MEDIA_ENTRY else SubmissionService.Action.FILE_ENTRY,
-            bundle
-        )
+        val action = if (submission.submissionType == Assignment.SubmissionType.MEDIA_RECORDING.apiString) SubmissionWorker.Action.MEDIA_ENTRY else SubmissionWorker.Action.FILE_ENTRY
+        startSubmissionWorker(action, submissionId = dbSubmissionId)
     }
 
     fun startMediaSubmission(
@@ -201,11 +180,7 @@ class SubmissionHelper(
             }
         }
 
-        val bundle = Bundle().apply {
-            putLong(Const.SUBMISSION_ID, dbSubmissionId)
-        }
-
-        startService(context, SubmissionService.Action.MEDIA_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.MEDIA_ENTRY, submissionId = dbSubmissionId)
     }
 
     fun startStudioSubmission(
@@ -229,11 +204,7 @@ class SubmissionHelper(
             }
         }
 
-        val bundle = Bundle().apply {
-            putLong(Const.SUBMISSION_ID, dbSubmissionId)
-        }
-
-        startService(context, SubmissionService.Action.STUDIO_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.STUDIO_ENTRY, submissionId = dbSubmissionId)
     }
 
     fun startCommentUpload(
@@ -270,10 +241,7 @@ class SubmissionHelper(
             runBlocking { studentDb.submissionCommentFileDao().insert(fileEntity) }
         }
 
-        val bundle = Bundle().apply {
-            putLong(Const.ID, commentId)
-        }
-        startService(context, SubmissionService.Action.COMMENT_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.COMMENT_ENTRY, commentId = commentId)
     }
 
     fun startMediaCommentUpload(
@@ -298,10 +266,7 @@ class SubmissionHelper(
         val rowId = runBlocking { studentDb.pendingSubmissionCommentDao().insert(entity) }
         val commentId = runBlocking { studentDb.pendingSubmissionCommentDao().findIdByRowId(rowId) }
 
-        val bundle = Bundle().apply {
-            putLong(Const.ID, commentId)
-        }
-        startService(context, SubmissionService.Action.COMMENT_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.COMMENT_ENTRY, commentId = commentId)
     }
 
     fun startStudentAnnotationSubmission(
@@ -325,11 +290,7 @@ class SubmissionHelper(
             }
         }
 
-        val bundle = Bundle().apply {
-            putLong(Const.SUBMISSION_ID, dbSubmissionId)
-        }
-
-        startService(context, SubmissionService.Action.STUDENT_ANNOTATION, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.STUDENT_ANNOTATION, submissionId = dbSubmissionId)
     }
 
     private suspend fun insertNewSubmission(
@@ -374,12 +335,21 @@ class SubmissionHelper(
         studentDb.submissionDao().deleteSubmissionsForAssignmentId(id, getUserId())
     }
 
-    private fun startService(context: Context, action: SubmissionService.Action, extras: Bundle) {
-        Intent(context, SubmissionService::class.java).also { intent ->
-            intent.action = action.name
-            intent.putExtras(extras)
-            context.startService(intent)
+    private fun startSubmissionWorker(action: SubmissionWorker.Action, submissionId: Long? = null, commentId: Long? = null) {
+        val data = Data.Builder()
+        data.putString(Const.ACTION, action.name)
+
+        submissionId?.let {
+            data.putLong(Const.SUBMISSION_ID, it)
         }
+        commentId?.let {
+            data.putLong(Const.ID, it)
+        }
+        val submissionWork = OneTimeWorkRequest.Builder(SubmissionWorker::class.java)
+            .setInputData(data.build())
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .build()
+        workManager.enqueue(submissionWork)
     }
 
     private fun getUserId(): Long {
@@ -407,10 +377,7 @@ class SubmissionHelper(
     }
 
     fun retryCommentUpload(commentId: Long) {
-        val bundle = Bundle().apply {
-            putLong(Const.ID, commentId)
-        }
-        startService(context, SubmissionService.Action.COMMENT_ENTRY, bundle)
+        startSubmissionWorker(SubmissionWorker.Action.COMMENT_ENTRY, commentId = commentId)
     }
 
 
