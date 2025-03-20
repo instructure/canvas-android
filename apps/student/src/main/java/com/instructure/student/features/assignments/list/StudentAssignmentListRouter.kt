@@ -27,4 +27,8 @@ class StudentAssignmentListRouter: AssignmentListRouter {
         val route = AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId)
         RouteMatcher.route(activity, route)
     }
+
+    override fun navigateBack(activity: FragmentActivity) {
+        activity.onBackPressed()
+    }
 }

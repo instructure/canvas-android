@@ -18,13 +18,16 @@ package com.instructure.teacher.features.assignment.list
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherAssignmentListRouter: AssignmentListRouter {
     override fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignmentId: Long) {
-        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId).copy(primaryClass = AssignmentListFragment::class.java))
+        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
+    }
+
+    override fun navigateBack(activity: FragmentActivity) {
+        activity.finish()
     }
 }

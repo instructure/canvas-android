@@ -21,4 +21,5 @@ import com.instructure.canvasapi2.models.CanvasContext
 
 interface AssignmentListRouter {
     fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignmentId: Long)
+    fun navigateBack(activity: FragmentActivity)
 }

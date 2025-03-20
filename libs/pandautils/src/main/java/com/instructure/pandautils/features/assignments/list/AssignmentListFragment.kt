@@ -82,7 +82,7 @@ class AssignmentListFragment: BaseCanvasFragment(), Bookmarkable {
             }
 
             AssignmentListFragmentEvent.NavigateBack -> {
-                requireActivity().onBackPressed()
+                assignmentListRouter.navigateBack(requireActivity())
             }
 
             is AssignmentListFragmentEvent.UpdateStatusBarStyle -> {
