@@ -301,13 +301,31 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
             .padding(vertical = 8.dp)
     ) {
         Spacer(modifier = Modifier.width(20.dp))
-        Icon(
-            painter = painterResource(assignment.getAssignmentIcon()),
-            tint = contextColor,
-            contentDescription = null,
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(24.dp)
-        )
+                .size(32.dp)
+        ) {
+            Icon(
+                painter = painterResource(assignment.getAssignmentIcon()),
+                tint = contextColor,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp)
+            )
+            if (item.showAssignmentDetails) {
+                val publishedIcon = if (assignment.published) R.drawable.ic_complete_solid else R.drawable.ic_unpublish
+                val publishColor = if (assignment.published) R.color.textSuccess else R.color.textDark
+                Icon(
+                    painter = painterResource(publishedIcon),
+                    tint = colorResource(publishColor),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .align(Alignment.BottomEnd)
+                )
+            }
+        }
         Spacer(modifier = Modifier.width(20.dp))
         Column {
             Text(
