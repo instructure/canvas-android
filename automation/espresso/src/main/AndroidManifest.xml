@@ -27,12 +27,5 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
 
-    <application tools:replace="android:label" android:label="" >
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
-    </application>
-
+    <application tools:replace="android:label" android:label="" />
 </manifest>
