@@ -37,6 +37,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.R
 import org.hamcrest.Matchers
@@ -62,7 +63,7 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickBeforeReminderOption(text: String) {
-        onView(withText(text)).scrollTo().click()
+        waitForView(withText(text)).scrollTo().click()
     }
 
     fun clickCustomReminderOption() {
