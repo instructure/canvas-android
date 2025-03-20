@@ -36,6 +36,9 @@ object UserAPI {
 
     interface UsersInterface {
 
+        @GET("users/self?include[]=uuid")
+        suspend fun getSelfWithUUID(@Tag restParams: RestParams): DataResult<User>
+
         @GET("users/self/colors")
         fun getColors(): Call<CanvasColor>
 
