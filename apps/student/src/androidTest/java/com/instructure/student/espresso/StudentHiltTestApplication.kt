@@ -16,7 +16,7 @@
 
 package com.instructure.student.espresso
 
-
+import com.instructure.canvas.espresso.TestAppManager
 import dagger.hilt.android.testing.CustomTestApplication
 
 @CustomTestApplication(TestAppManager::class)
