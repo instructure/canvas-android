@@ -269,3 +269,7 @@
 
 -keep class androidx.navigation.** { *; }
     -keep interface androidx.navigation.** { *; }
+
+-keepclassmembers class * extends androidx.work.Worker {
+    public <init>(android.content.Context,androidx.work.WorkerParameters);
+}
