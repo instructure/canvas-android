@@ -117,12 +117,6 @@ class AssignmentListViewModel @Inject constructor(
                     )
                 }
 
-                _uiState.update {
-                    it.copy(
-                        listState = performFilters()
-                    )
-                }
-
                 uiState.value.filterState.filterGroups.forEach { group ->
                     repository.getSelectedOptions(
                         apiPrefs.fullDomain,
@@ -144,6 +138,12 @@ class AssignmentListViewModel @Inject constructor(
                             )
                         }
                     }
+                }
+
+                _uiState.update {
+                    it.copy(
+                        listState = performFilters()
+                    )
                 }
             } catch {
                 _uiState.update { it.copy(state = ScreenState.Error, isRefreshing = false) }

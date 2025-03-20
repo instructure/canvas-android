@@ -196,8 +196,6 @@ private fun GroupedListViewPreview() {
 
 data class GroupedListViewState<GROUP>(
     val groups: List<GROUP>,
-    val scrollToGroup: String? = null,
-    val scrollToGroupItem: String? = null
 )
 
 open class GroupedListViewGroup<GROUP_ITEM: GroupedListViewGroupItem>(
