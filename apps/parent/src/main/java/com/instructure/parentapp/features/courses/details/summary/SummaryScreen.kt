@@ -60,7 +60,6 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.contentDescriptionRes
 import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.pandautils.utils.iconRes
@@ -92,9 +91,10 @@ internal fun SummaryContent(
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit,
 ) {
-    val pullToRefreshState = rememberPullRefreshState(refreshing = (uiState.state == ScreenState.Loading), onRefresh = {
-        onRefresh()
-    })
+    val pullToRefreshState = rememberPullRefreshState(
+        refreshing = uiState.state == ScreenState.Refreshing,
+        onRefresh = onRefresh
+    )
 
     Box(
         modifier = Modifier
@@ -104,12 +104,11 @@ internal fun SummaryContent(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             when (uiState.state) {
                 is ScreenState.Loading -> {
-                    SummaryLoadingScreen()
+                    SummaryLoadingScreen(uiState.studentColor)
                 }
 
                 is ScreenState.Error -> {
@@ -120,15 +119,22 @@ internal fun SummaryContent(
                     SummaryEmptyScreen()
                 }
 
-                is ScreenState.Content -> {
-                    SummaryContentScreen(uiState.items, uiState.courseId, navigateToAssignmentDetails, navigateToCalendarEvent)
+                is ScreenState.Refreshing, ScreenState.Content -> {
+                    SummaryContentScreen(
+                        uiState.items,
+                        uiState.courseId,
+                        uiState.studentColor,
+                        navigateToAssignmentDetails,
+                        navigateToCalendarEvent
+                    )
                 }
             }
         }
 
         PullRefreshIndicator(
-            refreshing = (uiState.state == ScreenState.Loading),
+            refreshing = uiState.state == ScreenState.Refreshing,
             state = pullToRefreshState,
+            contentColor = Color(uiState.studentColor),
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .testTag("pullRefreshIndicator"),
@@ -137,8 +143,11 @@ internal fun SummaryContent(
 }
 
 @Composable
-private fun SummaryLoadingScreen() {
-    Loading(modifier = Modifier.testTag("Loading"))
+private fun SummaryLoadingScreen(studentColor: Int) {
+    Loading(
+        color = Color(studentColor),
+        modifier = Modifier.testTag("Loading")
+    )
 }
 
 @Composable
@@ -163,6 +172,7 @@ private fun SummaryEmptyScreen() {
 private fun SummaryContentScreen(
     items: List<ScheduleItem>,
     courseId: Long,
+    studentColor: Int,
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit
 ) {
@@ -171,7 +181,7 @@ private fun SummaryContentScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         items(items) {
-            ScheduleItemRow(it, courseId, navigateToAssignmentDetails, navigateToCalendarEvent)
+            ScheduleItemRow(it, courseId, studentColor, navigateToAssignmentDetails, navigateToCalendarEvent)
         }
     }
 }
@@ -180,6 +190,7 @@ private fun SummaryContentScreen(
 private fun ScheduleItemRow(
     scheduleItem: ScheduleItem,
     courseId: Long,
+    studentColor: Int,
     navigateToAssignmentDetails: (Long, Long) -> Unit,
     navigateToCalendarEvent: (String, Long, Long) -> Unit
 ) {
@@ -212,7 +223,7 @@ private fun ScheduleItemRow(
         Icon(
             painter = painterResource(id = scheduleItem.iconRes),
             contentDescription = null,
-            tint = Color(CanvasContext.emptyCourseContext(courseId).color),
+            tint = Color(studentColor),
             modifier = Modifier
                 .padding(8.dp)
                 .size(24.dp)

@@ -275,9 +275,9 @@ fun setBottomMargin(view: View, bottomMargin: Int) {
     view.layoutParams = layoutParams
 }
 
-@BindingAdapter(value = ["userAvatar", "userName"], requireAll = true)
-fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?) {
-    ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
+@BindingAdapter(value = ["userAvatar", "userName", "avatarTint"], requireAll = false)
+fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?, @ColorInt avatarTint: Int?) {
+    ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl, avatarTint)
 }
 
 @BindingAdapter("avatar")
