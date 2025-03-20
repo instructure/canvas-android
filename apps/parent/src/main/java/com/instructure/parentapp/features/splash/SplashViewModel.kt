@@ -78,13 +78,14 @@ class SplashViewModel @Inject constructor(
 
             val sendUsageMetrics = repository.getSendUsageMetrics()
             if (sendUsageMetrics) {
+                val userWithIds = repository.getSelfWithUuid()
                 val visitorData = mapOf(
                     "locale" to apiPrefs.effectiveLocale,
                 )
                 val accountData = mapOf(
                     "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
                 )
-                Pendo.startSession(user?.uuid?.SHA256().orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
+                Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
             } else {
                 Pendo.endSession()
             }

@@ -23,7 +23,6 @@ import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
@@ -39,6 +38,11 @@ class SplashRepository(
 ) {
 
     suspend fun getSelf(): User? {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return userApi.getSelf(params).dataOrNull
+    }
+
+    suspend fun getSelfWithUuid(): User? {
         val params = RestParams(isForceReadFromNetwork = true)
         return userApi.getSelfWithUUID(params).dataOrNull
     }
@@ -70,10 +74,5 @@ class SplashRepository(
     suspend fun getSendUsageMetrics(): Boolean {
         val params = RestParams(isForceReadFromNetwork = true)
         return featuresApi.getEnvironmentFeatureFlags(params).dataOrNull?.get(FeaturesManager.SEND_USAGE_METRICS).orDefault()
-    }
-
-    suspend fun getAccount(): Account? {
-        val params = RestParams(isForceReadFromNetwork = true)
-        return userApi.getAccount(params).dataOrNull
     }
 }

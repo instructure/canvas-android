@@ -96,7 +96,8 @@ class SplashActivity : BaseCanvasActivity() {
             startUp = weave {
                 // Grab user teacher status
                 try {
-                    val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrThrow
+                    val user = userApi.getSelf(RestParams(isForceReadFromNetwork = true)).dataOrThrow
+                    val userWithIds = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrThrow
                     val shouldRestartForLocaleChange = setupUser(user)
                     if (shouldRestartForLocaleChange) {
                         if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
@@ -104,7 +105,7 @@ class SplashActivity : BaseCanvasActivity() {
                         return@weave
                     }
 
-                    setupPendoTracking(user)
+                    setupPendoTracking(userWithIds)
 
                     // Determine if user is a Teacher, Ta, or Designer
                     // Use GlobalScope since this can continue executing after SplashActivity is destroyed

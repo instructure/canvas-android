@@ -89,7 +89,7 @@ class SplashRepositoryTest {
     fun `Get self successfully returns data`() = runTest {
         val expected = User(id = 1L)
 
-        coEvery { userApi.getSelfWithUUID(any()) } returns DataResult.Success(expected)
+        coEvery { userApi.getSelf(any()) } returns DataResult.Success(expected)
 
         val result = repository.getSelf()
         assertEquals(expected, result)
@@ -97,7 +97,7 @@ class SplashRepositoryTest {
 
     @Test
     fun `Get self returns null when call fails`() = runTest {
-        coEvery { userApi.getSelfWithUUID(any()) } returns DataResult.Fail()
+        coEvery { userApi.getSelf(any()) } returns DataResult.Fail()
 
         val result = repository.getSelf()
         assertNull(result)
@@ -181,5 +181,23 @@ class SplashRepositoryTest {
 
         val result = repository.getSendUsageMetrics()
         assertFalse(result)
+    }
+
+    @Test
+    fun `Get user with UUID successfully returns data`() = runTest {
+        val expected = User(id = 1L, uuid = "uuid", accountUuid = "accountUuid")
+
+        coEvery { userApi.getSelfWithUUID(any()) } returns DataResult.Success(expected)
+
+        val result = repository.getSelfWithUuid()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Get user with UUID returns null when call fails`() = runTest {
+        coEvery { userApi.getSelfWithUUID(any()) } returns DataResult.Fail()
+
+        val result = repository.getSelfWithUuid()
+        assertNull(result)
     }
 }
