@@ -124,12 +124,18 @@ class EditDashboardViewModel @Inject constructor(
         }
     }
 
-    private fun postEmptyState() {
+    private fun postEmptyState(isFiltered: Boolean = false) {
         val offlineMode = offlineEnabled && !networkStateProvider.isOnline()
-        if (offlineMode) {
-            _state.postValue(ViewState.Empty(R.string.editDashboardOfflineMode, R.string.editDashboardOfflineModeMessage, R.drawable.ic_panda_nocourses))
-        } else {
-            _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title,R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+        when {
+            isFiltered -> {
+                _state.postValue(ViewState.Empty(R.string.editDashboardNoResults, R.string.editDashboardNoResultsMessage, R.drawable.ic_panda_nocourses))
+            }
+            offlineMode -> {
+                _state.postValue(ViewState.Empty(R.string.editDashboardOfflineMode, R.string.editDashboardOfflineModeMessage, R.drawable.ic_panda_nocourses))
+            }
+            else -> {
+                _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title,R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+            }
         }
     }
 
@@ -465,7 +471,7 @@ class EditDashboardViewModel @Inject constructor(
             createListItems(queriedCurrentCourses, queriedPastCourses, queriedFutureCourses, queriedGroups, true)
         }
         if (items.isEmpty()) {
-            postEmptyState()
+            postEmptyState(query.isNotBlank())
         } else {
             _state.postValue(ViewState.Success)
         }

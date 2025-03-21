@@ -130,4 +130,20 @@ class SummaryScreenTest {
         composeTestRule.onNodeWithText("No Due Date")
             .assertIsDisplayed()
     }
+
+    @Test
+    fun assertRefreshing() {
+        composeTestRule.setContent {
+            SummaryContent(
+                uiState = SummaryUiState(
+                    state = ScreenState.Refreshing
+                ),
+                onRefresh = {},
+                navigateToAssignmentDetails = { _, _ -> },
+                navigateToCalendarEvent = { _, _, _ -> }
+            )
+        }
+
+        composeTestRule.onNodeWithTag("pullRefreshIndicator").assertIsDisplayed()
+    }
 }

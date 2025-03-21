@@ -47,7 +47,7 @@ object SubmissionIndexEndpoint : Endpoint(
 
             // Construct a submission (including an attachment, if necessary)
             var attachment: Attachment? = null
-            if(submissionType == SubmissionType.ONLINE_UPLOAD.rawValue()) {
+            if(submissionType == SubmissionType.online_upload.rawValue) {
                 val courseRootFolder = data.courseRootFolders[pathVars.courseId]
                 // We've already uploaded a file for this submission; refer to it
                 val file = data.folderFiles[courseRootFolder?.id]?.find { it.id == submissionFileId!!.toLong() }!!

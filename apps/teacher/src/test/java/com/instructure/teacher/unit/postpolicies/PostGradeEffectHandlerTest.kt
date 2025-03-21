@@ -35,7 +35,14 @@ import com.instructure.teacher.features.postpolicies.PostGradeEvent
 import com.instructure.teacher.features.postpolicies.ui.PostGradeView
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -171,8 +178,7 @@ class PostGradeEffectHandlerTest : Assert() {
         mockkObject(PostPolicyManager)
         coEvery { PostPolicyManager.hideGradesAsync(assignmentId) } returns HideAssignmentGradesMutation.Data(
             HideAssignmentGradesMutation.HideAssignmentGrades(
-                "",
-                HideAssignmentGradesMutation.Progress("", progressId)
+                HideAssignmentGradesMutation.Progress(progressId)
             )
         )
 
@@ -198,8 +204,7 @@ class PostGradeEffectHandlerTest : Assert() {
             PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
         } returns HideAssignmentGradesForSectionsMutation.Data(
             HideAssignmentGradesForSectionsMutation.HideAssignmentGradesForSections(
-                "",
-                HideAssignmentGradesForSectionsMutation.Progress("", progressId)
+                HideAssignmentGradesForSectionsMutation.Progress(progressId)
             )
         )
 
@@ -244,10 +249,7 @@ class PostGradeEffectHandlerTest : Assert() {
 
         mockkObject(PostPolicyManager)
         coEvery { PostPolicyManager.postGradesAsync(assignmentId, gradedOnly) } returns PostAssignmentGradesMutation.Data(
-            PostAssignmentGradesMutation.PostAssignmentGrades(
-                "",
-                PostAssignmentGradesMutation.Progress("", progressId)
-            )
+            PostAssignmentGradesMutation.PostAssignmentGrades(PostAssignmentGradesMutation.Progress(progressId))
         )
 
         connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
@@ -272,7 +274,9 @@ class PostGradeEffectHandlerTest : Assert() {
         coEvery {
             PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
         } returns PostAssignmentGradesForSectionsMutation.Data(
-            PostAssignmentGradesForSectionsMutation.PostAssignmentGradesForSections("", PostAssignmentGradesForSectionsMutation.Progress("", progressId))
+            PostAssignmentGradesForSectionsMutation.PostAssignmentGradesForSections(
+                PostAssignmentGradesForSectionsMutation.Progress(progressId)
+            )
         )
 
         connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))

@@ -15,28 +15,25 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.apollographql.apollo.api.cache.http.HttpCachePolicy
+import com.apollographql.apollo.api.Optional
+import com.apollographql.apollo.cache.http.httpCache
 import com.instructure.canvasapi2.InboxSettingsQuery
-import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.UpdateInboxSettingsMutation
-import com.instructure.canvasapi2.enqueueMutation
-import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.canvasapi2.utils.weave.awaitQL
-import java.util.concurrent.TimeUnit
 
 class InboxSettingsManagerImpl : InboxSettingsManager {
 
     override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): DataResult<InboxSignatureSettings> {
         return try {
-            val inboxSettingsData = awaitQL { getInboxSignature(it, forceNetwork) }
+            val query = InboxSettingsQuery()
+            val inboxSettingsData = QLClientConfig.enqueueQuery(query, forceNetwork).dataAssertNoErrors
             val inboxSignatureSettings = InboxSignatureSettings(
                 inboxSettingsData.myInboxSettings?.signature.orEmpty(),
-                inboxSettingsData.myInboxSettings?.isUseSignature ?: false,
-                inboxSettingsData.myInboxSettings?.isUseOutOfOffice ?: false,
+                inboxSettingsData.myInboxSettings?.useSignature ?: false,
+                inboxSettingsData.myInboxSettings?.useOutOfOffice ?: false,
                 inboxSettingsData.myInboxSettings?.outOfOfficeMessage.orEmpty(),
                 inboxSettingsData.myInboxSettings?.outOfOfficeSubject.orEmpty(),
                 inboxSettingsData.myInboxSettings?.outOfOfficeFirstDate.toApiString(),
@@ -48,41 +45,26 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
         }
     }
 
-    private fun getInboxSignature(
-        callback: QLCallback<InboxSettingsQuery.Data>,
-        forceNetwork: Boolean
-    ) {
-        val query = InboxSettingsQuery.builder().build()
-
-        callback.enqueueQuery(query) {
-            if (forceNetwork) {
-                cachePolicy = HttpCachePolicy.NETWORK_FIRST.expireAfter(1, TimeUnit.HOURS)
-            }
-        }
-    }
-
     override suspend fun updateInboxSignatureSettings(inboxSignatureSettings: InboxSignatureSettings): DataResult<InboxSignatureSettings> {
         try {
-            val mutationResult = awaitQL<UpdateInboxSettingsMutation.Data> {
-                val mutation = UpdateInboxSettingsMutation.builder()
-                    .signature(inboxSignatureSettings.signature)
-                    .useSignature(inboxSignatureSettings.useSignature)
-                    .useOutOfOffice(inboxSignatureSettings.useOutOfOffice)
-                    .outOfOfficeMessage(inboxSignatureSettings.outOfOfficeMessage)
-                    .outOfOfficeSubject(inboxSignatureSettings.outOfOfficeSubject)
-                    .outOfOfficeFirstDate(inboxSignatureSettings.outOfOfficeFirstDate)
-                    .outOfOfficeLastDate(inboxSignatureSettings.outOfOfficeLastDate)
-                    .build()
+            val mutation = UpdateInboxSettingsMutation(
+                useSignature = inboxSignatureSettings.useSignature,
+                signature = Optional.present(inboxSignatureSettings.signature),
+                useOutOfOffice = inboxSignatureSettings.useOutOfOffice,
+                outOfOfficeMessage = Optional.present(inboxSignatureSettings.outOfOfficeMessage),
+                outOfOfficeSubject = Optional.present(inboxSignatureSettings.outOfOfficeSubject),
+                outOfOfficeFirstDate = Optional.present(inboxSignatureSettings.outOfOfficeFirstDate),
+                outOfOfficeLastDate = Optional.present(inboxSignatureSettings.outOfOfficeLastDate)
+            )
 
-                it.enqueueMutation(mutation)
-            }
+            val mutationResult = QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
 
-            QLClientConfig().buildClient().clearHttpCache()
+            QLClientConfig().buildClient().httpCache.clearAll()
 
             return DataResult.Success(
                 InboxSignatureSettings(
                     mutationResult.updateMyInboxSettings?.myInboxSettings?.signature ?: "",
-                    mutationResult.updateMyInboxSettings?.myInboxSettings?.isUseSignature ?: false
+                    mutationResult.updateMyInboxSettings?.myInboxSettings?.useSignature ?: false
                 )
             )
         } catch (e: Exception) {

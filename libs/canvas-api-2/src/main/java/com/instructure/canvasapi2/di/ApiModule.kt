@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.apis.SmartSearchApi
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.SubmissionAPI
@@ -352,5 +353,10 @@ class ApiModule {
     @Provides
     fun providePandataApi(): PandataApi.PandataInterface {
         return RestBuilder().build(PandataApi.PandataInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideSectionApi(): SectionAPI.SectionsInterface {
+        return RestBuilder().build(SectionAPI.SectionsInterface::class.java, RestParams())
     }
 }

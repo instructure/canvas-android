@@ -16,6 +16,7 @@
 package com.instructure.student.di.feature
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
 import com.instructure.pandautils.utils.Const
@@ -30,8 +31,8 @@ import dagger.hilt.android.components.FragmentComponent
 class LtiLaunchModule {
 
     @Provides
-    fun provideLtiLaunchFragmentBehavior(fragment: Fragment): LtiLaunchFragmentBehavior {
+    fun provideLtiLaunchFragmentBehavior(fragment: Fragment, activity: FragmentActivity): LtiLaunchFragmentBehavior {
         val canvasContext = fragment.arguments?.getParcelable(Const.CANVAS_CONTEXT) ?: CanvasContext.emptyUserContext()
-        return StudentLtiLaunchFragmentBehavior(canvasContext)
+        return StudentLtiLaunchFragmentBehavior(canvasContext, activity)
     }
 }

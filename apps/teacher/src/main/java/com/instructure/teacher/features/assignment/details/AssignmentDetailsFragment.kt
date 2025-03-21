@@ -19,6 +19,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.webkit.WebView
 import android.widget.Button
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
 import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPrettyPrintString
@@ -52,7 +54,6 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
@@ -64,7 +65,7 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
@@ -338,10 +339,13 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     //endregion
 
     override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
+        allTitle?.setTextColor(course.color)
+        allIcon?.setColorFilter(course.color)
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)
-        gradedChart.setSelectedColor(ThemePrefs.brandColor)
+        gradedChart.setSelectedColor(course.color)
+        gradedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         gradedChart.setCenterText(gradedStudents.toString())
         gradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_graded).format(gradedStudents, totalStudents)
         gradedWrapper.accessibilityClassName(Button::class.java.name)
@@ -350,7 +354,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
         ungradedChart.setSelected(needsGradingCount)
         ungradedChart.setTotal(totalStudents)
-        ungradedChart.setSelectedColor(ThemePrefs.brandColor)
+        ungradedChart.setSelectedColor(course.color)
+        ungradedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         ungradedChart.setCenterText(needsGradingCount.toString())
         ungradedLabel.text = requireContext().resources.getQuantityText(R.plurals.needsGradingNoQuantity, needsGradingCount)
         ungradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_needs_grading).format(needsGradingCount, totalStudents)
@@ -360,7 +365,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
         notSubmittedChart.setSelected(notSubmitted)
         notSubmittedChart.setTotal(totalStudents)
-        notSubmittedChart.setSelectedColor(ThemePrefs.brandColor)
+        notSubmittedChart.setSelectedColor(course.color)
+        notSubmittedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         notSubmittedChart.setCenterText(notSubmitted.toString())
 
         notSubmittedWrapper.contentDescription = getString(R.string.content_description_submission_donut_unsubmitted).format(notSubmitted, totalStudents)
@@ -429,8 +435,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     }
 
     private fun navigateToSubmissions(course: Course, assignment: Assignment, filter: SubmissionListFilter) {
-        val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
-        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
+        val args = SubmissionListFragment.makeBundle(assignment, filter)
+        RouteMatcher.route(requireActivity(), Route(null, SubmissionListFragment::class.java, course, args))
     }
 
     override fun onResume() {

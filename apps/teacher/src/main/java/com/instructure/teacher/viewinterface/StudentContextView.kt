@@ -20,8 +20,8 @@ import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 
 interface StudentContextView : FragmentViewInterface {
-    fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean)
-    fun addSubmissions(submissions: List<Submission>, course: AsCourse, student: User)
+    fun setData(course: OnCourse, student: User, summary: Analytics?, isStudent: Boolean)
+    fun addSubmissions(submissions: List<Submission>, course: OnCourse, student: User)
     fun showLoadMoreIndicator(show: Boolean)
     fun onErrorLoading(isDesigner: Boolean)
     fun clear()

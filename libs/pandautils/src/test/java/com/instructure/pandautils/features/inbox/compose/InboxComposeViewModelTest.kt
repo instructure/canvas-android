@@ -129,19 +129,19 @@ class InboxComposeViewModelTest {
         val viewModel = getViewModel()
         val courseId: Long = 1
         val recipients = listOf(
-            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
-            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
-            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
-            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue())))
+            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.StudentEnrollment.rawValue))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.ObserverEnrollment.rawValue))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TaEnrollment.rawValue)))
         )
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(recipients)
         coEvery { inboxComposeRepository.canSendToAll(any()) } returns DataResult.Success(false)
         viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = courseId)))
 
-        assertEquals(recipients[0], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.STUDENTENROLLMENT]?.first())
-        assertEquals(recipients[1], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.TEACHERENROLLMENT]?.first())
-        assertEquals(recipients[2], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.OBSERVERENROLLMENT]?.first())
-        assertEquals(recipients[3], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.TAENROLLMENT]?.first())
+        assertEquals(recipients[0], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.StudentEnrollment]?.first())
+        assertEquals(recipients[1], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.TeacherEnrollment]?.first())
+        assertEquals(recipients[2], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.ObserverEnrollment]?.first())
+        assertEquals(recipients[3], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.TaEnrollment]?.first())
 
     }
 
@@ -150,16 +150,16 @@ class InboxComposeViewModelTest {
         val viewModel = getViewModel()
         val courseId: Long = 1
         val recipients = listOf(
-            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
-            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
-            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
-            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue()))
+            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.StudentEnrollment.rawValue))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.ObserverEnrollment.rawValue))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TaEnrollment.rawValue))
             )
         )
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(recipients)
         coEvery { inboxComposeRepository.canSendToAll(any()) } returns DataResult.Success(false)
         viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = courseId)))
-        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.STUDENTENROLLMENT))
+        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.StudentEnrollment))
 
         assertEquals(recipients[0], viewModel.uiState.value.recipientPickerUiState.recipientsToShow.first())
     }
@@ -169,10 +169,10 @@ class InboxComposeViewModelTest {
         val courseId: Long = 1
         val course = Course(id = courseId, name = "Course")
         val recipients = listOf(
-            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
-            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
-            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
-            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue()))
+            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.StudentEnrollment.rawValue))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.ObserverEnrollment.rawValue))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TaEnrollment.rawValue))
             )
         )
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(recipients)
@@ -189,7 +189,7 @@ class InboxComposeViewModelTest {
         )
         assertEquals(expectedAllCourseRecipient, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
-        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.STUDENTENROLLMENT))
+        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.StudentEnrollment))
         val expectedAllStudentsRecipient = Recipient(
             stringId = "${course.contextId}_students",
             name = "All in Students"
@@ -203,7 +203,7 @@ class InboxComposeViewModelTest {
 
         assertEquals(expectedAllCourseRecipient, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
-        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.TEACHERENROLLMENT))
+        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.TeacherEnrollment))
         val expectedAllTeachersRecipient = Recipient(
             stringId = "${course.contextId}_teachers",
             name = "All in Teachers"
@@ -217,10 +217,10 @@ class InboxComposeViewModelTest {
         val courseId: Long = 1
         val course = Course(id = courseId, name = "Course")
         val recipients = listOf(
-            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
-            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
-            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
-            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue()))
+            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.StudentEnrollment.rawValue))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.ObserverEnrollment.rawValue))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TaEnrollment.rawValue))
             )
         )
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(recipients)
@@ -229,13 +229,13 @@ class InboxComposeViewModelTest {
 
         assertEquals(null, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
-        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.STUDENTENROLLMENT))
+        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.StudentEnrollment))
         assertEquals(null, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
         viewModel.handleAction(RecipientPickerActionHandler.RecipientBackClicked)
         assertEquals(null, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
-        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.STUDENTENROLLMENT))
+        viewModel.handleAction(RecipientPickerActionHandler.RoleClicked(EnrollmentType.StudentEnrollment))
         assertEquals(null, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
     }
 
@@ -355,6 +355,36 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(InboxComposeActionHandler.Close)
 
         assertEquals(InboxComposeViewModelAction.NavigateBack, events.last())
+    }
+
+    @Test
+    fun `Check if Compose content had been changed`() {
+        val viewModel = getViewModel()
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("")))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("")))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(InboxComposeActionHandler.SendIndividualChanged(true))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.SendIndividualChanged(false))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        val recipient = Recipient(stringId = "1")
+        viewModel.handleAction(InboxComposeActionHandler.AddRecipient(recipient))
+        assertEquals(true, viewModel.composeContentHasChanged())
+        viewModel.handleAction(InboxComposeActionHandler.RemoveRecipient(recipient))
+        assertEquals(false, viewModel.composeContentHasChanged())
+
+        viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course()))
+        assertEquals(true, viewModel.composeContentHasChanged())
     }
 
     @Test
@@ -563,10 +593,10 @@ class InboxComposeViewModelTest {
         val courseId: Long = 1
         val course = Course(id = courseId)
         val recipients = listOf(
-            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
-            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
-            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
-            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue())))
+            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.StudentEnrollment.rawValue))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.ObserverEnrollment.rawValue))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TaEnrollment.rawValue)))
         )
         coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(course))
         coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())

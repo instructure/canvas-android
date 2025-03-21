@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.features.grades.COURSE_ID_KEY
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.studentColor
+import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,9 +34,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
-    private val repository: SummaryRepository,
     savedStateHandle: SavedStateHandle,
-): ViewModel() {
+    private val repository: SummaryRepository,
+    private val parentPrefs: ParentPrefs
+) : ViewModel() {
 
     private val courseId = savedStateHandle.get<Long>(COURSE_ID_KEY).orDefault()
 
@@ -50,7 +53,12 @@ class SummaryViewModel @Inject constructor(
     }
 
     private fun loadSummary(forceRefresh: Boolean) {
-        _uiState.update { it.copy(state = ScreenState.Loading) }
+        _uiState.update {
+            it.copy(
+                state = if (forceRefresh) ScreenState.Refreshing else ScreenState.Loading,
+                studentColor = parentPrefs.currentStudent.studentColor
+            )
+        }
         viewModelScope.tryLaunch {
             val course = repository.getCourse(courseId)
             val summary = repository.getCalendarEvents(course.contextId, forceRefresh)
@@ -63,5 +71,4 @@ class SummaryViewModel @Inject constructor(
             _uiState.update { it.copy(state = ScreenState.Error) }
         }
     }
-
 }

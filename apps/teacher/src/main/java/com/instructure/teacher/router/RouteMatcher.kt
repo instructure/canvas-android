@@ -77,7 +77,7 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
@@ -489,7 +489,7 @@ object RouteMatcher : BaseRouteMatcher() {
             AssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getAssignmentDetailsFragment(canvasContext, route)
             DueDatesFragment::class.java.isAssignableFrom(cls) -> fragment = DueDatesFragment
                 .getInstance((canvasContext as Course?)!!, route.arguments)
-            AssignmentSubmissionListFragment::class.java.isAssignableFrom(cls) -> fragment = AssignmentSubmissionListFragment
+            SubmissionListFragment::class.java.isAssignableFrom(cls) -> fragment = SubmissionListFragment
                 .newInstance((canvasContext as Course?)!!, route.arguments)
             PostPolicyFragment::class.java.isAssignableFrom(cls) -> fragment = PostPolicyFragment.newInstance(route.argsWithContext)
             EditAssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditAssignmentDetailsFragment
