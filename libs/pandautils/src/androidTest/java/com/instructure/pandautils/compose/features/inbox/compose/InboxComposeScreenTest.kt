@@ -39,7 +39,6 @@ import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.features.inbox.compose.InboxComposeScreenOptions
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
-import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
 import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus

@@ -15,7 +15,6 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
-import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.features.inbox.compose.composables.RecipientPickerScreen
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.orDefault

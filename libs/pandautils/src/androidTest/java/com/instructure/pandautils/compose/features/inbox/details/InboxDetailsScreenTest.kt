@@ -31,7 +31,6 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.features.inbox.details.ConfirmationDialogState
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
-import com.instructure.pandautils.features.inbox.details.ScreenState
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.utils.ScreenState
