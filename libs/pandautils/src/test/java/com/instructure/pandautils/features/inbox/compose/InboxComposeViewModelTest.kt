@@ -39,6 +39,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
+import com.instructure.pandautils.utils.ScreenState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -94,7 +95,7 @@ class InboxComposeViewModelTest {
         assertEquals(false, uiState.sendIndividual)
         assertEquals(TextFieldValue(""), uiState.subject)
         assertEquals(TextFieldValue(""), uiState.body)
-        assertEquals(ScreenState.Data, uiState.screenState)
+        assertEquals(ScreenState.Content, uiState.screenState)
     }
 
     @Test

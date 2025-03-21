@@ -50,6 +50,124 @@ import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 
 @Composable
+fun LiveSearchBar(
+    @DrawableRes icon: Int,
+    tintColor: Color,
+    placeholder: String,
+    expanded: Boolean,
+    onExpand: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    query: String,
+    queryChanged: (String) -> Unit,
+    collapsable: Boolean = true,
+    @DrawableRes hintIcon: Int? = null,
+    collapseOnSearch: Boolean = false
+) {
+    Row(
+        modifier = modifier
+            .height(56.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val focusRequester = remember { FocusRequester() }
+
+        LaunchedEffect(expanded) {
+            if (expanded && collapsable) {
+                focusRequester.requestFocus()
+                keyboardController?.show()
+            }
+        }
+
+        if (expanded) {
+            if (collapsable) {
+                IconButton(
+                    modifier = Modifier.testTag("closeButton"),
+                    onClick = {
+                        onExpand(false)
+                    }) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.a11y_searchBarCloseButton),
+                        tint = tintColor
+                    )
+                }
+            }
+
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("searchField")
+                    .focusRequester(focusRequester),
+                placeholder = { Text(placeholder) },
+                value = query,
+                onValueChange = { queryChanged(it) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboardController?.hide()
+                        queryChanged(query)
+                        if (collapseOnSearch) {
+                            onExpand(false)
+                        }
+                    }
+                ),
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = tintColor,
+                    cursorColor = tintColor,
+                    focusedLabelColor = tintColor,
+                    leadingIconColor = tintColor,
+                    trailingIconColor = tintColor,
+                    textColor = tintColor,
+                    disabledTextColor = tintColor.copy(alpha = 0.5f),
+                    unfocusedLabelColor = tintColor.copy(alpha = 0.5f),
+                    unfocusedIndicatorColor = tintColor.copy(alpha = 0.5f),
+                    disabledLeadingIconColor = tintColor.copy(alpha = 0.5f),
+                    disabledTrailingIconColor = tintColor.copy(alpha = 0.5f),
+                    placeholderColor = tintColor.copy(alpha = 0.5f),
+                ),
+                leadingIcon = {
+                    Icon(
+                        modifier = Modifier.height(20.dp),
+                        painter = painterResource(hintIcon ?: icon),
+                        contentDescription = null
+                    )
+                },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(
+                            modifier = Modifier.testTag("clearButton"),
+                            onClick = { queryChanged("") }) {
+                            Icon(
+                                modifier = Modifier.size(18.dp),
+                                painter = painterResource(R.drawable.ic_close),
+                                contentDescription = stringResource(R.string.a11y_searchBarClearButton)
+                            )
+                        }
+                    }
+                }
+            )
+        } else {
+            IconButton(
+                modifier = Modifier.testTag("searchButton"),
+                onClick = {
+                    onExpand(true)
+                }) {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = stringResource(R.string.a11y_searchBarSearchButton),
+                    tint = tintColor
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun SearchBar(
     @DrawableRes icon: Int,
     tintColor: Color,

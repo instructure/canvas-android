@@ -42,6 +42,7 @@ import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
@@ -65,7 +66,6 @@ import com.instructure.student.activity.InterwebsToApplication
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.ViewMediaActivity
-import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
