@@ -22,7 +22,6 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.features.grades.COURSE_ID_KEY
-import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
