@@ -25,7 +25,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toSimpleDate
-import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.parentapp.features.courses.details.summary.ScreenState
 import com.instructure.parentapp.features.courses.details.summary.SummaryContent
