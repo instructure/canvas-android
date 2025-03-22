@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ButtonSecondary
 import com.instructure.horizon.horizonui.molecules.Pill
@@ -55,7 +56,13 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
     Card(
         shape = HorizonCornerRadius.level2,
         colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
-        elevation = CardDefaults.elevatedCardElevation(),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = HorizonElevation.level4,
+            pressedElevation = HorizonElevation.level4,
+            focusedElevation = HorizonElevation.level4,
+            disabledElevation = HorizonElevation.level4,
+            hoveredElevation = HorizonElevation.level4,
+            draggedElevation = HorizonElevation.level4),
         modifier = modifier
     ) {
         Column(Modifier.padding(36.dp)) {

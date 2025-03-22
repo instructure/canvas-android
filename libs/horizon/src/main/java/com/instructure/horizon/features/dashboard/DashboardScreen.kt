@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -61,6 +63,7 @@ fun DashboardScreen(uiState: DashboardUiState) {
 
 @Composable
 private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Modifier) {
+    val buttonModifier = Modifier.shadow(HorizonElevation.level4)
     Row(modifier) {
         GlideImage(
             model = uiState.logoUrl,
@@ -68,11 +71,11 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
             modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
-        ButtonPrimary(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick)
+        ButtonPrimary(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick, modifier = buttonModifier)
         HorizonSpace(SpaceSize.SPACE_8)
-        ButtonPrimary(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick)
+        ButtonPrimary(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick, modifier = buttonModifier)
         HorizonSpace(SpaceSize.SPACE_8)
-        ButtonPrimary(iconRes = R.drawable.mail, onClick = uiState.onInboxClick)
+        ButtonPrimary(iconRes = R.drawable.mail, onClick = uiState.onInboxClick, modifier = buttonModifier)
     }
 }
 

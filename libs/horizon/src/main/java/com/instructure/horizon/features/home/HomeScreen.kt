@@ -59,6 +59,7 @@ import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.pandautils.utils.ThemePrefs
@@ -118,7 +119,7 @@ private fun BottomNavigationBar(
     mainNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    Surface(shadowElevation = 8.dp) {
+    Surface(shadowElevation = HorizonElevation.level5) {
         NavigationBar(containerColor = HorizonColors.Surface.pageSecondary(), tonalElevation = 8.dp, modifier = modifier) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
