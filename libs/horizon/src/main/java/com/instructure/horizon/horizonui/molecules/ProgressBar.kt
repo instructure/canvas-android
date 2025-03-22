@@ -21,8 +21,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -42,13 +42,13 @@ fun ProgressBar(progress: Double, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
             modifier
-                .border(width = 2.dp, shape = RoundedCornerShape(100.dp), color = HorizonColors.Surface.institution())
+                .border(width = 2.dp, shape = HorizonCornerRadius.level6, color = HorizonColors.Surface.institution())
                 .height(28.dp)
                 .weight(1f)
         ) {
             Box(
                 modifier = Modifier
-                    .background(color = HorizonColors.Surface.institution(), shape = RoundedCornerShape(100.dp))
+                    .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
                     .fillMaxWidth((progress.toFloat() / 100f))
                     .height(28.dp)
             )

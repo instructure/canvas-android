@@ -21,8 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ButtonSecondary
 import com.instructure.horizon.horizonui.molecules.Pill
@@ -53,7 +53,7 @@ data class LearningObjectCardState(
 @Composable
 fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifier: Modifier = Modifier) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = HorizonCornerRadius.level2,
         colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
         elevation = CardDefaults.elevatedCardElevation(),
         modifier = modifier

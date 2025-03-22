@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -47,11 +47,11 @@ enum class PillStyle {
 fun Pill(style: PillStyle, label: String, modifier: Modifier = Modifier, @DrawableRes iconRes: Int? = null) {
     val finalModifier = when (style) {
         PillStyle.OUTLINE -> modifier
-            .border(width = 1.dp, shape = RoundedCornerShape(32.dp), color = HorizonColors.Surface.inversePrimary())
+            .border(width = 1.dp, shape = HorizonCornerRadius.level4, color = HorizonColors.Surface.inversePrimary())
             .height(34.dp)
             .padding(horizontal = 12.dp, vertical = 8.dp)
         PillStyle.SOLID -> modifier
-            .background(shape = RoundedCornerShape(32.dp), color = HorizonColors.Surface.inversePrimary())
+            .background(shape = HorizonCornerRadius.level4, color = HorizonColors.Surface.inversePrimary())
             .height(34.dp)
             .padding(horizontal = 12.dp, vertical = 8.dp)
         PillStyle.INLINE -> modifier
