@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.design
+package com.instructure.horizon.design.foundation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush

@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.instructure.horizon.design.Colors
+import com.instructure.horizon.design.foundation.Colors
 
 @Composable
 fun Spinner(modifier: Modifier = Modifier, color: Color = Colors.Surface.institution()) {

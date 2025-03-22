@@ -20,8 +20,8 @@
 
     <color name="icon_action">#0E68B3</color>
     <color name="icon_actionSecondary">#0A5A9E</color>
-    <color name="icon_beigePrimary">#FBF5ED</color>
-    <color name="icon_beigeSecondary">#FFFDFA</color>
+    <color name="icon_beigePrimary">#F2F4F4</color>
+    <color name="icon_beigeSecondary">#F9F9F9</color>
     <color name="icon_default">#273540</color>
     <color name="icon_error">#C71F23</color>
     <color name="icon_light">#9EA6AD</color>
@@ -69,8 +69,8 @@
     <color name="primitives_grey100">#334451</color>
     <color name="primitives_grey125">#273540</color>
     <color name="primitives_black174">#0A1B2A</color>
-    <color name="primitives_beige10">#FFFDFA</color>
-    <color name="primitives_beige11">#FBF5ED</color>
+    <color name="primitives_beige10">#F9F9F9</color>
+    <color name="primitives_beige11">#F2F4F4</color>
     <color name="primitives_beige12">#FDEACC</color>
     <color name="primitives_beige15">#E3D0B2</color>
     <color name="primitives_beige19">#CAB79A</color>
@@ -183,22 +183,22 @@
     <color name="surface_attention">#2B7ABC</color>
     <color name="surface_attentionSecondary">#0A5A9E</color>
     <color name="surface_cardPrimary">#FFFFFF</color>
-    <color name="surface_cardSecondary">#FFFDFA</color>
+    <color name="surface_cardSecondary">#F9F9F9</color>
     <color name="surface_divider">#E8EAEC</color>
     <color name="surface_error">#C71F23</color>
     <color name="surface_inversePrimary">#273540</color>
     <color name="surface_inverseSecondary">#0A1B2A</color>
     <color name="surface_overlayGrey">#586874</color>
     <color name="surface_overlayWhite">#FFFFFF</color>
-    <color name="surface_pagePrimary">#FBF5ED</color>
+    <color name="surface_pagePrimary">#F2F4F4</color>
     <color name="surface_pageSecondary">#FFFFFF</color>
     <color name="surface_pageTertiary">#E8EAEC</color>
     <color name="surface_warning">#CF4A00</color>
     <color name="surface_success">#03893D</color>
 
     <color name="text_author">#586874</color>
-    <color name="text_beigePrimary">#FBF5ED</color>
-    <color name="text_beigeSecondary">#FFFDFA</color>
+    <color name="text_beigePrimary">#F2F4F4</color>
+    <color name="text_beigeSecondary">#F9F9F9</color>
     <color name="text_body">#273540</color>
     <color name="text_dataPoint">#586874</color>
     <color name="text_link">#0E68B3</color>

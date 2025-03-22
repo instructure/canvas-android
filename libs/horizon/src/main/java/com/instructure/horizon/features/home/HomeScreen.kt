@@ -60,7 +60,7 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.HorizonTheme
 import com.instructure.horizon.MainNavigationRoute
 import com.instructure.horizon.R
-import com.instructure.horizon.design.Colors
+import com.instructure.horizon.design.foundation.Colors
 import com.instructure.horizon.design.molecules.Spinner
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -74,13 +74,13 @@ data class BottomNavItem(
 )
 
 private val bottomNavItems = listOf(
-    BottomNavItem(HomeNavigationRoute.Dashboard.route, R.string.bottom_nav_home, R.drawable.home, R.drawable.home_filled),
-    BottomNavItem(HomeNavigationRoute.Courses.route, R.string.bottom_nav_learn, R.drawable.book_2, R.drawable.book_2_filled),
-    BottomNavItem(MainNavigationRoute.AiAssistant.route, R.string.bottom_nav_ai_assist, R.drawable.ai, R.drawable.ai_filled),
-    BottomNavItem(HomeNavigationRoute.Skillspace.route, R.string.bottom_nav_skillspace, R.drawable.hub, R.drawable.hub_filled),
+    BottomNavItem(HomeNavigationRoute.Dashboard.route, R.string.bottomNav_home, R.drawable.home, R.drawable.home_filled),
+    BottomNavItem(HomeNavigationRoute.Courses.route, R.string.bottomNav_learn, R.drawable.book_2, R.drawable.book_2_filled),
+    BottomNavItem(MainNavigationRoute.AiAssistant.route, R.string.bottomNav_aiAssist, R.drawable.ai, R.drawable.ai_filled),
+    BottomNavItem(HomeNavigationRoute.Skillspace.route, R.string.bottomNav_skillspace, R.drawable.hub, R.drawable.hub_filled),
     BottomNavItem(
         HomeNavigationRoute.Account.route,
-        R.string.bottom_nav_account,
+        R.string.bottomNav_account,
         R.drawable.account_circle,
         R.drawable.account_circle_filled
     )
@@ -190,6 +190,6 @@ fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier:
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
+private fun HomeScreenPreview() {
     HomeScreen(parentNavController = rememberNavController(), viewModel = viewModel())
 }
