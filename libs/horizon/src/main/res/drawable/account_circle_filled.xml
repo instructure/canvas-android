@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2025 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M6.023,17.292C6.873,16.662 7.799,16.163 8.801,15.798C9.803,15.433 10.869,15.25 12,15.25C13.131,15.25 14.197,15.433 15.199,15.798C16.201,16.163 17.127,16.662 17.977,17.292C18.599,16.609 19.091,15.818 19.455,14.919C19.818,14.021 20,13.047 20,12C20,9.783 19.221,7.896 17.663,6.338C16.104,4.779 14.217,4 12,4C9.783,4 7.896,4.779 6.338,6.338C4.779,7.896 4,9.783 4,12C4,13.047 4.182,14.021 4.545,14.919C4.909,15.818 5.401,16.609 6.023,17.292ZM12,12.75C11.087,12.75 10.317,12.436 9.691,11.809C9.064,11.183 8.75,10.413 8.75,9.5C8.75,8.587 9.064,7.817 9.691,7.19C10.317,6.563 11.087,6.25 12,6.25C12.913,6.25 13.683,6.563 14.309,7.19C14.936,7.817 15.25,8.587 15.25,9.5C15.25,10.413 14.936,11.183 14.309,11.809C13.683,12.436 12.913,12.75 12,12.75ZM12,21.5C10.681,21.5 9.443,21.252 8.288,20.756C7.132,20.26 6.126,19.584 5.271,18.729C4.416,17.874 3.74,16.868 3.244,15.712C2.748,14.557 2.5,13.319 2.5,12C2.5,10.681 2.748,9.443 3.244,8.288C3.74,7.132 4.416,6.126 5.271,5.271C6.126,4.416 7.132,3.74 8.288,3.244C9.443,2.748 10.681,2.5 12,2.5C13.319,2.5 14.557,2.748 15.712,3.244C16.868,3.74 17.874,4.416 18.729,5.271C19.584,6.126 20.26,7.132 20.756,8.288C21.252,9.443 21.5,10.681 21.5,12C21.5,13.319 21.252,14.557 20.756,15.712C20.26,16.868 19.584,17.874 18.729,18.729C17.874,19.584 16.868,20.26 15.712,20.756C14.557,21.252 13.319,21.5 12,21.5Z"
+      android:fillColor="#273540"/>
+</vector>

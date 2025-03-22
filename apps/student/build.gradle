@@ -237,6 +237,7 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
     implementation project(path: ':DocumentScanner')
+    implementation project(path: ':horizon')
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

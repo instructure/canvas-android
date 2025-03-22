@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2025 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<resources>
+    <color name="ai_gradient_start">#09508C</color>
+    <color name="ai_gradient_end">#02672D</color>
+
+    <color name="icon_action">#0E68B3</color>
+    <color name="icon_actionSecondary">#0A5A9E</color>
+    <color name="icon_beigePrimary">#FBF5ED</color>
+    <color name="icon_beigeSecondary">#FFFDFA</color>
+    <color name="icon_default">#273540</color>
+    <color name="icon_error">#C71F23</color>
+    <color name="icon_light">#9EA6AD</color>
+    <color name="icon_medium">#6A7883</color>
+    <color name="icon_success">#03893D</color>
+    <color name="icon_surfaceColored">#FFFFFF</color>
+    <color name="icon_surfaceInverseSecondary">#0A1B2A</color>
+    <color name="icon_warning">#CF4A00</color>
+
+    <color name="lineAndBorder_containerStroke">#6A7883</color>
+    <color name="lineAndBorder_lineConnector">#D7DADE</color>
+    <color name="lineAndBorder_lineDivider">#D7DADE</color>
+    <color name="lineAndBorder_lineStroke">#D7DADE</color>
+
+    <color name="primitives_blue12">#E0EBF5</color>
+    <color name="primitives_blue45">#2B7ABC</color>
+    <color name="primitives_blue57">#0E68B3</color>
+    <color name="primitives_blue70">#0A5A9E</color>
+    <color name="primitives_blue82">#09508C</color>
+    <color name="primitives_green12">#DCEEE4</color>
+    <color name="primitives_green45">#03893D</color>
+    <color name="primitives_green57">#027634</color>
+    <color name="primitives_green70">#02672D</color>
+    <color name="primitives_green82">#015B28</color>
+    <color name="primitives_orange12">#FCE5D9</color>
+    <color name="primitives_orange30">#F06E26</color>
+    <color name="primitives_orange45">#CF4A00</color>
+    <color name="primitives_orange57">#B34000</color>
+    <color name="primitives_orange70">#9C3800</color>
+    <color name="primitives_orange82">#8B3200</color>
+    <color name="primitives_red12">#FCE4E5</color>
+    <color name="primitives_red45">#E62429</color>
+    <color name="primitives_red57">#C71F23</color>
+    <color name="primitives_red70">#AE1B1F</color>
+    <color name="primitives_red82">#9B181C</color>
+    <color name="primitives_white10">#FFFFFF</color>
+    <color name="primitives_grey11">#F2F4F4</color>
+    <color name="primitives_grey12">#E8EAEC</color>
+    <color name="primitives_grey14">#D7DADE</color>
+    <color name="primitives_grey24">#9EA6AD</color>
+    <color name="primitives_grey45">#6A7883</color>
+    <color name="primitives_grey57">#586874</color>
+    <color name="primitives_grey70">#4A5B68</color>
+    <color name="primitives_grey82">#3F515E</color>
+    <color name="primitives_grey100">#334451</color>
+    <color name="primitives_grey125">#273540</color>
+    <color name="primitives_black174">#0A1B2A</color>
+    <color name="primitives_beige10">#FFFDFA</color>
+    <color name="primitives_beige11">#FBF5ED</color>
+    <color name="primitives_beige12">#FDEACC</color>
+    <color name="primitives_beige15">#E3D0B2</color>
+    <color name="primitives_beige19">#CAB79A</color>
+    <color name="primitives_beige26">#B09F83</color>
+    <color name="primitives_beige35">#97876D</color>
+    <color name="primitives_beige49">#7D6F58</color>
+    <color name="primitives_beige69">#645844</color>
+    <color name="primitives_beige100">#4A4131</color>
+    <color name="primitives_beige147">#2F271B</color>
+    <color name="primitives_rose30">#FB5D5D</color>
+    <color name="primitives_rose35">#FA3F3F</color>
+    <color name="primitives_rose40">#FA1A1A</color>
+    <color name="primitives_rose45">#ED0000</color>
+    <color name="primitives_rose50">#E00000</color>
+    <color name="primitives_rose57">#CE0000</color>
+    <color name="primitives_rose70">#B50000</color>
+    <color name="primitives_rose90">#970000</color>
+    <color name="primitives_rose110">#7F0000</color>
+    <color name="primitives_copper30">#EE6D15</color>
+    <color name="primitives_copper35">#DB6414</color>
+    <color name="primitives_copper40">#CD5E12</color>
+    <color name="primitives_copper45">#BF5811</color>
+    <color name="primitives_copper50">#B45310</color>
+    <color name="primitives_copper57">#A54C0F</color>
+    <color name="primitives_copper70">#90420D</color>
+    <color name="primitives_copper90">#77360B</color>
+    <color name="primitives_copper110">#622D09</color>
+    <color name="primitives_honey30">#C08A00</color>
+    <color name="primitives_honey35">#B07E00</color>
+    <color name="primitives_honey40">#A57600</color>
+    <color name="primitives_honey45">#996E00</color>
+    <color name="primitives_honey50">#916800</color>
+    <color name="primitives_honey57">#856000</color>
+    <color name="primitives_honey70">#745300</color>
+    <color name="primitives_honey90">#5F4400</color>
+    <color name="primitives_honey110">#4E3800</color>
+    <color name="primitives_forest30">#55A459</color>
+    <color name="primitives_forest35">#409945</color>
+    <color name="primitives_forest40">#319135</color>
+    <color name="primitives_forest45">#27872B</color>
+    <color name="primitives_forest50">#248029</color>
+    <color name="primitives_forest57">#217526</color>
+    <color name="primitives_forest70">#1D6621</color>
+    <color name="primitives_forest90">#18541B</color>
+    <color name="primitives_forest110">#144516</color>
+    <color name="primitives_aurora30">#38A585</color>
+    <color name="primitives_aurora35">#1E9975</color>
+    <color name="primitives_aurora40">#0B9069</color>
+    <color name="primitives_aurora45">#048660</color>
+    <color name="primitives_aurora50">#047F5B</color>
+    <color name="primitives_aurora57">#037453</color>
+    <color name="primitives_aurora70">#036549</color>
+    <color name="primitives_aurora90">#02533C</color>
+    <color name="primitives_aurora110">#024531</color>
+    <color name="primitives_sea30">#37A1AA</color>
+    <color name="primitives_sea35">#1E95A0</color>
+    <color name="primitives_sea40">#0A8C97</color>
+    <color name="primitives_sea45">#00828E</color>
+    <color name="primitives_sea50">#007B86</color>
+    <color name="primitives_sea57">#00717B</color>
+    <color name="primitives_sea70">#00626B</color>
+    <color name="primitives_sea90">#005158</color>
+    <color name="primitives_sea110">#004349</color>
+    <color name="primitives_sky30">#4E9CC0</color>
+    <color name="primitives_sky35">#3890B8</color>
+    <color name="primitives_sky40">#2887B2</color>
+    <color name="primitives_sky45">#197EAB</color>
+    <color name="primitives_sky50">#1777A2</color>
+    <color name="primitives_sky57">#156D94</color>
+    <color name="primitives_sky70">#135F81</color>
+    <color name="primitives_sky90">#0F4E6A</color>
+    <color name="primitives_sky110">#0D4058</color>
+    <color name="primitives_ocean30">#5694EB</color>
+    <color name="primitives_ocean35">#4187E8</color>
+    <color name="primitives_ocean40">#317DE6</color>
+    <color name="primitives_ocean45">#2573DF</color>
+    <color name="primitives_ocean50">#236DD3</color>
+    <color name="primitives_ocean57">#2063C1</color>
+    <color name="primitives_ocean70">#1C57A8</color>
+    <color name="primitives_ocean90">#17478B</color>
+    <color name="primitives_ocean110">#133B72</color>
+    <color name="primitives_violet30">#B57FCC</color>
+    <color name="primitives_violet35">#AC6FC6</color>
+    <color name="primitives_violet40">#9E58BD</color>
+    <color name="primitives_violet45">#9E58BD</color>
+    <color name="primitives_violet50">#994FB9</color>
+    <color name="primitives_violet57">#9242B4</color>
+    <color name="primitives_violet70">#7F399E</color>
+    <color name="primitives_violet90">#682F82</color>
+    <color name="primitives_violet110">#56276B</color>
+    <color name="primitives_plum30">#D473B1</color>
+    <color name="primitives_plum35">#CE60A7</color>
+    <color name="primitives_plum40">#CA529F</color>
+    <color name="primitives_plum45">#C54396</color>
+    <color name="primitives_plum50">#C1368F</color>
+    <color name="primitives_plum57">#BA2083</color>
+    <color name="primitives_plum70">#A31C73</color>
+    <color name="primitives_plum90">#87175F</color>
+    <color name="primitives_plum110">#70134F</color>
+    <color name="primitives_stone30">#939393</color>
+    <color name="primitives_stone35">#878787</color>
+    <color name="primitives_stone40">#7F7F7F</color>
+    <color name="primitives_stone45">#767676</color>
+    <color name="primitives_stone50">#6F6F6F</color>
+    <color name="primitives_stone57">#666666</color>
+    <color name="primitives_stone70">#585858</color>
+    <color name="primitives_stone90">#494949</color>
+    <color name="primitives_stone110">#3C3C3C</color>
+
+    <color name="surface_attention">#2B7ABC</color>
+    <color name="surface_attentionSecondary">#0A5A9E</color>
+    <color name="surface_cardPrimary">#FFFFFF</color>
+    <color name="surface_cardSecondary">#FFFDFA</color>
+    <color name="surface_divider">#E8EAEC</color>
+    <color name="surface_error">#C71F23</color>
+    <color name="surface_inversePrimary">#273540</color>
+    <color name="surface_inverseSecondary">#0A1B2A</color>
+    <color name="surface_overlayGrey">#586874</color>
+    <color name="surface_overlayWhite">#FFFFFF</color>
+    <color name="surface_pagePrimary">#FBF5ED</color>
+    <color name="surface_pageSecondary">#FFFFFF</color>
+    <color name="surface_pageTertiary">#E8EAEC</color>
+    <color name="surface_warning">#CF4A00</color>
+    <color name="surface_success">#03893D</color>
+
+    <color name="text_author">#586874</color>
+    <color name="text_beigePrimary">#FBF5ED</color>
+    <color name="text_beigeSecondary">#FFFDFA</color>
+    <color name="text_body">#273540</color>
+    <color name="text_dataPoint">#586874</color>
+    <color name="text_link">#0E68B3</color>
+    <color name="text_linkSecondary">#0A5A9E</color>
+    <color name="text_placeholder">#6A7883</color>
+    <color name="text_surfaceColored">#FFFFFF</color>
+    <color name="text_surfaceInverseSecondary">#273540</color>
+    <color name="text_error">#C71F23</color>
+    <color name="text_success">#03893D</color>
+    <color name="text_warning">#B34000</color>
+    <color name="text_timestamp">#586874</color>
+    <color name="text_title">#273540</color>
+</resources>

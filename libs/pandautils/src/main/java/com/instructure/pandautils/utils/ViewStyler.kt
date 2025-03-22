@@ -21,7 +21,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.text.Spannable
@@ -34,6 +33,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckBox
@@ -194,6 +194,11 @@ object ViewStyler {
 
     fun setStatusBarLight(activity: Activity) {
         activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dimLighterGray)
+        activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    }
+
+    fun setStatusBarColor(activity: Activity, @ColorRes color: Int) {
+        activity.window.statusBarColor = ContextCompat.getColor(activity, color)
         activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
