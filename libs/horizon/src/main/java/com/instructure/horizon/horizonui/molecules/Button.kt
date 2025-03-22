@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.design.molecules
+package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -31,14 +31,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.design.foundation.Colors
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 
 @Composable
 fun ButtonPrimary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .background(shape = RoundedCornerShape(50.dp), color = Colors.Surface.pageSecondary())
+            .background(shape = RoundedCornerShape(50.dp), color = HorizonColors.Surface.pageSecondary())
             .size(48.dp)
             .clickable { onClick() }
     ) {
@@ -46,7 +46,7 @@ fun ButtonPrimary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, onCl
             painterResource(id = iconRes),
             contentDescription = null,
             modifier = Modifier.size(24.dp),
-            tint = Colors.Icon.default()
+            tint = HorizonColors.Icon.default()
         )
     }
 }
@@ -56,7 +56,7 @@ fun ButtonSecondary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, on
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .background(shape = RoundedCornerShape(50.dp), color = Colors.Surface.institution())
+            .background(shape = RoundedCornerShape(50.dp), color = HorizonColors.Surface.institution())
             .size(48.dp)
             .clickable { onClick() }
     ) {
@@ -64,7 +64,7 @@ fun ButtonSecondary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, on
             painterResource(id = iconRes),
             contentDescription = null,
             modifier = Modifier.size(24.dp),
-            tint = Colors.Icon.surfaceColored()
+            tint = HorizonColors.Icon.surfaceColored()
         )
     }
 }

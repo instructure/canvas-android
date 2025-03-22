@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.design.organisms
+package com.instructure.horizon.horizonui.organisms
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,10 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.design.foundation.Colors
-import com.instructure.horizon.design.molecules.ButtonSecondary
-import com.instructure.horizon.design.molecules.Pill
-import com.instructure.horizon.design.molecules.PillStyle
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.molecules.ButtonSecondary
+import com.instructure.horizon.horizonui.molecules.Pill
+import com.instructure.horizon.horizonui.molecules.PillStyle
 import java.util.Date
 
 data class LearningObjectCardState(
@@ -53,16 +54,16 @@ data class LearningObjectCardState(
 fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifier: Modifier = Modifier) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors().copy(containerColor = Colors.Surface.cardPrimary()),
+        colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
         elevation = CardDefaults.elevatedCardElevation(),
         modifier = modifier
     ) {
         Column(Modifier.padding(36.dp)) {
             if (learningObjectCardState.progressLabel != null) Pill(PillStyle.OUTLINE, learningObjectCardState.progressLabel)
             Spacer(modifier = Modifier.padding(16.dp))
-            Text(text = learningObjectCardState.moduleTitle)
+            Text(text = learningObjectCardState.moduleTitle, style = HorizonTypography.p2, color = HorizonColors.Text.body())
             Spacer(modifier = Modifier.padding(4.dp))
-            Text(text = learningObjectCardState.learningObjectTitle)
+            Text(text = learningObjectCardState.learningObjectTitle, style = HorizonTypography.h3, color = HorizonColors.Surface.institution())
             Spacer(Modifier.padding(48.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(

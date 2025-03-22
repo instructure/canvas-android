@@ -30,21 +30,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.design.foundation.Colors
-import com.instructure.horizon.design.molecules.ButtonPrimary
-import com.instructure.horizon.design.molecules.ProgressBar
-import com.instructure.horizon.design.organisms.LearningObjectCard
-import com.instructure.horizon.design.organisms.LearningObjectCardState
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.ButtonPrimary
+import com.instructure.horizon.horizonui.molecules.ProgressBar
+import com.instructure.horizon.horizonui.organisms.LearningObjectCard
+import com.instructure.horizon.horizonui.organisms.LearningObjectCardState
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState) {
-    Scaffold(containerColor = Colors.Surface.pagePrimary(), topBar = {
+    Scaffold(containerColor = HorizonColors.Surface.pagePrimary(), topBar = {
         HomeScreenTopBar(uiState, modifier = Modifier.height(48.dp))
     }, modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp)) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues), content = {
@@ -65,9 +69,9 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
         )
         Spacer(modifier = Modifier.weight(1f))
         ButtonPrimary(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick)
-        Spacer(modifier = Modifier.width(8.dp))
+        HorizonSpace(SpaceSize.SPACE_8)
         ButtonPrimary(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick)
-        Spacer(modifier = Modifier.width(8.dp))
+        HorizonSpace(SpaceSize.SPACE_8)
         ButtonPrimary(iconRes = R.drawable.mail, onClick = uiState.onInboxClick)
     }
 }
@@ -75,12 +79,12 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
 @Composable
 private fun DashboardCourseItem(courseItem: DashboardCourseUiState, modifier: Modifier = Modifier) {
     Column(modifier) {
-        Text(text = courseItem.courseName)
-        Spacer(modifier = Modifier.height(24.dp))
+        Text(text = courseItem.courseName, style = HorizonTypography.h1)
+        HorizonSpace(SpaceSize.SPACE_24)
         ProgressBar(progress = courseItem.courseProgress)
-        Spacer(modifier = Modifier.height(36.dp))
-        Text(text = courseItem.nextModuleName)
-        Spacer(modifier = Modifier.height(12.dp))
+        HorizonSpace(SpaceSize.SPACE_36)
+        Text(text = stringResource(R.string.dashboard_resumeLearning), style = HorizonTypography.h3)
+        HorizonSpace(SpaceSize.SPACE_12)
         LearningObjectCard(
             LearningObjectCardState(
                 moduleTitle = courseItem.nextModuleName,

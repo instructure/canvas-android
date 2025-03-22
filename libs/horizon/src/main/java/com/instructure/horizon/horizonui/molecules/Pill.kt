@@ -13,17 +13,15 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.design.molecules
+package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -34,7 +32,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
-import com.instructure.horizon.design.foundation.Colors
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 
 enum class PillStyle {
     OUTLINE,
@@ -46,11 +47,11 @@ enum class PillStyle {
 fun Pill(style: PillStyle, label: String, modifier: Modifier = Modifier, @DrawableRes iconRes: Int? = null) {
     val finalModifier = when (style) {
         PillStyle.OUTLINE -> modifier
-            .border(width = 1.dp, shape = RoundedCornerShape(32.dp), color = Colors.Surface.inversePrimary())
+            .border(width = 1.dp, shape = RoundedCornerShape(32.dp), color = HorizonColors.Surface.inversePrimary())
             .height(34.dp)
             .padding(horizontal = 12.dp, vertical = 8.dp)
         PillStyle.SOLID -> modifier
-            .background(shape = RoundedCornerShape(32.dp), color = Colors.Surface.inversePrimary())
+            .background(shape = RoundedCornerShape(32.dp), color = HorizonColors.Surface.inversePrimary())
             .height(34.dp)
             .padding(horizontal = 12.dp, vertical = 8.dp)
         PillStyle.INLINE -> modifier
@@ -65,11 +66,11 @@ fun Pill(style: PillStyle, label: String, modifier: Modifier = Modifier, @Drawab
                 painterResource(id = iconRes),
                 contentDescription = null,
                 modifier = Modifier.size(18.dp), // We need to check this because 18dp seems identical to 24dp
-                tint = Colors.Icon.default(),
+                tint = HorizonColors.Icon.default(),
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            HorizonSpace(SpaceSize.SPACE_4)
         }
-        Text(text = label, color = Colors.Text.body())
+        Text(text = label, style = HorizonTypography.tag, color = HorizonColors.Text.body())
     }
 }
 

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.design.foundation
+package com.instructure.horizon.horizonui.foundation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
@@ -22,7 +22,7 @@ import androidx.compose.ui.res.colorResource
 import com.instructure.horizon.R
 import com.instructure.pandautils.utils.ThemePrefs
 
-object Colors {
+object HorizonColors {
     object PrimitivesBlue {
         @Composable
         fun blue12() = colorResource(R.color.primitives_blue12)

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.design.molecules
+package com.instructure.horizon.horizonui.molecules
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,10 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.instructure.horizon.design.foundation.Colors
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 
 @Composable
-fun Spinner(modifier: Modifier = Modifier, color: Color = Colors.Surface.institution()) {
+fun Spinner(modifier: Modifier = Modifier, color: Color = HorizonColors.Surface.institution()) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center

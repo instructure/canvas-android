@@ -22,4 +22,5 @@
     <string name="bottomNav_account">Account</string>
     <string name="bottomNav_aiAssist">AI assist</string>
     <string name="progressBar_percent">%1$s\%%</string>
+    <string name="dashboard_resumeLearning">Resume Learning</string>
 </resources>

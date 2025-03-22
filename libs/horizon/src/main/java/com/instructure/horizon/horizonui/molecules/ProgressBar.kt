@@ -13,16 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.design.molecules
+package com.instructure.horizon.horizonui.molecules
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,26 +32,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.design.foundation.Colors
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 
 @Composable
 fun ProgressBar(progress: Double, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
             modifier
-                .border(width = 2.dp, shape = RoundedCornerShape(100.dp), color = Colors.Surface.institution())
+                .border(width = 2.dp, shape = RoundedCornerShape(100.dp), color = HorizonColors.Surface.institution())
                 .height(28.dp)
                 .weight(1f)
         ) {
             Box(
                 modifier = Modifier
-                    .background(color = Colors.Surface.institution(), shape = RoundedCornerShape(100.dp))
+                    .background(color = HorizonColors.Surface.institution(), shape = RoundedCornerShape(100.dp))
                     .fillMaxWidth((progress.toFloat() / 100f))
                     .height(28.dp)
             )
         }
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.progressBar_percent, progress.toInt()), color = Colors.Surface.institution())
+        HorizonSpace(SpaceSize.SPACE_8)
+        Text(text = stringResource(R.string.progressBar_percent, progress.toInt()), style = HorizonTypography.buttonTextMedium, color = HorizonColors.Surface.institution())
     }
 }
 

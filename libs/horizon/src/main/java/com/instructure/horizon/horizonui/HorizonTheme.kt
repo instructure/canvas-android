@@ -16,73 +16,38 @@
  *
  */
 
-package com.instructure.horizon
+package com.instructure.horizon.horizonui
 
 import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RippleConfiguration
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
+import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizonTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        typography = typography
-    ) {
+    MaterialTheme {
         CompositionLocalProvider(
             LocalRippleConfiguration provides RippleConfiguration(color = colorResource(id = R.color.backgroundDark), getRippleAlpha(isSystemInDarkTheme())),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
-            LocalTextStyle provides TextStyle(
-                fontFamily = manrope,
-                letterSpacing = TextUnit(0f, TextUnitType.Sp)
-            ),
+            LocalTextStyle provides HorizonTypography.p1,
             content = content
         )
     }
 }
-
-private val manrope = FontFamily(
-    Font(R.font.manrope_regular, FontWeight.Normal),
-    Font(R.font.manrope_semibold, FontWeight.SemiBold),
-    Font(R.font.manrope_bold, FontWeight.Bold),
-)
-
-private var typography = Typography(
-    displayLarge = TextStyle(fontFamily = manrope),
-    displayMedium = TextStyle(fontFamily = manrope),
-    displaySmall = TextStyle(fontFamily = manrope),
-    headlineLarge = TextStyle(fontFamily = manrope),
-    headlineMedium = TextStyle(fontFamily = manrope),
-    headlineSmall = TextStyle(fontFamily = manrope),
-    titleLarge = TextStyle(fontFamily = manrope),
-    titleMedium = TextStyle(fontFamily = manrope),
-    titleSmall = TextStyle(fontFamily = manrope),
-    bodyLarge = TextStyle(fontFamily = manrope),
-    bodyMedium = TextStyle(fontFamily = manrope),
-    bodySmall = TextStyle(fontFamily = manrope),
-    labelLarge = TextStyle(fontFamily = manrope),
-    labelMedium = TextStyle(fontFamily = manrope),
-    labelSmall = TextStyle(fontFamily = manrope)
-)
 
 private fun getRippleAlpha(isSystemInDarkTheme: Boolean): RippleAlpha {
     return if (isSystemInDarkTheme) {

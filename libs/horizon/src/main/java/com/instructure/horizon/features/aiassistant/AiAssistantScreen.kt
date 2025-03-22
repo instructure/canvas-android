@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.instructure.horizon.design.foundation.Colors
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +39,7 @@ fun AiAssistantScreen(navHostController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    brush = Colors.Surface.aiGradient()
+                    brush = HorizonColors.Surface.aiGradient()
                 )
         ) {
             Text(text = "Ai assistant Screen", modifier = Modifier.align(Alignment.Center), fontSize = 48.sp)
