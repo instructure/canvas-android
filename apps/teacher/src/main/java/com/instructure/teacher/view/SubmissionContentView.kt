@@ -146,7 +146,8 @@ class SubmissionContentView(
     private val studentSubmission: GradeableStudentSubmission,
     private val assignment: Assignment,
     private val course: Course,
-    var initialTabIndex: Int = 0
+    var initialTabIndex: Int = 0,
+    val index: Int = 0
 ) : PdfSubmissionView(context, courseId = course.id), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewSubmissionContentBinding
@@ -558,7 +559,7 @@ class SubmissionContentView(
 
     private fun setupToolbar(assignee: Assignee) = with(binding) {
         val assigneeName = if (assignment.anonymousGrading) {
-            resources.getString(R.string.anonymousStudentLabel)
+            "${resources.getString(R.string.anonymousStudentLabel)} ${index + 1}"
         } else {
             Pronouns.span(assignee.name, assignee.pronouns)
         }
@@ -798,7 +799,8 @@ class SubmissionContentView(
                         assignment.id,
                         assignment.groupCategoryId > 0 && assignee is GroupAssignee,
                         assignment.anonymousGrading,
-                        assignmentEnhancementsEnabled
+                        assignmentEnhancementsEnabled,
+                        index
                 ))
                 .add(SpeedGraderFilesFragment.newInstance(rootSubmission))
                 .setFileCount(rootSubmission?.attachments?.size ?: 0)

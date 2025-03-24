@@ -36,7 +36,8 @@ class SpeedGraderCommentsAdapter(
     val courseId: Long,
     val assignee: Assignee,
     private val gradeAnonymously: Boolean,
-    private val onAttachmentClicked: (Attachment) -> Unit
+    private val onAttachmentClicked: (Attachment) -> Unit,
+    val assignmentIndex: Int
 ) : ListRecyclerAdapter<SubmissionCommentWrapper, SpeedGraderCommentHolder, SpeedGraderCommentsView>(
     context,
     presenter
@@ -56,7 +57,8 @@ class SpeedGraderCommentsAdapter(
             assignee,
             gradeAnonymously,
             onAttachmentClicked,
-            presenter
+            presenter,
+            assignmentIndex
         )
     }
 }

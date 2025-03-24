@@ -59,7 +59,8 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
         assignee: Assignee,
         gradeAnonymously: Boolean,
         onAttachmentClicked: (Attachment) -> Unit,
-        presenter: SpeedGraderCommentsPresenter
+        presenter: SpeedGraderCommentsPresenter,
+        index: Int
     ): Unit = with(binding.commentHolder) {
 
         // Reset extra view container
@@ -110,7 +111,7 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
                         // all comments as being authored by "Student."
                         comment.authorName
                     } else {
-                        context.getString(R.string.anonymousStudentLabel)
+                        "${context.getString(R.string.anonymousStudentLabel)} ${index + 1}"
                     }
                     Triple(comment.comment, authorName, null)
                 }
@@ -145,7 +146,7 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
                 setExtraView(CommentSubmissionView(context, wrapper.submission))
                 if (gradeAnonymously) {
                     avatarView.setAnonymousAvatar()
-                    Triple(null, context.getString(R.string.anonymousStudentLabel), null)
+                    Triple(null, "${context.getString(R.string.anonymousStudentLabel)} ${index + 1}", null)
                 } else when (assignee) {
                     is StudentAssignee -> {
                         avatarView.setupAvatarA11y(assignee.name)

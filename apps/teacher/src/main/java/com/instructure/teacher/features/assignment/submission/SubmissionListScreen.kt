@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -199,7 +200,7 @@ private fun SubmissionListContent(
                 Header(uiState.headerTitle)
                 CanvasDivider()
             }
-            items(uiState.submissions, key = { it.submissionId }) { submission ->
+            itemsIndexed(uiState.submissions, key = { index, item -> item.submissionId }) { index, submission ->
                 SubmissionListItem(submission,
                     courseColor,
                     uiState.anonymousGrading,
@@ -208,7 +209,8 @@ private fun SubmissionListContent(
                     },
                     itemClick = {
                         uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
-                    })
+                    },
+                    index = index)
                 CanvasDivider()
             }
         }
@@ -248,7 +250,8 @@ private fun SubmissionListItem(
     courseColor: Color,
     anonymousGrading: Boolean,
     itemClick: (Long) -> Unit,
-    avatarClick: (Long) -> Unit
+    avatarClick: (Long) -> Unit,
+    index: Int
 ) {
     Column(modifier = Modifier.clickable { itemClick(submissionListUiState.submissionId) }) {
         Row(
@@ -270,7 +273,7 @@ private fun SubmissionListItem(
             )
             Column {
                 Text(
-                    text = if (anonymousGrading) stringResource(R.string.anonymousStudentLabel) else submissionListUiState.userName,
+                    text = if (anonymousGrading) "${stringResource(R.string.anonymousStudentLabel)} ${index + 1}" else submissionListUiState.userName,
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
                     color = colorResource(id = R.color.textDarkest),

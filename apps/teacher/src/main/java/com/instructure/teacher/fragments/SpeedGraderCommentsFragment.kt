@@ -53,6 +53,7 @@ import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.services.NotoriousUploadWorker
 import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ParcelableArrayListArg
@@ -128,11 +129,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     var mIsGroupMessage by BooleanArg()
     var mGradeAnonymously by BooleanArg()
     var assignmentEnhancementsEnabled by BooleanArg()
+    var assignmentIndex by IntArg()
 
     var changeCommentFieldExternallyFlag = false
 
     override fun createAdapter(): SpeedGraderCommentsAdapter {
-        return SpeedGraderCommentsAdapter(requireContext(), presenter, mCourseId, presenter.assignee, mGradeAnonymously, onAttachmentClicked)
+        return SpeedGraderCommentsAdapter(requireContext(), presenter, mCourseId, presenter.assignee, mGradeAnonymously, onAttachmentClicked, assignmentIndex)
     }
 
     private val mLayoutManager by lazy { LinearLayoutManager(requireContext())
@@ -403,7 +405,8 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                 assignmentId: Long,
                 isGroupMessage: Boolean,
                 gradeAnonymously: Boolean,
-                assignmentEnhancementsEnabled: Boolean
+                assignmentEnhancementsEnabled: Boolean,
+                assignmentIndex: Int
         ) = SpeedGraderCommentsFragment().apply {
             mSubmission = submission ?: Submission()
             mRawComments = ArrayList(submission?.submissionComments ?: emptyList())
@@ -415,6 +418,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
             mIsGroupMessage = isGroupMessage
             mGradeAnonymously = gradeAnonymously
             this.assignmentEnhancementsEnabled = assignmentEnhancementsEnabled
+            this.assignmentIndex = assignmentIndex
         }
     }
 }

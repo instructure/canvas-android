@@ -41,7 +41,8 @@ class SubmissionContentAdapter(
             studentSubmission = mStudentSubmissions[position],
             assignment = mAssignment,
             course = mCourse,
-            initialTabIndex = initialTabIdx
+            initialTabIndex = initialTabIdx,
+            index = position
         ).apply {
             container.addView(this)
             mContentMap += position to this

@@ -161,7 +161,7 @@ class SubmissionListViewModel @Inject constructor(
             .map { getSubmissionUiState(it) }
 
         if (assignment.anonymousGrading) {
-            submissions = submissions.shuffled(Random(1234))
+            submissions = submissions.shuffled(Random(12340))
         }
 
         _uiState.update {
