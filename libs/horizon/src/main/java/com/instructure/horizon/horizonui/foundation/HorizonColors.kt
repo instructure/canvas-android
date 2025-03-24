@@ -375,8 +375,7 @@ object HorizonColors {
         fun overlayGrey() = colorResource(R.color.surface_overlayGrey)
         @Composable
         fun overlayWhite() = colorResource(R.color.surface_overlayWhite)
-        @Composable
-        fun pagePrimary() = colorResource(R.color.surface_pagePrimary)
+        fun pagePrimary() = Color(0xFFF2F4F4)
         fun pageSecondary() = Color(0xFFFFFFFF)
         @Composable
         fun pageTertiary() = colorResource(R.color.surface_pageTertiary)
@@ -433,16 +432,14 @@ object HorizonColors {
         @Composable
         fun beigeSecondary() = colorResource(R.color.icon_beigeSecondary)
         fun default() = Color(0xFF273540)
-        @Composable
-        fun error() = colorResource(R.color.icon_error)
+        fun error() = Color(0xFFC71F23)
         @Composable
         fun light() = colorResource(R.color.icon_light)
         @Composable
         fun medium() = colorResource(R.color.icon_medium)
         @Composable
         fun success() = colorResource(R.color.icon_success)
-        @Composable
-        fun surfaceColored() = colorResource(R.color.icon_surfaceColored)
+        fun surfaceColored() = Color(0xFFFFFFFF)
         @Composable
         fun surfaceInverseSecondary() = colorResource(R.color.icon_surfaceInverseSecondary)
         @Composable

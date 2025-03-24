@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.horizonui.organisms
+package com.instructure.horizon.horizonui.organisms.cards
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.molecules.ButtonSecondary
+import com.instructure.horizon.horizonui.molecules.IconButtonSecondary
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillStyle
@@ -108,7 +108,7 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                     }
                 }
                 Spacer(modifier = Modifier.width(24.dp))
-                ButtonSecondary(iconRes = R.drawable.arrow_forward)
+                IconButtonSecondary(iconRes = R.drawable.arrow_forward)
             }
         }
     }

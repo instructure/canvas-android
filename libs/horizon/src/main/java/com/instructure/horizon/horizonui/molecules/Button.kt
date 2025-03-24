@@ -17,45 +17,94 @@ package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 
-@Composable
-fun ButtonPrimary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-            .background(shape = RoundedCornerShape(50.dp), color = HorizonColors.Surface.pageSecondary())
-            .size(44.dp)
-    ) {
-        Icon(
-            painterResource(id = iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-            tint = HorizonColors.Icon.default()
-        )
-    }
+enum class ButtonSize(val primaryButtonSize: Dp, val secondaryButtonSize: Dp) {
+    SMALL(32.dp, 40.dp),
+    NORMAL(44.dp, 44.dp),
+}
+
+enum class ButtonColor(val backgroundColor: Color, val iconColor: Color) {
+    BLACK(HorizonColors.Surface.inversePrimary(), HorizonColors.Icon.surfaceColored()),
+    INVERSE(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.default()),
+    INVERSE_DANGER(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.error()),
+    INSTITUTION(HorizonColors.Surface.institution(), HorizonColors.Icon.surfaceColored()),
+    BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Icon.default()),
 }
 
 @Composable
-fun ButtonSecondary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
+fun IconButtonPrimary(
+    @DrawableRes iconRes: Int,
+    modifier: Modifier = Modifier,
+    size: ButtonSize = ButtonSize.NORMAL,
+    color: ButtonColor = ButtonColor.BLACK,
+    enabled: Boolean = true,
+    onClick: () -> Unit = {}
+) {
+    IconButton(
+        iconRes = iconRes,
+        size = size.primaryButtonSize,
+        backgroundColor = color.backgroundColor,
+        iconColor = color.iconColor,
+        modifier = modifier,
+        onClick = onClick,
+        enabled = enabled
+    )
+}
+
+@Composable
+fun IconButtonSecondary(
+    @DrawableRes iconRes: Int,
+    modifier: Modifier = Modifier,
+    size: ButtonSize = ButtonSize.NORMAL,
+    color: ButtonColor = ButtonColor.INSTITUTION,
+    enabled: Boolean = true,
+    onClick: () -> Unit = {}
+) {
+    IconButton(
+        iconRes = iconRes,
+        size = size.secondaryButtonSize,
+        backgroundColor = color.backgroundColor,
+        iconColor = color.iconColor,
+        modifier = modifier,
+        onClick = onClick,
+        enabled = enabled
+    )
+}
+
+@Composable
+private fun IconButtonAi(
+    modifier: Modifier = Modifier,
+    size: ButtonSize = ButtonSize.NORMAL,
+    enabled: Boolean = true,
+    @DrawableRes iconRes: Int = R.drawable.ai,
+    onClick: () -> Unit = {}
+) {
+    val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
     IconButton(
         onClick = onClick,
-        modifier = modifier
-            .background(shape = RoundedCornerShape(50.dp), color = HorizonColors.Surface.institution())
-            .size(44.dp)
+        enabled = enabled,
+        modifier = buttonModifier
+            .background(
+                brush = HorizonColors.Surface.aiGradient(),
+                shape = RoundedCornerShape(500.dp)
+            )
+            .size(size.primaryButtonSize)
     ) {
         Icon(
             painterResource(id = iconRes),
@@ -67,14 +116,91 @@ fun ButtonSecondary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, on
 }
 
 @Composable
-@Preview
-private fun ButtonPreview() {
-    ButtonPrimary(iconRes = R.drawable.add)
+private fun IconButton(
+    @DrawableRes iconRes: Int,
+    size: Dp,
+    backgroundColor: Color,
+    iconColor: Color,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onClick: () -> Unit = {}
+) {
+    val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
+    IconButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = buttonModifier
+            .background(shape = RoundedCornerShape(50.dp), color = backgroundColor)
+            .size(size)
+    ) {
+        Icon(
+            painterResource(id = iconRes),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = iconColor
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun IconButtonPrimaryPreview() {
+    IconButtonPrimary(iconRes = R.drawable.add)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+private fun IconButtonPrimaryInversePreview() {
+    IconButtonPrimary(iconRes = R.drawable.add, color = ButtonColor.INVERSE)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+private fun IconButtonPrimaryInverseDisabledPreview() {
+    IconButtonPrimary(iconRes = R.drawable.add, color = ButtonColor.INVERSE, enabled = false)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+private fun IconButtonPrimaryInverseDangerPreview() {
+    IconButtonPrimary(iconRes = R.drawable.add, color = ButtonColor.INVERSE_DANGER)
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun IconButtonSecondaryPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    IconButtonSecondary(iconRes = R.drawable.add)
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun IconButtonSecondarySmallPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    IconButtonSecondary(iconRes = R.drawable.add, size = ButtonSize.SMALL)
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun IconButtonSecondaryDisabledPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    IconButtonSecondary(iconRes = R.drawable.add, enabled = false)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+private fun IconButtonSecondaryBeigePreview() {
+    IconButtonSecondary(iconRes = R.drawable.add, color = ButtonColor.BEIGE)
 }
 
 @Composable
 @Preview
-private fun ButtonSecondaryPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    ButtonSecondary(iconRes = R.drawable.add)
+private fun IconButtonAiPreview() {
+    IconButtonAi()
+}
+
+@Composable
+@Preview
+private fun IconButtonAiSmallPreview() {
+    IconButtonAi(size = ButtonSize.SMALL)
 }

@@ -47,10 +47,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.ButtonPrimary
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonPrimary
 import com.instructure.horizon.horizonui.molecules.ProgressBar
-import com.instructure.horizon.horizonui.organisms.LearningObjectCard
-import com.instructure.horizon.horizonui.organisms.LearningObjectCardState
+import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
+import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @Composable
@@ -78,11 +79,11 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
             modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
-        ButtonPrimary(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick, modifier = buttonModifier)
+        IconButtonPrimary(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick, modifier = buttonModifier, color = ButtonColor.INVERSE)
         HorizonSpace(SpaceSize.SPACE_8)
-        ButtonPrimary(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick, modifier = buttonModifier)
+        IconButtonPrimary(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick, modifier = buttonModifier, color = ButtonColor.INVERSE)
         HorizonSpace(SpaceSize.SPACE_8)
-        ButtonPrimary(iconRes = R.drawable.mail, onClick = uiState.onInboxClick, modifier = buttonModifier)
+        IconButtonPrimary(iconRes = R.drawable.mail, onClick = uiState.onInboxClick, modifier = buttonModifier, color = ButtonColor.INVERSE)
     }
 }
 

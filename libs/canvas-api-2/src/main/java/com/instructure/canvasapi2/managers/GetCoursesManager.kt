@@ -36,13 +36,13 @@ class GetCoursesManager {
     }
 
     private fun mapCourse(course: GetCoursesQuery.Course?): CourseWithProgress? {
-        val progress = course?.usersConnection?.nodes?.first()?.courseProgression?.requirements?.completionPercentage ?: 0.0
+        val progress = course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0
         val courseId = course?.id?.toLong()
         val courseName = course?.name
         val incompleteModulesConnection =
-            course?.usersConnection?.nodes?.first()?.courseProgression?.incompleteModulesConnection?.nodes?.first()
+            course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.incompleteModulesConnection?.nodes?.firstOrNull()
         val moduleId = incompleteModulesConnection?.module?.id?.toLong()
-        val moduleItemId = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.first()?.id?.toLong()
+        val moduleItemId = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.id?.toLong()
 
         return if (courseId != null && courseName != null && moduleId != null && moduleItemId != null) {
             CourseWithProgress(Course(courseId, courseName), progress, moduleItemId, moduleId)

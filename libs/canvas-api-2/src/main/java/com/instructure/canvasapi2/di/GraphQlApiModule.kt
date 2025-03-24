@@ -18,7 +18,6 @@ package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.CommentLibraryManagerImpl
-import com.instructure.canvasapi2.managers.GetCoursesManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManagerImpl
 import com.instructure.canvasapi2.managers.StudentContextManager
@@ -49,10 +48,5 @@ class GraphQlApiModule {
     @Provides
     fun provideStudentContextManager(): StudentContextManager {
         return StudentContextManagerImpl()
-    }
-
-    @Provides
-    fun provideGetCoursesManager(): GetCoursesManager {
-        return GetCoursesManager()
     }
 }

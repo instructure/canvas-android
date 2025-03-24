@@ -29,11 +29,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -57,8 +54,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
-import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.navelements.SelectableNavigationItem
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -118,7 +115,7 @@ private fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = HorizonElevation.level5) {
-        NavigationBar(containerColor = HorizonColors.Surface.pageSecondary(), tonalElevation = 8.dp, modifier = modifier) {
+        NavigationBar(containerColor = HorizonColors.Surface.pageSecondary(), modifier = modifier) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                 if (item.route == MainNavigationRoute.AiAssistant.route) {
@@ -140,31 +137,6 @@ private fun BottomNavigationBar(
             }
         }
     }
-}
-
-@Composable
-fun RowScope.SelectableNavigationItem(item: BottomNavItem, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val label = stringResource(item.label)
-    NavigationBarItem(
-        selected = selected,
-        onClick = onClick,
-        icon = {
-            Icon(painter = painterResource(if (selected) item.selectedIcon else item.icon), contentDescription = label)
-        },
-        label = {
-            val color = if (selected) HorizonColors.Text.surfaceInverseSecondary() else HorizonColors.Text.body()
-            val textStyle = if (selected) HorizonTypography.labelSmallBold else HorizonTypography.labelSmall
-            Text(text = label, color = color, style = textStyle)
-        },
-        colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = HorizonColors.Icon.surfaceInverseSecondary(),
-            unselectedIconColor = HorizonColors.Icon.medium(),
-            selectedTextColor = HorizonColors.Text.surfaceInverseSecondary(),
-            unselectedTextColor = HorizonColors.Text.body(),
-            indicatorColor = Color.Transparent
-        ),
-        modifier = modifier
-    )
 }
 
 @Composable
