@@ -223,7 +223,7 @@ private fun AssignmentListWrapper(
                 ){
                     EmptyContent(
                         emptyMessage = stringResource(R.string.noAssignments),
-                        imageRes = R.drawable.ic_panda_nodiscussions
+                        imageRes = R.drawable.ic_no_events
                     )
                 }
             }
@@ -237,7 +237,7 @@ private fun AssignmentListWrapper(
                         .background(colorResource(R.color.backgroundLightest))
                 ){
                     ErrorContent(
-                        errorMessage = stringResource(R.string.errorLoadingAssignment),
+                        errorMessage = stringResource(R.string.errorLoadingAssignments),
                         retryClick = { screenActionHandler(AssignmentListScreenEvent.Refresh) }
                     )
                 }
