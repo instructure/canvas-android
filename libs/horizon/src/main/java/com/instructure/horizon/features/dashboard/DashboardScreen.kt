@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-@file:OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 
 package com.instructure.horizon.features.dashboard
 
@@ -100,9 +100,11 @@ private fun DashboardCourseItem(courseItem: DashboardCourseUiState, modifier: Mo
                 progressLabel = courseItem.progressLabel,
                 remainingTime = courseItem.remainingTime,
                 dueDate = courseItem.dueDate,
-                learningObjectType = courseItem.learningObjectType
+                learningObjectType = courseItem.learningObjectType,
+                onClick = courseItem.onClick
             )
         )
+        HorizonSpace(SpaceSize.SPACE_24)
     }
 }
 

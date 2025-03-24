@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.horizonui.organisms
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +40,9 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ButtonSecondary
 import com.instructure.horizon.horizonui.molecules.Pill
+import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillStyle
+import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.formatDayMonth
 import java.util.Date
@@ -56,6 +59,8 @@ data class LearningObjectCardState(
 
 @Composable
 fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifier: Modifier = Modifier) {
+    val onClick = learningObjectCardState.onClick
+    val cardModifier = if (onClick != null) modifier.clickable { onClick() } else modifier
     Card(
         shape = HorizonCornerRadius.level2,
         colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
@@ -67,10 +72,10 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
             hoveredElevation = HorizonElevation.level4,
             draggedElevation = HorizonElevation.level4
         ),
-        modifier = modifier
+        modifier = cardModifier
     ) {
         Column(Modifier.padding(36.dp)) {
-            if (learningObjectCardState.progressLabel != null) Pill(PillStyle.OUTLINE, learningObjectCardState.progressLabel)
+            if (learningObjectCardState.progressLabel != null) Pill(learningObjectCardState.progressLabel)
             Spacer(modifier = Modifier.padding(16.dp))
             Text(text = learningObjectCardState.moduleTitle, style = HorizonTypography.p2, color = HorizonColors.Text.body())
             Spacer(modifier = Modifier.padding(4.dp))
@@ -85,20 +90,18 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                     modifier = Modifier.weight(1f)
                 ) {
                     if (learningObjectCardState.remainingTime != null) {
-                        Pill(PillStyle.INLINE, learningObjectCardState.remainingTime, iconRes = R.drawable.schedule)
+                        LearningObjectPill(learningObjectCardState.remainingTime, iconRes = R.drawable.schedule)
                         Spacer(modifier = Modifier.height(6.dp))
                     }
                     if (learningObjectCardState.learningObjectType != null) {
-                        Pill(
-                            PillStyle.INLINE,
+                        LearningObjectPill(
                             stringResource(learningObjectCardState.learningObjectType.stringRes),
                             iconRes = learningObjectCardState.learningObjectType.iconRes
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                     }
                     if (learningObjectCardState.dueDate != null) {
-                        Pill(
-                            PillStyle.INLINE,
+                        LearningObjectPill(
                             stringResource(R.string.learningobject_dueDate, learningObjectCardState.dueDate.formatDayMonth()),
                             iconRes = R.drawable.calendar_today
                         )
@@ -109,6 +112,11 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
             }
         }
     }
+}
+
+@Composable
+private fun LearningObjectPill(label: String, iconRes: Int? = null) {
+    Pill(label = label, style = PillStyle.INLINE, type = PillType.LEARNING_OBJECT_TYPE, case = PillCase.TITLE, iconRes = iconRes)
 }
 
 @Preview(showBackground = true)

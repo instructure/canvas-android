@@ -15,7 +15,6 @@
  */
 package com.instructure.horizon.horizonui.foundation
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -24,9 +23,6 @@ import androidx.compose.ui.unit.sp
 import com.instructure.horizon.R
 
 private const val LINE_HEIGHT_140_PERCENT = 1.4f
-
-// This color is the UI Colors/Text/Title color from the Figma file. We should define it here, because we can't use composables in text styles.
-private val defaultTextColor = Color(0xFF273540)
 
 private val manrope = FontFamily(
     Font(R.font.manrope_regular, FontWeight.Normal),
@@ -46,7 +42,7 @@ object HorizonTypography {
         fontSize = 28.sp,
         letterSpacing = 0.sp,
         lineHeight = 28.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val h2 = TextStyle(
@@ -55,7 +51,7 @@ object HorizonTypography {
         fontSize = 24.sp,
         letterSpacing = 0.sp,
         lineHeight = 24.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val h3 = TextStyle(
@@ -64,7 +60,7 @@ object HorizonTypography {
         fontSize = 20.sp,
         letterSpacing = 0.sp,
         lineHeight = 20.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val h4 = TextStyle(
@@ -73,7 +69,7 @@ object HorizonTypography {
         fontSize = 16.sp,
         letterSpacing = 0.sp,
         lineHeight = 16.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val sh1 = TextStyle(
@@ -82,7 +78,7 @@ object HorizonTypography {
         fontSize = 28.sp,
         letterSpacing = 0.sp,
         lineHeight = 28.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val sh2 = TextStyle(
@@ -91,7 +87,7 @@ object HorizonTypography {
         fontSize = 24.sp,
         letterSpacing = 0.sp,
         lineHeight = 24.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val sh3 = TextStyle(
@@ -100,7 +96,7 @@ object HorizonTypography {
         fontSize = 20.sp,
         letterSpacing = 0.sp,
         lineHeight = 20.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val sh4 = TextStyle(
@@ -109,7 +105,7 @@ object HorizonTypography {
         fontSize = 16.sp,
         letterSpacing = 0.sp,
         lineHeight = 16.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val p1 = TextStyle(
@@ -118,7 +114,7 @@ object HorizonTypography {
         fontSize = 16.sp,
         letterSpacing = 0.sp,
         lineHeight = 16.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val p2 = TextStyle(
@@ -127,7 +123,7 @@ object HorizonTypography {
         fontSize = 14.sp,
         letterSpacing = 0.sp,
         lineHeight = 14.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val p3 = TextStyle(
@@ -136,7 +132,7 @@ object HorizonTypography {
         fontSize = 12.sp,
         letterSpacing = 0.sp,
         lineHeight = 12.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val tag = TextStyle(
@@ -144,7 +140,7 @@ object HorizonTypography {
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         letterSpacing = 0.5.sp,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val labelLargeBold = TextStyle(
@@ -153,7 +149,7 @@ object HorizonTypography {
         fontSize = 16.sp,
         letterSpacing = 0.sp,
         lineHeight = 16.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val labelMediumBold = TextStyle(
@@ -162,7 +158,7 @@ object HorizonTypography {
         fontSize = 14.sp,
         letterSpacing = 0.sp,
         lineHeight = 14.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val labelSmallBold = TextStyle(
@@ -171,7 +167,7 @@ object HorizonTypography {
         fontSize = 12.sp,
         letterSpacing = 0.25.sp,
         lineHeight = 12.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val labelSmall = TextStyle(
@@ -180,7 +176,7 @@ object HorizonTypography {
         fontSize = 12.sp,
         letterSpacing = 0.25.sp,
         lineHeight = 12.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val buttonTextLarge = TextStyle(
@@ -189,7 +185,7 @@ object HorizonTypography {
         fontSize = 16.sp,
         letterSpacing = 0.sp,
         lineHeight = 16.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 
     val buttonTextMedium = TextStyle(
@@ -198,6 +194,6 @@ object HorizonTypography {
         fontSize = 16.sp,
         letterSpacing = 0.sp,
         lineHeight = 16.sp * LINE_HEIGHT_140_PERCENT,
-        color = defaultTextColor
+        color = HorizonColors.Text.title()
     )
 }

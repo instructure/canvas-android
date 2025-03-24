@@ -367,10 +367,8 @@ object HorizonColors {
         fun cardSecondary() = colorResource(R.color.surface_cardSecondary)
         @Composable
         fun divider() = colorResource(R.color.surface_divider)
-        @Composable
-        fun error() = colorResource(R.color.surface_error)
-        @Composable
-        fun inversePrimary() = colorResource(R.color.surface_inversePrimary)
+        fun error() = Color(0xFFC71F23)
+        fun inversePrimary() = Color(0xFF273540)
         @Composable
         fun inverseSecondary() = colorResource(R.color.surface_inverseSecondary)
         @Composable
@@ -379,8 +377,7 @@ object HorizonColors {
         fun overlayWhite() = colorResource(R.color.surface_overlayWhite)
         @Composable
         fun pagePrimary() = colorResource(R.color.surface_pagePrimary)
-        @Composable
-        fun pageSecondary() = colorResource(R.color.surface_pageSecondary)
+        fun pageSecondary() = Color(0xFFFFFFFF)
         @Composable
         fun pageTertiary() = colorResource(R.color.surface_pageTertiary)
         @Composable
@@ -394,7 +391,6 @@ object HorizonColors {
                 colorResource(R.color.ai_gradient_end)
             )
         )
-        @Composable
         fun institution() = Color(ThemePrefs.brandColor)
     }
 
@@ -405,8 +401,7 @@ object HorizonColors {
         fun beigePrimary() = colorResource(R.color.text_beigePrimary)
         @Composable
         fun beigeSecondary() = colorResource(R.color.text_beigeSecondary)
-        @Composable
-        fun body() = colorResource(R.color.text_body)
+        fun body() = Color(0xFF273540)
         @Composable
         fun dataPoint() = colorResource(R.color.text_dataPoint)
         @Composable
@@ -415,20 +410,17 @@ object HorizonColors {
         fun linkSecondary() = colorResource(R.color.text_linkSecondary)
         @Composable
         fun placeholder() = colorResource(R.color.text_placeholder)
-        @Composable
-        fun surfaceColored() = colorResource(R.color.text_surfaceColored)
+        fun surfaceColored() = Color(0xFFFFFFFF)
         @Composable
         fun surfaceInverseSecondary() = colorResource(R.color.text_surfaceInverseSecondary)
-        @Composable
-        fun error() = colorResource(R.color.text_error)
+        fun error() = Color(0xFFC71F23)
         @Composable
         fun success() = colorResource(R.color.text_success)
         @Composable
         fun warning() = colorResource(R.color.text_warning)
         @Composable
         fun timestamp() = colorResource(R.color.text_timestamp)
-        @Composable
-        fun title() = colorResource(R.color.text_title)
+        fun title() = Color(0xFF273540)
     }
 
     object Icon {
@@ -440,8 +432,7 @@ object HorizonColors {
         fun beigePrimary() = colorResource(R.color.icon_beigePrimary)
         @Composable
         fun beigeSecondary() = colorResource(R.color.icon_beigeSecondary)
-        @Composable
-        fun default() = colorResource(R.color.icon_default)
+        fun default() = Color(0xFF273540)
         @Composable
         fun error() = colorResource(R.color.icon_error)
         @Composable
