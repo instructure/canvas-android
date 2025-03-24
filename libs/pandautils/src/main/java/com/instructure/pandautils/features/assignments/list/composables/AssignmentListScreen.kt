@@ -29,7 +29,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -223,6 +225,7 @@ private fun AssignmentListWrapper(
                     modifier = modifier
                         .fillMaxSize()
                         .background(colorResource(R.color.backgroundLightest))
+                        .verticalScroll(rememberScrollState())
                 ){
                     EmptyContent(
                         emptyMessage = stringResource(R.string.noAssignments),
@@ -238,6 +241,7 @@ private fun AssignmentListWrapper(
                     modifier = modifier
                         .fillMaxSize()
                         .background(colorResource(R.color.backgroundLightest))
+                        .verticalScroll(rememberScrollState())
                 ){
                     ErrorContent(
                         errorMessage = stringResource(R.string.errorLoadingAssignments),

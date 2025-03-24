@@ -93,7 +93,9 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed." +
                 "Assert that the needs grading count under the corresponding assignment is 1.")
-        assignmentListPage.refresh()
+        composeTestRule.waitForIdle()
+        assignmentListPage.refreshAssignmentList()
+        composeTestRule.waitForIdle()
         assignmentListPage.assertHasAssignment(assignment[0])
 
         Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert the numbers of 'Not Submitted' and 'Needs Grading' submissions.")
@@ -133,6 +135,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Navigate back to Assignment List Page, open the '${assignment[0].name}' assignment and publish it. Click on Save.")
         Espresso.pressBack()
+        composeTestRule.waitForIdle()
         assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickPublishSwitch()
@@ -158,7 +161,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as UNPUBLISHED. Open the quiz assignment again.")
         Espresso.pressBack()
-        assignmentListPage.assertAssignmentUnPublished(quizAssignment[0].name)
+        assignmentListPage.assertPublishedState(quizAssignment[0].name, false)
         assignmentListPage.clickAssignment(quizAssignment[0])
 
         Log.d(STEP_TAG, "Open Edit Page and re-publish the assignment, then click on Save. Assert that the quiz assignment is published automatically.")
@@ -169,7 +172,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as PUBLISHED.")
         Espresso.pressBack()
-        assignmentListPage.assertAssignmentPublished(quizAssignment[0].name)
+        assignmentListPage.assertPublishedState(quizAssignment[0].name, true)
 
         Log.d(STEP_TAG, "Open the '${assignment[0].name}' assignment.")
         assignmentListPage.clickAssignment(assignment[0])

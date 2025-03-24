@@ -36,6 +36,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.composeTest.hasDrawable
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.R
@@ -152,13 +153,14 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
     fun refreshAssignmentList() {
         composeTestRule.onNodeWithTag("assignmentList").performTouchInput { swipeDown() }
+        composeTestRule.waitForIdle()
     }
 
     fun assertGradingPeriodLabel(gradingPeriodName: String? = null) {
         composeTestRule.onNode(
             hasText("Grading Period:").and(hasParent(hasAnyDescendant(hasText(gradingPeriodName ?: "All"))))
         )
-            .assertIsDisplayed()
+        .assertIsDisplayed()
     }
 
     private fun clickFilterMenu() {
@@ -175,6 +177,16 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         clickFilterMenu()
         selectGroupByOption("Grouped By", option)
         composeTestRule.onNodeWithText("Done").performClick()
+    }
+
+    fun assertPublishedState(assignmentName: String, published: Boolean) {
+        val publishedResource = if (published) com.instructure.pandares.R.drawable.ic_complete_solid else com.instructure.pandares.R.drawable.ic_unpublish
+        composeTestRule.onNode(
+            hasText(assignmentName).and(
+                hasDrawable(publishedResource)
+            )
+        )
+        .assertIsDisplayed()
     }
 
     private fun selectFilterOption(groupName: String, option: FilterOption) {
