@@ -233,6 +233,7 @@ class AssignmentListViewModel @Inject constructor(
                 _uiState.update { it.copy(overFlowItemsExpanded = action.expanded) }
             }
             AssignmentListScreenEvent.Refresh -> {
+                _uiState.update { it.copy(isRefreshing = true) }
                 getAssignments(true)
             }
         }

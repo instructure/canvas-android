@@ -2038,7 +2038,7 @@
     <string name="graded">Graded</string>
     <string name="other">Other</string>
     <string name="a11y_filterAssignments">Filter Assignments</string>
-    <string name="assignmentFilter">Assignment filter</string>
+    <string name="assignmentFilter">Assignment Filter</string>
     <string name="groupedBy">Grouped By</string>
     <string name="gradingPeriod">Grading Period</string>
     <string name="gradePreferences">Grade Preferences</string>

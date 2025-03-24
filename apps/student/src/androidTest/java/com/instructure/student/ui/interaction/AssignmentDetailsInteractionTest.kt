@@ -70,7 +70,6 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         )
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.waitForPage()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
@@ -134,7 +133,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         val expectedDueDate = "January 31, 2023 11:59 PM"
         val course = data.courses.values.first()
         val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString())
-        assignmentListPage.refresh()
+        assignmentListPage.refreshAssignmentList()
         assignmentListPage.clickAssignment(assignmentWithNoDueDate)
 
         assignmentDetailsPage.assertDisplaysDate(expectedDueDate)
@@ -363,7 +362,6 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         )
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.waitForPage()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
@@ -559,7 +557,6 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.waitForPage()
 
         // Let's find and click an assignment with a submission, so that we get meaningful
         // data in the submission details.
