@@ -46,16 +46,16 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ButtonPrimary
 import com.instructure.horizon.horizonui.molecules.ProgressBar
-import com.instructure.horizon.horizonui.platform.PullToRefresh
 import com.instructure.horizon.horizonui.organisms.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.LearningObjectCardState
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState) {
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary(), topBar = {
         HomeScreenTopBar(uiState, modifier = Modifier.height(48.dp))
     }, modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp)) { paddingValues ->
-        PullToRefresh(isRefreshing = uiState.isRefreshing, onRefresh = uiState.onRefresh) {
+        LoadingStateWrapper(loadingState = uiState.loadingState) {
             LazyColumn(modifier = Modifier.padding(paddingValues), content = {
                 items(uiState.coursesUiState) { courseItem ->
                     DashboardCourseItem(courseItem)

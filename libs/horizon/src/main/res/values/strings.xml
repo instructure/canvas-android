@@ -33,4 +33,5 @@
     <string name="learningObject_pillStatusInProgress">In Progress</string>
     <string name="learningObject_pillStatusCompleted">Completed</string>
     <string name="learningObject_pillStatusNotStarted">Not Started</string>
+    <string name="loadingStateWrapper_errorOccurred">An error occurred</string>
 </resources>

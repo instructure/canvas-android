@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,26 +40,26 @@ class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState(onRefresh = ::refresh))
+    private val _uiState = MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh)))
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.tryLaunch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             loadData(forceNetwork = false)
-            _uiState.update { it.copy(isLoading = false) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         } catch {
-            _uiState.update { it.copy(isLoading = false) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         }
     }
 
     fun refresh() {
         viewModelScope.tryLaunch {
-            _uiState.update { it.copy(isRefreshing = true) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
             loadData(forceNetwork = true)
-            _uiState.update { it.copy(isRefreshing = false) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false)) }
         } catch {
-            _uiState.update { it.copy(isRefreshing = false) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false)) }
         }
     }
 
@@ -118,7 +119,7 @@ class DashboardViewModel @Inject constructor(
 
     private fun handleError() {
         _uiState.update {
-            it.copy(isError = true)
+            it.copy(loadingState = it.loadingState.copy(isError = true))
         }
     }
 }

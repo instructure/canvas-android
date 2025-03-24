@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectType
 import java.util.Date
 
@@ -24,10 +25,7 @@ data class DashboardUiState(
     val onNotificationsClick: () -> Unit = {},
     val onInboxClick: () -> Unit = {},
     val coursesUiState: List<DashboardCourseUiState> = emptyList(),
-    val isRefreshing: Boolean = false,
-    val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val onRefresh: () -> Unit = {},
+    val loadingState: LoadingState = LoadingState(),
 )
 
 data class DashboardCourseUiState(
