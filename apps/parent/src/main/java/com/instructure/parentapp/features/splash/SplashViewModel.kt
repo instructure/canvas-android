@@ -62,8 +62,6 @@ class SplashViewModel @Inject constructor(
             val user = repository.getSelf()
             user?.let { saveUserInfo(it) }
 
-            val account = repository.getAccount()
-
             val colors = repository.getColors()
             colors?.let { colorKeeper.addToCache(it) }
 
@@ -80,16 +78,14 @@ class SplashViewModel @Inject constructor(
 
             val sendUsageMetrics = repository.getSendUsageMetrics()
             if (sendUsageMetrics) {
-                val userIdSha = user?.id.toString().SHA256()
+                val userWithIds = repository.getSelfWithUuid()
                 val visitorData = mapOf(
-                    "id" to userIdSha,
                     "locale" to apiPrefs.effectiveLocale,
                 )
                 val accountData = mapOf(
-                    "id" to account?.uuid,
                     "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
                 )
-                Pendo.startSession(userIdSha, account?.uuid, visitorData, accountData)
+                Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
             } else {
                 Pendo.endSession()
             }
