@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import com.instructure.horizon.model.LearningObjectType
 import java.util.Date
 
 data class DashboardUiState(
@@ -23,6 +24,10 @@ data class DashboardUiState(
     val onNotificationsClick: () -> Unit = {},
     val onInboxClick: () -> Unit = {},
     val coursesUiState: List<DashboardCourseUiState> = emptyList(),
+    val isRefreshing: Boolean = false,
+    val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val onRefresh: () -> Unit = {},
 )
 
 data class DashboardCourseUiState(
@@ -33,6 +38,6 @@ data class DashboardCourseUiState(
     val nextModuleItemName: String,
     val progressLabel: String? = null,
     val remainingTime: String? = null,
-    val learningObjectType: String? = null,
+    val learningObjectType: LearningObjectType? = null,
     val dueDate: Date? = null,
 )

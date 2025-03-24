@@ -36,6 +36,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import kotlin.math.roundToInt
 
 @Composable
 fun ProgressBar(progress: Double, modifier: Modifier = Modifier) {
@@ -54,7 +55,7 @@ fun ProgressBar(progress: Double, modifier: Modifier = Modifier) {
             )
         }
         HorizonSpace(SpaceSize.SPACE_8)
-        Text(text = stringResource(R.string.progressBar_percent, progress.toInt()), style = HorizonTypography.buttonTextMedium, color = HorizonColors.Surface.institution())
+        Text(text = stringResource(R.string.progressBar_percent, progress.roundToInt()), style = HorizonTypography.buttonTextMedium, color = HorizonColors.Surface.institution())
     }
 }
 

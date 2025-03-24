@@ -23,4 +23,14 @@
     <string name="bottomNav_aiAssist">AI assist</string>
     <string name="progressBar_percent">%1$s\%%</string>
     <string name="dashboard_resumeLearning">Resume Learning</string>
+    <string name="learningObject_assignment">Assignment</string>
+    <string name="learningObject_File">File</string>
+    <string name="learningObject_externalLink">External Link</string>
+    <string name="learningObject_externalTool">External Tool</string>
+    <string name="learningObject_page">Page</string>
+    <string name="learningObject_assessment">Assessment</string>
+    <string name="learningobject_dueDate">Due %1$s</string>
+    <string name="learningObject_pillStatusInProgress">In Progress</string>
+    <string name="learningObject_pillStatusCompleted">Completed</string>
+    <string name="learningObject_pillStatusNotStarted">Not Started</string>
 </resources>

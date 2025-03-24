@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-@file:OptIn(ExperimentalGlideComposeApi::class)
+@file:OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
 
 package com.instructure.horizon.features.dashboard
 
@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +46,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ButtonPrimary
 import com.instructure.horizon.horizonui.molecules.ProgressBar
+import com.instructure.horizon.horizonui.platform.PullToRefresh
 import com.instructure.horizon.horizonui.organisms.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.LearningObjectCardState
 
@@ -53,11 +55,13 @@ fun DashboardScreen(uiState: DashboardUiState) {
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary(), topBar = {
         HomeScreenTopBar(uiState, modifier = Modifier.height(48.dp))
     }, modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp)) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues), content = {
-            items(uiState.coursesUiState) { courseItem ->
-                DashboardCourseItem(courseItem)
-            }
-        })
+        PullToRefresh(isRefreshing = uiState.isRefreshing, onRefresh = uiState.onRefresh) {
+            LazyColumn(modifier = Modifier.padding(paddingValues), content = {
+                items(uiState.coursesUiState) { courseItem ->
+                    DashboardCourseItem(courseItem)
+                }
+            })
+        }
     }
 }
 
@@ -94,7 +98,8 @@ private fun DashboardCourseItem(courseItem: DashboardCourseUiState, modifier: Mo
                 learningObjectTitle = courseItem.nextModuleItemName,
                 progressLabel = courseItem.progressLabel,
                 remainingTime = courseItem.remainingTime,
-                dueDate = courseItem.dueDate
+                dueDate = courseItem.dueDate,
+                learningObjectType = courseItem.learningObjectType
             )
         )
     }

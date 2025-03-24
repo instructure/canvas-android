@@ -27,6 +27,7 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.format.DateTimeParseException
 import java.util.Calendar
 import java.util.Date
@@ -112,4 +113,9 @@ fun String.formatIsoDuration(context: Context): String {
         FirebaseCrashlytics.getInstance().recordException(e)
         ""
     }
+}
+
+fun Date.formatDayMonth(): String {
+    val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+    return formatter.format(this)
 }

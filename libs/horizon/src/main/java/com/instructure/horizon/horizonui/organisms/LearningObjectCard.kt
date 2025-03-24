@@ -21,13 +21,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -39,6 +40,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ButtonSecondary
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillStyle
+import com.instructure.horizon.model.LearningObjectType
+import com.instructure.pandautils.utils.formatDayMonth
 import java.util.Date
 
 data class LearningObjectCardState(
@@ -46,7 +49,7 @@ data class LearningObjectCardState(
     val learningObjectTitle: String,
     val progressLabel: String? = null,
     val remainingTime: String? = null,
-    val learningObjectType: String? = null,
+    val learningObjectType: LearningObjectType? = null,
     val dueDate: Date? = null,
     val onClick: (() -> Unit)? = null
 )
@@ -62,7 +65,8 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
             focusedElevation = HorizonElevation.level4,
             disabledElevation = HorizonElevation.level4,
             hoveredElevation = HorizonElevation.level4,
-            draggedElevation = HorizonElevation.level4),
+            draggedElevation = HorizonElevation.level4
+        ),
         modifier = modifier
     ) {
         Column(Modifier.padding(36.dp)) {
@@ -70,7 +74,11 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
             Spacer(modifier = Modifier.padding(16.dp))
             Text(text = learningObjectCardState.moduleTitle, style = HorizonTypography.p2, color = HorizonColors.Text.body())
             Spacer(modifier = Modifier.padding(4.dp))
-            Text(text = learningObjectCardState.learningObjectTitle, style = HorizonTypography.h3, color = HorizonColors.Surface.institution())
+            Text(
+                text = learningObjectCardState.learningObjectTitle,
+                style = HorizonTypography.h3,
+                color = HorizonColors.Surface.institution()
+            )
             Spacer(Modifier.padding(48.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(
@@ -81,13 +89,19 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                         Spacer(modifier = Modifier.height(6.dp))
                     }
                     if (learningObjectCardState.learningObjectType != null) {
-                        // TODO This icon should change based on the learning object type
-                        Pill(PillStyle.INLINE, learningObjectCardState.learningObjectType, iconRes = R.drawable.text_snippet)
+                        Pill(
+                            PillStyle.INLINE,
+                            stringResource(learningObjectCardState.learningObjectType.stringRes),
+                            iconRes = learningObjectCardState.learningObjectType.iconRes
+                        )
                         Spacer(modifier = Modifier.height(6.dp))
                     }
                     if (learningObjectCardState.dueDate != null) {
-                        // TODO How should we format the date?
-                        Pill(PillStyle.INLINE, "Due ${learningObjectCardState.dueDate}", iconRes = R.drawable.calendar_today)
+                        Pill(
+                            PillStyle.INLINE,
+                            stringResource(R.string.learningobject_dueDate, learningObjectCardState.dueDate.formatDayMonth()),
+                            iconRes = R.drawable.calendar_today
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.width(24.dp))
@@ -107,7 +121,7 @@ private fun LearningObjectCardPreview() {
             learningObjectTitle = "Learning Object Title",
             progressLabel = "In progress",
             remainingTime = "30 min",
-            learningObjectType = "Assignment",
+            learningObjectType = LearningObjectType.ASSIGNMENT,
             dueDate = Date(),
             onClick = {})
     )
