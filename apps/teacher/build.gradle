@@ -307,6 +307,9 @@ dependencies {
     testImplementation Libs.HAMCREST
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
 }
 
 apply plugin: 'com.google.gms.google-services'
