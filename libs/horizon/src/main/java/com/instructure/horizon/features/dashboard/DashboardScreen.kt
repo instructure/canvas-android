@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -67,7 +68,7 @@ fun DashboardScreen(uiState: DashboardUiState) {
 
 @Composable
 private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Modifier) {
-    val buttonModifier = Modifier.shadow(HorizonElevation.level4)
+    val buttonModifier = Modifier.shadow(HorizonElevation.level4, shape = RoundedCornerShape(50.dp))
     Row(modifier) {
         GlideImage(
             model = uiState.logoUrl,

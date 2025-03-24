@@ -20,13 +20,12 @@ package com.instructure.horizon.features.home
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -39,7 +38,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -55,13 +53,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.instructure.horizon.horizonui.HorizonTheme
-import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
@@ -171,19 +169,20 @@ fun RowScope.SelectableNavigationItem(item: BottomNavItem, selected: Boolean, on
 
 @Composable
 fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Box(modifier = modifier
-        .requiredSize(48.dp)
-        .weight(1f)
-        .background(
-            brush = HorizonColors.Surface.aiGradient(),
-            shape = RoundedCornerShape(500.dp)
-        )
-        .clickable { onClick() }) {
+    IconButton(
+        modifier = modifier
+            .requiredSize(48.dp)
+            .weight(1f)
+            .background(
+                brush = HorizonColors.Surface.aiGradient(),
+                shape = RoundedCornerShape(500.dp)
+            ),
+        onClick = onClick
+    ) {
         Icon(
             painter = painterResource(R.drawable.ai),
             tint = Color.White,
-            contentDescription = stringResource(item.label),
-            modifier = Modifier.align(Alignment.Center)
+            contentDescription = stringResource(item.label)
         )
     }
 }
