@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 fun HorizonTheme(content: @Composable () -> Unit) {
     MaterialTheme {
         CompositionLocalProvider(
-            LocalRippleConfiguration provides RippleConfiguration(color = colorResource(id = R.color.backgroundDark), getRippleAlpha(isSystemInDarkTheme())),
+            LocalRippleConfiguration provides RippleConfiguration(color = HorizonColors.Surface.overlayGrey(), getRippleAlpha(isSystemInDarkTheme())),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
             LocalTextStyle provides HorizonTypography.p1,
             content = content

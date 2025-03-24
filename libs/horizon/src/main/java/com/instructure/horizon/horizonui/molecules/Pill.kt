@@ -130,84 +130,84 @@ fun Pill(
 @Preview(showBackground = true)
 private fun PillDefaultOutlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.DEFAULT, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.DEFAULT, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillDangerOutlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.DANGER, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.DANGER, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun PillInverseOutlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.INVERSE, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.INVERSE, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillInstitutionOutlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillDefaultSolidPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.DEFAULT, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.DEFAULT, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillDangerSolidPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.DANGER, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.DANGER, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun PillInverseSolidPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.INVERSE, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.INVERSE, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillInstitutionSolidPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillDefaultInlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.DEFAULT, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.DEFAULT, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillDangerInlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.DANGER, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.DANGER, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun PillInverseInlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.INVERSE, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.INVERSE, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillInstitutionInlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.book_2)
+    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
 }
 
 @Composable

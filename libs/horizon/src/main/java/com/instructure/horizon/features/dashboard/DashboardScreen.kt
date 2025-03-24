@@ -18,6 +18,7 @@
 package com.instructure.horizon.features.dashboard
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
@@ -54,10 +56,10 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 @Composable
 fun DashboardScreen(uiState: DashboardUiState) {
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary(), topBar = {
-        HomeScreenTopBar(uiState, modifier = Modifier.height(48.dp))
-    }, modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp)) { paddingValues ->
+        HomeScreenTopBar(uiState, modifier = Modifier.height(56.dp))
+    }) { paddingValues ->
         LoadingStateWrapper(loadingState = uiState.loadingState) {
-            LazyColumn(modifier = Modifier.padding(paddingValues), content = {
+            LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 12.dp), modifier = Modifier.padding(paddingValues), content = {
                 items(uiState.coursesUiState) { courseItem ->
                     DashboardCourseItem(courseItem)
                 }
@@ -69,7 +71,7 @@ fun DashboardScreen(uiState: DashboardUiState) {
 @Composable
 private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Modifier) {
     val buttonModifier = Modifier.shadow(HorizonElevation.level4, shape = RoundedCornerShape(50.dp))
-    Row(modifier) {
+    Row(modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp), verticalAlignment = Alignment.Bottom) {
         GlideImage(
             model = uiState.logoUrl,
             contentDescription = null,

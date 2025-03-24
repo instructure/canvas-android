@@ -171,7 +171,7 @@ fun RowScope.SelectableNavigationItem(item: BottomNavItem, selected: Boolean, on
 fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(
         modifier = modifier
-            .requiredSize(48.dp)
+            .requiredSize(44.dp)
             .weight(1f)
             .background(
                 brush = HorizonColors.Surface.aiGradient(),

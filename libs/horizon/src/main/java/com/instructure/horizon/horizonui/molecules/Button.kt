@@ -17,10 +17,11 @@ package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,7 +38,7 @@ fun ButtonPrimary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, onCl
         onClick = onClick,
         modifier = modifier
             .background(shape = RoundedCornerShape(50.dp), color = HorizonColors.Surface.pageSecondary())
-            .size(48.dp)
+            .size(44.dp)
     ) {
         Icon(
             painterResource(id = iconRes),
@@ -54,7 +55,7 @@ fun ButtonSecondary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, on
         onClick = onClick,
         modifier = modifier
             .background(shape = RoundedCornerShape(50.dp), color = HorizonColors.Surface.institution())
-            .size(48.dp)
+            .size(44.dp)
     ) {
         Icon(
             painterResource(id = iconRes),
@@ -68,12 +69,12 @@ fun ButtonSecondary(@DrawableRes iconRes: Int, modifier: Modifier = Modifier, on
 @Composable
 @Preview
 private fun ButtonPreview() {
-    ButtonPrimary(iconRes = R.drawable.arrow_forward)
+    ButtonPrimary(iconRes = R.drawable.add)
 }
 
 @Composable
 @Preview
 private fun ButtonSecondaryPreview() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonSecondary(iconRes = R.drawable.arrow_forward)
+    ButtonSecondary(iconRes = R.drawable.add)
 }

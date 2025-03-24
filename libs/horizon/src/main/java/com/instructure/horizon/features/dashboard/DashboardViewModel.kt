@@ -28,7 +28,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -64,7 +63,6 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceNetwork: Boolean) {
-        delay(3000) // TODO remove
         val courses = dashboardRepository.getCoursesWithProgress(forceNetwork = forceNetwork)
         if (courses.isSuccess) {
             val coursesResult = courses.dataOrThrow
