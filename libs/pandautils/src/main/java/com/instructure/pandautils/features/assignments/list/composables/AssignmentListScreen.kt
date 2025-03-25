@@ -135,37 +135,55 @@ private fun AppBar(
         title = title,
         subtitle = state.subtitle,
         actions = {
-            IconButton(onClick = { screenActionHandler(AssignmentListScreenEvent.OpenFilterScreen) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_filter),
-                    contentDescription = stringResource(R.string.a11y_filterAssignments)
+            if (state.state != ScreenState.Loading) {
+                IconButton(onClick = { screenActionHandler(AssignmentListScreenEvent.OpenFilterScreen) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_filter),
+                        contentDescription = stringResource(R.string.a11y_filterAssignments)
+                    )
+                }
+                LiveSearchBar(
+                    icon = R.drawable.ic_search_white_24dp,
+                    tintColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),
+                    placeholder = "Search Assignments",
+                    query = state.searchQuery,
+                    queryChanged = {
+                        screenActionHandler(
+                            AssignmentListScreenEvent.SearchContentChanged(
+                                it
+                            )
+                        )
+                    },
+                    expanded = state.searchBarExpanded,
+                    onExpand = {
+                        screenActionHandler(AssignmentListScreenEvent.SearchContentChanged(""))
+                        screenActionHandler(AssignmentListScreenEvent.ExpandCollapseSearchBar(it))
+                    },
                 )
-            }
-            LiveSearchBar(
-                icon = R.drawable.ic_search_white_24dp,
-                tintColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),
-                placeholder = "Search Assignments",
-                query = state.searchQuery,
-                queryChanged = { screenActionHandler(AssignmentListScreenEvent.SearchContentChanged(it)) },
-                expanded = state.searchBarExpanded,
-                onExpand = {
-                    screenActionHandler(AssignmentListScreenEvent.SearchContentChanged(""))
-                    screenActionHandler(AssignmentListScreenEvent.ExpandCollapseSearchBar(it))
-                },
-            )
-            if (state.overFlowItems.isNotEmpty()) {
-                OverflowMenu(
-                    showMenu = state.overFlowItemsExpanded,
-                    onDismissRequest = { screenActionHandler(AssignmentListScreenEvent.ChangeOverflowMenuState(!state.overFlowItemsExpanded)) }
-                ) {
-                    state.overFlowItems.forEach { item ->
-                        DropdownMenuItem(
-                            onClick = {
-                                item.onClick()
-                                screenActionHandler(AssignmentListScreenEvent.ChangeOverflowMenuState(!state.overFlowItemsExpanded))
-                            },
-                        ) {
-                            Text(item.label)
+                if (state.overFlowItems.isNotEmpty()) {
+                    OverflowMenu(
+                        showMenu = state.overFlowItemsExpanded,
+                        onDismissRequest = {
+                            screenActionHandler(
+                                AssignmentListScreenEvent.ChangeOverflowMenuState(
+                                    !state.overFlowItemsExpanded
+                                )
+                            )
+                        }
+                    ) {
+                        state.overFlowItems.forEach { item ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    item.onClick()
+                                    screenActionHandler(
+                                        AssignmentListScreenEvent.ChangeOverflowMenuState(
+                                            !state.overFlowItemsExpanded
+                                        )
+                                    )
+                                },
+                            ) {
+                                Text(item.label)
+                            }
                         }
                     }
                 }
