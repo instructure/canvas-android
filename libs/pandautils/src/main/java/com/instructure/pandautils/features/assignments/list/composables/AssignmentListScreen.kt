@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -75,6 +76,7 @@ import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getAssignmentIcon
+import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
@@ -402,12 +404,16 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                     .padding(vertical = 1.dp)
             ) {
                 if (item.showSubmissionDetails) {
+                    val gradeText = assignment.getGrade(
+                        submission = assignment.submission,
+                        context = LocalContext.current,
+                        restrictQuantitativeData = item.course.settings?.restrictQuantitativeData.orDefault(),
+                        gradingScheme = item.course.gradingScheme,
+                        showZeroPossiblePoints = true,
+                        showNotGraded = true
+                    )
                     Text(
-                        stringResource(
-                            R.string.assignmentPointsPerMaximum,
-                            if (assignment.isGraded()) assignment.submission?.score?.toFormattedString() ?: "-" else "-",
-                            assignment.pointsPossible.toFormattedString()
-                        ),
+                        gradeText.text,
                         color = contextColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,

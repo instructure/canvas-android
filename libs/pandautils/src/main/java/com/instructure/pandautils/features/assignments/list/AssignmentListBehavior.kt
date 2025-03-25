@@ -19,11 +19,12 @@ package com.instructure.pandautils.features.assignments.list
 import androidx.annotation.ColorInt
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
 
 interface AssignmentListBehavior {
-    fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState
+    fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState
 
     fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState
 

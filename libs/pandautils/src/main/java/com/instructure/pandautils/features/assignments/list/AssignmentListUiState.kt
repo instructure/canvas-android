@@ -48,6 +48,7 @@ class AssignmentGroupState(
 )
 
 class AssignmentGroupItemState(
+    val course: Course,
     val assignment: Assignment,
     val showAssignmentDetails: Boolean = false,
     val showSubmissionDetails: Boolean = false

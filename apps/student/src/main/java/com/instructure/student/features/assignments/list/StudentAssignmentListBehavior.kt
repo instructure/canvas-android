@@ -20,6 +20,7 @@ import android.content.res.Resources
 import androidx.annotation.ColorInt
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
@@ -37,8 +38,8 @@ import com.instructure.student.dialog.BookmarkCreationDialog
 class StudentAssignmentListBehavior(
     private val resources: Resources
 ): AssignmentListBehavior {
-    override fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState {
-        return AssignmentGroupItemState(assignment, showSubmissionDetails = true)
+    override fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState {
+        return AssignmentGroupItemState(course, assignment, showSubmissionDetails = true)
     }
 
     override fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState {

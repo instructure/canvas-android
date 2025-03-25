@@ -107,7 +107,7 @@ class AssignmentListViewModel @Inject constructor(
                                     group.id,
                                     group.name.orEmpty(),
                                     group.assignments.map { assignment ->
-                                        assignmentListBehavior.getAssignmentGroupItemState(assignment)
+                                        assignmentListBehavior.getAssignmentGroupItemState(course, assignment)
                                     }
                                 )
                             }
@@ -244,6 +244,7 @@ class AssignmentListViewModel @Inject constructor(
         val allAssignments = uiState.value.allAssignments.filter { it.name?.contains(searchQuery, true).orDefault() }
         var filteredAssignments = allAssignments.toSet()
         val filters = uiState.value.filterState.filterGroups.filter { it.filterType == AssignmentListFilterType.Filter }
+        val course = uiState.value.course
         filters
             .forEach { filterGroup ->
                 val newFilteredAssignments = mutableSetOf<Assignment>()
@@ -324,7 +325,7 @@ class AssignmentListViewModel @Inject constructor(
                         AssignmentGroupState(
                             id = key,
                             title = uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty(),
-                            items = value.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                            items = value.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                         )
                     }
             }
@@ -341,17 +342,17 @@ class AssignmentListViewModel @Inject constructor(
                     AssignmentGroupState(
                         id = 0,
                         title = resources.getString(R.string.assignments),
-                        items = assignmentGroup.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        items = assignmentGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                     ),
                     AssignmentGroupState(
                         id = 1,
                         title = resources.getString(R.string.discussion),
-                        items = discussionsGroup.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        items = discussionsGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                     ),
                     AssignmentGroupState(
                         id = 2,
                         title = resources.getString(R.string.quizzes),
-                        items = quizzesGroup.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        items = quizzesGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                     )
                 )
             }
@@ -369,17 +370,17 @@ class AssignmentListViewModel @Inject constructor(
                     AssignmentGroupState(
                         id = 0,
                         title = resources.getString(R.string.overdueAssignments),
-                        items = past.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        items = past.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                     ),
                     AssignmentGroupState(
                         id = 1,
                         title = resources.getString(R.string.upcomingAssignments),
-                        items = upcoming.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        items = upcoming.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                     ),
                     AssignmentGroupState(
                         id = 2,
                         title = resources.getString(R.string.undatedAssignments),
-                        items = undated.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                        items = undated.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                     )
                 )
             }
@@ -390,7 +391,7 @@ class AssignmentListViewModel @Inject constructor(
                         AssignmentGroupState(
                             id = key,
                             title = uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty(),
-                            items = value.map { assignmentListBehavior.getAssignmentGroupItemState(it) }
+                            items = value.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                         )
                     }
             }

@@ -19,6 +19,7 @@ package com.instructure.teacher.features.assignment.list
 import android.content.res.Resources
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
@@ -33,8 +34,8 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.teacher.R
 
 class TeacherAssignmentListBehavior(private val resources: Resources): AssignmentListBehavior {
-    override fun getAssignmentGroupItemState(assignment: Assignment): AssignmentGroupItemState {
-        return AssignmentGroupItemState(assignment, showAssignmentDetails = true)
+    override fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState {
+        return AssignmentGroupItemState(course, assignment, showAssignmentDetails = true)
     }
 
     override fun getAssignmentListFilterState(
