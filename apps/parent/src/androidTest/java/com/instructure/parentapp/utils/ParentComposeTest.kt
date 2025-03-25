@@ -18,6 +18,7 @@
 package com.instructure.parentapp.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.instructure.canvas.espresso.common.pages.ReminderPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
@@ -77,6 +78,7 @@ abstract class ParentComposeTest : ParentTest() {
     protected val calendarToDoCreateUpdatePage = CalendarToDoCreateUpdatePage(composeTestRule)
     protected val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     protected val calendarFilterPage = CalendarFilterPage(composeTestRule)
+    protected val reminderPage = ReminderPage(composeTestRule)
     protected val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
