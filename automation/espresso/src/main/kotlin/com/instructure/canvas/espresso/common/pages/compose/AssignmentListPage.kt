@@ -19,8 +19,10 @@ package com.instructure.canvas.espresso.common.pages.compose
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -36,7 +38,6 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.composeTest.hasDrawable
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.R
@@ -85,7 +86,8 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertHasAssignment(assignment: AssignmentApiModel, needsGradingCount: Int? = null) {
-        assertHasAssignmentCommon(assignment.name!!, assignment.dueAt, "$needsGradingCount Needs Grading")
+        val needsGradingLabel = needsGradingCount?.let { "$it Needs Grading" }
+        assertHasAssignmentCommon(assignment.name, assignment.dueAt, needsGradingLabel)
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {
@@ -152,7 +154,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun refreshAssignmentList() {
-        composeTestRule.onNodeWithTag("assignmentList").performTouchInput { swipeDown() }
+        composeTestRule.onNodeWithTag("assignmentList").performTouchInput { swipeDown(200f, 1000f) }
         composeTestRule.waitForIdle()
     }
 
@@ -180,10 +182,12 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertPublishedState(assignmentName: String, published: Boolean) {
-        val publishedResource = if (published) com.instructure.pandares.R.drawable.ic_complete_solid else com.instructure.pandares.R.drawable.ic_unpublish
+        val publishedDescription = if (published) "Published" else "Unpublished"
         composeTestRule.onNode(
-            hasText(assignmentName).and(
-                hasDrawable(publishedResource)
+            hasTestTag("assignmentListItem").and(
+                hasAnySibling(hasText(assignmentName))
+            ).and(
+                hasAnySibling(hasContentDescription(publishedDescription))
             )
         )
         .assertIsDisplayed()

@@ -92,8 +92,6 @@ fun AssignmentListScreen(
         when (state.screenOption) {
             AssignmentListScreenOption.List -> {
                 Scaffold(
-                    modifier = Modifier
-                        .testTag("assignmentList"),
                     backgroundColor = colorResource(id = R.color.backgroundLightest),
                     topBar = {
                         AppBar(
@@ -226,6 +224,7 @@ private fun AssignmentListWrapper(
                         .fillMaxSize()
                         .background(colorResource(R.color.backgroundLightest))
                         .verticalScroll(rememberScrollState())
+                        .testTag("assignmentList"),
                 ){
                     EmptyContent(
                         emptyMessage = stringResource(R.string.noAssignments),
@@ -242,6 +241,7 @@ private fun AssignmentListWrapper(
                         .fillMaxSize()
                         .background(colorResource(R.color.backgroundLightest))
                         .verticalScroll(rememberScrollState())
+                        .testTag("assignmentList"),
                 ){
                     ErrorContent(
                         errorMessage = stringResource(R.string.errorLoadingAssignments),
@@ -292,6 +292,8 @@ private fun AssignmentListContentView(
         }
 
         GroupedListView(
+            modifier = Modifier
+                .testTag("assignmentList"),
             state = state.listState,
             itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
             actionHandler = listActionHandler
@@ -306,6 +308,7 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
         modifier = modifier
             .background(colorResource(R.color.backgroundLightest))
             .padding(vertical = 8.dp)
+            .testTag("assignmentListItem")
     ) {
         Spacer(modifier = Modifier.width(20.dp))
         Box(
@@ -323,10 +326,11 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
             if (item.showAssignmentDetails) {
                 val publishedIcon = if (assignment.published) R.drawable.ic_complete_solid else R.drawable.ic_unpublish
                 val publishColor = if (assignment.published) R.color.textSuccess else R.color.textDark
+                val publishedContentDescriptionRes = if (assignment.published) R.string.published else R.string.unpublished
                 Icon(
                     painter = painterResource(publishedIcon),
                     tint = colorResource(publishColor),
-                    contentDescription = null,
+                    contentDescription = stringResource(publishedContentDescriptionRes),
                     modifier = Modifier
                         .size(16.dp)
                         .align(Alignment.BottomEnd)

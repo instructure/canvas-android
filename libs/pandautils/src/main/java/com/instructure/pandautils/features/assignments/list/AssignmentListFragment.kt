@@ -78,7 +78,7 @@ class AssignmentListFragment: BaseCanvasFragment(), Bookmarkable {
     private fun handleAction(action: AssignmentListFragmentEvent) {
         when (action) {
             is AssignmentListFragmentEvent.NavigateToAssignment -> {
-                assignmentListRouter.routeToAssignmentDetails(requireActivity(), action.canvasContext, action.assignmentId)
+                assignmentListRouter.routeToAssignmentDetails(requireActivity(), action.canvasContext, action.assignment)
             }
 
             AssignmentListFragmentEvent.NavigateBack -> {

@@ -17,14 +17,22 @@
 package com.instructure.teacher.features.assignment.list
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.fragments.QuizDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherAssignmentListRouter: AssignmentListRouter {
-    override fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignmentId: Long) {
-        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
+    override fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment) {
+        if (assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ)) {
+            val args = QuizDetailsFragment.makeBundle(assignment.quizId)
+            RouteMatcher.route(activity, Route(null, QuizDetailsFragment::class.java, canvasContext, args))
+        } else {
+            RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+        }
     }
 
     override fun navigateBack(activity: FragmentActivity) {

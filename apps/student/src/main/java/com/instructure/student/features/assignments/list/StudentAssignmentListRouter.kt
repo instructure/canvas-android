@@ -17,14 +17,15 @@
 package com.instructure.student.features.assignments.list
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import com.instructure.student.router.RouteMatcher
 
 class StudentAssignmentListRouter: AssignmentListRouter {
-    override fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignmentId: Long) {
-        val route = AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId)
+    override fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment) {
+        val route = AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id)
         RouteMatcher.route(activity, route)
     }
 

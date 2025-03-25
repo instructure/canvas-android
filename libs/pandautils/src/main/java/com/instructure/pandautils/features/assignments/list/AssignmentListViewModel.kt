@@ -179,7 +179,7 @@ class AssignmentListViewModel @Inject constructor(
 
             is GroupedListViewEvent.ItemClicked -> {
                 viewModelScope.launch {
-                    _events.send(AssignmentListFragmentEvent.NavigateToAssignment(uiState.value.course, event.groupItem.assignment.id))
+                    _events.send(AssignmentListFragmentEvent.NavigateToAssignment(uiState.value.course, event.groupItem.assignment))
                 }
             }
         }

@@ -17,9 +17,10 @@
 package com.instructure.pandautils.features.assignments.list
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 
 interface AssignmentListRouter {
-    fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignmentId: Long)
+    fun routeToAssignmentDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment)
     fun navigateBack(activity: FragmentActivity)
 }

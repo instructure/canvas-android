@@ -333,6 +333,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG,"Navigate back to Assignments Page and assert that the assignment ${pointsTextAssignment.name} can be seen there with the corresponding grade.")
         Espresso.pressBack()
+        composeTestRule.waitForIdle()
         assignmentListPage.refreshAssignmentList()
         assignmentListPage.assertHasAssignment(pointsTextAssignment, textGrade.grade)
     }

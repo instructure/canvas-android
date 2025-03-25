@@ -60,25 +60,27 @@ fun<GROUP: GroupedListViewGroup<GROUP_ITEM>, GROUP_ITEM: GroupedListViewGroupIte
     modifier: Modifier = Modifier,
     actionHandler: (GroupedListViewEvent<GROUP, GROUP_ITEM>) -> Unit
 ) {
-    Column(modifier = modifier) {
-        headerView?.let { it() }
 
-        LazyColumn {
-            state.groups.forEach { group ->
-                stickyHeader {
-                    groupHeaderView(group) {
-                        actionHandler(GroupedListViewEvent.GroupClicked(group))
-                    }
+    LazyColumn(
+        modifier = modifier
+    ) {
+        item {
+            headerView?.let { it() }
+        }
+        state.groups.forEach { group ->
+            stickyHeader {
+                groupHeaderView(group) {
+                    actionHandler(GroupedListViewEvent.GroupClicked(group))
                 }
-                if (group.isExpanded) {
-                    items(group.items) { item ->
-                        itemView(
-                            item,
-                            Modifier.clickable {
-                                actionHandler(GroupedListViewEvent.ItemClicked(item))
-                            }
-                        )
-                    }
+            }
+            if (group.isExpanded) {
+                items(group.items) { item ->
+                    itemView(
+                        item,
+                        Modifier.clickable {
+                            actionHandler(GroupedListViewEvent.ItemClicked(item))
+                        }
+                    )
                 }
             }
         }
