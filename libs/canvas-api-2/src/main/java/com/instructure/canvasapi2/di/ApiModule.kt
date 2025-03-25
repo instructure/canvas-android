@@ -1,5 +1,6 @@
 package com.instructure.canvasapi2.di
 
+import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
@@ -57,10 +58,12 @@ import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.EarlyEntryPoint
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
@@ -70,6 +73,12 @@ const val PLANNER_API_SERIALIZE_NULLS = "PLANNER_API_SERIALIZE_NULLS"
 @Module
 @InstallIn(SingletonComponent::class)
 class ApiModule {
+
+    @Provides
+    @Singleton
+    fun provideCanvasAuthenticator(tokenRefresher: TokenRefresher): CanvasAuthenticator {
+        return CanvasAuthenticator(tokenRefresher)
+    }
 
     @Provides
     fun provideCourseManager(): CourseManager {
@@ -359,4 +368,10 @@ class ApiModule {
     fun provideSectionApi(): SectionAPI.SectionsInterface {
         return RestBuilder().build(SectionAPI.SectionsInterface::class.java, RestParams())
     }
+}
+
+@EarlyEntryPoint
+@InstallIn(SingletonComponent::class)
+interface CanvasAuthenticatorEntryPoint {
+    fun canvasAuthenticator(): CanvasAuthenticator
 }

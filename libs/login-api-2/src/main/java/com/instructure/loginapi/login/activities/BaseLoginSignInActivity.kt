@@ -17,7 +17,9 @@
 package com.instructure.loginapi.login.activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.net.Uri
@@ -35,6 +37,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -42,6 +45,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.TokenRefreshState
+import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.managers.OAuthManager.getToken
 import com.instructure.canvasapi2.managers.UserManager.getSelf
 import com.instructure.canvasapi2.models.AccountDomain
@@ -94,6 +99,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationSet {
+
     companion object {
         const val ACCOUNT_DOMAIN = "accountDomain"
         const val SUCCESS_URL = "/login/oauth2/auth?code="
@@ -124,6 +130,9 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     @Inject
     lateinit var navigation: LoginNavigation
 
+    @Inject
+    lateinit var tokenRefresher: TokenRefresher
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -131,6 +140,11 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         setupViews()
         applyTheme()
         beginSignIn(accountDomain)
+
+        onBackPressedDispatcher.addCallback(this) {
+            tokenRefresher.refreshState = TokenRefreshState.Failed
+            finish()
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -138,7 +152,10 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = accountDomain.domain
         toolbar.navigationIcon?.isAutoMirrored = true
-        toolbar.setupAsBackButton { finish() }
+        toolbar.setupAsBackButton {
+            tokenRefresher.refreshState = TokenRefreshState.Failed
+            finish()
+        }
         webView = findViewById(R.id.webView)
         clearCookies()
         CookieManager.getInstance().setAcceptCookie(true)
@@ -451,8 +468,12 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 @Suppress("DEPRECATION")
                 ApiPrefs.token = "" // TODO: Remove when we're 100% using refresh tokens
 
+                if (intent.hasExtra("refresh")) {
+                    tokenRefresher.refreshState = TokenRefreshState.Success(accessToken)
+                }
+
                 // We now need to get the cache user
-                getSelf(object : StatusCallback<User>() {
+                getSelf(true, object : StatusCallback<User>() {
                     override fun onResponse(response: Response<User>, linkHeaders: LinkHeaders, type: ApiType) {
                         if (type.isAPI) {
                             user = response.body()
@@ -472,6 +493,9 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                                 null
                             )
                             add(this@BaseLoginSignInActivity, user)
+                            if (intent.hasExtra("refresh")) {
+                                finish()
+                            }
                             refreshWidgets()
                             LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
                             navigation.startLogin(viewModel, false)
@@ -529,4 +553,6 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             }
         }, 750)
     } //endregion
+
+    abstract fun signInIntent(context: Context): Intent
 }
