@@ -62,7 +62,7 @@ class ModuleListEffectHandler(
                 effect.scrollToItemId
             )
 
-            is ModuleListEffect.ScrollToItem -> view?.scrollToItem(effect.moduleItemId)
+            is ModuleListEffect.ScrollToItem -> view?.scrollToItem(effect.moduleItemId, effect.scrollToHeaderItem)
             is ModuleListEffect.MarkModuleExpanded -> {
                 CollapsedModulesStore.markModuleCollapsed(effect.canvasContext, effect.moduleId, !effect.isExpanded)
             }

@@ -23,7 +23,6 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
     id 'org.jetbrains.kotlin.plugin.compose'
-    id 'io.heap.gradle'
 }
 
 configurations {
@@ -99,7 +98,7 @@ android {
                 mappingFileUploadEnabled false
             }
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
 
         debugMinify {
@@ -115,7 +114,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
     }
 
@@ -227,5 +226,5 @@ dependencies {
 
     implementation Libs.ENCRYPTED_SHARED_PREFERENCES
 
-    implementation Libs.HEAP_CORE
+    implementation Libs.PENDO
 }
