@@ -29,6 +29,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
@@ -182,12 +183,12 @@ class AssignmentListScreenTest {
                         AssignmentGroupState(
                             id = assignmentGroups[0].id,
                             title = assignmentGroups[0].name ?: "",
-                            items = assignmentGroups[0].assignments.map { AssignmentGroupItemState(assignment = it) }
+                            items = assignmentGroups[0].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) }
                         ),
                         AssignmentGroupState(
                             id = assignmentGroups[1].id,
                             title = assignmentGroups[1].name ?: "",
-                            items = assignmentGroups[1].assignments.map { AssignmentGroupItemState(assignment = it) }
+                            items = assignmentGroups[1].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) }
                         ),
                     )
                 ),
