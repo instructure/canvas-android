@@ -42,6 +42,7 @@ abstract class StudentComposeTest : StudentTest() {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
+    //Compose pages
     val calendarEventCreateEditPage = CalendarEventCreateEditPage(composeTestRule)
     val calendarScreenPage = CalendarScreenPage(composeTestRule)
     val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
