@@ -54,6 +54,7 @@ fun IconButtonPrimary(
     size: ButtonSize = ButtonSize.NORMAL,
     color: ButtonColor = ButtonColor.BLACK,
     enabled: Boolean = true,
+    contentDescription: String? = null,
     onClick: () -> Unit = {}
 ) {
     IconButton(
@@ -63,7 +64,8 @@ fun IconButtonPrimary(
         iconColor = color.iconColor,
         modifier = modifier,
         onClick = onClick,
-        enabled = enabled
+        enabled = enabled,
+        contentDescription = contentDescription
     )
 }
 
@@ -74,6 +76,7 @@ fun IconButtonSecondary(
     size: ButtonSize = ButtonSize.NORMAL,
     color: ButtonColor = ButtonColor.INSTITUTION,
     enabled: Boolean = true,
+    contentDescription: String? = null,
     onClick: () -> Unit = {}
 ) {
     IconButton(
@@ -83,16 +86,18 @@ fun IconButtonSecondary(
         iconColor = color.iconColor,
         modifier = modifier,
         onClick = onClick,
-        enabled = enabled
+        enabled = enabled,
+        contentDescription = contentDescription
     )
 }
 
 @Composable
-private fun IconButtonAi(
+fun IconButtonAi(
     modifier: Modifier = Modifier,
     size: ButtonSize = ButtonSize.NORMAL,
     enabled: Boolean = true,
     @DrawableRes iconRes: Int = R.drawable.ai,
+    contentDescription: String? = null,
     onClick: () -> Unit = {}
 ) {
     val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
@@ -108,7 +113,7 @@ private fun IconButtonAi(
     ) {
         Icon(
             painterResource(id = iconRes),
-            contentDescription = null,
+            contentDescription = contentDescription,
             modifier = Modifier.size(24.dp),
             tint = HorizonColors.Icon.surfaceColored()
         )
@@ -123,6 +128,7 @@ private fun IconButton(
     iconColor: Color,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    contentDescription: String? = null,
     onClick: () -> Unit = {}
 ) {
     val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
@@ -135,7 +141,7 @@ private fun IconButton(
     ) {
         Icon(
             painterResource(id = iconRes),
-            contentDescription = null,
+            contentDescription = contentDescription,
             modifier = Modifier.size(24.dp),
             tint = iconColor
         )

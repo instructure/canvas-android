@@ -54,6 +54,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
+import com.instructure.horizon.horizonui.molecules.IconButtonAi
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.navelements.SelectableNavigationItem
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -141,22 +142,9 @@ private fun BottomNavigationBar(
 
 @Composable
 fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    IconButton(
-        modifier = modifier
-            .requiredSize(44.dp)
-            .weight(1f)
-            .background(
-                brush = HorizonColors.Surface.aiGradient(),
-                shape = RoundedCornerShape(500.dp)
-            ),
-        onClick = onClick
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ai),
-            tint = Color.White,
-            contentDescription = stringResource(item.label)
-        )
-    }
+    IconButtonAi(modifier = modifier
+        .requiredSize(44.dp)
+        .weight(1f), onClick = onClick, contentDescription = stringResource(item.label))
 }
 
 @Preview

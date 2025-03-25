@@ -60,7 +60,7 @@ fun DashboardScreen(uiState: DashboardUiState) {
         HomeScreenTopBar(uiState, modifier = Modifier.height(56.dp))
     }) { paddingValues ->
         LoadingStateWrapper(loadingState = uiState.loadingState) {
-            LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 12.dp), modifier = Modifier.padding(paddingValues), content = {
+            LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 36.dp), modifier = Modifier.padding(paddingValues), content = {
                 items(uiState.coursesUiState) { courseItem ->
                     DashboardCourseItem(courseItem)
                 }
