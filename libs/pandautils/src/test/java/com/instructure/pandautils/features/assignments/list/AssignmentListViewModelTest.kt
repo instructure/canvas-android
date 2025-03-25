@@ -93,7 +93,7 @@ class AssignmentListViewModelTest {
         coEvery { repository.getSelectedOptions(any(), any(), any(), any()) } returns null
         coEvery { repository.updateSelectedOptions(any(), any(), any(), any()) } just runs
         every { behavior.getAssignmentListFilterState(any(), any(), any()) } returns AssignmentListFilterState()
-        every { behavior.getAssignmentGroupItemState(any()) } returns mockk(relaxed = true)
+        every { behavior.getAssignmentGroupItemState(any(), any()) } returns mockk(relaxed = true)
     }
 
     @After
@@ -117,21 +117,21 @@ class AssignmentListViewModelTest {
 
     @Test
     fun `Test List item click event handler`() = runTest {
-        val assignmentId = 1L
+        val assignment = Assignment(
+            id = 1,
+            name = "Assignment 1",
+        )
         val assignmentGroups = listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
                 assignments = listOf(
-                    Assignment(
-                        id = 1,
-                        name = "Assignment 1",
-                    ),
+                    assignment,
                 )
             ),
         )
-        val groupItem = AssignmentGroupItemState(assignmentGroups.first().assignments.first())
-        every { behavior.getAssignmentGroupItemState(assignmentGroups.first().assignments.first()) } returns groupItem
+        val groupItem = AssignmentGroupItemState(course, assignmentGroups.first().assignments.first())
+        every { behavior.getAssignmentGroupItemState(course, assignmentGroups.first().assignments.first()) } returns groupItem
         coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
         val viewModel = getViewModel()
 
@@ -142,7 +142,7 @@ class AssignmentListViewModelTest {
 
         viewModel.handleListEvent(GroupedListViewEvent.ItemClicked(groupItem))
 
-        assertEquals(AssignmentListFragmentEvent.NavigateToAssignment(viewModel.uiState.value.course, assignmentId), events.last())
+        assertEquals(AssignmentListFragmentEvent.NavigateToAssignment(viewModel.uiState.value.course, assignment), events.last())
     }
 
     @Test
@@ -159,8 +159,8 @@ class AssignmentListViewModelTest {
                 )
             ),
         )
-        val groupItem = AssignmentGroupItemState(assignmentGroups.first().assignments.first())
-        every { behavior.getAssignmentGroupItemState(assignmentGroups.first().assignments.first()) } returns groupItem
+        val groupItem = AssignmentGroupItemState(course, assignmentGroups.first().assignments.first())
+        every { behavior.getAssignmentGroupItemState(course, assignmentGroups.first().assignments.first()) } returns groupItem
         coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
         val viewModel = getViewModel()
 
@@ -284,10 +284,10 @@ class AssignmentListViewModelTest {
                 assignments = listOf(assignment1, assignment2)
             ),
         )
-        val groupItem1 = AssignmentGroupItemState(assignment1)
-        val groupItem2 = AssignmentGroupItemState(assignment2)
-        every { behavior.getAssignmentGroupItemState(assignment1) } returns groupItem1
-        every { behavior.getAssignmentGroupItemState(assignment2) } returns groupItem2
+        val groupItem1 = AssignmentGroupItemState(course, assignment1)
+        val groupItem2 = AssignmentGroupItemState(course, assignment2)
+        every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
         coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
         val viewModel = getViewModel()
 
@@ -348,12 +348,12 @@ class AssignmentListViewModelTest {
                 assignments = listOf(assignment1, assignment2, assignment3)
             ),
         )
-        val groupItem1 = AssignmentGroupItemState(assignment1)
-        val groupItem2 = AssignmentGroupItemState(assignment2)
-        val groupItem3 = AssignmentGroupItemState(assignment3)
-        every { behavior.getAssignmentGroupItemState(assignment1) } returns groupItem1
-        every { behavior.getAssignmentGroupItemState(assignment2) } returns groupItem2
-        every { behavior.getAssignmentGroupItemState(assignment3) } returns groupItem3
+        val groupItem1 = AssignmentGroupItemState(course, assignment1)
+        val groupItem2 = AssignmentGroupItemState(course, assignment2)
+        val groupItem3 = AssignmentGroupItemState(course, assignment3)
+        every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
+        every { behavior.getAssignmentGroupItemState(course, assignment3) } returns groupItem3
         coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
         val viewModel = getViewModel()
 
@@ -419,12 +419,12 @@ class AssignmentListViewModelTest {
             title = "Grading Period 2",
         )
         val gradingPeriods = listOf(gradingPeriod1, gradingPeriod2)
-        val groupItem1 = AssignmentGroupItemState(assignment1)
-        val groupItem2 = AssignmentGroupItemState(assignment2)
-        val groupItem3 = AssignmentGroupItemState(assignment3)
-        every { behavior.getAssignmentGroupItemState(assignment1) } returns groupItem1
-        every { behavior.getAssignmentGroupItemState(assignment2) } returns groupItem2
-        every { behavior.getAssignmentGroupItemState(assignment3) } returns groupItem3
+        val groupItem1 = AssignmentGroupItemState(course, assignment1)
+        val groupItem2 = AssignmentGroupItemState(course, assignment2)
+        val groupItem3 = AssignmentGroupItemState(course, assignment3)
+        every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
+        every { behavior.getAssignmentGroupItemState(course, assignment3) } returns groupItem3
         coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
         coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(gradingPeriods)
         coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), 1, any()) } returns DataResult.Success(listOf(AssignmentGroup(id = 1, assignments = listOf(assignment1))))
@@ -486,12 +486,12 @@ class AssignmentListViewModelTest {
                 assignments = listOf(gradedAssignment, notGradedAssignment, notSubmittedAssignment)
             ),
         )
-        val groupItem1 = AssignmentGroupItemState(gradedAssignment)
-        val groupItem2 = AssignmentGroupItemState(notGradedAssignment)
-        val groupItem3 = AssignmentGroupItemState(notSubmittedAssignment)
-        every { behavior.getAssignmentGroupItemState(gradedAssignment) } returns groupItem1
-        every { behavior.getAssignmentGroupItemState(notGradedAssignment) } returns groupItem2
-        every { behavior.getAssignmentGroupItemState(notSubmittedAssignment) } returns groupItem3
+        val groupItem1 = AssignmentGroupItemState(course, gradedAssignment)
+        val groupItem2 = AssignmentGroupItemState(course, notGradedAssignment)
+        val groupItem3 = AssignmentGroupItemState(course, notSubmittedAssignment)
+        every { behavior.getAssignmentGroupItemState(course, gradedAssignment) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, notGradedAssignment) } returns groupItem2
+        every { behavior.getAssignmentGroupItemState(course, notSubmittedAssignment) } returns groupItem3
         coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
         val viewModel = getViewModel()
 
@@ -608,12 +608,12 @@ class AssignmentListViewModelTest {
             ),
         )
 
-        val groupItem1 = AssignmentGroupItemState(assignment1)
-        val groupItem2 = AssignmentGroupItemState(assignment2)
-        val groupItem3 = AssignmentGroupItemState(assignment3)
-        every { behavior.getAssignmentGroupItemState(assignment1) } returns groupItem1
-        every { behavior.getAssignmentGroupItemState(assignment2) } returns groupItem2
-        every { behavior.getAssignmentGroupItemState(assignment3) } returns groupItem3
+        val groupItem1 = AssignmentGroupItemState(course, assignment1)
+        val groupItem2 = AssignmentGroupItemState(course, assignment2)
+        val groupItem3 = AssignmentGroupItemState(course, assignment3)
+        every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
+        every { behavior.getAssignmentGroupItemState(course, assignment3) } returns groupItem3
         coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
         val viewModel = getViewModel()
 

@@ -30,6 +30,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.test.espresso.Espresso.onView
@@ -51,20 +52,26 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
     val searchBar = SearchableToolbar(composeTestRule)
 
     fun clickAssignment(assignment: AssignmentApiModel) {
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name))
+
         composeTestRule.onNodeWithText(assignment.name)
-            .performScrollTo()
             .performClick()
     }
 
     fun clickAssignment(assignment: Assignment) {
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name!!))
+
         composeTestRule.onNodeWithText(assignment.name!!)
-            .performScrollTo()
             .performClick()
     }
 
     fun clickQuiz(quiz: QuizApiModel) {
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(quiz.title))
+
         composeTestRule.onNodeWithText(quiz.title)
-            .performScrollTo()
             .performClick()
     }
 
