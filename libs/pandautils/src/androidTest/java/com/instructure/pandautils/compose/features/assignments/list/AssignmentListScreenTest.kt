@@ -52,6 +52,7 @@ class AssignmentListScreenTest {
         composeTestRule.setContent {
             AndroidThreeTen.init(LocalContext.current)
             val state = AssignmentListUiState(
+                state = ScreenState.Content,
                 subtitle = "Course Name",
                 overFlowItems = listOf(AssignmentListMenuOverFlowItem("Item 1", {})),
             )
@@ -87,6 +88,7 @@ class AssignmentListScreenTest {
         composeTestRule.setContent {
             AndroidThreeTen.init(LocalContext.current)
             val state = AssignmentListUiState(
+                state = ScreenState.Content,
                 subtitle = "Course Name",
             )
             AssignmentListScreen(
@@ -120,6 +122,7 @@ class AssignmentListScreenTest {
         composeTestRule.setContent {
             AndroidThreeTen.init(LocalContext.current)
             val state = AssignmentListUiState(
+                state = ScreenState.Content,
                 subtitle = "Course",
                 filterState = AssignmentListFilterState(
                     courseName = "Course Name",
