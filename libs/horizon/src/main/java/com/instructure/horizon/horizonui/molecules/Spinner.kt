@@ -16,19 +16,73 @@
 package com.instructure.horizon.horizonui.molecules
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 
+enum class SpinnerSize(val size: Dp, val strokeWidth: Dp) {
+    LARGE(112.dp, 8.dp),
+    MEDIUM(80.dp, 6.dp),
+    SMALL(48.dp, 4.dp),
+    EXTRA_SMALL(24.dp, 2.dp)
+}
+
 @Composable
-fun Spinner(modifier: Modifier = Modifier, color: Color = HorizonColors.Surface.institution()) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(color = color)
-    }
+fun Spinner(
+    modifier: Modifier = Modifier,
+    size: SpinnerSize = SpinnerSize.SMALL,
+    color: Color = HorizonColors.Surface.institution(),
+    hasStrokeBackground: Boolean = false
+) {
+    val strokeBackground = if (hasStrokeBackground) HorizonColors.LineAndBorder.lineDivider() else Color.Transparent
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = color, modifier = Modifier.size(size.size), strokeWidth = size.strokeWidth, trackColor = strokeBackground)
+        }
+}
+
+@Preview
+@Composable
+private fun SpinnerPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Spinner()
+}
+
+@Preview
+@Composable
+private fun SpinnerWithBackgroundPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Spinner(hasStrokeBackground = true)
+}
+
+@Preview
+@Composable
+private fun SpinnerWithBackgroundExtraSmallPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Spinner(hasStrokeBackground = true, size = SpinnerSize.EXTRA_SMALL)
+}
+
+@Preview
+@Composable
+private fun SpinnerWithBackgroundMediumPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Spinner(hasStrokeBackground = true, size = SpinnerSize.MEDIUM)
+}
+
+@Preview
+@Composable
+private fun SpinnerWithBackgroundLargePreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Spinner(hasStrokeBackground = true, size = SpinnerSize.LARGE)
 }

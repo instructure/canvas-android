@@ -361,16 +361,14 @@ object HorizonColors {
         fun attention() = colorResource(R.color.surface_attention)
         @Composable
         fun attentionSecondary() = colorResource(R.color.surface_attentionSecondary)
-        @Composable
-        fun cardPrimary() = colorResource(R.color.surface_cardPrimary)
+        fun cardPrimary() = Color(0xFFFFFFFF)
         @Composable
         fun cardSecondary() = colorResource(R.color.surface_cardSecondary)
         @Composable
         fun divider() = colorResource(R.color.surface_divider)
         fun error() = Color(0xFFC71F23)
         fun inversePrimary() = Color(0xFF273540)
-        @Composable
-        fun inverseSecondary() = colorResource(R.color.surface_inverseSecondary)
+        fun inverseSecondary() = Color(0xFF0A1B2A)
         @Composable
         fun overlayGrey() = colorResource(R.color.surface_overlayGrey)
         @Composable
