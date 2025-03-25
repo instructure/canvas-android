@@ -39,7 +39,7 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
                 .build()
         } catch (e: Exception) {
             loginRouter.loginIntent().let {
-                it.putExtra("refresh", true)
+                it.putExtra(TOKEN_REFRESH, true)
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 ContextKeeper.appContext.startActivity(it)
                 return waitForRefresh(response)
@@ -84,6 +84,10 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
             }
         }
         return newRequest
+    }
+
+    companion object {
+        const val TOKEN_REFRESH = "token_refresh"
     }
 }
 

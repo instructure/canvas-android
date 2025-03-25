@@ -145,6 +145,22 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             tokenRefresher.refreshState = TokenRefreshState.Failed
             finish()
         }
+
+        if (intent.hasExtra(TokenRefresher.TOKEN_REFRESH)) {
+            AlertDialog.Builder(this, R.style.AccessibleAlertDialog)
+                .setTitle(R.string.loginRequired)
+                .setMessage(R.string.loginRequiredMessage)
+                .setPositiveButton(R.string.login) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.logout) { dialog, _ ->
+                    tokenRefresher.refreshState = TokenRefreshState.Failed
+                    dialog.dismiss()
+                }
+                .setCancelable(false)
+                .create()
+                .show()
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -468,7 +484,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 @Suppress("DEPRECATION")
                 ApiPrefs.token = "" // TODO: Remove when we're 100% using refresh tokens
 
-                if (intent.hasExtra("refresh")) {
+                if (intent.hasExtra(TokenRefresher.TOKEN_REFRESH)) {
                     tokenRefresher.refreshState = TokenRefreshState.Success(accessToken)
                 }
 
@@ -493,10 +509,11 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                                 null
                             )
                             add(this@BaseLoginSignInActivity, user)
-                            if (intent.hasExtra("refresh")) {
+                            refreshWidgets()
+
+                            if (intent.hasExtra(TokenRefresher.TOKEN_REFRESH)) {
                                 finish()
                             }
-                            refreshWidgets()
                             LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
                             navigation.startLogin(viewModel, false)
                         }
