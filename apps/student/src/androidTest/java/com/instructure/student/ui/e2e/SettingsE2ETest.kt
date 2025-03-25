@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.dataseeding.api.ConversationsApi
@@ -413,5 +414,69 @@ class SettingsE2ETest : StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the 'Appointment Availability' email notification's frequency is 'Weekly' yet.")
         emailNotificationsPage.assertNotificationFrequency("Appointment Availability", "Weekly")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
+    fun testInboxSignatureE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that by default the Inbox Signature is 'Not Set'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Not Set")
+
+        Log.d(STEP_TAG, "Click on the 'Inbox Signature' settings.")
+        settingsPage.clickOnSettingsItem("Inbox Signature")
+
+        Log.d(ASSERTION_TAG, "Assert that by default the 'Inbox Signature' toggle is turned off.")
+        inboxSignatureSettingsPage.assertSignatureEnabledState(false)
+
+        val signatureText = "President of AC Milan\nVice President of Ferencvaros"
+
+        Log.d(STEP_TAG, "Turn on the 'Inbox Signature' and set the inbox signature text to: '$signatureText'. Save the changes.")
+        inboxSignatureSettingsPage.toggleSignatureEnabledState()
+        inboxSignatureSettingsPage.changeSignatureText(signatureText)
+        inboxSignatureSettingsPage.saveChanges()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Inbox settings saved!' toast message is displayed.")
+        checkToastText(R.string.inboxSignatureSettingsUpdated, activityRule.activity)
+
+        Log.d(STEP_TAG, "Refresh the Settings page.")
+        settingsPage.refresh()
+
+        Log.d(ASSERTION_TAG, "Assert that the Inbox Signature became 'Enabled'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Enabled")
+
+        Log.d(STEP_TAG, "Click on the 'Inbox Signature' settings.")
+        settingsPage.clickOnSettingsItem("Inbox Signature")
+
+        Log.d(ASSERTION_TAG, "Assert that the previously changed inbox signature text has been really set to: '$signatureText' and the toggle has turned off.")
+        inboxSignatureSettingsPage.assertSignatureText(signatureText)
+        inboxSignatureSettingsPage.assertSignatureEnabledState(true)
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG,"Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        inboxPage.pressNewMessageButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature text is displayed by default when the user opens the Compose New Message Page.")
+        inboxComposePage.assertBodyText("\n\n---\nPresident of AC Milan\nVice President of Ferencvaros")
     }
 }
