@@ -31,9 +31,9 @@ import com.instructure.loginapi.login.R
 
 class CanvasNetworkSignInPage: BasePage() {
 
-    private val EMAIL_FIELD_CSS = "input[id=\"IDToken2\"]"
-    private val PASSWORD_FIELD_CSS = "input[id=\"IDToken3\"]"
-    private val LOGIN_BUTTON_CSS = "button[data-cid=\"BaseButton Button\"]"
+    private val EMAIL_FIELD_CSS = "input[id=\"IDToken2\"], input[id=\"username\"], input[data-testid=\"username-input\"]"
+    private val PASSWORD_FIELD_CSS = "input[id=\"IDToken3\"], input[id=\"password\"], input[data-testid=\"password-input\"]"
+    private val LOGIN_BUTTON_CSS = "button[data-cid=\"BaseButton Button\"], button[data-testid=\"login-button\"]"
     private val FORGOT_PASSWORD_BUTTON_CSS = "a[href*='forgot-password']"
 
     private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
