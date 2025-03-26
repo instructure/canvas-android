@@ -162,6 +162,7 @@ private fun AppBar(
                 )
                 if (state.overFlowItems.isNotEmpty()) {
                     OverflowMenu(
+                        modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
                         showMenu = state.overFlowItemsExpanded,
                         onDismissRequest = {
                             screenActionHandler(
@@ -169,10 +170,12 @@ private fun AppBar(
                                     !state.overFlowItemsExpanded
                                 )
                             )
-                        }
+                        },
+                        iconColor = colorResource(R.color.backgroundLightest)
                     ) {
                         state.overFlowItems.forEach { item ->
                             DropdownMenuItem(
+                                modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
                                 onClick = {
                                     item.onClick()
                                     screenActionHandler(
@@ -182,7 +185,7 @@ private fun AppBar(
                                     )
                                 },
                             ) {
-                                Text(item.label)
+                                Text(item.label, color = colorResource(id = R.color.textDarkest))
                             }
                         }
                     }

@@ -95,7 +95,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
             groups.add(
                 AssignmentListFilterGroup(
                     groupId = 4,
-                    title = resources.getString(R.string.gradingPeriod),
+                    title = resources.getString(R.string.gradingPeriodHeading),
                     options = listOf(allGradingPeriod) + gradingPeriods.map {
                         AssignmentListFilterOption.GradingPeriod(it, resources)
                     },

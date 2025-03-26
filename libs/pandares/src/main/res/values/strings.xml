@@ -2041,6 +2041,7 @@
     <string name="assignmentFilter">Assignment Filter</string>
     <string name="groupedBy">Grouped By</string>
     <string name="gradingPeriod">Grading Period:</string>
+    <string name="gradingPeriodHeading">Grading Period</string>
     <string name="gradePreferences">Grade Preferences</string>
     <string name="allAssignments">All Assignments</string>
     <string name="statusFilter">Status Filter</string>

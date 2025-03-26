@@ -250,7 +250,11 @@ class AssignmentListViewModel @Inject constructor(
         filters
             .forEach { filterGroup ->
                 val newFilteredAssignments = mutableSetOf<Assignment>()
-                filterGroup.selectedOptionIndexes.forEach {
+                var selectedOptionIndexes = filterGroup.selectedOptionIndexes
+                if (selectedOptionIndexes.isEmpty()) {
+                    selectedOptionIndexes = (0 until filterGroup.options.size).toList()
+                }
+                selectedOptionIndexes.forEach {
                     val filter = filterGroup.options[it]
                     when (filter) {
                         is AssignmentListFilterOption.AllStatusAssignments -> {
