@@ -18,6 +18,8 @@ package com.instructure.horizon
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
+import com.instructure.horizon.horizonui.HorizonTheme
+import com.instructure.horizon.navigation.HorizonNavigation
 import com.instructure.pandautils.base.BaseCanvasActivity
 import dagger.hilt.android.AndroidEntryPoint
 

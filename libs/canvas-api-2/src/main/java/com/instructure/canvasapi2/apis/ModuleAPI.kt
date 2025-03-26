@@ -83,8 +83,11 @@ object ModuleAPI {
         @GET("{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
         fun getModuleItem(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ModuleItem>
 
-        @GET("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
+        @GET("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details&include[]=estimated_durations")
         suspend fun getModuleItem(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Tag params: RestParams) : DataResult<ModuleItem>
+
+        @GET("{contextType}/{contextId}/modules/{moduleId}")
+        suspend fun getModuleObject(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Tag params: RestParams) : DataResult<ModuleObject>
 
         @PUT("{contextType}/{contextId}/modules")
         suspend fun bulkUpdateModules(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Query("module_ids[]") moduleIds: List<Long>, @Query("event") event: String, @Query("skip_content_tags") skipContentTags: Boolean, @Query("async") async: Boolean, @Tag params: RestParams): DataResult<BulkUpdateResponse>

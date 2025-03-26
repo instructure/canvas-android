@@ -16,13 +16,17 @@
 package com.instructure.horizon.features.home
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.account.AccountScreen
 import com.instructure.horizon.features.courses.CoursesScreen
 import com.instructure.horizon.features.dashboard.DashboardScreen
+import com.instructure.horizon.features.dashboard.DashboardViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 
 sealed class HomeNavigationRoute(val route: String) {
@@ -36,7 +40,9 @@ sealed class HomeNavigationRoute(val route: String) {
 fun HomeNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController, startDestination = HomeNavigationRoute.Dashboard.route, modifier = modifier) {
         composable(HomeNavigationRoute.Dashboard.route) {
-            DashboardScreen()
+            val viewModel = hiltViewModel<DashboardViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            DashboardScreen(uiState)
         }
         composable(HomeNavigationRoute.Courses.route) {
             CoursesScreen()
