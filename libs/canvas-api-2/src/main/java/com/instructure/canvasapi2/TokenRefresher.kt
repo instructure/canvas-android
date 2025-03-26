@@ -38,12 +38,8 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
                 ) // Mark retry to prevent infinite recursion
                 .build()
         } catch (e: Exception) {
-            loginRouter.loginIntent().let {
-                it.putExtra(TOKEN_REFRESH, true)
-                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                ContextKeeper.appContext.startActivity(it)
-                return waitForRefresh(response)
-            }
+            launchLogin()
+            return waitForRefresh(response)
         }
     }
 
@@ -79,11 +75,24 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
                 newRequest = null
             }
 
+            is TokenRefreshState.Restart -> {
+                launchLogin()
+                refreshState = TokenRefreshState.Refreshing
+                newRequest = waitForRefresh(response)
+            }
+
             else -> {
                 newRequest = null
             }
         }
         return newRequest
+    }
+
+    private fun launchLogin() {
+        val intent = loginRouter.loginIntent()
+        intent.putExtra(TOKEN_REFRESH, true)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        ContextKeeper.appContext.startActivity(intent)
     }
 
     companion object {
@@ -94,5 +103,6 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
 sealed class TokenRefreshState {
     data object Refreshing : TokenRefreshState()
     data object Failed : TokenRefreshState()
+    data object Restart : TokenRefreshState()
     data class Success(val token: String) : TokenRefreshState()
 }

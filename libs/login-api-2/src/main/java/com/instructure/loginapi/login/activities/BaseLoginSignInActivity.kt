@@ -93,6 +93,7 @@ import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -475,10 +476,16 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         object : StatusCallback<OAuthTokenResponse>() {
             override fun onResponse(response: Response<OAuthTokenResponse>, linkHeaders: LinkHeaders, type: ApiType) {
                 if (type.isCache) return
+                val token = response.body()
+                if (intent.hasExtra(TokenRefresher.TOKEN_REFRESH) && user?.id != null && token?.user?.id != null && user?.id != token.user?.id) {
+                    toast("You must login with the same user")
+                    tokenRefresher.refreshState = TokenRefreshState.Restart
+                    finish()
+                    return
+                }
                 val bundle = Bundle()
                 bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
                 logEvent(AnalyticsEventConstants.LOGIN_SUCCESS, bundle)
-                val token = response.body()
                 refreshToken = token!!.refreshToken!!
                 accessToken = token.accessToken!!
                 @Suppress("DEPRECATION")
