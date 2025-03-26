@@ -92,7 +92,7 @@ class AssignmentListViewModelTest {
         coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any()) } returns DataResult.Success(assignmentGroups)
         coEvery { repository.getSelectedOptions(any(), any(), any(), any()) } returns null
         coEvery { repository.updateSelectedOptions(any(), any(), any(), any()) } just runs
-        every { behavior.getAssignmentListFilterState(any(), any(), any()) } returns AssignmentListFilterState()
+        every { behavior.getAssignmentListFilterState(any(), any(), any(), any()) } returns AssignmentListFilterState()
         every { behavior.getAssignmentGroupItemState(any(), any()) } returns mockk(relaxed = true)
     }
 

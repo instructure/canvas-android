@@ -23,7 +23,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarker
@@ -112,7 +114,7 @@ class AssignmentListViewModel @Inject constructor(
                                 )
                             }
                         ),
-                        filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, course.name, gradingPeriods)
+                        filterState = assignmentListBehavior.getAssignmentListFilterState(course.color, course.name, gradingPeriods, getCurrentGradingPeriod(gradingPeriods)),
                     )
                 }
 
@@ -398,5 +400,10 @@ class AssignmentListViewModel @Inject constructor(
         }.filter { it.items.isNotEmpty() }
 
         return GroupedListViewState(groups)
+    }
+
+    private fun getCurrentGradingPeriod(gradingPeriods: List<GradingPeriod>): GradingPeriod? {
+        val currentDate = Date()
+        return gradingPeriods.firstOrNull { it.startDate?.toDate()?.before(currentDate).orDefault() && it.endDate?.toDate()?.after(currentDate).orDefault() }
     }
 }

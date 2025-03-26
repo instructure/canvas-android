@@ -26,7 +26,7 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 interface AssignmentListBehavior {
     fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState
 
-    fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState
+    fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?, currentGradingPeriod: GradingPeriod?): AssignmentListFilterState
 
     fun getOverFlowMenuItems(activity: FragmentActivity, fragment: AssignmentListFragment): List<AssignmentListMenuOverFlowItem>
 }

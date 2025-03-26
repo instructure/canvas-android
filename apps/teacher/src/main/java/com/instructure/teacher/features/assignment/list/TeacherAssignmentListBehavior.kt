@@ -49,7 +49,8 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
     override fun getAssignmentListFilterState(
         contextColor: Int,
         courseName: String,
-        gradingPeriods: List<GradingPeriod>?
+        gradingPeriods: List<GradingPeriod>?,
+        currentGradingPeriod: GradingPeriod?
     ): AssignmentListFilterState {
         val groups = mutableListOf(
             AssignmentListFilterGroup(
@@ -90,6 +91,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
         )
         if (gradingPeriods != null && gradingPeriods.size > 1) {
             val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
+            val currentPeriodIndex = currentGradingPeriod?.let { gradingPeriods.indexOf(it) } ?: 0
             groups.add(
                 AssignmentListFilterGroup(
                     groupId = 4,
@@ -97,7 +99,7 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
                     options = listOf(allGradingPeriod) + gradingPeriods.map {
                         AssignmentListFilterOption.GradingPeriod(it, resources)
                     },
-                    selectedOptionIndexes = listOf(0),
+                    selectedOptionIndexes = listOf(currentPeriodIndex + 1),
                     groupType = AssignmentListFilterGroupType.SingleChoice,
                     filterType = AssignmentListFilterType.Filter
                 )
