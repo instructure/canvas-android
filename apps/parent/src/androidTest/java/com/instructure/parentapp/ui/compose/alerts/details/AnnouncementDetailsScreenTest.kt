@@ -64,7 +64,8 @@ class AnnouncementDetailsScreenTest {
             AnnouncementDetailsScreen(
                 uiState = uiState,
                 navigationActionClick = {},
-                actionHandler = {}
+                actionHandler = {},
+                applyOnWebView = {}
             )
         }
 
@@ -105,7 +106,8 @@ class AnnouncementDetailsScreenTest {
             AnnouncementDetailsScreen(
                 uiState = uiState,
                 navigationActionClick = {},
-                actionHandler = {}
+                actionHandler = {},
+                applyOnWebView = {}
             )
         }
 
@@ -135,7 +137,8 @@ class AnnouncementDetailsScreenTest {
                     studentColor = Color.BLUE,
                 ),
                 navigationActionClick = {},
-                actionHandler = {}
+                actionHandler = {},
+                applyOnWebView = {}
             )
         }
 
@@ -156,7 +159,8 @@ class AnnouncementDetailsScreenTest {
                     studentColor = Color.BLUE,
                 ),
                 navigationActionClick = {},
-                actionHandler = {}
+                actionHandler = {},
+                applyOnWebView = {}
             )
         }
 
@@ -174,7 +178,8 @@ class AnnouncementDetailsScreenTest {
                     studentColor = Color.BLUE,
                 ),
                 navigationActionClick = {},
-                actionHandler = {}
+                actionHandler = {},
+                applyOnWebView = {}
             )
         }
 

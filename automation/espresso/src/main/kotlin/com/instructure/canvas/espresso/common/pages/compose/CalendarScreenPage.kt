@@ -15,6 +15,7 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
@@ -78,8 +79,9 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         assertTrue(composeTestRule.onAllNodesWithTag("calendarEventsEmpty").fetchSemanticsNodes().isNotEmpty())
     }
 
+    @OptIn(ExperimentalTestApi::class)
     fun assertItemDisplayed(itemTitle: String) {
-        composeTestRule.onNodeWithText(itemTitle).assertIsDisplayed()
+        composeTestRule.waitUntilExactlyOneExists(hasText(itemTitle), 5000)
     }
 
     fun assertItemNotExist(itemTitle: String) {
@@ -122,7 +124,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun clickTodayButton() {
-        composeTestRule.onNodeWithContentDescription("Jump to Today", true).performClick()
+        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.a11y_contentDescriptionCalendarJumpToToday), true).performClick()
         composeTestRule.waitForIdle()
     }
 

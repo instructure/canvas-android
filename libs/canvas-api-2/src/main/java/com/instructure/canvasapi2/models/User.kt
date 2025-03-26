@@ -51,7 +51,10 @@ data class User(
         @SerializedName("root_account")
         val rootAccount: String? = null,
         val isFakeStudent: Boolean = false,
-        val calendar: UserCalendar? = null
+        val calendar: UserCalendar? = null,
+        val uuid: String? = null,
+        @SerializedName("account_uuid")
+        val accountUuid: String? = null
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.USER

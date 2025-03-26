@@ -101,11 +101,11 @@ fun RemoteFile.mapToAttachment(): Attachment = Attachment(
 val EnrollmentType?.displayText: String
     get() = ContextKeeper.appContext.getText(
         when (this) {
-            EnrollmentType.STUDENTENROLLMENT -> R.string.enrollmentTypeStudents
-            EnrollmentType.TEACHERENROLLMENT -> R.string.enrollmentTypeTeachers
-            EnrollmentType.OBSERVERENROLLMENT -> R.string.enrollmentTypeObservers
-            EnrollmentType.TAENROLLMENT -> R.string.enrollmentTypeTeachingAssistants
-            EnrollmentType.DESIGNERENROLLMENT -> R.string.enrollmentTypeDesigners
+            EnrollmentType.StudentEnrollment -> R.string.enrollmentTypeStudents
+            EnrollmentType.TeacherEnrollment -> R.string.enrollmentTypeTeachers
+            EnrollmentType.ObserverEnrollment -> R.string.enrollmentTypeObservers
+            EnrollmentType.TaEnrollment -> R.string.enrollmentTypeTeachingAssistants
+            EnrollmentType.DesignerEnrollment -> R.string.enrollmentTypeDesigners
             else -> R.string.enrollmentTypeUnknown
         }
     ).toString()

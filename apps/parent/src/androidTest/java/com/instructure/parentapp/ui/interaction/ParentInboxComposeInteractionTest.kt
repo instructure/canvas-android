@@ -56,7 +56,7 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )

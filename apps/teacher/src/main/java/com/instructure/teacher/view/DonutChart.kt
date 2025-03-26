@@ -1,7 +1,11 @@
 package com.instructure.teacher.view
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Typeface
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -23,7 +27,7 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     private var selected = 0
     private var total = 0
     private var selectedColor = 0
-    private val unselectedColor: Int
+    private var unselectedColor = ContextCompat.getColor(context, R.color.porcelain)
     private var centerText: String? = ""
     private var centerTextSize = 0f
     private var textX = 0f
@@ -35,9 +39,9 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
     init {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.DonutChart, 0, 0)
         try {
-            radius = a.getDimension(R.styleable.DonutChart_dc_radius, 40.0f)
+            radius = a.getDimension(R.styleable.DonutChart_dc_radius, 48.0f)
             centerText = a.getString(R.styleable.DonutChart_dc_center_text)
-            centerTextSize = a.getDimension(R.styleable.DonutChart_dc_center_text_size, 16f)
+            centerTextSize = a.getDimension(R.styleable.DonutChart_dc_center_text_size, 22f)
         } finally {
             a.recycle()
         }
@@ -64,14 +68,14 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
             resources.displayMetrics
         )
         textPaint.textSize = textSize
-        unselectedColor = ContextCompat.getColor(context, R.color.porcelain)
         path = Path()
         outerCircle = RectF()
         innerCircle = RectF()
-        var adjust: Float = .038f * radius
-        outerCircle[adjust, adjust, radius * 2 - adjust] = radius * 2 - adjust
-        adjust = .276f * radius
-        innerCircle[adjust, adjust, radius * 2 - adjust] = radius * 2 - adjust
+        val outerAdjust: Float = 2f * scale
+        val innerAdjust: Float = outerAdjust + 2f * scale
+
+        outerCircle[outerAdjust, outerAdjust, radius * 2 - outerAdjust] = radius * 2 - outerAdjust
+        innerCircle[innerAdjust, innerAdjust, radius * 2 - innerAdjust] = radius * 2 - innerAdjust
     }
 
     fun setSelected(selected: Int) {
@@ -88,6 +92,10 @@ class DonutChart(context: Context, attrs: AttributeSet?) : View(context, attrs) 
 
     fun setSelectedColor(@ColorInt selectedColor: Int) {
         this.selectedColor = selectedColor
+    }
+
+    fun setUnselectedColor(@ColorInt unselectedColor: Int) {
+        this.unselectedColor = unselectedColor
     }
 
     fun setCenterText(centerText: String?) {

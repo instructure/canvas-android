@@ -66,7 +66,8 @@ class InboxDetailsViewModelTest {
         ContextKeeper.appContext = context
 
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
-        coEvery { savedStateHandle.get<Long>(any()) } returns conversation.id
+        coEvery { savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID) } returns conversation.id
+        coEvery { savedStateHandle.get<Boolean>(InboxDetailsFragment.UNREAD) } returns false
         coEvery { context.getString(
             com.instructure.pandautils.R.string.inboxForwardSubjectFwPrefix,
             conversation.subject

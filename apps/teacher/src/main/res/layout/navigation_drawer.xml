@@ -226,12 +226,13 @@
                     android:textColor="@color/textDarkest"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/navigationDrawerColorOverlaySwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="48dp"
-                    android:minHeight="48dp"/>
+                    android:minHeight="48dp"
+                    app:theme="@style/Theme.Material3.DayNight"/>
 
             </LinearLayout>
 

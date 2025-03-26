@@ -25,6 +25,7 @@
         <item name="colorAccent">@color/textDarkest</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/darkStatusBarColor</item>
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>

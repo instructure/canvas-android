@@ -15,25 +15,41 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.instructure.canvasapi2.QLCallback
+import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.StudentContextCardQuery
-import com.instructure.canvasapi2.enqueueQuery
 
 class StudentContextManagerImpl : StudentContextManager {
-    override fun getStudentContext(
+
+    private var submissionPageSize = QLClientConfig.GRAPHQL_PAGE_SIZE
+    private var endCursor: String? = null
+    override var hasNextPage: Boolean = false
+        private set
+
+    override suspend fun getStudentContext(
         courseId: Long,
         userId: Long,
         submissionPageSize: Int,
-        forceNetwork: Boolean,
-        callback: QLCallback<StudentContextCardQuery.Data>
-    ) {
-        val query = StudentContextCardQuery.builder()
-            .courseId(courseId.toString())
-            .studentId(userId.toString())
-            .pageSize(submissionPageSize)
-            .nextCursor(callback.nextCursor)
-            .build()
+        forceNetwork: Boolean
+    ): StudentContextCardQuery.Data {
+        this.submissionPageSize = submissionPageSize
+        val query = StudentContextCardQuery(courseId.toString(), userId.toString(), submissionPageSize)
+        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
 
-        callback.enqueueQuery(query, forceNetwork)
+        this.endCursor = result.data?.course?.onCourse?.submissions?.pageInfo?.endCursor
+        this.hasNextPage = result.data?.course?.onCourse?.submissions?.pageInfo?.hasNextPage ?: false
+
+        return result.dataAssertNoErrors
+    }
+
+    override suspend fun getNextPage(courseId: Long, userId: Long, forceNetwork: Boolean): StudentContextCardQuery.Data? {
+        if (!hasNextPage) return null
+        val query = StudentContextCardQuery(courseId.toString(), userId.toString(), submissionPageSize, Optional.present(endCursor))
+        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
+
+        this.endCursor = result.data?.course?.onCourse?.submissions?.pageInfo?.endCursor
+        this.hasNextPage = result.data?.course?.onCourse?.submissions?.pageInfo?.hasNextPage ?: false
+
+        return result.dataAssertNoErrors
     }
 }

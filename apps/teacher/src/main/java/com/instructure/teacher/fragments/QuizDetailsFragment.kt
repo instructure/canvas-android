@@ -61,7 +61,7 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.QuizDetailsPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.presenters.QuizDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -451,8 +451,8 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun navigateToSubmissions(course: Course, assignment: Assignment?, filter: SubmissionListFilter) {
         assignment ?: return // We can't navigate to the submission list if there isn't an associated assignment
         val assignmentWithAnonymousGrading = assignment.copy(anonymousGrading = quiz.allowAnonymousSubmissions)
-        val args = AssignmentSubmissionListFragment.makeBundle(assignmentWithAnonymousGrading, filter)
-        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
+        val args = SubmissionListFragment.makeBundle(assignmentWithAnonymousGrading, filter)
+        RouteMatcher.route(requireActivity(), Route(null, SubmissionListFragment::class.java, course, args))
     }
 
     private fun clearListeners() = with(binding) {

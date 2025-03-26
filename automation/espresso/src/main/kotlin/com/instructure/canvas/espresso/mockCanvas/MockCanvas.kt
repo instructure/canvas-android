@@ -772,7 +772,7 @@ fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teach
                 stringId = it.id.toString(),
                 name = it.shortName,
                 avatarURL = it.avatarUrl,
-                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue())))
+                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.StudentEnrollment.rawValue)))
         )
     }
 
@@ -781,7 +781,7 @@ fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teach
                 stringId = it.id.toString(),
                 name = it.shortName,
                 avatarURL = it.avatarUrl,
-                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())))
+                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.TeacherEnrollment.rawValue)))
         )
     }
 

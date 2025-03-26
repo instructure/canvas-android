@@ -17,7 +17,6 @@
 package com.instructure.teacher.features.syllabus.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.utils.ColorKeeper
@@ -26,9 +25,7 @@ import com.instructure.teacher.databinding.ViewholderSyllabusItemBinding
 import com.instructure.teacher.features.syllabus.SyllabusEvent
 import com.spotify.mobius.functions.Consumer
 
-class SyllabusEventsAdapter(val consumer: Consumer<SyllabusEvent>?) : RecyclerView.Adapter<SyllabusEventsAdapter.SyllabusEventViewHolder>() {
-
-    private lateinit var binding: ViewholderSyllabusItemBinding
+class SyllabusEventsAdapter(private val consumer: Consumer<SyllabusEvent>?) : RecyclerView.Adapter<SyllabusEventsAdapter.SyllabusEventViewHolder>() {
 
     private var events: List<ScheduleItemViewState> = emptyList()
 
@@ -38,8 +35,8 @@ class SyllabusEventsAdapter(val consumer: Consumer<SyllabusEvent>?) : RecyclerVi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyllabusEventViewHolder {
-        binding = ViewholderSyllabusItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SyllabusEventViewHolder(binding.root)
+        val binding = ViewholderSyllabusItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SyllabusEventViewHolder(binding)
     }
 
     override fun getItemCount(): Int = events.size
@@ -48,15 +45,14 @@ class SyllabusEventsAdapter(val consumer: Consumer<SyllabusEvent>?) : RecyclerVi
         holder.onBind(consumer, events[position])
     }
 
-    inner class SyllabusEventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class SyllabusEventViewHolder(private val binding: ViewholderSyllabusItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(consumer: Consumer<SyllabusEvent>?, event: ScheduleItemViewState) {
             with(binding) {
                 syllabusItemTitle.text = event.title
                 syllabusItemDate.text = event.date
                 syllabusItemIcon.setImageDrawable(ColorKeeper.getColoredDrawable(root.context, event.iconRes, event.color))
-
-                itemView.onClick { consumer?.accept(SyllabusEvent.SyllabusItemClicked(event.id)) }
+                root.onClick { consumer?.accept(SyllabusEvent.SyllabusItemClicked(event.id)) }
             }
         }
     }

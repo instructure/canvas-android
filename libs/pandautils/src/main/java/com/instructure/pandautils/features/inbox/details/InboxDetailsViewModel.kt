@@ -25,7 +25,6 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
-import com.instructure.pandautils.utils.isTablet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -45,6 +44,7 @@ class InboxDetailsViewModel @Inject constructor(
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
+    val unread: Boolean = savedStateHandle.get<Boolean>(InboxDetailsFragment.UNREAD) ?: false
 
     private val _uiState = MutableStateFlow(InboxDetailsUiState())
     val uiState = _uiState.asStateFlow()
@@ -162,6 +162,9 @@ class InboxDetailsViewModel @Inject constructor(
 
                 try {
                     val conversation = conversationResult.dataOrThrow
+                    if (unread) {
+                        refreshParentFragment()
+                    }
                     if (conversation.messages.isEmpty()) {
                         _uiState.update { it.copy(state = ScreenState.Empty, conversation =  conversation) }
                     } else {
