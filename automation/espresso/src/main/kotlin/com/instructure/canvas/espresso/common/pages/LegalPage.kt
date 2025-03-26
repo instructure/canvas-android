@@ -38,7 +38,6 @@ class LegalPage : BasePage(R.id.legalPage) {
 
     private val privacyPolicyLabel by OnViewWithId(R.id.privacyPolicyLabel)
     private val termsOfUseLabel by OnViewWithId(R.id.termsOfUseLabel)
-    private val openSourceLabel by OnViewWithId(R.id.openSourceLabel)
 
     /**
      * Opens the privacy policy.
@@ -52,13 +51,6 @@ class LegalPage : BasePage(R.id.legalPage) {
      */
     fun openTermsOfUse() {
         termsOfUseLabel.click()
-    }
-
-    /**
-     * Opens the Canvas on GitHub.
-     */
-    fun openCanvasOnGithub() {
-        openSourceLabel.click()
     }
 
     fun assertTermsOfUseDisplayed() {
