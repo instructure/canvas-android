@@ -52,6 +52,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -290,10 +292,15 @@ private fun AssignmentListContentView(
     listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
     Column {
+        val gradingPeriodGroup = state.filterState.filterGroups.firstOrNull { it.options.any { it is AssignmentListFilterOption.GradingPeriod } }
+        val selectedGradingPeriod = gradingPeriodGroup?.options?.get(gradingPeriodGroup.selectedOptionIndexes.firstOrNull().orDefault()) as? AssignmentListFilterOption.GradingPeriod
+        val gradingPeriodName = if (selectedGradingPeriod?.period != null) selectedGradingPeriod.stringValue else stringResource(R.string.all)
+        val gradingPeriodContentDescription = stringResource(R.string.gradingPeriod) + " " + if (selectedGradingPeriod?.period != null) selectedGradingPeriod.stringValue else stringResource(R.string.all)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(16.dp)
+                .clearAndSetSemantics { contentDescription = gradingPeriodContentDescription }
         ) {
             Text(
                 stringResource(R.string.gradingPeriod),
@@ -303,9 +310,6 @@ private fun AssignmentListContentView(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            val gradingPeriodGroup = state.filterState.filterGroups.firstOrNull { it.options.any { it is AssignmentListFilterOption.GradingPeriod } }
-            val selectedGradingPeriod = gradingPeriodGroup?.options?.get(gradingPeriodGroup.selectedOptionIndexes.firstOrNull().orDefault()) as? AssignmentListFilterOption.GradingPeriod
-            val gradingPeriodName = if (selectedGradingPeriod?.period != null) selectedGradingPeriod.stringValue else stringResource(R.string.all)
             Text(
                 gradingPeriodName,
                 color = colorResource(id = R.color.textDarkest),

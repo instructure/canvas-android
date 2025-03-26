@@ -32,6 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,6 +64,10 @@ fun<T> MultiChoicePicker(
                     .background(colorResource(R.color.backgroundLightest))
                     .clickable {
                         onItemChange(item, selectedIndexes.contains(items.indexOf(item)).not())
+                    }
+                    .clearAndSetSemantics {
+                        contentDescription = item.toString()
+                        selected = selectedIndexes.contains(items.indexOf(item))
                     }
             ) {
                 Spacer(modifier = Modifier.width(20.dp))
