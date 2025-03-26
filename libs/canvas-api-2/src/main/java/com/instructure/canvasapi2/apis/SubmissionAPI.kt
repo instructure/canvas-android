@@ -45,10 +45,6 @@ object SubmissionAPI {
     private const val ratingIdPostFix = "][rating_id]"
     private const val pointsPostFix = "][points]"
     private const val commentsPostFix = "][comments]"
-    const val BASIC_LTI_LAUNCH = "basic_lti_launch"
-    const val ONLINE_URL = "online_url"
-    const val ONLINE_TEXT_ENTRY = "online_text_entry"
-    const val ONLINE_UPLOAD = "online_upload"
 
     interface SubmissionInterface {
 
@@ -306,7 +302,7 @@ object SubmissionAPI {
 
     fun postSubmissionAttachmentsSynchronous(courseId: Long, assignmentId: Long, attachmentsIds: List<Long>, adapter: RestBuilder, params: RestParams): Submission? {
         return try {
-            adapter.build(SubmissionInterface::class.java, params).postSubmissionAttachments(courseId, assignmentId, ONLINE_UPLOAD, attachmentsIds).execute().body()
+            adapter.build(SubmissionInterface::class.java, params).postSubmissionAttachments(courseId, assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD.apiString, attachmentsIds).execute().body()
         } catch (e: Exception) {
             null
         }

@@ -33,13 +33,14 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FileUploadConfig
 import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -59,30 +60,39 @@ import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.trySend
-import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.student.room.entities.CreateSubmissionEntity
+import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
+import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.student.room.entities.daos.CreateSubmissionDao
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-@OptIn(DelicateCoroutinesApi::class)
 @HiltWorker
 class SubmissionWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val studentDb: StudentDb,
+    private val createSubmissionDao: CreateSubmissionDao,
+    private val createFileSubmissionDao: CreateFileSubmissionDao,
+    private val createPendingSubmissionCommentDao: CreatePendingSubmissionCommentDao,
+    private val createSubmissionCommentFileDao: CreateSubmissionCommentFileDao,
     private val notificationManager: NotificationManager,
-    private val submissionApi: SubmissionAPI.SubmissionInterface
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val userApi: UserAPI.UsersInterface,
+    private val eventBus: EventBus,
+    private val apiPrefs: ApiPrefs,
+    private val notoriousUploader: NotoriousUploader,
+    private val fileUploadManager: FileUploadManager,
+    private val groupManager: GroupManager,
+    private val analytics: Analytics
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
@@ -95,7 +105,7 @@ class SubmissionWorker @AssistedInject constructor(
 
             if (inputData.hasKeyWithValueOfType<Long>(Const.SUBMISSION_ID)) {
                 val dbSubmissionId = inputData.getLong(Const.SUBMISSION_ID, 0)
-                submission = studentDb.submissionDao().findSubmissionById(dbSubmissionId)
+                submission = createSubmissionDao.findSubmissionById(dbSubmissionId)
                     ?: return Result.failure()// Return early if deleted, means it was canceled
             }
 
@@ -114,13 +124,12 @@ class SubmissionWorker @AssistedInject constructor(
         }
     }
 
-    private fun showConfetti() {
-        GlobalScope.launch {
-            UserManager.getSelfFeatures().await().onSuccess { features ->
-                features.find { it.feature == "disable_celebrations" }?.let {
-                    if (it.flag.state == "off" || it.flag.state == "allowed") {
-                        EventBus.getDefault().post(ShowConfettiEvent)
-                    }
+    private suspend fun showConfetti() {
+        val featuresResult = userApi.getSelfFeatures(RestParams())
+        if (featuresResult.isSuccess) {
+            featuresResult.dataOrNull?.find { it.feature == "disable_celebrations" }?.let {
+                if (it.flag.state == "off" || it.flag.state == "allowed") {
+                    eventBus.post(ShowConfettiEvent)
                 }
             }
         }
@@ -137,38 +146,27 @@ class SubmissionWorker @AssistedInject constructor(
         }
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = ApiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
         )
         val result = submissionApi.postTextSubmission(
             submission.canvasContext.id,
             submission.assignmentId,
-            SubmissionAPI.ONLINE_TEXT_ENTRY,
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
             textToSubmit,
             params
         )
 
-        return when (result) {
-            is DataResult.Success -> {
-                studentDb.submissionDao().deleteSubmissionById(submission.id)
-                if (!result.dataOrThrow.late) showConfetti()
-                Result.success()
-            }
-
-            is DataResult.Fail -> {
-                studentDb.submissionDao().setSubmissionError(true, submission.id)
-                showErrorNotification(context, submission)
-                Result.failure()
-            }
-        }
+        return handleSubmissionResult(result, submission)
     }
 
     private suspend fun uploadUrl(submission: CreateSubmissionEntity, isLti: Boolean): Result {
         showProgressNotification(submission.assignmentName, submission.id)
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = ApiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
         )
-        val type = if (isLti) SubmissionAPI.BASIC_LTI_LAUNCH else SubmissionAPI.ONLINE_URL
+        val type =
+            if (isLti) Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString else Assignment.SubmissionType.ONLINE_URL.apiString
         val result = submissionApi.postUrlSubmission(
             submission.canvasContext.id,
             submission.assignmentId,
@@ -177,19 +175,7 @@ class SubmissionWorker @AssistedInject constructor(
             params
         )
 
-        return when (result) {
-            is DataResult.Success -> {
-                studentDb.submissionDao().deleteSubmissionById(submission.id)
-                if (!result.dataOrThrow.late) showConfetti()
-                Result.success()
-            }
-
-            is DataResult.Fail -> {
-                studentDb.submissionDao().setSubmissionError(true, submission.id)
-                showErrorNotification(context, submission)
-                Result.failure()
-            }
-        }
+        return handleSubmissionResult(result, submission)
     }
 
     private suspend fun uploadMedia(submission: CreateSubmissionEntity): Result {
@@ -197,14 +183,14 @@ class SubmissionWorker @AssistedInject constructor(
 
         // Upload file
         val mediaFile =
-            studentDb.fileSubmissionDao().findFileForSubmissionId(submission.id)
+            createFileSubmissionDao.findFileForSubmissionId(submission.id)
                 ?: return Result.failure() // The file is deleted, so no need to upload anything
 
-        NotoriousUploader.performUpload(
+        notoriousUploader.performUpload(
             mediaFile.fullPath!!,
             object : ProgressRequestUpdateListener {
                 override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
-                    runBlocking { studentDb.submissionDao().findSubmissionById(submission.id) }
+                    runBlocking { createSubmissionDao.findSubmissionById(submission.id) }
                         ?: return false // Stop uploading and don't show error if submission was deleted,
 
                     updateFileProgress(submission.id, progressPercent, 0, 1, 0)
@@ -212,7 +198,7 @@ class SubmissionWorker @AssistedInject constructor(
                 }
             }).onSuccess { result ->
             updateFileProgress(submission.id, 1.0f, 0, 1, 0)
-            studentDb.fileSubmissionDao()
+            createFileSubmissionDao
                 .setFileAttachmentIdAndError(null, false, null, mediaFile.id)
 
             // Update the notification to show that we're doing the actual submission now
@@ -235,28 +221,24 @@ class SubmissionWorker @AssistedInject constructor(
                 params
             )
 
-            return when (mediaSubmissionResult) {
-                is DataResult.Success -> {
-                    // Clear out the db for the successful submission
-                    studentDb.fileSubmissionDao().deleteFilesForSubmissionId(submission.id)
-                    studentDb.submissionDao().deleteSubmissionById(submission.id)
+            return mediaSubmissionResult.dataOrNull?.let {
+                // Clear out the db for the successful submission
+                createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
+                createSubmissionDao.deleteSubmissionById(submission.id)
 
-                    showCompleteNotification(
-                        context,
-                        submission,
-                        mediaSubmissionResult.dataOrThrow.late
-                    )
-                    Result.success()
-                }
-
-                is DataResult.Fail -> {
-                    studentDb.submissionDao().setSubmissionError(true, submission.id)
-                    showErrorNotification(context, submission)
-                    Result.failure()
-                }
+                showCompleteNotification(
+                    context,
+                    submission,
+                    mediaSubmissionResult.dataOrThrow.late
+                )
+                Result.success()
+            } ?: run {
+                createSubmissionDao.setSubmissionError(true, submission.id)
+                showErrorNotification(context, submission)
+                Result.failure()
             }
         }.onFailure {
-            handleFileError(studentDb, submission, 0, listOf(mediaFile), it?.message)
+            handleFileError(submission, 0, listOf(mediaFile), it?.message)
             return Result.failure()
         }
         return Result.failure()
@@ -265,7 +247,7 @@ class SubmissionWorker @AssistedInject constructor(
     private suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {
         showProgressNotification(submission.assignmentName, submission.id)
 
-        val (completed, pending) = studentDb.fileSubmissionDao()
+        val (completed, pending) = createFileSubmissionDao
             .findFilesForSubmissionId(submission.id).partition { it.attachmentId != null }
         val uploadedAttachmentIds = uploadFiles(submission, completed.size, pending)
             ?: return Result.failure() // Cancel submitting if any of the files failed to upload
@@ -281,23 +263,19 @@ class SubmissionWorker @AssistedInject constructor(
         val result = submissionApi.postSubmissionAttachments(
             submission.canvasContext.id,
             submission.assignmentId,
-            SubmissionAPI.ONLINE_UPLOAD,
+            Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
             attachmentIds,
             params
         )
 
-        return when (result) {
-            is DataResult.Success -> {
-                deleteSubmissionsForAssignment(submission.assignmentId, studentDb)
-                showCompleteNotification(context, submission, result.dataOrThrow.late)
-                Result.success()
-            }
-
-            is DataResult.Fail -> {
-                studentDb.submissionDao().setSubmissionError(true, submission.id)
-                showErrorNotification(context, submission)
-                Result.failure()
-            }
+        return result.dataOrNull?.let {
+            deleteSubmissionsForAssignment(submission.assignmentId)
+            showCompleteNotification(context, submission, result.dataOrThrow.late)
+            Result.success()
+        } ?: run {
+            createSubmissionDao.setSubmissionError(true, submission.id)
+            showErrorNotification(context, submission)
+            Result.failure()
         }
     }
 
@@ -310,19 +288,22 @@ class SubmissionWorker @AssistedInject constructor(
 
         // This is a group assignment, we need to get the list of groups before starting uploads
         val groupId = if (submission.assignmentGroupCategoryId == 0L) null else {
-            GroupManager.getGroupsSynchronous(true)
+            groupManager.getGroupsSynchronous(true)
                 .find { it.groupCategoryId == submission.assignmentGroupCategoryId }?.id
         }
 
         attachments.forEachIndexed { index, pendingAttachment ->
+            if (pendingAttachment.name == null || pendingAttachment.size == null || pendingAttachment.contentType == null || pendingAttachment.fullPath == null) {
+                return null
+            }
             updateFileProgress(submission.id, 0f, index, attachments.size, completedAttachmentCount)
 
             // Upload config setup
             val fso = FileSubmitObject(
-                pendingAttachment.name!!,
-                pendingAttachment.size!!,
-                pendingAttachment.contentType!!,
-                pendingAttachment.fullPath!!
+                pendingAttachment.name,
+                pendingAttachment.size,
+                pendingAttachment.contentType,
+                pendingAttachment.fullPath
             )
             val config = if (groupId == null) {
                 FileUploadConfig.forSubmission(
@@ -335,9 +316,9 @@ class SubmissionWorker @AssistedInject constructor(
             }
 
             // Perform upload
-            FileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
+            fileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
                 override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
-                    runBlocking { studentDb.submissionDao().findSubmissionById(submission.id) }
+                    runBlocking { createSubmissionDao.findSubmissionById(submission.id) }
                         ?: return false // Stop uploading and don't show error if submission was deleted,
 
                     updateFileProgress(
@@ -350,7 +331,7 @@ class SubmissionWorker @AssistedInject constructor(
                     return true
                 }
             }).onSuccess { attachment ->
-                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED)
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED)
                 updateFileProgress(
                     submission.id,
                     1.0f,
@@ -359,7 +340,7 @@ class SubmissionWorker @AssistedInject constructor(
                     completedAttachmentCount
                 )
                 runBlocking {
-                    studentDb.fileSubmissionDao()
+                    createFileSubmissionDao
                         .setFileAttachmentIdAndError(
                             attachment.id,
                             false,
@@ -372,7 +353,7 @@ class SubmissionWorker @AssistedInject constructor(
             }.onFailure {
                 Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
                 runBlocking {
-                    handleFileError(studentDb, submission, index, attachments, it?.message)
+                    handleFileError(submission, index, attachments, it?.message)
                 }
                 return null
             }
@@ -381,15 +362,13 @@ class SubmissionWorker @AssistedInject constructor(
     }
 
     private suspend fun uploadComment(): Result {
-        val commentDao = studentDb.pendingSubmissionCommentDao()
-        val fileDao = studentDb.submissionCommentFileDao()
-
         // Get existing pending comment from db, or return if it was deleted
         val comment =
-            commentDao.findCommentById(inputData.getLong(Const.ID, 0)) ?: return Result.failure()
+            createPendingSubmissionCommentDao.findCommentById(inputData.getLong(Const.ID, 0))
+                ?: return Result.failure()
 
         // Get attachments, partition by completed vs pending
-        val (completed, pending) = fileDao
+        val (completed, pending) = createSubmissionCommentFileDao
             .findFilesForPendingComment(comment.id)
             .partition { it.attachmentId != null }
 
@@ -434,14 +413,14 @@ class SubmissionWorker @AssistedInject constructor(
             notification.setAutoCancel(true) // Still need auto cancel for clicks, false to ongoing only makes it possible to swipe away
 
             // Set error in db
-            commentDao.setCommentError(true, comment.id)
+            createPendingSubmissionCommentDao.setCommentError(true, comment.id)
 
             // Notify after we stop the service so that it shows on api versions less than N (stopForeground(false) is a little odd in behavior)
             notificationManager.notify(comment.assignmentId.toInt(), notification.build())
         }
 
         // Clear existing error state, if any
-        commentDao.setCommentError(false, comment.id)
+        createPendingSubmissionCommentDao.setCommentError(false, comment.id)
 
         // Upload pending attachments
         pending.forEachIndexed { index, pendingAttachment ->
@@ -490,7 +469,10 @@ class SubmissionWorker @AssistedInject constructor(
                 }
             }).onSuccess { attachment ->
                 // Update db
-                fileDao.setFileAttachmentId(attachment.id, pendingAttachment.id)
+                createSubmissionCommentFileDao.setFileAttachmentId(
+                    attachment.id,
+                    pendingAttachment.id
+                )
             }.onFailure {
                 setError()
                 return Result.failure()
@@ -547,7 +529,7 @@ class SubmissionWorker @AssistedInject constructor(
                 )
             } ?: run {
                 val attachmentIds = runBlocking {
-                    fileDao
+                    createSubmissionCommentFileDao
                         .findFilesForPendingComment(comment.id)
                         .map { file -> file.attachmentId!! }
                 }
@@ -563,29 +545,25 @@ class SubmissionWorker @AssistedInject constructor(
                 )
             }
 
-            return when (postCommentResult) {
-                is DataResult.Success -> {
-                    val submission = postCommentResult.dataOrThrow
-                    val newComment = submission.submissionComments.last()
-                    FlowSource.getFlow<SubmissionComment>().trySend(newComment)
+            return postCommentResult.dataOrNull?.let {
+                val submission = postCommentResult.dataOrThrow
+                val newComment = submission.submissionComments.last()
+                FlowSource.getFlow<SubmissionComment>().trySend(newComment)
 
-                    FlowSource.getFlow<SubmissionDetailsSharedEvent>().trySend(
-                        SubmissionDetailsSharedEvent.SubmissionCommentsUpdated(submission.submissionComments)
-                    )
+                FlowSource.getFlow<SubmissionDetailsSharedEvent>().trySend(
+                    SubmissionDetailsSharedEvent.SubmissionCommentsUpdated(submission.submissionComments)
+                )
 
-                    // Remove db entry
-                    commentDao.deleteCommentById(comment.id)
+                // Remove db entry
+                createPendingSubmissionCommentDao.deleteCommentById(comment.id)
 
-                    // Clear network cache so we don't fetch a stale comment list
-                    CanvasRestAdapter.clearCacheUrls("assignments/${comment.assignmentId}")
+                // Clear network cache so we don't fetch a stale comment list
+                CanvasRestAdapter.clearCacheUrls("assignments/${comment.assignmentId}")
 
-                    Result.success()
-                }
-
-                is DataResult.Fail -> {
-                    setError()
-                    Result.failure()
-                }
+                Result.success()
+            } ?: run {
+                setError()
+                Result.failure()
             }
         } catch (e: Throwable) {
             setError()
@@ -614,40 +592,42 @@ class SubmissionWorker @AssistedInject constructor(
             params
         )
 
-        return when (result) {
-            is DataResult.Success -> {
-                studentDb.submissionDao().deleteSubmissionById(submission.id)
-                if (!result.dataOrThrow.late) showConfetti()
-                Result.success()
-            }
+        return handleSubmissionResult(result, submission)
+    }
 
-            is DataResult.Fail -> {
-                studentDb.submissionDao().setSubmissionError(true, submission.id)
-                showErrorNotification(context, submission)
-                Result.failure()
-            }
+    private suspend fun handleSubmissionResult(
+        result: DataResult<Submission>,
+        submission: CreateSubmissionEntity
+    ): Result {
+        return result.dataOrNull?.let {
+            createSubmissionDao.deleteSubmissionById(submission.id)
+            if (!result.dataOrThrow.late) showConfetti()
+            Result.success()
+        } ?: run {
+            createSubmissionDao.setSubmissionError(true, submission.id)
+            showErrorNotification(context, submission)
+            Result.failure()
         }
     }
 
     // region Notifications
 
     private suspend fun handleFileError(
-        db: StudentDb,
         submission: CreateSubmissionEntity,
         completedCount: Int,
         attachments: List<CreateFileSubmissionEntity>,
         errorMessage: String?
     ) {
-        if (db.submissionDao().findSubmissionById(submission.id) == null) {
+        if (createSubmissionDao.findSubmissionById(submission.id) == null) {
             return // Not an error if the submission was deleted, it was canceled
         }
 
-        db.submissionDao().setSubmissionError(true, submission.id)
+        createSubmissionDao.setSubmissionError(true, submission.id)
 
         // Set all files that haven't been completed yet to error
         attachments.forEachIndexed { index, file ->
             if (index >= completedCount) {
-                db.fileSubmissionDao().setFileError(true, errorMessage, file.id)
+                createFileSubmissionDao.setFileError(true, errorMessage, file.id)
             }
         }
 
@@ -709,7 +689,7 @@ class SubmissionWorker @AssistedInject constructor(
 
         // Set initial progress
         runBlocking {
-            studentDb.submissionDao().updateProgress(
+            createSubmissionDao.updateProgress(
                 currentFile = (completedAttachmentCount + fileIndex).toLong(),
                 fileCount = (completedAttachmentCount + fileCount).toLong(),
                 progress = uploaded.toDouble(),
@@ -732,7 +712,7 @@ class SubmissionWorker @AssistedInject constructor(
 
         // Update progress in db
         runBlocking {
-            studentDb.pendingSubmissionCommentDao().updateCommentProgress(
+            createPendingSubmissionCommentDao.updateCommentProgress(
                 id = comment.id,
                 currentFile = (completedSize + index).toLong(),
                 fileCount = (completedSize + pendingSize).toLong(),
@@ -807,7 +787,7 @@ class SubmissionWorker @AssistedInject constructor(
         notificationManager.notify(submission.id.toInt(), notificationBuilder.build())
     }
 
-    private fun showCompleteNotification(
+    private suspend fun showCompleteNotification(
         context: Context,
         submission: CreateSubmissionEntity,
         isLate: Boolean
@@ -829,6 +809,24 @@ class SubmissionWorker @AssistedInject constructor(
         if (!isLate) showConfetti()
     }
 
+    private suspend fun deleteSubmissionsForAssignment(
+        id: Long,
+        files: List<FileSubmitObject> = emptyList()
+    ) {
+        createSubmissionDao.findSubmissionsByAssignmentId(id, getUserId())
+            .forEach { submission ->
+                createFileSubmissionDao.findFilesForSubmissionId(submission.id).forEach { file ->
+                    // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
+                    if (!files.any { it.fullPath == file.fullPath } && createFileSubmissionDao
+                            .findFilesForPath(file.id, file.fullPath).isEmpty()) {
+                        FileUploadUtils.deleteTempFile(file.fullPath)
+                    }
+                }
+                createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
+            }
+        createSubmissionDao.deleteSubmissionsForAssignmentId(id, getUserId())
+    }
+
     // endregion
 
     enum class Action {
@@ -841,23 +839,5 @@ class SubmissionWorker @AssistedInject constructor(
 
         private fun getUserId() = ApiPrefs.user!!.id
 
-        private suspend fun deleteSubmissionsForAssignment(
-            id: Long,
-            db: StudentDb,
-            files: List<FileSubmitObject> = emptyList()
-        ) {
-            db.submissionDao().findSubmissionsByAssignmentId(id, getUserId())
-                .forEach { submission ->
-                    db.fileSubmissionDao().findFilesForSubmissionId(submission.id).forEach { file ->
-                        // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
-                        if (!files.any { it.fullPath == file.fullPath } && db.fileSubmissionDao()
-                                .findFilesForPath(file.id, file.fullPath).isEmpty()) {
-                            FileUploadUtils.deleteTempFile(file.fullPath)
-                        }
-                    }
-                    db.fileSubmissionDao().deleteFilesForSubmissionId(submission.id)
-                }
-            db.submissionDao().deleteSubmissionsForAssignmentId(id, getUserId())
-        }
     }
 }
