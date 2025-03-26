@@ -20,7 +20,9 @@ package com.instructure.parentapp.util
 import androidx.hilt.work.HiltWorkerFactory
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.parentapp.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
+import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
 
@@ -36,6 +38,11 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var flutterAppMigration: FlutterAppMigration
 
+    override fun onCreate() {
+        super.onCreate()
+        initPendo()
+    }
+
     override fun performLogoutOnAuthError() {
         ParentLogoutTask(LogoutTask.Type.LOGOUT, null, getScheduler()).execute()
     }
@@ -48,5 +55,10 @@ class AppManager : BaseAppManager() {
 
     override fun performFlutterAppMigration() {
         flutterAppMigration.migrateIfNecessary()
+    }
+
+    private fun initPendo() {
+        val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
+        Pendo.setup(this, BuildConfig.PENDO_TOKEN, options, null)
     }
 }

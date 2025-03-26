@@ -54,8 +54,9 @@ fun SearchBar(
     @DrawableRes icon: Int,
     tintColor: Color,
     placeholder: String,
-    onExpand: (Boolean) -> Unit,
     onSearch: (String) -> Unit,
+    onExpand: ((Boolean) -> Unit)? = null,
+    onClear: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     searchQuery: String = "",
     collapsable: Boolean = true,
@@ -85,7 +86,7 @@ fun SearchBar(
                     modifier = Modifier.testTag("closeButton"),
                     onClick = {
                         expanded = false
-                        onExpand(false)
+                        onExpand?.invoke(false)
                     }) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),
@@ -113,7 +114,7 @@ fun SearchBar(
                         onSearch(query)
                         if (collapseOnSearch) {
                             expanded = false
-                            onExpand(false)
+                            onExpand?.invoke(false)
                         }
                     }
                 ),
@@ -144,7 +145,10 @@ fun SearchBar(
                     if (query.isNotEmpty()) {
                         IconButton(
                             modifier = Modifier.testTag("clearButton"),
-                            onClick = { query = "" }) {
+                            onClick = {
+                                query = ""
+                                onClear?.invoke()
+                            }) {
                             Icon(
                                 modifier = Modifier.size(18.dp),
                                 painter = painterResource(R.drawable.ic_close),
@@ -159,7 +163,7 @@ fun SearchBar(
                 modifier = Modifier.testTag("searchButton"),
                 onClick = {
                     expanded = true
-                    onExpand(true)
+                    onExpand?.invoke(true)
                 }) {
                 Icon(
                     painter = painterResource(icon),

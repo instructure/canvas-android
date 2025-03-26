@@ -40,12 +40,12 @@ import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
-import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
@@ -87,22 +87,22 @@ object ViewStyler {
         spinner.supportBackgroundTintList = makeColorStateList(defaultColor, brand)
     }
 
-    fun themeSwitch(context: Context, switch: SwitchCompat, @ColorInt brand: Int = ThemePrefs.brandColor) {
-        val thumbColor = brand
+    fun themeSwitch(context: Context, switch: MaterialSwitch, @ColorInt brand: Int = ThemePrefs.brandColor) {
+        switch.thumbTintList = ColorStateList(
+            arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+            intArrayOf(ContextCompat.getColor(context, R.color.switchThumbColorChecked), ContextCompat.getColor(context, R.color.switchThumbColor)))
 
-        // trackColor is the thumbColor with 30% transparency (77)
-        val trackColor = Color.argb(77, Color.red(thumbColor), Color.green(thumbColor), Color.blue(thumbColor))
+        switch.trackTintList = ColorStateList(
+            arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+            intArrayOf(brand, ContextCompat.getColor(context, R.color.switchTrackColor)))
 
-        // setting the thumb color
-        switch.thumbDrawable.setTintList(ColorStateList(
-                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(thumbColor, ContextCompat.getColor(context, R.color.switchThumbColor)))
-        )
-
-        // setting the track color
-        switch.trackDrawable.setTintList(ColorStateList(
-                arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
-                intArrayOf(trackColor, ContextCompat.getColor(context, R.color.switchTrackColor))))
+        switch.thumbIconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_switch_icon)
+        switch.thumbIconTintList = ColorStateList(
+            arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+            intArrayOf(brand, ContextCompat.getColor(context, R.color.switchIconColor)))
+        switch.trackDecorationTintList = ColorStateList(
+            arrayOf(intArrayOf()),
+            intArrayOf(ContextCompat.getColor(context, R.color.transparent)))
     }
 
     fun themeInputTextLayout(textInputLayout: TextInputLayout, @ColorInt color: Int) {
@@ -254,7 +254,7 @@ fun AppCompatCheckBox.applyTheme(@ColorInt brand: Int) {
     highlightColor = ThemePrefs.increaseAlpha(defaultColor)
 }
 
-fun SwitchCompat.applyTheme(@ColorInt color: Int = ThemePrefs.brandColor) {
+fun MaterialSwitch.applyTheme(@ColorInt color: Int = ThemePrefs.brandColor) {
     ViewStyler.themeSwitch(context, this, color)
 }
 

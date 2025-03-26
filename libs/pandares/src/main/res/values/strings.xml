@@ -1550,6 +1550,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
     <string name="editDashboardOfflineMode">You are offline</string>
+    <string name="editDashboardNoResults">No results</string>
+    <string name="editDashboardNoResultsMessage">No matching items found.</string>
     <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Offline Content Sync Success</string>
     <string name="offlineContentSyncFailureNotificationTitle">Offline Content Sync Failed</string>
@@ -1794,6 +1796,7 @@
     <string name="navigationDrawerLogOut">Log Out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
+    <string name="noStudentsRefresh">Refresh</string>
     <string name="noGrade">No Grade</string>
     <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
     <string name="parentNoCourses">No Courses</string>
@@ -2017,4 +2020,13 @@
     <string name="inboxSignatureScreenSubtitle">Signature will be added to the end of all messaging.</string>
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Signature text</string>
+    <string name="due_dateTime">Due: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Post policy</string>
+    <string name="late">Late</string>
+    <string name="a11y_contentDescription_expand">Expand</string>
+    <string name="missingTag">Missing</string>
+    <string name="submissionFilter">Submission Filter</string>
+    <string name="submissionMessageSubject">%1$s on %2$s</string>
+    <string name="all">All</string>
 </resources>

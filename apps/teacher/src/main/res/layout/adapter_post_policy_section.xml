@@ -17,6 +17,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <TextView
@@ -33,13 +34,14 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <androidx.appcompat.widget.SwitchCompat
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/postPolicySectionToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingEnd="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:layout_gravity="center_vertical"/>
+        android:layout_gravity="center_vertical"
+        app:theme="@style/Theme.Material3.DayNight"/>
 
 </LinearLayout>

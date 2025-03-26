@@ -20,13 +20,14 @@ package com.instructure.student.activity
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UnreadCountManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Account
-import com.instructure.canvasapi2.models.BecomeUserPermission
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.LaunchDefinition
@@ -39,7 +40,6 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
@@ -52,6 +52,8 @@ import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
@@ -61,11 +63,10 @@ import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
-import io.heap.autocapture.ViewAutocaptureSDK
-import io.heap.core.Heap
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
+import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -79,6 +80,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     @Inject
     lateinit var pandataAppKey: PandataInfo.AppKey
+
+    @Inject
+    lateinit var userApi: UserAPI.UsersInterface
 
     private var loadInitialDataJob: Job? = null
 
@@ -96,7 +100,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
-            setupHeapTracking()
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
+
+            setupPendoTracking()
 
             // Get enabled tabs
             enabledTabs.initTabs()
@@ -107,7 +113,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
                     ApiPrefs.canBecomeUser = true
                 } else try {
                     val account = awaitApi<Account> { UserManager.getSelfAccount(true, it) }
-                    val permission = awaitApi<BecomeUserPermission> { UserManager.getBecomeUserPermission(true, account.id, it) }
+                    val permission = awaitApi { UserManager.getBecomeUserPermission(true, account.id, it) }
                     ApiPrefs.canBecomeUser = permission.becomeUser
                 } catch (e: StatusCallbackError) {
                     if (e.response?.code() == 401) ApiPrefs.canBecomeUser = false
@@ -168,23 +174,22 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             getUnreadNotificationCount()
 
-            featureFlagProvider.fetchEnvironmentFeatureFlags()
-
             initialCoreDataLoadingComplete()
         } catch {
             initialCoreDataLoadingComplete()
         }
     }
 
-    private suspend fun setupHeapTracking() {
+    private suspend fun setupPendoTracking() {
+        val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrNull
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
         if (sendUsageMetrics) {
-            Heap.startRecording(context.applicationContext, BuildConfig.HEAP_APP_ID)
-            ViewAutocaptureSDK.register()
+            val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
+            val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
+            Pendo.startSession(user?.uuid?.SHA256().orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
         } else {
-            Heap.stopRecording()
-            ViewAutocaptureSDK.deregister()
+            Pendo.endSession()
         }
     }
 

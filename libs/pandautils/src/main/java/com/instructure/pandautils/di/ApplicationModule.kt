@@ -21,6 +21,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
 import android.webkit.CookieManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.WorkManager
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -39,7 +40,6 @@ import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.WebViewAuthenticator
-import com.instructure.pandautils.utils.date.DateTimeProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -122,7 +122,7 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideHtmlParses(
+    fun provideHtmlParser(
         localFileDao: LocalFileDao,
         apiPrefs: ApiPrefs,
         fileFolderDao: FileFolderDao,
@@ -168,5 +168,11 @@ class ApplicationModule {
         apiPrefs: ApiPrefs
     ): WebViewAuthenticator {
         return WebViewAuthenticator(oAuthApi, apiPrefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalBroadcastManager(@ApplicationContext context: Context): LocalBroadcastManager {
+        return LocalBroadcastManager.getInstance(context)
     }
 }

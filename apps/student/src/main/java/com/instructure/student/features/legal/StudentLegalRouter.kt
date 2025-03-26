@@ -25,7 +25,7 @@ import com.instructure.student.activity.InternalWebViewActivity
 class StudentLegalRouter(private val context: Context) : LegalRouter {
     override fun routeToTermsOfService(html: String) {
         val intent = InternalWebViewActivity.createIntent(
-            context, "http://www.canvaslms.com/policies/terms-of-use", html, context.getString(
+            context, "https://www.canvaslms.com/policies/terms-of-use", html, context.getString(
                 R.string.termsOfUse
             ), false
         )

@@ -63,14 +63,14 @@ abstract class GradesInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        gradesPage.assertGradeText(
+        gradesPage.assertTotalGradeText(
             formatGrade(
                 enrollment.currentScore.orDefault(),
                 enrollment.currentGrade.orEmpty()
             )
         )
         gradesPage.clickBasedOnGradedAssignments()
-        gradesPage.assertGradeText("N/A")
+        gradesPage.assertTotalGradeText("N/A")
     }
 
     @Test

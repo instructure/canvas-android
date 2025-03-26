@@ -48,10 +48,10 @@ class StudentContextPage : PersonContextPage() {
      *
      * @param student The student for which the information should be displayed.
      */
-    fun assertDisplaysStudentInfo(student: CanvasUserApiModel) {
-        waitForView(withParent(R.id.toolbar) + withText(student.shortName)).assertDisplayed()
-        studentName.assertHasText(student.shortName)
-        studentEmail.assertHasText(student.loginId)
+    fun assertDisplaysStudentInfo(shortName: String, loginId: String) {
+        waitForView(withParent(R.id.toolbar) + withText(shortName)).assertDisplayed()
+        studentName.assertHasText(shortName)
+        studentEmail.assertHasText(loginId)
         onView(withId(R.id.gradeItems)).scrollTo().assertDisplayed()
     }
 

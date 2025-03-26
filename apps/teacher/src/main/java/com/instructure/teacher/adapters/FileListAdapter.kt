@@ -18,24 +18,26 @@ package com.instructure.teacher.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 import com.instructure.teacher.databinding.AdapterFileFolderBinding
 import com.instructure.teacher.holders.FileFolderViewHolder
 import com.instructure.teacher.presenters.FileListPresenter
 import com.instructure.teacher.viewinterface.FileListView
-import com.instructure.pandautils.blueprint.SyncRecyclerAdapter
 
 class FileListAdapter(
     private val mContext: Context,
     private val iconColor: Int,
     presenter: FileListPresenter,
-    private val mCallback: (FileFolder) -> Unit
+    private val callback: (FileFolder) -> Unit,
+    private val menuCallback: (FileFolder, View) -> Unit
 ) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileListView>(mContext, presenter) {
 
     override fun bindHolder(model: FileFolder, holder: FileFolderViewHolder, position: Int) {
-        holder.bind(model, iconColor, mContext, mCallback)
+        holder.bind(model, iconColor, mContext, callback, menuCallback)
     }
 
     override fun createViewHolder(binding: ViewBinding, viewType: Int) = FileFolderViewHolder(binding as AdapterFileFolderBinding)

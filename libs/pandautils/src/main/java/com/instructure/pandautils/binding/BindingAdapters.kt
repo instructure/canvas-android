@@ -45,6 +45,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.DonutChartView
@@ -58,6 +59,7 @@ import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.accessibleTouchTarget
+import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collapse
 import com.instructure.pandautils.utils.expand
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -215,6 +217,11 @@ fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backg
     border.setStroke(borderWidth?.toPx ?: 2.toPx, strokeColor)
     border.cornerRadius = borderCornerRadius?.toPx?.toFloat() ?: 4.toPx.toFloat()
     view.background = border
+}
+
+@BindingAdapter("themeSwitch")
+fun themeSwitch(materialSwitch: MaterialSwitch, color: Int) {
+    materialSwitch.applyTheme(color)
 }
 
 @BindingAdapter("layout_constraintWidth_percent")

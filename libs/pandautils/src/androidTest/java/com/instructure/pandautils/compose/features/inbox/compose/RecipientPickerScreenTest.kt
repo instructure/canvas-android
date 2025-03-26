@@ -55,7 +55,7 @@ class RecipientPickerScreenTest {
 
     @Test
     fun testRecipientsRecipientScreenTopBar() {
-        setTestScreen(getUiState(screenOption = RecipientPickerScreenOption.Recipients, selectedRole = EnrollmentType.STUDENTENROLLMENT))
+        setTestScreen(getUiState(screenOption = RecipientPickerScreenOption.Recipients, selectedRole = EnrollmentType.StudentEnrollment))
 
         val toolbar = composeTestRule.onNodeWithTag("toolbar")
         toolbar.assertExists()
@@ -103,7 +103,7 @@ class RecipientPickerScreenTest {
     fun testRecipientsRecipientScreen() {
         setTestScreen(getUiState(
             screenOption = RecipientPickerScreenOption.Recipients,
-            selectedRole = EnrollmentType.STUDENTENROLLMENT
+            selectedRole = EnrollmentType.StudentEnrollment
         ))
 
         composeTestRule.onNode(hasText("Student 1"))
@@ -139,7 +139,7 @@ class RecipientPickerScreenTest {
         setTestScreen(getUiState(
             screenState = ScreenState.Data,
             screenOption = RecipientPickerScreenOption.Recipients,
-            selectedRole = EnrollmentType.STUDENTENROLLMENT,
+            selectedRole = EnrollmentType.StudentEnrollment,
             canSendToAll = true
         ))
 
@@ -185,7 +185,7 @@ class RecipientPickerScreenTest {
         setTestScreen(getUiState(
             screenState = ScreenState.Data,
             screenOption = RecipientPickerScreenOption.Recipients,
-            selectedRole = EnrollmentType.STUDENTENROLLMENT,
+            selectedRole = EnrollmentType.StudentEnrollment,
             searchValue = TextFieldValue("Teacher")
         ))
 
@@ -213,7 +213,7 @@ class RecipientPickerScreenTest {
             getUiState(
                 screenState = ScreenState.Data,
                 screenOption = RecipientPickerScreenOption.Recipients,
-                selectedRole = EnrollmentType.STUDENTENROLLMENT,
+                selectedRole = EnrollmentType.StudentEnrollment,
                 selectedRecipients = listOf(Recipient(stringId = "1", name = "Student 1"))
             )
         )
@@ -255,9 +255,9 @@ class RecipientPickerScreenTest {
     ): RecipientPickerUiState {
         val recipientsByRoles: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
         recipientsByRoles.putAll(mapOf(
-            EnrollmentType.STUDENTENROLLMENT to listOf(Recipient(stringId = "1", name = "Student 1"), Recipient(stringId = "2", name = "Student 2")),
-            EnrollmentType.TEACHERENROLLMENT to listOf(Recipient(stringId = "3", name = "Teacher 1"), Recipient(stringId = "4", name = "Teacher 2")),
-            EnrollmentType.TAENROLLMENT to listOf(Recipient(stringId = "5", name = "Ta 1")),
+            EnrollmentType.StudentEnrollment to listOf(Recipient(stringId = "1", name = "Student 1"), Recipient(stringId = "2", name = "Student 2")),
+            EnrollmentType.TeacherEnrollment to listOf(Recipient(stringId = "3", name = "Teacher 1"), Recipient(stringId = "4", name = "Teacher 2")),
+            EnrollmentType.TaEnrollment to listOf(Recipient(stringId = "5", name = "Ta 1")),
         ))
         val allRecipientsToShow = if (canSendToAll) {
             if (selectedRole != null) {

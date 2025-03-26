@@ -72,7 +72,9 @@
 
     <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
     <color name="switchThumbColor">#FFFFFF</color>
-    <color name="switchTrackColor">#9EA6AD</color>
+    <color name="switchThumbColorChecked">#FFFFFF</color>
+    <color name="switchTrackColor">#6A7883</color>
+    <color name="switchIconColor">#273540</color>
 
     <!-- Special one off colors that should be different in light and dark modes but are not in the color palette  -->
     <color name="studentDocumentSharingColor">#ee0612</color>

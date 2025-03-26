@@ -21,6 +21,7 @@ import android.os.Handler
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
@@ -61,17 +62,20 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.databinding.FragmentFileListBinding
+import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
 import com.instructure.teacher.dialog.CreateFolderDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.factory.FileListPresenterFactory
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.holders.FileFolderViewHolder
+import com.instructure.teacher.interfaces.ConfirmDeleteFileCallback
 import com.instructure.teacher.presenters.FileListPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.viewMedia
+import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.FileListView
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
@@ -88,7 +92,7 @@ class FileListFragment : BaseSyncFragment<
         FileListPresenter,
         FileListView,
         FileFolderViewHolder,
-        FileListAdapter>(), FileListView, FileUploadDialogParent {
+        FileListAdapter>(), FileListView, FileUploadDialogParent, ConfirmDeleteFileCallback {
 
     @Inject
     lateinit var pageViewUtils: PageViewUtils
@@ -221,7 +225,7 @@ class FileListFragment : BaseSyncFragment<
     }
 
     override fun createAdapter(): FileListAdapter {
-        return FileListAdapter(requireContext(), canvasContext.color, presenter) {
+        return FileListAdapter(requireContext(), canvasContext.color, presenter, callback = {
             if (it.displayName.isValid()) {
                 // This is a file
                 val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.color, presenter.mCanvasContext, R.drawable.ic_document)
@@ -239,8 +243,36 @@ class FileListFragment : BaseSyncFragment<
                 val args = makeBundle(presenter.mCanvasContext, it)
                 RouteMatcher.route(requireActivity(), Route(FileListFragment::class.java, presenter.mCanvasContext, args))
             }
-        }
+        }, menuCallback = ::showOptionMenu)
     }
+
+    private fun showOptionMenu(item: FileFolder, anchorView: View) {
+        val popup = PopupMenu(requireContext(), anchorView)
+        popup.inflate(R.menu.menu_file_list_item)
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.edit -> {
+                    val bundle = EditFileFolderFragment.makeBundle(item, presenter.usageRights, presenter.licenses, presenter.mCanvasContext.id)
+                    RouteMatcher.route(requireActivity(), Route(EditFileFolderFragment::class.java, canvasContext, bundle))
+                }
+                R.id.delete -> withRequireNetwork { ConfirmDeleteFileFolderDialog.show(childFragmentManager, item) }
+            }
+            true
+        }
+
+        popup.show()
+    }
+
+    override val onConfirmDeleteFile: (fileFolder: FileFolder) -> Unit
+        get() = { fileFolder -> presenter.deleteFileFolder(fileFolder) }
+
+    override fun fileFolderDeleted(fileFolder: FileFolder) {
+        presenter.data.remove(fileFolder)
+        checkIfEmpty()
+    }
+
+    override fun fileFolderDeleteError(message: Int) = toast(message)
 
     private fun recordFilePreviewEvent(file: FileFolder) {
         pageViewUtils.saveSingleEvent("FilePreview", "${makePageViewUrl()}?preview=${file.id}")

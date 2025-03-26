@@ -31,6 +31,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
 import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -162,5 +163,11 @@ fun BroadcastReceiver.goAsync(
         } finally {
             pendingResult.finish()
         }
+    }
+}
+
+fun String.SHA256(): String {
+    return MessageDigest.getInstance("SHA-256").digest(toByteArray()).joinToString("") {
+        "%02x".format(it)
     }
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -75,7 +76,8 @@ fun GradePreferencesScreen(
                 navIconRes = R.drawable.ic_close,
                 navIconContentDescription = stringResource(id = R.string.close),
                 backgroundColor = Color(color = uiState.canvasContextColor),
-                contentColor = colorResource(id = R.color.textLightest)
+                contentColor = colorResource(id = R.color.textLightest),
+                modifier = Modifier.testTag("GradePreferencesToolbar")
             ) {
                 val saveEnabled = selectedPeriod != uiState.selectedGradingPeriod || selectedSortBy != uiState.sortBy
                 TextButton(

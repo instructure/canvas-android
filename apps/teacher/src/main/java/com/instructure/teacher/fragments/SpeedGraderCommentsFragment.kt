@@ -15,12 +15,10 @@
  */
 package com.instructure.teacher.fragments
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
@@ -29,7 +27,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_COMMENTS
@@ -39,10 +44,25 @@ import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
-import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
-import com.instructure.pandautils.services.NotoriousUploadService
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.services.NotoriousUploadWorker
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.SpeedGraderCommentsAdapter
@@ -71,7 +91,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_COMMENTS)
@@ -357,22 +377,16 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
      * @param mediaFile File pointing to the media to upload
      */
     private fun uploadSGMediaComment(mediaFile: File, assignmentId: Long, courseID: Long, dbId: Long, attemptId: Long?) {
-        val mediaUri = Uri.fromFile(mediaFile)
-
-        val serviceIntent = Intent(requireActivity(), NotoriousUploadService::class.java)
-        with(serviceIntent) {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            putExtra(Const.MEDIA_FILE_PATH, mediaUri.path)
-            putExtra(Const.ACTION, NotoriousUploadService.ACTION.SUBMISSION_COMMENT)
-            putExtra(Const.ASSIGNMENT, Assignment(id = assignmentId, courseId = courseID))
-            putExtra(Const.STUDENT_ID, mAssignee.id)
-            putExtra(Const.IS_GROUP, mAssignee is GroupAssignee)
-            putExtra(Const.PAGE_ID, presenter.mPageId)
-            putExtra(Const.ID, dbId)
-            putExtra(Const.SUBMISSION_ATTEMPT, attemptId.takeIf { assignmentEnhancementsEnabled })
-        }
-
-        ContextCompat.startForegroundService(requireActivity(), serviceIntent)
+        NotoriousUploadWorker.enqueueUpload(
+            context = requireActivity(),
+            mediaFilePath = Uri.fromFile(mediaFile).path,
+            assignment = Assignment(id = assignmentId, courseId = courseID),
+            studentId = mAssignee.id,
+            isGroupComment = mAssignee is GroupAssignee,
+            pageId = presenter.mPageId,
+            attemptId = attemptId.takeIf { assignmentEnhancementsEnabled },
+            mediaCommentId = dbId
+        )
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

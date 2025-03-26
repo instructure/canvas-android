@@ -141,11 +141,11 @@ val GroupAssignee.iconRes: Int get() = R.drawable.ic_group
 val EnrollmentType?.displayText: CharSequence
     get() = ContextKeeper.appContext.getText(
         when (this) {
-            EnrollmentType.STUDENTENROLLMENT -> R.string.enrollmentTypeStudent
-            EnrollmentType.TEACHERENROLLMENT -> R.string.enrollmentTypeTeacher
-            EnrollmentType.OBSERVERENROLLMENT -> R.string.enrollmentTypeObserver
-            EnrollmentType.TAENROLLMENT -> R.string.enrollmentTypeTeachingAssistant
-            EnrollmentType.DESIGNERENROLLMENT -> R.string.enrollmentTypeDesigner
+            EnrollmentType.StudentEnrollment -> R.string.enrollmentTypeStudent
+            EnrollmentType.TeacherEnrollment -> R.string.enrollmentTypeTeacher
+            EnrollmentType.ObserverEnrollment -> R.string.enrollmentTypeObserver
+            EnrollmentType.TaEnrollment -> R.string.enrollmentTypeTeachingAssistant
+            EnrollmentType.DesignerEnrollment -> R.string.enrollmentTypeDesigner
             else -> R.string.enrollmentTypeUnknown
         }
     )

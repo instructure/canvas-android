@@ -156,7 +156,7 @@ class SpeedGraderPage : BasePage() {
                 Matchers.allOf(
                     ViewMatchers.withContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description),
                     ViewMatchers.isCompletelyDisplayed(),
-                    ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.speedGraderToolbar))
+                    ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.gradingToolbar))
                 )
             ).click()
         } catch (e: NoMatchingViewException) {}
@@ -232,5 +232,40 @@ class SpeedGraderPage : BasePage() {
     fun assertSpeedGraderToolbarTitle(title: String, subTitle: String? = null) {
         onView(withId(R.id.titleTextView) + withText(title) + withAncestor(R.id.speedGraderToolbar)).assertDisplayed()
         if(subTitle != null) onView(withId(R.id.subtitleTextView) + withText(subTitle) + withAncestor(R.id.speedGraderToolbar) + hasSibling(withId(R.id.titleTextView) + withText(title))).assertDisplayed()
+    }
+
+    /**
+     *
+     * Asserts that the file with the given filename is displayed.
+     * @param fileName The name of the file.
+     */
+    fun assertFileDisplayed(fileName: String) {
+        val matcher =
+            Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
+        Espresso.onView(matcher).assertDisplayed()
+    }
+    /**
+
+    Asserts that the comment attachment with the given filename and display name is displayed.
+    @param fileName The name of the attachment file.
+    @param displayName The display name of the attachment.
+     */
+    fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
+        val commentMatcher = Matchers.allOf(
+            ViewMatchers.withId(R.id.commentHolder),
+            ViewMatchers.hasDescendant(
+                Matchers.allOf(
+                    ViewMatchers.withText(displayName),
+                    ViewMatchers.withId(R.id.userNameTextView)
+                )
+            ),
+            ViewMatchers.hasDescendant(
+                Matchers.allOf(
+                    ViewMatchers.withText(fileName),
+                    ViewMatchers.withId(R.id.attachmentNameTextView)
+                )
+            )
+        )
+        onView(commentMatcher).assertDisplayed()
     }
 }

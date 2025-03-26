@@ -42,6 +42,11 @@ class SplashRepository(
         return userApi.getSelf(params).dataOrNull
     }
 
+    suspend fun getSelfWithUuid(): User? {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return userApi.getSelfWithUUID(params).dataOrNull
+    }
+
     suspend fun getColors(): CanvasColor? {
         val params = RestParams(isForceReadFromNetwork = true)
         return userApi.getColors(params).dataOrNull

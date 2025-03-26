@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
@@ -34,6 +35,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ParcelableArg
@@ -58,7 +60,6 @@ import com.instructure.teacher.events.PageUpdatedEvent
 import com.instructure.teacher.factory.PageDetailsPresenterFactory
 import com.instructure.teacher.presenters.PageDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.services.FileDownloadService
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
@@ -242,7 +243,7 @@ class PageDetailsFragment : BasePresenterFragment<
      */
     private fun downloadFile() {
         if (downloadFileName != null && downloadUrl != null) {
-            FileDownloadService.scheduleDownloadJob(requireContext(), downloadUrl!!, downloadFileName!!)
+            WorkManager.getInstance(requireContext()).enqueue(FileDownloadWorker.createOneTimeWorkRequest(downloadFileName, downloadUrl!!))
         }
     }
 

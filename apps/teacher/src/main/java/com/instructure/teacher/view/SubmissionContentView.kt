@@ -21,6 +21,7 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -62,6 +63,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
@@ -73,7 +75,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.binding.BindableSpinnerAdapter
-import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.interfaces.ShareableFile
@@ -91,9 +92,9 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.viewExternally
+import com.instructure.pandautils.views.ExpandCollapseAnimation
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.pandautils.views.RecordingMediaType
-import com.instructure.pandautils.views.ExpandCollapseAnimation
 import com.instructure.pandautils.views.ViewPagerNonSwipeable
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
@@ -102,7 +103,6 @@ import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.databinding.ViewSubmissionContentBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.RationedBusEvent
-import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.fragments.SimpleWebViewFragment
 import com.instructure.teacher.fragments.SpeedGraderCommentsFragment
 import com.instructure.teacher.fragments.SpeedGraderEmptyFragment
@@ -115,7 +115,6 @@ import com.instructure.teacher.fragments.SpeedGraderUrlSubmissionFragment
 import com.instructure.teacher.fragments.ViewImageFragment
 import com.instructure.teacher.fragments.ViewMediaFragment
 import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
-import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.Const
 import com.instructure.teacher.utils.getColorCompat
@@ -124,7 +123,6 @@ import com.instructure.teacher.utils.getState
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.utils.setAnonymousAvatar
-import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.pspdfkit.ui.PdfFragment
@@ -144,12 +142,12 @@ import java.util.Locale
 
 @SuppressLint("ViewConstructor")
 class SubmissionContentView(
-        context: Context,
-        private val mStudentSubmission: GradeableStudentSubmission,
-        private val mAssignment: Assignment,
-        private val mCourse: Course,
-        var initialTabIndex: Int = 0
-) : PdfSubmissionView(context, courseId = mCourse.id), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+    context: Context,
+    private val studentSubmission: GradeableStudentSubmission,
+    private val assignment: Assignment,
+    private val course: Course,
+    var initialTabIndex: Int = 0
+) : PdfSubmissionView(context, courseId = course.id), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewSubmissionContentBinding
 
@@ -166,21 +164,21 @@ class SubmissionContentView(
     override val progressColor: Int
         get() = R.color.login_teacherAppTheme
 
-    private var mContainerId: Int = 0
-    private val mAssignee: Assignee get() = mStudentSubmission.assignee
-    private val mRootSubmission: Submission? get() = mStudentSubmission.submission
-    private val mBottomViewPager: ViewPagerNonSwipeable
+    private var containerId: Int = 0
+    private val assignee: Assignee get() = studentSubmission.assignee
+    private val rootSubmission: Submission? get() = studentSubmission.submission
+    private val bottomViewPager: ViewPagerNonSwipeable
 
     private var initJob: Job? = null
     private var deleteJob: Job? = null
     private var studentAnnotationJob: Job? = null
 
-    private var mIsCleanedUp = false
+    private var isCleanedUp = false
     private val activity: SpeedGraderActivity get() = context as SpeedGraderActivity
-    private val mGradeFragment by lazy { SpeedGraderGradeFragment.newInstance(mRootSubmission, mAssignment, mCourse, mAssignee) }
+    private val gradeFragment by lazy { SpeedGraderGradeFragment.newInstance(rootSubmission, assignment, course, assignee) }
 
     val hasUnsavedChanges: Boolean
-        get() = mGradeFragment.hasUnsavedChanges
+        get() = gradeFragment.hasUnsavedChanges
 
     private var selectedSubmission: Submission? = null
     private var assignmentEnhancementsEnabled = false
@@ -206,7 +204,7 @@ class SubmissionContentView(
     }
 
     override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
-        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, apiValues, mAssignee.id)
+        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, apiValues, assignee.id)
         //if isTablet, we need to prevent the sliding panel from moving opening all the way with the keyboard
         if(context.isTablet) {
             setIsCurrentlyAnnotating(true)
@@ -216,16 +214,17 @@ class SubmissionContentView(
 
     @SuppressLint("CommitTransaction")
     override fun setFragment(fragment: Fragment) {
-        if (!mIsCleanedUp && isAttachedToWindow) supportFragmentManager.beginTransaction().replace(mContainerId, fragment).commitNowAllowingStateLoss()
+        if (!isCleanedUp && isAttachedToWindow) supportFragmentManager.beginTransaction().replace(containerId, fragment).commitNowAllowingStateLoss()
 
         //if we can share the content with another app, show the share icon
-        binding.speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
-
-        ViewStyler.themeToolbarLight(context as Activity, binding.speedGraderToolbar)
+        binding.speedGraderToolbar.menu.findItem(R.id.menu_share).apply {
+            isVisible = fragment is ShareableFile || fragment is PdfFragment
+            iconTintList = ContextCompat.getColorStateList(context, R.color.textDarkest)
+        }
     }
 
     override fun removeContentFragment() {
-        val contentFragment = supportFragmentManager.findFragmentById(mContainerId)
+        val contentFragment = supportFragmentManager.findFragmentById(containerId)
         if (contentFragment != null) {
             supportFragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
         }
@@ -238,14 +237,14 @@ class SubmissionContentView(
         setLoading(true)
 
         //if we have anonymous peer reviews we don't want the teacher to be able to annotate
-        if (mAssignment.isPeerReviews && mAssignment.anonymousPeerReviews) {
+        if (assignment.isPeerReviews && assignment.anonymousPeerReviews) {
             annotationToolbarLayout.setGone()
             inspectorCoordinatorLayout.setGone()
         }
 
-        mContainerId = View.generateViewId()
-        binding.content.id = mContainerId
-        mBottomViewPager = binding.bottomViewPager.apply { id = View.generateViewId() }
+        containerId = View.generateViewId()
+        binding.content.id = containerId
+        bottomViewPager = binding.bottomViewPager.apply { id = View.generateViewId() }
 
         initializeSubmissionView()
 
@@ -292,7 +291,7 @@ class SubmissionContentView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        setupToolbar(mAssignee)
+        setupToolbar(assignee)
         obtainSubmissionData()
     }
 
@@ -308,29 +307,29 @@ class SubmissionContentView(
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun obtainSubmissionData() {
         initJob = tryWeave {
-            if (!mStudentSubmission.isCached) {
+            if (!studentSubmission.isCached) {
                 // Determine if the logged in user is an Observer
                 val enrollments = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }
                 val isObserver = enrollments.any { it.isObserver }
                 if (isObserver) {
                     // Get the first observee associated with this course
-                    val observee = enrollments.first { it.courseId == mCourse.id }
-                    mStudentSubmission.submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(mCourse.id, mAssignment.id, mStudentSubmission.assigneeId, it, true) }
+                    val observee = enrollments.first { it.courseId == course.id }
+                    studentSubmission.submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(course.id, assignment.id, studentSubmission.assigneeId, it, true) }
                 } else {
                     // Get the user's submission normally
-                    mStudentSubmission.submission = awaitApi<Submission> {
+                    studentSubmission.submission = awaitApi<Submission> {
                         SubmissionManager.getSingleSubmission(
-                            mCourse.id,
-                            mAssignment.id,
-                            mStudentSubmission.assigneeId,
+                            course.id,
+                            assignment.id,
+                            studentSubmission.assigneeId,
                             it,
                             true
                         )
                     }
                 }
-                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(mCourse.id, true).await().dataOrNull
+                val featureFlags = FeaturesManager.getEnabledFeaturesForCourseAsync(course.id, true).await().dataOrNull
                 assignmentEnhancementsEnabled = featureFlags?.contains("assignments_2_student").orDefault()
-                mStudentSubmission.isCached = true
+                studentSubmission.isCached = true
             }
             setup()
         } catch {
@@ -346,22 +345,30 @@ class SubmissionContentView(
     }
 
     fun setup() {
-        if (SubmissionType.ONLINE_QUIZ in mAssignment.getSubmissionTypes()) mRootSubmission?.transformForQuizGrading()
-        setupToolbar(mAssignee)
-        setupSubmissionVersions(mRootSubmission?.submissionHistory?.filterNotNull()?.filter { it.attempt > 0 })
-        setSubmission(mRootSubmission)
-        setupBottomSheetViewPager(mCourse)
+        if (SubmissionType.ONLINE_QUIZ in assignment.getSubmissionTypes()) rootSubmission?.transformForQuizGrading()
+        setupToolbar(assignee)
+        setupDueDate(assignment)
+        setupSubmissionVersions(rootSubmission?.submissionHistory?.filterNotNull()?.filter { it.attempt > 0 })
+        setSubmission(rootSubmission)
+        setupBottomSheetViewPager(course)
         setupSlidingPanel()
         //we must set up the sliding panel prior to registering to the event
         EventBus.getDefault().register(this)
         setLoading(false)
     }
 
+    private fun setupDueDate(assignment: Assignment) = with(binding) {
+        if (assignment.dueDate != null) {
+            dueDateTextView?.setVisible(true)
+            dueDateTextView?.text = DateHelper.getDateAtTimeString(context, R.string.due_dateTime, assignment.dueDate)
+        }
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         initJob?.cancel()
         studentAnnotationJob?.cancel()
-        mBottomViewPager.adapter = null
+        bottomViewPager.adapter = null
         EventBus.getDefault().unregister(this)
     }
 
@@ -390,8 +397,8 @@ class SubmissionContentView(
                 val adjustedHeight = Math.abs(maxHeight * slideOffset).toInt()
 
                 if (slideOffset >= 0.50F) { //Prevents resizing views when not necessary
-                    mBottomViewPager.layoutParams?.height = adjustedHeight
-                    mBottomViewPager.requestLayout()
+                    this@SubmissionContentView.bottomViewPager.layoutParams?.height = adjustedHeight
+                    this@SubmissionContentView.bottomViewPager.requestLayout()
                 } else if (slideOffset <= 0.50F) {
                     contentWrapper?.layoutParams?.height = Math.abs(maxHeight - adjustedHeight)
                     contentWrapper?.requestLayout()
@@ -402,7 +409,7 @@ class SubmissionContentView(
 
     @SuppressLint("CommitTransaction")
     fun performCleanup() {
-        mIsCleanedUp = true
+        isCleanedUp = true
         getCurrentFragment()?.let { supportFragmentManager.beginTransaction().remove(it).commit() }
     }
     //endregion
@@ -411,17 +418,17 @@ class SubmissionContentView(
     private fun setSubmission(submission: Submission?) {
         selectedSubmission = submission
         val content = when {
-            SubmissionType.NONE.apiString in mAssignment.submissionTypesRaw -> NoneContent
-            SubmissionType.ON_PAPER.apiString in mAssignment.submissionTypesRaw -> OnPaperContent
+            SubmissionType.NONE.apiString in assignment.submissionTypesRaw -> NoneContent
+            SubmissionType.ON_PAPER.apiString in assignment.submissionTypesRaw -> OnPaperContent
             submission?.submissionType == null -> NoSubmissionContent
-            mAssignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_MISSING ||
-                    mAssignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING -> NoSubmissionContent
+            assignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_MISSING ||
+                    assignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING -> NoSubmissionContent
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType!!)) {
 
             // LTI submission
                 SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
-                        submission.previewUrl.validOrNull() ?: mAssignment.url.validOrNull()
-                        ?: mAssignment.htmlUrl ?: ""
+                        submission.previewUrl.validOrNull() ?: assignment.url.validOrNull()
+                        ?: assignment.htmlUrl ?: ""
                 )
 
             // Text submission
@@ -456,18 +463,18 @@ class SubmissionContentView(
                 else -> UnsupportedContent
             }
         }
-        (mBottomViewPager.adapter as? BottomSheetPagerAdapter)?.refreshFilesTabCount(submission?.attachments?.size
+        (bottomViewPager.adapter as? BottomSheetPagerAdapter)?.refreshFilesTabCount(submission?.attachments?.size
             ?: 0)
         setGradeableContent(content)
     }
 
     private fun handleQuizSubmissionType(submission: Submission): GradeableContent {
-        return if (mAssignment.anonymousGrading) {
+        return if (assignment.anonymousGrading) {
             AnonymousSubmissionContent
         } else {
             QuizContent(
-                mCourse.id,
-                mAssignment.id,
+                course.id,
+                assignment.id,
                 submission.userId,
                 submission.previewUrl ?: "",
                 QuizSubmission.parseWorkflowState(submission.workflowState!!) == QuizSubmission.WorkflowState.PENDING_REVIEW
@@ -550,33 +557,16 @@ class SubmissionContentView(
     ).format(date)
 
     private fun setupToolbar(assignee: Assignee) = with(binding) {
-        speedGraderToolbar.setupBackButton {
-            // Use back button for WebView if applicable
-            (getCurrentFragment() as? SpeedGraderWebNavigator)?.let {
-                if (it.canGoBack()) {
-                    it.goBack()
-                    return@setupBackButton
-                }
-            }
-
-            // Notify of unsaved changes
-            if (hasUnsavedChanges) {
-                UnsavedChangesExitDialog.show(supportFragmentManager) { (context as? Activity)?.finish() }
-            } else {
-                (context as? Activity)?.finish()
-            }
-        }
-
-        val assigneeName = if (mAssignment.anonymousGrading) {
+        val assigneeName = if (assignment.anonymousGrading) {
             resources.getString(R.string.anonymousStudentLabel)
         } else {
             Pronouns.span(assignee.name, assignee.pronouns)
         }
         titleTextView.text = assigneeName
 
-        if (mStudentSubmission.isCached) {
+        if (studentSubmission.isCached) {
             // get string/color resources for assignment status
-            val (stringRes, colorRes) = mAssignment.getResForSubmission(mRootSubmission)
+            val (stringRes, colorRes) = assignment.getResForSubmission(rootSubmission)
             if (stringRes == -1 || colorRes == -1) {
                 contentDescription = titleTextView.text
                 subtitleTextView.setGone()
@@ -588,23 +578,23 @@ class SubmissionContentView(
         }
 
         speedGraderToolbar.setupMenu(R.menu.menu_share_file, menuItemCallback)
-        ViewStyler.themeToolbarLight(context as Activity, speedGraderToolbar)
+        speedGraderToolbar.foregroundGravity = Gravity.CENTER_VERTICAL
         ViewStyler.setToolbarElevationSmall(context, speedGraderToolbar)
 
         when {
-            mAssignment.anonymousGrading -> userImageView.setAnonymousAvatar()
+            assignment.anonymousGrading -> userImageView.setAnonymousAvatar()
             assignee is GroupAssignee -> userImageView.setImageResource(assignee.iconRes)
             assignee is StudentAssignee -> {
                 ProfileUtils.loadAvatarForUser(userImageView, assignee.student.name, assignee.student.avatarUrl)
                 userImageView.setupAvatarA11y(assignee.name)
                 userImageView.onClick {
-                    val bundle = StudentContextFragment.makeBundle(assignee.id, mCourse.id)
+                    val bundle = StudentContextFragment.makeBundle(assignee.id, course.id)
                     RouteMatcher.route(activity as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
                 }
             }
         }
 
-        if (assignee is GroupAssignee && !mAssignment.anonymousGrading) setupGroupMemberList(assignee)
+        if (assignee is GroupAssignee && !assignment.anonymousGrading) setupGroupMemberList(assignee)
     }
 
     private val menuItemCallback: (MenuItem) -> Unit = { item ->
@@ -616,9 +606,6 @@ class SubmissionContentView(
                 if (pdfFragment != null) {
                     pdfFragment?.document?.documentSource?.fileUri?.viewExternally(context, "application/pdf")
                 }
-            }
-            R.id.menuPostPolicies -> {
-                RouteMatcher.route(activity as FragmentActivity, PostPolicyFragment.makeRoute(mCourse, mAssignment))
             }
         }
     }
@@ -642,7 +629,7 @@ class SubmissionContentView(
             popup.verticalOffset = -assigneeWrapperView.height
             popup.isModal = true // For a11y
             popup.setOnItemClickListener { _, _, position, _ ->
-                val bundle = StudentContextFragment.makeBundle(assignee.students[position].id, mCourse.id)
+                val bundle = StudentContextFragment.makeBundle(assignee.students[position].id, course.id)
                 RouteMatcher.route(activity as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
                 popup.dismiss()
             }
@@ -672,7 +659,7 @@ class SubmissionContentView(
                     showMessageFragment(R.string.pdfError)
                 }
             }
-            is NoSubmissionContent -> when (mAssignee) {
+            is NoSubmissionContent -> when (assignee) {
                 is StudentAssignee -> showMessageFragment(R.string.noSubmission, R.string.noSubmissionTeacher)
                 is GroupAssignee -> showMessageFragment(R.string.speedgrader_group_no_submissions)
             }
@@ -726,11 +713,11 @@ class SubmissionContentView(
     }
 
     private fun getCurrentFragment(): Fragment? {
-        return supportFragmentManager.findFragmentById(mContainerId)
+        return supportFragmentManager.findFragmentById(containerId)
     }
 
     override fun attachDocListener() {
-        if (!(mAssignment.anonymousPeerReviews && mAssignment.isPeerReviews)) {
+        if (!(assignment.anonymousPeerReviews && assignment.isPeerReviews)) {
             // We don't need to do annotations if there are anonymous peer reviews
             if(docSession.annotationMetadata?.canWrite() == true) {
                 if ((context as Activity).isTablet)
@@ -795,29 +782,29 @@ class SubmissionContentView(
         val adjustedHeight = Math.abs(maxHeight * offset)
 
         if (offset >= 0.50F) { //Prevents resizing views when not necessary
-            mBottomViewPager.layoutParams?.height = adjustedHeight.toInt()
-            mBottomViewPager.requestLayout()
+            bottomViewPager.layoutParams?.height = adjustedHeight.toInt()
+            bottomViewPager.requestLayout()
         }
     }
 
     private fun setupBottomSheetViewPager(course: Course) = with(binding) {
-        mBottomViewPager.offscreenPageLimit = 2
-        mBottomViewPager.adapter = BottomSheetPagerAdapter.Holder(supportFragmentManager)
-                .add(mGradeFragment)
+        this@SubmissionContentView.bottomViewPager.offscreenPageLimit = 2
+        this@SubmissionContentView.bottomViewPager.adapter = BottomSheetPagerAdapter.Holder(supportFragmentManager)
+                .add(gradeFragment)
                 .add(SpeedGraderCommentsFragment.newInstance(
-                        mRootSubmission,
-                        mAssignee,
-                        mCourse.id,
-                        mAssignment.id,
-                        mAssignment.groupCategoryId > 0 && mAssignee is GroupAssignee,
-                        mAssignment.anonymousGrading,
+                        rootSubmission,
+                        assignee,
+                        this@SubmissionContentView.course.id,
+                        assignment.id,
+                        assignment.groupCategoryId > 0 && assignee is GroupAssignee,
+                        assignment.anonymousGrading,
                         assignmentEnhancementsEnabled
                 ))
-                .add(SpeedGraderFilesFragment.newInstance(mRootSubmission))
-                .setFileCount(mRootSubmission?.attachments?.size ?: 0)
+                .add(SpeedGraderFilesFragment.newInstance(rootSubmission))
+                .setFileCount(rootSubmission?.attachments?.size ?: 0)
                 .set()
 
-        mBottomViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        this@SubmissionContentView.bottomViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {}
@@ -829,7 +816,7 @@ class SubmissionContentView(
             }
         })
 
-        bottomTabLayout.setupWithViewPager(mBottomViewPager)
+        bottomTabLayout.setupWithViewPager(this@SubmissionContentView.bottomViewPager)
         bottomTabLayout.setSelectedTabIndicatorColor(course.color)
         bottomTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.textDarkest), course.color)
         bottomTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -857,7 +844,7 @@ class SubmissionContentView(
             tab.requestLayout()
         }
 
-        mBottomViewPager.currentItem = initialTabIndex
+        this@SubmissionContentView.bottomViewPager.currentItem = initialTabIndex
     }
 
     private fun showVideoCommentDialog() = with(binding) {
@@ -866,7 +853,7 @@ class SubmissionContentView(
         floatingRecordingView.startVideoView()
         floatingRecordingView.recordingCallback = {
             it?.let {
-                EventBus.getDefault().post(UploadMediaCommentEvent(it, mAssignment.id, mAssignment.courseId, mAssignee.id, selectedSubmission?.attempt))
+                EventBus.getDefault().post(UploadMediaCommentEvent(it, assignment.id, assignment.courseId, assignee.id, selectedSubmission?.attempt))
             }
         }
         floatingRecordingView.stoppedCallback = {
@@ -889,7 +876,7 @@ class SubmissionContentView(
         }
         floatingRecordingView.recordingCallback = {
             it?.let {
-                EventBus.getDefault().post(UploadMediaCommentEvent(it, mAssignment.id, mAssignment.courseId, mAssignee.id, selectedSubmission?.attempt))
+                EventBus.getDefault().post(UploadMediaCommentEvent(it, assignment.id, assignment.courseId, assignee.id, selectedSubmission?.attempt))
             }
         }
     }
@@ -961,12 +948,12 @@ class SubmissionContentView(
     fun onSwitchSubmission(event: SubmissionSelectedEvent) {
         //close the annotations toolbar so it can be associated with new document
         pdfFragment?.exitCurrentlyActiveMode()
-        if (event.submission?.id == mRootSubmission?.id) setSubmission(event.submission)
+        if (event.submission?.id == rootSubmission?.id) setSubmission(event.submission)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSwitchAttachment(event: SubmissionFileSelectedEvent) {
-        if (event.submissionId == mRootSubmission?.id) {
+        if (event.submissionId == rootSubmission?.id) {
             //close the annotations toolbar so it can be associated with new document
             pdfFragment?.exitCurrentlyActiveMode()
             setAttachmentContent(event.attachment)
@@ -983,14 +970,14 @@ class SubmissionContentView(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCommentTextFocused(event: CommentTextFocusedEvent) {
-        if (event.assigneeId == mAssignee.id) {
+        if (event.assigneeId == assignee.id) {
             activity.isCurrentlyAnnotating = false
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAnnotationCommentAdded(event: AnnotationCommentAdded) {
-        if (event.assigneeId == mAssignee.id) {
+        if (event.assigneeId == assignee.id) {
             //add the comment to the hashmap
             commentRepliesHashMap[event.annotation.inReplyTo]?.add(event.annotation)
         }
@@ -998,7 +985,7 @@ class SubmissionContentView(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAnnotationCommentEdited(event: AnnotationCommentEdited) {
-        if (event.assigneeId == mAssignee.id) {
+        if (event.assigneeId == assignee.id) {
             //update the annotation in the hashmap
             commentRepliesHashMap[event.annotation.inReplyTo]?.find { it.annotationId == event.annotation.annotationId }?.contents = event.annotation.contents
         }
@@ -1006,7 +993,7 @@ class SubmissionContentView(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAnnotationCommentDeleted(event: AnnotationCommentDeleted) {
-        if (event.assigneeId == mAssignee.id) {
+        if (event.assigneeId == assignee.id) {
             if (event.isHeadAnnotation) {
                 //we need to delete the entire list of comments from the hashmap
                 commentRepliesHashMap.remove(event.annotation.inReplyTo)
@@ -1021,7 +1008,7 @@ class SubmissionContentView(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAnnotationCommentDeleteAcknowledged(event: AnnotationCommentDeleteAcknowledged) {
-        if (event.assigneeId == mAssignee.id) {
+        if (event.assigneeId == assignee.id) {
             deleteJob = tryWeave {
                 for(annotation in event.annotationList) {
                     awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.annotationId, apiValues.canvaDocsDomain, it) }
@@ -1035,7 +1022,7 @@ class SubmissionContentView(
 
     @Subscribe
     fun onTabSelected(event: TabSelectedEvent) {
-        mBottomViewPager.currentItem = event.selectedTabIdx
+        bottomViewPager.currentItem = event.selectedTabIdx
     }
 
     @Suppress("unused")
@@ -1053,10 +1040,10 @@ class SubmissionContentView(
     }
 
     private fun compareAssignees(eventAssigneeId: Long): Boolean{
-        return if(mAssignee is GroupAssignee) {
-            (mAssignee as GroupAssignee).group.users.any { it.id == eventAssigneeId }
+        return if(assignee is GroupAssignee) {
+            (assignee as GroupAssignee).group.users.any { it.id == eventAssigneeId }
         } else {
-            return eventAssigneeId == mAssignee.id
+            return eventAssigneeId == assignee.id
         }
     }
     //endregion

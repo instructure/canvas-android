@@ -16,11 +16,13 @@
  */
 package com.instructure.teacher.features.files.search
 
+import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.pandautils.blueprint.SyncManager
 
 interface FileSearchView : SyncManager<FileFolder> {
 
     fun displayError()
-
+    fun fileFolderDeleted(fileFolder: FileFolder)
+    fun fileFolderDeleteError(@StringRes message: Int)
 }

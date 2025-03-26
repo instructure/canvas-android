@@ -101,15 +101,6 @@ fun CalendarScreen(
                 }
             }
         }
-        val todayTapped = calendarScreenUiState.calendarUiState.todayTapped
-        LaunchedEffect(todayTapped) {
-            if (todayTapped) {
-                focusManager.clearFocus(true)
-                delay(200)
-                todayFocusRequester.requestFocus()
-                actionHandler(CalendarAction.TodayTapHandled)
-            }
-        }
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
@@ -169,6 +160,15 @@ fun CalendarScreen(
                     Column {
                         Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth(), todayFocusRequester)
                         CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler, Modifier.testTag("calendarEvents"))
+                    }
+                    val todayTapped = calendarScreenUiState.calendarUiState.todayTapped
+                    LaunchedEffect(todayTapped) {
+                        if (todayTapped) {
+                            focusManager.clearFocus(true)
+                            delay(200)
+                            todayFocusRequester.requestFocus()
+                            actionHandler(CalendarAction.TodayTapHandled)
+                        }
                     }
                 }
             },

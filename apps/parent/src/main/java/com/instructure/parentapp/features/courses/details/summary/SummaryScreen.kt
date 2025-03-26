@@ -234,7 +234,7 @@ private fun ScheduleItemRow(
                 text = scheduleItem.title.orEmpty(),
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest),
-                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp).testTag("summaryItemName")
             )
 
             Text(

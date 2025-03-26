@@ -16,6 +16,8 @@
  */
 package com.instructure.teacher.fragments
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.flowWithLifecycle
@@ -127,8 +129,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     private fun handleSharedAction(action: DiscussionSharedAction) {
         when (action) {
             is DiscussionSharedAction.RefreshListScreen -> {
-                needToForceNetwork = true
-                presenter.refresh(true)
+                // Possible fix for MBL-18630 recyclerView inconsistency crash
+                Handler(Looper.getMainLooper()).post {
+                    needToForceNetwork = true
+                    presenter.refresh(true)
+                }
             }
         }
     }

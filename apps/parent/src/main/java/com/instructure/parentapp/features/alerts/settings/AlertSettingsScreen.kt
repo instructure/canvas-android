@@ -38,8 +38,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
@@ -80,6 +78,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
@@ -176,7 +175,9 @@ fun AlertSettingsScreen(
 
 @Composable
 fun AlertSettingsContent(uiState: AlertSettingsUiState, modifier: Modifier) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState()).testTag("alertSettingsContent")) {
+    Column(modifier = modifier
+        .verticalScroll(rememberScrollState())
+        .testTag("alertSettingsContent")) {
         StudentDetails(
             avatarUrl = uiState.avatarUrl,
             studentName = uiState.studentName,
@@ -403,7 +404,7 @@ private fun SwitchItem(
             fontSize = 16.sp,
             color = colorResource(id = R.color.textDarkest)
         )
-        Switch(
+        CanvasSwitch(
             modifier = Modifier
                 .testTag("${alertType.name}_thresholdSwitch")
                 .semantics { invisibleToUser() },
@@ -412,10 +413,7 @@ private fun SwitchItem(
                 switchState = it
                 toggleAlert(switchState)
             },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = color,
-                uncheckedTrackColor = colorResource(id = R.color.textDark)
-            )
+            color = color
         )
     }
 }

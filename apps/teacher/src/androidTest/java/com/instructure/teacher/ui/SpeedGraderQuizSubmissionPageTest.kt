@@ -15,17 +15,22 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
+import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SpeedGraderQuizSubmissionPageTest : TeacherTest() {
+class SpeedGraderQuizSubmissionPageTest : TeacherComposeTest() {
 
     @Test
     override fun displaysPageObjects() {
@@ -92,6 +97,6 @@ class SpeedGraderQuizSubmissionPageTest : TeacherTest() {
 
         quizListPage.clickQuiz(quiz)
         quizDetailsPage.openSubmissionsPage()
-        quizSubmissionListPage.clickSubmission(student)
+        assignmentSubmissionListPage.clickSubmission(student)
     }
 }

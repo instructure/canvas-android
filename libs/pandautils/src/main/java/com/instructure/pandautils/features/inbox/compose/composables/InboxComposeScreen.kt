@@ -112,7 +112,7 @@ fun InboxComposeScreen(
             topBar = {
                 CanvasAppBar(
                     title = title,
-                    navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelDismissDialog(true)) },
+                    navigationActionClick = { actionHandler(InboxComposeActionHandler.Close) },
                     actions = {
                         if (uiState.screenState == ScreenState.Loading) {
                             Loading(

@@ -13,26 +13,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package com.instructure.teacher.features.assignment.submission
+ */
+package com.instructure.teacher.features.assignment.submission
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.intersectBy
+import java.util.Locale
 
 class AssignmentSubmissionRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val sectionApi: SectionAPI.SectionsInterface
 ) {
 
     suspend fun getGradeableStudentSubmissions(
@@ -82,6 +87,9 @@ class AssignmentSubmissionRepository(
                 students.map {
                     GradeableStudentSubmission(StudentAssignee(it), submissionMap[it.id])
                 }
+            }.sortedBy {
+                (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(
+                    Locale.getDefault())
             }
 
         return allSubmissions
@@ -129,5 +137,12 @@ class AssignmentSubmissionRepository(
         }
 
         return groupSubs + individualSubs
+    }
+
+    suspend fun getSections(courseId: Long, forceNetwork: Boolean): List<Section> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        return sectionApi.getFirstPageSectionsList(courseId, params).depaginate {
+            sectionApi.getNextPageSectionsList(it, params)
+        }.dataOrNull ?: emptyList()
     }
 }

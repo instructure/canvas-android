@@ -25,6 +25,7 @@
             type="com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewModel" />
 
         <import type="android.view.View" />
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
     </data>
 
     <LinearLayout
@@ -45,7 +46,7 @@
             app:theme="@style/ToolBarStyle"
             app:title="@string/syncSettings_toolbarTitle" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/autoSyncSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +58,8 @@
             android:text="@string/syncSettings_autoContentSyncTitle"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
-            android:theme="@style/SwitchTheme" />
+            app:themeSwitch="@{ThemePrefs.INSTANCE.brandColor}"
+            app:theme="@style/Theme.Material3.DayNight" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -130,7 +132,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <androidx.appcompat.widget.SwitchCompat
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/wifiOnlySwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -143,7 +145,8 @@
                 android:text="@string/syncSettings_wifiOnlyTitle"
                 android:textColor="@color/textDarkest"
                 android:textSize="16sp"
-                android:theme="@style/SwitchTheme" />
+                app:themeSwitch="@{ThemePrefs.INSTANCE.brandColor}"
+                app:theme="@style/Theme.Material3.DayNight" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"

@@ -16,6 +16,7 @@
  */
 package com.instructure.canvasapi2
 
+import android.net.Uri
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -97,8 +98,11 @@ class RequestInterceptor : Interceptor {
             request = request.newBuilder().url(url).build()
         }
 
+
         if (domain.isNotEmpty() && params.domain != null && domain != params.domain) {
-            val url = request.url.newBuilder().host(params.domain.removePrefix("https://")).build()
+            val uri = Uri.parse(params.domain)
+            val url = request.url.newBuilder().scheme(uri.scheme ?: "https")
+                .host(uri.host ?: params.domain.removePrefix("https://")).build()
             request = request.newBuilder().url(url).build()
         }
 

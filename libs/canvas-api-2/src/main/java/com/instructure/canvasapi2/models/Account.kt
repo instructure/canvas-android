@@ -23,5 +23,6 @@ data class Account(
         override val id: Long = 0,
         var name: String = "",
         @SerializedName("effective_locale")
-        val effectiveLocale: String? = null
+        val effectiveLocale: String? = null,
+        val uuid: String? = null,
 ) : CanvasModel<Account>()

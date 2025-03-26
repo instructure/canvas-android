@@ -93,6 +93,7 @@ object RouteResolver {
         } else {
             if (route.canvasContext == null) route.canvasContext = canvasContext
             if (!route.arguments.containsKey(Const.CANVAS_CONTEXT)) route.arguments.putParcelable(Const.CANVAS_CONTEXT, route.canvasContext) // When coming from an external url
+            if (!route.arguments.containsKey(Const.URL)) route.arguments.putString(Const.URL, route.uri?.toString())
 
             // We have a route, load up the secondary class if there is one, otherwise primary
             if (route.secondaryClass != null) {

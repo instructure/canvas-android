@@ -16,27 +16,22 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.instructure.canvasapi2.QLCallback
 import com.instructure.canvasapi2.StudentContextCardQuery
-import com.instructure.canvasapi2.enqueueQuery
 
-object StudentContextManager {
+interface StudentContextManager {
 
-    fun getStudentContext(
+    val hasNextPage: Boolean
+
+    suspend fun getStudentContext(
         courseId: Long,
-        studentId: Long,
+        userId: Long,
         submissionPageSize: Int,
-        forceNetwork: Boolean,
-        callback: QLCallback<StudentContextCardQuery.Data>
-    ) {
-        val query = StudentContextCardQuery.builder()
-            .courseId(courseId.toString())
-            .studentId(studentId.toString())
-            .pageSize(submissionPageSize)
-            .nextCursor(callback.nextCursor)
-            .build()
+        forceNetwork: Boolean
+    ): StudentContextCardQuery.Data
 
-        callback.enqueueQuery(query, forceNetwork)
-    }
-
+    suspend fun getNextPage(
+        courseId: Long,
+        userId: Long,
+        forceNetwork: Boolean
+    ): StudentContextCardQuery.Data?
 }
