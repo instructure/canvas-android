@@ -2033,4 +2033,5 @@
     <string name="loginRequiredMessage">You need to login again due to your institution\'s security policy. Once logged in you can continue working seamlessly.</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="loginRefreshSameUserError">You must login with the same user.</string>
 </resources>

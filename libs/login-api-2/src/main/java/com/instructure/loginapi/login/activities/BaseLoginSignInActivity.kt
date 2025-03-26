@@ -478,7 +478,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 if (type.isCache) return
                 val token = response.body()
                 if (intent.hasExtra(TokenRefresher.TOKEN_REFRESH) && user?.id != null && token?.user?.id != null && user?.id != token.user?.id) {
-                    toast("You must login with the same user")
+                    toast(R.string.loginRefreshSameUserError)
                     tokenRefresher.refreshState = TokenRefreshState.Restart
                     finish()
                     return
@@ -520,6 +520,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
                             if (intent.hasExtra(TokenRefresher.TOKEN_REFRESH)) {
                                 finish()
+                                return
                             }
                             LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
                             navigation.startLogin(viewModel, false)
