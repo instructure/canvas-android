@@ -39,7 +39,13 @@ class StudentAssignmentListBehavior(
     private val resources: Resources
 ): AssignmentListBehavior {
     override fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState {
-        return AssignmentGroupItemState(course, assignment, showSubmissionDetails = true)
+        return AssignmentGroupItemState(
+            course,
+            assignment,
+            showDueDate = true,
+            showSubmissionState = true,
+            showGrade = true
+        )
     }
 
     override fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?): AssignmentListFilterState {

@@ -35,7 +35,15 @@ import com.instructure.teacher.R
 
 class TeacherAssignmentListBehavior(private val resources: Resources): AssignmentListBehavior {
     override fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState {
-        return AssignmentGroupItemState(course, assignment, showAssignmentDetails = true)
+        return AssignmentGroupItemState(
+            course,
+            assignment,
+            showPublishStateIcon = true,
+            showClosedState = true,
+            showDueDate = true,
+            showNeedsGrading = true,
+            showMaxPoints = true
+        )
     }
 
     override fun getAssignmentListFilterState(

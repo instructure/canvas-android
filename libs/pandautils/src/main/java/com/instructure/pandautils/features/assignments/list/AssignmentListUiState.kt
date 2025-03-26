@@ -50,8 +50,13 @@ class AssignmentGroupState(
 class AssignmentGroupItemState(
     val course: Course,
     val assignment: Assignment,
-    val showAssignmentDetails: Boolean = false,
-    val showSubmissionDetails: Boolean = false
+    val showPublishStateIcon: Boolean = false,
+    val showClosedState: Boolean = false,
+    val showDueDate: Boolean = false,
+    val showSubmissionState: Boolean = false,
+    val showGrade: Boolean = false,
+    val showNeedsGrading: Boolean = false,
+    val showMaxPoints: Boolean = false
 ): GroupedListViewGroupItem(assignment.id)
 
 sealed class AssignmentListFragmentEvent {

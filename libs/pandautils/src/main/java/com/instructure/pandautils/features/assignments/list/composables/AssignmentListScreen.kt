@@ -343,7 +343,7 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                 modifier = Modifier
                     .size(24.dp)
             )
-            if (item.showAssignmentDetails) {
+            if (item.showPublishStateIcon) {
                 val publishedIcon = if (assignment.published) R.drawable.ic_complete_solid else R.drawable.ic_unpublish
                 val publishColor = if (assignment.published) R.color.textSuccess else R.color.textDark
                 val publishedContentDescriptionRes = if (assignment.published) R.string.published else R.string.unpublished
@@ -371,13 +371,26 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                     .fillMaxWidth()
                     .padding(vertical = 1.dp)
             ) {
-                if (item.showSubmissionDetails) {
+                if (item.showClosedState) {
+                    if (assignment.lockDate?.before(Date()).orDefault()) {
+                        Text(
+                            stringResource(R.string.closed),
+                            color = colorResource(id = R.color.textDark),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Normal,
+                        )
+                        AssignmentDivider()
+                    }
+                }
+                if (item.showDueDate) {
                     Text(
                         assignment.dueDate?.toFormattedString() ?: stringResource(R.string.noDueDate),
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
                     )
+                }
+                if (item.showSubmissionState) {
                     val submissionStateLabel = assignment.getSubmissionStateLabel()
                     if (submissionStateLabel != SubmissionStateLabel.NONE) {
                         AssignmentDivider()
@@ -396,23 +409,6 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                         )
                     }
                 }
-                if (item.showAssignmentDetails){
-                    if (assignment.lockDate?.before(Date()).orDefault()) {
-                        Text(
-                            stringResource(R.string.closed),
-                            color = colorResource(id = R.color.textDark),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                        )
-                        AssignmentDivider()
-                    }
-                    Text(
-                        assignment.dueDate?.toFormattedString() ?: stringResource(R.string.noDueDate),
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                    )
-                }
             }
 
             Row(
@@ -421,7 +417,7 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                     .fillMaxWidth()
                     .padding(vertical = 1.dp)
             ) {
-                if (item.showSubmissionDetails) {
+                if (item.showGrade) {
                     val gradeText = assignment.getGrade(
                         submission = assignment.submission,
                         context = LocalContext.current,
@@ -437,7 +433,7 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
-                if (item.showAssignmentDetails) {
+                if (item.showNeedsGrading) {
                     if (assignment.needsGradingCount.toInt() != 0) {
                         AssignmentNeedsGradingChip(
                             assignment.needsGradingCount.toInt(),
@@ -445,6 +441,8 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                         )
                         AssignmentDivider()
                     }
+                }
+                if (item.showMaxPoints) {
                     Text(
                         stringResource(
                             R.string.assignmentListMaxpoints,
