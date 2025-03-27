@@ -379,8 +379,7 @@ object HorizonColors {
         fun pageTertiary() = colorResource(R.color.surface_pageTertiary)
         @Composable
         fun warning() = colorResource(R.color.surface_warning)
-        @Composable
-        fun success() = colorResource(R.color.surface_success)
+        fun success() = Color(0xFF03893D)
         @Composable
         fun aiGradient() = Brush.verticalGradient(
             colors = listOf(
@@ -389,6 +388,8 @@ object HorizonColors {
             )
         )
         fun institution() = Color(ThemePrefs.brandColor)
+        fun aiGradientStart() = Color(0xFF09508C)
+        fun aiGradientEnd() = Color(0xFF02672D)
     }
 
     object Text {
@@ -451,7 +452,6 @@ object HorizonColors {
         fun lineConnector() = colorResource(R.color.lineAndBorder_lineConnector)
         @Composable
         fun lineDivider() = colorResource(R.color.lineAndBorder_lineDivider)
-        @Composable
-        fun lineStroke() = colorResource(R.color.lineAndBorder_lineStroke)
+        fun lineStroke() = Color(0xFFD7DADE)
     }
 }

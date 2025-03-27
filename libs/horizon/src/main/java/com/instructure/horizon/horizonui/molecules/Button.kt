@@ -13,200 +13,227 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 
-enum class ButtonSize(val primaryButtonSize: Dp, val secondaryButtonSize: Dp) {
-    SMALL(32.dp, 40.dp),
-    NORMAL(44.dp, 44.dp),
+enum class ButtonHeight(val height: Dp, val textStyle: TextStyle, val verticalPadding: Dp) {
+    SMALL(32.dp, HorizonTypography.buttonTextMedium, 6.dp),
+    NORMAL(44.dp, HorizonTypography.buttonTextLarge, 11.dp),
 }
 
-enum class ButtonColor(val backgroundColor: Color, val iconColor: Color) {
-    BLACK(HorizonColors.Surface.inversePrimary(), HorizonColors.Icon.surfaceColored()),
-    INVERSE(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.default()),
-    INVERSE_DANGER(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.error()),
-    INSTITUTION(HorizonColors.Surface.institution(), HorizonColors.Icon.surfaceColored()),
-    BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Icon.default()),
+enum class ButtonWidth {
+    RELATIVE,
+    FILL
+}
+
+enum class ButtonColor(
+    val backgroundColor: Color,
+    val contentColor: Color,
+    val outlineColor: Color = Color.Transparent,
+    val secondaryBackgroundColor: Color? = null
+) {
+    BLACK(HorizonColors.Surface.inversePrimary(), HorizonColors.Text.surfaceColored()),
+    INVERSE(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.title()),
+    AI(
+        HorizonColors.Surface.aiGradientStart(),
+        HorizonColors.Text.surfaceColored(),
+        secondaryBackgroundColor = HorizonColors.Surface.aiGradientEnd()
+    ),
+    WHITE_WITH_OUTLINE(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.title(), HorizonColors.LineAndBorder.lineStroke()),
+    BLACK_OUTLINE(Color.Transparent, HorizonColors.Text.title(), HorizonColors.Surface.inversePrimary()),
+    DANGER(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored()),
+    GHOST(Color.Transparent, HorizonColors.Text.title()),
+    INSTITUTION(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored()),
+    BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Text.title())
+}
+
+sealed class IconPosition(@DrawableRes open val iconRes: Int? = null) {
+    data object NoIcon : IconPosition()
+    data class Start(@DrawableRes override val iconRes: Int) : IconPosition(iconRes)
+    data class End(@DrawableRes override val iconRes: Int) : IconPosition(iconRes)
 }
 
 @Composable
-fun IconButtonPrimary(
-    @DrawableRes iconRes: Int,
+fun Button(
+    label: String,
     modifier: Modifier = Modifier,
-    size: ButtonSize = ButtonSize.NORMAL,
+    height: ButtonHeight = ButtonHeight.NORMAL,
+    width: ButtonWidth = ButtonWidth.RELATIVE,
     color: ButtonColor = ButtonColor.BLACK,
+    iconPosition: IconPosition = IconPosition.NoIcon,
     enabled: Boolean = true,
-    contentDescription: String? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    badge: @Composable (() -> Unit)? = null
 ) {
-    IconButton(
-        iconRes = iconRes,
-        size = size.primaryButtonSize,
-        backgroundColor = color.backgroundColor,
-        iconColor = color.iconColor,
-        modifier = modifier,
-        onClick = onClick,
-        enabled = enabled,
-        contentDescription = contentDescription
-    )
-}
-
-@Composable
-fun IconButtonSecondary(
-    @DrawableRes iconRes: Int,
-    modifier: Modifier = Modifier,
-    size: ButtonSize = ButtonSize.NORMAL,
-    color: ButtonColor = ButtonColor.INSTITUTION,
-    enabled: Boolean = true,
-    contentDescription: String? = null,
-    onClick: () -> Unit = {}
-) {
-    IconButton(
-        iconRes = iconRes,
-        size = size.secondaryButtonSize,
-        backgroundColor = color.backgroundColor,
-        iconColor = color.iconColor,
-        modifier = modifier,
-        onClick = onClick,
-        enabled = enabled,
-        contentDescription = contentDescription
-    )
-}
-
-@Composable
-fun IconButtonAi(
-    modifier: Modifier = Modifier,
-    size: ButtonSize = ButtonSize.NORMAL,
-    enabled: Boolean = true,
-    @DrawableRes iconRes: Int = R.drawable.ai,
-    contentDescription: String? = null,
-    onClick: () -> Unit = {}
-) {
-    val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
-    IconButton(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = buttonModifier
-            .background(
-                brush = HorizonColors.Surface.aiGradient(),
-                shape = RoundedCornerShape(500.dp)
-            )
-            .size(size.primaryButtonSize)
-    ) {
-        Icon(
-            painterResource(id = iconRes),
-            contentDescription = contentDescription,
-            modifier = Modifier.size(24.dp),
-            tint = HorizonColors.Icon.surfaceColored()
+    val widthModifier = if (width == ButtonWidth.FILL) modifier.fillMaxWidth() else modifier
+    val gradientModifier = color.secondaryBackgroundColor?.let {
+        widthModifier.background(
+            brush = Brush.verticalGradient(
+                colors = listOf(color.backgroundColor, it)
+            ), shape = HorizonCornerRadius.level6, alpha = if (enabled) 1f else 0.5f
         )
+    } ?: widthModifier
+    val buttonBackgroundColor = if (color.secondaryBackgroundColor == null) color.backgroundColor else Color.Transparent
+    Box(contentAlignment = Alignment.TopEnd) {
+        Button(
+            onClick = onClick,
+            enabled = enabled,
+            shape = HorizonCornerRadius.level6,
+            modifier = gradientModifier.height(height.height),
+            border = HorizonBorder.level1(color.outlineColor),
+            contentPadding = PaddingValues(vertical = height.verticalPadding, horizontal = 22.dp),
+            colors = ButtonDefaults.buttonColors().copy(
+                containerColor = buttonBackgroundColor,
+                contentColor = color.contentColor,
+                disabledContainerColor = buttonBackgroundColor.copy(alpha = 0.5f),
+                disabledContentColor = color.contentColor
+            ),
+        ) {
+            if (iconPosition is IconPosition.Start) {
+                Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)
+                HorizonSpace(SpaceSize.SPACE_4)
+            }
+            Text(text = label, style = height.textStyle, color = color.contentColor)
+            if (iconPosition is IconPosition.End) {
+                HorizonSpace(SpaceSize.SPACE_4)
+                Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)
+            }
+        }
+        badge?.let {
+            Box(modifier = Modifier.offset(x = 4.dp, y = (-4).dp)) {
+                it()
+            }
+        }
     }
 }
 
 @Composable
-private fun IconButton(
-    @DrawableRes iconRes: Int,
-    size: Dp,
-    backgroundColor: Color,
-    iconColor: Color,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    contentDescription: String? = null,
-    onClick: () -> Unit = {}
-) {
-    val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
-    IconButton(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = buttonModifier
-            .background(shape = RoundedCornerShape(50.dp), color = backgroundColor)
-            .size(size)
-    ) {
-        Icon(
-            painterResource(id = iconRes),
-            contentDescription = contentDescription,
-            modifier = Modifier.size(24.dp),
-            tint = iconColor
-        )
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonBlackPreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.BLACK)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonInversePreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.INVERSE)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonAiPreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.AI)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonWhiteWithOutlinePreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.WHITE_WITH_OUTLINE)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonBlackOutlinePreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.BLACK_OUTLINE)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonDangerPreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.DANGER)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonGhostPreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.GHOST)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonInstitutionPreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.INSTITUTION)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonBeigePreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.BEIGE)
+}
+
+@Composable
+private fun ButtonPreview(color: ButtonColor) {
+    ContextKeeper.appContext = LocalContext.current
+    val heights = ButtonHeight.entries.toTypedArray()
+    val widths = ButtonWidth.entries.toTypedArray()
+    val iconPositions = listOf(
+        IconPosition.NoIcon,
+        IconPosition.Start(iconRes = R.drawable.add),
+        IconPosition.End(iconRes = R.drawable.add)
+    )
+
+    Column {
+        heights.forEach { height ->
+            widths.forEach { width ->
+                iconPositions.forEach { iconPosition ->
+                    Text(text = "${height.name} ${width.name} ${color.name} ${iconPosition::class.simpleName}")
+                    HorizonSpace(SpaceSize.SPACE_2)
+                    Button(
+                        label = "Button",
+                        height = height,
+                        width = width,
+                        color = color,
+                        iconPosition = iconPosition,
+                        badge = {
+                            if (iconPosition is IconPosition.NoIcon) Badge(content = BadgeContent.Text("5"), type = BadgeType.PRIMARY)
+                        }
+                    )
+                    HorizonSpace(SpaceSize.SPACE_8)
+                }
+            }
+        }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun IconButtonPrimaryPreview() {
-    IconButtonPrimary(iconRes = R.drawable.add)
-}
-
-@Composable
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonPrimaryInversePreview() {
-    IconButtonPrimary(iconRes = R.drawable.add, color = ButtonColor.INVERSE)
-}
-
-@Composable
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonPrimaryInverseDisabledPreview() {
-    IconButtonPrimary(iconRes = R.drawable.add, color = ButtonColor.INVERSE, enabled = false)
-}
-
-@Composable
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonPrimaryInverseDangerPreview() {
-    IconButtonPrimary(iconRes = R.drawable.add, color = ButtonColor.INVERSE_DANGER)
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun IconButtonSecondaryPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    IconButtonSecondary(iconRes = R.drawable.add)
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun IconButtonSecondarySmallPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    IconButtonSecondary(iconRes = R.drawable.add, size = ButtonSize.SMALL)
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun IconButtonSecondaryDisabledPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    IconButtonSecondary(iconRes = R.drawable.add, enabled = false)
-}
-
-@Composable
-@Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonSecondaryBeigePreview() {
-    IconButtonSecondary(iconRes = R.drawable.add, color = ButtonColor.BEIGE)
-}
-
-@Composable
-@Preview
-private fun IconButtonAiPreview() {
-    IconButtonAi()
-}
-
-@Composable
-@Preview
-private fun IconButtonAiSmallPreview() {
-    IconButtonAi(size = ButtonSize.SMALL)
 }
