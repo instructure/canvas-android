@@ -132,7 +132,9 @@ private fun CourseDetailsScreenContent(
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            actionHandler(CourseDetailsAction.CurrentTabChanged(uiState.tabs[page]))
+            uiState.tabs.getOrNull(page)?.let {
+                actionHandler(CourseDetailsAction.CurrentTabChanged(it))
+            }
         }
     }
 
