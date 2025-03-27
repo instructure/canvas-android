@@ -375,8 +375,7 @@ object HorizonColors {
         fun overlayWhite() = colorResource(R.color.surface_overlayWhite)
         fun pagePrimary() = Color(0xFFF2F4F4)
         fun pageSecondary() = Color(0xFFFFFFFF)
-        @Composable
-        fun pageTertiary() = colorResource(R.color.surface_pageTertiary)
+        fun pageTertiary() = Color(0xFFE8EAEC)
         @Composable
         fun warning() = colorResource(R.color.surface_warning)
         fun success() = Color(0xFF03893D)
