@@ -422,7 +422,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
 
-        sleep(3000) // wait for comments to load
         Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed as a comment.")
         submissionDetailsPage.assertCommentDisplayed(uploadInfo.fileName, student)
 
@@ -627,12 +626,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         submissionDetailsPage.openComments()
 
         submissionDetailsPage.addAndSendVideoComment()
-        sleep(5000) // wait for video comment submission to propagate
         submissionDetailsPage.assertVideoCommentDisplayed()
 
         Log.d(STEP_TAG,"Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
-        sleep(5000) // Wait for audio comment submission to propagate
 
         Log.d(STEP_TAG,"Assert that the audio comment has been displayed.")
         submissionDetailsPage.assertAudioCommentDisplayed()
