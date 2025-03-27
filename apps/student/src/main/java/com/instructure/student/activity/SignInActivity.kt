@@ -20,9 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity
-import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SIGN_IN
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.student.widget.WidgetUpdater
@@ -38,10 +36,6 @@ class SignInActivity : BaseLoginSignInActivity() {
 
     override fun refreshWidgets() {
         WidgetUpdater.updateWidgets()
-    }
-
-    override fun signInIntent(context: Context): Intent {
-        return createIntent(context, LoginPrefs.lastSavedLogin?.accountDomain ?: AccountDomain(ApiPrefs.domain))
     }
 
     companion object {
