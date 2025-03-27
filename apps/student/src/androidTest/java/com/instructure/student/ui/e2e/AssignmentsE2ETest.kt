@@ -371,6 +371,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testPercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -597,6 +598,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
+    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")

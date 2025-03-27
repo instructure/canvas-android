@@ -263,7 +263,6 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            android:multiprocess="true"
             tools:node="remove">
         </provider>
 
