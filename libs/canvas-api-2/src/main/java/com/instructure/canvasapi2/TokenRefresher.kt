@@ -28,7 +28,7 @@ class TokenRefresher(
         if (refreshState != null && refreshState is TokenRefreshState.Refreshing) {
             return waitForRefresh(response)
         }
-
+        refreshState = TokenRefreshState.Refreshing
         try {
             val refreshed: OAuthTokenResponse
             runBlocking {
@@ -42,7 +42,6 @@ class TokenRefresher(
                 ) // Mark retry to prevent infinite recursion
                 .build()
         } catch (e: Exception) {
-            refreshState = TokenRefreshState.Refreshing
             launchLogin()
             return waitForRefresh(response)
         }
