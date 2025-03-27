@@ -16,8 +16,8 @@
 
 package com.instructure.pandautils.utils
 
+import android.app.Activity
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.net.Uri
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
@@ -126,7 +126,7 @@ suspend fun <T> poll(
     return null
 }
 
-fun Context.launchCustomTab(url: String, @ColorInt color: Int) {
+fun Activity.launchCustomTab(url: String, @ColorInt color: Int) {
     val uri = Uri.parse(url)
         .buildUpon()
         .appendQueryParameter("display", "borderless")
@@ -135,6 +135,7 @@ fun Context.launchCustomTab(url: String, @ColorInt color: Int) {
 
     val colorSchemeParams = CustomTabColorSchemeParams.Builder()
         .setToolbarColor(color)
+        .setNavigationBarColor(window.navigationBarColor)
         .build()
 
     var intent = CustomTabsIntent.Builder()
