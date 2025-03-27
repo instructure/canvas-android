@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.LoginRouter
-import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.LoginNavigation
@@ -81,11 +80,5 @@ class  LoginRouterModule {
                 )
             }
         }
-    }
-
-    @Provides
-    @Singleton
-    fun provideTokenRefresher(loginRouter: LoginRouter): TokenRefresher {
-        return TokenRefresher(loginRouter)
     }
 }

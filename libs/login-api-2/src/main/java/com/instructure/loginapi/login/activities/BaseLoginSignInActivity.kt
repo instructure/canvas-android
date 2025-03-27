@@ -17,9 +17,7 @@
 package com.instructure.loginapi.login.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.net.Uri
@@ -578,6 +576,4 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             }
         }, 750)
     } //endregion
-
-    abstract fun signInIntent(context: Context): Intent
 }

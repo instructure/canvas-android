@@ -1,12 +1,12 @@
 package com.instructure.canvasapi2
 
+import android.content.Context
 import android.content.Intent
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import okhttp3.Request
@@ -16,7 +16,11 @@ import org.greenrobot.eventbus.EventBus
 private const val AUTH_HEADER = "Authorization"
 private const val RETRY_HEADER = "mobile_refresh"
 
-class TokenRefresher(private val loginRouter: LoginRouter) {
+class TokenRefresher(
+    private val context: Context,
+    private val loginRouter: LoginRouter,
+    private val apiPrefs: ApiPrefs,
+    private val eventBus: EventBus) {
 
     var refreshState: TokenRefreshState? = null
 
@@ -24,12 +28,12 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
         if (refreshState != null && refreshState is TokenRefreshState.Refreshing) {
             return waitForRefresh(response)
         }
-        refreshState = TokenRefreshState.Refreshing
+
         try {
             val refreshed: OAuthTokenResponse
             runBlocking {
                 refreshed = OAuthManager.refreshTokenAsync().await().dataOrThrow
-                ApiPrefs.accessToken = refreshed.accessToken!!
+                apiPrefs.accessToken = refreshed.accessToken!!
             }
             return response.request.newBuilder()
                 .header(AUTH_HEADER, OAuthAPI.authBearer(refreshed.accessToken!!))
@@ -38,6 +42,7 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
                 ) // Mark retry to prevent infinite recursion
                 .build()
         } catch (e: Exception) {
+            refreshState = TokenRefreshState.Refreshing
             launchLogin()
             return waitForRefresh(response)
         }
@@ -65,13 +70,13 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
                         ) // Mark retry to prevent infinite recursion
                         .build()
                 } catch (e: Exception) {
-                    EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))
+                    eventBus.post(CanvasAuthError("Failed to authenticate"))
                     null
                 }
             }
 
             is TokenRefreshState.Failed -> {
-                EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))
+                eventBus.post(CanvasAuthError("Failed to authenticate"))
                 newRequest = null
             }
 
@@ -92,7 +97,7 @@ class TokenRefresher(private val loginRouter: LoginRouter) {
         val intent = loginRouter.loginIntent()
         intent.putExtra(TOKEN_REFRESH, true)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        ContextKeeper.appContext.startActivity(intent)
+        context.startActivity(intent)
     }
 
     companion object {

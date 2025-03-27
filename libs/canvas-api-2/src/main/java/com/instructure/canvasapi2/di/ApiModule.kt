@@ -1,5 +1,7 @@
 package com.instructure.canvasapi2.di
 
+import android.content.Context
+import com.instructure.canvasapi2.LoginRouter
 import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
@@ -64,7 +66,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EarlyEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -367,6 +371,12 @@ class ApiModule {
     @Provides
     fun provideSectionApi(): SectionAPI.SectionsInterface {
         return RestBuilder().build(SectionAPI.SectionsInterface::class.java, RestParams())
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, apiPrefs: ApiPrefs, eventBus: EventBus): TokenRefresher {
+        return TokenRefresher(context, loginRouter, apiPrefs, eventBus)
     }
 }
 

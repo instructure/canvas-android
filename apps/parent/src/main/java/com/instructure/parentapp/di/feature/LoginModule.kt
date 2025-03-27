@@ -21,7 +21,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.LoginRouter
-import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -45,19 +44,26 @@ import javax.inject.Singleton
 class LoginModule {
 
     @Provides
-    fun provideAcceptableUsePolicyRouter(activity: FragmentActivity, alarmScheduler: AlarmScheduler, analytics: Analytics): AcceptableUsePolicyRouter {
+    fun provideAcceptableUsePolicyRouter(
+        activity: FragmentActivity,
+        alarmScheduler: AlarmScheduler,
+        analytics: Analytics
+    ): AcceptableUsePolicyRouter {
         return ParentAcceptableUsePolicyRouter(activity, alarmScheduler, analytics)
     }
 
     @Provides
-    fun provideLoginNavigation(activity: FragmentActivity, alarmScheduler: AlarmScheduler): LoginNavigation {
+    fun provideLoginNavigation(
+        activity: FragmentActivity,
+        alarmScheduler: AlarmScheduler
+    ): LoginNavigation {
         return ParentLoginNavigation(activity, alarmScheduler)
     }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-class  LoginRouterModule {
+class LoginRouterModule {
     @Provides
     @Singleton
     fun provideLoginRouter(
@@ -73,11 +79,5 @@ class  LoginRouterModule {
                 )
             }
         }
-    }
-
-    @Provides
-    @Singleton
-    fun provideTokenRefresher(loginRouter: LoginRouter): TokenRefresher {
-        return TokenRefresher(loginRouter)
     }
 }
