@@ -210,7 +210,7 @@ class SubmissionWorker @AssistedInject constructor(
 
             val params = RestParams(
                 canvasContext = submission.canvasContext,
-                domain = ApiPrefs.overrideDomains[submission.canvasContext.id]
+                domain = apiPrefs.overrideDomains[submission.canvasContext.id]
             )
             val mediaSubmissionResult = submissionApi.postMediaSubmission(
                 submission.canvasContext.id,
@@ -258,7 +258,7 @@ class SubmissionWorker @AssistedInject constructor(
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = ApiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
         )
         val result = submissionApi.postSubmissionAttachments(
             submission.canvasContext.id,
@@ -351,7 +351,7 @@ class SubmissionWorker @AssistedInject constructor(
 
                 attachmentIds.add(attachment.id)
             }.onFailure {
-                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
                 runBlocking {
                     handleFileError(submission, index, attachments, it?.message)
                 }
@@ -455,7 +455,7 @@ class SubmissionWorker @AssistedInject constructor(
             )
 
             // Perform upload
-            FileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
+            fileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
                 override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
                     updateCommentProgress(
                         notification = notification,
@@ -487,7 +487,7 @@ class SubmissionWorker @AssistedInject constructor(
             notification.setProgress(0, 0, true)
             notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
-            NotoriousUploader.performUpload(
+            notoriousUploader.performUpload(
                 comment.mediaPath,
                 object : ProgressRequestUpdateListener {
                     override fun onProgressUpdated(
@@ -514,13 +514,13 @@ class SubmissionWorker @AssistedInject constructor(
         try {
             val params = RestParams(
                 canvasContext = comment.canvasContext,
-                domain = ApiPrefs.overrideDomains[comment.canvasContext.id]
+                domain = apiPrefs.overrideDomains[comment.canvasContext.id]
             )
             val postCommentResult = notoriousResult?.let { result ->
                 submissionApi.postMediaSubmissionComment(
                     courseId = comment.canvasContext.id,
                     assignmentId = comment.assignmentId,
-                    userId = getUserId(),
+                    userId = apiPrefs.user!!.id,
                     mediaId = result.id!!,
                     commentType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType),
                     isGroupComment = comment.isGroupMessage,
@@ -536,7 +536,7 @@ class SubmissionWorker @AssistedInject constructor(
                 submissionApi.postSubmissionComment(
                     courseId = comment.canvasContext.id,
                     assignmentId = comment.assignmentId,
-                    userId = getUserId(),
+                    userId = apiPrefs.user!!.id,
                     comment = comment.message.orEmpty(),
                     isGroupComment = comment.isGroupMessage,
                     attachments = attachmentIds,
@@ -582,7 +582,7 @@ class SubmissionWorker @AssistedInject constructor(
 
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = ApiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
         )
         val result = submissionApi.postStudentAnnotationSubmission(
             submission.canvasContext.id,
@@ -753,7 +753,7 @@ class SubmissionWorker @AssistedInject constructor(
     ): PendingIntent {
         val submissionPage = if (goToSubmissionDetail) "/submissions" else ""
         val path =
-            "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId$submissionPage"
+            "${apiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId$submissionPage"
         val intent = Intent(context, NavigationActivity.startActivityClass).apply {
             putExtra(Const.LOCAL_NOTIFICATION, true)
             putExtra(PushNotification.HTML_URL, path)
@@ -813,7 +813,7 @@ class SubmissionWorker @AssistedInject constructor(
         id: Long,
         files: List<FileSubmitObject> = emptyList()
     ) {
-        createSubmissionDao.findSubmissionsByAssignmentId(id, getUserId())
+        createSubmissionDao.findSubmissionsByAssignmentId(id, apiPrefs.user!!.id)
             .forEach { submission ->
                 createFileSubmissionDao.findFilesForSubmissionId(submission.id).forEach { file ->
                     // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
@@ -824,7 +824,7 @@ class SubmissionWorker @AssistedInject constructor(
                 }
                 createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
             }
-        createSubmissionDao.deleteSubmissionsForAssignmentId(id, getUserId())
+        createSubmissionDao.deleteSubmissionsForAssignmentId(id, apiPrefs.user!!.id)
     }
 
     // endregion
@@ -836,8 +836,5 @@ class SubmissionWorker @AssistedInject constructor(
     companion object {
         private const val CHANNEL_ID = "submissionChannel"
         const val COMMENT_CHANNEL_ID = "commentUploadChannel"
-
-        private fun getUserId() = ApiPrefs.user!!.id
-
     }
 }
