@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
@@ -368,10 +369,12 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Send an audio comment and assert that is displayed among the comments.")
         speedGraderCommentsPage.sendAudioComment()
+        sleep(5000) // wait for audio comment submission to propagate
         speedGraderCommentsPage.assertAudioCommentDisplayed()
 
         Log.d(STEP_TAG, "Send a video comment and assert that is displayed among the comments.")
         speedGraderCommentsPage.sendVideoComment()
+        sleep(5000) // wait for video comment submission to propagate
         speedGraderCommentsPage.assertVideoCommentDisplayed()
 
         Log.d(STEP_TAG, "Click on the previously uploaded audio comment. Assert that the media comment preview (and the 'Play button') is displayed.")
