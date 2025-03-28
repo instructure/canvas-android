@@ -82,7 +82,6 @@ import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore
-import com.pspdfkit.internal.utilities.toArrayList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -746,12 +745,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                    else -> sequenceItems[0].current
                 }
                 val moduleItems = repository.getAllModuleItems(canvasContext, current!!.moduleId, true)
-                val unfilteredItems = ArrayList<ArrayList<ModuleItem>>(1).apply { add(ArrayList(moduleItems)) }
+                val unfilteredItems = ArrayList<ArrayList<ModuleItem>?>(1).apply { add(ArrayList(moduleItems)) }
                 modules = ArrayList<ModuleObject>(1).apply { moduleItemSequence.modules!!.firstOrNull { it.id == current?.moduleId }?.let { add(it) } }
                 val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(requireContext(), current!!.id, modules, unfilteredItems)
                 groupPos = moduleHelper.newGroupPosition
                 childPos = moduleHelper.newChildPosition
-                items = moduleHelper.strippedModuleItems.map { it.toArrayList() }.toArrayList()
+                items = moduleHelper.strippedModuleItems
             } else {
                 binding.progressBar.setGone()
                 val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType) ?: ModuleItemAsset.MODULE_ITEM
