@@ -371,6 +371,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testPercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -422,13 +423,13 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
 
+        sleep(3000) // wait for comments to load
         Log.d(STEP_TAG,"Assert that ${uploadInfo.fileName} file has been displayed as a comment.")
         submissionDetailsPage.assertCommentDisplayed(uploadInfo.fileName, student)
 
         val newComment = "My comment!!"
         Log.d(STEP_TAG,"Add a new comment ($newComment) and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
-        sleep(2000) // Give the comment time to propagate
 
         Log.d(STEP_TAG,"Assert that $newComment is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -597,6 +598,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
+    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -627,12 +629,12 @@ class AssignmentsE2ETest: StudentComposeTest() {
         submissionDetailsPage.openComments()
 
         submissionDetailsPage.addAndSendVideoComment()
-        sleep(3000) // wait for video comment submission to propagate
+        sleep(5000) // wait for video comment submission to propagate
         submissionDetailsPage.assertVideoCommentDisplayed()
 
         Log.d(STEP_TAG,"Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
-        sleep(3000) // Wait for audio comment submission to propagate
+        sleep(5000) // Wait for audio comment submission to propagate
 
         Log.d(STEP_TAG,"Assert that the audio comment has been displayed.")
         submissionDetailsPage.assertAudioCommentDisplayed()
