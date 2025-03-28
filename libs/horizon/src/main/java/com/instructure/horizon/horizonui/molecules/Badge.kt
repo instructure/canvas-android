@@ -47,16 +47,17 @@ sealed class BadgeContent(
     data class Icon(override val iconRes: Int, override val contentDescription: String? = null) : BadgeContent(19.dp)
 }
 
-enum class BadgeType(val backgroundColor: Color, val contentColor: Color) {
-    PRIMARY(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored()),
-    PRIMARY_WHITE(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.body()),
-    DANGER(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored()),
-    SUCCESS(HorizonColors.Surface.success(), HorizonColors.Text.surfaceColored()),
-    INVERSE(HorizonColors.Surface.inversePrimary(), HorizonColors.Text.surfaceColored()),
+sealed class BadgeType(open val backgroundColor: Color, open val contentColor: Color) {
+    data object Primary : BadgeType(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored())
+    data object PrimaryWhite : BadgeType(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.body())
+    data object Danger : BadgeType(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored())
+    data object Success : BadgeType(HorizonColors.Surface.success(), HorizonColors.Text.surfaceColored())
+    data object Inverse : BadgeType(HorizonColors.Surface.inversePrimary(), HorizonColors.Text.surfaceColored())
+    data class Custom(override val backgroundColor: Color, override val contentColor: Color) : BadgeType(backgroundColor, contentColor)
 }
 
 @Composable
-fun Badge(modifier: Modifier = Modifier, content: BadgeContent = BadgeContent.Color, type: BadgeType = BadgeType.PRIMARY) {
+fun Badge(modifier: Modifier = Modifier, content: BadgeContent = BadgeContent.Color, type: BadgeType = BadgeType.Primary) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -87,138 +88,178 @@ fun Badge(modifier: Modifier = Modifier, content: BadgeContent = BadgeContent.Co
 @Preview(name = "Badge - Color - PRIMARY")
 private fun BadgeColorPrimaryPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Color, type = BadgeType.PRIMARY)
+    Badge(content = BadgeContent.Color, type = BadgeType.Primary)
 }
 
 @Composable
 @Preview(name = "Badge - ColorSmall - PRIMARY")
 private fun BadgeColorSmallPrimaryPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.ColorSmall, type = BadgeType.PRIMARY)
+    Badge(content = BadgeContent.ColorSmall, type = BadgeType.Primary)
 }
 
 @Composable
 @Preview(name = "Badge - Text - PRIMARY")
 private fun BadgeTextPrimaryPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Text("5"), type = BadgeType.PRIMARY)
+    Badge(content = BadgeContent.Text("5"), type = BadgeType.Primary)
 }
 
 @Composable
-@Preview(name = "Badge - Icon Camera - PRIMARY")
+@Preview(name = "Badge - Icon - PRIMARY")
 private fun BadgeIconCameraPrimaryPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Icon(R.drawable.check, "Camera"), type = BadgeType.PRIMARY)
+    Badge(content = BadgeContent.Icon(R.drawable.check, "Check"), type = BadgeType.Primary)
 }
 
 @Composable
 @Preview(name = "Badge - Color - PRIMARY_WHITE")
 private fun BadgeColorPrimaryWhitePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Color, type = BadgeType.PRIMARY_WHITE)
+    Badge(content = BadgeContent.Color, type = BadgeType.PrimaryWhite)
 }
 
 @Composable
 @Preview(name = "Badge - ColorSmall - PRIMARY_WHITE")
 private fun BadgeColorSmallPrimaryWhitePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.ColorSmall, type = BadgeType.PRIMARY_WHITE)
+    Badge(content = BadgeContent.ColorSmall, type = BadgeType.PrimaryWhite)
 }
 
 @Composable
 @Preview(name = "Badge - Text - PRIMARY_WHITE")
 private fun BadgeTextPrimaryWhitePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Text("5"), type = BadgeType.PRIMARY_WHITE)
+    Badge(content = BadgeContent.Text("5"), type = BadgeType.PrimaryWhite)
 }
 
 @Composable
-@Preview(name = "Badge - Icon Camera - PRIMARY_WHITE")
+@Preview(name = "Badge - Icon - PRIMARY_WHITE")
 private fun BadgeIconCameraPrimaryWhitePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Icon(R.drawable.check, "Camera"), type = BadgeType.PRIMARY_WHITE)
+    Badge(content = BadgeContent.Icon(R.drawable.check, "Check"), type = BadgeType.PrimaryWhite)
 }
 
 @Composable
 @Preview(name = "Badge - Color - DANGER")
 private fun BadgeColorDangerPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Color, type = BadgeType.DANGER)
+    Badge(content = BadgeContent.Color, type = BadgeType.Danger)
 }
 
 @Composable
 @Preview(name = "Badge - ColorSmall - DANGER")
 private fun BadgeColorSmallDangerPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.ColorSmall, type = BadgeType.DANGER)
+    Badge(content = BadgeContent.ColorSmall, type = BadgeType.Danger)
 }
 
 @Composable
 @Preview(name = "Badge - Text - DANGER")
 private fun BadgeTextDangerPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Text("5"), type = BadgeType.DANGER)
+    Badge(content = BadgeContent.Text("5"), type = BadgeType.Danger)
 }
 
 @Composable
-@Preview(name = "Badge - Icon Camera - DANGER")
+@Preview(name = "Badge - Icon - DANGER")
 private fun BadgeIconCameraDangerPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Icon(R.drawable.check, "Camera"), type = BadgeType.DANGER)
+    Badge(content = BadgeContent.Icon(R.drawable.check, "Check"), type = BadgeType.Danger)
 }
 
 @Composable
 @Preview(name = "Badge - Color - SUCCESS")
 private fun BadgeColorSuccessPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Color, type = BadgeType.SUCCESS)
+    Badge(content = BadgeContent.Color, type = BadgeType.Success)
 }
 
 @Composable
 @Preview(name = "Badge - ColorSmall - SUCCESS")
 private fun BadgeColorSmallSuccessPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.ColorSmall, type = BadgeType.SUCCESS)
+    Badge(content = BadgeContent.ColorSmall, type = BadgeType.Success)
 }
 
 @Composable
 @Preview(name = "Badge - Text - SUCCESS")
 private fun BadgeTextSuccessPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Text("5"), type = BadgeType.SUCCESS)
+    Badge(content = BadgeContent.Text("5"), type = BadgeType.Success)
 }
 
 @Composable
-@Preview(name = "Badge - Icon Camera - SUCCESS")
+@Preview(name = "Badge - Icon - SUCCESS")
 private fun BadgeIconCameraSuccessPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Icon(R.drawable.check, "Camera"), type = BadgeType.SUCCESS)
+    Badge(content = BadgeContent.Icon(R.drawable.check, "Check"), type = BadgeType.Success)
 }
 
 @Composable
 @Preview(name = "Badge - Color - INVERSE")
 private fun BadgeColorInversePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Color, type = BadgeType.INVERSE)
+    Badge(content = BadgeContent.Color, type = BadgeType.Inverse)
 }
 
 @Composable
 @Preview(name = "Badge - ColorSmall - INVERSE")
 private fun BadgeColorSmallInversePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.ColorSmall, type = BadgeType.INVERSE)
+    Badge(content = BadgeContent.ColorSmall, type = BadgeType.Inverse)
 }
 
 @Composable
 @Preview(name = "Badge - Text - INVERSE")
 private fun BadgeTextInversePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Text("5"), type = BadgeType.INVERSE)
+    Badge(content = BadgeContent.Text("5"), type = BadgeType.Inverse)
 }
 
 @Composable
-@Preview(name = "Badge - Icon Camera - INVERSE")
+@Preview(name = "Badge - Icon - INVERSE")
 private fun BadgeIconCameraInversePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Badge(content = BadgeContent.Icon(R.drawable.check, "Camera"), type = BadgeType.INVERSE)
+    Badge(content = BadgeContent.Icon(R.drawable.check, "Check"), type = BadgeType.Inverse)
+}
+
+@Composable
+@Preview(name = "Badge - Color - Custom")
+private fun BadgeColorCustomPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Badge(
+        content = BadgeContent.Color,
+        type = BadgeType.Custom(HorizonColors.PrimitivesBeige.beige15(), HorizonColors.Surface.institution())
+    )
+}
+
+@Composable
+@Preview(name = "Badge - ColorSmall - INVERSE")
+private fun BadgeColorSmallCustomPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Badge(
+        content = BadgeContent.ColorSmall,
+        type = BadgeType.Custom(HorizonColors.PrimitivesBeige.beige15(), HorizonColors.Surface.institution())
+    )
+}
+
+@Composable
+@Preview(name = "Badge - Text - INVERSE")
+private fun BadgeTextCustomPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Badge(
+        content = BadgeContent.Text("5"),
+        type = BadgeType.Custom(HorizonColors.PrimitivesBeige.beige15(), HorizonColors.Surface.institution())
+    )
+}
+
+@Composable
+@Preview(name = "Badge - Icon - INVERSE")
+private fun BadgeIconCameraCustomPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Badge(
+        content = BadgeContent.Icon(R.drawable.check, "Check"),
+        type = BadgeType.Custom(HorizonColors.PrimitivesBeige.beige15(), HorizonColors.Surface.institution())
+    )
 }

@@ -60,31 +60,40 @@ enum class ButtonWidth {
     FILL
 }
 
-enum class ButtonColor(
-    val backgroundColor: Color,
-    val contentColor: Color,
-    val outlineColor: Color = Color.Transparent,
-    val secondaryBackgroundColor: Color? = null
+sealed class ButtonColor(
+    open val backgroundColor: Color,
+    open val contentColor: Color,
+    open val outlineColor: Color = Color.Transparent,
+    open val secondaryBackgroundColor: Color? = null
 ) {
-    BLACK(HorizonColors.Surface.inversePrimary(), HorizonColors.Text.surfaceColored()),
-    INVERSE(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.title()),
-    AI(
+    data object Black : ButtonColor(HorizonColors.Surface.inversePrimary(), HorizonColors.Text.surfaceColored())
+    data object Inverse : ButtonColor(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.title())
+    data object Ai : ButtonColor(
         HorizonColors.Surface.aiGradientStart(),
         HorizonColors.Text.surfaceColored(),
         secondaryBackgroundColor = HorizonColors.Surface.aiGradientEnd()
-    ),
-    WHITE_WITH_OUTLINE(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.title(), HorizonColors.LineAndBorder.lineStroke()),
-    BLACK_OUTLINE(Color.Transparent, HorizonColors.Text.title(), HorizonColors.Surface.inversePrimary()),
-    DANGER(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored()),
-    GHOST(Color.Transparent, HorizonColors.Text.title()),
-    INSTITUTION(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored()),
-    BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Text.title())
+    )
+
+    data object WhiteWithOutline :
+        ButtonColor(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.title(), HorizonColors.LineAndBorder.lineStroke())
+
+    data object BlackOutline : ButtonColor(Color.Transparent, HorizonColors.Text.title(), HorizonColors.Surface.inversePrimary())
+    data object Danger : ButtonColor(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored())
+    data object Ghost : ButtonColor(Color.Transparent, HorizonColors.Text.title())
+    data object Institution : ButtonColor(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored())
+    data object Beige : ButtonColor(HorizonColors.Surface.pagePrimary(), HorizonColors.Text.title())
+    data class Custom(
+        override val backgroundColor: Color,
+        override val contentColor: Color,
+        override val outlineColor: Color = Color.Transparent,
+        override val secondaryBackgroundColor: Color? = null
+    ) : ButtonColor(backgroundColor, contentColor, outlineColor, secondaryBackgroundColor)
 }
 
-sealed class IconPosition(@DrawableRes open val iconRes: Int? = null) {
-    data object NoIcon : IconPosition()
-    data class Start(@DrawableRes override val iconRes: Int) : IconPosition(iconRes)
-    data class End(@DrawableRes override val iconRes: Int) : IconPosition(iconRes)
+sealed class ButtonIconPosition(@DrawableRes open val iconRes: Int? = null) {
+    data object NoIcon : ButtonIconPosition()
+    data class Start(@DrawableRes override val iconRes: Int) : ButtonIconPosition(iconRes)
+    data class End(@DrawableRes override val iconRes: Int) : ButtonIconPosition(iconRes)
 }
 
 @Composable
@@ -93,8 +102,8 @@ fun Button(
     modifier: Modifier = Modifier,
     height: ButtonHeight = ButtonHeight.NORMAL,
     width: ButtonWidth = ButtonWidth.RELATIVE,
-    color: ButtonColor = ButtonColor.BLACK,
-    iconPosition: IconPosition = IconPosition.NoIcon,
+    color: ButtonColor = ButtonColor.Black,
+    iconPosition: ButtonIconPosition = ButtonIconPosition.NoIcon,
     enabled: Boolean = true,
     onClick: () -> Unit = {},
     badge: @Composable (() -> Unit)? = null
@@ -123,12 +132,12 @@ fun Button(
                 disabledContentColor = color.contentColor
             ),
         ) {
-            if (iconPosition is IconPosition.Start) {
+            if (iconPosition is ButtonIconPosition.Start) {
                 Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)
                 HorizonSpace(SpaceSize.SPACE_4)
             }
             Text(text = label, style = height.textStyle, color = color.contentColor)
-            if (iconPosition is IconPosition.End) {
+            if (iconPosition is ButtonIconPosition.End) {
                 HorizonSpace(SpaceSize.SPACE_4)
                 Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)
             }
@@ -145,63 +154,75 @@ fun Button(
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonBlackPreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.BLACK)
+    ButtonPreview(ButtonColor.Black)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonInversePreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.INVERSE)
+    ButtonPreview(ButtonColor.Inverse)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonAiPreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.AI)
+    ButtonPreview(ButtonColor.Ai)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonWhiteWithOutlinePreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.WHITE_WITH_OUTLINE)
+    ButtonPreview(ButtonColor.WhiteWithOutline)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonBlackOutlinePreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.BLACK_OUTLINE)
+    ButtonPreview(ButtonColor.BlackOutline)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonDangerPreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.DANGER)
+    ButtonPreview(ButtonColor.Danger)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonGhostPreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.GHOST)
+    ButtonPreview(ButtonColor.Ghost)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonInstitutionPreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.INSTITUTION)
+    ButtonPreview(ButtonColor.Institution)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonBeigePreviews() {
     ContextKeeper.appContext = LocalContext.current
-    ButtonPreview(ButtonColor.BEIGE)
+    ButtonPreview(ButtonColor.Beige)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonCustomPreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(
+        ButtonColor.Custom(
+            backgroundColor = HorizonColors.PrimitivesBeige.beige15(),
+            contentColor = HorizonColors.Surface.institution(),
+        )
+    )
 }
 
 @Composable
@@ -210,16 +231,16 @@ private fun ButtonPreview(color: ButtonColor) {
     val heights = ButtonHeight.entries.toTypedArray()
     val widths = ButtonWidth.entries.toTypedArray()
     val iconPositions = listOf(
-        IconPosition.NoIcon,
-        IconPosition.Start(iconRes = R.drawable.add),
-        IconPosition.End(iconRes = R.drawable.add)
+        ButtonIconPosition.NoIcon,
+        ButtonIconPosition.Start(iconRes = R.drawable.add),
+        ButtonIconPosition.End(iconRes = R.drawable.add)
     )
 
     Column {
         heights.forEach { height ->
             widths.forEach { width ->
                 iconPositions.forEach { iconPosition ->
-                    Text(text = "${height.name} ${width.name} ${color.name} ${iconPosition::class.simpleName}")
+                    Text(text = "${height.name} ${width.name} ${color.javaClass.simpleName} ${iconPosition::class.simpleName}")
                     HorizonSpace(SpaceSize.SPACE_2)
                     Button(
                         label = "Button",
@@ -228,7 +249,7 @@ private fun ButtonPreview(color: ButtonColor) {
                         color = color,
                         iconPosition = iconPosition,
                         badge = {
-                            if (iconPosition is IconPosition.NoIcon) Badge(content = BadgeContent.Text("5"), type = BadgeType.PRIMARY)
+                            if (iconPosition is ButtonIconPosition.NoIcon) Badge(content = BadgeContent.Text("5"), type = BadgeType.Primary)
                         }
                     )
                     HorizonSpace(SpaceSize.SPACE_8)
