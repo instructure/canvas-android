@@ -346,6 +346,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 // Update the module item locally, needed to unlock modules as the user ViewPages through them
                 getCurrentModuleItem(currentPos)?.completionRequirement?.completed = true
 
+                setupNextModule(getModuleItemGroup(currentPos))
+
                 // Update the module state to indicate in the list that the module is completed
                 val module = modules.find { it.id == moduleItem.moduleId } ?: return@tryWeave
                 val isModuleCompleted = items.flatten().filter { it.moduleId == moduleItem.moduleId }.all { it.completionRequirement?.completed.orDefault() }
@@ -786,11 +788,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         private const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
 
 
-        //we don't want to add subheaders or external tools into the list. subheaders don't do anything and we
-        //don't support external tools.
+        //we don't want to add external tools into the list. we don't support external tools.
         fun shouldAddModuleItem(context: Context, moduleItem: ModuleItem): Boolean = when (moduleItem.type) {
             "UnlockRequirements" -> false
-            "SubHeader" -> false
             else -> !moduleItem.title.equals(context.getString(R.string.loading), ignoreCase = true)
         }
 
