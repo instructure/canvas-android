@@ -81,10 +81,10 @@ enum class ButtonColor(
     BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Text.title())
 }
 
-sealed class IconPosition(@DrawableRes open val iconRes: Int? = null) {
-    data object NoIcon : IconPosition()
-    data class Start(@DrawableRes override val iconRes: Int) : IconPosition(iconRes)
-    data class End(@DrawableRes override val iconRes: Int) : IconPosition(iconRes)
+sealed class ButtonIconPosition(@DrawableRes open val iconRes: Int? = null) {
+    data object NoIcon : ButtonIconPosition()
+    data class Start(@DrawableRes override val iconRes: Int) : ButtonIconPosition(iconRes)
+    data class End(@DrawableRes override val iconRes: Int) : ButtonIconPosition(iconRes)
 }
 
 @Composable
@@ -94,7 +94,7 @@ fun Button(
     height: ButtonHeight = ButtonHeight.NORMAL,
     width: ButtonWidth = ButtonWidth.RELATIVE,
     color: ButtonColor = ButtonColor.BLACK,
-    iconPosition: IconPosition = IconPosition.NoIcon,
+    iconPosition: ButtonIconPosition = ButtonIconPosition.NoIcon,
     enabled: Boolean = true,
     onClick: () -> Unit = {},
     badge: @Composable (() -> Unit)? = null
@@ -123,12 +123,12 @@ fun Button(
                 disabledContentColor = color.contentColor
             ),
         ) {
-            if (iconPosition is IconPosition.Start) {
+            if (iconPosition is ButtonIconPosition.Start) {
                 Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)
                 HorizonSpace(SpaceSize.SPACE_4)
             }
             Text(text = label, style = height.textStyle, color = color.contentColor)
-            if (iconPosition is IconPosition.End) {
+            if (iconPosition is ButtonIconPosition.End) {
                 HorizonSpace(SpaceSize.SPACE_4)
                 Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)
             }
@@ -210,9 +210,9 @@ private fun ButtonPreview(color: ButtonColor) {
     val heights = ButtonHeight.entries.toTypedArray()
     val widths = ButtonWidth.entries.toTypedArray()
     val iconPositions = listOf(
-        IconPosition.NoIcon,
-        IconPosition.Start(iconRes = R.drawable.add),
-        IconPosition.End(iconRes = R.drawable.add)
+        ButtonIconPosition.NoIcon,
+        ButtonIconPosition.Start(iconRes = R.drawable.add),
+        ButtonIconPosition.End(iconRes = R.drawable.add)
     )
 
     Column {
@@ -228,7 +228,7 @@ private fun ButtonPreview(color: ButtonColor) {
                         color = color,
                         iconPosition = iconPosition,
                         badge = {
-                            if (iconPosition is IconPosition.NoIcon) Badge(content = BadgeContent.Text("5"), type = BadgeType.PRIMARY)
+                            if (iconPosition is ButtonIconPosition.NoIcon) Badge(content = BadgeContent.Text("5"), type = BadgeType.PRIMARY)
                         }
                     )
                     HorizonSpace(SpaceSize.SPACE_8)
