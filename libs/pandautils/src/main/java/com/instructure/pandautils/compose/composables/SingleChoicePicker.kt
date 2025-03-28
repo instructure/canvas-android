@@ -44,8 +44,9 @@ import com.instructure.pandautils.R
 fun<T> SingleChoicePicker(
     title: String,
     items: List<T>,
+    stringValueOfItem: @Composable (T) -> String,
     contextColor: Color,
-    selectedIndex: Int,
+    selectedItem: T,
     onItemSelected: (T) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -67,12 +68,12 @@ fun<T> SingleChoicePicker(
                     }
                     .clearAndSetSemantics {
                         contentDescription = item.toString()
-                        selected = items.indexOf(item) == selectedIndex
+                        selected = item == selectedItem
                     }
             ) {
                 Spacer(modifier = Modifier.width(20.dp))
                 RadioButton(
-                    selected = items.indexOf(item) == selectedIndex,
+                    selected = item == selectedItem,
                     onClick = { onItemSelected(item) },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = contextColor,
@@ -82,7 +83,7 @@ fun<T> SingleChoicePicker(
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Text(
-                    item.toString(),
+                    stringValueOfItem(item),
                     color = colorResource(R.color.textDarkest),
                     fontSize = 16.sp
                 )
@@ -97,8 +98,9 @@ private fun SingleChoicePickerPreview(){
     SingleChoicePicker(
         title = "Title",
         items = listOf("Item 1", "Item 2", "Item 3"),
+        stringValueOfItem = { it },
         contextColor = Color.Blue,
-        selectedIndex = 0,
+        selectedItem = "Item 2",
         onItemSelected = {},
         modifier = Modifier
     )

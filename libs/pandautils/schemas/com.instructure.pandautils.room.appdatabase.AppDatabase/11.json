@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 11,
-    "identityHash": "621b96b1dc7b8b42be22036dfd6c00a5",
+    "identityHash": "a3c5b4d123bfb3545f913e98d23e0a2e",
     "entities": [
       {
         "tableName": "AttachmentEntity",
@@ -608,7 +608,7 @@
       },
       {
         "tableName": "assignment_filter",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userDomain` TEXT NOT NULL, `userId` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `groupId` INTEGER NOT NULL, `selectedIndexes` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userDomain` TEXT NOT NULL, `userId` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `selectedAssignmentFilters` TEXT NOT NULL, `selectedAssignmentStatusFilter` TEXT, `selectedGroupByOption` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -635,14 +635,20 @@
             "notNull": true
           },
           {
-            "fieldPath": "groupId",
-            "columnName": "groupId",
-            "affinity": "INTEGER",
+            "fieldPath": "selectedAssignmentFilters",
+            "columnName": "selectedAssignmentFilters",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "selectedIndexes",
-            "columnName": "selectedIndexes",
+            "fieldPath": "selectedAssignmentStatusFilter",
+            "columnName": "selectedAssignmentStatusFilter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "selectedGroupByOption",
+            "columnName": "selectedGroupByOption",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -660,7 +666,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '621b96b1dc7b8b42be22036dfd6c00a5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3c5b4d123bfb3545f913e98d23e0a2e')"
     ]
   }
 }

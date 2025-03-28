@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.assignment.list
 
-import android.content.res.Resources
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -25,15 +24,14 @@ import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemS
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOverFlowItem
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
-import com.instructure.teacher.R
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentStatusFilterOption
 
-class TeacherAssignmentListBehavior(private val resources: Resources): AssignmentListBehavior {
+class TeacherAssignmentListBehavior: AssignmentListBehavior {
     override fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState {
         return AssignmentGroupItemState(
             course,
@@ -46,67 +44,39 @@ class TeacherAssignmentListBehavior(private val resources: Resources): Assignmen
         )
     }
 
-    override fun getAssignmentListFilterState(
-        contextColor: Int,
-        courseName: String,
-        gradingPeriods: List<GradingPeriod>?,
-        currentGradingPeriod: GradingPeriod?
-    ): AssignmentListFilterState {
-        val groups = mutableListOf(
-            AssignmentListFilterGroup(
-                groupId = 0,
-                title = resources.getString(R.string.assignmentFilter),
-                options = listOf(
-                    AssignmentListFilterOption.AllFilterAssignments(resources),
-                    AssignmentListFilterOption.NeedsGrading(resources),
-                    AssignmentListFilterOption.NotSubmitted(resources),
-                ),
-                selectedOptionIndexes = (0..2).toList(),
-                groupType = AssignmentListFilterGroupType.SingleChoice,
-                filterType = AssignmentListFilterType.Filter
+    override fun getAssignmentFilters(): AssignmentListFilterData {
+        return AssignmentListFilterData(
+            listOf(
+                AssignmentFilter.All,
+                AssignmentFilter.NeedsGrading,
+                AssignmentFilter.NotSubmitted,
             ),
-            AssignmentListFilterGroup(
-                groupId = 1,
-                title = resources.getString(R.string.statusFilter),
-                options = listOf(
-                    AssignmentListFilterOption.AllStatusAssignments(resources),
-                    AssignmentListFilterOption.Published(resources),
-                    AssignmentListFilterOption.Unpublished(resources),
-                ),
-                selectedOptionIndexes = listOf(0),
-                groupType = AssignmentListFilterGroupType.SingleChoice,
-                filterType = AssignmentListFilterType.Filter
-            ),
-            AssignmentListFilterGroup(
-                groupId = 2,
-                title = resources.getString(R.string.groupedBy),
-                options = listOf(
-                    AssignmentListGroupByOption.AssignmentGroup(resources),
-                    AssignmentListGroupByOption.AssignmentType(resources),
-                ),
-                selectedOptionIndexes = listOf(0),
-                groupType = AssignmentListFilterGroupType.SingleChoice,
-                filterType = AssignmentListFilterType.GroupBy
-            ),
+            AssignmentListFilterType.SingleChoice
         )
-        if (gradingPeriods != null && gradingPeriods.size > 1) {
-            val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
-            val currentPeriodIndex = currentGradingPeriod?.let { gradingPeriods.indexOf(it) } ?: 0
-            groups.add(
-                AssignmentListFilterGroup(
-                    groupId = 4,
-                    title = resources.getString(R.string.gradingPeriodHeading),
-                    options = listOf(allGradingPeriod) + gradingPeriods.map {
-                        AssignmentListFilterOption.GradingPeriod(it, resources)
-                    },
-                    selectedOptionIndexes = listOf(currentPeriodIndex + 1),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        }
+    }
 
-        return AssignmentListFilterState(contextColor, courseName, groups)
+    override fun getAssignmentStatusFilters(): List<AssignmentStatusFilterOption>? {
+        return listOf(
+            AssignmentStatusFilterOption.All,
+            AssignmentStatusFilterOption.Published,
+            AssignmentStatusFilterOption.Unpublished
+        )
+    }
+
+    override fun getGroupByOptions(): List<AssignmentGroupByOption> {
+        return listOf(
+            AssignmentGroupByOption.AssignmentGroup,
+            AssignmentGroupByOption.AssignmentType,
+        )
+    }
+
+    override fun getDefaultSelection(currentGradingPeriod: GradingPeriod?): AssignmentListSelectedFilters {
+        return AssignmentListSelectedFilters(
+            selectedAssignmentFilters = listOf(AssignmentFilter.All),
+            selectedAssignmentStatusFilter = AssignmentStatusFilterOption.All,
+            selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup,
+            selectedGradingPeriodFilter = currentGradingPeriod
+        )
     }
 
     override fun getOverFlowMenuItems(activity: FragmentActivity, fragment: AssignmentListFragment): List<AssignmentListMenuOverFlowItem> = emptyList()

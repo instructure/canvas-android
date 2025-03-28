@@ -22,11 +22,9 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
 import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
-import com.instructure.pandautils.room.assignment.list.entities.AssignmentListFilterEntity
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.list.datasource.AssignmentListDataSource
@@ -38,7 +36,7 @@ class StudentAssignmentListRepository(
     networkDataSource: AssignmentListNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-    private val assignmentListFilterDao: AssignmentListFilterDao
+    private val assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao
 ) : Repository<AssignmentListDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider), AssignmentListRepository {
 
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -76,42 +74,22 @@ class StudentAssignmentListRepository(
         userDomain: String,
         userId: Long,
         contextId: Long,
-        groupId: Int
-    ): List<Int>? {
-        return assignmentListFilterDao.findAssignmentListFilter(userDomain, userId, contextId, groupId)?.selectedIndexes
+    ): AssignmentListSelectedFiltersEntity? {
+        return assignmentListSelectedFiltersEntityDao.findAssignmentListSelectedFiltersEntity(userDomain, userId, contextId)
     }
 
     override suspend fun updateSelectedOptions(
-        userDomain: String,
-        userId: Long,
-        contextId: Long,
-        state: AssignmentListFilterState
+        entity: AssignmentListSelectedFiltersEntity
     ) {
-        state.filterGroups.forEach { group ->
-            if (group.options.any { it is AssignmentListFilterOption.GradingPeriod }) {
-                return@forEach
-            }
-            val entity = assignmentListFilterDao.findAssignmentListFilter(
-                userDomain,
-                userId,
-                contextId,
-                group.groupId
-            )
-            if (entity != null) {
-                assignmentListFilterDao.update(
-                    entity.copy(selectedIndexes = group.selectedOptionIndexes)
-                )
-            } else {
-                assignmentListFilterDao.insert(
-                    entity = AssignmentListFilterEntity(
-                        userDomain = userDomain,
-                        userId = userId,
-                        contextId = contextId,
-                        groupId = group.groupId,
-                        selectedIndexes = group.selectedOptionIndexes
-                    )
-                )
-            }
-        }
+        val databaseEntity = assignmentListSelectedFiltersEntityDao.findAssignmentListSelectedFiltersEntity(
+            entity.userDomain,
+            entity.userId,
+            entity.contextId
+        )?.copy(
+            selectedAssignmentFilters = entity.selectedAssignmentFilters,
+            selectedAssignmentStatusFilter = entity.selectedAssignmentStatusFilter,
+            selectedGroupByOption = entity.selectedGroupByOption
+        ) ?: entity
+        assignmentListSelectedFiltersEntityDao.insertOrUpdate(databaseEntity)
     }
 }

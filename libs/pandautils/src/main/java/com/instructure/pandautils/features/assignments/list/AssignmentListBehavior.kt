@@ -16,17 +16,25 @@
  */
 package com.instructure.pandautils.features.assignments.list
 
-import androidx.annotation.ColorInt
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentStatusFilterOption
 
 interface AssignmentListBehavior {
     fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState
 
-    fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?, currentGradingPeriod: GradingPeriod?): AssignmentListFilterState
+    fun getAssignmentFilters(): AssignmentListFilterData
+
+    fun getAssignmentStatusFilters(): List<AssignmentStatusFilterOption>?
+
+    fun getGroupByOptions(): List<AssignmentGroupByOption>
+
+    fun getDefaultSelection(currentGradingPeriod: GradingPeriod?): AssignmentListSelectedFilters
 
     fun getOverFlowMenuItems(activity: FragmentActivity, fragment: AssignmentListFragment): List<AssignmentListMenuOverFlowItem>
 }

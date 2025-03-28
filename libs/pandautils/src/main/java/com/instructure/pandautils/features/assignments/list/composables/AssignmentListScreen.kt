@@ -72,7 +72,6 @@ import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterScreen
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.ScreenState
@@ -117,11 +116,19 @@ fun AssignmentListScreen(
             }
 
             AssignmentListScreenOption.Filter -> {
-                AssignmentListFilterScreen(
-                    state.filterState,
-                    { screenActionHandler(AssignmentListScreenEvent.UpdateFilterState(it)) },
-                    { screenActionHandler(AssignmentListScreenEvent.CloseFilterScreen) }
-                )
+                state.filterOptions?.let {
+                    AssignmentListFilterScreen(
+                        state.course.name,
+                        Color(state.course.color),
+                        state.filterOptions.assignmentFilters,
+                        state.filterOptions.assignmentStatusFilters,
+                        state.filterOptions.groupByOptions,
+                        state.filterOptions.gradingPeriodOptions,
+                        state.selectedFilterData,
+                        { screenActionHandler(AssignmentListScreenEvent.UpdateFilterState(it)) },
+                        { screenActionHandler(AssignmentListScreenEvent.CloseFilterScreen) }
+                    )
+                }
             }
         }
     }
@@ -292,10 +299,9 @@ private fun AssignmentListContentView(
     listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
     Column {
-        val gradingPeriodGroup = state.filterState.filterGroups.firstOrNull { it.options.any { it is AssignmentListFilterOption.GradingPeriod } }
-        val selectedGradingPeriod = gradingPeriodGroup?.options?.get(gradingPeriodGroup.selectedOptionIndexes.firstOrNull().orDefault()) as? AssignmentListFilterOption.GradingPeriod
-        val gradingPeriodName = if (selectedGradingPeriod?.period != null) selectedGradingPeriod.stringValue else stringResource(R.string.all)
-        val gradingPeriodContentDescription = stringResource(R.string.gradingPeriod) + " " + if (selectedGradingPeriod?.period != null) selectedGradingPeriod.stringValue else stringResource(R.string.all)
+        val selectedGradingPeriod = state.selectedFilterData.selectedGradingPeriodFilter
+        val gradingPeriodName = if (selectedGradingPeriod != null) selectedGradingPeriod.title.orEmpty() else stringResource(R.string.all)
+        val gradingPeriodContentDescription = stringResource(R.string.gradingPeriod) + " " + if (selectedGradingPeriod != null) selectedGradingPeriod.title else stringResource(R.string.all)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier

@@ -16,13 +16,12 @@
  */
 package com.instructure.teacher.di
 
-import android.content.res.Resources
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
-import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
 import com.instructure.teacher.features.assignment.list.TeacherAssignmentListBehavior
 import com.instructure.teacher.features.assignment.list.TeacherAssignmentListRepository
 import com.instructure.teacher.features.assignment.list.TeacherAssignmentListRouter
@@ -48,13 +47,13 @@ class AssignmentListViewModelModule {
     fun provideAssignmentListRepository(
         assignmentApi: AssignmentAPI.AssignmentInterface,
         courseApi: CourseAPI.CoursesInterface,
-        assignmentListFilterDao: AssignmentListFilterDao
+        assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao
     ): AssignmentListRepository {
-        return TeacherAssignmentListRepository(assignmentApi, courseApi, assignmentListFilterDao)
+        return TeacherAssignmentListRepository(assignmentApi, courseApi, assignmentListSelectedFiltersEntityDao)
     }
 
     @Provides
-    fun provideAssignmentListBehavior(resources: Resources): AssignmentListBehavior {
-        return TeacherAssignmentListBehavior(resources)
+    fun provideAssignmentListBehavior(): AssignmentListBehavior {
+        return TeacherAssignmentListBehavior()
     }
 }

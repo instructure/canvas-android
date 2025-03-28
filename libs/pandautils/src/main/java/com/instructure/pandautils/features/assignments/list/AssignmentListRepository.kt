@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 
 interface AssignmentListRepository {
     suspend fun getAssignments(courseId: Long, forceRefresh: Boolean = false): DataResult<List<AssignmentGroup>>
@@ -35,7 +35,7 @@ interface AssignmentListRepository {
 
     suspend fun getCourse(courseId: Long, forceRefresh: Boolean = false): DataResult<Course>
 
-    suspend fun getSelectedOptions(userDomain: String, userId: Long, contextId: Long, groupId: Int): List<Int>?
+    suspend fun getSelectedOptions(userDomain: String, userId: Long, contextId: Long): AssignmentListSelectedFiltersEntity?
 
-    suspend fun updateSelectedOptions(userDomain: String, userId: Long, contextId: Long, state: AssignmentListFilterState)
+    suspend fun updateSelectedOptions(entity: AssignmentListSelectedFiltersEntity)
 }

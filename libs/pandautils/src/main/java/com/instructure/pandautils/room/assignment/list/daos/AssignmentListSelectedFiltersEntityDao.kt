@@ -23,22 +23,22 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
-import com.instructure.pandautils.room.assignment.list.entities.AssignmentListFilterEntity
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 
 @Dao
-interface AssignmentListFilterDao {
+interface AssignmentListSelectedFiltersEntityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: AssignmentListFilterEntity)
+    suspend fun insert(entity: AssignmentListSelectedFiltersEntity)
 
     @Upsert
-    suspend fun insertOrUpdate(entity: AssignmentListFilterEntity)
+    suspend fun insertOrUpdate(entity: AssignmentListSelectedFiltersEntity)
 
     @Delete
-    suspend fun delete(entity: AssignmentListFilterEntity)
+    suspend fun delete(entity: AssignmentListSelectedFiltersEntity)
 
     @Update
-    suspend fun update(entity: AssignmentListFilterEntity)
+    suspend fun update(entity: AssignmentListSelectedFiltersEntity)
 
-    @Query("SELECT * FROM assignment_filter WHERE userDomain = :userDomain AND userId = :userId AND contextId = :contextId AND groupId = :groupId")
-    suspend fun findAssignmentListFilter(userDomain: String, userId: Long, contextId: Long, groupId: Int): AssignmentListFilterEntity?
+    @Query("SELECT * FROM assignment_filter WHERE userDomain = :userDomain AND userId = :userId AND contextId = :contextId")
+    suspend fun findAssignmentListSelectedFiltersEntity(userDomain: String, userId: Long, contextId: Long): AssignmentListSelectedFiltersEntity?
 }

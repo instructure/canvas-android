@@ -8,7 +8,8 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.compose.composables.GroupedListViewGroup
 import com.instructure.pandautils.compose.composables.GroupedListViewGroupItem
 import com.instructure.pandautils.compose.composables.GroupedListViewState
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.utils.ScreenState
 
 data class AssignmentListUiState(
@@ -23,7 +24,8 @@ data class AssignmentListUiState(
     val assignmentGroups: List<AssignmentGroup> = emptyList(),
     val gradingPeriodsWithAssignments: Map<GradingPeriod, List<Assignment>> = emptyMap(),
     val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList()),
-    val filterState: AssignmentListFilterState = AssignmentListFilterState(),
+    val filterOptions: AssignmentListFilterOptions? = null,
+    val selectedFilterData: AssignmentListSelectedFilters = AssignmentListSelectedFilters(),
     val searchQuery: String = "",
     val searchBarExpanded: Boolean = false,
     val overFlowItemsExpanded: Boolean = false,
@@ -67,7 +69,7 @@ sealed class AssignmentListFragmentEvent {
 
 sealed class AssignmentListScreenEvent {
     data object NavigateBack: AssignmentListScreenEvent()
-    data class UpdateFilterState(val filterState: AssignmentListFilterState): AssignmentListScreenEvent()
+    data class UpdateFilterState(val selectedFilters: AssignmentListSelectedFilters): AssignmentListScreenEvent()
     data object OpenFilterScreen: AssignmentListScreenEvent()
     data object CloseFilterScreen: AssignmentListScreenEvent()
     data class ExpandCollapseSearchBar(val expanded: Boolean): AssignmentListScreenEvent()

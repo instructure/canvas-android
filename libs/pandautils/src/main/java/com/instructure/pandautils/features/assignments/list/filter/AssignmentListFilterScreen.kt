@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.MultiChoicePicker
@@ -40,24 +41,30 @@ import com.instructure.pandautils.compose.composables.SingleChoicePicker
 
 @Composable
 fun AssignmentListFilterScreen(
-    state: AssignmentListFilterState,
-    onFilterChange: (AssignmentListFilterState) -> Unit,
+    courseName: String,
+    contextColor: Color,
+    assignmentFilterOptions: AssignmentListFilterData,
+    assignmentStatusFilterOptions: List<AssignmentStatusFilterOption>?,
+    assignmentGroupByOptions: List<AssignmentGroupByOption>,
+    gradingPeriodOptions: List<GradingPeriod?>?,
+    selectedOptions: AssignmentListSelectedFilters,
+    onFilterChange: (AssignmentListSelectedFilters) -> Unit,
     onBackPressed: () -> Unit
 ) {
-    var filterState by remember { mutableStateOf(state) }
+    var selectedFilters by remember { mutableStateOf(selectedOptions) }
     Scaffold(
         backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(R.string.gradePreferences),
-                subtitle = state.courseName,
-                backgroundColor = Color(state.contextColor),
+                subtitle = courseName,
+                backgroundColor = contextColor,
                 contentColor = colorResource(R.color.backgroundLightest),
                 navIconRes = R.drawable.ic_close,
                 navIconContentDescription = stringResource(R.string.close),
                 navigationActionClick = { onBackPressed() },
                 actions = {
-                    TextButton({ onFilterChange(filterState); onBackPressed() }) {
+                    TextButton({ onFilterChange(selectedFilters); onBackPressed() }) {
                         Text(stringResource(R.string.done), color = colorResource(R.color.backgroundLightest))
                     }
                 }
@@ -70,56 +77,99 @@ fun AssignmentListFilterScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            filterState.filterGroups.forEach { group ->
-                AssignmentListFilterGroup(group, Color(state.contextColor)) {
-                    val newState = filterState.copy(filterGroups = filterState.filterGroups.map { g ->
-                        if (g.title == it.title) {
-                            it
-                        } else {
-                            g
-                        }
-                    })
-                    filterState = newState
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun AssignmentListFilterGroup(
-    group: AssignmentListFilterGroup,
-    contextColor: Color,
-    onFilterChange: (AssignmentListFilterGroup) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        when (group.groupType) {
-            AssignmentListFilterGroupType.SingleChoice -> {
+            if (assignmentFilterOptions.assignmentFilterType == AssignmentListFilterType.SingleChoice) {
                 SingleChoicePicker(
-                    title = group.title,
-                    items = group.options,
+                    title = stringResource(R.string.assignmentFilter),
+                    items = assignmentFilterOptions.assignmentFilterOptions,
+                    stringValueOfItem = {
+                        when (it) {
+                            AssignmentFilter.All -> stringResource(R.string.all)
+                            AssignmentFilter.NotYetSubmitted -> stringResource(R.string.notYetSubmitted)
+                            AssignmentFilter.ToBeGraded -> stringResource(R.string.toBeGraded)
+                            AssignmentFilter.Graded -> stringResource(R.string.graded)
+                            AssignmentFilter.Other -> stringResource(R.string.other)
+                            AssignmentFilter.NeedsGrading -> stringResource(R.string.needsGrading)
+                            AssignmentFilter.NotSubmitted -> stringResource(R.string.notSubmitted)
+                        }
+                    },
                     contextColor = contextColor,
-                    selectedIndex = group.selectedOptionIndexes.first(),
-                    onItemSelected = { onFilterChange(group.copy(selectedOptionIndexes = listOf(group.options.indexOf(it)))) },
+                    selectedItem = selectedFilters.selectedAssignmentFilters.first(),
+                    onItemSelected = { selectedFilters = selectedFilters.copy(selectedAssignmentFilters = listOf(it)) }
+                )
+            } else {
+                MultiChoicePicker(
+                    title = stringResource(R.string.assignmentFilter),
+                    items = assignmentFilterOptions.assignmentFilterOptions,
+                    stringValueOfItem = {
+                        when (it) {
+                            AssignmentFilter.All -> stringResource(R.string.all)
+                            AssignmentFilter.NotYetSubmitted -> stringResource(R.string.notYetSubmitted)
+                            AssignmentFilter.ToBeGraded -> stringResource(R.string.toBeGraded)
+                            AssignmentFilter.Graded -> stringResource(R.string.graded)
+                            AssignmentFilter.Other -> stringResource(R.string.other)
+                            AssignmentFilter.NeedsGrading -> stringResource(R.string.needsGrading)
+                            AssignmentFilter.NotSubmitted -> stringResource(R.string.notSubmitted)
+                        }
+                    },
+                    contextColor = contextColor,
+                    selectedItems = selectedFilters.selectedAssignmentFilters,
+                    onItemChange = { item, isSelected ->
+                        val newSelectedIndexes = if (isSelected) {
+                            selectedFilters.selectedAssignmentFilters + item
+                        } else {
+                            selectedFilters.selectedAssignmentFilters - item
+                        }
+                        selectedFilters = selectedFilters.copy(selectedAssignmentFilters = newSelectedIndexes)
+                    }
                 )
             }
-            AssignmentListFilterGroupType.MultiChoice -> {
-                MultiChoicePicker(
-                    title = group.title,
-                    items = group.options,
-                    contextColor = contextColor,
-                    selectedIndexes = group.selectedOptionIndexes,
-                    onItemChange = { item, isSelected ->
-                        val index = group.options.indexOf(item)
-                        val newSelectedIndexes = if (isSelected) {
-                            group.selectedOptionIndexes + index
-                        } else {
-                            group.selectedOptionIndexes - index
+
+            assignmentStatusFilterOptions?.let {
+                SingleChoicePicker(
+                    title = stringResource(R.string.statusFilter),
+                    items = assignmentStatusFilterOptions,
+                    stringValueOfItem = {
+                        when (it) {
+                            AssignmentStatusFilterOption.All -> stringResource(R.string.all)
+                            AssignmentStatusFilterOption.Published -> stringResource(R.string.published)
+                            AssignmentStatusFilterOption.Unpublished -> stringResource(R.string.unpublished)
                         }
-                        onFilterChange(group.copy(selectedOptionIndexes = newSelectedIndexes))
                     },
+                    contextColor = contextColor,
+                    selectedItem = selectedFilters.selectedAssignmentStatusFilter ?: assignmentStatusFilterOptions.first(),
+                    onItemSelected = { selectedFilters = selectedFilters.copy(selectedAssignmentStatusFilter = it) }
+                )
+            }
+
+            SingleChoicePicker(
+                title = stringResource(R.string.groupedBy),
+                items = assignmentGroupByOptions,
+                stringValueOfItem = {
+                    when (it) {
+                        AssignmentGroupByOption.DueDate -> stringResource(R.string.dueDate)
+                        AssignmentGroupByOption.AssignmentGroup -> stringResource(R.string.assignmentGroup)
+                        AssignmentGroupByOption.AssignmentType -> stringResource(R.string.assignmentType)
+                    }
+                },
+                contextColor = contextColor,
+                selectedItem = selectedFilters.selectedGroupByOption ?: assignmentGroupByOptions.first(),
+                onItemSelected = { selectedFilters = selectedFilters.copy(selectedGroupByOption = it) }
+            )
+
+            gradingPeriodOptions?.let {
+                SingleChoicePicker(
+                    title = stringResource(R.string.gradingPeriodHeading),
+                    items = gradingPeriodOptions,
+                    stringValueOfItem = {
+                        if (it == null)  {
+                             stringResource(R.string.allGradingPeriods)
+                        } else {
+                            it.title.orEmpty()
+                        }
+                    },
+                    contextColor = contextColor,
+                    selectedItem = selectedFilters.selectedGradingPeriodFilter ?: gradingPeriodOptions.first(),
+                    onItemSelected = { selectedFilters = selectedFilters.copy(selectedGradingPeriodFilter = it) }
                 )
             }
         }

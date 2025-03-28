@@ -16,8 +16,6 @@
  */
 package com.instructure.student.features.assignments.list
 
-import android.content.res.Resources
-import androidx.annotation.ColorInt
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -26,18 +24,16 @@ import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemS
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOverFlowItem
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentStatusFilterOption
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
 
-class StudentAssignmentListBehavior(
-    private val resources: Resources
-): AssignmentListBehavior {
+class StudentAssignmentListBehavior: AssignmentListBehavior {
     override fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState {
         return AssignmentGroupItemState(
             course,
@@ -48,56 +44,41 @@ class StudentAssignmentListBehavior(
         )
     }
 
-    override fun getAssignmentListFilterState(@ColorInt contextColor: Int, courseName: String, gradingPeriods: List<GradingPeriod>?, currentGradingPeriod: GradingPeriod?): AssignmentListFilterState {
-        val groups = mutableListOf(
-            AssignmentListFilterGroup(
-                groupId = 0,
-                title = resources.getString(R.string.assignmentFilter),
-                options = listOf(
-                    AssignmentListFilterOption.NotYetSubmitted(resources),
-                    AssignmentListFilterOption.ToBeGraded(resources),
-                    AssignmentListFilterOption.Graded(resources),
-                    AssignmentListFilterOption.Other(resources),
-                ),
-                selectedOptionIndexes = (0..3).toList(),
-                groupType = AssignmentListFilterGroupType.MultiChoice,
-                filterType = AssignmentListFilterType.Filter
+    override fun getAssignmentFilters(): AssignmentListFilterData {
+        return AssignmentListFilterData(
+            listOf(
+                AssignmentFilter.NotYetSubmitted,
+                AssignmentFilter.ToBeGraded,
+                AssignmentFilter.Graded,
+                AssignmentFilter.Other,
             ),
-            AssignmentListFilterGroup(
-                groupId = 1,
-                title = resources.getString(R.string.groupedBy),
-                options = listOf(
-                    AssignmentListGroupByOption.DueDate(resources),
-                    AssignmentListGroupByOption.AssignmentGroup(resources),
-                ),
-                selectedOptionIndexes = listOf(0),
-                groupType = AssignmentListFilterGroupType.SingleChoice,
-                filterType = AssignmentListFilterType.GroupBy
-            ),
+            AssignmentListFilterType.MultiChoice
         )
-        if (gradingPeriods != null && gradingPeriods.size > 1) {
-            val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
-            val currentPeriodIndex = currentGradingPeriod?.let { gradingPeriods.indexOf(it) } ?: 0
-            groups.add(
-                AssignmentListFilterGroup(
-                    groupId = 2,
-                    title = resources.getString(R.string.gradingPeriodHeading),
-                    options = listOf(allGradingPeriod) + gradingPeriods.map {
-                        AssignmentListFilterOption.GradingPeriod(it, resources)
-                     },
-                    selectedOptionIndexes = listOf(currentPeriodIndex + 1),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        }
+    }
 
-        return AssignmentListFilterState(contextColor, courseName, groups)
+    override fun getAssignmentStatusFilters(): List<AssignmentStatusFilterOption>? {
+        return null
+    }
+
+    override fun getGroupByOptions(): List<AssignmentGroupByOption> {
+        return listOf(
+            AssignmentGroupByOption.DueDate,
+            AssignmentGroupByOption.AssignmentGroup,
+        )
+    }
+
+    override fun getDefaultSelection(currentGradingPeriod: GradingPeriod?): AssignmentListSelectedFilters {
+        return AssignmentListSelectedFilters(
+            listOf(AssignmentFilter.NotYetSubmitted, AssignmentFilter.ToBeGraded, AssignmentFilter.Graded, AssignmentFilter.Other),
+            null,
+            AssignmentGroupByOption.DueDate,
+            currentGradingPeriod
+        )
     }
 
     override fun getOverFlowMenuItems(activity: FragmentActivity, fragment: AssignmentListFragment): List<AssignmentListMenuOverFlowItem> {
         return listOf(
-            AssignmentListMenuOverFlowItem(resources.getString(R.string.addBookmark)) {
+            AssignmentListMenuOverFlowItem(activity.getString(R.string.addBookmark)) {
                 val dialog = BookmarkCreationDialog.newInstance(activity, fragment, null)
                 dialog?.show(activity.supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
             }

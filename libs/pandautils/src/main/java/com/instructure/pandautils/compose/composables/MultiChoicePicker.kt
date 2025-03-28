@@ -44,8 +44,9 @@ import com.instructure.pandautils.R
 fun<T> MultiChoicePicker(
     title: String,
     items: List<T>,
+    stringValueOfItem: @Composable (T) -> String,
     contextColor: Color,
-    selectedIndexes: List<Int>,
+    selectedItems: List<T>,
     onItemChange: (T, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -63,16 +64,16 @@ fun<T> MultiChoicePicker(
                     .padding(vertical = 4.dp)
                     .background(colorResource(R.color.backgroundLightest))
                     .clickable {
-                        onItemChange(item, selectedIndexes.contains(items.indexOf(item)).not())
+                        onItemChange(item, selectedItems.contains(item).not())
                     }
                     .clearAndSetSemantics {
                         contentDescription = item.toString()
-                        selected = selectedIndexes.contains(items.indexOf(item))
+                        selected = selectedItems.contains(item)
                     }
             ) {
                 Spacer(modifier = Modifier.width(20.dp))
                 Checkbox(
-                    checked = selectedIndexes.contains(items.indexOf(item)),
+                    checked = selectedItems.contains(item),
                     onCheckedChange = { onItemChange(item, it) },
                     colors = CheckboxDefaults.colors(
                         checkedColor = contextColor,
@@ -82,7 +83,7 @@ fun<T> MultiChoicePicker(
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Text(
-                    item.toString(),
+                    stringValueOfItem(item),
                     color = colorResource(R.color.textDarkest),
                     fontSize = 16.sp
                 )
@@ -97,8 +98,9 @@ private fun MultiChoicePickerPreview(){
     MultiChoicePicker(
         title = "Title",
         items = listOf("Item 1", "Item 2", "Item 3", "Item 4"),
+        stringValueOfItem = { it },
         contextColor = Color.Blue,
-        selectedIndexes = listOf(0, 3),
+        selectedItems = listOf("Item 1", "Item 4"),
         onItemChange = {_, _ -> },
         modifier = Modifier
     )

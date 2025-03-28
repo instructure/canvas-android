@@ -23,8 +23,9 @@ import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEn
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
-import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
-import com.instructure.pandautils.room.assignment.list.entities.AssignmentListFilterEntity
+import com.instructure.pandautils.room.assignment.list.converter.AssignmentFilterConverter
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 import com.instructure.pandautils.room.common.Converters
 
 @Database(
@@ -39,10 +40,10 @@ import com.instructure.pandautils.room.common.Converters
         DashboardFileUploadEntity::class,
         ReminderEntity::class,
         ModuleBulkProgressEntity::class,
-        AssignmentListFilterEntity::class
+        AssignmentListSelectedFiltersEntity::class
     ], version = 11
 )
-@TypeConverters(Converters::class)
+@TypeConverters(Converters::class, AssignmentFilterConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun attachmentDao(): AttachmentDao
@@ -65,5 +66,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun moduleBulkProgressDao(): ModuleBulkProgressDao
 
-    abstract fun assignmentListFilterDao(): AssignmentListFilterDao
+    abstract fun assignmentListSelectedFiltersEntityDao(): AssignmentListSelectedFiltersEntityDao
 }
