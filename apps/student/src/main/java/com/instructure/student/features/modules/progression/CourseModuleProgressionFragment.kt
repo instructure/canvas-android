@@ -82,6 +82,7 @@ import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.instructure.student.util.CourseModulesStore
+import com.pspdfkit.internal.utilities.toArrayList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -109,7 +110,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var groupPos: Int by IntArg(key = GROUP_POSITION)
     private var childPos: Int by IntArg(key = CHILD_POSITION)
     private var modules: ArrayList<ModuleObject> by ParcelableArrayListArg(key = MODULE_OBJECTS)
-    private var items: ArrayList<ArrayList<ModuleItem>> by SerializableArg(key = MODULE_ITEMS, default = ArrayList())
+    private var items: ArrayList<ArrayList<ModuleItem>?> by SerializableArg(key = MODULE_ITEMS, default = ArrayList())
     private var assetId: String by StringArg(key = ASSET_ID)
     private var assetType: String by StringArg(key = ASSET_TYPE, default = ModuleItemAsset.MODULE_ITEM.assetType)
     // This is used in offline cases when the modules are not synced, but we have links with moduleId. This will never be module item asset type.
@@ -257,7 +258,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private fun setViewInfo(bundle: Bundle?) {
         // Figure out the total size so the adapter knows how many items it will have
         var size = 0
-        for (i in items.indices) { size += items[i].size }
+        for (i in items.indices) { size += items[i]?.size.orDefault() }
         itemsCount = size
 
         currentPos = if (bundle != null && bundle.containsKey(Const.MODULE_POSITION)) {
@@ -350,7 +351,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
                 // Update the module state to indicate in the list that the module is completed
                 val module = modules.find { it.id == moduleItem.moduleId } ?: return@tryWeave
-                val isModuleCompleted = items.flatten().filter { it.moduleId == moduleItem.moduleId }.all { it.completionRequirement?.completed.orDefault() }
+                val isModuleCompleted = items.filterNotNull().flatten().filter { it.moduleId == moduleItem.moduleId }.all { it.completionRequirement?.completed.orDefault() }
                 val updatedState = if (isModuleCompleted) State.Completed.apiString else module.state
 
                 // Update the module list fragment to show that these requirements are done,
@@ -428,8 +429,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 //check if we should add the moduleItem. Also, we don't want to add it if the view pager
                 //already contains it. This could happen if they complete an item and pull to refresh
                 //or if the teacher adds an item
-                if (shouldAddModuleItem(requireContext(), moduleItems[i]) && !items[index].contains(moduleItems[i])) {
-                    items[index].add(moduleItems[i])
+                if (shouldAddModuleItem(requireContext(), moduleItems[i]) && !items[index]?.contains(moduleItems[i]).orDefault()) {
+                    items[index]?.add(moduleItems[i])
                     itemsAdded++
                 }
             }
@@ -463,7 +464,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private fun setupNextModule(groupPosition: Int) {
         val nextUnlocked = groupPosition + 1
         // Check if the next_item module exists
-        if (items.size > nextUnlocked && items[nextUnlocked].isEmpty() && moduleItemsJob?.isActive != true) {
+        if (items.size > nextUnlocked && items[nextUnlocked] == null && moduleItemsJob?.isActive != true) {
             // Get the module items for the next_item module
             getModuleItemData(modules[nextUnlocked].id)
         }
@@ -479,7 +480,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private fun setupPreviousModule(groupPosition: Int) {
         val prevUnlocked = groupPosition - 1
         // Check if the prev_item module exists
-        if (prevUnlocked >= 0 && items[prevUnlocked].isEmpty() && moduleItemsJob?.isActive != true) {
+        if (prevUnlocked >= 0 && items[prevUnlocked] == null && moduleItemsJob?.isActive != true) {
             // Get the module items for the previous module. The user could select the third module without expanding the second module, so we wouldn't
             // know what is in the second module.
             getModuleItemData(modules[prevUnlocked].id)
@@ -496,12 +497,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         var modulePos = 0
         var i = 0
         while (i < items.size) {
-            if (position + 1 < items[i].size + modulePos) {
+            if (position + 1 < items[i]?.size.orDefault() + modulePos) {
                 // Set the label at the bottom
                 setModuleName(modules[i].name!!)
                 break
             }
-            modulePos += items[i].size
+            modulePos += items[i]?.size.orDefault()
             i++
         }
         // +1 because we're going to the next_item module item
@@ -518,12 +519,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         var modulePos = 0
         var i = 0
         while (i < items.size) {
-            if (position - 1 < items[i].size + modulePos) {
+            if (position - 1 < items[i]?.size.orDefault() + modulePos) {
                 // Set the label at the bottom
                 setModuleName(modules[i].name!!)
                 break
             }
-            modulePos += items[i].size
+            modulePos += items[i]?.size.orDefault()
             i++
         }
         // -1 from position because we're going to the previous module item
@@ -544,12 +545,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         var moduleItem: ModuleItem? = null
         var modulePos = 0
         for (i in items.indices) {
-            if (position < items[i].size + modulePos) {
-                moduleItem = items[i][position - modulePos]
-
+            val item = items[i]
+            if (item != null && position < item.size + modulePos) {
+                moduleItem = item[position - modulePos]
                 break
             }
-            modulePos += items[i].size
+            modulePos += items[i]?.size.orDefault()
         }
         return moduleItem
     }
@@ -565,11 +566,11 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private fun getModuleItemGroup(overallPos: Int): Int {
         var modulePos = 0
         for (i in items.indices) {
-            if (overallPos < items[i].size + modulePos) {
+            if (overallPos < items[i]?.size.orDefault() + modulePos) {
                 // overallPos is the contained in the current group (i)
                 return i
             }
-            modulePos += items[i].size
+            modulePos += items[i]?.size.orDefault()
         }
         return 0
     }
@@ -585,7 +586,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private fun getCurrentModuleItemPos(groupPosition: Int, childPosition: Int): Int {
         var modulePos = 0
         for (i in 0 until groupPosition) {
-            modulePos += items[i].size
+            modulePos += items[i]?.size.orDefault()
         }
         return modulePos + childPosition
     }
@@ -600,7 +601,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
      * @param childPosition
      * @return true if icon is added, false otherwise
      */
-    private fun addLockedIconIfNeeded(objects: ArrayList<ModuleObject>, moduleItems: ArrayList<ArrayList<ModuleItem>>, groupPosition: Int, childPosition: Int): Boolean {
+    private fun addLockedIconIfNeeded(objects: ArrayList<ModuleObject>, moduleItems: ArrayList<ArrayList<ModuleItem>?>, groupPosition: Int, childPosition: Int): Boolean {
         if (objects.size <= groupPosition) {
             binding.moduleNotFound.setVisible()
             setLockedIcon()
@@ -629,8 +630,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
             // Group is sequential, need to figure out which ones to display and not display. We don't want to display any locked items
             var index = -1 // Current behavior of sequential unlocking means that if you view the first item everything will unlock, so there won't be a 'first non-Completed item' and index will be -1
-            for (i in 0 until moduleItems[groupPosition].size) {
-                if (moduleItems[groupPosition][i].completionRequirement != null && !moduleItems[groupPosition][i].completionRequirement!!.completed) {
+            for (i in 0 until moduleItems[groupPosition]?.size.orDefault()) {
+                val moduleItem = moduleItems[groupPosition]
+                if (moduleItem != null && moduleItem[i].completionRequirement != null && !moduleItem[i].completionRequirement!!.completed) {
                     // i is the first non Completed item (if it exists), so we don't include this item to show in the view pager.
                     index = i
                     break
@@ -749,7 +751,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(requireContext(), current!!.id, modules, unfilteredItems)
                 groupPos = moduleHelper.newGroupPosition
                 childPos = moduleHelper.newChildPosition
-                items = moduleHelper.strippedModuleItems
+                items = moduleHelper.strippedModuleItems.map { it.toArrayList() }.toArrayList()
             } else {
                 binding.progressBar.setGone()
                 val moduleItemAsset = ModuleItemAsset.fromAssetType(assetType) ?: ModuleItemAsset.MODULE_ITEM
@@ -788,9 +790,11 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         private const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
 
 
-        //we don't want to add external tools into the list. we don't support external tools.
+        //we don't want to add subheaders or external tools into the list. subheaders don't do anything and we
+        //don't support external tools.
         fun shouldAddModuleItem(context: Context, moduleItem: ModuleItem): Boolean = when (moduleItem.type) {
             "UnlockRequirements" -> false
+            "SubHeader" -> false
             else -> !moduleItem.title.equals(context.getString(R.string.loading), ignoreCase = true)
         }
 
