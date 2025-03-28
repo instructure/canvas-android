@@ -2025,7 +2025,10 @@
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Needs Grading</string>
     <string name="assignmentListTitle">Assignment list</string>
-    <string name="assignmentListMaxpoints">%1$s points</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d point</item>
+        <item quantity="other">%d points</item>
+    </plurals>
     <string name="noAssignments">No assignments</string>
     <string name="assignmentGroup">Assignment Group</string>
     <string name="assignmentType">Assignment Type</string>
@@ -2054,4 +2057,5 @@
     <string name="submissionMessageSubject">%1$s on %2$s</string>
     <string name="all">All</string>
     <string name="errorLoadingAssignments">An error occurred while loading assignments</string>
+    <string name="a11y_searchAssignments">Search Assignments</string>
 </resources>

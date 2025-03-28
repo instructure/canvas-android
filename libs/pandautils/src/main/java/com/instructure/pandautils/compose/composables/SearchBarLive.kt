@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2024 - present Instructure, Inc.
- *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
- */
 package com.instructure.pandautils.compose.composables
 
 import android.content.res.Configuration
@@ -31,10 +16,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -50,15 +32,15 @@ import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 
 @Composable
-fun SearchBar(
+fun SearchBarLive(
     @DrawableRes icon: Int,
     tintColor: Color,
     placeholder: String,
-    onSearch: (String) -> Unit,
-    onExpand: ((Boolean) -> Unit)? = null,
-    onClear: (() -> Unit)? = null,
+    expanded: Boolean,
+    onExpand: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    searchQuery: String = "",
+    query: String,
+    queryChanged: (String) -> Unit,
     collapsable: Boolean = true,
     @DrawableRes hintIcon: Int? = null,
     collapseOnSearch: Boolean = false
@@ -68,8 +50,6 @@ fun SearchBar(
             .height(56.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var expanded by remember { mutableStateOf(!collapsable) }
-        var query by remember { mutableStateOf(searchQuery) }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
 
@@ -85,8 +65,7 @@ fun SearchBar(
                 IconButton(
                     modifier = Modifier.testTag("closeButton"),
                     onClick = {
-                        expanded = false
-                        onExpand?.invoke(false)
+                        onExpand(false)
                     }) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),
@@ -103,7 +82,7 @@ fun SearchBar(
                     .focusRequester(focusRequester),
                 placeholder = { Text(placeholder) },
                 value = query,
-                onValueChange = { query = it },
+                onValueChange = { queryChanged(it) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Search
@@ -111,10 +90,9 @@ fun SearchBar(
                 keyboardActions = KeyboardActions(
                     onSearch = {
                         keyboardController?.hide()
-                        onSearch(query)
+                        queryChanged(query)
                         if (collapseOnSearch) {
-                            expanded = false
-                            onExpand?.invoke(false)
+                            onExpand(false)
                         }
                     }
                 ),
@@ -145,10 +123,7 @@ fun SearchBar(
                     if (query.isNotEmpty()) {
                         IconButton(
                             modifier = Modifier.testTag("clearButton"),
-                            onClick = {
-                                query = ""
-                                onClear?.invoke()
-                            }) {
+                            onClick = { queryChanged("") }) {
                             Icon(
                                 modifier = Modifier.size(18.dp),
                                 painter = painterResource(R.drawable.ic_close),
@@ -162,8 +137,7 @@ fun SearchBar(
             IconButton(
                 modifier = Modifier.testTag("searchButton"),
                 onClick = {
-                    expanded = true
-                    onExpand?.invoke(true)
+                    onExpand(true)
                 }) {
                 Icon(
                     painter = painterResource(icon),
@@ -181,13 +155,15 @@ fun SearchBar(
     backgroundColor = 0xFFFFFFFF
 )
 @Composable
-fun SearchBarPreview() {
-    SearchBar(
+fun SearchBarLivePreview() {
+    SearchBarLive(
         icon = R.drawable.ic_smart_search,
         tintColor = Color.Black,
         placeholder = "Smart Search",
         onExpand = {},
-        onSearch = {}
+        expanded = false,
+        query = "",
+        queryChanged = {}
     )
 }
 
@@ -197,12 +173,14 @@ fun SearchBarPreview() {
     backgroundColor = 0xFF121212
 )
 @Composable
-fun SearchBarDarkPreview() {
-    SearchBar(
+fun SearchBarLiveDarkPreview() {
+    SearchBarLive(
         icon = R.drawable.ic_smart_search,
-        tintColor = Color.White,
+        tintColor = Color.Black,
         placeholder = "Smart Search",
         onExpand = {},
-        onSearch = {}
+        expanded = false,
+        query = "",
+        queryChanged = {}
     )
 }

@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.assignments.list.composables
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,22 +50,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.instructure.pandares.R
+import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.GroupedListView
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
-import com.instructure.pandautils.compose.composables.LiveSearchBar
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
+import com.instructure.pandautils.compose.composables.SearchBarLive
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
@@ -151,10 +151,10 @@ private fun AppBar(
                         contentDescription = stringResource(R.string.a11y_filterAssignments)
                     )
                 }
-                LiveSearchBar(
+                SearchBarLive(
                     icon = R.drawable.ic_search_white_24dp,
-                    tintColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),
-                    placeholder = "Search Assignments",
+                    tintColor = colorResource(R.color.backgroundLightest),
+                    placeholder = stringResource(R.string.a11y_searchAssignments),
                     query = state.searchQuery,
                     queryChanged = {
                         screenActionHandler(
@@ -202,7 +202,7 @@ private fun AppBar(
             }
         },
         backgroundColor = Color(state.course.color),
-        contentColor = colorResource(com.instructure.pandautils.R.color.backgroundLightest),
+        contentColor = colorResource(R.color.backgroundLightest),
         navigationActionClick = { screenActionHandler(AssignmentListScreenEvent.NavigateBack) }
     )
 }
@@ -457,9 +457,10 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                 }
                 if (item.showMaxPoints) {
                     Text(
-                        stringResource(
-                            R.string.assignmentListMaxpoints,
-                            assignment.pointsPossible.toFormattedString()
+                        pluralStringResource(
+                            R.plurals.assignmentListMaxpoints,
+                            assignment.pointsPossible.toInt(),
+                            assignment.pointsPossible.toInt()
                         ),
                         color = contextColor,
                         fontSize = 16.sp,
@@ -479,7 +480,6 @@ private fun AssignmentNeedsGradingChip(count: Int, contextColor: Color) {
             .clip(RoundedCornerShape(100.dp))
             .background(contextColor)
     ) {
-        Log.d("AssignmentNeedsGradingChip", "count: ${stringResource(R.string.needsGradingCount, count.toString())}")
         Text(
             stringResource(R.string.needsGradingCount, count),
             modifier = Modifier
