@@ -18,22 +18,23 @@
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.SectionAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(SingletonComponent::class)
 class AssignmentSubmissionListModule {
 
     @Provides
     fun provideAssignmentSubmissionListRepository(
         assignmentApi: AssignmentAPI.AssignmentInterface,
         enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-        courseApi: CourseAPI.CoursesInterface
+        courseApi: CourseAPI.CoursesInterface,
+        sectionApi: SectionAPI.SectionsInterface
     ): AssignmentSubmissionRepository {
-        return AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi)
+        return AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi)
     }
 }

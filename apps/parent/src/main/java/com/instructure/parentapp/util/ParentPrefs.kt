@@ -21,10 +21,13 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.BooleanPref
 import com.instructure.canvasapi2.utils.GsonPref
 import com.instructure.canvasapi2.utils.PrefManager
+import kotlin.reflect.KMutableProperty0
 
 
 object ParentPrefs : PrefManager("parentSP") {
 
     var currentStudent: User? by GsonPref(User::class.java, null, "current_student", false)
     var hasMigrated: Boolean by BooleanPref(false, "has_migrated_data_from_old_app")
+
+    override fun keepBaseProps(): List<KMutableProperty0<out Any?>> = listOf(::hasMigrated)
 }

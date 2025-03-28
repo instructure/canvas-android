@@ -82,7 +82,7 @@ class ParentInboxCoursePickerViewModelTest {
         assertEquals("course_1", options.defaultValues.contextCode)
         assertEquals("Course 1", options.defaultValues.subject)
         assertEquals(true, options.disabledFields.isContextDisabled)
-        assertEquals(listOf(EnrollmentType.TEACHERENROLLMENT), options.autoSelectRecipientsFromRoles)
+        assertEquals(listOf(EnrollmentType.TeacherEnrollment), options.autoSelectRecipientsFromRoles)
     }
 
     @Test

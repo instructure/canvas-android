@@ -27,11 +27,16 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.*
+import androidx.test.espresso.action.CoordinatesProvider
+import androidx.test.espresso.action.GeneralClickAction
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.action.Tap
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
@@ -43,11 +48,12 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.util.HumanReadables
 import androidx.viewpager.widget.ViewPager
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.espresso.swipeUp
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
 
 //
@@ -336,4 +342,12 @@ fun checkToastText(text: String, activity: Activity) {
 
 fun checkToastText(@StringRes stringRes: Int, activity: Activity) {
     onView(withText(stringRes)).inRoot(withDecorView(not(`is`(activity.window.decorView)))).check(matches(isDisplayed()))
+
+    retryWithIncreasingDelay(times = 5, initialDelay = 500, maxDelay = 15500) {
+        try {
+            onView(withText(stringRes)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+        } catch (e: NoMatchingViewException) {
+            //Intentionally empty as we would like to wait for the toast to disappear. Somehow doesNotExist() doesn't work because it passes even if the toast is still there and visible.
+        }
+    }
 }

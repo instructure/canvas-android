@@ -45,6 +45,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.DonutChartView
@@ -58,6 +59,7 @@ import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.accessibleTouchTarget
+import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collapse
 import com.instructure.pandautils.utils.expand
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -217,6 +219,11 @@ fun addBorderToContainer(view: View, borderColor: Int?, borderWidth: Int?, backg
     view.background = border
 }
 
+@BindingAdapter("themeSwitch")
+fun themeSwitch(materialSwitch: MaterialSwitch, color: Int) {
+    materialSwitch.applyTheme(color)
+}
+
 @BindingAdapter("layout_constraintWidth_percent")
 fun bindConstraintWidthPercentage(view: View, percentage: Float) {
     val params = view.layoutParams as ConstraintLayout.LayoutParams
@@ -268,9 +275,9 @@ fun setBottomMargin(view: View, bottomMargin: Int) {
     view.layoutParams = layoutParams
 }
 
-@BindingAdapter(value = ["userAvatar", "userName"], requireAll = true)
-fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?) {
-    ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl)
+@BindingAdapter(value = ["userAvatar", "userName", "avatarTint"], requireAll = false)
+fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: String?, @ColorInt avatarTint: Int?) {
+    ProfileUtils.loadAvatarForUser(imageView, userName, userAvatarUrl, avatarTint)
 }
 
 @BindingAdapter("avatar")

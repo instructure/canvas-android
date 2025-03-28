@@ -35,7 +35,7 @@ import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -44,7 +44,7 @@ import org.junit.Test
 
 @UninstallModules(GraphQlApiModule::class)
 @HiltAndroidTest
-class CommentLibraryPageTest : TeacherTest() {
+class CommentLibraryPageTest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 

@@ -62,6 +62,9 @@ object FileFolderAPI {
         @GET("users/self/files/{folderId}")
         fun getUserFile(@Path("folderId") folderId: Long): Call<FileFolder>
 
+        @GET("users/self/files/{folderId}")
+        suspend fun getUserFile(@Path("folderId") folderId: Long, @Tag params: RestParams): DataResult<FileFolder>
+
         @GET("folders/{folderId}/folders")
         fun getFirstPageFolders(@Path("folderId") folderId: Long): Call<List<FileFolder>>
 

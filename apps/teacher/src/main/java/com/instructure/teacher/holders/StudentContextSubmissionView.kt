@@ -59,7 +59,7 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
         }
 
         // Submission grade
-        if (submission.gradingStatus == SubmissionGradingStatus.EXCUSED || submission.gradingStatus == SubmissionGradingStatus.GRADED) {
+        if (submission.gradingStatus == SubmissionGradingStatus.excused || submission.gradingStatus == SubmissionGradingStatus.graded) {
             val pointsPossible = submission.assignment?.pointsPossible ?: 0.0
             val displayGrade = getDisplayGrade(
                 context = context,
@@ -79,7 +79,7 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
             binding.scoreBar.progress = ((submission.score ?: 0.0) / pointsPossible).toFloat()
         } else {
             binding.submissionGradeContainer.setGone()
-            if (submission.gradingStatus == SubmissionGradingStatus.NEEDS_GRADING) {
+            if (submission.gradingStatus == SubmissionGradingStatus.needs_grading) {
                 val submissionGradeDrawable = ContextCompat.getDrawable(context, R.drawable.bg_generic_pill)
                 val strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics)
                 (submissionGradeDrawable as GradientDrawable).setStroke(strokeWidth.toInt(), ThemePrefs.brandColor)

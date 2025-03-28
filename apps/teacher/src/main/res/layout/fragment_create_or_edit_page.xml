@@ -123,7 +123,7 @@
                     android:text="@string/setAsFrontPage"
                     android:textSize="16sp"/>
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/frontPageSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -132,6 +132,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:backgroundTint="@color/backgroundDarkest"
+                    app:theme="@style/Theme.Material3.DayNight"
                     tools:checked="true"/>
 
             </RelativeLayout>
@@ -155,7 +156,7 @@
                     android:text="@string/publish"
                     android:textSize="16sp"/>
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/publishSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -164,6 +165,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    app:theme="@style/Theme.Material3.DayNight"
                     app:backgroundTint="@color/backgroundDarkest"/>
 
             </RelativeLayout>

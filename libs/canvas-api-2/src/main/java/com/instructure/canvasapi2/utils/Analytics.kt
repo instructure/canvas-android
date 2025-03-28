@@ -18,7 +18,7 @@
 package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
-import io.heap.core.Heap
+import sdk.pendo.io.Pendo
 
 object Analytics {
 
@@ -31,11 +31,11 @@ object Analytics {
                 bundle.getString(it).orEmpty()
             }
         } ?: emptyMap()
-        Heap.track(eventName, map)
+        Pendo.track(eventName, map)
     }
 
     fun logEvent(eventName: String) {
-        Heap.track(eventName, emptyMap())
+        Pendo.track(eventName, emptyMap())
     }
 
     fun setUserProperty(propertyName: String, propertyValue: String) {

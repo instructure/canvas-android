@@ -12,23 +12,24 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.teacher.unit.features.assignment.submission
+ */package com.instructure.teacher.features.assignment.submission
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradeableStudent
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -42,12 +43,18 @@ class AssignmentSubmissionRepositoryTest {
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
+    private val sectionApi: SectionAPI.SectionsInterface = mockk(relaxed = true)
+
 
     private lateinit var repository: AssignmentSubmissionRepository
 
     @Before
     fun setup() {
-        repository = AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi)
+        repository = AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi)
+
+        coEvery {
+            sectionApi.getFirstPageSectionsList(any(), any())
+        } returns DataResult.Success(listOf(Section(id = 1L, name = "Section 1")))
     }
 
     @Test

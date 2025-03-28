@@ -35,6 +35,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@null"
+            app:avatarTint="@{@color/backgroundLightestElevated}"
             app:layout_constraintBottom_toTopOf="@id/student_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

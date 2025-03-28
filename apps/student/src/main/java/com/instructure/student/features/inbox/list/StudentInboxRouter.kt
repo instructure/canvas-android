@@ -34,7 +34,7 @@ import com.instructure.student.router.RouteMatcher.openMedia
 class StudentInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
-        val route = InboxDetailsFragment.makeRoute(conversation.id)
+        val route = InboxDetailsFragment.makeRoute(conversation.id, conversation.workflowState == Conversation.WorkflowState.UNREAD)
         RouteMatcher.route(activity, route)
     }
 

@@ -105,7 +105,7 @@ internal fun ManageStudentsScreen(
                     EmptyContent(
                         emptyMessage = stringResource(id = R.string.noStudentsErrorDescription),
                         imageRes = R.drawable.panda_manage_students,
-                        buttonText = stringResource(id = R.string.retry),
+                        buttonText = stringResource(id = R.string.noStudentsRefresh),
                         buttonClick = {
                             actionHandler(ManageStudentsAction.Refresh)
                         },

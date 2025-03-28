@@ -36,7 +36,7 @@ import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.espresso.ViewUtils
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import com.instructure.teacher.ui.utils.uploadTextFile
@@ -46,7 +46,7 @@ import java.io.File
 import java.io.FileWriter
 
 @HiltAndroidTest
-class FilesE2ETest: TeacherTest() {
+class FilesE2ETest: TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -148,9 +148,9 @@ class FilesE2ETest: TeacherTest() {
         speedGraderPage.selectFilesTab(1)
 
         Log.d(STEP_TAG,"Assert that '${submissionUploadInfo.fileName}' file. Navigate to Comments Tab and '${commentUploadInfo.fileName}' comment attachment is displayed.")
-        assignmentSubmissionListPage.assertFileDisplayed(submissionUploadInfo.fileName)
+        speedGraderPage.assertFileDisplayed(submissionUploadInfo.fileName)
         speedGraderPage.selectCommentsTab()
-        assignmentSubmissionListPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
+        speedGraderPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
 
         Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(5)

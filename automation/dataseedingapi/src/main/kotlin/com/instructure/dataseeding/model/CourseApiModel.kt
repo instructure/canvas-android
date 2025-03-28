@@ -55,7 +55,9 @@ data class UpdateCourse(
         @SerializedName("syllabus_body")
         val syllabusBody: String? = null,
         @SerializedName("default_view")
-        var homePage: String? = null
+        var homePage: String? = null,
+        @SerializedName("syllabus_course_summary")
+        var showSummary: Int? = 1
 )
 
 data class CourseSettings(

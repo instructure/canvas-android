@@ -256,3 +256,6 @@
 # AGP 8 update
 -dontwarn java.beans.MethodDescriptor
 -dontwarn java.beans.SimpleBeanInfo
+
+-keep class androidx.navigation.** { *; }
+    -keep interface androidx.navigation.** { *; }

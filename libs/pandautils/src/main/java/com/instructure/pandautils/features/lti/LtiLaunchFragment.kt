@@ -110,7 +110,7 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
             ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
         }
         binding.toolbar.title = title
-        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, requireContext().getColor(R.color.textLightest))
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ltiLaunchFragmentBehavior.toolbarColor, ltiLaunchFragmentBehavior.toolbarTextColor)
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         lifecycleScope.launch {

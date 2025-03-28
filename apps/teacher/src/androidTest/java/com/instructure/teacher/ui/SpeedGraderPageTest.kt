@@ -27,13 +27,13 @@ import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_URL
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ON_PAPER
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SpeedGraderPageTest : TeacherTest() {
+class SpeedGraderPageTest : TeacherComposeTest() {
 
     @Test
     override fun displaysPageObjects() {
@@ -52,10 +52,9 @@ class SpeedGraderPageTest : TeacherTest() {
         val data = goToSpeedGraderPage(students = 4, submissionTypeList = listOf(ONLINE_TEXT_ENTRY))
         speedGraderPage.clickBackButton()
         val students = data.students
-        for (i in 0 until students.size) {
-            val student = students[i]
-            assignmentSubmissionListPage.clickSubmission(student)
-            speedGraderPage.assertGradingStudent(student)
+        students.forEach {
+            assignmentSubmissionListPage.clickSubmission(it)
+            speedGraderPage.assertGradingStudent(it)
             speedGraderPage.clickBackButton()
         }
     }
@@ -65,18 +64,6 @@ class SpeedGraderPageTest : TeacherTest() {
         goToSpeedGraderPage(students = 4)
         speedGraderPage.assertPageCount(4)
     }
-
-    /* TODO: Uncomment and implement if we come up with a way to create/modify submissions dates
-    @Test
-    fun displaysSelectedSubmissionInDropDown() {
-        goToSpeedGraderPage()
-        speedGraderPage.openSubmissionsDialog()
-        getNextSubmission()
-        val submission = getNextSubmission()
-        speedGraderPage.selectSubmissionFromDialog(submission)
-        speedGraderPage.assertSubmissionSelected(submission)
-    }
-    */
 
     @Test
     fun displaysTextSubmission() {

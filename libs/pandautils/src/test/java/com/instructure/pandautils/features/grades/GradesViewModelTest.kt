@@ -113,7 +113,7 @@ class GradesViewModelTest {
                         id = 1,
                         name = "Assignment 1",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         )
                     )
                 )
@@ -211,7 +211,7 @@ class GradesViewModelTest {
                         id = 1,
                         name = "Assignment 1",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_QUIZ.rawValue()
+                            SubmissionType.online_quiz.rawValue
                         )
                     ),
                     Assignment(
@@ -219,7 +219,7 @@ class GradesViewModelTest {
                         name = "Assignment 2",
                         dueAt = today.plusDays(1).toApiString(),
                         submissionTypesRaw = listOf(
-                            SubmissionType.DISCUSSION_TOPIC.rawValue()
+                            SubmissionType.discussion_topic.rawValue
                         )
                     )
                 )
@@ -233,7 +233,7 @@ class GradesViewModelTest {
                         name = "Assignment 3",
                         dueAt = today.minusDays(1).toApiString(),
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         ),
                         submission = Submission(
                             submittedAt = Date(),
@@ -246,7 +246,7 @@ class GradesViewModelTest {
                         name = "Assignment 4",
                         dueAt = today.minusDays(1).toApiString(),
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         ),
                         submission = Submission(
                             submittedAt = Date()
@@ -347,14 +347,14 @@ class GradesViewModelTest {
                         id = 1,
                         name = "Assignment 1",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_QUIZ.rawValue()
+                            SubmissionType.online_quiz.rawValue
                         )
                     ),
                     Assignment(
                         id = 2,
                         name = "Assignment 2",
                         submissionTypesRaw = listOf(
-                            SubmissionType.DISCUSSION_TOPIC.rawValue()
+                            SubmissionType.discussion_topic.rawValue
                         )
                     )
                 )
@@ -367,7 +367,7 @@ class GradesViewModelTest {
                         id = 3,
                         name = "Assignment 3",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         ),
                         submission = Submission(
                             submittedAt = Date(),
@@ -379,7 +379,7 @@ class GradesViewModelTest {
                         id = 4,
                         name = "Assignment 4",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         ),
                         submission = Submission(
                             submittedAt = Date(),
@@ -532,7 +532,7 @@ class GradesViewModelTest {
                         id = 1,
                         name = "Assignment 1",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         )
                     )
                 )
@@ -648,7 +648,7 @@ class GradesViewModelTest {
                         id = 1,
                         name = "Assignment 1",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         )
                     )
                 )
@@ -708,14 +708,14 @@ class GradesViewModelTest {
                         id = 1,
                         name = "Assignment 1",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         )
                     ),
                     Assignment(
                         id = 2,
                         name = "Assignment 2",
                         submissionTypesRaw = listOf(
-                            SubmissionType.ONLINE_TEXT_ENTRY.rawValue()
+                            SubmissionType.online_text_entry.rawValue
                         ),
                         isHiddenInGradeBook = true
                     ),

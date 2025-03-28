@@ -169,7 +169,7 @@
                     android:text="@string/create_announcement_delay_posting"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/delaySwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -178,6 +178,7 @@
                     android:backgroundTint="@color/backgroundDarkest"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
+                    app:theme="@style/Theme.Material3.DayNight"
                     tools:checked="true" />
 
             </RelativeLayout>
@@ -253,7 +254,7 @@
                     android:text="@string/allowUserComments"
                     android:textSize="16sp"/>
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/allowCommentsSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -261,7 +262,8 @@
                     android:minWidth="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:backgroundTint="@color/backgroundDarkest"/>
+                    android:backgroundTint="@color/backgroundDarkest"
+                    app:theme="@style/Theme.Material3.DayNight"/>
 
             </RelativeLayout>
 
@@ -286,7 +288,7 @@
                     android:text="@string/usersMustPost"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/usersMustPostSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
