@@ -29,6 +29,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_QUIZ_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -45,7 +46,6 @@ import com.instructure.teacher.databinding.FragmentQuizListBinding
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.factory.QuizListPresenterFactory
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
-import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.presenters.QuizListPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils

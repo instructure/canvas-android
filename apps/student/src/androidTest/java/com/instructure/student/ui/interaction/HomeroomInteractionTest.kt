@@ -30,13 +30,13 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class HomeroomInteractionTest : StudentTest() {
+class HomeroomInteractionTest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -266,7 +266,6 @@ class HomeroomInteractionTest : StudentTest() {
         homeroomPage.assertPageObjects()
         homeroomPage.openAssignments("2 due today | 2 missing")
 
-        assignmentListPage.assertPageObjects()
         assignmentListPage.assertHasAssignment(assignment1)
     }
 

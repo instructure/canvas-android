@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.parentapp.R
 import io.mockk.coEvery
 import io.mockk.every
@@ -103,7 +104,7 @@ class ParentInboxCoursePickerViewModelTest {
         coEvery { repository.getEnrollments() } returns DataResult.Success(enrollments)
 
         val viewModel = getViewModel()
-        assertEquals(ScreenState.Data, viewModel.uiState.value.screenState)
+        assertEquals(ScreenState.Content, viewModel.uiState.value.screenState)
         assertEquals(2, viewModel.uiState.value.studentContextItems.size)
         assertEquals(courses[0], viewModel.uiState.value.studentContextItems[0].course)
         assertEquals(users[0], viewModel.uiState.value.studentContextItems[0].user)

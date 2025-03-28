@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 
 class AssignmentListNetworkDataSource(
@@ -35,7 +36,7 @@ class AssignmentListNetworkDataSource(
         gradingPeriodId: Long,
         scopeToStudent: Boolean,
         forceNetwork: Boolean
-    ): List<AssignmentGroup> {
+    ): DataResult<List<AssignmentGroup>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
@@ -45,26 +46,31 @@ class AssignmentListNetworkDataSource(
             restParams = params
         ).depaginate {
             assignmentApi.getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(it, params)
-        }.dataOrThrow
+        }
     }
 
-    override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {
+    override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): DataResult<List<AssignmentGroup>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, params).depaginate {
             assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, params)
-        }.dataOrThrow
+        }
     }
 
-    override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
+    override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): DataResult<List<GradingPeriod>> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
-        return courseApi.getGradingPeriodsForCourse(courseId, params).dataOrThrow.gradingPeriodList
+        val gradingPeriods = courseApi.getGradingPeriodsForCourse(courseId, params).dataOrNull?.gradingPeriodList
+        if (gradingPeriods != null) {
+            return DataResult.Success(gradingPeriods)
+        } else {
+            return DataResult.Fail()
+        }
     }
 
-    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course? {
+    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): DataResult<Course> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
-        return courseApi.getCourseWithGrade(courseId, params).dataOrNull
+        return courseApi.getCourseWithGrade(courseId, params)
     }
 }

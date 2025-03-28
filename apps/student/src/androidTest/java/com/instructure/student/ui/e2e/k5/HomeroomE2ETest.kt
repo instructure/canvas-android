@@ -34,7 +34,7 @@ import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -43,7 +43,7 @@ import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 @HiltAndroidTest
-class HomeroomE2ETest : StudentTest() {
+class HomeroomE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -138,7 +138,6 @@ class HomeroomE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Assert that the Assignment list page of '${nonHomeroomCourses[2].name}' course is loaded well" +
                 "and the corresponding assignments (Not missing: '${testAssignment.name}', missing: '${testAssignmentMissing.name}') are displayed.")
-        assignmentListPage.assertPageObjects()
         assignmentListPage.assertHasAssignment(testAssignment)
         assignmentListPage.assertHasAssignment(testAssignmentMissing)
     }
