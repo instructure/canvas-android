@@ -79,6 +79,10 @@ object OAuthAPI {
         return adapter.build(OAuthInterface::class.java, params).refreshAccessToken(ApiPrefs.clientId, ApiPrefs.clientSecret, "urn:ietf:wg:oauth:2.0:oob", ApiPrefs.refreshToken).dataResult()
     }
 
+    fun refreshAccessTokenWithCallback(adapter: RestBuilder, params: RestParams, callback: StatusCallback<OAuthTokenResponse>) {
+        adapter.build(OAuthInterface::class.java, params).refreshAccessToken(ApiPrefs.clientId, ApiPrefs.clientSecret, "urn:ietf:wg:oauth:2.0:oob", ApiPrefs.refreshToken).enqueue(callback)
+    }
+
     fun getAuthenticatedSession(targetUrl: String, params: RestParams, adapter: RestBuilder, callback: StatusCallback<AuthenticatedSession>) {
         callback.addCall(adapter.build(OAuthInterface::class.java, params).getAuthenticatedSession(targetUrl)).enqueue(callback)
     }
