@@ -171,7 +171,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.NoneContent
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.OnPaperContent
             Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw.orEmpty() -> {
-                if (assignment?.isAllowedToSubmit == true)
+                if (assignment != null && (assignment.isAllowedToSubmit || submission?.workflowState != "unsubmitted"))
                     SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiTool, assignment.name.orEmpty(), assignment.ltiToolType())
                 else SubmissionDetailsContentType.LockedContent
             }

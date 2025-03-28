@@ -68,7 +68,6 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
             binding.termsOfUse.setVisible(html.isNotBlank())
             // Now set the rest of the items visible
             binding.privacyPolicy.setVisible()
-            binding.openSource.setVisible()
         } catch {
             // Something went wrong, make everything visible
             binding.root.descendants.forEach { it.setVisible() }
@@ -95,13 +94,6 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
         }
 
         binding.privacyPolicy.accessibilityClassName(Button::class.java.name)
-
-        binding.openSource.onClickWithRequireNetwork {
-            legalRouter.routeToOpenSource()
-            dialog.dismiss()
-        }
-
-        binding.openSource.accessibilityClassName(Button::class.java.name)
 
         dialog.setCanceledOnTouchOutside(true)
         return dialog

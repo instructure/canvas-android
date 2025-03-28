@@ -47,6 +47,7 @@ data class SubmissionUiState(
     val submissionId: Long,
     val assigneeId: Long,
     val userName: String,
+    val isFakeStudent: Boolean,
     val avatarUrl: String?,
     val tags: List<SubmissionTag>,
     val grade: String? = null,
