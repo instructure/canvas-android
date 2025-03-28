@@ -364,8 +364,7 @@ object HorizonColors {
         fun cardPrimary() = Color(0xFFFFFFFF)
         @Composable
         fun cardSecondary() = colorResource(R.color.surface_cardSecondary)
-        @Composable
-        fun divider() = colorResource(R.color.surface_divider)
+        fun divider() = Color(0xFFE8EAEC)
         fun error() = Color(0xFFC71F23)
         fun inversePrimary() = Color(0xFF273540)
         fun inverseSecondary() = Color(0xFF0A1B2A)
