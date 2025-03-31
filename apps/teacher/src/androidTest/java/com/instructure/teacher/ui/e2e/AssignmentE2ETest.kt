@@ -112,7 +112,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentDetailsPage.assertNeedsGrading(0,3)
 
         Log.d(STEP_TAG, "Open the 'All Submissions' page and click on the filter icon on the top-right corner.")
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Filter by section (the ${course.name} course).")
@@ -362,7 +362,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentListPage.clickAssignment(assignment)
 
         Log.d(STEP_TAG,"Open ${student.name} student's submission and switch to submission details Comments Tab.")
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
 
@@ -430,7 +430,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Click on ${assignment.name} assignment and navigate to Submissions Page.")
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
 
         Log.d(STEP_TAG,"Click on ${student.name} student's submission.")
         assignmentSubmissionListPage.clickSubmission(student)

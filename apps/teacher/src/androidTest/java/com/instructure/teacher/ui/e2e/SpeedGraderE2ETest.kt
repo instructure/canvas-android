@@ -17,9 +17,8 @@
 package com.instructure.teacher.ui.e2e
 
 import android.util.Log
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.swipeDown
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.printToLog
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
@@ -105,18 +104,36 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
 
-        Log.d(STEP_TAG,"Click on '${assignment[0].name}' assignment and assert that that there is one 'Needs Grading' submission for '${noSubStudent.name}' student and one 'Not Submitted' submission for '${student.name}' student.")
+        Log.d(STEP_TAG,"Click on '${assignment[0].name}' assignment.")
         assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(ASSERTION_TAG, "Assert that that there is one 'Needs Grading' submission for '${noSubStudent.name}' student and one 'Not Submitted' submission for '${student.name}' student, and one 'Graded' submission for '${gradedStudent.name}' student.")
         assignmentDetailsPage.assertNeedsGrading(actual = 1, outOf = 3)
         assignmentDetailsPage.assertNotSubmitted(actual = 1, outOf = 3)
+        assignmentDetailsPage.assertHasGraded(actual = 1, outOf = 3)
 
-        Log.d(STEP_TAG,"Open 'Not Submitted' submissions and assert that the submission of '${noSubStudent.name}' student is displayed. Navigate back.")
-        assignmentDetailsPage.openNotSubmittedSubmissions()
+        Log.d(ASSERTION_TAG, "Assert that the 'Submission Types' is 'Text Entry' at this assignment and the 'Submissions' and 'All' labels are displayed on the 'Submissions' card.")
+        assignmentDetailsPage.assertSubmissionTypeOnlineTextEntry()
+        assignmentDetailsPage.assertSubmissionsLabel()
+        assignmentDetailsPage.assertAllSubmissionsLabel()
+
+        Log.d(STEP_TAG,"Open 'Not Submitted' submissions.")
+        assignmentDetailsPage.clickNotSubmittedSubmissions()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Haven't Submitted Yet' label is displayed (as we filtered for only 'Not Submitted') and the submission of '${noSubStudent.name}' student is displayed.")
+        assignmentSubmissionListPage.assertFilterLabelNotSubmittedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(noSubStudent)
+
+        composeTestRule.onRoot().printToLog("SEMANTIC_TREE")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${noSubStudent.name}' student has '-' as score as it's submission is not submitted yet.")
+        assignmentSubmissionListPage.assertStudentScoreText(noSubStudent.name, "-")
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on 'View All Submission' arrow icon.")
-        assignmentDetailsPage.viewAllSubmission()
+        assignmentDetailsPage.clickAllSubmissions()
 
         Log.d(STEP_TAG, "Click on '${student.name}' student's avatar and assert if it's navigating to the Student Context Page.")
         assignmentSubmissionListPage.clickOnStudentAvatar(student.name)
@@ -129,13 +146,18 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate back to the Assignment Details Page.")
         ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG,"Open 'Graded' submissions and assert that the submission of '${gradedStudent.name}' student is displayed. Navigate back.")
-        assignmentDetailsPage.openGradedSubmissions()
+        Log.d(STEP_TAG,"Open 'Graded' submissions.")
+        assignmentDetailsPage.clickGradedSubmissions()
+
+        Log.d(ASSERTION_TAG, "Assert that the the submission of '${gradedStudent.name}' student is displayed with the corresponding grade (15).")
         assignmentSubmissionListPage.assertHasStudentSubmission(gradedStudent)
+        assignmentSubmissionListPage.assertStudentScoreText(gradedStudent.name, "15")
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of '${student.name}' student is displayed.")
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
 
@@ -144,17 +166,18 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         speedGraderGradePage.openGradeDialog()
         val grade = "10"
 
-        Log.d(STEP_TAG,"Enter '$grade' as the new grade and assert that it has applied. Navigate back and refresh the page.")
+        Log.d(STEP_TAG,"Enter '$grade' as the new grade and assert that it has applied.")
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment Submission List Page and refresh the page to apply the new grade changes.")
         Espresso.pressBack()
-        composeTestRule.onNodeWithTag("submissionList").performTouchInput {
-            swipeDown()
-        }
+        assignmentSubmissionListPage.refresh()
 
         Log.d(STEP_TAG,"Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
 
+        //Assert to all possible submission filter text (and section?)
         Log.d(STEP_TAG,"Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogOk()
@@ -178,8 +201,10 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of '${student.name}' student is displayed.")
-        assignmentDetailsPage.openAllSubmissionsPage()
-        
+        assignmentDetailsPage.clickAllSubmissions()
+
+        //TODO: Test searching here
+
         Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
         assignmentSubmissionListPage.clickOnPostPolicies()
 

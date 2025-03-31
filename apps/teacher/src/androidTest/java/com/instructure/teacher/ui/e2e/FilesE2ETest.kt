@@ -141,7 +141,7 @@ class FilesE2ETest: TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Click on '${assignment.name}' assignment and navigate to Submissions Page.")
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
 
         Log.d(STEP_TAG,"Click on '${student.name}' student's submission and navigate to Files Tab.")
         assignmentSubmissionListPage.clickSubmission(student)

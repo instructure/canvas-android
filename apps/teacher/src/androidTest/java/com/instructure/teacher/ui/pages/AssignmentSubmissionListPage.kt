@@ -19,6 +19,8 @@ package com.instructure.teacher.ui.pages
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -27,6 +29,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.page.BasePage
@@ -66,6 +70,22 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun assertFilterLabelAllSubmissions() {
         composeTestRule.onNodeWithText("All submissions").assertIsDisplayed()
+    }
+
+    /**
+     * Assert filter label 'Haven't Submitted Yet' (aka. 'Not Submitted')
+     *
+     */
+    fun assertFilterLabelNotSubmittedSubmissions() {
+        composeTestRule.onNodeWithText("Haven't Submitted Yet").assertIsDisplayed()
+    }
+
+    /**
+     * Assert that the scoreText is displayed besides the proper student.
+     *
+     */
+    fun assertStudentScoreText(studentName: String, scoreText: String) {
+        composeTestRule.onNode(hasText(scoreText) and hasAnySibling(hasAnyDescendant(hasText(studentName))), useUnmergedTree = true).assertIsDisplayed()
     }
 
     /**
@@ -131,6 +151,14 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         )
             .performScrollTo()
             .performClick()
+    }
+
+    /**
+     * Assert that the corresponding submission filter options are displayed.
+     *
+     */
+    fun assertSubmissionFilterOptions() {
+
     }
 
     /**
@@ -260,5 +288,14 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         )
             .performScrollTo()
             .performClick()
+    }
+
+    /**
+     * Refresh the page.
+     */
+    fun refresh() {
+        composeTestRule.onNodeWithTag("submissionList").performTouchInput {
+            swipeDown()
+        }
     }
 }
