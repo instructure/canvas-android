@@ -215,7 +215,8 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             is FilterOption.GradingPeriod -> option.name ?: "All Grading Period"
         }
         composeTestRule.onNode(
-            hasText(filterText).and(hasParent(hasAnyDescendant(hasText(groupName))))
+            hasText(filterText).and(hasParent(hasParent(hasAnyDescendant(hasText(groupName))))),
+            useUnmergedTree = true
         )
         .performClick()
     }
@@ -227,7 +228,8 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             is GroupByOption.DueDate -> "Due Date"
         }
         composeTestRule.onNode(
-            hasText(groupByText).and(hasParent(hasAnyDescendant(hasText(groupName))))
+            hasText(groupByText).and(hasParent(hasParent(hasAnyDescendant(hasText(groupName))))),
+            useUnmergedTree = true
         )
             .performClick()
     }

@@ -118,8 +118,8 @@ class AssignmentListNetworkDataSourceTest {
         Assert.assertEquals(expected, result)
     }
 
-    @Test
-    fun `Get course failure returns null`() = runTest {
+    @Test(expected = IllegalStateException::class)
+    fun `Get course failure throws exception`() = runTest {
         coEvery { coursesApi.getCourseWithGrade(any(), any()) } returns DataResult.Fail()
 
         val result = dataSource.getCourseWithGrade(1, true)

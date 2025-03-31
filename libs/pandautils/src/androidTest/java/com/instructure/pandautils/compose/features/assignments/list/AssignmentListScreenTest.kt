@@ -37,6 +37,12 @@ import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOv
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
 import com.instructure.pandautils.features.assignments.list.composables.AssignmentListScreen
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.utils.ScreenState
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.junit.Rule
@@ -121,10 +127,26 @@ class AssignmentListScreenTest {
         composeTestRule.setContent {
             AndroidThreeTen.init(LocalContext.current)
             val state = AssignmentListUiState(
+                course = Course(name = "Course Name"),
                 state = ScreenState.Content,
                 subtitle = "Course",
                 screenOption = AssignmentListScreenOption.Filter,
                 overFlowItems = listOf(AssignmentListMenuOverFlowItem("Item 1", {})),
+                filterOptions = AssignmentListFilterOptions(
+                    assignmentFilters = AssignmentListFilterData(
+                        listOf(AssignmentFilter.All),
+                        AssignmentListFilterType.SingleChoice
+                    ),
+                    assignmentStatusFilters = null,
+                    groupByOptions = listOf(AssignmentGroupByOption.AssignmentGroup),
+                    gradingPeriodOptions = null
+                ),
+                selectedFilterData = AssignmentListSelectedFilters(
+                    selectedAssignmentFilters = listOf(AssignmentFilter.All),
+                    selectedAssignmentStatusFilter = null,
+                    selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup,
+                    selectedGradingPeriodFilter = null
+                )
             )
             AssignmentListScreen(
                 title = "Grade Preferences",

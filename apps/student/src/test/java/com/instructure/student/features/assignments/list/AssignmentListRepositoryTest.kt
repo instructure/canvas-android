@@ -178,8 +178,9 @@ class AssignmentListRepositoryTest {
             selectedAssignmentStatusFilter = null,
             selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup
         )
+        coEvery { assignmentListSelectedFiltersEntityDao.findAssignmentListSelectedFiltersEntity(any(), any(), any()) } returns null
         repository.updateSelectedOptions(entity)
 
-        coVerify { assignmentListSelectedFiltersEntityDao.update(entity) }
+        coVerify { assignmentListSelectedFiltersEntityDao.insertOrUpdate(entity) }
     }
 }

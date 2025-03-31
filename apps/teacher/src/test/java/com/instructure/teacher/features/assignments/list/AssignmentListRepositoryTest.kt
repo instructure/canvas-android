@@ -23,12 +23,10 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriodResponse
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
-import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
-import com.instructure.pandautils.room.assignment.list.entities.AssignmentListFilterEntity
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 import com.instructure.teacher.features.assignment.list.TeacherAssignmentListRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -41,9 +39,9 @@ class AssignmentListRepositoryTest {
 
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val assignmentListFilterDao: AssignmentListFilterDao = mockk(relaxed = true)
+    private val assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao = mockk(relaxed = true)
 
-    private val repository = TeacherAssignmentListRepository(assignmentApi, courseApi, assignmentListFilterDao)
+    private val repository = TeacherAssignmentListRepository(assignmentApi, courseApi, assignmentListSelectedFiltersEntityDao)
 
     @Test
     fun `Get assignment groups with assignments for grading period`() = runTest {
@@ -51,7 +49,7 @@ class AssignmentListRepositoryTest {
 
         coEvery { assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(any(), any(), any(), any(), any()) } returns DataResult.Success(expected)
 
-        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, forceRefresh = true).dataOrNull
+        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, forceRefresh = true)
 
         coVerify { assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(1, 1, false, any(), any()) }
         assertEquals(expected, result)
@@ -64,7 +62,7 @@ class AssignmentListRepositoryTest {
 
         coEvery { assignmentApi.getFirstPageAssignmentGroupListWithAssignments(any(), any()) } returns DataResult.Success(expected)
 
-        val result = repository.getAssignments(1, true).dataOrNull
+        val result = repository.getAssignments(1, true)
 
         coVerify { assignmentApi.getFirstPageAssignmentGroupListWithAssignments(1, any()) }
         assertEquals(expected, result)
@@ -76,7 +74,7 @@ class AssignmentListRepositoryTest {
 
         coEvery { courseApi.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(GradingPeriodResponse(gradingPeriodList = expected))
 
-        val result = repository.getGradingPeriodsForCourse(1, true).dataOrNull
+        val result = repository.getGradingPeriodsForCourse(1, true)
 
         coVerify { courseApi.getGradingPeriodsForCourse(1, any()) }
         assertEquals(expected, result)
@@ -88,51 +86,40 @@ class AssignmentListRepositoryTest {
             Course(id = 1L, name = "Course 1")
         )
 
-        val result = repository.getCourse(1, true).dataOrNull
+        val result = repository.getCourse(1, true)
 
         assertEquals(1L, result!!.id)
     }
 
     @Test
     fun `Returns saved filters from database`() = runTest {
-        val expected = AssignmentListFilterEntity(
+        val expected = AssignmentListSelectedFiltersEntity(
             userDomain = "domain",
             userId = 1,
             contextId = 2,
-            groupId = 3,
-            selectedIndexes = listOf(1, 2, 3)
+            selectedAssignmentFilters = listOf(AssignmentFilter.All),
+            selectedAssignmentStatusFilter = null,
+            selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup
         )
-        coEvery { assignmentListFilterDao.findAssignmentListFilter(any(), any(), any(), any()) } returns expected
+        coEvery { assignmentListSelectedFiltersEntityDao.findAssignmentListSelectedFiltersEntity(any(), any(), any()) } returns expected
 
-        val result = repository.getSelectedOptions("domain", 1, 2, 3)
-        assertEquals(expected.selectedIndexes, result)
+        val result = repository.getSelectedOptions("domain", 1, 2)
+        assertEquals(expected, result)
     }
 
     @Test
     fun `Updates filters in database`() = runTest {
-        val expected = AssignmentListFilterEntity(
+        val entity = AssignmentListSelectedFiltersEntity(
             userDomain = "domain",
             userId = 1,
             contextId = 2,
-            groupId = 3,
-            selectedIndexes = listOf(1, 2, 3)
+            selectedAssignmentFilters = listOf(AssignmentFilter.All),
+            selectedAssignmentStatusFilter = null,
+            selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup
         )
-        val filterState = AssignmentListFilterState(
-            filterGroups = listOf(
-                AssignmentListFilterGroup(
-                    groupId = 3,
-                    title = "title",
-                    options = emptyList(),
-                    selectedOptionIndexes = listOf(1),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        )
-        coEvery { assignmentListFilterDao.findAssignmentListFilter(any(), any(), any(), any()) } returns expected
+        coEvery { assignmentListSelectedFiltersEntityDao.findAssignmentListSelectedFiltersEntity(any(), any(), any()) } returns null
+        repository.updateSelectedOptions(entity)
 
-        repository.updateSelectedOptions("domain", 1, 2, filterState)
-
-        coVerify { assignmentListFilterDao.update(expected.copy(selectedIndexes = listOf(1))) }
+        coVerify { assignmentListSelectedFiltersEntityDao.insertOrUpdate(entity) }
     }
 }
