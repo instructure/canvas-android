@@ -20,7 +20,6 @@ package com.instructure.student.features.assignments.list.datasource
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.utils.DataResult
 
 interface AssignmentListDataSource {
 
@@ -29,17 +28,17 @@ interface AssignmentListDataSource {
         gradingPeriodId: Long,
         scopeToStudent: Boolean,
         forceNetwork: Boolean
-    ): DataResult<List<AssignmentGroup>>
+    ): List<AssignmentGroup>
 
     suspend fun getAssignmentGroupsWithAssignments(
         courseId: Long,
         forceNetwork: Boolean
-    ): DataResult<List<AssignmentGroup>>
+    ): List<AssignmentGroup>
 
     suspend fun getGradingPeriodsForCourse(
         courseId: Long,
         forceNetwork: Boolean
-    ): DataResult<List<GradingPeriod>>
+    ): List<GradingPeriod>
 
-    suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): DataResult<Course>
+    suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course
 }

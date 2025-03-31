@@ -20,15 +20,12 @@ package com.instructure.student.features.assignments.list.datasource
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 
 class AssignmentListLocalDataSource(
     private val assignmentFacade: AssignmentFacade,
     private val courseFacade: CourseFacade,
-    private val courseSettingsDao: CourseSettingsDao
 ) : AssignmentListDataSource {
 
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -36,24 +33,20 @@ class AssignmentListLocalDataSource(
         gradingPeriodId: Long,
         scopeToStudent: Boolean,
         forceNetwork: Boolean
-    ): DataResult<List<AssignmentGroup>> {
-        return DataResult.Success(assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId))
+    ): List<AssignmentGroup> {
+        return assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId)
     }
 
-    override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): DataResult<List<AssignmentGroup>> {
-        return DataResult.Success(assignmentFacade.getAssignmentGroupsWithAssignments(courseId))
+    override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {
+        return assignmentFacade.getAssignmentGroupsWithAssignments(courseId)
     }
 
-    override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): DataResult<List<GradingPeriod>> {
-        return DataResult.Success(courseFacade.getGradingPeriodsByCourseId(courseId))
+    override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
+        return courseFacade.getGradingPeriodsByCourseId(courseId)
     }
 
-    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): DataResult<Course> {
+    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val course = courseFacade.getCourseById(courseId)
-        return if (course != null) {
-            DataResult.Success(course)
-        } else {
-            DataResult.Fail()
-        }
+        return course ?: throw Exception("Course not found")
     }
 }

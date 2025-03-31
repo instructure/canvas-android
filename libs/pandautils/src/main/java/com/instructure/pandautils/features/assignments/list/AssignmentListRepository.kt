@@ -19,21 +19,20 @@ package com.instructure.pandautils.features.assignments.list
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 
 interface AssignmentListRepository {
-    suspend fun getAssignments(courseId: Long, forceRefresh: Boolean = false): DataResult<List<AssignmentGroup>>
+    suspend fun getAssignments(courseId: Long, forceRefresh: Boolean = false): List<AssignmentGroup>
 
     suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
         forceRefresh: Boolean
-    ): DataResult<List<AssignmentGroup>>
+    ): List<AssignmentGroup>
 
-    suspend fun getGradingPeriodsForCourse(courseId: Long, forceRefresh: Boolean): DataResult<List<GradingPeriod>>
+    suspend fun getGradingPeriodsForCourse(courseId: Long, forceRefresh: Boolean): List<GradingPeriod>
 
-    suspend fun getCourse(courseId: Long, forceRefresh: Boolean = false): DataResult<Course>
+    suspend fun getCourse(courseId: Long, forceRefresh: Boolean = false): Course
 
     suspend fun getSelectedOptions(userDomain: String, userId: Long, contextId: Long): AssignmentListSelectedFiltersEntity?
 

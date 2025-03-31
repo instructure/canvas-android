@@ -80,20 +80,20 @@ class AssignmentListViewModel @Inject constructor(
     private fun getAssignments(forceRefresh: Boolean = false) {
         if (courseId != null) {
             viewModelScope.tryLaunch {
-                val course = repository.getCourse(courseId, forceRefresh).dataOrThrow
+                val course = repository.getCourse(courseId, forceRefresh)
                 bookmarker = Bookmarker(true, course)
                 viewModelScope.launch { _events.send(AssignmentListFragmentEvent.UpdateStatusBarStyle(course)) }
                 _uiState.update { it.copy(course = course) }
 
-                val assignmentGroups = repository.getAssignments(courseId, forceRefresh).dataOrThrow
-                val gradingPeriods = repository.getGradingPeriodsForCourse(courseId, forceRefresh).dataOrThrow
+                val assignmentGroups = repository.getAssignments(courseId, forceRefresh)
+                val gradingPeriods = repository.getGradingPeriodsForCourse(courseId, forceRefresh)
                 val allAssignment = assignmentGroups.flatMap { it.assignments }
                 val gradingPeriodAssignments = gradingPeriods.associateWith { gradingPeriod ->
                     repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(
                         courseId,
                         gradingPeriod.id,
                         forceRefresh
-                    ).dataOrThrow
+                    )
                         .flatMap { it.assignments }
                 }
                 _uiState.update {

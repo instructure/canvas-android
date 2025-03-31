@@ -55,8 +55,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
@@ -64,6 +68,7 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.GroupedListView
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
+import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SearchBarLive
@@ -504,4 +509,70 @@ private fun AssignmentDivider() {
         )
         Spacer(modifier = Modifier.width(8.dp))
     }
+}
+
+@Composable
+@Preview
+fun AssignmentListPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val course = Course(name = "Course 1", courseColor = Color.Magenta.toString())
+    val state = AssignmentListUiState(
+        course = course,
+        subtitle = "Course 1",
+        state = ScreenState.Content,
+        listState = GroupedListViewState(
+            groups = listOf(
+                AssignmentGroupState(
+                    id = 1,
+                    title = "Group 1",
+                    items = listOf(
+                        AssignmentGroupItemState(
+                            course,
+                            Assignment(name = "Assignment 1"),
+                            showDueDate = true,
+                            showGrade = true,
+                            showSubmissionState = true
+                        ),
+                        AssignmentGroupItemState(
+                            course,
+                            Assignment(name = "Assignment 2"),
+                            showPublishStateIcon = true,
+                            showClosedState = true,
+                            showDueDate = true,
+                            showMaxPoints = true,
+                        ),
+                    )
+                ),
+                AssignmentGroupState(
+                    id = 2,
+                    title = "Group 2",
+                    items = listOf(
+                        AssignmentGroupItemState(
+                            course,
+                            Assignment(name = "Assignment 3"),
+                            showDueDate = true,
+                            showGrade = true,
+                            showSubmissionState = true
+                        ),
+                        AssignmentGroupItemState(
+                            course,
+                            Assignment(name = "Assignment 4"),
+                            showPublishStateIcon = true,
+                            showClosedState = true,
+                            showDueDate = true,
+                            showMaxPoints = true,
+                        ),
+                    )
+                ),
+            )
+        ),
+    )
+
+    AssignmentListScreen(
+        title = "Assignment list",
+        state,
+        Color(course.color),
+        {},
+        {}
+    )
 }

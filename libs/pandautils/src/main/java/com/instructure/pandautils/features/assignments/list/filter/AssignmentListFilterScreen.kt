@@ -31,13 +31,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.MultiChoicePicker
 import com.instructure.pandautils.compose.composables.SingleChoicePicker
+import com.instructure.pandautils.utils.color
 
 @Composable
 fun AssignmentListFilterScreen(
@@ -174,4 +179,44 @@ fun AssignmentListFilterScreen(
             }
         }
     }
+}
+
+@Composable
+@Preview
+fun AssignmentFilterPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val course = Course(name = "Course 1", courseColor = Color.Magenta.toString())
+
+    AssignmentListFilterScreen(
+        courseName = course.name,
+        contextColor = Color(course.color),
+        assignmentFilterOptions = AssignmentListFilterData(
+            assignmentFilterType = AssignmentListFilterType.MultiChoice,
+            assignmentFilterOptions = listOf(
+                AssignmentFilter.NotYetSubmitted,
+                AssignmentFilter.ToBeGraded,
+                AssignmentFilter.Graded,
+                AssignmentFilter.Other,
+            )
+        ),
+        assignmentStatusFilterOptions = listOf(
+            AssignmentStatusFilterOption.All,
+            AssignmentStatusFilterOption.Published,
+            AssignmentStatusFilterOption.Unpublished
+        ),
+        assignmentGroupByOptions = listOf(
+            AssignmentGroupByOption.DueDate,
+            AssignmentGroupByOption.AssignmentGroup,
+            AssignmentGroupByOption.AssignmentType
+        ),
+        gradingPeriodOptions = null,
+        selectedOptions = AssignmentListSelectedFilters(
+            selectedAssignmentFilters = listOf(AssignmentFilter.All),
+            selectedAssignmentStatusFilter = AssignmentStatusFilterOption.All,
+            selectedGroupByOption = AssignmentGroupByOption.DueDate,
+            selectedGradingPeriodFilter = null
+        ),
+        onFilterChange = {},
+        onBackPressed = {}
+    )
 }

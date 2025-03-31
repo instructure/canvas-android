@@ -20,7 +20,6 @@ package com.instructure.student.features.assignments.list
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
@@ -43,7 +42,7 @@ class StudentAssignmentListRepository(
         courseId: Long,
         gradingPeriodId: Long,
         forceRefresh: Boolean
-    ): DataResult<List<AssignmentGroup>> {
+    ): List<AssignmentGroup> {
         return dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(
             courseId,
             gradingPeriodId,
@@ -55,18 +54,18 @@ class StudentAssignmentListRepository(
     override suspend fun getAssignments(
         courseId: Long,
         forceRefresh: Boolean
-    ): DataResult<List<AssignmentGroup>> {
+    ): List<AssignmentGroup> {
         return dataSource().getAssignmentGroupsWithAssignments(courseId, forceRefresh)
     }
 
     override suspend fun getGradingPeriodsForCourse(
         courseId: Long,
         forceRefresh: Boolean
-    ): DataResult<List<GradingPeriod>> {
+    ): List<GradingPeriod> {
         return dataSource().getGradingPeriodsForCourse(courseId, forceRefresh)
     }
 
-    override suspend fun getCourse(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
+    override suspend fun getCourse(courseId: Long, forceRefresh: Boolean): Course {
         return dataSource().getCourseWithGrade(courseId, forceRefresh)
     }
 

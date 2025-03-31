@@ -23,7 +23,6 @@ import com.instructure.pandautils.features.assignments.list.AssignmentListBehavi
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
-import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -54,10 +53,9 @@ class AssignmentListViewModelModule{
     @Provides
     fun provideAssignmentListLocalDataSource(
         assignmentFacade: AssignmentFacade,
-        courseFacade: CourseFacade,
-        courseSettingsDao: CourseSettingsDao
+        courseFacade: CourseFacade
     ): AssignmentListLocalDataSource {
-        return AssignmentListLocalDataSource(assignmentFacade, courseFacade, courseSettingsDao)
+        return AssignmentListLocalDataSource(assignmentFacade, courseFacade)
     }
 
     @Provides
