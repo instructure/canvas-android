@@ -18,7 +18,7 @@ package com.instructure.horizon.horizonui.molecules
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -107,7 +107,7 @@ fun IconButtonAi(
         modifier = buttonModifier
             .background(
                 brush = HorizonColors.Surface.aiGradient(),
-                shape = RoundedCornerShape(500.dp)
+                shape = CircleShape
             )
             .size(size.primaryButtonSize)
     ) {
@@ -136,7 +136,7 @@ private fun IconButton(
         onClick = onClick,
         enabled = enabled,
         modifier = buttonModifier
-            .background(shape = RoundedCornerShape(50.dp), color = backgroundColor)
+            .background(shape = CircleShape, color = backgroundColor)
             .size(size)
     ) {
         Icon(

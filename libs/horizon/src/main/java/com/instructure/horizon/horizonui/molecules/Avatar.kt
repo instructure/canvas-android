@@ -22,7 +22,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,10 +77,10 @@ fun Avatar(
     var avatarModifier = modifier
         .background(
             color = color.backgroundColor,
-            shape = RoundedCornerShape(500.dp)
+            shape = CircleShape
         )
     if (type !is AvatarType.Picture) avatarModifier =
-        avatarModifier.border(HorizonBorder.level2(color.borderColor), shape = RoundedCornerShape(500.dp))
+        avatarModifier.border(HorizonBorder.level2(color.borderColor), shape = CircleShape)
     avatarModifier = avatarModifier.size(size.size)
     Box(
         contentAlignment = Alignment.Center,
@@ -107,10 +107,10 @@ fun Avatar(
             is AvatarType.Picture -> {
                 GlideImage(
                     model = type.pictureUrl,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.avatar_contentDescription),
                     modifier = Modifier
                         .size(size.size)
-                        .clip(RoundedCornerShape(500.dp)),
+                        .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
             }
