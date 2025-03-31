@@ -18,6 +18,10 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.UserAPI
@@ -25,7 +29,6 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
-import com.instructure.canvasapi2.managers.UnreadCountManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.CanvasColor
@@ -33,8 +36,6 @@ import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.SelfRegistration
 import com.instructure.canvasapi2.models.TermsOfService
-import com.instructure.canvasapi2.models.UnreadConversationCount
-import com.instructure.canvasapi2.models.UnreadNotificationCount
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -55,15 +56,17 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.util.StudentPrefs
+import com.instructure.student.viewmodels.CallbackViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 import sdk.pendo.io.Pendo
@@ -84,6 +87,8 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     @Inject
     lateinit var userApi: UserAPI.UsersInterface
 
+    private val viewModel: CallbackViewModel by viewModels()
+
     private var loadInitialDataJob: Job? = null
 
     abstract fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
@@ -96,6 +101,25 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         super.onCreate(savedInstanceState)
         RatingDialog.showRatingDialog(this@CallbackActivity, AppType.STUDENT)
         reloadCoreData()
+        collectUnreadCountFlows()
+    }
+
+    private fun collectUnreadCountFlows() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.unreadNotificationCountFlow.collectLatest { count ->
+                        updateNotificationCount(count + viewModel.unreadMessageCountFlow.value)
+                    }
+                }
+                launch {
+                    viewModel.unreadMessageCountFlow.collectLatest { count ->
+                        updateUnreadCount(count)
+                        updateNotificationCount(count + viewModel.unreadNotificationCountFlow.value)
+                    }
+                }
+            }
+        }
     }
 
     private fun loadInitialData() {
@@ -193,20 +217,12 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         }
     }
 
-    private suspend fun getUnreadMessageCount() {
-        val unreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
-        unreadCount.let {
-            val unreadCountInt = (it.unreadCount ?: "0").toInt()
-            updateUnreadCount(unreadCountInt)
-        }
+    private fun getUnreadMessageCount() {
+        viewModel.updateMessageCount()
     }
 
     private fun getUnreadNotificationCount() {
-        UnreadCountManager.getUnreadNotificationCount(object : StatusCallback<List<UnreadNotificationCount>>() {
-            override fun onResponse(data: Call<List<UnreadNotificationCount>>, response: Response<List<UnreadNotificationCount>>) {
-                updateNotificationCount(response.body()?.sumOf { it.unreadCount.orDefault() }.orDefault())
-            }
-        }, true)
+        viewModel.updateNotificationCount()
     }
 
     private val themeCallback = object : StatusCallback<CanvasTheme>() {

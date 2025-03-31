@@ -50,8 +50,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -1265,6 +1263,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun increaseUnreadCount(increaseBy: Int) {
         updateUnreadCount(binding.bottomBar.getOrCreateBadge(R.id.bottomNavigationInbox).number + increaseBy)
+        updateNotificationCount(binding.bottomBar.getOrCreateBadge(R.id.bottomNavigationNotifications).number + increaseBy)
     }
 
     override fun updateNotificationCount(notificationCount: Int) {
