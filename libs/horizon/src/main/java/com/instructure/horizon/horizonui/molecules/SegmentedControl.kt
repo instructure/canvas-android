@@ -36,7 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,6 +61,7 @@ import com.instructure.pandautils.utils.toDp
  */
 sealed class SegmentedControlIconPosition(open val checkmark: Boolean, @DrawableRes open val iconRes: Int? = null) {
     data class NoIcon(override val checkmark: Boolean = false) : SegmentedControlIconPosition(checkmark)
+
     data class Start(override val checkmark: Boolean = false, @DrawableRes override val iconRes: Int = R.drawable.check) :
         SegmentedControlIconPosition(checkmark, iconRes)
 
@@ -74,10 +74,9 @@ fun SegmentedControl(
     options: List<String>,
     onItemSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    selectedIndex: Int = 0,
     iconPosition: SegmentedControlIconPosition = SegmentedControlIconPosition.NoIcon()
 ) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
-
     val itemWidth = remember { mutableIntStateOf(0) }
     val indicatorOffset by animateIntAsState(
         targetValue = (selectedIndex * itemWidth.intValue),
@@ -96,7 +95,6 @@ fun SegmentedControl(
             options.forEachIndexed { index, label ->
                 Button(
                     onClick = {
-                        selectedIndex = index
                         onItemSelected(index)
                     },
                     shape = HorizonCornerRadius.level6,
@@ -221,7 +219,7 @@ fun SegmentedControlPreview_StartIcon_Checkmark_2Items() {
     SegmentedControl(
         onItemSelected = {},
         options = listOf("Option 1", "Option 2"),
-        iconPosition = SegmentedControlIconPosition.Start(checkmark = true, iconRes = R.drawable.add)
+        iconPosition = SegmentedControlIconPosition.Start(checkmark = true)
     )
 }
 
@@ -232,7 +230,7 @@ fun SegmentedControlPreview_StartIcon_Checkmark_3Items() {
     SegmentedControl(
         onItemSelected = {},
         options = listOf("Option 1", "Option 2", "Option 3"),
-        iconPosition = SegmentedControlIconPosition.Start(checkmark = true, iconRes = R.drawable.add)
+        iconPosition = SegmentedControlIconPosition.Start(checkmark = true)
     )
 }
 
@@ -265,7 +263,7 @@ fun SegmentedControlPreview_EndIcon_Checkmark_2Items() {
     SegmentedControl(
         onItemSelected = {},
         options = listOf("Option 1", "Option 2"),
-        iconPosition = SegmentedControlIconPosition.End(checkmark = true, iconRes = R.drawable.add)
+        iconPosition = SegmentedControlIconPosition.End(checkmark = true)
     )
 }
 
@@ -276,6 +274,6 @@ fun SegmentedControlPreview_EndIcon_Checkmark_3Items() {
     SegmentedControl(
         onItemSelected = {},
         options = listOf("Option 1", "Option 2", "Option 3"),
-        iconPosition = SegmentedControlIconPosition.End(checkmark = true, iconRes = R.drawable.add)
+        iconPosition = SegmentedControlIconPosition.End(checkmark = true)
     )
 }
