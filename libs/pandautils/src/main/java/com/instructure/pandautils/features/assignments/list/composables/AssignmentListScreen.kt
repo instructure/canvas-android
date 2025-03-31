@@ -348,10 +348,10 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
             .padding(vertical = 8.dp)
             .testTag("assignmentListItem")
     ) {
-        Spacer(modifier = Modifier.width(20.dp))
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
+                .padding(horizontal = 20.dp)
                 .size(32.dp)
         ) {
             Icon(
@@ -375,7 +375,6 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                 )
             }
         }
-        Spacer(modifier = Modifier.width(20.dp))
         Column {
             Text(
                 assignment.name.orEmpty(),
