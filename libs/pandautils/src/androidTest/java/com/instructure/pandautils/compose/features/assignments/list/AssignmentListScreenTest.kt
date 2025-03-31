@@ -37,7 +37,6 @@ import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOv
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
 import com.instructure.pandautils.features.assignments.list.composables.AssignmentListScreen
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
 import com.instructure.pandautils.utils.ScreenState
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.junit.Rule
@@ -124,9 +123,6 @@ class AssignmentListScreenTest {
             val state = AssignmentListUiState(
                 state = ScreenState.Content,
                 subtitle = "Course",
-                filterState = AssignmentListFilterState(
-                    courseName = "Course Name",
-                ),
                 screenOption = AssignmentListScreenOption.Filter,
                 overFlowItems = listOf(AssignmentListMenuOverFlowItem("Item 1", {})),
             )
@@ -176,9 +172,6 @@ class AssignmentListScreenTest {
             val state = AssignmentListUiState(
                 state = ScreenState.Content,
                 subtitle = "Course",
-                filterState = AssignmentListFilterState(
-                    courseName = "Course Name",
-                ),
                 allAssignments = assignmentGroups.flatMap { it.assignments },
                 assignmentGroups = assignmentGroups,
                 listState = GroupedListViewState(
@@ -233,9 +226,6 @@ class AssignmentListScreenTest {
             val state = AssignmentListUiState(
                 state = ScreenState.Empty,
                 subtitle = "Course",
-                filterState = AssignmentListFilterState(
-                    courseName = "Course Name",
-                ),
                 screenOption = AssignmentListScreenOption.List,
                 overFlowItems = listOf(AssignmentListMenuOverFlowItem("Item 1", {})),
             )
@@ -259,9 +249,6 @@ class AssignmentListScreenTest {
             val state = AssignmentListUiState(
                 state = ScreenState.Error,
                 subtitle = "Course",
-                filterState = AssignmentListFilterState(
-                    courseName = "Course Name",
-                ),
                 screenOption = AssignmentListScreenOption.List,
                 overFlowItems = listOf(AssignmentListMenuOverFlowItem("Item 1", {})),
             )

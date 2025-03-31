@@ -20,7 +20,6 @@ package com.instructure.student.features.assignments.list.datasource
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import io.mockk.coEvery
@@ -33,9 +32,8 @@ class AssignmentListLocalDataSourceTest {
 
     private val assignmentFacade: AssignmentFacade = mockk(relaxed = true)
     private val courseFacade: CourseFacade = mockk(relaxed = true)
-    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
 
-    private val dataSource = AssignmentListLocalDataSource(assignmentFacade, courseFacade, courseSettingsDao)
+    private val dataSource = AssignmentListLocalDataSource(assignmentFacade, courseFacade)
 
     @Test
     fun `Get assignment groups with assignments for grading period successfully returns api model`() = runTest {
@@ -43,7 +41,7 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any()) } returns expected
 
-        val result = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true).dataOrNull
+        val result = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
 
         assertEquals(expected, result)
     }
@@ -54,7 +52,7 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignments(any()) } returns expected
 
-        val result = dataSource.getAssignmentGroupsWithAssignments(1, true).dataOrNull
+        val result = dataSource.getAssignmentGroupsWithAssignments(1, true)
 
         assertEquals(expected, result)
     }
@@ -65,7 +63,7 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { courseFacade.getGradingPeriodsByCourseId(any()) } returns expected
 
-        val result = dataSource.getGradingPeriodsForCourse(1, true).dataOrNull
+        val result = dataSource.getGradingPeriodsForCourse(1, true)
 
         assertEquals(expected, result)
     }
@@ -76,7 +74,7 @@ class AssignmentListLocalDataSourceTest {
 
         coEvery { courseFacade.getCourseById(any()) } returns expected
 
-        val result = dataSource.getCourseWithGrade(1, true).dataOrNull
+        val result = dataSource.getCourseWithGrade(1, true)
 
         assertEquals(expected, result)
     }

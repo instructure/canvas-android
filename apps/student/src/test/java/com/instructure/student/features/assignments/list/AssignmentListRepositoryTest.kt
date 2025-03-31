@@ -20,13 +20,10 @@ package com.instructure.student.features.assignments.list
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
-import com.instructure.pandautils.room.assignment.list.daos.AssignmentListFilterDao
-import com.instructure.pandautils.room.assignment.list.entities.AssignmentListFilterEntity
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
@@ -46,9 +43,9 @@ class AssignmentListRepositoryTest {
     private val localDataSource: AssignmentListLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val assignmentListFilterDao: AssignmentListFilterDao = mockk(relaxed = true)
+    private val assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao = mockk(relaxed = true)
 
-    private val repository = StudentAssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, assignmentListFilterDao)
+    private val repository = StudentAssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, assignmentListSelectedFiltersEntityDao)
 
     @Before
     fun setup() = runTest {
@@ -60,9 +57,9 @@ class AssignmentListRepositoryTest {
         val expected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
 
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns expected
 
-        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, forceRefresh = true).dataOrNull
+        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, forceRefresh = true)
 
         coVerify { networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true) }
         assertEquals(expected, result)
@@ -73,9 +70,9 @@ class AssignmentListRepositoryTest {
         val expected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
 
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns DataResult.Success(expected)
+        coEvery { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any(), any()) } returns expected
 
-        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, forceRefresh = true).dataOrNull
+        val result = repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, forceRefresh = true)
 
         coVerify { localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true) }
         assertEquals(expected, result)
@@ -86,9 +83,9 @@ class AssignmentListRepositoryTest {
         val expected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
 
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns expected
 
-        val result = repository.getAssignments(1, true).dataOrNull
+        val result = repository.getAssignments(1, true)
 
         coVerify { networkDataSource.getAssignmentGroupsWithAssignments(1, true) }
         assertEquals(expected, result)
@@ -99,9 +96,9 @@ class AssignmentListRepositoryTest {
         val expected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
 
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns DataResult.Success(expected)
+        coEvery { localDataSource.getAssignmentGroupsWithAssignments(any(), any()) } returns expected
 
-        val result = repository.getAssignments(1, true).dataOrNull
+        val result = repository.getAssignments(1, true)
 
         coVerify { localDataSource.getAssignmentGroupsWithAssignments(1, true) }
         assertEquals(expected, result)
@@ -112,9 +109,9 @@ class AssignmentListRepositoryTest {
         val expected = listOf(GradingPeriod(id = 1L), GradingPeriod(id = 2L))
 
         every { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(expected)
+        coEvery { networkDataSource.getGradingPeriodsForCourse(any(), any()) } returns expected
 
-        val result = repository.getGradingPeriodsForCourse(1, true).dataOrNull
+        val result = repository.getGradingPeriodsForCourse(1, true)
 
         coVerify { networkDataSource.getGradingPeriodsForCourse(1, true) }
         assertEquals(expected, result)
@@ -125,9 +122,9 @@ class AssignmentListRepositoryTest {
         val expected = listOf(GradingPeriod(id = 1L), GradingPeriod(id = 2L))
 
         every { networkStateProvider.isOnline() } returns false
-        coEvery { localDataSource.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(expected)
+        coEvery { localDataSource.getGradingPeriodsForCourse(any(), any()) } returns expected
 
-        val result = repository.getGradingPeriodsForCourse(1, true).dataOrNull
+        val result = repository.getGradingPeriodsForCourse(1, true)
 
         coVerify { localDataSource.getGradingPeriodsForCourse(1, true) }
         assertEquals(expected, result)
@@ -135,66 +132,54 @@ class AssignmentListRepositoryTest {
 
     @Test
     fun `Get course from local storage when device is offline`() = runTest {
-        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns DataResult.Success(Course(id = 1L, name = "Course 1"))
-        coEvery { localDataSource.getCourseWithGrade(any(), any()) } returns DataResult.Success(Course(id = 2L, name = "Course 2"))
+        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 1L, name = "Course 1")
+        coEvery { localDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 2L, name = "Course 2")
         coEvery { networkStateProvider.isOnline() } returns false
 
-        val result = repository.getCourse(1, true).dataOrNull
+        val result = repository.getCourse(1, true)
 
         assertEquals(2L, result!!.id)
     }
 
     @Test
     fun `Get course from network when device is online`() = runTest {
-        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns DataResult.Success(Course(id = 1L, name = "Course 1"))
-        coEvery { localDataSource.getCourseWithGrade(any(), any()) } returns DataResult.Success(Course(id = 2L, name = "Course 2"))
+        coEvery { networkDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 1L, name = "Course 1")
+        coEvery { localDataSource.getCourseWithGrade(any(), any()) } returns Course(id = 2L, name = "Course 2")
         coEvery { networkStateProvider.isOnline() } returns true
 
-        val result = repository.getCourse(1, true).dataOrNull
+        val result = repository.getCourse(1, true)
 
         assertEquals(1L, result!!.id)
     }
 
     @Test
     fun `Returns saved filters from database`() = runTest {
-        val expected = AssignmentListFilterEntity(
+        val expected = AssignmentListSelectedFiltersEntity(
             userDomain = "domain",
             userId = 1,
             contextId = 2,
-            groupId = 3,
-            selectedIndexes = listOf(1, 2, 3)
+            selectedAssignmentFilters = listOf(AssignmentFilter.All),
+            selectedAssignmentStatusFilter = null,
+            selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup
         )
-        coEvery { assignmentListFilterDao.findAssignmentListFilter(any(), any(), any(), any()) } returns expected
+        coEvery { assignmentListSelectedFiltersEntityDao.findAssignmentListSelectedFiltersEntity(any(), any(), any()) } returns expected
 
-        val result = repository.getSelectedOptions("domain", 1, 2, 3)
-        assertEquals(expected.selectedIndexes, result)
+        val result = repository.getSelectedOptions("domain", 1, 2)
+        assertEquals(expected, result)
     }
 
     @Test
     fun `Updates filters in database`() = runTest {
-        val expected = AssignmentListFilterEntity(
+        val entity = AssignmentListSelectedFiltersEntity(
             userDomain = "domain",
             userId = 1,
             contextId = 2,
-            groupId = 3,
-            selectedIndexes = listOf(1, 2, 3)
+            selectedAssignmentFilters = listOf(AssignmentFilter.All),
+            selectedAssignmentStatusFilter = null,
+            selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup
         )
-        val filterState = AssignmentListFilterState(
-            filterGroups = listOf(
-                AssignmentListFilterGroup(
-                    groupId = 3,
-                    title = "title",
-                    options = emptyList(),
-                    selectedOptionIndexes = listOf(1),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        )
-        coEvery { assignmentListFilterDao.findAssignmentListFilter(any(), any(), any(), any()) } returns expected
+        repository.updateSelectedOptions(entity)
 
-        repository.updateSelectedOptions("domain", 1, 2, filterState)
-
-       coVerify { assignmentListFilterDao.update(expected.copy(selectedIndexes = listOf(1))) }
+        coVerify { assignmentListSelectedFiltersEntityDao.update(entity) }
     }
 }

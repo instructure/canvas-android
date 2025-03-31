@@ -51,7 +51,7 @@ class AssignmentListNetworkDataSourceTest {
             )
         } returns DataResult.Success(expected)
 
-        val result = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true).dataOrNull
+        val result = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
 
         Assert.assertEquals(expected, result)
     }
@@ -68,7 +68,7 @@ class AssignmentListNetworkDataSourceTest {
             )
         } returns DataResult.Fail()
 
-        dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true).dataOrThrow
+        dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
     }
 
     @Test
@@ -77,7 +77,7 @@ class AssignmentListNetworkDataSourceTest {
 
         coEvery { assignmentApi.getFirstPageAssignmentGroupListWithAssignments(any(), any()) } returns DataResult.Success(expected)
 
-        val result = dataSource.getAssignmentGroupsWithAssignments(1, true).dataOrNull
+        val result = dataSource.getAssignmentGroupsWithAssignments(1, true)
 
         Assert.assertEquals(expected, result)
     }
@@ -86,7 +86,7 @@ class AssignmentListNetworkDataSourceTest {
     fun `Get assignment groups with assignments failure throws exception`() = runTest {
         coEvery { assignmentApi.getFirstPageAssignmentGroupListWithAssignments(any(), any()) } returns DataResult.Fail()
 
-        dataSource.getAssignmentGroupsWithAssignments(1, true).dataOrThrow
+        dataSource.getAssignmentGroupsWithAssignments(1, true)
     }
 
     @Test
@@ -95,7 +95,7 @@ class AssignmentListNetworkDataSourceTest {
 
         coEvery { coursesApi.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(expected)
 
-        val result = dataSource.getGradingPeriodsForCourse(1, true).dataOrNull
+        val result = dataSource.getGradingPeriodsForCourse(1, true)
 
         Assert.assertEquals(expected.gradingPeriodList, result)
     }
@@ -104,7 +104,7 @@ class AssignmentListNetworkDataSourceTest {
     fun `Get grading periods failure throws exception`() = runTest {
         coEvery { coursesApi.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Fail()
 
-        dataSource.getGradingPeriodsForCourse(1, true).dataOrThrow
+        dataSource.getGradingPeriodsForCourse(1, true)
     }
 
     @Test
@@ -113,7 +113,7 @@ class AssignmentListNetworkDataSourceTest {
 
         coEvery { coursesApi.getCourseWithGrade(any(), any()) } returns DataResult.Success(expected)
 
-        val result = dataSource.getCourseWithGrade(1, true).dataOrNull
+        val result = dataSource.getCourseWithGrade(1, true)
 
         Assert.assertEquals(expected, result)
     }
@@ -122,7 +122,7 @@ class AssignmentListNetworkDataSourceTest {
     fun `Get course failure returns null`() = runTest {
         coEvery { coursesApi.getCourseWithGrade(any(), any()) } returns DataResult.Fail()
 
-        val result = dataSource.getCourseWithGrade(1, true).dataOrNull
+        val result = dataSource.getCourseWithGrade(1, true)
 
         Assert.assertNull(result)
     }

@@ -234,7 +234,7 @@ class AssignmentListViewModel @Inject constructor(
 
     private fun performFilters(): GroupedListViewState<AssignmentGroupState> {
         val searchQuery = uiState.value.searchQuery
-        val allAssignments = uiState.value.allAssignments.filter { it.name?.contains(searchQuery, true).orDefault() }
+        val allAssignments = uiState.value.allAssignments.filter { it.name?.contains(searchQuery, true) ?: true }
         var filteredAssignments = allAssignments.toSet()
         val course = uiState.value.course
         val selectedFilters = uiState.value.selectedFilterData
@@ -263,7 +263,12 @@ class AssignmentListViewModel @Inject constructor(
         }
 
         selectedFilters.selectedGradingPeriodFilter?.let { gradingPeriodFilter ->
-            filteredAssignments = filteredAssignments.filter { uiState.value.gradingPeriodsWithAssignments[gradingPeriodFilter]?.map { it.id }?.contains(it.id).orDefault() }.toSet()
+            if (uiState.value.gradingPeriods.isNotEmpty()) {
+                filteredAssignments = filteredAssignments.filter {
+                    uiState.value.gradingPeriodsWithAssignments[gradingPeriodFilter]?.map { it.id }
+                        ?.contains(it.id).orDefault()
+                }.toSet()
+            }
         }
 
         val groups = when(selectedFilters.selectedGroupByOption) {

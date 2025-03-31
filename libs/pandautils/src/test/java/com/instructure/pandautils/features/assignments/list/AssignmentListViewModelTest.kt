@@ -25,15 +25,14 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroup
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterGroupType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOption
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentStatusFilterOption
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ScreenState
 import io.mockk.coEvery
@@ -86,13 +85,13 @@ class AssignmentListViewModelTest {
         ContextKeeper.appContext = mockk(relaxed = true)
 
         every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns 0L
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
-        coEvery { repository.getCourse(any(), any()) } returns DataResult.Success(course)
-        coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(gradingPeriods)
-        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any()) } returns DataResult.Success(assignmentGroups)
-        coEvery { repository.getSelectedOptions(any(), any(), any(), any()) } returns null
-        coEvery { repository.updateSelectedOptions(any(), any(), any(), any()) } just runs
-        every { behavior.getAssignmentListFilterState(any(), any(), any(), any()) } returns AssignmentListFilterState()
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+        coEvery { repository.getCourse(any(), any()) } returns course
+        coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns gradingPeriods
+        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any(), any()) } returns assignmentGroups
+        coEvery { repository.getSelectedOptions(any(), any(), any()) } returns null
+        coEvery { repository.updateSelectedOptions(any()) } just runs
+        every { behavior.getAssignmentFilters() } returns AssignmentListFilterData(emptyList(), AssignmentListFilterType.SingleChoice)
         every { behavior.getAssignmentGroupItemState(any(), any()) } returns mockk(relaxed = true)
     }
 
@@ -102,15 +101,8 @@ class AssignmentListViewModelTest {
     }
 
     @Test
-    fun `Test error state on Fail`() = runTest {
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Fail()
-        val viewModel = getViewModel()
-        assertEquals(ScreenState.Error, viewModel.uiState.value.state)
-    }
-
-    @Test
     fun `Test empty state on Empty`() = runTest {
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getAssignments(any(), any()) } returns emptyList()
         val viewModel = getViewModel()
         assertEquals(ScreenState.Empty, viewModel.uiState.value.state)
     }
@@ -132,7 +124,7 @@ class AssignmentListViewModelTest {
         )
         val groupItem = AssignmentGroupItemState(course, assignmentGroups.first().assignments.first())
         every { behavior.getAssignmentGroupItemState(course, assignmentGroups.first().assignments.first()) } returns groupItem
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
         val events = mutableListOf<AssignmentListFragmentEvent>()
@@ -161,7 +153,8 @@ class AssignmentListViewModelTest {
         )
         val groupItem = AssignmentGroupItemState(course, assignmentGroups.first().assignments.first())
         every { behavior.getAssignmentGroupItemState(course, assignmentGroups.first().assignments.first()) } returns groupItem
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+        coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns emptyList()
         val viewModel = getViewModel()
 
         var group = viewModel.uiState.value.listState.groups.first()
@@ -195,13 +188,13 @@ class AssignmentListViewModelTest {
     @Test
     fun `Test Update Filters action handler`() = runTest {
         val viewModel = getViewModel()
-        val newFilters = AssignmentListFilterState(filterGroups = listOf(mockk(relaxed = true)))
+        val newFilters = AssignmentListSelectedFilters()
 
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilters))
 
-        assertEquals(newFilters, viewModel.uiState.value.filterState)
+        assertEquals(newFilters, viewModel.uiState.value.selectedFilterData)
 
-        coVerify(exactly = 1) { repository.updateSelectedOptions(any(), any(), any(), any()) }
+        coVerify(exactly = 1) { repository.updateSelectedOptions(any()) }
     }
 
     @Test
@@ -288,37 +281,18 @@ class AssignmentListViewModelTest {
         val groupItem2 = AssignmentGroupItemState(course, assignment2)
         every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
         every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
-        var newFilter = AssignmentListFilterState(
-            filterGroups = listOf(
-                AssignmentListFilterGroup(
-                    groupId = 0,
-                    title = "Status",
-                    options = listOf(
-                        AssignmentListFilterOption.AllStatusAssignments(resources),
-                        AssignmentListFilterOption.Published(resources),
-                        AssignmentListFilterOption.Unpublished(resources),
-                    ),
-                    selectedOptionIndexes = listOf(0),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        )
+        var newFilter = AssignmentListSelectedFilters(selectedAssignmentStatusFilter = AssignmentStatusFilterOption.All)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment1, assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(1))
-        })
+        newFilter = newFilter.copy(selectedAssignmentStatusFilter = AssignmentStatusFilterOption.Published)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment1), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(2))
-        })
+        newFilter = newFilter.copy(selectedAssignmentStatusFilter = AssignmentStatusFilterOption.Unpublished)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
     }
@@ -354,37 +328,22 @@ class AssignmentListViewModelTest {
         every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
         every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
         every { behavior.getAssignmentGroupItemState(course, assignment3) } returns groupItem3
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
-        var newFilter = AssignmentListFilterState(
-            filterGroups = listOf(
-                AssignmentListFilterGroup(
-                    groupId = 0,
-                    title = "Assignment Filter",
-                    options = listOf(
-                        AssignmentListFilterOption.AllFilterAssignments(resources),
-                        AssignmentListFilterOption.NeedsGrading(resources),
-                        AssignmentListFilterOption.NotSubmitted(resources),
-                    ),
-                    selectedOptionIndexes = listOf(0),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        )
+        var newFilter = AssignmentListSelectedFilters(selectedAssignmentFilters = listOf(
+            AssignmentFilter.All,
+            AssignmentFilter.NeedsGrading,
+            AssignmentFilter.NotSubmitted
+        ))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment1, assignment2, assignment3), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(1))
-        })
+        newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.NeedsGrading))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(2))
-        })
+        newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.NotSubmitted))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment2, assignment3), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
     }
@@ -425,39 +384,21 @@ class AssignmentListViewModelTest {
         every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
         every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
         every { behavior.getAssignmentGroupItemState(course, assignment3) } returns groupItem3
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
-        coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns DataResult.Success(gradingPeriods)
-        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), 1, any()) } returns DataResult.Success(listOf(AssignmentGroup(id = 1, assignments = listOf(assignment1))))
-        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), 2, any()) } returns DataResult.Success(listOf(AssignmentGroup(id = 2, assignments = listOf(assignment2))))
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+        coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns gradingPeriods
+        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), 1, any()) } returns listOf(AssignmentGroup(id = 1, assignments = listOf(assignment1)))
+        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), 2, any()) } returns listOf(AssignmentGroup(id = 2, assignments = listOf(assignment2)))
         val viewModel = getViewModel()
 
-        val allGradingPeriod = AssignmentListFilterOption.GradingPeriod(null, resources)
-        var newFilter = AssignmentListFilterState(
-            filterGroups = listOf(
-                AssignmentListFilterGroup(
-                    groupId = 4,
-                    title = "Grading periods",
-                    options = listOf(allGradingPeriod) + gradingPeriods.map {
-                        AssignmentListFilterOption.GradingPeriod(it, resources)
-                    },
-                    selectedOptionIndexes = listOf(0),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        )
+        var newFilter = AssignmentListSelectedFilters(selectedGradingPeriodFilter = null)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment1, assignment2, assignment3), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(1))
-        })
+        newFilter = newFilter.copy(selectedGradingPeriodFilter = gradingPeriod1)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment1), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(2))
-        })
+        newFilter = newFilter.copy(selectedGradingPeriodFilter = gradingPeriod2)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
     }
@@ -492,44 +433,27 @@ class AssignmentListViewModelTest {
         every { behavior.getAssignmentGroupItemState(course, gradedAssignment) } returns groupItem1
         every { behavior.getAssignmentGroupItemState(course, notGradedAssignment) } returns groupItem2
         every { behavior.getAssignmentGroupItemState(course, notSubmittedAssignment) } returns groupItem3
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
-        var newFilter = AssignmentListFilterState(
-            filterGroups = listOf(
-                AssignmentListFilterGroup(
-                    groupId = 0,
-                    title = "Assignment Filter",
-                    options = listOf(
-                        AssignmentListFilterOption.NotYetSubmitted(resources),
-                        AssignmentListFilterOption.ToBeGraded(resources),
-                        AssignmentListFilterOption.Graded(resources),
-                        AssignmentListFilterOption.Other(resources),
-                    ),
-                    selectedOptionIndexes = (0..3).toList(),
-                    groupType = AssignmentListFilterGroupType.MultiChoice,
-                    filterType = AssignmentListFilterType.Filter
-                )
-            )
-        )
+        var newFilter = AssignmentListSelectedFilters(selectedAssignmentFilters = listOf(
+            AssignmentFilter.NotYetSubmitted,
+            AssignmentFilter.ToBeGraded,
+            AssignmentFilter.Graded,
+            AssignmentFilter.Other,
+        ))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(notSubmittedAssignment, notGradedAssignment, gradedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(0))
-        })
+        newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.NotYetSubmitted))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(notSubmittedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(1))
-        })
+        newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.ToBeGraded))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(notGradedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(2))
-        })
+        newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(listOf(gradedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
     }
@@ -614,37 +538,18 @@ class AssignmentListViewModelTest {
         every { behavior.getAssignmentGroupItemState(course, assignment1) } returns groupItem1
         every { behavior.getAssignmentGroupItemState(course, assignment2) } returns groupItem2
         every { behavior.getAssignmentGroupItemState(course, assignment3) } returns groupItem3
-        coEvery { repository.getAssignments(any(), any()) } returns DataResult.Success(assignmentGroups)
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
-        var newFilter = AssignmentListFilterState(
-            filterGroups = listOf(
-                AssignmentListFilterGroup(
-                    groupId = 1,
-                    title = "Group By",
-                    options = listOf(
-                        AssignmentListGroupByOption.AssignmentGroup(resources),
-                        AssignmentListGroupByOption.DueDate(resources),
-                        AssignmentListGroupByOption.AssignmentType(resources),
-                    ),
-                    selectedOptionIndexes = listOf(0),
-                    groupType = AssignmentListFilterGroupType.SingleChoice,
-                    filterType = AssignmentListFilterType.GroupBy
-                )
-            )
-        )
+        var newFilter = AssignmentListSelectedFilters(selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(assignmentGroups.map { it.assignments }, viewModel.uiState.value.listState.groups.map { it.items.map{ it.assignment } })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(1))
-        })
+        newFilter = newFilter.copy(selectedGroupByOption = AssignmentGroupByOption.DueDate)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(dueDateGroups.map { it.assignments }, viewModel.uiState.value.listState.groups.map { it.items.map{ it.assignment } })
 
-        newFilter = newFilter.copy(filterGroups = newFilter.filterGroups.map {
-            it.copy(selectedOptionIndexes = listOf(2))
-        })
+        newFilter = newFilter.copy(selectedGroupByOption = AssignmentGroupByOption.AssignmentType)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(typeGroups.map { it.assignments }, viewModel.uiState.value.listState.groups.map { it.items.map{ it.assignment } })
     }
