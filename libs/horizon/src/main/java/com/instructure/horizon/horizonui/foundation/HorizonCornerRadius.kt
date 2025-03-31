@@ -23,6 +23,8 @@ object HorizonCornerRadius {
     val level1_5 = RoundedCornerShape(12.dp)
     val level2 = RoundedCornerShape(16.dp)
     val level3 = RoundedCornerShape(16.dp)
+    val level3Top = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+    val level3Bottom = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
     val level3_5 = RoundedCornerShape(24.dp)
     val level4 = RoundedCornerShape(32.dp)
     val level5 = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
