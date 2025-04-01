@@ -17,7 +17,11 @@ package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
 import com.instructure.canvasapi2.TokenRefresher
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
+import com.instructure.canvasapi2.models.OAuthTokenResponse
+import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -48,7 +52,19 @@ class CanvasAuthenticator(private val tokenRefresher: TokenRefresher) : Authenti
             return null // Indicate authentication was not successful
         }
 
-        return tokenRefresher.refresh(response)
+        return try {
+            val refreshed: OAuthTokenResponse
+            runBlocking {
+                refreshed = OAuthManager.refreshTokenAsync().await().dataOrThrow
+                ApiPrefs.accessToken = refreshed.accessToken!!
+            }
+            response.request.newBuilder()
+                .header(AUTH_HEADER, OAuthAPI.authBearer(refreshed.accessToken!!))
+                .header(RETRY_HEADER, RETRY_HEADER) // Mark retry to prevent infinite recursion
+                .build()
+        } catch (e: Exception) {
+            tokenRefresher.refresh(response)
+        }
     }
 
     private fun logAuthAnalytics(eventString: String) {

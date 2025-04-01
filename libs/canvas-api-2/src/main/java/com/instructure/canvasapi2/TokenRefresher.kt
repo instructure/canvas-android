@@ -3,9 +3,7 @@ package com.instructure.canvasapi2
 import android.content.Context
 import android.content.Intent
 import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
-import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.ApiPrefs
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -23,31 +21,20 @@ class TokenRefresher(
     private val eventBus: EventBus) {
 
     var refreshState: TokenRefreshState? = null
+    var loggingOut = false
 
     fun refresh(response: Response): Request? {
+        if (loggingOut) return null
+
         if (refreshState != null && refreshState is TokenRefreshState.Refreshing) {
-            return waitForRefresh(response)
+            return waitForRefresh(response, false)
         }
         refreshState = TokenRefreshState.Refreshing
-        try {
-            val refreshed: OAuthTokenResponse
-            runBlocking {
-                refreshed = OAuthManager.refreshTokenAsync().await().dataOrThrow
-                apiPrefs.accessToken = refreshed.accessToken!!
-            }
-            return response.request.newBuilder()
-                .header(AUTH_HEADER, OAuthAPI.authBearer(refreshed.accessToken!!))
-                .header(
-                    RETRY_HEADER, RETRY_HEADER
-                ) // Mark retry to prevent infinite recursion
-                .build()
-        } catch (e: Exception) {
-            launchLogin()
-            return waitForRefresh(response)
-        }
+        launchLogin()
+        return waitForRefresh(response)
     }
 
-    private fun waitForRefresh(response: Response): Request? {
+    private fun waitForRefresh(response: Response, logoutOnFailure: Boolean = true): Request? {
         runBlocking {
             while (refreshState is TokenRefreshState.Refreshing) {
                 delay(1000)
@@ -75,7 +62,9 @@ class TokenRefresher(
             }
 
             is TokenRefreshState.Failed -> {
-                eventBus.post(CanvasAuthError("Failed to authenticate"))
+                if (logoutOnFailure) {
+                    eventBus.post(CanvasAuthError("Failed to authenticate"))
+                }
                 newRequest = null
             }
 

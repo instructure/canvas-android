@@ -255,7 +255,6 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
             .baseUrl(params.domain + params.apiVersion + apiContext)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(DataResultCallAdapterFactory())
-            .client(okHttpClient)
             .callFactory { request ->
                 // Tag this request with the rest params so we can access them later in RequestInterceptor
                 okHttpClient.newCall(request.newBuilder().tag(params).build())
