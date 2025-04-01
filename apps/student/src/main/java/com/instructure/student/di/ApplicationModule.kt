@@ -18,7 +18,6 @@
 
 package com.instructure.student.di
 
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.EnabledTabsImpl
@@ -40,7 +39,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideEnabledTabs(courseApi: CourseAPI.CoursesInterface): EnabledTabs {
-        return EnabledTabsImpl(courseApi)
+    fun provideEnabledTabs(): EnabledTabs {
+        return EnabledTabsImpl()
     }
 }

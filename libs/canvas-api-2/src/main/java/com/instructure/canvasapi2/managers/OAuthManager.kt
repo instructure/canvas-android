@@ -48,6 +48,12 @@ object OAuthManager {
         return OAuthAPI.refreshAccessToken(adapter, params)
     }
 
+    fun refreshTokenAsync() = apiAsync {
+        val adapter = RestBuilder()
+        val params = RestParams(isForceReadFromNetwork = true)
+        OAuthAPI.refreshAccessTokenWithCallback(adapter, params, it)
+    }
+
     fun getAuthenticatedSessionAsync(targetUrl: String) = apiAsync<AuthenticatedSession> { getAuthenticatedSession(targetUrl, it) }
 
     fun getAuthenticatedSession(targetUrl: String, callback: StatusCallback<AuthenticatedSession>) {

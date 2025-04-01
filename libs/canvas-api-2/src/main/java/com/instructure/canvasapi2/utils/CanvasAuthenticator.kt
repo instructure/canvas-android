@@ -16,9 +16,12 @@
 package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
+import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
+import com.instructure.canvasapi2.models.OAuthTokenResponse
+import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -28,7 +31,7 @@ import org.greenrobot.eventbus.EventBus
 private const val AUTH_HEADER = "Authorization"
 private const val RETRY_HEADER = "mobile_refresh"
 
-class CanvasAuthenticator : Authenticator {
+class CanvasAuthenticator(private val tokenRefresher: TokenRefresher) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.request.header(RETRY_HEADER) != null) {
@@ -49,27 +52,19 @@ class CanvasAuthenticator : Authenticator {
             return null // Indicate authentication was not successful
         }
 
-        val refreshTokenResponse =  OAuthManager.refreshToken()
-
-        refreshTokenResponse.onSuccess {
-            refreshTokenResponse.dataOrNull?.accessToken?.let {
-                ApiPrefs.accessToken = it
+        return try {
+            val refreshed: OAuthTokenResponse
+            runBlocking {
+                refreshed = OAuthManager.refreshTokenAsync().await().dataOrThrow
+                ApiPrefs.accessToken = refreshed.accessToken!!
             }
-
-            return response.request.newBuilder()
-                .header(AUTH_HEADER, OAuthAPI.authBearer(ApiPrefs.accessToken))
+            response.request.newBuilder()
+                .header(AUTH_HEADER, OAuthAPI.authBearer(refreshed.accessToken!!))
                 .header(RETRY_HEADER, RETRY_HEADER) // Mark retry to prevent infinite recursion
                 .build()
+        } catch (e: Exception) {
+            tokenRefresher.refresh(response)
         }
-
-        refreshTokenResponse.onFail<Failure.Authorization> {
-            logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID)
-            // We got a 401 trying to get a new access token (refresh token is no longer valid) - log user out
-            EventBus.getDefault().post(CanvasAuthError("Refresh token expired - cannot get new access token"))
-        }
-
-        logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE)
-        return null // Indicate authentication was not successful
     }
 
     private fun logAuthAnalytics(eventString: String) {
