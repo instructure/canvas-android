@@ -30,9 +30,14 @@
     <string name="learningObject_page">Page</string>
     <string name="learningObject_assessment">Assessment</string>
     <string name="learningobject_dueDate">Due %1$s</string>
+    <string name="learningobject_pastDue">Past Due %1$s</string>
     <string name="learningObject_pillStatusInProgress">In Progress</string>
     <string name="learningObject_pillStatusCompleted">Completed</string>
     <string name="learningObject_pillStatusNotStarted">Not Started</string>
     <string name="loadingStateWrapper_errorOccurred">An error occurred</string>
     <string name="tag_dismiss">Dismiss</string>
+    <string name="learningObjectStatus_optional">Optional</string>
+    <string name="learningObjectStatus_required">Required</string>
+    <string name="learningObjectStatus_viewed">Viewed</string>
+    <string name="learningObjectStatus_submitted">Submitted</string>
 </resources>
