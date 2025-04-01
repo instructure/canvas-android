@@ -68,7 +68,6 @@ fun Tag(
     size: TagSize = TagSize.LARGE,
     enabled: Boolean = true,
     dismissible: Boolean = false,
-    onClick: (() -> Unit)? = null,
     onDismiss: () -> Unit = {}
 ) {
     val padding = when {
@@ -78,18 +77,15 @@ fun Tag(
     }
     val badgePadding = if (dismissible && type == TagType.INLINE) PaddingValues(top = 8.dp, end = 8.dp) else PaddingValues()
     Box(contentAlignment = Alignment.TopEnd, modifier = modifier.padding(badgePadding)) {
-        var tagModifier = Modifier
-            .background(
-                color = if (enabled) type.backgroundColor else type.backgroundColor.copy(alpha = 0.5f),
-                shape = type.cornerRadius
-            )
-            .border(HorizonBorder.level1(), shape = type.cornerRadius)
-            .clip(type.cornerRadius)
-        if (onClick != null) tagModifier = tagModifier.clickable { onClick() }
-        tagModifier = tagModifier.padding(padding)
-
         Box(
-            modifier = tagModifier
+            modifier = Modifier
+                .background(
+                    color = if (enabled) type.backgroundColor else type.backgroundColor.copy(alpha = 0.5f),
+                    shape = type.cornerRadius
+                )
+                .border(HorizonBorder.level1(), shape = type.cornerRadius)
+                .clip(type.cornerRadius)
+                .padding(padding)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = label, style = size.textStyle, color = HorizonColors.Text.body())
