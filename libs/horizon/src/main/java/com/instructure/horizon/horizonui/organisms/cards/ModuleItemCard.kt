@@ -32,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -145,11 +144,6 @@ private fun RowScope.ModuleItemCardIcon(state: ModuleItemCardState, modifier: Mo
             )
         }
     }
-}
-
-@Composable
-private fun ModuleItemText(text: String, modifier: Modifier = Modifier, color: Color = HorizonColors.Text.timestamp()) {
-    Text(text = text, style = HorizonTypography.labelSmall, modifier = modifier, color = color)
 }
 
 @Composable

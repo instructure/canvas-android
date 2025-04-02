@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
@@ -84,6 +85,11 @@ enum class PillCase {
     TITLE
 }
 
+enum class PillSize(val height: Dp, val verticalPadding: Dp, val horizontalPadding: Dp) {
+    REGULAR(34.dp, 8.dp, 12.dp),
+    SMALL(26.dp, 4.dp, 8.dp)
+}
+
 @Composable
 fun Pill(
     label: String,
@@ -91,18 +97,19 @@ fun Pill(
     style: PillStyle = PillStyle.OUTLINE,
     type: PillType = PillType.DEFAULT,
     case: PillCase = PillCase.UPPERCASE,
+    size: PillSize = PillSize.REGULAR,
     @DrawableRes iconRes: Int? = null
 ) {
     val finalModifier = when (style) {
         PillStyle.OUTLINE -> modifier
             .border(width = 1.dp, shape = HorizonCornerRadius.level4, color = type.shapeColor)
-            .height(34.dp)
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .height(size.height)
+            .padding(horizontal = size.horizontalPadding, vertical = size.verticalPadding)
 
         PillStyle.SOLID -> modifier
             .background(shape = HorizonCornerRadius.level4, color = type.shapeColor)
-            .height(34.dp)
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .height(size.height)
+            .padding(horizontal = size.horizontalPadding, vertical = size.verticalPadding)
 
         PillStyle.INLINE -> modifier
             .height(17.dp)
@@ -229,4 +236,11 @@ private fun PillNoCaps() {
 private fun PillLearningObjectCard() {
     ContextKeeper.appContext = LocalContext.current
     Pill(style = PillStyle.INLINE, label = "Label", type = PillType.LEARNING_OBJECT_TYPE, case = PillCase.TITLE, iconRes = R.drawable.schedule)
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun PillSmall() {
+    ContextKeeper.appContext = LocalContext.current
+    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.INSTITUTION, case = PillCase.TITLE, size = PillSize.SMALL)
 }

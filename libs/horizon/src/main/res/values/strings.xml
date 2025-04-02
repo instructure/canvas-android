@@ -40,4 +40,13 @@
     <string name="learningObjectStatus_required">Required</string>
     <string name="learningObjectStatus_viewed">Viewed</string>
     <string name="learningObjectStatus_submitted">Submitted</string>
+    <string name="moduleStatus_notStarted">Not started</string>
+    <string name="moduleStatus_inProgress">In Progress</string>
+    <string name="moduleStatus_completed">Completed</string>
+    <string name="moduleStatus_locked">Locked</string>
+    <plurals name="moduleHeader_itemCount">
+        <item quantity="one">%1$d Item</item>
+        <item quantity="other">%1$d Items</item>
+    </plurals>
+    <string name="moduleHeader_pastDue">%1$d Past Due</string>
 </resources>
