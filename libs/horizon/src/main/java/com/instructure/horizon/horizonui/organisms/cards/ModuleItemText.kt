@@ -19,10 +19,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
 @Composable
 fun ModuleItemText(text: String, modifier: Modifier = Modifier, color: Color = HorizonColors.Text.timestamp()) {
     Text(text = text, style = HorizonTypography.labelSmall, modifier = modifier, color = color)
+}
+
+@Composable
+@Preview
+fun ModuleItemTextPreview() {
+    ModuleItemText("This is a module item text")
+}
+
+@Composable
+@Preview
+fun ModuleItemTextErrorPreview() {
+    ModuleItemText("This is a module item text", color = HorizonColors.Text.error())
 }
