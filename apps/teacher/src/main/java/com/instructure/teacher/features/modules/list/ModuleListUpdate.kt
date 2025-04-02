@@ -70,11 +70,17 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 if (event.pageData.lastPageResult?.isSuccess == true) {
                     val newModules = event.pageData.lastPageResult.dataOrThrow
                     newModel = newModel.copy(modules = model.modules + newModules)
-                    if (model.scrollToItemId != null
-                        && newModules.any { module -> module.items.any { it.id == model.scrollToItemId } }
-                    ) {
-                        newModel = newModel.copy(scrollToItemId = null)
-                        effects += ModuleListEffect.ScrollToItem(model.scrollToItemId)
+                    if (model.scrollToItemId != null) {
+                        if (newModules.any { module -> module.items.any { it.id == model.scrollToItemId } }) {
+                            newModel = newModel.copy(scrollToItemId = null)
+                            effects += ModuleListEffect.ScrollToItem(model.scrollToItemId)
+                        } else if (newModules.any { it.id == model.scrollToItemId }) {
+                            newModel = newModel.copy(scrollToItemId = null)
+                            val idToScroll = newModules.first { it.id == model.scrollToItemId }.items.firstOrNull()?.id
+                            idToScroll?.let {
+                                effects += ModuleListEffect.ScrollToItem(it, true)
+                            }
+                        }
                     }
                 }
 

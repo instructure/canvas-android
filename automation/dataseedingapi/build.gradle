@@ -21,12 +21,12 @@ repositories {
 }
 
 apollo {
-    useJavaBeansSemanticNaming = true
-    customTypeMapping = [
-            "URL" : "java.lang.String",
-            "DateTime": "java.util.Date",
-            "ID"  : "java.lang.String"
-    ]
+    service("canvas") {
+        packageName.set("com.instructure.dataseedingapi")
+        mapScalar("URL", "kotlin.String")
+        mapScalar("DateTime", "java.util.Date")
+        mapScalar("ID", "kotlin.String")
+    }
 }
 
 dependencies {
@@ -63,7 +63,7 @@ tasks.named('compileKotlin') {
         jvmTarget = '17'
     }
     dependsOn addPrivateData
-    dependsOn generateTestServiceApolloSources
+    dependsOn generateApolloSources
 }
 
 task customClean {

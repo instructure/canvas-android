@@ -76,7 +76,7 @@ sealed class ModuleListEffect {
         val scrollToItemId: Long?
     ) : ModuleListEffect()
 
-    data class ScrollToItem(val moduleItemId: Long) : ModuleListEffect()
+    data class ScrollToItem(val moduleItemId: Long, val scrollToHeaderItem: Boolean = false) : ModuleListEffect()
     data class MarkModuleExpanded(
         val canvasContext: CanvasContext,
         val moduleId: Long,

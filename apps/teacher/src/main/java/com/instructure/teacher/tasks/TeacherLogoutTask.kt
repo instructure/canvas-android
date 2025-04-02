@@ -25,7 +25,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.utils.TeacherPrefs
-import io.heap.core.Heap
+import sdk.pendo.io.Pendo
 
 class TeacherLogoutTask(
     type: Type,
@@ -35,7 +35,7 @@ class TeacherLogoutTask(
 
     override fun onCleanup() {
         TeacherPrefs.safeClearPrefs()
-        Heap.stopRecording()
+        Pendo.endSession()
     }
 
     override fun createLoginIntent(context: Context): Intent {

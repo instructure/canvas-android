@@ -119,7 +119,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
             disabledFields = options.disabledFields.copy(
                 isContextDisabled = true
             ),
-            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TeacherEnrollment),
             hiddenBodyMessage = context.getString(
                 R.string.regardingHiddenMessage,
                 parentPrefs.currentStudent?.name.orEmpty(),

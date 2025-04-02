@@ -143,7 +143,7 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
 
     override fun onHandleBackPressed(): Boolean {
         val uiState = viewModel.uiState.value
-        if (!uiState.enableCustomBackHandler) return false
+        if (shouldAllowExit()) return false
 
         when (uiState.screenOption) {
             is InboxComposeScreenOptions.None -> {
@@ -171,7 +171,7 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
 
     // For Teacher BottomSheetDialog handling
     fun shouldAllowExit(): Boolean {
-        return !viewModel.uiState.value.enableCustomBackHandler
+        return !viewModel.uiState.value.enableCustomBackHandler || !viewModel.composeContentHasChanged()
     }
 
     fun handleExit() {

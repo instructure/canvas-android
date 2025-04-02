@@ -23,6 +23,7 @@ import com.instructure.dataseeding.model.CreateUser
 import com.instructure.dataseeding.model.OAuthToken
 import com.instructure.dataseeding.model.PairingCodeResponseModel
 import com.instructure.dataseeding.model.Pseudonym
+import com.instructure.dataseeding.model.TermsOfServiceApiResponseModel
 import com.instructure.dataseeding.model.User
 import com.instructure.dataseeding.model.UserSettingsApiModel
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
@@ -33,6 +34,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.FormElement
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -62,6 +64,9 @@ object UserApi {
         @POST("users/{userId}/observer_pairing_codes")
         fun postGeneratePairingCode(@Path("userId") userId: Long): Call<PairingCodeResponseModel>
 
+        @GET("accounts/self/terms_of_service")
+        fun getTermsOfService(): Call<TermsOfServiceApiResponseModel>
+
     }
 
     private val userAdminService: UserService by lazy {
@@ -75,6 +80,10 @@ object UserApi {
 
     fun postGeneratePairingCode(userId: Long): PairingCodeResponseModel {
         return userAdminService.postGeneratePairingCode(userId).execute().body()!!
+    }
+
+    fun getTermsOfService(): TermsOfServiceApiResponseModel {
+        return userAdminService.getTermsOfService().execute().body()!!
     }
 
     fun createCanvasUser(

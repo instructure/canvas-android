@@ -62,6 +62,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.inbox.utils.AttachmentCard
 import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.instructure.pandautils.views.CanvasWebView
 import com.jakewharton.threetenabp.AndroidThreeTen
 import java.util.Date
 
@@ -70,6 +71,7 @@ fun AnnouncementDetailsScreen(
     uiState: AnnouncementDetailsUiState,
     actionHandler: (AnnouncementDetailsAction) -> Unit,
     navigationActionClick: () -> Unit,
+    applyOnWebView: (CanvasWebView.() -> Unit),
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
@@ -128,6 +130,7 @@ fun AnnouncementDetailsScreen(
                             AnnouncementDetailsSuccessScreen(
                                 uiState,
                                 actionHandler,
+                                applyOnWebView,
                                 modifier
                             )
                         }
@@ -149,6 +152,7 @@ fun AnnouncementDetailsScreen(
 private fun AnnouncementDetailsSuccessScreen(
     uiState: AnnouncementDetailsUiState,
     actionHandler: (AnnouncementDetailsAction) -> Unit,
+    applyOnWebView: (CanvasWebView.() -> Unit),
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -191,7 +195,8 @@ private fun AnnouncementDetailsSuccessScreen(
                 )
                 ComposeCanvasWebViewWrapper(
                     modifier = Modifier.padding(horizontal = 6.dp),
-                    html = message
+                    html = message,
+                    applyOnWebView = applyOnWebView
                 )
             }
         }
@@ -231,7 +236,8 @@ private fun AnnouncementDetailsPreview() {
             attachment = null
         ),
         actionHandler = {},
-        navigationActionClick = {}
+        navigationActionClick = {},
+        applyOnWebView = {}
     )
 }
 
@@ -253,7 +259,8 @@ private fun AnnouncementDetailsAttachmentPreview() {
             )
         ),
         actionHandler = {},
-        navigationActionClick = {}
+        navigationActionClick = {},
+        applyOnWebView = {}
     )
 }
 
@@ -265,7 +272,8 @@ private fun AnnouncementDetailsErrorPreview() {
             isError = true
         ),
         actionHandler = {},
-        navigationActionClick = {}
+        navigationActionClick = {},
+        applyOnWebView = {}
     )
 }
 
@@ -277,6 +285,7 @@ private fun AnnouncementDetailsLoadingPreview() {
             isLoading = true
         ),
         actionHandler = {},
-        navigationActionClick = {}
+        navigationActionClick = {},
+        applyOnWebView = {}
     )
 }

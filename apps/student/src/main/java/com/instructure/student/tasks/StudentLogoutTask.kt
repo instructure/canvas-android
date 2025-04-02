@@ -25,13 +25,13 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.activity.LoginActivity
-import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
-import io.heap.core.Heap
+import sdk.pendo.io.Pendo
 import java.io.File
 
 class StudentLogoutTask(
@@ -46,7 +46,7 @@ class StudentLogoutTask(
     override fun onCleanup() {
         StudentPrefs.safeClearPrefs()
         WidgetUpdater.updateWidgets()
-        Heap.stopRecording()
+        Pendo.endSession()
     }
 
     override fun createLoginIntent(context: Context): Intent {

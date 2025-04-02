@@ -388,7 +388,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(previewUrl = url, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, ltiTool, assignment.name!!),
+            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, null, assignment.name!!, ltiUrl = url),
             lti = ltiTool
         )
     }
