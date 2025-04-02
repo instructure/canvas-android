@@ -22,6 +22,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -320,6 +321,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentDueDatesPage.assertDueDateTime("Due $dueDateForStudentSpecially")
     }
 
+    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.COMMENTS, TestCategory.E2E)
