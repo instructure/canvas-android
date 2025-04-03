@@ -13,15 +13,16 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-@file:OptIn(ExperimentalAnimationGraphicsApi::class)
 
 package com.instructure.horizon.horizonui.organisms.controls
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,7 +33,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,7 +50,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.utils.toPx
 
-private const val ANIMATION_DURATION = 200
+private const val ANIMATION_DURATION = 250
 
 data class SwitchItemState(
     val controlsContentState: ControlsContentState,
@@ -70,6 +73,7 @@ fun SwitchItem(state: SwitchItemState, modifier: Modifier = Modifier) {
     }
 }
 
+@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 private fun HorizonSwitch(
     checked: Boolean,
@@ -94,18 +98,40 @@ private fun HorizonSwitch(
         label = "Background Color"
     ) { if (it) HorizonColors.Icon.default() else HorizonColors.Icon.medium() }
 
-//    val vector = AnimatedImageVector.animatedVectorResource(R.drawable.avd_anim)
-//    val animatedVectorPainter = rememberAnimatedVectorPainter(
-//        vector, // Your AVD XML
-//        !checked
-//    )
+    val iconAlpha by transition.animateFloat(
+        transitionSpec = {
+            keyframes {
+                durationMillis = ANIMATION_DURATION
+                1f at 0
+                0f at ANIMATION_DURATION / 2
+                1f at ANIMATION_DURATION
+            }
+        },
+        label = "Icon Alpha"
+    ) { 1f }
 
+    val progress by transition.animateFloat(
+        transitionSpec = { tween(durationMillis = ANIMATION_DURATION, easing = LinearEasing) },
+        label = "Progress"
+    ) { if (it) 1f else 0f }
+
+    val currentIcon by remember(progress, checked) {
+        derivedStateOf {
+            if (progress < 0.5f) {
+                R.drawable.close
+            } else {
+                R.drawable.check
+            }
+        }
+    }
+
+    var switchModifier = modifier
+        .size(width = switchWidth, height = switchHeight)
+        .clip(CircleShape)
+        .background(color)
+    if (enabled && onCheckedChange != null) switchModifier = switchModifier.clickable { onCheckedChange(!checked) }
     Box(
-        modifier = modifier
-            .size(width = switchWidth, height = switchHeight)
-            .clip(CircleShape)
-            .background(color)
-            .clickable { onCheckedChange!!(!checked) },
+        modifier = switchModifier,
         contentAlignment = Alignment.CenterStart
     ) {
         Box(contentAlignment = Alignment.Center,
@@ -116,10 +142,12 @@ private fun HorizonSwitch(
                 .background(HorizonColors.Surface.pagePrimary(), CircleShape)
         ) {
             Icon(
-                painter = painterResource(if (checked) R.drawable.check else R.drawable.close),
+                painter = painterResource(currentIcon),
                 tint = color,
                 contentDescription = null,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier
+                    .size(16.dp)
+                    .alpha(iconAlpha),
             )
         }
     }
@@ -129,4 +157,16 @@ private fun HorizonSwitch(
 @Preview(showBackground = true)
 fun SwitchItemPreview() {
     SwitchItem(SwitchItemState(ControlsContentState("Content", "Description"), checked = true))
+}
+
+@Composable
+@Preview(showBackground = true)
+fun SwitchItemOffPreview() {
+    SwitchItem(SwitchItemState(ControlsContentState("Content", "Description"), checked = false))
+}
+
+@Composable
+@Preview(showBackground = true)
+fun SwitchItemDisabledPreview() {
+    SwitchItem(SwitchItemState(ControlsContentState("Content", "Description"), checked = true, enabled = false))
 }
