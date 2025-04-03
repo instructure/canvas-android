@@ -68,6 +68,7 @@ import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.tryRequestFocus
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -144,7 +145,7 @@ fun CalendarScreen(
                     )
                     // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
                     LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
-                        focusRequester.requestFocus()
+                        focusRequester.tryRequestFocus()
                     })
                 }
             },
@@ -166,7 +167,7 @@ fun CalendarScreen(
                         if (todayTapped) {
                             focusManager.clearFocus(true)
                             delay(200)
-                            todayFocusRequester.requestFocus()
+                            todayFocusRequester.tryRequestFocus()
                             actionHandler(CalendarAction.TodayTapHandled)
                         }
                     }
