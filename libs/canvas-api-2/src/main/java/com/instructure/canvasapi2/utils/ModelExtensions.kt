@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.ModuleItem
@@ -211,4 +212,9 @@ fun convertPercentScoreToLetterGrade(percentScore: Double, gradingScheme: List<G
 
 fun convertPercentToPointBased(percentScore: Double, scalingFactor: Double): String {
     return String.format("%.2f / %.2f", scalingFactor * (percentScore / 100.0), scalingFactor)
+}
+
+fun List<GradingPeriod>.getCurrentGradingPeriod(): GradingPeriod? {
+    val currentDate = Date()
+    return this.firstOrNull { it.startDate?.toDate()?.before(currentDate) == true && it.endDate?.toDate()?.after(currentDate) == true }
 }
