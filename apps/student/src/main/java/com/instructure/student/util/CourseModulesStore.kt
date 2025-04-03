@@ -19,10 +19,9 @@ package com.instructure.student.util
 
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import java.util.ArrayList
 
 object CourseModulesStore {
 
-    var moduleListItems: ArrayList<ArrayList<ModuleItem>>? = null
+    var moduleListItems: ArrayList<ArrayList<ModuleItem>?>? = null
     var moduleObjects: ArrayList<ModuleObject>? = null
 }
