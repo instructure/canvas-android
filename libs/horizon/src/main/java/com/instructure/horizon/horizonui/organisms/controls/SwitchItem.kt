@@ -155,18 +155,18 @@ private fun HorizonSwitch(
 
 @Composable
 @Preview(showBackground = true)
-fun SwitchItemPreview() {
+private fun SwitchItemPreview() {
     SwitchItem(SwitchItemState(ControlsContentState("Content", "Description"), checked = true))
 }
 
 @Composable
 @Preview(showBackground = true)
-fun SwitchItemOffPreview() {
+private fun SwitchItemOffPreview() {
     SwitchItem(SwitchItemState(ControlsContentState("Content", "Description"), checked = false))
 }
 
 @Composable
 @Preview(showBackground = true)
-fun SwitchItemDisabledPreview() {
+private fun SwitchItemDisabledPreview() {
     SwitchItem(SwitchItemState(ControlsContentState("Content", "Description"), checked = true, enabled = false))
 }
