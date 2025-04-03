@@ -134,10 +134,10 @@ private fun DialogFooter(
     Row(modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)) {
         Spacer(Modifier.weight(1f))
         if (secondaryButtonTitle != null && secondaryButtonClick != null) {
-            Button(label = secondaryButtonTitle, onClick = secondaryButtonClick, color = ButtonColor.INVERSE)
+            Button(label = secondaryButtonTitle, onClick = secondaryButtonClick, color = ButtonColor.Inverse)
             HorizonSpace(SpaceSize.SPACE_8)
         }
-        Button(label = primaryButtonTitle, onClick = primaryButtonClick, color = ButtonColor.INSTITUTION)
+        Button(label = primaryButtonTitle, onClick = primaryButtonClick, color = ButtonColor.Institution)
     }
 }
 
@@ -182,7 +182,7 @@ private fun ModalPreviewWithIcon() {
             secondaryButtonClick = {}
         ),
         headerIcon = {
-            Badge(type = BadgeType.SUCCESS, content = BadgeContent.Icon(R.drawable.check, null))
+            Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
         }
     )
 }
@@ -200,7 +200,7 @@ private fun ModalPreviewWithMultilineTitle() {
             secondaryButtonClick = {}
         ),
         headerIcon = {
-            Badge(type = BadgeType.SUCCESS, content = BadgeContent.Icon(R.drawable.check, null))
+            Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
         }
     )
 }
@@ -218,7 +218,7 @@ private fun ModalPreviewWithExtraBody() {
             secondaryButtonClick = {}
         ),
         headerIcon = {
-            Badge(type = BadgeType.SUCCESS, content = BadgeContent.Icon(R.drawable.check, null))
+            Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
         },
         extraBody = {
             // TODO change this to the other card
