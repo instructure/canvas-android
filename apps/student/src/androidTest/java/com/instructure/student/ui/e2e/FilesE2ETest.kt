@@ -41,7 +41,7 @@ import com.instructure.dataseeding.util.Randomizer
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -52,7 +52,7 @@ import java.io.File
 import java.io.FileWriter
 
 @HiltAndroidTest
-class FilesE2ETest: StudentTest() {
+class FilesE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 

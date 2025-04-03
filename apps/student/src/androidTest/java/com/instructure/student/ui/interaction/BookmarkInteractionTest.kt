@@ -30,14 +30,14 @@ import com.instructure.canvas.espresso.mockCanvas.addBookmark
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
 import org.junit.Test
 
 @HiltAndroidTest
-class BookmarkInteractionTest : StudentTest() {
+class BookmarkInteractionTest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,13 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.factory
+package com.instructure.pandautils.utils
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.teacher.features.assignment.list.AssignmentListPresenter
-import com.instructure.teacher.viewinterface.AssignmentListView
-import com.instructure.pandautils.blueprint.PresenterFactory
+import java.math.RoundingMode
 
-class AssignmentListPresenterFactory(private var mCanvasContext: CanvasContext) : PresenterFactory<AssignmentListView, AssignmentListPresenter> {
-    override fun create(): AssignmentListPresenter = AssignmentListPresenter(mCanvasContext)
+fun Double.toFormattedString(maxDecimals: Int? = 2): String {
+    return if (this % 1 == 0.0) {
+        this.toInt().toString()
+    } else {
+        if (maxDecimals != null) {
+            this.toBigDecimal().setScale(maxDecimals, RoundingMode.HALF_DOWN).toString()
+        } else {
+            this.toString()
+        }
+    }
 }

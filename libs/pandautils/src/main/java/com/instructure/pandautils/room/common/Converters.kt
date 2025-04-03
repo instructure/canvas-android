@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingSchemeRow
-import java.util.*
+import java.util.Date
 
 class Converters {
     @TypeConverter
@@ -55,7 +55,7 @@ class Converters {
 
     @TypeConverter
     fun toIntList(s: String?): List<Int>? {
-        return s?.split(",")?.map { it.toInt() }
+        return s?.split(",")?.mapNotNull { it.toIntOrNull() }
     }
 
     @TypeConverter
