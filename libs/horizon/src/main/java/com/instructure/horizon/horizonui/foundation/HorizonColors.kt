@@ -432,8 +432,7 @@ object HorizonColors {
         fun error() = Color(0xFFC71F23)
         @Composable
         fun light() = colorResource(R.color.icon_light)
-        @Composable
-        fun medium() = colorResource(R.color.icon_medium)
+        fun medium() = Color(0xFF6A7883)
         @Composable
         fun success() = colorResource(R.color.icon_success)
         fun surfaceColored() = Color(0xFFFFFFFF)
@@ -444,8 +443,7 @@ object HorizonColors {
     }
 
     object LineAndBorder {
-        @Composable
-        fun containerStroke() = colorResource(R.color.lineAndBorder_containerStroke)
+        fun containerStroke() = Color(0xFF6A7883)
         @Composable
         fun lineConnector() = colorResource(R.color.lineAndBorder_lineConnector)
         @Composable
