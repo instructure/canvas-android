@@ -30,6 +30,7 @@
     <string name="learningObject_page">Page</string>
     <string name="learningObject_assessment">Assessment</string>
     <string name="learningobject_dueDate">Due %1$s</string>
+    <string name="learningobject_pastDue">Past Due %1$s</string>
     <string name="learningObject_pillStatusInProgress">In Progress</string>
     <string name="learningObject_pillStatusCompleted">Completed</string>
     <string name="learningObject_pillStatusNotStarted">Not Started</string>
@@ -42,4 +43,17 @@
     <string name="fileDropSheet_takePhotoOrVideo">Take Photo or Video</string>
     <string name="fileDropSheet_chooseFile">Choose File</string>
     <string name="avatar_contentDescription">Avatar</string>
+    <string name="learningObjectStatus_optional">Optional</string>
+    <string name="learningObjectStatus_required">Required</string>
+    <string name="learningObjectStatus_viewed">Viewed</string>
+    <string name="learningObjectStatus_submitted">Submitted</string>
+    <string name="moduleStatus_notStarted">Not started</string>
+    <string name="moduleStatus_inProgress">In Progress</string>
+    <string name="moduleStatus_completed">Completed</string>
+    <string name="moduleStatus_locked">Locked</string>
+    <plurals name="moduleHeader_itemCount">
+        <item quantity="one">%1$d Item</item>
+        <item quantity="other">%1$d Items</item>
+    </plurals>
+    <string name="moduleHeader_pastDue">%1$d Past Due</string>
 </resources>

@@ -86,7 +86,7 @@ fun FileDrop(
                 label = stringResource(R.string.fileDrop_uploadFile),
                 height = ButtonHeight.NORMAL,
                 width = ButtonWidth.RELATIVE,
-                color = ButtonColor.INSTITUTION,
+                color = ButtonColor.Institution,
                 onClick = onUploadClick
             )
             HorizonSpace(SpaceSize.SPACE_16)
@@ -128,7 +128,7 @@ fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier) {
                 Spinner(size = SpinnerSize.EXTRA_SMALL, hasStrokeBackground = true)
                 HorizonSpace(SpaceSize.SPACE_8)
             } else if (state is FileDropItemState.Success) {
-                Badge(type = BadgeType.SUCCESS, content = BadgeContent.Icon(R.drawable.check, null))
+                Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
                 HorizonSpace(SpaceSize.SPACE_8)
             }
             Text(text = state.fileName, style = HorizonTypography.p1, modifier = Modifier.weight(1f))
