@@ -51,6 +51,7 @@ class ParentGradesRepository(
                 val filteredAssignments = group.assignments
                     .filter { assignment -> assignment.published }
                     .filter { assignment -> getGradingTypeFromAPIString(assignment.gradingType.orEmpty()) != Assignment.GradingType.NOT_GRADED }
+                    .filter { assignment -> assignment.submissionList.isNullOrEmpty() || assignment.submissionList?.any { submission -> submission.userId == studentId } == true}
                 group.copy(assignments = filteredAssignments).toAssignmentGroup(studentId)
             }
         }.dataOrThrow
