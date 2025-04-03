@@ -16,23 +16,25 @@
  */
 package com.instructure.horizon.horizonui.organisms.inputs
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-sealed class SingleSelectSize(open val height: Dp, open val width: SingleSelectWidth) {
-    data object Small: SingleSelectSize(34.dp, SingleSelectWidth.Fill)
-    data object Medium: SingleSelectSize(44.dp, SingleSelectWidth.Fill)
-    data class Custom(override val height: Dp, override val width: SingleSelectWidth) : SingleSelectSize(height, width)
-}
-
-sealed class SingleSelectWidth {
-    data object Fill: SingleSelectWidth()
-    data class Fixed(val width: Dp): SingleSelectWidth()
-}
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.organisms.inputs.sizes.SingleSelectInputSize
 
 data class SingleSelectState(
     val label: String? = null,
@@ -42,7 +44,7 @@ data class SingleSelectState(
     val isDisabled: Boolean = false,
     val isMenuOpen: Boolean = false,
     val errorText: String? = null,
-    val size: SingleSelectSize,
+    val size: SingleSelectInputSize,
     val options: List<String>,
     val selectedOption: String?,
     val onOptionSelected: (String) -> Unit,
@@ -61,7 +63,126 @@ fun SingleSelect(
         onExpandedChange = { state.onMenuOpenChanged(it) },
         modifier = modifier
     ) {
+        InputContainer(
+            isFocused = state.isFocused,
+            isError = state.errorText != null,
+            isDisabled = state.isDisabled,
+            size = state.size,
+        ) {
+            SingleSelectContent(state)
 
+            ExposedDropdownMenu(
+                expanded = state.isMenuOpen,
+                onDismissRequest = { state.onMenuOpenChanged(false) },
+            ) {
+                state.options.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        onClick = {
+                            state.onOptionSelected(selectionOption)
+                        }
+                    ) {
+                        SingleSelectItem(selectionOption)
+                    }
+                }
+            }
+        }
     }
 }
 
+@Composable
+private fun SingleSelectContent(state: SingleSelectState) {
+    Row {
+        if (state.selectedOption != null) {
+            Text(
+                text = state.selectedOption,
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.body(),
+            )
+        } else if (state.placeHolderText != null) {
+            Text(
+                text = state.placeHolderText,
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.placeholder(),
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Icon(
+            painter = painterResource(R.drawable.keyboard_arrow_down),
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun SingleSelectItem(item: String) {
+    Text(
+        text = item,
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier
+            .padding(horizontal = 11.dp, vertical = 6.dp)
+    )
+}
+
+@Composable
+@Preview
+fun SingleSelectCollapsedPreview() {
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = false,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        )
+    )
+}
+
+@Composable
+@Preview
+fun SingleSelectExpandedPreview() {
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = true,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        )
+    )
+}
+
+@Composable
+@Preview
+fun SingleSelectFocusedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = true,
+            isDisabled = false,
+            isMenuOpen = false,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        )
+    )
+}

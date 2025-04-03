@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -46,6 +47,7 @@ fun InputContainer(
     content: @Composable () -> Unit
 ) {
     Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
             .wrapContentSize()
             .clip(HorizonCornerRadius.level1_5)
@@ -63,6 +65,7 @@ fun InputContainer(
             .alpha(if (isDisabled) 0.5f else 1f)
     ) {
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .padding(4.dp)
                 .clip(HorizonCornerRadius.level1_5)
@@ -73,6 +76,7 @@ fun InputContainer(
                 )
         ) {
             Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .padding(
                         vertical = size.verticalPadding,
