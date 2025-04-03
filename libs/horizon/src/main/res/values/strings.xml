@@ -42,4 +42,6 @@
     <string name="fileDropSheet_takePhotoOrVideo">Take Photo or Video</string>
     <string name="fileDropSheet_chooseFile">Choose File</string>
     <string name="avatar_contentDescription">Avatar</string>
+    <string name="requiredMark">" *"</string>
+    <string name="optionalMark">" (optional)"</string>
 </resources>
