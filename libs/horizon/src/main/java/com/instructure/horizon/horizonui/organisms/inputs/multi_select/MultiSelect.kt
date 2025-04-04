@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,13 +60,16 @@ fun MultiSelect(
         errorText = state.errorText,
         required = state.required,
         modifier = modifier
+            .onFocusChanged {
+                state.onFocusChanged(it.isFocused)
+            }
     ) {
         Column(
             modifier = modifier
         ) {
             var heightInPx by remember { mutableIntStateOf(0) }
             InputContainer(
-                isFocused = state.isFocused,
+                isFocused = state.isFocused || state.isMenuOpen,
                 isError = state.errorText != null,
                 isDisabled = state.isDisabled,
                 modifier = Modifier
@@ -198,7 +202,7 @@ fun MultiSelectCollapsedPreview() {
 }
 
 @Composable
-@Preview(heightDp = 150)
+@Preview(heightDp = 200)
 fun MultiSelectExpandedPreview() {
     MultiSelect(
         state = MultiSelectState(

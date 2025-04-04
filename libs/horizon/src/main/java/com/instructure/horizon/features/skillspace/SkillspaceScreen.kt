@@ -33,11 +33,12 @@ fun SkillspaceScreen() {
     Column {
         var isOpen by remember { mutableStateOf(false) }
         var selected by remember { mutableStateOf<String?>(null) }
+        var isFocused by remember { mutableStateOf(false) }
         SingleSelect(
             state = SingleSelectState(
                 label = "Label",
                 placeHolderText = "Placeholder",
-                isFocused = false,
+                isFocused = isFocused,
                 isDisabled = false,
                 isMenuOpen = isOpen,
                 errorText = null,
@@ -46,16 +47,18 @@ fun SkillspaceScreen() {
                 selectedOption = selected,
                 onOptionSelected = { selected = it },
                 onMenuOpenChanged = { isOpen = it },
+                onFocusChanged = { isFocused = it },
             )
         )
 
+        var isFocusedMulti by remember { mutableStateOf(false) }
         var isOpenMulti by remember { mutableStateOf(false) }
         var selectedMulti by remember { mutableStateOf<List<String>>(emptyList()) }
         MultiSelect(
             state = MultiSelectState(
                 label = "Label",
                 placeHolderText = "Placeholder",
-                isFocused = false,
+                isFocused = isFocusedMulti,
                 isDisabled = false,
                 isMenuOpen = isOpenMulti,
                 errorText = null,
@@ -72,6 +75,7 @@ fun SkillspaceScreen() {
                 onOptionSelected = { selectedMulti = selectedMulti + it },
                 onMenuOpenChanged = { isOpenMulti = it },
                 onOptionRemoved = { selectedMulti = selectedMulti - it },
+                onFocusChanged = { isFocusedMulti = it },
             )
         )
     }

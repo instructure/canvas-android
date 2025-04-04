@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -56,17 +57,22 @@ fun SingleSelect(
         errorText = state.errorText,
         required = state.required,
         modifier = modifier
+            .onFocusChanged {
+                state.onFocusChanged(it.isFocused)
+            }
     ) {
         Column(
             modifier = modifier
         ) {
             var heightInPx by remember { mutableIntStateOf(0) }
             InputContainer(
-                isFocused = state.isFocused,
+                isFocused = state.isFocused || state.isMenuOpen,
                 isError = state.errorText != null,
                 isDisabled = state.isDisabled,
                 modifier = Modifier
-                    .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
+                    .clickable {
+                        state.onMenuOpenChanged(!state.isMenuOpen)
+                    }
                     .onGloballyPositioned {
                         heightInPx = it.size.height
                     }

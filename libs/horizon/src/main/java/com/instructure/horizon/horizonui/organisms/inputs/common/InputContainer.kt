@@ -51,7 +51,6 @@ fun InputContainer(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .padding(4.dp)
             .background(HorizonColors.Surface.cardPrimary())
             .border(
                 HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
