@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -50,6 +51,7 @@ fun InputDropDownPopup(
     Popup(
         offset = IntOffset(0, verticalOffsetPx),
         onDismissRequest = { onMenuOpenChanged(false) },
+        properties = PopupProperties(focusable = isMenuOpen)
     ) {
         AnimatedContent(
             isMenuOpen,
