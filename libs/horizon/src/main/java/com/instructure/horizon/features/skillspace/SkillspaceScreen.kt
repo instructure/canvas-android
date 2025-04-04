@@ -15,32 +15,64 @@
  */
 package com.instructure.horizon.features.skillspace
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.instructure.horizon.horizonui.organisms.inputs.SingleSelect
-import com.instructure.horizon.horizonui.organisms.inputs.SingleSelectState
-import com.instructure.horizon.horizonui.organisms.inputs.sizes.SingleSelectInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.multi_select.MultiSelect
+import com.instructure.horizon.horizonui.organisms.inputs.multi_select.MultiSelectInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.multi_select.MultiSelectState
+import com.instructure.horizon.horizonui.organisms.inputs.single_select.SingleSelect
+import com.instructure.horizon.horizonui.organisms.inputs.single_select.SingleSelectInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.single_select.SingleSelectState
 
 @Composable
 fun SkillspaceScreen() {
-    var isOpen by remember { mutableStateOf(false) }
-    var selected by remember { mutableStateOf<String?>(null) }
-    SingleSelect(
-        state = SingleSelectState(
-            label = "Label",
-            placeHolderText = "Placeholder",
-            isFocused = false,
-            isDisabled = false,
-            isMenuOpen = isOpen,
-            errorText = null,
-            size = SingleSelectInputSize.Medium,
-            options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOption = selected,
-            onOptionSelected = { selected = it },
-            onMenuOpenChanged = { isOpen = it },
+    Column {
+        var isOpen by remember { mutableStateOf(false) }
+        var selected by remember { mutableStateOf<String?>(null) }
+        SingleSelect(
+            state = SingleSelectState(
+                label = "Label",
+                placeHolderText = "Placeholder",
+                isFocused = false,
+                isDisabled = false,
+                isMenuOpen = isOpen,
+                errorText = null,
+                size = SingleSelectInputSize.Medium,
+                options = listOf("Option 1", "Option 2", "Option 3"),
+                selectedOption = selected,
+                onOptionSelected = { selected = it },
+                onMenuOpenChanged = { isOpen = it },
+            )
         )
-    )
+
+        var isOpenMulti by remember { mutableStateOf(false) }
+        var selectedMulti by remember { mutableStateOf<List<String>>(emptyList()) }
+        MultiSelect(
+            state = MultiSelectState(
+                label = "Label",
+                placeHolderText = "Placeholder",
+                isFocused = false,
+                isDisabled = false,
+                isMenuOpen = isOpenMulti,
+                errorText = null,
+                size = MultiSelectInputSize.Medium,
+                options = listOf(
+                    "Option 1",
+                    "Option 2",
+                    "Option 3",
+                    "Option 4",
+                    "Option 5",
+                    "Option 6"
+                ),
+                selectedOptions = selectedMulti,
+                onOptionSelected = { selectedMulti = selectedMulti + it },
+                onMenuOpenChanged = { isOpenMulti = it },
+                onOptionRemoved = { selectedMulti = selectedMulti - it },
+            )
+        )
+    }
 }

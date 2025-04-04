@@ -29,20 +29,17 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.organisms.inputs.sizes.InputSize
 
 @Composable
 fun InputContainer(
     isFocused: Boolean,
     isError: Boolean,
     isDisabled: Boolean,
-    size: InputSize,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -75,16 +72,7 @@ fun InputContainer(
                     HorizonCornerRadius.level1_5
                 )
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .padding(
-                        vertical = size.verticalPadding,
-                        horizontal = size.horizontalPadding
-                    )
-            ){
-                content()
-            }
+            content()
         }
     }
 }
@@ -97,14 +85,11 @@ fun InputContainerPreview() {
         isFocused = false,
         isError = false,
         isDisabled = false,
-        size = object : InputSize {
-            override val verticalPadding: Dp
-                get() = 8.dp
-            override val horizontalPadding: Dp
-                get() = 12.dp
-        },
     ) {
-        Text("Placeholder")
+        Text(
+            "Placeholder",
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
 
@@ -116,14 +101,11 @@ fun InputContainerFocusedPreview() {
         isFocused = true,
         isError = false,
         isDisabled = false,
-        size = object : InputSize {
-            override val verticalPadding: Dp
-                get() = 8.dp
-            override val horizontalPadding: Dp
-                get() = 12.dp
-        },
     ) {
-        Text("Placeholder")
+        Text(
+            "Placeholder",
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
 
@@ -135,14 +117,11 @@ fun InputContainerErrorFocusedPreview() {
         isFocused = true,
         isError = true,
         isDisabled = false,
-        size = object : InputSize {
-            override val verticalPadding: Dp
-                get() = 8.dp
-            override val horizontalPadding: Dp
-                get() = 12.dp
-        },
     ) {
-        Text("Placeholder")
+        Text(
+            "Placeholder",
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
 
@@ -154,14 +133,11 @@ fun InputContainerErrorPreview() {
         isFocused = false,
         isError = true,
         isDisabled = false,
-        size = object : InputSize {
-            override val verticalPadding: Dp
-                get() = 8.dp
-            override val horizontalPadding: Dp
-                get() = 12.dp
-        },
     ) {
-        Text("Placeholder")
+        Text(
+            "Placeholder",
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
 
@@ -173,13 +149,10 @@ fun InputContainerDisabledPreview() {
         isFocused = false,
         isError = false,
         isDisabled = true,
-        size = object : InputSize {
-            override val verticalPadding: Dp
-                get() = 8.dp
-            override val horizontalPadding: Dp
-                get() = 12.dp
-        },
     ) {
-        Text("Placeholder")
+        Text(
+            "Placeholder",
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }

@@ -14,15 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.sizes
+package com.instructure.horizon.horizonui.organisms.inputs.single_select
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 sealed class SingleSelectInputSize(
-    override val verticalPadding: Dp,
-    override val horizontalPadding: Dp
-): InputSize {
+    val verticalPadding: Dp,
+    val horizontalPadding: Dp
+) {
     data object Small: SingleSelectInputSize(11.dp, 12.dp)
     data object Medium: SingleSelectInputSize(6.dp, 12.dp)
 }

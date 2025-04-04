@@ -14,13 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs
+package com.instructure.horizon.horizonui.organisms.inputs.multi_select
 
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -32,37 +36,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.molecules.Tag
+import com.instructure.horizon.horizonui.molecules.TagSize
+import com.instructure.horizon.horizonui.molecules.TagType
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
-import com.instructure.horizon.horizonui.organisms.inputs.sizes.SingleSelectInputSize
-
-data class SingleSelectState(
-    val label: String? = null,
-    val helperText: String? = null,
-    val placeHolderText: String? = null,
-    val isFocused: Boolean = false,
-    val isDisabled: Boolean = false,
-    val isMenuOpen: Boolean = false,
-    val errorText: String? = null,
-    val size: SingleSelectInputSize,
-    val options: List<String>,
-    val selectedOption: String?,
-    val onOptionSelected: (String) -> Unit,
-    val onMenuOpenChanged: (Boolean) -> Unit,
-    val onFocusChanged: (Boolean) -> Unit = {},
-)
 
 @Composable
-fun SingleSelect(
+fun MultiSelect(
     modifier: Modifier = Modifier,
-    state: SingleSelectState
+    state: MultiSelectState
 ) {
     Column(
         modifier = modifier
@@ -72,14 +60,13 @@ fun SingleSelect(
             isFocused = state.isFocused,
             isError = state.errorText != null,
             isDisabled = state.isDisabled,
-            size = state.size,
             modifier = Modifier
                 .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
                 .onGloballyPositioned {
                     heightInPx = it.size.height
                 }
         ) {
-            SingleSelectContent(state)
+            MultiSelectContent(state)
         }
 
         InputDropDownPopup(
@@ -88,28 +75,59 @@ fun SingleSelect(
             verticalOffsetPx = heightInPx,
             onMenuOpenChanged = state.onMenuOpenChanged,
             onOptionSelected = { selectedOption ->
-                state.onOptionSelected(selectedOption)
-                state.onMenuOpenChanged(false)
+                if (state.selectedOptions.contains(selectedOption)) {
+                    state.onOptionRemoved(selectedOption)
+                } else {
+                    state.onOptionSelected(selectedOption)
+                }
             }
         )
     }
 }
 
 @Composable
-private fun SingleSelectContent(state: SingleSelectState) {
-    var iconRotation = animateIntAsState(
+@OptIn(ExperimentalLayoutApi::class)
+private fun MultiSelectContent(state: MultiSelectState) {
+    val iconRotation = animateIntAsState(
         targetValue = if (state.isMenuOpen) 180 else 0,
         label = "iconRotation"
     )
+    val paddingModifier = if (state.selectedOptions.isNotEmpty()) {
+        Modifier.padding(
+            vertical = state.size.verticalContentPadding,
+            horizontal = state.size.horizontalContentPadding
+        )
+    } else {
+        Modifier
+            .padding(
+                vertical = state.size.verticalTextPadding,
+                horizontal = state.size.horizontalTextPadding
+            )
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        modifier = paddingModifier
     ) {
-        if (state.selectedOption != null) {
-            Text(
-                text = state.selectedOption,
-                style = HorizonTypography.p1,
-                color = HorizonColors.Text.body(),
-            )
+        if (state.selectedOptions.isNotEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(state.size.horizontalContentPadding),
+                verticalArrangement = Arrangement.spacedBy(state.size.verticalContentPadding),
+            ) {
+                state.selectedOptions.forEach { selectedOption ->
+                    Tag(
+                        label = selectedOption,
+                        type = TagType.STANDALONE,
+                        size = when (state.size) {
+                            MultiSelectInputSize.Small -> TagSize.SMALL
+                            MultiSelectInputSize.Medium -> TagSize.MEDIUM
+                        },
+                        dismissible = true,
+                        onDismiss = {
+                            state.onOptionRemoved(selectedOption)
+                        },
+                    )
+                }
+            }
         } else if (state.placeHolderText != null) {
             Text(
                 text = state.placeHolderText,
@@ -131,61 +149,83 @@ private fun SingleSelectContent(state: SingleSelectState) {
 
 @Composable
 @Preview
-fun SingleSelectCollapsedPreview() {
-    SingleSelect(
-        state = SingleSelectState(
+fun MultiSelectCollapsedPlaceholderPreview() {
+    MultiSelect(
+        state = MultiSelectState(
             label = "Label",
             placeHolderText = "Placeholder",
             isFocused = false,
             isDisabled = false,
             isMenuOpen = false,
             errorText = null,
-            size = SingleSelectInputSize.Medium,
+            size = MultiSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOption = null,
+            selectedOptions = emptyList(),
             onOptionSelected = {},
             onMenuOpenChanged = {},
-        )
-    )
-}
-
-@Composable
-@Preview(heightDp = 150)
-fun SingleSelectExpandedPreview() {
-    SingleSelect(
-        state = SingleSelectState(
-            label = "Label",
-            placeHolderText = "Placeholder",
-            isFocused = false,
-            isDisabled = false,
-            isMenuOpen = true,
-            errorText = null,
-            size = SingleSelectInputSize.Medium,
-            options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOption = null,
-            onOptionSelected = {},
-            onMenuOpenChanged = {},
+            onOptionRemoved = {}
         )
     )
 }
 
 @Composable
 @Preview
-fun SingleSelectFocusedPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    SingleSelect(
-        state = SingleSelectState(
+fun MultiSelectCollapsedPreview() {
+    MultiSelect(
+        state = MultiSelectState(
             label = "Label",
-            placeHolderText = "Placeholder",
-            isFocused = true,
+            isFocused = false,
             isDisabled = false,
             isMenuOpen = false,
             errorText = null,
-            size = SingleSelectInputSize.Medium,
+            size = MultiSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOption = "Option 1",
+            selectedOptions = emptyList(),
             onOptionSelected = {},
             onMenuOpenChanged = {},
+            onOptionRemoved = {}
+        )
+    )
+}
+
+@Composable
+@Preview(heightDp = 150)
+fun MultiSelectExpandedPreview() {
+    MultiSelect(
+        state = MultiSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = true,
+            errorText = null,
+            size = MultiSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOptions = emptyList(),
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+            onOptionRemoved = {}
+        )
+    )
+}
+
+@Composable
+@Preview
+fun MultiSelectSelectedPreview() {
+    MultiSelect(
+        state = MultiSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = false,
+            errorText = null,
+            size = MultiSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOptions = listOf("Option 1", "Option 3"),
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+            onOptionRemoved = {}
         )
     )
 }

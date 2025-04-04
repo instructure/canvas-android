@@ -14,11 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.sizes
+package com.instructure.horizon.horizonui.organisms.inputs.multi_select
 
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-interface InputSize {
-    val verticalPadding: Dp
-    val horizontalPadding: Dp
+sealed class MultiSelectInputSize(
+    val verticalContentPadding: Dp,
+    val horizontalContentPadding: Dp,
+    val verticalTextPadding: Dp,
+    val horizontalTextPadding: Dp,
+) {
+    data object Small: MultiSelectInputSize(6.dp, 12.dp, 8.dp, 12.dp)
+    data object Medium: MultiSelectInputSize(6.dp, 12.dp, 11.dp, 12.dp)
 }
