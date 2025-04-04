@@ -37,199 +37,199 @@ fun IconographyScreen() {
         Icon(
             painterResource(R.drawable.accessibility_new),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.account_circle),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.add),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.alarm),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.archive),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.arrow_back),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.arrow_forward),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.attach_file),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.autorenew),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.backup),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.block),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.bookmark),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.bug_report),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.build),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.cached),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.camera),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.change_history),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.check),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.check_circle),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.code),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.compare_arrows),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.contacts),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.content_copy),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.content_cut),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.content_paste),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.delete),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.description),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.done_all),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.error),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.event),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.exit_to_app),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.extension),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
         Icon(
             painterResource(R.drawable.favorite),
             contentDescription = null,
-            modifier = Modifier.size(24.dp).padding(8.dp),
+            modifier = Modifier.size(40.dp).padding(8.dp),
             tint = HorizonColors.Icon.default()
         )
     }

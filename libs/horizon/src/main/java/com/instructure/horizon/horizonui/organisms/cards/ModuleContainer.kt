@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -253,7 +252,7 @@ private fun ModuleContainerLockedPreview() {
 }
 
 @Composable
-private fun ModuleContainerPreview(status: ModuleStatus, pastDueCount: Int, expanded: Boolean, subtitle: String?) {
+fun ModuleContainerPreview(status: ModuleStatus, pastDueCount: Int, expanded: Boolean, subtitle: String?, onClick: () -> Unit = {}) {
     ContextKeeper.appContext = LocalContext.current
     ModuleContainer(
         state = ModuleHeaderState(
@@ -263,11 +262,12 @@ private fun ModuleContainerPreview(status: ModuleStatus, pastDueCount: Int, expa
             itemCount = 5,
             pastDueCount = pastDueCount,
             remainingMinutes = "5 mins",
-            expanded = expanded
+            expanded = expanded,
+            onClick = onClick
         )
     ) {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(5) { index ->
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            repeat(5) { index ->
                 ModuleItemCard(
                     ModuleItemCardState(
                         title = "Module Item Title $index",

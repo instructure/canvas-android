@@ -61,7 +61,6 @@ import com.instructure.horizon.horizonui.showroom.screens.IconButtonScreen
 import com.instructure.horizon.horizonui.showroom.screens.IconographyScreen
 import com.instructure.horizon.horizonui.showroom.screens.InputsScreen
 import com.instructure.horizon.horizonui.showroom.screens.ModalScreen
-import com.instructure.horizon.horizonui.showroom.screens.NavigationalElementsScreen
 import com.instructure.horizon.horizonui.showroom.screens.PillScreen
 import com.instructure.horizon.horizonui.showroom.screens.ProgressBarScreen
 import com.instructure.horizon.horizonui.showroom.screens.SegmentedControlScreen
@@ -94,7 +93,6 @@ val showroomItems = listOf(
     ShowroomItem.Item("Tag", "tag"),
     ShowroomItem.Header("Components: Organisms"),
     ShowroomItem.Item("Cards", "cards"),
-    ShowroomItem.Item("Navigational elements", "navigational"),
     ShowroomItem.Item("Modal", "modal"),
     ShowroomItem.Item("Controls", "controls"),
     ShowroomItem.Item("Inputs", "inputs"),
@@ -193,7 +191,6 @@ private fun ShowroomContent(route: String) {
         "spinner" -> SpinnerScreen()
         "tag" -> TagScreen()
         "cards" -> CardsScreen()
-        "navigational" -> NavigationalElementsScreen()
         "modal" -> ModalScreen()
         "controls" -> ControlsScreen()
         "inputs" -> InputsScreen()
