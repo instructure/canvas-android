@@ -40,6 +40,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.organisms.inputs.common.Input
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 
@@ -48,33 +49,42 @@ fun SingleSelect(
     modifier: Modifier = Modifier,
     state: SingleSelectState
 ) {
-    Column(
+
+    Input(
+        label = state.label,
+        helperText = null,
+        errorText = state.errorText,
+        required = state.required,
         modifier = modifier
     ) {
-        var heightInPx by remember { mutableIntStateOf(0) }
-        InputContainer(
-            isFocused = state.isFocused,
-            isError = state.errorText != null,
-            isDisabled = state.isDisabled,
-            modifier = Modifier
-                .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
-                .onGloballyPositioned {
-                    heightInPx = it.size.height
-                }
+        Column(
+            modifier = modifier
         ) {
-            SingleSelectContent(state)
-        }
-
-        InputDropDownPopup(
-            isMenuOpen = state.isMenuOpen,
-            options = state.options,
-            verticalOffsetPx = heightInPx,
-            onMenuOpenChanged = state.onMenuOpenChanged,
-            onOptionSelected = { selectedOption ->
-                state.onOptionSelected(selectedOption)
-                state.onMenuOpenChanged(false)
+            var heightInPx by remember { mutableIntStateOf(0) }
+            InputContainer(
+                isFocused = state.isFocused,
+                isError = state.errorText != null,
+                isDisabled = state.isDisabled,
+                modifier = Modifier
+                    .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
+                    .onGloballyPositioned {
+                        heightInPx = it.size.height
+                    }
+            ) {
+                SingleSelectContent(state)
             }
-        )
+
+            InputDropDownPopup(
+                isMenuOpen = state.isMenuOpen,
+                options = state.options,
+                verticalOffsetPx = heightInPx,
+                onMenuOpenChanged = state.onMenuOpenChanged,
+                onOptionSelected = { selectedOption ->
+                    state.onOptionSelected(selectedOption)
+                    state.onMenuOpenChanged(false)
+                }
+            )
+        }
     }
 }
 

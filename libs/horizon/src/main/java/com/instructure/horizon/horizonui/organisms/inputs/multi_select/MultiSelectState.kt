@@ -1,5 +1,7 @@
 package com.instructure.horizon.horizonui.organisms.inputs.multi_select
 
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
+
 data class MultiSelectState(
     val label: String? = null,
     val helperText: String? = null,
@@ -8,6 +10,7 @@ data class MultiSelectState(
     val isDisabled: Boolean = false,
     val isMenuOpen: Boolean = false,
     val errorText: String? = null,
+    val required: InputLabelRequired = InputLabelRequired.Regular,
     val size: MultiSelectInputSize,
     val options: List<String>,
     val selectedOptions: List<String>,

@@ -1,5 +1,7 @@
 package com.instructure.horizon.horizonui.organisms.inputs.single_select
 
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
+
 data class SingleSelectState(
     val label: String? = null,
     val helperText: String? = null,
@@ -8,6 +10,7 @@ data class SingleSelectState(
     val isDisabled: Boolean = false,
     val isMenuOpen: Boolean = false,
     val errorText: String? = null,
+    val required: InputLabelRequired = InputLabelRequired.Regular,
     val size: SingleSelectInputSize,
     val options: List<String>,
     val selectedOption: String?,

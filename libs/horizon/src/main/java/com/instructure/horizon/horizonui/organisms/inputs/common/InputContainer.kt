@@ -20,13 +20,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,34 +51,36 @@ fun InputContainer(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .wrapContentSize()
-            .clip(HorizonCornerRadius.level1_5)
-            .then(
-                if (isFocused)
-                    Modifier
-                        .border(
-                            HorizonBorder.level2(if (isError) HorizonColors.Surface.error() else HorizonColors.Surface.institution()),
-                            HorizonCornerRadius.level1_5
-                        )
-                        .background(HorizonColors.Surface.cardPrimary())
-                else
-                    Modifier
+            .padding(4.dp)
+            .background(HorizonColors.Surface.cardPrimary())
+            .border(
+                HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
+                HorizonCornerRadius.level1_5
             )
+            .drawBehind {
+                if (isError || isFocused) {
+                    val strokeColor =
+                        if (isError) HorizonColors.Surface.error() else HorizonColors.Surface.institution()
+                    val stroke = HorizonBorder.level2(strokeColor)
+                    val radius = 12.dp
+                    val borderPadding = 2.dp
+
+                    drawRoundRect(
+                        color = strokeColor, // your "selected" outer border
+                        size = Size(
+                            size.width + stroke.width.toPx() + borderPadding.toPx() * 2,
+                            size.height + stroke.width.toPx() + borderPadding.toPx() * 2
+                        ),
+                        topLeft = Offset(-stroke.width.toPx() / 2 - borderPadding.toPx(), -stroke.width.toPx() / 2 - borderPadding.toPx()),
+                        cornerRadius = CornerRadius(radius.toPx(), radius.toPx()),
+                        style = Stroke(width = stroke.width.toPx())
+                    )
+                }
+            }
+            .clip(HorizonCornerRadius.level1_5)
             .alpha(if (isDisabled) 0.5f else 1f)
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(4.dp)
-                .clip(HorizonCornerRadius.level1_5)
-                .background(HorizonColors.Surface.cardPrimary())
-                .border(
-                    HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
-                    HorizonCornerRadius.level1_5
-                )
-        ) {
-            content()
-        }
+        content()
     }
 }
 
@@ -133,6 +140,7 @@ fun InputContainerErrorPreview() {
         isFocused = false,
         isError = true,
         isDisabled = false,
+        modifier = Modifier.graphicsLayer { clip = false }
     ) {
         Text(
             "Placeholder",

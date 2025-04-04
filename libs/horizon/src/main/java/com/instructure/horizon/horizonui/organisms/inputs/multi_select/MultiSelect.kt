@@ -44,6 +44,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Tag
 import com.instructure.horizon.horizonui.molecules.TagSize
 import com.instructure.horizon.horizonui.molecules.TagType
+import com.instructure.horizon.horizonui.organisms.inputs.common.Input
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 
@@ -52,36 +53,44 @@ fun MultiSelect(
     modifier: Modifier = Modifier,
     state: MultiSelectState
 ) {
-    Column(
+    Input(
+        label = state.label,
+        helperText = null,
+        errorText = state.errorText,
+        required = state.required,
         modifier = modifier
     ) {
-        var heightInPx by remember { mutableIntStateOf(0) }
-        InputContainer(
-            isFocused = state.isFocused,
-            isError = state.errorText != null,
-            isDisabled = state.isDisabled,
-            modifier = Modifier
-                .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
-                .onGloballyPositioned {
-                    heightInPx = it.size.height
-                }
+        Column(
+            modifier = modifier
         ) {
-            MultiSelectContent(state)
-        }
-
-        InputDropDownPopup(
-            isMenuOpen = state.isMenuOpen,
-            options = state.options,
-            verticalOffsetPx = heightInPx,
-            onMenuOpenChanged = state.onMenuOpenChanged,
-            onOptionSelected = { selectedOption ->
-                if (state.selectedOptions.contains(selectedOption)) {
-                    state.onOptionRemoved(selectedOption)
-                } else {
-                    state.onOptionSelected(selectedOption)
-                }
+            var heightInPx by remember { mutableIntStateOf(0) }
+            InputContainer(
+                isFocused = state.isFocused,
+                isError = state.errorText != null,
+                isDisabled = state.isDisabled,
+                modifier = Modifier
+                    .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
+                    .onGloballyPositioned {
+                        heightInPx = it.size.height
+                    }
+            ) {
+                MultiSelectContent(state)
             }
-        )
+
+            InputDropDownPopup(
+                isMenuOpen = state.isMenuOpen,
+                options = state.options,
+                verticalOffsetPx = heightInPx,
+                onMenuOpenChanged = state.onMenuOpenChanged,
+                onOptionSelected = { selectedOption ->
+                    if (state.selectedOptions.contains(selectedOption)) {
+                        state.onOptionRemoved(selectedOption)
+                    } else {
+                        state.onOptionSelected(selectedOption)
+                    }
+                }
+            )
+        }
     }
 }
 
