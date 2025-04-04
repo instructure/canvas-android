@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -76,11 +77,12 @@ fun Tag(
         else -> size.padding
     }
     val badgePadding = if (dismissible && type == TagType.INLINE) PaddingValues(top = 8.dp, end = 8.dp) else PaddingValues()
-    Box(contentAlignment = Alignment.TopEnd, modifier = modifier.padding(badgePadding)) {
+    val alphaModifier = if (enabled) modifier else modifier.alpha(0.5f)
+    Box(contentAlignment = Alignment.TopEnd, modifier = alphaModifier.padding(badgePadding)) {
         Box(
             modifier = Modifier
                 .background(
-                    color = if (enabled) type.backgroundColor else type.backgroundColor.copy(alpha = 0.5f),
+                    color = type.backgroundColor,
                     shape = type.cornerRadius
                 )
                 .border(HorizonBorder.level1(), shape = type.cornerRadius)

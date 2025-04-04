@@ -13,11 +13,40 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+@file:OptIn(ExperimentalLayoutApi::class)
+
 package com.instructure.horizon.horizonui.showroom.screens
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 
 @Composable
 fun SpinnerScreen() {
+    FlowRow(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(vertical = 16.dp)
+    ) {
+        SpinnerSize.entries.forEach {
+            Spinner(hasStrokeBackground = true, size = it)
+            Spinner(hasStrokeBackground = false, size = it)
+        }
+    }
+}
 
+@Composable
+@Preview
+fun SpinnerScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SpinnerScreen()
 }
