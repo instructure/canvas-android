@@ -76,7 +76,7 @@ fun MultiSelect(
                 isError = state.errorText != null,
                 isDisabled = state.isDisabled,
                 modifier = Modifier
-                    .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
+                    .clickable(enabled = !state.isDisabled) { state.onMenuOpenChanged(!state.isMenuOpen) }
                     .onGloballyPositioned {
                         heightInPx = it.size.height
                     }
@@ -375,6 +375,52 @@ fun MultiSelectSelectedErrorCollapsedWithHelperTextPreview() {
             isDisabled = false,
             isMenuOpen = false,
             errorText = "Error",
+            size = MultiSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOptions = listOf("Option 1", "Option 3"),
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+            onOptionRemoved = {}
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun MultiSelectCollapsedDisabledPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    MultiSelect(
+        state = MultiSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = true,
+            isMenuOpen = false,
+            errorText = null,
+            size = MultiSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOptions = emptyList(),
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+            onOptionRemoved = {}
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun MultiSelectSelectedCollapsedDisabledPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    MultiSelect(
+        state = MultiSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = true,
+            isMenuOpen = false,
+            errorText = null,
             size = MultiSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
             selectedOptions = listOf("Option 1", "Option 3"),

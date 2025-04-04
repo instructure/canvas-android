@@ -71,7 +71,7 @@ fun SingleSelect(
                 isError = state.errorText != null,
                 isDisabled = state.isDisabled,
                 modifier = Modifier
-                    .clickable {
+                    .clickable(enabled = !state.isDisabled) {
                         state.onMenuOpenChanged(!state.isMenuOpen)
                     }
                     .onGloballyPositioned {
@@ -335,6 +335,50 @@ fun SingleSelectSelectedErrorCollapsedWithHelperTextPreview() {
             isDisabled = false,
             isMenuOpen = false,
             errorText = "Error",
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = "Option 1",
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun SingleSelectCollapsedDisabledPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = true,
+            isMenuOpen = false,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun SingleSelectSelectedCollapsedDisabledPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = true,
+            isMenuOpen = false,
+            errorText = null,
             size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
             selectedOption = "Option 1",
