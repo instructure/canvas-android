@@ -29,16 +29,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -99,46 +97,26 @@ val showroomItems = listOf(
 )
 
 @Composable
-fun ShowroomScreen() {
-    var subScreen by remember { mutableStateOf<String?>(null) }
+fun ShowroomScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
             .fillMaxSize()
     ) {
-        Box {
-            if (subScreen != null) {
-                IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.GHOST, onClick = {
-                    subScreen = null
-                })
-            }
-            Column {
-                Text(
-                    text = "Design system",
-                    style = HorizonTypography.h1,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-                subScreen?.let { subScreen ->
-                    val showroomItem = showroomItems.find { (it as? ShowroomItem.Item)?.route == subScreen }
-                    Text(
-                        text = (showroomItem as ShowroomItem.Item).title,
-                        style = HorizonTypography.p2,
-                        modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
-                        textAlign = TextAlign.Center)
-                }
-            }
-        }
-        subScreen?.let {
-            ShowroomContent(it)
-        } ?: LazyColumn {
+        Text(
+            text = "Design system",
+            style = HorizonTypography.h1,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        LazyColumn {
             items(showroomItems.size, contentType = {
                 showroomItems[it].contentType
             }) { index ->
                 when (val showroomItem = showroomItems[index]) {
                     is ShowroomItem.Header -> ShowroomHeader(showroomItem.title)
                     is ShowroomItem.Item -> ShowroomItem(showroomItem.title) {
-                        subScreen = showroomItem.route
+                        navController.navigate(showroomItem.route)
                     }
                 }
             }
@@ -173,27 +151,56 @@ private fun ColumnScope.ShowroomItem(title: String, onClick: () -> Unit = {}) {
 }
 
 @Composable
-private fun ShowroomContent(route: String) {
-    when (route) {
-        "colors" -> ColorScreen()
-        "typography" -> TypographyScreen()
-        "cornerradius" -> CornerRadiusScreen()
-        "border" -> BorderScreen()
-        "elevation" -> ElevationScreen()
-        "iconography" -> IconographyScreen()
-        "avatar" -> AvatarScreen()
-        "buttons" -> ButtonsScreen()
-        "iconbuttons" -> IconButtonScreen()
-        "filedrop" -> FileDropScreen()
-        "pill" -> PillScreen()
-        "progressbar" -> ProgressBarScreen()
-        "segmentedcontrol" -> SegmentedControlScreen()
-        "spinner" -> SpinnerScreen()
-        "tag" -> TagScreen()
-        "cards" -> CardsScreen()
-        "modal" -> ModalScreen()
-        "controls" -> ControlsScreen()
-        "inputs" -> InputsScreen()
+fun ShowroomContent(route: String, navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            .fillMaxSize()
+    ) {
+        Box {
+            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.GHOST, onClick = {
+                navController.popBackStack()
+            })
+            Column {
+                Text(
+                    text = "Design system",
+                    style = HorizonTypography.h1,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                val showroomItem = showroomItems.find { (it as? ShowroomItem.Item)?.route == route }
+                Text(
+                    text = (showroomItem as ShowroomItem.Item).title,
+                    style = HorizonTypography.p2,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
+        when (route) {
+            "colors" -> ColorScreen()
+            "typography" -> TypographyScreen()
+            "cornerradius" -> CornerRadiusScreen()
+            "border" -> BorderScreen()
+            "elevation" -> ElevationScreen()
+            "iconography" -> IconographyScreen()
+            "avatar" -> AvatarScreen()
+            "buttons" -> ButtonsScreen()
+            "iconbuttons" -> IconButtonScreen()
+            "filedrop" -> FileDropScreen()
+            "pill" -> PillScreen()
+            "progressbar" -> ProgressBarScreen()
+            "segmentedcontrol" -> SegmentedControlScreen()
+            "spinner" -> SpinnerScreen()
+            "tag" -> TagScreen()
+            "cards" -> CardsScreen()
+            "modal" -> ModalScreen()
+            "controls" -> ControlsScreen()
+            "inputs" -> InputsScreen()
+        }
     }
 }
 
@@ -201,5 +208,5 @@ private fun ShowroomContent(route: String) {
 @Preview(showBackground = true, backgroundColor = 0xFFF2F4F4)
 fun ShowroomScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    ShowroomScreen()
+    ShowroomScreen(rememberNavController())
 }
