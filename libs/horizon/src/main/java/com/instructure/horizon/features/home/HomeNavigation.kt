@@ -28,6 +28,7 @@ import com.instructure.horizon.features.courses.CoursesScreen
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
+import com.instructure.horizon.horizonui.showroom.ShowroomScreen
 
 sealed class HomeNavigationRoute(val route: String) {
     data object Dashboard : HomeNavigationRoute("dashboard")
@@ -45,7 +46,7 @@ fun HomeNavigation(navController: NavHostController, modifier: Modifier = Modifi
             DashboardScreen(uiState)
         }
         composable(HomeNavigationRoute.Courses.route) {
-            CoursesScreen()
+            ShowroomScreen()
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             SkillspaceScreen()

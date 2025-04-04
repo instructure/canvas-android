@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +33,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,8 +53,8 @@ import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.IconButtonPrimary
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
@@ -110,6 +113,10 @@ sealed class FileDropItemState(open val fileName: String, val actionIconRes: Int
 
     data class NoLongerEditable(override val fileName: String, override val onActionClick: () -> Unit) :
         FileDropItemState(fileName, actionIconRes = R.drawable.download)
+
+    data class Error(override val fileName: String, override val onActionClick: () -> Unit) :
+        FileDropItemState(fileName, actionIconRes = R.drawable.refresh)
+
 }
 
 @Composable
@@ -124,16 +131,32 @@ fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier) {
                 .border(HorizonBorder.level1(), shape = HorizonCornerRadius.level3)
                 .padding(16.dp)
         ) {
-            if (state is FileDropItemState.InProgress) {
-                Spinner(size = SpinnerSize.EXTRA_SMALL, hasStrokeBackground = true)
-                HorizonSpace(SpaceSize.SPACE_8)
-            } else if (state is FileDropItemState.Success) {
-                Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
-                HorizonSpace(SpaceSize.SPACE_8)
+            when (state) {
+                is FileDropItemState.InProgress -> {
+                    Spinner(size = SpinnerSize.EXTRA_SMALL, hasStrokeBackground = true)
+                    HorizonSpace(SpaceSize.SPACE_8)
+                }
+
+                is FileDropItemState.Success -> {
+                    Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
+                    HorizonSpace(SpaceSize.SPACE_8)
+                }
+
+                is FileDropItemState.Error -> {
+                    Icon(
+                        painter = painterResource(R.drawable.error),
+                        tint = HorizonColors.Text.error(),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    HorizonSpace(SpaceSize.SPACE_8)
+                }
+
+                else -> {}
             }
             Text(text = state.fileName, style = HorizonTypography.p1, modifier = Modifier.weight(1f))
             HorizonSpace(SpaceSize.SPACE_8)
-            IconButtonPrimary(
+            IconButton(
                 iconRes = state.actionIconRes,
                 size = IconButtonSize.SMALL,
                 color = IconButtonColor.INVERSE,
@@ -151,5 +174,6 @@ fun FileDropPreview() {
         FileDropItem(state = FileDropItemState.InProgress("In progress file") {})
         FileDropItem(state = FileDropItemState.Success("Success file") {})
         FileDropItem(state = FileDropItemState.NoLongerEditable("No longer editable file") {})
+        FileDropItem(state = FileDropItemState.Error("Error text") {})
     })
 }
