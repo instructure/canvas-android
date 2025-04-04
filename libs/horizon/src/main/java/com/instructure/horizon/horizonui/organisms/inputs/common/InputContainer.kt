@@ -51,11 +51,6 @@ fun InputContainer(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .background(HorizonColors.Surface.cardPrimary())
-            .border(
-                HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
-                HorizonCornerRadius.level1_5
-            )
             .drawBehind {
                 if (isError || isFocused) {
                     val strokeColor =
@@ -77,6 +72,11 @@ fun InputContainer(
                 }
             }
             .clip(HorizonCornerRadius.level1_5)
+            .background(HorizonColors.Surface.cardPrimary())
+            .border(
+                HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
+                HorizonCornerRadius.level1_5
+            )
             .alpha(if (isDisabled) 0.5f else 1f)
     ) {
         content()

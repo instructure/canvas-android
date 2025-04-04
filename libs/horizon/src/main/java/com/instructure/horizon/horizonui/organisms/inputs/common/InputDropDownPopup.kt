@@ -39,6 +39,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.pandautils.utils.toPx
 
 @Composable
 fun InputDropDownPopup(
@@ -49,7 +51,8 @@ fun InputDropDownPopup(
     onOptionSelected: (String) -> Unit,
 ) {
     Popup(
-        offset = IntOffset(0, verticalOffsetPx),
+        alignment = Alignment.TopCenter,
+        offset = IntOffset(0, verticalOffsetPx + SpaceSize.SPACE_8.value.toPx),
         onDismissRequest = { onMenuOpenChanged(false) },
         properties = PopupProperties(focusable = isMenuOpen)
     ) {

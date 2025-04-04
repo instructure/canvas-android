@@ -15,68 +15,15 @@
  */
 package com.instructure.horizon.features.skillspace
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.instructure.horizon.horizonui.organisms.inputs.multi_select.MultiSelect
-import com.instructure.horizon.horizonui.organisms.inputs.multi_select.MultiSelectInputSize
-import com.instructure.horizon.horizonui.organisms.inputs.multi_select.MultiSelectState
-import com.instructure.horizon.horizonui.organisms.inputs.single_select.SingleSelect
-import com.instructure.horizon.horizonui.organisms.inputs.single_select.SingleSelectInputSize
-import com.instructure.horizon.horizonui.organisms.inputs.single_select.SingleSelectState
+import androidx.compose.ui.Modifier
 
 @Composable
 fun SkillspaceScreen() {
-    Column {
-        var isOpen by remember { mutableStateOf(false) }
-        var selected by remember { mutableStateOf<String?>(null) }
-        var isFocused by remember { mutableStateOf(false) }
-        SingleSelect(
-            state = SingleSelectState(
-                label = "Label",
-                placeHolderText = "Placeholder",
-                isFocused = isFocused,
-                isDisabled = false,
-                isMenuOpen = isOpen,
-                errorText = null,
-                size = SingleSelectInputSize.Medium,
-                options = listOf("Option 1", "Option 2", "Option 3"),
-                selectedOption = selected,
-                onOptionSelected = { selected = it },
-                onMenuOpenChanged = { isOpen = it },
-                onFocusChanged = { isFocused = it },
-            )
-        )
-
-        var isFocusedMulti by remember { mutableStateOf(false) }
-        var isOpenMulti by remember { mutableStateOf(false) }
-        var selectedMulti by remember { mutableStateOf<List<String>>(emptyList()) }
-        MultiSelect(
-            state = MultiSelectState(
-                label = "Label",
-                placeHolderText = "Placeholder",
-                isFocused = isFocusedMulti,
-                isDisabled = false,
-                isMenuOpen = isOpenMulti,
-                errorText = null,
-                size = MultiSelectInputSize.Medium,
-                options = listOf(
-                    "Option 1",
-                    "Option 2",
-                    "Option 3",
-                    "Option 4",
-                    "Option 5",
-                    "Option 6"
-                ),
-                selectedOptions = selectedMulti,
-                onOptionSelected = { selectedMulti = selectedMulti + it },
-                onMenuOpenChanged = { isOpenMulti = it },
-                onOptionRemoved = { selectedMulti = selectedMulti - it },
-                onFocusChanged = { isFocusedMulti = it },
-            )
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Text(text = "Skillspace Screen")
     }
 }

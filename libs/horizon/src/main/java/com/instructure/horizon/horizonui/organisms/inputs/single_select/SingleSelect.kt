@@ -22,8 +22,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,6 +37,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -53,7 +54,7 @@ fun SingleSelect(
 
     Input(
         label = state.label,
-        helperText = null,
+        helperText = state.helperText,
         errorText = state.errorText,
         required = state.required,
         modifier = modifier
@@ -131,8 +132,93 @@ private fun SingleSelectContent(state: SingleSelectState) {
 }
 
 @Composable
-@Preview
-fun SingleSelectCollapsedPreview() {
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun SingleSelectSimpleCollapsedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = null,
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = false,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300, heightDp = 170)
+fun SingleSelectSimpleExpandedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = null,
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = true,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun SingleSelectSimpleCollapsedFocusedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = null,
+            isFocused = true,
+            isDisabled = false,
+            isMenuOpen = false,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun SingleSelectSimpleCollapsedErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = null,
+            isFocused = true,
+            isDisabled = false,
+            isMenuOpen = false,
+            errorText = "Error",
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = null,
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun SingleSelectSelectedCollapsedPreview() {
+    ContextKeeper.appContext = LocalContext.current
     SingleSelect(
         state = SingleSelectState(
             label = "Label",
@@ -143,16 +229,18 @@ fun SingleSelectCollapsedPreview() {
             errorText = null,
             size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOption = null,
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-        )
+        ),
+        modifier = Modifier.padding(4.dp)
     )
 }
 
 @Composable
-@Preview(heightDp = 150)
-fun SingleSelectExpandedPreview() {
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300, heightDp = 180)
+fun SingleSelectSelectedExpandedPreview() {
+    ContextKeeper.appContext = LocalContext.current
     SingleSelect(
         state = SingleSelectState(
             label = "Label",
@@ -163,30 +251,96 @@ fun SingleSelectExpandedPreview() {
             errorText = null,
             size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOption = null,
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-        )
+        ),
+        modifier = Modifier.padding(4.dp)
     )
 }
 
 @Composable
-@Preview
-fun SingleSelectFocusedPreview() {
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
+fun SingleSelectSelectedErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
     SingleSelect(
         state = SingleSelectState(
             label = "Label",
             placeHolderText = "Placeholder",
-            isFocused = true,
+            isFocused = false,
             isDisabled = false,
             isMenuOpen = false,
-            errorText = null,
+            errorText = "Error",
             size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
             selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-        )
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300)
+fun SingleSelectSelectedCollapsedWithHelperTextPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            helperText = "Helper text",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = false,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = "Option 1",
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300, heightDp = 180)
+fun SingleSelectSelectedExpandedWithHelperTextPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            helperText = "Helper text",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = true,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = "Option 1",
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300)
+fun SingleSelectSelectedErrorCollapsedWithHelperTextPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            helperText = "Helper text",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = false,
+            errorText = "Error",
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = "Option 1",
+            onOptionSelected = {},
+            onMenuOpenChanged = {},
+        ),
+        modifier = Modifier.padding(4.dp)
     )
 }

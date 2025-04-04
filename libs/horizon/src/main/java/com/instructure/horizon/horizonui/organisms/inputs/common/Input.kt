@@ -46,9 +46,8 @@ fun Input(
 
         content()
 
-        HorizonSpace(size = SpaceSize.SPACE_8)
-
         if (errorText != null) {
+            HorizonSpace(size = SpaceSize.SPACE_8)
             InputErrorText(
                 text = errorText,
             )
@@ -57,6 +56,7 @@ fun Input(
         }
 
         if (helperText != null) {
+            HorizonSpace(size = SpaceSize.SPACE_8)
             InputHelperText(
                 text = helperText,
             )
