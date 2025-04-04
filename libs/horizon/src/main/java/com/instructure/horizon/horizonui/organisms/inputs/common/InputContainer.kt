@@ -52,7 +52,7 @@ fun InputContainer(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .drawBehind {
-                if (isError || isFocused) {
+                if (isFocused) {
                     val strokeColor =
                         if (isError) HorizonColors.Surface.error() else HorizonColors.Surface.institution()
                     val stroke = HorizonBorder.level2(strokeColor)
