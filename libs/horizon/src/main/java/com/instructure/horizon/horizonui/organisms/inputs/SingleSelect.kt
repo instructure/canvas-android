@@ -16,23 +16,36 @@
  */
 package com.instructure.horizon.horizonui.organisms.inputs
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.organisms.inputs.sizes.SingleSelectInputSize
 
@@ -58,30 +71,48 @@ fun SingleSelect(
     modifier: Modifier = Modifier,
     state: SingleSelectState
 ) {
-    ExposedDropdownMenuBox(
-        expanded = state.isMenuOpen,
-        onExpandedChange = { state.onMenuOpenChanged(it) },
-        modifier = modifier
-    ) {
+    Column {
+        val localDensity = LocalDensity.current
+        var heightInPx by remember { mutableIntStateOf(0) }
         InputContainer(
             isFocused = state.isFocused,
             isError = state.errorText != null,
             isDisabled = state.isDisabled,
             size = state.size,
+            modifier = Modifier
+                .clickable { state.onMenuOpenChanged(!state.isMenuOpen) }
+                .onGloballyPositioned {
+                    heightInPx = it.size.height
+                }
         ) {
             SingleSelectContent(state)
-
-            ExposedDropdownMenu(
-                expanded = state.isMenuOpen,
+        }
+        if (state.isMenuOpen) {
+            Popup(
                 onDismissRequest = { state.onMenuOpenChanged(false) },
+                offset = IntOffset(0, heightInPx),
             ) {
-                state.options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        onClick = {
-                            state.onOptionSelected(selectionOption)
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp),
+                    shape = HorizonCornerRadius.level2,
+                    elevation = HorizonElevation.level3,
+                    backgroundColor = HorizonColors.Surface.cardPrimary()
+                ) {
+                    Column {
+                        state.options.forEach { selectionOption ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        state.onOptionSelected(selectionOption)
+                                        state.onMenuOpenChanged(false)
+                                    }
+                            ) {
+                                SingleSelectItem(selectionOption)
+                            }
                         }
-                    ) {
-                        SingleSelectItem(selectionOption)
                     }
                 }
             }
@@ -147,7 +178,7 @@ fun SingleSelectCollapsedPreview() {
 }
 
 @Composable
-@Preview
+@Preview(heightDp = 200)
 fun SingleSelectExpandedPreview() {
     SingleSelect(
         state = SingleSelectState(
@@ -180,7 +211,7 @@ fun SingleSelectFocusedPreview() {
             errorText = null,
             size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOption = null,
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
         )
