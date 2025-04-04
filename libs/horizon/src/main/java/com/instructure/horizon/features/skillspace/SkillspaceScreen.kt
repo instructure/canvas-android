@@ -15,15 +15,32 @@
  */
 package com.instructure.horizon.features.skillspace
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.instructure.horizon.horizonui.organisms.inputs.SingleSelect
+import com.instructure.horizon.horizonui.organisms.inputs.SingleSelectState
+import com.instructure.horizon.horizonui.organisms.inputs.sizes.SingleSelectInputSize
 
 @Composable
 fun SkillspaceScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Skillspace Screen")
-    }
+    var isOpen by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf<String?>(null) }
+    SingleSelect(
+        state = SingleSelectState(
+            label = "Label",
+            placeHolderText = "Placeholder",
+            isFocused = false,
+            isDisabled = false,
+            isMenuOpen = isOpen,
+            errorText = null,
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Option 1", "Option 2", "Option 3"),
+            selectedOption = selected,
+            onOptionSelected = { selected = it },
+            onMenuOpenChanged = { isOpen = it },
+        )
+    )
 }

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs
+package com.instructure.horizon.horizonui.organisms.inputs.common
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding

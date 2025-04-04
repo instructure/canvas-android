@@ -16,14 +16,11 @@
  */
 package com.instructure.horizon.horizonui.organisms.inputs
 
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,20 +30,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 import com.instructure.horizon.horizonui.organisms.inputs.sizes.SingleSelectInputSize
 
 data class SingleSelectState(
@@ -65,14 +59,14 @@ data class SingleSelectState(
     val onFocusChanged: (Boolean) -> Unit = {},
 )
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SingleSelect(
     modifier: Modifier = Modifier,
     state: SingleSelectState
 ) {
-    Column {
-        val localDensity = LocalDensity.current
+    Column(
+        modifier = modifier
+    ) {
         var heightInPx by remember { mutableIntStateOf(0) }
         InputContainer(
             isFocused = state.isFocused,
@@ -87,42 +81,29 @@ fun SingleSelect(
         ) {
             SingleSelectContent(state)
         }
-        if (state.isMenuOpen) {
-            Popup(
-                onDismissRequest = { state.onMenuOpenChanged(false) },
-                offset = IntOffset(0, heightInPx),
-            ) {
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp),
-                    shape = HorizonCornerRadius.level2,
-                    elevation = HorizonElevation.level3,
-                    backgroundColor = HorizonColors.Surface.cardPrimary()
-                ) {
-                    Column {
-                        state.options.forEach { selectionOption ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        state.onOptionSelected(selectionOption)
-                                        state.onMenuOpenChanged(false)
-                                    }
-                            ) {
-                                SingleSelectItem(selectionOption)
-                            }
-                        }
-                    }
-                }
+
+        InputDropDownPopup(
+            isMenuOpen = state.isMenuOpen,
+            options = state.options,
+            verticalOffsetPx = heightInPx,
+            onMenuOpenChanged = state.onMenuOpenChanged,
+            onOptionSelected = { selectedOption ->
+                state.onOptionSelected(selectedOption)
+                state.onMenuOpenChanged(false)
             }
-        }
+        )
     }
 }
 
 @Composable
 private fun SingleSelectContent(state: SingleSelectState) {
-    Row {
+    var iconRotation = animateIntAsState(
+        targetValue = if (state.isMenuOpen) 180 else 0,
+        label = "iconRotation"
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         if (state.selectedOption != null) {
             Text(
                 text = state.selectedOption,
@@ -141,20 +122,11 @@ private fun SingleSelectContent(state: SingleSelectState) {
 
         Icon(
             painter = painterResource(R.drawable.keyboard_arrow_down),
-            contentDescription = null
+            contentDescription = null,
+            modifier = Modifier
+                .rotate(iconRotation.value.toFloat())
         )
     }
-}
-
-@Composable
-private fun SingleSelectItem(item: String) {
-    Text(
-        text = item,
-        style = HorizonTypography.p1,
-        color = HorizonColors.Text.body(),
-        modifier = Modifier
-            .padding(horizontal = 11.dp, vertical = 6.dp)
-    )
 }
 
 @Composable
@@ -178,7 +150,7 @@ fun SingleSelectCollapsedPreview() {
 }
 
 @Composable
-@Preview(heightDp = 200)
+@Preview(heightDp = 150)
 fun SingleSelectExpandedPreview() {
     SingleSelect(
         state = SingleSelectState(
