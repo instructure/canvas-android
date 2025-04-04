@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
 object HorizonCornerRadius {
+    val level0 = RoundedCornerShape(0.dp)
     val level1 = RoundedCornerShape(8.dp)
     val level1_5 = RoundedCornerShape(12.dp)
     val level2 = RoundedCornerShape(16.dp)

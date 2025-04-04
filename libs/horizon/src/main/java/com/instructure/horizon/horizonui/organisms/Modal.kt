@@ -48,7 +48,7 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.IconButtonPrimary
+import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCard
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardState
@@ -100,7 +100,7 @@ private fun DialogHeader(
             HorizonSpace(SpaceSize.SPACE_8)
         }
         Text(text = title, style = HorizonTypography.h3, modifier = Modifier.weight(1f))
-        IconButtonPrimary(
+        IconButton(
             iconRes = R.drawable.close,
             size = IconButtonSize.SMALL,
             color = IconButtonColor.INVERSE,

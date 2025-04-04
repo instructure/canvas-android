@@ -38,7 +38,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.molecules.IconButtonSecondary
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillStyle
@@ -105,7 +106,7 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                     }
                 }
                 Spacer(modifier = Modifier.width(24.dp))
-                IconButtonSecondary(iconRes = R.drawable.arrow_forward)
+                IconButton(iconRes = R.drawable.arrow_forward, color = IconButtonColor.INSTITUTION)
             }
         }
     }
