@@ -56,4 +56,5 @@
         <item quantity="other">%1$d Items</item>
     </plurals>
     <string name="moduleHeader_pastDue">%1$d Past Due</string>
+    <string name="a11y_institutionLogoContentDescription">Institution logo</string>
 </resources>

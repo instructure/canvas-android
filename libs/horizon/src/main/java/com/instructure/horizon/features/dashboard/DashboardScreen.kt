@@ -75,7 +75,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
     Row(modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp), verticalAlignment = Alignment.Bottom) {
         GlideImage(
             model = uiState.logoUrl,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.a11y_institutionLogoContentDescription),
             modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))

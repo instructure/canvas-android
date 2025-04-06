@@ -22,8 +22,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,9 +51,9 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 
-enum class ButtonHeight(val height: Dp, val textStyle: TextStyle, val verticalPadding: Dp) {
-    SMALL(32.dp, HorizonTypography.buttonTextMedium, 6.dp),
-    NORMAL(44.dp, HorizonTypography.buttonTextLarge, 11.dp),
+enum class ButtonHeight(val height: Dp, val textStyle: TextStyle, val verticalPadding: Dp, val horizontalPadding: Dp) {
+    SMALL(32.dp, HorizonTypography.buttonTextMedium, 6.dp, 12.dp),
+    NORMAL(44.dp, HorizonTypography.buttonTextLarge, 11.dp, 22.dp),
 }
 
 enum class ButtonWidth {
@@ -123,9 +124,9 @@ fun Button(
             onClick = onClick,
             enabled = enabled,
             shape = HorizonCornerRadius.level6,
-            modifier = gradientModifier.height(height.height),
+            modifier = gradientModifier.defaultMinSize(minHeight = height.height),
             border = HorizonBorder.level1(color.outlineColor),
-            contentPadding = PaddingValues(vertical = height.verticalPadding, horizontal = 22.dp),
+            contentPadding = PaddingValues(vertical = height.verticalPadding, horizontal = height.horizontalPadding),
             colors = ButtonDefaults.buttonColors().copy(
                 containerColor = buttonBackgroundColor,
                 contentColor = color.contentColor,
@@ -137,7 +138,7 @@ fun Button(
                 Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)
                 HorizonSpace(SpaceSize.SPACE_4)
             }
-            Text(text = label, style = height.textStyle, color = color.contentColor)
+            Text(text = label, style = height.textStyle, color = color.contentColor, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (iconPosition is ButtonIconPosition.End) {
                 HorizonSpace(SpaceSize.SPACE_4)
                 Icon(painter = painterResource(iconPosition.iconRes), contentDescription = null, tint = color.contentColor)

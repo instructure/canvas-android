@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -103,16 +104,13 @@ fun Pill(
     val finalModifier = when (style) {
         PillStyle.OUTLINE -> modifier
             .border(width = 1.dp, shape = HorizonCornerRadius.level4, color = type.shapeColor)
-            .height(size.height)
             .padding(horizontal = size.horizontalPadding, vertical = size.verticalPadding)
 
         PillStyle.SOLID -> modifier
             .background(shape = HorizonCornerRadius.level4, color = type.shapeColor)
-            .height(size.height)
             .padding(horizontal = size.horizontalPadding, vertical = size.verticalPadding)
 
         PillStyle.INLINE -> modifier
-            .height(17.dp)
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -122,14 +120,20 @@ fun Pill(
             Icon(
                 painterResource(id = iconRes),
                 contentDescription = null,
-                modifier = Modifier.size(18.dp), // We need to check this because 18dp seems identical to 24dp
+                modifier = Modifier.size(18.dp),
                 tint = if (style == PillStyle.SOLID) type.filledTextColor else type.iconColor,
             )
             HorizonSpace(SpaceSize.SPACE_4)
         }
         val text = if (case == PillCase.UPPERCASE) label.uppercase() else label
         val textStyle = if (case == PillCase.UPPERCASE) HorizonTypography.tag else HorizonTypography.labelSmall
-        Text(text = text, style = textStyle, color = if (style == PillStyle.SOLID) type.filledTextColor else type.textColor)
+        Text(
+            text = text,
+            style = textStyle,
+            color = if (style == PillStyle.SOLID) type.filledTextColor else type.textColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -137,7 +141,13 @@ fun Pill(
 @Preview(showBackground = true)
 private fun PillDefaultOutlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.DEFAULT, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
+    Pill(
+        style = PillStyle.OUTLINE,
+        label = "Label",
+        type = PillType.DEFAULT,
+        case = PillCase.UPPERCASE,
+        iconRes = R.drawable.calendar_today
+    )
 }
 
 @Composable
@@ -151,14 +161,26 @@ private fun PillDangerOutlinePreview() {
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun PillInverseOutlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.INVERSE, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
+    Pill(
+        style = PillStyle.OUTLINE,
+        label = "Label",
+        type = PillType.INVERSE,
+        case = PillCase.UPPERCASE,
+        iconRes = R.drawable.calendar_today
+    )
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun PillInstitutionOutlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.OUTLINE, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
+    Pill(
+        style = PillStyle.OUTLINE,
+        label = "Label",
+        type = PillType.INSTITUTION,
+        case = PillCase.UPPERCASE,
+        iconRes = R.drawable.calendar_today
+    )
 }
 
 @Composable
@@ -186,7 +208,13 @@ private fun PillInverseSolidPreview() {
 @Preview(showBackground = true)
 private fun PillInstitutionSolidPreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.SOLID, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
+    Pill(
+        style = PillStyle.SOLID,
+        label = "Label",
+        type = PillType.INSTITUTION,
+        case = PillCase.UPPERCASE,
+        iconRes = R.drawable.calendar_today
+    )
 }
 
 @Composable
@@ -214,7 +242,13 @@ private fun PillInverseInlinePreview() {
 @Preview(showBackground = true)
 private fun PillInstitutionInlinePreview() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.INSTITUTION, case = PillCase.UPPERCASE, iconRes = R.drawable.calendar_today)
+    Pill(
+        style = PillStyle.INLINE,
+        label = "Label",
+        type = PillType.INSTITUTION,
+        case = PillCase.UPPERCASE,
+        iconRes = R.drawable.calendar_today
+    )
 }
 
 @Composable
@@ -235,7 +269,13 @@ private fun PillNoCaps() {
 @Preview(showBackground = true)
 private fun PillLearningObjectCard() {
     ContextKeeper.appContext = LocalContext.current
-    Pill(style = PillStyle.INLINE, label = "Label", type = PillType.LEARNING_OBJECT_TYPE, case = PillCase.TITLE, iconRes = R.drawable.schedule)
+    Pill(
+        style = PillStyle.INLINE,
+        label = "Label",
+        type = PillType.LEARNING_OBJECT_TYPE,
+        case = PillCase.TITLE,
+        iconRes = R.drawable.schedule
+    )
 }
 
 @Composable
