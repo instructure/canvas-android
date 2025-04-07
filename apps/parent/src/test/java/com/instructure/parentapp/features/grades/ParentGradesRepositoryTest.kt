@@ -238,11 +238,6 @@ class ParentGradesRepositoryTest {
                         id = 11,
                         published = true,
                         submission = Submission(id = 111, userId = 1)
-                    ),
-                    Assignment(
-                        id = 12,
-                        published = true,
-                        submission = null
                     )
                 )
             )
@@ -399,7 +394,7 @@ class ParentGradesRepositoryTest {
                     Assignment(
                         id = 12,
                         published = true,
-                        submission = Submission(id = 121, userId = 2)
+                        submission = Submission(id = 121, userId = 1)
                     )
                 )
             )
@@ -425,7 +420,7 @@ class ParentGradesRepositoryTest {
                     Assignment(
                         id = 12,
                         published = true,
-                        submission = null
+                        submission = Submission(id = 121, userId = 1)
                     )
                 )
             )
