@@ -39,7 +39,8 @@ class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh)))
+    private val _uiState =
+        MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh, onErrorSnackbarDismiss = ::dismissSnackbar)))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -107,9 +108,11 @@ class DashboardViewModel @Inject constructor(
             in 0.0..<100.0 -> {
                 context.getString(R.string.learningObject_pillStatusInProgress).uppercase()
             }
+
             100.0 -> {
                 context.getString(R.string.learningObject_pillStatusCompleted).uppercase()
             }
+
             else -> {
                 context.getString(R.string.learningObject_pillStatusNotStarted).uppercase()
             }
@@ -118,7 +121,17 @@ class DashboardViewModel @Inject constructor(
 
     private fun handleError() {
         _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(isError = true))
+            if (it.coursesUiState.isEmpty()) {
+                it.copy(loadingState = it.loadingState.copy(isError = true))
+            } else {
+                it.copy(loadingState = it.loadingState.copy(errorSnackbar = context.getString(R.string.errorOccurred)))
+            }
+        }
+    }
+
+    private fun dismissSnackbar() {
+        _uiState.update {
+            it.copy(loadingState = it.loadingState.copy(errorSnackbar = null))
         }
     }
 
