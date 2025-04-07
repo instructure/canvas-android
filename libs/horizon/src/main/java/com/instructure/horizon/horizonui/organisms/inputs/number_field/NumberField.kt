@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -158,6 +159,8 @@ private fun TextAreaBox(state: NumberFieldState, textStyle: TextStyle, innerText
                             painter = painterResource(R.drawable.keyboard_arrow_up),
                             contentDescription = stringResource(R.string.a11y_increaseValue),
                             tint = HorizonColors.Icon.default(),
+                            modifier = Modifier
+                                .size(16.dp)
                         )
                     }
 
@@ -178,6 +181,8 @@ private fun TextAreaBox(state: NumberFieldState, textStyle: TextStyle, innerText
                             painter = painterResource(R.drawable.keyboard_arrow_down),
                             contentDescription = stringResource(R.string.a11y_decreaseValue),
                             tint = HorizonColors.Icon.default(),
+                            modifier = Modifier
+                                .size(16.dp)
                         )
                     }
                 }
