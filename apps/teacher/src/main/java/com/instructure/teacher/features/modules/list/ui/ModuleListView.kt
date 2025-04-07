@@ -221,9 +221,12 @@ class ModuleListView(
         RouteMatcher.route(activity as FragmentActivity, route)
     }
 
-    fun scrollToItem(itemId: Long) {
+    fun scrollToItem(itemId: Long, scrollToModuleHeader: Boolean = false) {
         val itemPosition = adapter.getItemVisualPosition(itemId)
-        binding.recyclerView.scrollToPosition(itemPosition)
+        val scrollPosition = itemPosition - if (scrollToModuleHeader) 1 else 0
+        if (scrollPosition >= 0) {
+            binding.recyclerView.scrollToPosition(scrollPosition)
+        }
     }
 
     fun showConfirmationDialog(

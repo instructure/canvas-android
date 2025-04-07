@@ -39,9 +39,9 @@ class CreateAccountPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Create Account").assertIsDisplayed()
     }
 
-    fun fillValidData() {
+    fun fillValidData(email: String = "test@email.com") {
         composeTestRule.onNodeWithTag("nameInput").performTextInput("Test Name")
-        composeTestRule.onNodeWithTag("emailInput").performTextInput("test@email.com")
+        composeTestRule.onNodeWithTag("emailInput").performTextInput(email)
         composeTestRule.onNodeWithTag("passwordInput").performTextInput("password")
     }
 

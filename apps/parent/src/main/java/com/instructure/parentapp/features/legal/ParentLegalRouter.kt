@@ -31,7 +31,7 @@ class ParentLegalRouter(private val activity: Activity) : LegalRouter {
         if (html.isNotBlank()) {
             val intent = HtmlContentActivity.createIntent(
                 activity,
-                activity.getString(R.string.acceptableUsePolicyTitle),
+                activity.getString(R.string.termsOfUse),
                 html,
                 true
             )

@@ -144,7 +144,7 @@
                     android:text="@string/utils_allowThreadedReplies"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/threadedSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -154,6 +154,7 @@
                     android:maxWidth="48dp"
                     android:minHeight="48dp"
                     android:padding="2dp"
+                    app:theme="@style/Theme.Material3.DayNight"
                     app:backgroundTint="@color/backgroundDarkest" />
 
             </RelativeLayout>
@@ -177,7 +178,7 @@
                     android:text="@string/utils_usersMustPost"
                     android:textSize="16sp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/usersMustPostSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

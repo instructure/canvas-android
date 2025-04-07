@@ -336,7 +336,7 @@ class CourseDetailsViewModelTest {
             disabledFields = options.disabledFields.copy(
                 isContextDisabled = true
             ),
-            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TeacherEnrollment),
             hiddenBodyMessage = "https://domain.com/courses/1"
         )
 

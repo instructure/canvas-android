@@ -23,7 +23,7 @@ object Versions {
     const val GOOGLE_SERVICES = "4.4.2"
 
     /* Others */
-    const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
+    const val APOLLO = "4.1.1"
     const val PSPDFKIT = "2024.3.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
@@ -35,7 +35,6 @@ object Versions {
     const val GLIDE_VERSION = "4.16.0"
     const val RETROFIT = "2.11.0"
     const val OKHTTP = "4.12.0"
-    const val HEAP = "1.10.6"
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.8.3"
@@ -54,7 +53,7 @@ object Libs {
 
     /* Apollo/GraphQL */
     const val APOLLO_RUNTIME = "com.apollographql.apollo:apollo-runtime:${Versions.APOLLO}"
-    const val APOLLO_ANDROID_SUPPORT = "com.apollographql.apollo:apollo-android-support:${Versions.APOLLO}"
+    const val APOLLO_API = "com.apollographql.apollo:apollo-api:${Versions.APOLLO}"
     const val APOLLO_HTTP_CACHE = "com.apollographql.apollo:apollo-http-cache:${Versions.APOLLO}"
 
     /* Androidx libraries */
@@ -165,7 +164,7 @@ object Libs {
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
-    const val HEAP_CORE = "com.contentsquare.android:sdk:0.3.0"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.6+"
 
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
@@ -185,6 +184,7 @@ object Libs {
     const val COMPOSE_UI = "androidx.compose.ui:ui-android"
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
+    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
@@ -200,5 +200,4 @@ object Plugins {
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
-    const val HEAP = "io.heap.gradle:io.heap.gradle.gradle.plugin:0.5.0"
 }

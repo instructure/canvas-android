@@ -423,13 +423,20 @@ class InboxE2ETest: ParentComposeTest() {
         val parent = data.parentsList[0]
         val teacher = data.teachersList[0]
         val student = data.studentsList[0]
-        Log.d(PREPARATION_TAG, "Creating a Front Page for ${courseWithFrontPage.name} course.")
+
+        Log.d(PREPARATION_TAG, "Creating a Front Page for '${courseWithFrontPage.name}' course.")
         PagesApi.createCoursePage(courseWithFrontPage.id, teacher.token, frontPage = true, editingRoles = "public")
-        Log.d(PREPARATION_TAG, "Setting up ${course.name} course to have summary.")
+
+        Log.d(PREPARATION_TAG, "Setting up '${course.name}' course to have summary.")
         CoursesApi.updateCourseSettings(course.id, mapOf("syllabus_course_summary" to true))
-        Log.d(PREPARATION_TAG, "Setting the Front Page for ${courseWithFrontPage.name} course.")
+
+        Log.d(PREPARATION_TAG, "Setting the Front Page for '${courseWithFrontPage.name}' course.")
         CoursesApi.updateCourse(courseWithFrontPage.id, UpdateCourse(homePage = "wiki", syllabusBody = "Syllabus body"))
+
+        Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token)
+
+        Log.d(PREPARATION_TAG, "Seed a calendar event for '${course.name}' course.")
         val testEvent = CalendarEventApi.createCalendarEvent(
             teacher.token,
             CanvasContext.makeContextId(CanvasContext.Type.COURSE, course.id),
@@ -437,11 +444,11 @@ class InboxE2ETest: ParentComposeTest() {
             Date().toApiString()
         )
 
-        Log.d(STEP_TAG, "Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
+        Log.d(STEP_TAG, "Click on the '${course.name}' course.")
         retryWithIncreasingDelay(
             initialDelay = 2000,
             times = 5,
@@ -453,79 +460,95 @@ class InboxE2ETest: ParentComposeTest() {
         ) {
             coursesPage.clickCourseItem(course.name)
         }
+
+        Log.d(ASSERTION_TAG, "Assert that the details of the '${course.name}' course has opened.")
         courseDetailsPage.assertCourseNameDisplayed(course)
 
-        Log.d(STEP_TAG, "Click assignment ${testAssignment.name}.")
+        Log.d(STEP_TAG, "Click assignment '${testAssignment.name}'.")
         courseDetailsPage.clickAssignment(testAssignment.name)
 
         val expectedSubjectAssignment = "Regarding: ${student.name}, Assignment - ${testAssignment.name}"
-        Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectAssignment' as subject.")
+        Log.d(STEP_TAG, "Click FAB.")
         assignmentDetailsPage.clickComposeMessageFAB()
+
+        Log.d(ASSERTION_TAG, "Assert that the Subject text is '$expectedSubjectAssignment'.")
         inboxComposeMessagePage.assertSubjectText(expectedSubjectAssignment)
 
-        Log.d(STEP_TAG, "Go back to course details.")
+        Log.d(STEP_TAG, "Navigate back to course details.")
         inboxComposeMessagePage.pressBackButton()
-        inboxComposeMessagePage.pressExitConfirmationButton()
         Espresso.pressBack()
 
         val expectedSubjectGrades = "Regarding: ${student.shortName}, Grades"
-        Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectGrades' as subject.")
+        Log.d(STEP_TAG, "Click FAB.")
         courseDetailsPage.clickComposeMessageFAB()
+
+        Log.d(ASSERTION_TAG, "Assert that the Subject text is '$expectedSubjectGrades'.")
         inboxComposeMessagePage.assertSubjectText(expectedSubjectGrades)
 
-        Log.d(STEP_TAG, "Go back to course details and select 'Syllabus' tab.")
+        Log.d(STEP_TAG, "Navigate back to course details and select 'SYLLABUS' tab.")
         inboxComposeMessagePage.pressBackButton()
-        inboxComposeMessagePage.pressExitConfirmationButton()
         courseDetailsPage.selectTab("SYLLABUS")
 
         val expectedSubjectSyllabus = "Regarding: ${student.shortName}, Syllabus"
-        Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectSyllabus' as subject.")
+        Log.d(STEP_TAG, "Click FAB.")
         courseDetailsPage.clickComposeMessageFAB()
+
+        Log.d(ASSERTION_TAG, "Assert that the Subject text is '$expectedSubjectSyllabus'.")
         inboxComposeMessagePage.assertSubjectText(expectedSubjectSyllabus)
 
-        Log.d(STEP_TAG, "Go back to course details and select 'Summary' tab.")
+        Log.d(STEP_TAG, "Navigate back to course details and select 'SUMMARY' tab.")
         inboxComposeMessagePage.pressBackButton()
-        inboxComposeMessagePage.pressExitConfirmationButton()
         courseDetailsPage.selectTab("SUMMARY")
 
         val expectedSubjectSummary = "Regarding: ${student.shortName}, Summary"
-        Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectSummary' as subject.")
+        Log.d(STEP_TAG, "Click FAB.")
         courseDetailsPage.clickComposeMessageFAB()
+
+        Log.d(ASSERTION_TAG, "Assert that the Subject text is '$expectedSubjectSummary'.")
         inboxComposeMessagePage.assertSubjectText(expectedSubjectSummary)
 
-        Log.d(STEP_TAG, "Go back to course list and select a course with 'Front Page' as home page.")
+        Log.d(STEP_TAG, "Navigate back to course list.")
         inboxComposeMessagePage.pressBackButton()
-        inboxComposeMessagePage.pressExitConfirmationButton()
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, " Select a '${courseWithFrontPage.name}' course (with 'Front Page' as home page) and select 'FRONT PAGE' tab.")
         coursesPage.clickCourseItem(courseWithFrontPage.name)
         courseDetailsPage.selectTab("FRONT PAGE")
 
         val expectedSubjectFrontPage = "Regarding: ${student.shortName}, Front Page"
-        Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectFrontPage' as subject.")
+        Log.d(STEP_TAG, "Click FAB.")
         courseDetailsPage.clickComposeMessageFAB()
+
+        Log.d(ASSERTION_TAG, "Assert that the Subject text is '$expectedSubjectFrontPage'.")
         inboxComposeMessagePage.assertSubjectText(expectedSubjectFrontPage)
 
-        Log.d(STEP_TAG, "Go to Calendar and click on ${testEvent.title} event.")
+        Log.d(STEP_TAG, "Navigate to Calendar and click on '${testEvent.title}' event.")
         inboxComposeMessagePage.pressBackButton()
-        inboxComposeMessagePage.pressExitConfirmationButton()
         Espresso.pressBack()
         dashboardPage.clickCalendarBottomMenu()
         calendarScreenPage.clickOnItem(testEvent.title.orEmpty())
 
         val expectedSubjectEvent = "Regarding: ${student.name}, Event - ${testEvent.title}"
-        Log.d(STEP_TAG, "Click FAB and assert compose message has '$expectedSubjectEvent' as subject.")
+        Log.d(STEP_TAG, "Click FAB.")
         calendarEventDetailsPage.clickComposeMessageFAB()
+
+        Log.d(ASSERTION_TAG, "Assert that the Subject text is '$expectedSubjectEvent'.")
         inboxComposeMessagePage.assertSubjectText(expectedSubjectEvent)
+
+        Log.d(STEP_TAG, "Type a message body and press the 'Send' icon on the top-right corner to send the message.")
         inboxComposeMessagePage.typeBody("This is a test message.")
         inboxComposeMessagePage.pressSendButton()
 
-        val expectedMessage =
-            "This is a test message.\n\nRegarding: ${student.name}, https://${CanvasNetworkAdapter.canvasDomain}/courses/${course.id}/calendar_events/${testEvent.id}"
-        Log.d(STEP_TAG, "Go to Inbox and assert the sent message's body is $expectedMessage.")
+        Log.d(STEP_TAG, "Navigate to Inbox.")
         Espresso.pressBack()
         dashboardPage.openLeftSideMenu()
         leftSideNavigationDrawerPage.clickInbox()
+
+        Log.d(STEP_TAG, "Filter to 'Sent' messages.")
         inboxPage.filterInbox("Sent")
+
+        val expectedMessage = "This is a test message.\n\nRegarding: ${student.name}, https://${CanvasNetworkAdapter.canvasDomain}/courses/${course.id}/calendar_events/${testEvent.id}"
+        Log.d(ASSERTION_TAG, "Assert the previously sent message's body is '$expectedMessage'.")
         inboxPage.openConversation(expectedSubjectEvent)
         inboxDetailsPage.assertMessageDisplayed(expectedMessage)
     }

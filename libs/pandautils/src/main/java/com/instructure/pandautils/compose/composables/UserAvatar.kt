@@ -40,18 +40,19 @@ import com.instructure.pandautils.utils.ProfileUtils
 fun UserAvatar(
     imageUrl: String?,
     name: String,
+    anonymous: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    val model: Any? = if (ProfileUtils.shouldLoadAltAvatarImage(imageUrl)) {
-        ProfileUtils.createAvatarDrawable(
+    val model: Any? = when {
+        anonymous -> R.drawable.ic_user_avatar
+        ProfileUtils.shouldLoadAltAvatarImage(imageUrl) -> ProfileUtils.createAvatarDrawable(
             context = LocalContext.current,
             userName = name,
             borderWidth = with(LocalDensity.current) {
                 dimensionResource(id = R.dimen.avatar_border_width_thin).toPx().toInt()
             }
         ).toBitmap()
-    } else {
-        imageUrl
+        else -> imageUrl
     }
 
     GlideImage(
