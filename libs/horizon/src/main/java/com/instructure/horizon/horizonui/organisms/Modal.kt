@@ -50,8 +50,10 @@ import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonPrimary
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
-import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
-import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
+import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCard
+import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardState
+import com.instructure.horizon.model.LearningObjectStatus
+import com.instructure.horizon.model.LearningObjectType
 
 data class ModalDialogState(
     val title: String,
@@ -221,11 +223,11 @@ private fun ModalPreviewWithExtraBody() {
             Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
         },
         extraBody = {
-            // TODO change this to the other card
-            LearningObjectCard(
-                LearningObjectCardState(
-                    moduleTitle = "Title",
-                    learningObjectTitle = "Description",
+            ModuleItemCard(
+                ModuleItemCardState(
+                    title = "Title",
+                    learningObjectType = LearningObjectType.ASSIGNMENT,
+                    learningObjectStatus = LearningObjectStatus.REQUIRED,
                     onClick = {}
                 )
             )

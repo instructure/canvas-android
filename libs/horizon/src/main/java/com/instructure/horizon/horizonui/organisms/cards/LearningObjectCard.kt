@@ -60,7 +60,6 @@ data class LearningObjectCardState(
 @Composable
 fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifier: Modifier = Modifier) {
     val onClick = learningObjectCardState.onClick
-    val clickModifier = if (onClick != null) modifier.clickable { onClick() } else modifier
     Card(
         shape = HorizonCornerRadius.level2,
         colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
@@ -72,8 +71,9 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
             hoveredElevation = HorizonElevation.level4,
             draggedElevation = HorizonElevation.level4
         ),
-        modifier = clickModifier
+        modifier = modifier
     ) {
+        val clickModifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
         Column(clickModifier.padding(36.dp)) {
             if (learningObjectCardState.progressLabel != null) Pill(learningObjectCardState.progressLabel)
             Spacer(modifier = Modifier.padding(16.dp))
@@ -94,10 +94,7 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                         Spacer(modifier = Modifier.height(6.dp))
                     }
                     if (learningObjectCardState.learningObjectType != null) {
-                        LearningObjectPill(
-                            stringResource(learningObjectCardState.learningObjectType.stringRes),
-                            iconRes = learningObjectCardState.learningObjectType.iconRes
-                        )
+                        LearningObjectTypePill(learningObjectCardState.learningObjectType)
                         Spacer(modifier = Modifier.height(6.dp))
                     }
                     if (learningObjectCardState.dueDate != null) {
