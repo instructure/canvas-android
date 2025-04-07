@@ -1,4 +1,4 @@
-package com.instructure.horizon.horizonui.organisms.inputs.time_picker
+package com.instructure.horizon.horizonui.organisms.inputs.timepicker
 
 import androidx.annotation.DrawableRes
 import com.instructure.horizon.R
@@ -12,7 +12,7 @@ data class TimePickerState(
     val helperText: String? = null,
     val placeHolderText: String? = null,
     val isFocused: Boolean = false,
-    val isDisabled: Boolean = false,
+    val enabled: Boolean = true,
     val errorText: String? = null,
     val required: InputLabelRequired = InputLabelRequired.Regular,
     val size: TimePickerInputSize = TimePickerInputSize.Medium,

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.date_picker
+package com.instructure.horizon.horizonui.organisms.inputs.datepicker
 
 import androidx.annotation.DrawableRes
 import com.instructure.horizon.R
@@ -26,7 +26,7 @@ data class DatePickerState(
     val helperText: String? = null,
     val placeHolderText: String? = null,
     val isFocused: Boolean = false,
-    val isDisabled: Boolean = false,
+    val enabled: Boolean = true,
     val errorText: String? = null,
     val required: InputLabelRequired = InputLabelRequired.Regular,
     val size: DatePickerInputSize = DatePickerInputSize.Medium,

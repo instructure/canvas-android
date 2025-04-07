@@ -24,11 +24,11 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 
 @Composable
 fun Input(
+    modifier: Modifier = Modifier,
     label: String? = null,
     helperText: String? = null,
     errorText: String? = null,
     required: InputLabelRequired = InputLabelRequired.Regular,
-    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Column(modifier = modifier) {

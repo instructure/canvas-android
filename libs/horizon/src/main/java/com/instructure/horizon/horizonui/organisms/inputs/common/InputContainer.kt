@@ -44,7 +44,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 fun InputContainer(
     isFocused: Boolean,
     isError: Boolean,
-    isDisabled: Boolean,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -77,7 +77,7 @@ fun InputContainer(
                 HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
                 HorizonCornerRadius.level1_5
             )
-            .alpha(if (isDisabled) 0.5f else 1f)
+            .alpha(if (enabled) 1f else 0.5f)
     ) {
         content()
     }
@@ -90,7 +90,7 @@ fun InputContainerPreview() {
     InputContainer(
         isFocused = false,
         isError = false,
-        isDisabled = false,
+        enabled = true,
     ) {
         Text(
             "Placeholder",
@@ -106,7 +106,7 @@ fun InputContainerFocusedPreview() {
     InputContainer(
         isFocused = true,
         isError = false,
-        isDisabled = false,
+        enabled = true,
     ) {
         Text(
             "Placeholder",
@@ -122,7 +122,7 @@ fun InputContainerErrorFocusedPreview() {
     InputContainer(
         isFocused = true,
         isError = true,
-        isDisabled = false,
+        enabled = true,
     ) {
         Text(
             "Placeholder",
@@ -138,7 +138,7 @@ fun InputContainerErrorPreview() {
     InputContainer(
         isFocused = false,
         isError = true,
-        isDisabled = false,
+        enabled = true,
         modifier = Modifier.graphicsLayer { clip = false }
     ) {
         Text(
@@ -155,7 +155,7 @@ fun InputContainerDisabledPreview() {
     InputContainer(
         isFocused = false,
         isError = false,
-        isDisabled = true,
+        enabled = false,
     ) {
         Text(
             "Placeholder",

@@ -14,15 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.time_picker
+package com.instructure.horizon.horizonui.organisms.inputs.singleselect
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-sealed class TimePickerInputSize(
+sealed class SingleSelectInputSize(
     val verticalPadding: Dp,
-    val horizontalPadding: Dp,
+    val horizontalPadding: Dp
 ) {
-    data object Small : TimePickerInputSize(11.dp, 12.dp)
-    data object Medium : TimePickerInputSize(6.dp, 12.dp)
+    data object Small: SingleSelectInputSize(6.dp, 12.dp)
+    data object Medium: SingleSelectInputSize(11.dp, 12.dp)
 }

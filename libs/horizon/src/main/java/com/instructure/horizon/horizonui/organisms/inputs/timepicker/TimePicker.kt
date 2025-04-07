@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.date_picker
+package com.instructure.horizon.horizonui.organisms.inputs.timepicker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,11 +39,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.organisms.inputs.common.Input
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
-import java.util.Date
+import java.time.LocalTime
 
 @Composable
-fun DatePicker(
-    state: DatePickerState,
+fun TimePicker(
+    state: TimePickerState,
     modifier: Modifier = Modifier,
 ) {
     Input(
@@ -57,29 +57,29 @@ fun DatePicker(
         InputContainer(
             isFocused = state.isFocused,
             isError = state.errorText != null,
-            isDisabled = state.isDisabled,
+            enabled = state.enabled,
         ) {
-            DatePickerContent(state)
+            TimePickerContent(state)
         }
     }
 }
 
 @Composable
-private fun DatePickerContent(state: DatePickerState) {
+private fun TimePickerContent(state: TimePickerState) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .background(HorizonColors.Surface.cardPrimary())
-            .clickable(enabled = !state.isDisabled) { state.onClick() }
+            .clickable(enabled = state.enabled) { state.onClick() }
             .padding(
                 vertical = state.size.verticalPadding,
                 horizontal = state.size.horizontalPadding,
             )
     ) {
-        if (state.selectedDate != null) {
+        if (state.selectedTime != null) {
             Text(
-                text = state.dateFormat.format.format(state.selectedDate),
+                text = state.timeFormat.format(state.selectedTime),
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
             )
@@ -105,16 +105,16 @@ private fun DatePickerContent(state: DatePickerState) {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerSimplePreview() {
+fun TimePickerSimplePreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
             label = null,
             helperText = null,
             placeHolderText = null,
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -124,16 +124,16 @@ fun DatePickerSimplePreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerSimpleFocusedPreview() {
+fun TimePickerSimpleFocusedPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
             label = null,
             helperText = null,
             placeHolderText = null,
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -143,16 +143,16 @@ fun DatePickerSimpleFocusedPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerSimpleErrorPreview() {
+fun TimePickerSimpleErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
             label = null,
             helperText = null,
             placeHolderText = null,
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -162,16 +162,16 @@ fun DatePickerSimpleErrorPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerSimpleErrorFocusedPreview() {
+fun TimePickerSimpleErrorFocusedPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
             label = null,
             helperText = null,
             placeHolderText = null,
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -181,16 +181,16 @@ fun DatePickerSimpleErrorFocusedPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerPlaceholderPreview() {
+fun TimePickerPlaceholderPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -200,16 +200,16 @@ fun DatePickerPlaceholderPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerPlaceholderErrorPreview() {
+fun TimePickerPlaceholderErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -219,18 +219,17 @@ fun DatePickerPlaceholderErrorPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerValueFullPreview() {
+fun TimePickerValuePreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
-            dateFormat = DatePickerFormat.Full,
-            selectedDate = Date(),
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
+            selectedTime = LocalTime.now(),
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -240,39 +239,17 @@ fun DatePickerValueFullPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerValueNumericPreview() {
+fun TimePickerValueErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
-            dateFormat = DatePickerFormat.Numeric,
-            selectedDate = Date(),
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
+            selectedTime = LocalTime.now(),
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
-            errorText = null,
-            required = InputLabelRequired.Regular,
-        ),
-        modifier = Modifier.padding(4.dp)
-    )
-}
-
-@Composable
-@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerValueFullErrorPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
-            dateFormat = DatePickerFormat.Full,
-            selectedDate = Date(),
-            label = "Label",
-            helperText = "Helper text",
-            placeHolderText = "Placeholder",
-            isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -282,18 +259,17 @@ fun DatePickerValueFullErrorPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerValueNumericErrorPreview() {
+fun TimePickerValueNumericErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
-            dateFormat = DatePickerFormat.Numeric,
-            selectedDate = Date(),
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
+            selectedTime = LocalTime.now(),
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -303,18 +279,17 @@ fun DatePickerValueNumericErrorPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerValueFullDisabled() {
+fun TimePickerValueFullDisabled() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
-            selectedDate = Date(),
-            dateFormat = DatePickerFormat.Full,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
+            selectedTime = LocalTime.now(),
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = true,
+            enabled = false,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -324,18 +299,17 @@ fun DatePickerValueFullDisabled() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerValueNumericDisabled() {
+fun TimePickerValueNumericDisabled() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
-            selectedDate = Date(),
-            dateFormat = DatePickerFormat.Numeric,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
+            selectedTime = LocalTime.now(),
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = true,
+            enabled = false,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -345,16 +319,16 @@ fun DatePickerValueNumericDisabled() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun DatePickerPlaceholderDisabled() {
+fun TimePickerPlaceholderDisabled() {
     ContextKeeper.appContext = LocalContext.current
-    DatePicker(
-        state = DatePickerState(
-            size = DatePickerInputSize.Medium,
+    TimePicker(
+        state = TimePickerState(
+            size = TimePickerInputSize.Medium,
             label = "Label",
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = true,
+            enabled = false,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.text_area
+package com.instructure.horizon.horizonui.organisms.inputs.textarea
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -48,6 +48,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequi
 
 @Composable
 fun TextArea(
+    modifier: Modifier = Modifier,
     readOnly: Boolean = false,
     textStyle: TextStyle = HorizonTypography.p1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -59,7 +60,6 @@ fun TextArea(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(Color.Black),
-    modifier: Modifier = Modifier,
     state: TextAreaState,
 ) {
     Input(
@@ -73,14 +73,14 @@ fun TextArea(
         InputContainer(
             isFocused = state.isFocused,
             isError = state.errorText != null,
-            isDisabled = state.isDisabled,
+            enabled = state.enabled,
         ) {
             BasicTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = state.value,
                 onValueChange = state.onValueChange,
-                enabled = !state.isDisabled,
+                enabled = state.enabled,
                 readOnly = readOnly,
                 textStyle = textStyle,
                 keyboardOptions = keyboardOptions,
@@ -129,7 +129,7 @@ fun TextAreaSimplePreview() {
             helperText = null,
             placeHolderText = null,
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -149,7 +149,7 @@ fun TextAreaSimpleFocusedPreview() {
             helperText = null,
             placeHolderText = null,
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -169,7 +169,7 @@ fun TextAreaSimpleErrorPreview() {
             helperText = null,
             placeHolderText = null,
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -189,7 +189,7 @@ fun TextAreaSimpleErrorFocusedPreview() {
             helperText = null,
             placeHolderText = null,
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -209,7 +209,7 @@ fun TextAreaPlaceholderPreview() {
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -229,7 +229,7 @@ fun TextAreaPlaceholderErrorPreview() {
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -249,7 +249,7 @@ fun TextAreaValuePreview() {
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -269,7 +269,7 @@ fun TextAreaValueErrorPreview() {
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             errorText = "Error",
             required = InputLabelRequired.Regular,
         ),
@@ -289,7 +289,7 @@ fun TextAreaValueDisabled() {
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = true,
+            enabled = false,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),
@@ -309,7 +309,7 @@ fun TextAreaPlaceholderDisabled() {
             helperText = "Helper text",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = true,
+            enabled = false,
             errorText = null,
             required = InputLabelRequired.Regular,
         ),

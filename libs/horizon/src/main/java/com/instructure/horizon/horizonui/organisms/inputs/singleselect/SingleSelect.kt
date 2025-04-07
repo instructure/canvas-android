@@ -14,14 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.multi_select
+package com.instructure.horizon.horizonui.organisms.inputs.singleselect
 
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -45,18 +42,16 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.molecules.Tag
-import com.instructure.horizon.horizonui.molecules.TagSize
-import com.instructure.horizon.horizonui.molecules.TagType
 import com.instructure.horizon.horizonui.organisms.inputs.common.Input
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 
 @Composable
-fun MultiSelect(
-    modifier: Modifier = Modifier,
-    state: MultiSelectState
+fun SingleSelect(
+    state: SingleSelectState,
+    modifier: Modifier = Modifier
 ) {
+
     Input(
         label = state.label,
         helperText = state.helperText,
@@ -74,26 +69,26 @@ fun MultiSelect(
             InputContainer(
                 isFocused = state.isFocused || state.isMenuOpen,
                 isError = state.errorText != null,
-                isDisabled = state.isDisabled,
+                enabled = state.enabled,
                 modifier = Modifier
-                    .clickable(enabled = !state.isDisabled) { state.onMenuOpenChanged(!state.isMenuOpen) }
+                    .clickable(enabled = state.enabled) {
+                        state.onMenuOpenChanged(!state.isMenuOpen)
+                    }
                     .onGloballyPositioned {
                         heightInPx = it.size.height
                     }
             ) {
-                MultiSelectContent(state)
+                SingleSelectContent(state)
             }
+
             InputDropDownPopup(
                 isMenuOpen = state.isMenuOpen,
                 options = state.options,
                 verticalOffsetPx = heightInPx,
                 onMenuOpenChanged = state.onMenuOpenChanged,
                 onOptionSelected = { selectedOption ->
-                    if (state.selectedOptions.contains(selectedOption)) {
-                        state.onOptionRemoved(selectedOption)
-                    } else {
-                        state.onOptionSelected(selectedOption)
-                    }
+                    state.onOptionSelected(selectedOption)
+                    state.onMenuOpenChanged(false)
                 }
             )
         }
@@ -101,48 +96,22 @@ fun MultiSelect(
 }
 
 @Composable
-@OptIn(ExperimentalLayoutApi::class)
-private fun MultiSelectContent(state: MultiSelectState) {
+private fun SingleSelectContent(state: SingleSelectState) {
     val iconRotation = animateIntAsState(
         targetValue = if (state.isMenuOpen) 180 else 0,
         label = "iconRotation"
     )
-    val paddingModifier = if (state.selectedOptions.isNotEmpty()) {
-        Modifier.padding(
-            vertical = state.size.verticalContentPadding,
-            horizontal = state.size.horizontalContentPadding
-        )
-    } else {
-        Modifier
-            .padding(
-                vertical = state.size.verticalTextPadding,
-                horizontal = state.size.horizontalTextPadding
-            )
-    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = paddingModifier
+        modifier = Modifier
+            .padding(vertical = state.size.verticalPadding, horizontal = state.size.horizontalPadding)
     ) {
-        if (state.selectedOptions.isNotEmpty()) {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(state.size.horizontalContentPadding),
-                verticalArrangement = Arrangement.spacedBy(state.size.verticalContentPadding),
-            ) {
-                state.selectedOptions.forEach { selectedOption ->
-                    Tag(
-                        label = selectedOption,
-                        type = TagType.STANDALONE,
-                        size = when (state.size) {
-                            MultiSelectInputSize.Small -> TagSize.SMALL
-                            MultiSelectInputSize.Medium -> TagSize.MEDIUM
-                        },
-                        dismissible = true,
-                        onDismiss = {
-                            state.onOptionRemoved(selectedOption)
-                        },
-                    )
-                }
-            }
+        if (state.selectedOption != null) {
+            Text(
+                text = state.selectedOption,
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.body(),
+            )
         } else if (state.placeHolderText != null) {
             Text(
                 text = state.placeHolderText,
@@ -164,21 +133,20 @@ private fun MultiSelectContent(state: MultiSelectState) {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun MultiSelectSimpleCollapsedPreview() {
+fun SingleSelectSimpleCollapsedPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = null,
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = false,
             errorText = null,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = emptyList(),
+            selectedOption = null,
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -186,21 +154,20 @@ fun MultiSelectSimpleCollapsedPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300, heightDp = 170)
-fun MultiSelectSimpleExpandedPreview() {
+fun SingleSelectSimpleExpandedPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = null,
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = true,
             errorText = null,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = emptyList(),
+            selectedOption = null,
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -208,21 +175,20 @@ fun MultiSelectSimpleExpandedPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun MultiSelectSimpleCollapsedFocusedPreview() {
+fun SingleSelectSimpleCollapsedFocusedPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = null,
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = false,
             errorText = null,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = emptyList(),
+            selectedOption = null,
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -230,21 +196,20 @@ fun MultiSelectSimpleCollapsedFocusedPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun MultiSelectSimpleCollapsedErrorPreview() {
+fun SingleSelectSimpleCollapsedErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = null,
             isFocused = true,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = false,
             errorText = "Error",
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = emptyList(),
+            selectedOption = null,
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -252,22 +217,21 @@ fun MultiSelectSimpleCollapsedErrorPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun MultiSelectSelectedCollapsedPreview() {
+fun SingleSelectSelectedCollapsedPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = false,
             errorText = null,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = listOf("Option 1", "Option 3"),
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -275,22 +239,21 @@ fun MultiSelectSelectedCollapsedPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300, heightDp = 180)
-fun MultiSelectSelectedExpandedPreview() {
+fun SingleSelectSelectedExpandedPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = true,
             errorText = null,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = listOf("Option 1", "Option 3"),
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -298,22 +261,21 @@ fun MultiSelectSelectedExpandedPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun MultiSelectSelectedErrorPreview() {
+fun SingleSelectSelectedErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = false,
             errorText = "Error",
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = listOf("Option 1", "Option 3"),
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -321,21 +283,20 @@ fun MultiSelectSelectedErrorPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300)
-fun MultiSelectSelectedCollapsedWithHelperTextPreview() {
+fun SingleSelectSelectedCollapsedWithHelperTextPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             helperText = "Helper text",
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = false,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = listOf("Option 1", "Option 3"),
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -343,21 +304,20 @@ fun MultiSelectSelectedCollapsedWithHelperTextPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300, heightDp = 180)
-fun MultiSelectSelectedExpandedWithHelperTextPreview() {
+fun SingleSelectSelectedExpandedWithHelperTextPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             helperText = "Helper text",
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = true,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = listOf("Option 1", "Option 3"),
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -365,22 +325,21 @@ fun MultiSelectSelectedExpandedWithHelperTextPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD , widthDp = 300)
-fun MultiSelectSelectedErrorCollapsedWithHelperTextPreview() {
+fun SingleSelectSelectedErrorCollapsedWithHelperTextPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             helperText = "Helper text",
             isFocused = false,
-            isDisabled = false,
+            enabled = true,
             isMenuOpen = false,
             errorText = "Error",
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = listOf("Option 1", "Option 3"),
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -388,22 +347,21 @@ fun MultiSelectSelectedErrorCollapsedWithHelperTextPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun MultiSelectCollapsedDisabledPreview() {
+fun SingleSelectCollapsedDisabledPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = true,
+            enabled = false,
             isMenuOpen = false,
             errorText = null,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = emptyList(),
+            selectedOption = null,
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )
@@ -411,22 +369,21 @@ fun MultiSelectCollapsedDisabledPreview() {
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, widthDp = 300)
-fun MultiSelectSelectedCollapsedDisabledPreview() {
+fun SingleSelectSelectedCollapsedDisabledPreview() {
     ContextKeeper.appContext = LocalContext.current
-    MultiSelect(
-        state = MultiSelectState(
+    SingleSelect(
+        state = SingleSelectState(
             label = "Label",
             placeHolderText = "Placeholder",
             isFocused = false,
-            isDisabled = true,
+            enabled = false,
             isMenuOpen = false,
             errorText = null,
-            size = MultiSelectInputSize.Medium,
+            size = SingleSelectInputSize.Medium,
             options = listOf("Option 1", "Option 2", "Option 3"),
-            selectedOptions = listOf("Option 1", "Option 3"),
+            selectedOption = "Option 1",
             onOptionSelected = {},
             onMenuOpenChanged = {},
-            onOptionRemoved = {}
         ),
         modifier = Modifier.padding(4.dp)
     )

@@ -14,14 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.date_picker
+package com.instructure.horizon.horizonui.organisms.inputs.datepicker
 
-import java.text.SimpleDateFormat
-import java.util.Locale
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-sealed class DatePickerFormat(
-    val format: SimpleDateFormat
+sealed class DatePickerInputSize(
+    val verticalPadding: Dp,
+    val horizontalPadding: Dp,
 ) {
-    data object Numeric : DatePickerFormat(SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()))
-    data object Full : DatePickerFormat(SimpleDateFormat("MM/dd/yy", Locale.getDefault()))
+    data object Small : DatePickerInputSize(6.dp, 12.dp)
+    data object Medium : DatePickerInputSize(11.dp, 12.dp)
 }

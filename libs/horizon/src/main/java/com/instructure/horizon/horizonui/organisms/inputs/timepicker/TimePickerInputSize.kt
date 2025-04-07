@@ -14,15 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.text_field
+package com.instructure.horizon.horizonui.organisms.inputs.timepicker
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-sealed class TextFieldInputSize(
+sealed class TimePickerInputSize(
     val verticalPadding: Dp,
-    val horizontalPadding: Dp
+    val horizontalPadding: Dp,
 ) {
-    data object Small: TextFieldInputSize(3.dp, 12.dp)
-    data object Medium: TextFieldInputSize(8.dp, 12.dp)
+    data object Small : TimePickerInputSize(6.dp, 12.dp)
+    data object Medium : TimePickerInputSize(11.dp, 12.dp)
 }

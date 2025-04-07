@@ -47,6 +47,7 @@ fun InputDropDownPopup(
     isMenuOpen: Boolean,
     options: List<String>,
     verticalOffsetPx: Int,
+    modifier: Modifier = Modifier,
     onMenuOpenChanged: (Boolean) -> Unit,
     onOptionSelected: (String) -> Unit,
 ) {
@@ -65,7 +66,7 @@ fun InputDropDownPopup(
         ) {
             if (it) {
                 Card(
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(horizontal = 4.dp),
                     shape = HorizonCornerRadius.level2,
                     colors = CardDefaults.cardColors()

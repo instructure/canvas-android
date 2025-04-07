@@ -14,17 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.number_field
+package com.instructure.horizon.horizonui.organisms.inputs.textfield
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-sealed class NumberFieldInputSize(
+sealed class TextFieldInputSize(
     val verticalPadding: Dp,
-    val horizontalPadding: Dp,
-    val increaseDecreaseButtonVerticalPadding: Dp,
-    val increaseDecreaseButtonHorizontalPadding: Dp,
+    val horizontalPadding: Dp
 ) {
-    data object Small: NumberFieldInputSize(6.dp, 12.dp, 1.dp, 10.dp)
-    data object Medium: NumberFieldInputSize(8.dp, 12.dp, 3.dp, 10.dp)
+    data object Small: TextFieldInputSize(3.dp, 12.dp)
+    data object Medium: TextFieldInputSize(8.dp, 12.dp)
 }
