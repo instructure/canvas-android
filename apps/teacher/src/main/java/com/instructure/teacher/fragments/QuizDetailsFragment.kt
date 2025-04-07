@@ -20,6 +20,8 @@ import android.view.LayoutInflater
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -61,7 +63,7 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.QuizDetailsPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.presenters.QuizDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -333,11 +335,13 @@ class QuizDetailsFragment : BasePresenterFragment<
         return getString(R.string.quiz_details_until, toDate)
     }
     override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
-
+        allTitle.setTextColor(course.color)
+        allIcon.setColorFilter(course.color)
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)
-        gradedChart.setSelectedColor(ThemePrefs.brandColor)
+        gradedChart.setSelectedColor(course.color)
+        gradedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         gradedChart.setCenterText(gradedStudents.toString())
         gradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_graded).format(gradedStudents, totalStudents)
         gradedProgressBar.setGone()
@@ -345,7 +349,8 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         ungradedChart.setSelected(needsGradingCount)
         ungradedChart.setTotal(totalStudents)
-        ungradedChart.setSelectedColor(ThemePrefs.brandColor)
+        ungradedChart.setSelectedColor(course.color)
+        ungradedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         ungradedChart.setCenterText(needsGradingCount.toString())
         ungradedLabel.text = requireContext().resources.getQuantityText(R.plurals.needsGradingNoQuantity, needsGradingCount)
         ungradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_needs_grading).format(needsGradingCount, totalStudents)
@@ -354,7 +359,8 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         notSubmittedChart.setSelected(notSubmitted)
         notSubmittedChart.setTotal(totalStudents)
-        notSubmittedChart.setSelectedColor(ThemePrefs.brandColor)
+        notSubmittedChart.setSelectedColor(course.color)
+        notSubmittedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         notSubmittedChart.setCenterText(notSubmitted.toString())
         notSubmittedWrapper.contentDescription = getString(R.string.content_description_submission_donut_unsubmitted).format(notSubmitted, totalStudents)
         notSubmittedProgressBar.setGone()
@@ -451,8 +457,8 @@ class QuizDetailsFragment : BasePresenterFragment<
     private fun navigateToSubmissions(course: Course, assignment: Assignment?, filter: SubmissionListFilter) {
         assignment ?: return // We can't navigate to the submission list if there isn't an associated assignment
         val assignmentWithAnonymousGrading = assignment.copy(anonymousGrading = quiz.allowAnonymousSubmissions)
-        val args = AssignmentSubmissionListFragment.makeBundle(assignmentWithAnonymousGrading, filter)
-        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
+        val args = SubmissionListFragment.makeBundle(assignmentWithAnonymousGrading, filter)
+        RouteMatcher.route(requireActivity(), Route(null, SubmissionListFragment::class.java, course, args))
     }
 
     private fun clearListeners() = with(binding) {

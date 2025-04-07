@@ -22,5 +22,8 @@ interface LtiLaunchFragmentBehavior {
     @get:ColorInt
     val toolbarColor: Int
 
+    @get:ColorInt
+    val toolbarTextColor: Int
+
     fun closeLtiLaunchFragment(activity: FragmentActivity)
 }

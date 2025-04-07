@@ -174,10 +174,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
-    @Stub
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
     fun testAssignmentBeforeReminderE2E() {
-
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]

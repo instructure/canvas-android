@@ -78,7 +78,7 @@ class ParentEventViewModelBehaviorTest {
                 contextName = "Course Name",
                 subject = "Regarding: Student Name, Event - Event Title",
             ),
-            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TeacherEnrollment),
             hiddenBodyMessage = "Regarding: Student Name, Event - https://event.com/courses/1/calendar_events/420"
         )
 

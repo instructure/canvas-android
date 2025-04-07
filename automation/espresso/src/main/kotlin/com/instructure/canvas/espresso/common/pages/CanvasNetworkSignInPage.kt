@@ -31,9 +31,9 @@ import com.instructure.loginapi.login.R
 
 class CanvasNetworkSignInPage: BasePage() {
 
-    private val EMAIL_FIELD_CSS = "input[id=\"username\"]"
-    private val PASSWORD_FIELD_CSS = "input[id=\"password\"]"
-    private val LOGIN_BUTTON_CSS = "button[data-testid=\"login-button\"]"
+    private val EMAIL_FIELD_CSS = "input[id=\"IDToken2\"], input[id=\"username\"], input[data-testid=\"username-input\"]"
+    private val PASSWORD_FIELD_CSS = "input[id=\"IDToken3\"], input[id=\"password\"], input[data-testid=\"password-input\"]"
+    private val LOGIN_BUTTON_CSS = "button[data-cid=\"BaseButton Button\"], button[data-testid=\"login-button\"]"
     private val FORGOT_PASSWORD_BUTTON_CSS = "a[href*='forgot-password']"
 
     private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
@@ -65,6 +65,7 @@ class CanvasNetworkSignInPage: BasePage() {
         signInRoot.assertDisplayed()
         toolbar.assertDisplayed()
 
+        Thread.sleep(3000) // Wait for the webpage to be loaded.
         emailField()
         passwordField()
         loginButton()

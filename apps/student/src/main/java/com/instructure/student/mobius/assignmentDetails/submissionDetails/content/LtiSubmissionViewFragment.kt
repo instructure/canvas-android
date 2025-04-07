@@ -62,7 +62,7 @@ class LtiSubmissionViewFragment : BaseCanvasFragment() {
                     url,
                     title,
                     sessionLessLaunch = false,
-                    assignmentLti = true,
+                    assignmentLti = false,
                     ltiTool = ltiTool,
                     openInternally = ltiType.openInternally
                 )
@@ -79,7 +79,7 @@ class LtiSubmissionViewFragment : BaseCanvasFragment() {
     companion object {
         fun newInstance(data: ExternalToolContent) = LtiSubmissionViewFragment().apply {
             canvasContext = data.canvasContext
-            url = data.ltiTool?.url.orEmpty()
+            url = data.ltiTool?.url ?: data.ltiUrl.orEmpty()
             ltiTool = data.ltiTool
             title = data.title
             ltiType = data.ltiType

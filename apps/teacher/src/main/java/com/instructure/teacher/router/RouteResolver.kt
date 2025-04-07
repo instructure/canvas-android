@@ -29,7 +29,7 @@ import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentList
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.features.assignment.list.AssignmentListFragment
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
@@ -128,8 +128,8 @@ object RouteResolver {
             fragment = getAssignmentDetailsFragment(canvasContext, route)
         } else if (DueDatesFragment::class.java.isAssignableFrom(cls)) {
             fragment = DueDatesFragment.getInstance((canvasContext as Course?)!!, route.arguments)
-        } else if (AssignmentSubmissionListFragment::class.java.isAssignableFrom(cls)) {
-            fragment = AssignmentSubmissionListFragment.newInstance((canvasContext as Course?)!!, route.arguments)
+        } else if (SubmissionListFragment::class.java.isAssignableFrom(cls)) {
+            fragment = SubmissionListFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else if (PostPolicyFragment::class.java.isAssignableFrom(cls)) {
             fragment = PostPolicyFragment.newInstance(route.argsWithContext)
         } else if (EditAssignmentDetailsFragment::class.java.isAssignableFrom(cls)) {
