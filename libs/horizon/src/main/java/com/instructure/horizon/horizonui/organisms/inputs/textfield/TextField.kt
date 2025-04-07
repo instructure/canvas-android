@@ -48,6 +48,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequi
 
 @Composable
 fun TextField(
+    state: TextFieldState,
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
     textStyle: TextStyle = HorizonTypography.p1,
@@ -57,7 +58,6 @@ fun TextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(Color.Black),
-    state: TextFieldState,
 ) {
     Input(
         label = state.label,
