@@ -80,7 +80,7 @@ fun InputsScreen() {
 private fun SingleSelectShowcase() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Single Selects SMALL", style = HorizonTypography.p2)
+            Text("Single Selects SMALL", style = HorizonTypography.h2)
             val state = SingleSelectState(
                 size = SingleSelectInputSize.Small,
                 options = listOf("Option 1", "Option 2", "Option 3"),
@@ -108,7 +108,7 @@ private fun SingleSelectShowcase() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Single Selects MEDIUM", style = HorizonTypography.p2)
+            Text("Single Selects MEDIUM", style = HorizonTypography.h2)
             val state = SingleSelectState(
                 size = SingleSelectInputSize.Medium,
                 options = listOf("Option 1", "Option 2", "Option 3"),
@@ -141,7 +141,7 @@ private fun SingleSelectShowcase() {
 private fun MultiSelectShowcase() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Multiple Selects SMALL", style = HorizonTypography.p2)
+            Text("Multiple Selects SMALL", style = HorizonTypography.h2)
             val state = MultiSelectState(
                 size = MultiSelectInputSize.Small,
                 options = listOf("Option 1", "Option 2", "Option 3"),
@@ -170,7 +170,7 @@ private fun MultiSelectShowcase() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Multiple Selects MEDIUM", style = HorizonTypography.p2)
+            Text("Multiple Selects MEDIUM", style = HorizonTypography.h2)
             val state = MultiSelectState(
                 size = MultiSelectInputSize.Medium,
                 options = listOf("Option 1", "Option 2", "Option 3"),
@@ -203,7 +203,7 @@ private fun MultiSelectShowcase() {
 private fun DatePickerShowcase() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Date Pickers SMALL", style = HorizonTypography.p2)
+            Text("Date Pickers SMALL", style = HorizonTypography.h2)
             val state = DatePickerState(
                 size = DatePickerInputSize.Small,
                 helperText = "This is a Date Picker from the Android Design System",
@@ -226,7 +226,7 @@ private fun DatePickerShowcase() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Date Pickers MEDIUM", style = HorizonTypography.p2)
+            Text("Date Pickers MEDIUM", style = HorizonTypography.h2)
             val state = DatePickerState(
                 size = DatePickerInputSize.Medium,
                 helperText = "This is a Date Picker from the Android Design System",
@@ -249,7 +249,7 @@ private fun DatePickerShowcase() {
 private fun TimePickerShowcase() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Time Pickers SMALL", style = HorizonTypography.p2)
+            Text("Time Pickers SMALL", style = HorizonTypography.h2)
             val state = TimePickerState(
                 size = TimePickerInputSize.Small,
                 helperText = "This is a Time Picker from the Android Design System",
@@ -267,7 +267,7 @@ private fun TimePickerShowcase() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Time Pickers MEDIUM", style = HorizonTypography.p2)
+            Text("Time Pickers MEDIUM", style = HorizonTypography.h2)
             val state = TimePickerState(
                 size = TimePickerInputSize.Medium,
                 helperText = "This is a Time Picker from the Android Design System",
@@ -289,7 +289,7 @@ private fun TimePickerShowcase() {
 @Composable
 private fun TextAreaShowcase() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text("Text Area", style = HorizonTypography.p2)
+        Text("Text Area", style = HorizonTypography.h2)
         val modifier = Modifier
             .defaultMinSize(minHeight = 100.dp)
         val state = TextAreaState(
@@ -314,7 +314,7 @@ private fun TextAreaShowcase() {
 private fun TextFieldShowcase() {
     Column (verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Text Field SMALL", style = HorizonTypography.p2)
+            Text("Text Field SMALL", style = HorizonTypography.h2)
             val state = TextFieldState(
                 value = TextFieldValue(""),
                 size = TextFieldInputSize.Small,
@@ -334,7 +334,7 @@ private fun TextFieldShowcase() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Text Field MEDIUM", style = HorizonTypography.p2)
+            Text("Text Field MEDIUM", style = HorizonTypography.h2)
             val state = TextFieldState(
                 value = TextFieldValue(""),
                 size = TextFieldInputSize.Medium,
@@ -359,7 +359,7 @@ private fun TextFieldShowcase() {
 private fun NumberFieldShowcase() {
     Column (verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Number Field SMALL", style = HorizonTypography.p2)
+            Text("Number Field SMALL", style = HorizonTypography.h2)
             val state = NumberFieldState(
                 value = TextFieldValue(""),
                 size = NumberFieldInputSize.Small,
@@ -381,7 +381,7 @@ private fun NumberFieldShowcase() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Number Field MEDIUM", style = HorizonTypography.p2)
+            Text("Number Field MEDIUM", style = HorizonTypography.h2)
             val state = NumberFieldState(
                 value = TextFieldValue(""),
                 size = NumberFieldInputSize.Medium,
