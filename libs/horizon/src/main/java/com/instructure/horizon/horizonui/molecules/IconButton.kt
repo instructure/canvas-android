@@ -17,13 +17,18 @@ package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,181 +37,168 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 
-enum class IconButtonSize(val primaryButtonSize: Dp, val secondaryButtonSize: Dp) {
-    SMALL(32.dp, 40.dp),
-    NORMAL(44.dp, 44.dp),
+enum class IconButtonSize(val size: Dp, val badgeOffset: Dp) {
+    SMALL(32.dp, 8.dp),
+    NORMAL(44.dp, 5.dp),
 }
 
-enum class IconButtonColor(val backgroundColor: Color, val iconColor: Color) {
+enum class IconButtonColor(
+    val backgroundColor: Color,
+    val iconColor: Color,
+    val borderColor: Color = Color.Transparent,
+    val secondaryBackgroundColor: Color? = null
+) {
     BLACK(HorizonColors.Surface.inversePrimary(), HorizonColors.Icon.surfaceColored()),
     INVERSE(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.default()),
     INVERSE_DANGER(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.error()),
     INSTITUTION(HorizonColors.Surface.institution(), HorizonColors.Icon.surfaceColored()),
     BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Icon.default()),
+    GHOST(Color.Transparent, HorizonColors.Icon.default()),
+    WHITE_GREY_OUTLINE(
+        HorizonColors.Surface.pagePrimary(),
+        HorizonColors.Icon.default(),
+        HorizonColors.LineAndBorder.lineStroke()
+    ),
+    AI(
+        HorizonColors.Surface.aiGradientStart(),
+        HorizonColors.Icon.surfaceColored(),
+        secondaryBackgroundColor =  HorizonColors.Surface.aiGradientEnd()
+    ),
 }
 
 @Composable
-fun IconButtonPrimary(
+fun IconButton(
     @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
     size: IconButtonSize = IconButtonSize.NORMAL,
     color: IconButtonColor = IconButtonColor.BLACK,
     enabled: Boolean = true,
     contentDescription: String? = null,
-    onClick: () -> Unit = {}
-) {
-    IconButton(
-        iconRes = iconRes,
-        size = size.primaryButtonSize,
-        backgroundColor = color.backgroundColor,
-        iconColor = color.iconColor,
-        modifier = modifier,
-        onClick = onClick,
-        enabled = enabled,
-        contentDescription = contentDescription
-    )
-}
-
-@Composable
-fun IconButtonSecondary(
-    @DrawableRes iconRes: Int,
-    modifier: Modifier = Modifier,
-    size: IconButtonSize = IconButtonSize.NORMAL,
-    color: IconButtonColor = IconButtonColor.INSTITUTION,
-    enabled: Boolean = true,
-    contentDescription: String? = null,
-    onClick: () -> Unit = {}
-) {
-    IconButton(
-        iconRes = iconRes,
-        size = size.secondaryButtonSize,
-        backgroundColor = color.backgroundColor,
-        iconColor = color.iconColor,
-        modifier = modifier,
-        onClick = onClick,
-        enabled = enabled,
-        contentDescription = contentDescription
-    )
-}
-
-@Composable
-fun IconButtonAi(
-    modifier: Modifier = Modifier,
-    size: IconButtonSize = IconButtonSize.NORMAL,
-    enabled: Boolean = true,
-    @DrawableRes iconRes: Int = R.drawable.ai,
-    contentDescription: String? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    badge: @Composable (() -> Unit)? = null
 ) {
     val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
-    IconButton(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = buttonModifier
-            .background(
-                brush = HorizonColors.Surface.aiGradient(),
-                shape = CircleShape
+    val gradientModifier = color.secondaryBackgroundColor?.let {
+        buttonModifier.background(
+            brush = Brush.verticalGradient(
+                colors = listOf(color.backgroundColor, it)
+            ), shape = HorizonCornerRadius.level6, alpha = if (enabled) 1f else 0.5f
+        )
+    } ?: buttonModifier
+    val buttonBackgroundColor = if (color.secondaryBackgroundColor == null) color.backgroundColor else Color.Transparent
+    Box(contentAlignment = Alignment.TopEnd) {
+        IconButton(
+            onClick = onClick,
+            enabled = enabled,
+            modifier = gradientModifier
+                .background(shape = CircleShape, color = buttonBackgroundColor)
+                .border(HorizonBorder.level1(color.borderColor), shape = CircleShape)
+                .size(size.size)
+        ) {
+            Icon(
+                painterResource(id = iconRes),
+                contentDescription = contentDescription,
+                modifier = Modifier.size(24.dp),
+                tint = color.iconColor
             )
-            .size(size.primaryButtonSize)
-    ) {
-        Icon(
-            painterResource(id = iconRes),
-            contentDescription = contentDescription,
-            modifier = Modifier.size(24.dp),
-            tint = HorizonColors.Icon.surfaceColored()
-        )
-    }
-}
-
-@Composable
-private fun IconButton(
-    @DrawableRes iconRes: Int,
-    size: Dp,
-    backgroundColor: Color,
-    iconColor: Color,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    contentDescription: String? = null,
-    onClick: () -> Unit = {}
-) {
-    val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
-    IconButton(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = buttonModifier
-            .background(shape = CircleShape, color = backgroundColor)
-            .size(size)
-    ) {
-        Icon(
-            painterResource(id = iconRes),
-            contentDescription = contentDescription,
-            modifier = Modifier.size(24.dp),
-            tint = iconColor
-        )
+        }
+        badge?.let {
+            Box(modifier = Modifier.offset(x = size.badgeOffset, y = (-size.badgeOffset))) {
+                it()
+            }
+        }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-private fun IconButtonPrimaryPreview() {
-    IconButtonPrimary(iconRes = R.drawable.add)
+private fun IconButtonPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    IconButton(iconRes = R.drawable.add)
+}
+
+@Composable
+@Preview(showBackground = true, widthDp = 54, heightDp = 54)
+private fun IconButtonWithBadgePreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Box(contentAlignment = Alignment.Center) {
+        IconButton(iconRes = R.drawable.add, badge = {
+            Badge(
+                content = BadgeContent.Text("5"),
+                type = BadgeType.Primary
+            )
+        })
+    }
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonPrimaryInversePreview() {
-    IconButtonPrimary(iconRes = R.drawable.add, color = IconButtonColor.INVERSE)
+private fun IconButtonInversePreview() {
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INVERSE)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonPrimaryInverseDisabledPreview() {
-    IconButtonPrimary(iconRes = R.drawable.add, color = IconButtonColor.INVERSE, enabled = false)
+private fun IconButtonInverseDisabledPreview() {
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INVERSE, enabled = false)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonPrimaryInverseDangerPreview() {
-    IconButtonPrimary(iconRes = R.drawable.add, color = IconButtonColor.INVERSE_DANGER)
+private fun IconButtonInverseDangerPreview() {
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INVERSE_DANGER)
 }
 
 @Composable
 @Preview(showBackground = true)
-private fun IconButtonSecondaryPreview() {
+private fun IconButtonSmallPreview() {
     ContextKeeper.appContext = LocalContext.current
-    IconButtonSecondary(iconRes = R.drawable.add)
+    IconButton(iconRes = R.drawable.add, size = IconButtonSize.SMALL)
 }
 
 @Composable
 @Preview(showBackground = true)
-private fun IconButtonSecondarySmallPreview() {
+private fun IconButtonDisabledPreview() {
     ContextKeeper.appContext = LocalContext.current
-    IconButtonSecondary(iconRes = R.drawable.add, size = IconButtonSize.SMALL)
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun IconButtonSecondaryDisabledPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    IconButtonSecondary(iconRes = R.drawable.add, enabled = false)
+    IconButton(iconRes = R.drawable.add, enabled = false)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
-private fun IconButtonSecondaryBeigePreview() {
-    IconButtonSecondary(iconRes = R.drawable.add, color = IconButtonColor.BEIGE)
+private fun IconButtonBeigePreview() {
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.BEIGE)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+private fun IconButtonInstitutionPreview() {
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INSTITUTION)
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun IconButtonOutlinePreview() {
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.WHITE_GREY_OUTLINE)
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun IconButtonGhostPreview() {
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.GHOST)
 }
 
 @Composable
 @Preview
 private fun IconButtonAiPreview() {
-    IconButtonAi()
+    IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI)
 }
 
 @Composable
 @Preview
 private fun IconButtonAiSmallPreview() {
-    IconButtonAi(size = IconButtonSize.SMALL)
+    IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, size = IconButtonSize.SMALL)
 }
