@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.features.login.LoginActivity
-import io.heap.core.Heap
+import sdk.pendo.io.Pendo
 
 
 class ParentLogoutTask(
@@ -36,7 +36,7 @@ class ParentLogoutTask(
 
     override fun onCleanup() {
         ParentPrefs.safeClearPrefs()
-        Heap.stopRecording()
+        Pendo.endSession()
     }
 
     override fun createLoginIntent(context: Context): Intent {

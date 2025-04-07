@@ -19,7 +19,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'io.heap.gradle'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -36,8 +36,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 74
-        versionName = '1.37.0'
+        versionCode = 76
+        versionName = '1.38.1'
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -106,7 +106,7 @@ android {
                 mappingFileUploadEnabled false
             }
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
 
         debugMinify {
@@ -131,13 +131,13 @@ android {
             buildConfigField "boolean", "POINT_EIGHT", "false"
             buildConfigField "boolean", "POINT_NINE", "false"
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
-
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
                 strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
+
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
     }
 
@@ -295,7 +295,7 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
-    implementation Libs.HEAP_CORE
+    implementation Libs.PENDO
 
     implementation Libs.CAMERA_VIEW
 
@@ -307,6 +307,9 @@ dependencies {
     testImplementation Libs.HAMCREST
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
 }
 
 apply plugin: 'com.google.gms.google-services'

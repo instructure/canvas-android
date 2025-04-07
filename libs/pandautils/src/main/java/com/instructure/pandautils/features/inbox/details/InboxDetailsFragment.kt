@@ -140,6 +140,7 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
 
     companion object {
         const val CONVERSATION_ID = "conversation_id"
+        const val UNREAD = "unread"
 
         fun newInstance(): InboxDetailsFragment {
             return InboxDetailsFragment()
@@ -152,9 +153,10 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
             return InboxDetailsFragment().withArgs(route.arguments)
         }
 
-        fun makeRoute(conversationId: Long): Route {
+        fun makeRoute(conversationId: Long, unread: Boolean = false): Route {
             val bundle = bundleOf().apply {
                 putLong(Const.CONVERSATION_ID, conversationId)
+                putBoolean(UNREAD, unread)
             }
             return Route(null, InboxDetailsFragment::class.java, null, bundle)
         }

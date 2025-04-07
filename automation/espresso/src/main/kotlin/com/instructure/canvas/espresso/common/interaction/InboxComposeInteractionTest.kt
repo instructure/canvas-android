@@ -48,7 +48,7 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )
@@ -75,7 +75,7 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )
@@ -106,14 +106,14 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             ),
             Recipient(
                 stringId = getTeachers().last().id.toString(),
                 name = getTeachers().last().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )
@@ -145,14 +145,14 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             ),
             Recipient(
                 stringId = getTeachers().last().id.toString(),
                 name = getTeachers().last().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )
@@ -182,14 +182,14 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             ),
             Recipient(
                 stringId = getTeachers().last().id.toString(),
                 name = getTeachers().last().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )
@@ -220,7 +220,7 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )
@@ -268,7 +268,7 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
                 stringId = getTeachers().first().id.toString(),
                 name = getTeachers().first().name,
                 commonCourses = hashMapOf(
-                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())
+                    getFirstCourse().id.toString() to arrayOf(EnrollmentType.TeacherEnrollment.rawValue)
                 )
             )
         )
@@ -317,10 +317,22 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
     }
 
     @Test
-    fun assertAlertDialogPopsOnExit() {
+    fun assertAlertDialogNotPopsOnExitWithoutModification() {
         val data = initData()
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
+
+        inboxComposePage.pressBackButton()
+        inboxPage.assertInboxEmpty()
+    }
+
+    @Test
+    fun assertAlertDialogPopsOnExitWithModification() {
+        val data = initData()
+        goToInboxCompose(data)
+        composeTestRule.waitForIdle()
+
+        inboxComposePage.typeBody("Test Body")
 
         inboxComposePage.pressBackButton()
         inboxComposePage.assertAlertDialog()

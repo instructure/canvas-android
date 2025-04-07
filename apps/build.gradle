@@ -34,13 +34,15 @@ buildscript {
         classpath Plugins.FIREBASE_CRASHLYTICS
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.HILT
-        classpath Plugins.HEAP
     }
 }
 
 allprojects {
     repositories {
         google()
+        maven {
+            url = uri("https://software.mobile.pendo.io/artifactory/androidx-release")
+        }
         mavenCentral()
         maven { url 'https://jitpack.io' }
         maven {

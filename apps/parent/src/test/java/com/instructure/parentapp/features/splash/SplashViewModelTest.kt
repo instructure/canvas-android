@@ -30,9 +30,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
-import com.instructure.parentapp.BuildConfig
-import io.heap.autocapture.ViewAutocaptureSDK
-import io.heap.core.Heap
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -53,6 +51,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import sdk.pendo.io.Pendo
 
 
 @ExperimentalCoroutinesApi
@@ -69,19 +68,21 @@ class SplashViewModelTest {
     private val repository: SplashRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
-    private val heap: Heap = mockk(relaxed = true)
-    private val viewAutoCaptureSDK: ViewAutocaptureSDK = mockk(relaxed = true)
     private val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+    private val featureFlagProvider = mockk<FeatureFlagProvider>(relaxed = true)
 
     private lateinit var viewModel: SplashViewModel
 
     @Before
-    fun setup() {
+    fun setup() = runTest {
         every { savedStateHandle.get<Long>(Const.QR_CODE_MASQUERADE_ID) } returns 0L
+        coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns true
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
-        mockkStatic(Heap::class)
+        mockkStatic(Pendo::class)
+        every { Pendo.startSession(any(), any(), any(), any()) } returns Unit
+        every { Pendo.endSession() } returns Unit
     }
 
     @After
@@ -268,7 +269,7 @@ class SplashViewModelTest {
             viewModel.events.toList()
         }
 
-        verify { heap.startRecording(context, BuildConfig.HEAP_APP_ID) }
+        verify { Pendo.startSession(any(), any(), any(), any()) }
     }
 
     @Test
@@ -281,7 +282,7 @@ class SplashViewModelTest {
             viewModel.events.toList()
         }
 
-        verify { heap.stopRecording() }
+        verify { Pendo.endSession() }
     }
 
     private fun createViewModel() {
@@ -290,8 +291,7 @@ class SplashViewModelTest {
             repository = repository,
             apiPrefs = apiPrefs,
             colorKeeper = colorKeeper,
-            heap = heap,
-            viewAutocaptureSDK = viewAutoCaptureSDK,
+            featureFlagProvider = featureFlagProvider,
             savedStateHandle = savedStateHandle
         )
     }

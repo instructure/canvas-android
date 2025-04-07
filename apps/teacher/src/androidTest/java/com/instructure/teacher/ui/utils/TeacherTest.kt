@@ -25,6 +25,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
+import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
@@ -42,7 +43,6 @@ import com.instructure.teacher.ui.pages.AssigneeListPage
 import com.instructure.teacher.ui.pages.AssignmentDetailsPage
 import com.instructure.teacher.ui.pages.AssignmentDueDatesPage
 import com.instructure.teacher.ui.pages.AssignmentListPage
-import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
 import com.instructure.teacher.ui.pages.CommentLibraryPage
 import com.instructure.teacher.ui.pages.CourseBrowserPage
 import com.instructure.teacher.ui.pages.CourseSettingsPage
@@ -71,7 +71,6 @@ import com.instructure.teacher.ui.pages.ProfileSettingsPage
 import com.instructure.teacher.ui.pages.PushNotificationsPage
 import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
-import com.instructure.teacher.ui.pages.QuizSubmissionListPage
 import com.instructure.teacher.ui.pages.RemoteConfigSettingsPage
 import com.instructure.teacher.ui.pages.SpeedGraderCommentsPage
 import com.instructure.teacher.ui.pages.SpeedGraderFilesPage
@@ -103,7 +102,6 @@ abstract class TeacherTest : CanvasTest() {
     val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val assignmentDueDatesPage = AssignmentDueDatesPage()
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val assignmentSubmissionListPage = AssignmentSubmissionListPage()
     val postSettingsPage = PostSettingsPage()
     val commentLibraryPage = CommentLibraryPage()
     val courseBrowserPage = CourseBrowserPage()
@@ -131,6 +129,7 @@ abstract class TeacherTest : CanvasTest() {
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
     val loginSignInPage = LoginSignInPage()
+    val canvasNetworkSignInPage = CanvasNetworkSignInPage()
     val moduleListPage = ModulesPage()
     val navDrawerPage = NavDrawerPage()
     val notATeacherPage = NotATeacherPage()
@@ -138,7 +137,6 @@ abstract class TeacherTest : CanvasTest() {
     val peopleListPage = PeopleListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val quizDetailsPage = QuizDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
-    val quizSubmissionListPage = QuizSubmissionListPage()
     val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderFilesPage = SpeedGraderFilesPage()
     val speedGraderGradePage = SpeedGraderGradePage()

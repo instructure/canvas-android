@@ -20,7 +20,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
-apply plugin: 'io.heap.gradle'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -39,8 +38,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 272
-        versionName = '7.9.0'
+        versionCode = 274
+        versionName = '7.10.1'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
@@ -110,7 +109,7 @@ android {
                 mappingFileUploadEnabled false
             }
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
 
         debugMinify {
@@ -135,7 +134,7 @@ android {
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
 
-            buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
+            buildConfigField "String", "PENDO_TOKEN", "\"$pendoAccessToken\""
         }
     }
 
@@ -318,7 +317,7 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
-    implementation Libs.HEAP_CORE
+    implementation Libs.PENDO
 
     /* ROOM */
     implementation Libs.ROOM
@@ -328,6 +327,9 @@ dependencies {
     testImplementation Libs.HAMCREST
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
 }
 
 // Comment out this line if the reporting logic starts going wonky.

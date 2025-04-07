@@ -71,7 +71,7 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
                 StudentContextItem(course, user)
             }
 
-            _uiState.update { it.copy(screenState = ScreenState.Data, studentContextItems = studentContextItems) }
+            _uiState.update { it.copy(screenState = ScreenState.Data, studentContextItems = studentContextItems.distinct()) }
         }
     }
 
@@ -102,7 +102,7 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
             disabledFields = options.disabledFields.copy(
                 isContextDisabled = true
             ),
-            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TEACHERENROLLMENT),
+            autoSelectRecipientsFromRoles = listOf(EnrollmentType.TeacherEnrollment),
             hiddenBodyMessage = context.getString(
                 R.string.regardingHiddenMessage,
                 item.user.name,
