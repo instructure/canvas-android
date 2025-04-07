@@ -19,15 +19,11 @@ package com.instructure.horizon.features.home
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -36,9 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,7 +48,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
-import com.instructure.horizon.horizonui.molecules.IconButtonAi
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.navelements.SelectableNavigationItem
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -142,9 +137,9 @@ private fun BottomNavigationBar(
 
 @Composable
 fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    IconButtonAi(modifier = modifier
+    IconButton(modifier = modifier
         .requiredSize(44.dp)
-        .weight(1f), onClick = onClick, contentDescription = stringResource(item.label))
+        .weight(1f), onClick = onClick, contentDescription = stringResource(item.label), iconRes = R.drawable.ai, color = IconButtonColor.AI)
 }
 
 @Preview

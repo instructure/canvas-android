@@ -48,7 +48,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.IconButtonPrimary
+import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
@@ -75,15 +75,15 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
     Row(modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp), verticalAlignment = Alignment.Bottom) {
         GlideImage(
             model = uiState.logoUrl,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.a11y_institutionLogoContentDescription),
             modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
-        IconButtonPrimary(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
+        IconButton(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
         HorizonSpace(SpaceSize.SPACE_8)
-        IconButtonPrimary(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
+        IconButton(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
         HorizonSpace(SpaceSize.SPACE_8)
-        IconButtonPrimary(iconRes = R.drawable.mail, onClick = uiState.onInboxClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
+        IconButton(iconRes = R.drawable.mail, onClick = uiState.onInboxClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
     }
 }
 

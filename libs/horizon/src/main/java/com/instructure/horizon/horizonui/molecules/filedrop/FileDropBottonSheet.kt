@@ -57,7 +57,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.IconButtonPrimary
+import com.instructure.horizon.horizonui.molecules.IconButton
 import kotlinx.coroutines.launch
 
 data class FileDropBottomSheetCallbacks(
@@ -94,7 +94,7 @@ fun FileDropBottomSheet(
                         .padding(horizontal = 48.dp)
                         .align(Alignment.Center)
                 )
-                IconButtonPrimary(
+                IconButton(
                     iconRes = R.drawable.close, color = IconButtonColor.INVERSE, onClick = {
                         localCoroutineScope.launch {
                             sheetState.hide()
