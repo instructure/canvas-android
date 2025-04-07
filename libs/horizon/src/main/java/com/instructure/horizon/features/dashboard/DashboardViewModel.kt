@@ -96,7 +96,7 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
             }.awaitAll().filterNotNull()
-            _uiState.update { it.copy(coursesUiState = courseUiStates) }
+            _uiState.update { it.copy(coursesUiState = courseUiStates, loadingState = it.loadingState.copy(isError = false)) }
         } else {
             handleError()
         }

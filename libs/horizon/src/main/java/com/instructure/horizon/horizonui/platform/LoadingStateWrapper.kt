@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -83,8 +85,8 @@ private fun BoxScope.LoadingContent(modifier: Modifier = Modifier) {
 
 @Composable
 private fun BoxScope.ErrorContent(errorText: String, modifier: Modifier = Modifier) {
-    Column (
-        modifier = modifier.fillMaxSize().align(Alignment.Center),
+    Column(
+        modifier = modifier.fillMaxSize().align(Alignment.Center).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
