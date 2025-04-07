@@ -44,4 +44,6 @@
     <string name="avatar_contentDescription">Avatar</string>
     <string name="requiredMark">" *"</string>
     <string name="optionalMark">" (optional)"</string>
+    <string name="a11y_increaseValue">Increase Value</string>
+    <string name="a11y_decreaseValue">Decrease Value</string>
 </resources>
