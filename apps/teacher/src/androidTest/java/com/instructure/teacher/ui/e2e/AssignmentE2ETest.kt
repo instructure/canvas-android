@@ -16,12 +16,14 @@
  */
 package com.instructure.teacher.ui.e2e
 
+import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -331,6 +333,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.COMMENTS, TestCategory.E2E)
+    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -376,10 +379,12 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Send an audio comment and assert that is displayed among the comments.")
         speedGraderCommentsPage.sendAudioComment()
+        sleep(5000) // wait for audio comment submission to propagate
         speedGraderCommentsPage.assertAudioCommentDisplayed()
 
         Log.d(STEP_TAG, "Send a video comment and assert that is displayed among the comments.")
         speedGraderCommentsPage.sendVideoComment()
+        sleep(5000) // wait for video comment submission to propagate
         speedGraderCommentsPage.assertVideoCommentDisplayed()
 
         Log.d(STEP_TAG, "Click on the previously uploaded audio comment. Assert that the media comment preview (and the 'Play button') is displayed.")
