@@ -19,6 +19,7 @@ package com.instructure.horizon.horizonui.organisms.inputs.numberfield
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -34,6 +35,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -70,6 +73,9 @@ fun NumberField(
     interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(Color.Black),
 ) {
+    val textInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
+    val isFocused by textInteractionSource.collectIsFocusedAsState()
+
     Input(
         label = state.label,
         helperText = state.helperText,
@@ -79,7 +85,7 @@ fun NumberField(
             .onFocusChanged { state.onFocusChanged(it.isFocused) }
     ) {
         InputContainer(
-            isFocused = state.isFocused,
+            isFocused = state.isFocused || isFocused,
             isError = state.errorText != null,
             enabled = state.enabled,
         ) {
@@ -96,7 +102,7 @@ fun NumberField(
                 singleLine = true,
                 visualTransformation = visualTransformation,
                 onTextLayout = onTextLayout,
-                interactionSource = interactionSource,
+                interactionSource = textInteractionSource,
                 cursorBrush = cursorBrush,
                 decorationBox = { TextAreaBox(state, textStyle) { it() } },
             )
@@ -127,14 +133,19 @@ private fun TextAreaBox(state: NumberFieldState, textStyle: TextStyle, innerText
                         vertical = state.size.verticalPadding
                     )
             ) {
-                if (state.value.text.isEmpty() && state.placeHolderText != null) {
-                    Text(
-                        text = state.placeHolderText,
-                        style = textStyle,
-                        color = HorizonColors.Text.placeholder(),
-                    )
+
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    if (state.value.text.isEmpty() && state.placeHolderText != null) {
+                        Text(
+                            text = state.placeHolderText,
+                            style = textStyle,
+                            color = HorizonColors.Text.placeholder(),
+                        )
+                    }
+                    innerTextField()
                 }
-                innerTextField()
             }
 
             if (state.showIncreaseDecreaseButtons) {

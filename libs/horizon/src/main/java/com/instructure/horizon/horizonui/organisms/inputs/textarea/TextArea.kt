@@ -18,6 +18,7 @@ package com.instructure.horizon.horizonui.organisms.inputs.textarea
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -62,6 +65,9 @@ fun TextArea(
     interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(Color.Black),
 ) {
+    val textInteractionSource = interactionSource ?: remember { MutableInteractionSource() }
+    val isFocused by textInteractionSource.collectIsFocusedAsState()
+
     Input(
         label = state.label,
         helperText = state.helperText,
@@ -71,7 +77,7 @@ fun TextArea(
             .onFocusChanged { state.onFocusChanged(it.isFocused) }
     ) {
         InputContainer(
-            isFocused = state.isFocused,
+            isFocused = state.isFocused || isFocused,
             isError = state.errorText != null,
             enabled = state.enabled,
         ) {
@@ -90,7 +96,7 @@ fun TextArea(
                 minLines = minLines,
                 visualTransformation = visualTransformation,
                 onTextLayout = onTextLayout,
-                interactionSource = interactionSource,
+                interactionSource = textInteractionSource,
                 cursorBrush = cursorBrush,
                 decorationBox = { TextAreaBox(state, textStyle) { it() } },
             )
@@ -106,6 +112,7 @@ private fun TextAreaBox(state: TextAreaState, textStyle: TextStyle, innerTextFie
             .background(HorizonColors.Surface.cardPrimary())
             .padding(horizontal = 12.dp, vertical = 7.dp)
     ){
+        innerTextField()
         if (state.value.text.isEmpty() && state.placeHolderText != null) {
             Text(
                 text = state.placeHolderText,
@@ -113,7 +120,6 @@ private fun TextAreaBox(state: TextAreaState, textStyle: TextStyle, innerTextFie
                 color = HorizonColors.Text.placeholder(),
             )
         }
-        innerTextField()
     }
 }
 

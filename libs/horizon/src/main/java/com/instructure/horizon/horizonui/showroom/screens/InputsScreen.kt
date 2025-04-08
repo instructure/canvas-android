@@ -79,123 +79,120 @@ fun InputsScreen() {
 @Composable
 private fun SingleSelectShowcase() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Single Selects SMALL", style = HorizonTypography.h2)
-            val state = SingleSelectState(
-                size = SingleSelectInputSize.Small,
-                options = listOf("Option 1", "Option 2", "Option 3"),
-                selectedOption = null,
-                onOptionSelected = {},
-                onMenuOpenChanged = {},
-                helperText = "This is a Single Select from the Android Design System",
-            )
+        Text("Single Select SMALL", style = HorizonTypography.h2)
+        var selectedValueSmall by remember { mutableStateOf<String?>(null) }
+        var isOpenSmall by remember { mutableStateOf(false) }
+        var errorTextSmall by remember { mutableStateOf<String?>(null) }
+        val stateSmall = SingleSelectState(
+            label = "Single Select",
+            placeHolderText = "Select a value",
+            size = SingleSelectInputSize.Small,
+            options = listOf("Value", "[Error]", "[Clear]"),
+            isMenuOpen = isOpenSmall,
+            selectedOption = selectedValueSmall,
+            onOptionSelected = {
+                errorTextSmall = if (it == "[Error]") {
+                    "This is an error message"
+                } else {
+                    null
+                }
+                selectedValueSmall = if (it == "[Clear]") null else it
+            },
+            onMenuOpenChanged = { isOpenSmall = it },
+            errorText = errorTextSmall,
+            helperText = "This is a Single Select from the Android Design System",
+        )
 
-            SingleSelect(state.copy(label = "Single Select PLACEHOLDER", placeHolderText = "Select a date"))
+        SingleSelect(stateSmall)
 
-            SingleSelect(state.copy(label = "Single Select SELECTED", selectedOption = "Option 1"))
+        Text("Single Select MEDIUM", style = HorizonTypography.h2)
+        var selectedValueMedium by remember { mutableStateOf<String?>(null) }
+        var isOpenMedium by remember { mutableStateOf(false) }
+        var errorTextMedium by remember { mutableStateOf<String?>(null) }
+        val stateMedium = SingleSelectState(
+            label = "Single Select",
+            placeHolderText = "Select a value",
+            size = SingleSelectInputSize.Medium,
+            options = listOf("Value", "[Error]", "[Clear]"),
+            isMenuOpen = isOpenMedium,
+            selectedOption = selectedValueMedium,
+            onOptionSelected = {
+                errorTextMedium = if (it == "[Error]") {
+                    "This is an error message"
+                } else {
+                    null
+                }
+                selectedValueMedium = if (it == "[Clear]") null else it
+            },
+            errorText = errorTextMedium,
+            onMenuOpenChanged = { isOpenMedium = it },
+            helperText = "This is a Single Select from the Android Design System",
+        )
 
-            SingleSelect(state.copy(label = "Single Select FOCUSED", isFocused = true))
-
-            var isOpened1 by remember { mutableStateOf(false) }
-            SingleSelect(state.copy(label = "Single Select OPENED FOCUSED", isMenuOpen = isOpened1, onMenuOpenChanged = {isOpened1 = it}, selectedOption = "Option 1"))
-
-            SingleSelect(state.copy(label = "Single Select ERROR", errorText = "This is an error message"))
-
-            var isOpened2 by remember { mutableStateOf(false) }
-            SingleSelect(state.copy(label = "Single Select ERROR OPENED", isMenuOpen = isOpened2, onMenuOpenChanged = {isOpened2 = it}, errorText = "This is an error message", selectedOption = "Option 1"))
-
-            SingleSelect(state.copy(label = "Single Select DISABLED", enabled = false, selectedOption = "Option 1"))
-        }
-
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Single Selects MEDIUM", style = HorizonTypography.h2)
-            val state = SingleSelectState(
-                size = SingleSelectInputSize.Medium,
-                options = listOf("Option 1", "Option 2", "Option 3"),
-                selectedOption = null,
-                onOptionSelected = {},
-                onMenuOpenChanged = {},
-                helperText = "This is a Single Select from the Android Design System",
-            )
-
-            SingleSelect(state.copy(label = "Single Select PLACEHOLDER", placeHolderText = "Select a date"))
-
-            SingleSelect(state.copy(label = "Single Select SELECTED", selectedOption = "Option 1"))
-
-            SingleSelect(state.copy(label = "Single Select FOCUSED", isFocused = true))
-
-            var isOpened1 by remember { mutableStateOf(false) }
-            SingleSelect(state.copy(label = "Single Select OPENED FOCUSED", isMenuOpen = isOpened1, onMenuOpenChanged = {isOpened1 = it}, selectedOption = "Option 1"))
-
-            SingleSelect(state.copy(label = "Single Select ERROR", errorText = "This is an error message"))
-
-            var isOpened2 by remember { mutableStateOf(false) }
-            SingleSelect(state.copy(label = "Single Select ERROR OPENED", isMenuOpen = isOpened2, onMenuOpenChanged = {isOpened2 = it}, errorText = "This is an error message", selectedOption = "Option 1"))
-
-            SingleSelect(state.copy(label = "Single Select DISABLED", enabled = false, selectedOption = "Option 1"))
-        }
+        SingleSelect(stateMedium)
     }
 }
 
 @Composable
 private fun MultiSelectShowcase() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Multiple Selects SMALL", style = HorizonTypography.h2)
-            val state = MultiSelectState(
-                size = MultiSelectInputSize.Small,
-                options = listOf("Option 1", "Option 2", "Option 3"),
-                selectedOptions = emptyList(),
-                onOptionSelected = {},
-                onOptionRemoved = {},
-                onMenuOpenChanged = {},
-                helperText = "This is a Multiple Selects from the Android Design System",
-            )
+        Text("Multi Select SMALL", style = HorizonTypography.h2)
+        var selectedValuesSmall by remember { mutableStateOf(emptyList<String>()) }
+        var isOpenSmall by remember { mutableStateOf(false) }
+        var errorTextSmall by remember { mutableStateOf<String?>(null) }
+        val stateSmall = MultiSelectState(
+            label = "Multi Selects",
+            placeHolderText = "Select values",
+            size = MultiSelectInputSize.Small,
+            options = listOf("Value 1", "Value 2", "[Error]", "[Clear]"),
+            isMenuOpen = isOpenSmall,
+            selectedOptions = selectedValuesSmall,
+            onOptionSelected = {
+                errorTextSmall = if (it == "[Error]") {
+                    "This is an error message"
+                } else {
+                    null
+                }
+                selectedValuesSmall = if (it == "[Clear]") emptyList() else selectedValuesSmall + it
+            },
+            onOptionRemoved = {
+                selectedValuesSmall = selectedValuesSmall - it
+            },
+            onMenuOpenChanged = { isOpenSmall = it },
+            errorText = errorTextSmall,
+            helperText = "This is a Single Select from the Android Design System",
+        )
 
-            MultiSelect(state.copy(label = "Multiple Selects PLACEHOLDER", placeHolderText = "Select a date"))
+        MultiSelect(stateSmall)
 
-            MultiSelect(state.copy(label = "Multiple Selects SELECTED", selectedOptions = listOf("Option 1", "Option 2")))
+        Text("Multi Selects MEDIUM", style = HorizonTypography.h2)
+        var selectedValuesMedium by remember { mutableStateOf(listOf<String>()) }
+        var isOpenMedium by remember { mutableStateOf(false) }
+        var errorTextMedium by remember { mutableStateOf<String?>(null) }
+        val stateMedium = MultiSelectState(
+            label = "Multi Select",
+            placeHolderText = "Select values",
+            size = MultiSelectInputSize.Medium,
+            options = listOf("1Value 1", "Value 2", "[Error]", "[Clear]"),
+            isMenuOpen = isOpenMedium,
+            selectedOptions = selectedValuesMedium,
+            onOptionSelected = {
+                errorTextMedium = if (it == "[Error]") {
+                    "This is an error message"
+                } else {
+                    null
+                }
+                selectedValuesMedium = if (it == "[Clear]") emptyList() else selectedValuesMedium + it
+            },
+            onOptionRemoved = {
+                selectedValuesMedium = selectedValuesMedium - it
+            },
+            errorText = errorTextMedium,
+            onMenuOpenChanged = { isOpenMedium = it },
+            helperText = "This is a Single Select from the Android Design System",
+        )
 
-            MultiSelect(state.copy(label = "Multiple Selects FOCUSED", isFocused = true))
-
-            var isOpened1 by remember { mutableStateOf(false) }
-            MultiSelect(state.copy(label = "Multiple Selects OPENED FOCUSED", isMenuOpen = isOpened1, onMenuOpenChanged = {isOpened1 = it}, selectedOptions = listOf("Option 1", "Option 2")))
-
-            MultiSelect(state.copy(label = "Multiple Selects ERROR", errorText = "This is an error message"))
-
-            var isOpened2 by remember { mutableStateOf(false) }
-            MultiSelect(state.copy(label = "Multiple Selects ERROR OPENED", isMenuOpen = isOpened2, onMenuOpenChanged = {isOpened2 = it}, errorText = "This is an error message", selectedOptions = listOf("Option 1", "Option 2")))
-
-            MultiSelect(state.copy(label = "Multiple Selects DISABLED", enabled = false, selectedOptions = listOf("Option 1", "Option 2")))
-        }
-
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Multiple Selects MEDIUM", style = HorizonTypography.h2)
-            val state = MultiSelectState(
-                size = MultiSelectInputSize.Medium,
-                options = listOf("Option 1", "Option 2", "Option 3"),
-                selectedOptions = emptyList(),
-                onOptionSelected = {},
-                onOptionRemoved = {},
-                onMenuOpenChanged = {},
-                helperText = "This is a Single Select from the Android Design System",
-            )
-
-            MultiSelect(state.copy(label = "Date Picker PLACEHOLDER", placeHolderText = "Select a date"))
-
-            MultiSelect(state.copy(label = "Date Picker SELECTED", selectedOptions = listOf("Option 1", "Option 2")))
-
-            MultiSelect(state.copy(label = "Date Picker FOCUSED", isFocused = true))
-
-            var isOpened1 by remember { mutableStateOf(false) }
-            MultiSelect(state.copy(label = "Date Picker OPENED", isMenuOpen = isOpened1, onMenuOpenChanged = { isOpened1 = it }, selectedOptions = listOf("Option 1", "Option 2")))
-            MultiSelect(state.copy(label = "Date Picker ERROR", errorText = "This is an error message"))
-
-            var isOpened2 by remember { mutableStateOf(false) }
-            MultiSelect(state.copy(label = "Date Picker ERROR OPENED", isMenuOpen = isOpened2, onMenuOpenChanged = { isOpened2 = it }, errorText = "This is an error message", selectedOptions = listOf("Option 1", "Option 2")))
-
-            MultiSelect(state.copy(label = "Date Picker DISABLED", enabled = false, selectedOptions = listOf("Option 1", "Option 2")))
-        }
+        MultiSelect(stateMedium)
     }
 }
 
@@ -216,11 +213,9 @@ private fun DatePickerShowcase() {
                 )
             )
 
-            DatePicker(state.copy(label = "Date Picker SELECTED", selectedDate = Date()))
+            DatePicker(state.copy(label = "Date Picker FOCUSED", isFocused = true, selectedDate = Date()))
 
-            DatePicker(state.copy(label = "Date Picker FOCUSED", isFocused = true))
-
-            DatePicker(state.copy(label = "Date Picker ERROR", errorText = "This is an error message"))
+            DatePicker(state.copy(label = "Date Picker ERROR", errorText = "This is an error message", selectedDate = Date()))
 
             DatePicker(state.copy(label = "Date Picker DISABLED", enabled = false, selectedDate = Date()))
         }
@@ -234,11 +229,9 @@ private fun DatePickerShowcase() {
 
             DatePicker(state.copy(label = "Date Picker PLACEHOLDER", placeHolderText = "Select a date"))
 
-            DatePicker(state.copy(label = "Date Picker SELECTED", selectedDate = Date()))
+            DatePicker(state.copy(label = "Date Picker FOCUSED", isFocused = true,selectedDate = Date()))
 
-            DatePicker(state.copy(label = "Date Picker FOCUSED", isFocused = true))
-
-            DatePicker(state.copy(label = "Date Picker ERROR", errorText = "This is an error message"))
+            DatePicker(state.copy(label = "Date Picker ERROR", errorText = "This is an error message", selectedDate = Date()))
 
             DatePicker(state.copy(label = "Date Picker DISABLED", enabled = false, selectedDate = Date()))
         }
@@ -257,11 +250,9 @@ private fun TimePickerShowcase() {
 
             TimePicker(state.copy(label = "Time PickerPLACEHOLDER", placeHolderText = "Select a time"))
 
-            TimePicker(state.copy(label = "Time Picker SELECTED", selectedTime = LocalTime.now()))
+            TimePicker(state.copy(label = "Time Picker FOCUSED", isFocused = true, selectedTime = LocalTime.now()))
 
-            TimePicker(state.copy(label = "Time Picker FOCUSED", isFocused = true))
-
-            TimePicker(state.copy(label = "Time Picker ERROR", errorText = "This is an error message"))
+            TimePicker(state.copy(label = "Time Picker ERROR",  isFocused = true, errorText = "This is an error message", selectedTime = LocalTime.now()))
 
             TimePicker(state.copy(label = "Time Picker DISABLED", enabled = false, selectedTime = LocalTime.now()))
         }
@@ -275,11 +266,9 @@ private fun TimePickerShowcase() {
 
             TimePicker(state.copy(label = "Time Picker PLACEHOLDER", placeHolderText = "Select a time"))
 
-            TimePicker(state.copy(label = "Time Picker SELECTED", selectedTime = LocalTime.now()))
+            TimePicker(state.copy(label = "Time Picker FOCUSED", isFocused = true, selectedTime = LocalTime.now()))
 
-            TimePicker(state.copy(label = "Time Picker FOCUSED", isFocused = true))
-
-            TimePicker(state.copy(label = "Time Picker ERROR", errorText = "This is an error message"))
+            TimePicker(state.copy(label = "Time Picker ERROR", isFocused = true, errorText = "This is an error message", selectedTime = LocalTime.now()))
 
             TimePicker(state.copy(label = "Time Picker DISABLED", enabled = false, selectedTime = LocalTime.now()))
         }
@@ -292,114 +281,207 @@ private fun TextAreaShowcase() {
         Text("Text Area", style = HorizonTypography.h2)
         val modifier = Modifier
             .defaultMinSize(minHeight = 100.dp)
+        var value by remember { mutableStateOf(TextFieldValue("")) }
+        var isFocused by remember { mutableStateOf(false) }
+        var error by remember { mutableStateOf<String?>(null) }
         val state = TextAreaState(
-            value = TextFieldValue(""),
-            onValueChange = {},
+            label = "Text Area",
+            placeHolderText = "Type 'error' to see the error state",
+            value = value,
+            onValueChange = {
+                value = it
+                error = if (it.text.contains("error")) {
+                    "This is an error message"
+                } else {
+                    null
+                }
+            },
+            errorText = error,
+            isFocused = isFocused,
+            onFocusChanged = { isFocused = it },
             helperText = "This is a Time Picker from the Android Design System",
         )
 
-        TextArea(state.copy(label = "Text Area PLACEHOLDER", placeHolderText = "Type a text"), modifier)
-
-        TextArea(state.copy(label = "Text Area SELECTED", value = TextFieldValue("This \n is \n a \n very \n long \n text")), modifier)
-
-        TextArea(state.copy(label = "Text Area FOCUSED", isFocused = true), modifier)
-
-        TextArea(state.copy(label = "Text Area ERROR", errorText = "This is an error message"), modifier)
-
-        TextArea(state.copy(label = "Text Area DISABLED", enabled = false, value = TextFieldValue("This \n is \n a \n very \n long \n text")), modifier)
+        TextArea(state, modifier)
     }
 }
 
 @Composable
 private fun TextFieldShowcase() {
     Column (verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Text Field SMALL", style = HorizonTypography.h2)
-            val state = TextFieldState(
-                value = TextFieldValue(""),
-                size = TextFieldInputSize.Small,
-                onValueChange = {},
-                helperText = "This is a Text Field from the Android Design System",
-            )
+        Text("Text Field SMALL", style = HorizonTypography.h2)
+        var valueSmall by remember { mutableStateOf(TextFieldValue("")) }
+        var isFocusedSmall by remember { mutableStateOf(false) }
+        var errorSmall by remember { mutableStateOf<String?>(null) }
+        val stateSmall = TextFieldState(
+            label = "Text Field",
+            size = TextFieldInputSize.Small,
+            placeHolderText = "Type 'error' to see the error state",
+            value = valueSmall,
+            onValueChange = {
+                valueSmall = it
+                errorSmall = if (it.text.contains("error")) {
+                    "This is an error message"
+                } else {
+                    null
+                }
+            },
+            errorText = errorSmall,
+            isFocused = isFocusedSmall,
+            onFocusChanged = { isFocusedSmall = it },
+            helperText = "This is a Time Picker from the Android Design System"
+        )
 
-            TextField(state.copy(label = "Text Field PLACEHOLDER", placeHolderText = "Type a text"))
+        TextField(stateSmall)
 
-            TextField(state.copy(label = "Text Field SELECTED", value = TextFieldValue("This a text")))
+        Text("Text Field MEDIUM", style = HorizonTypography.h2)
+        var valueMedium by remember { mutableStateOf(TextFieldValue("")) }
+        var isFocusedMedium by remember { mutableStateOf(false) }
+        var errorMedium by remember { mutableStateOf<String?>(null) }
+        val stateMedium = TextFieldState(
+            label = "Text Field",
+            size = TextFieldInputSize.Medium,
+            placeHolderText = "Type 'error' to see the error state",
+            value = valueMedium,
+            onValueChange = {
+                valueMedium = it
+                errorMedium = if (it.text.contains("error")) {
+                    "This is an error message"
+                } else {
+                    null
+                }
+            },
+            errorText = errorMedium,
+            isFocused = isFocusedMedium,
+            onFocusChanged = { isFocusedMedium = it },
+            helperText = "This is a Time Picker from the Android Design System"
+        )
 
-            TextField(state.copy(label = "Text Field FOCUSED", isFocused = true))
-
-            TextField(state.copy(label = "Text Field ERROR", errorText = "This is an error message"))
-
-            TextField(state.copy(label = "Text Field DISABLED", enabled = false, value = TextFieldValue("This a text")))
-        }
-
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Text Field MEDIUM", style = HorizonTypography.h2)
-            val state = TextFieldState(
-                value = TextFieldValue(""),
-                size = TextFieldInputSize.Medium,
-                onValueChange = {},
-                helperText = "This is a Text Field from the Android Design System",
-            )
-
-            TextField(state.copy(label = "Text Field PLACEHOLDER", placeHolderText = "Type a text"))
-
-            TextField(state.copy(label = "Text Field SELECTED", value = TextFieldValue("This a text")))
-
-            TextField(state.copy(label = "Text Field FOCUSED", isFocused = true))
-
-            TextField(state.copy(label = "Text Field ERROR", errorText = "This is an error message"))
-
-            TextField(state.copy(label = "Text Field DISABLED", enabled = false, value = TextFieldValue("This a text")))
-        }
+        TextField(stateMedium)
     }
 }
 
 @Composable
 private fun NumberFieldShowcase() {
-    Column (verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text("Number Field SMALL", style = HorizonTypography.h2)
-            val state = NumberFieldState(
-                value = TextFieldValue(""),
+            var valueSmall by remember { mutableStateOf(TextFieldValue("")) }
+            var isFocusedSmall by remember { mutableStateOf(false) }
+            var errorSmall by remember { mutableStateOf<String?>(null) }
+            val stateSmall = NumberFieldState(
+                label = "Number Field",
                 size = NumberFieldInputSize.Small,
-                onValueChange = {},
+                placeHolderText = "Type 'NaN' to see the error state",
+                value = valueSmall,
+                onValueChange = {
+                    valueSmall = it
+                    errorSmall = if (it.text.toIntOrNull() == null) {
+                        "This is an error message"
+                    } else {
+                        null
+                    }
+                },
+                errorText = errorSmall,
+                isFocused = isFocusedSmall,
+                onFocusChanged = { isFocusedSmall = it },
                 helperText = "This is a Number Field from the Android Design System",
             )
 
-            NumberField(state.copy(label = "Number Field PLACEHOLDER", placeHolderText = "Type a number"))
+            NumberField(stateSmall)
 
-            NumberField(state.copy(label = "Number Field PLACEHOLDER with BUTTONS", placeHolderText = "Type a number", showIncreaseDecreaseButtons = true))
 
-            NumberField(state.copy(label = "Number Field SELECTED", value = TextFieldValue("1")))
+            Text("Number Field MEDIUM", style = HorizonTypography.h2)
+            var valueMedium by remember { mutableStateOf(TextFieldValue("")) }
+            var isFocusedMedium by remember { mutableStateOf(false) }
+            var errorMedium by remember { mutableStateOf<String?>(null) }
+            val stateMedium = NumberFieldState(
+                label = "Number Field",
+                size = NumberFieldInputSize.Medium,
+                placeHolderText = "Type 'NaN' to see the error state",
+                value = valueMedium,
+                onValueChange = {
+                    valueMedium = it
+                    errorMedium = if (it.text.toIntOrNull() == null) {
+                        "This is an error message"
+                    } else {
+                        null
+                    }
+                },
+                errorText = errorMedium,
+                isFocused = isFocusedMedium,
+                onFocusChanged = { isFocusedMedium = it },
+                helperText = "This is a Number Field from the Android Design System",
+            )
 
-            NumberField(state.copy(label = "Number Field FOCUSED", isFocused = true))
-
-            NumberField(state.copy(label = "Number Field ERROR", errorText = "This is an error message"))
-
-            NumberField(state.copy(label = "Number Field DISABLED", enabled = false, value = TextFieldValue("1")))
+            NumberField(stateMedium)
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("Number Field MEDIUM", style = HorizonTypography.h2)
-            val state = NumberFieldState(
-                value = TextFieldValue(""),
-                size = NumberFieldInputSize.Medium,
-                onValueChange = {},
-                helperText = "This is a Text Field from the Android Design System",
+            Text("Number Field SMALL", style = HorizonTypography.h2)
+            var valueSmall by remember { mutableStateOf(TextFieldValue("")) }
+            var isFocusedSmall by remember { mutableStateOf(false) }
+            var errorSmall by remember { mutableStateOf<String?>(null) }
+            val stateSmall = NumberFieldState(
+                label = "Number Field",
+                size = NumberFieldInputSize.Small,
+                placeHolderText = "Type 'NaN' to see the error state",
+                value = valueSmall,
+                onValueChange = {
+                    valueSmall = it
+                    errorSmall = if (it.text.toIntOrNull() == null) {
+                        "This is an error message"
+                    } else {
+                        null
+                    }
+                },
+                showIncreaseDecreaseButtons = true,
+                onIncreaseButtonClick = {
+                    valueSmall = TextFieldValue(((valueSmall.text.toIntOrNull() ?: 0) + 1).toString())
+                },
+                onDecreaseButtonClick = {
+                    valueSmall = TextFieldValue(((valueSmall.text.toIntOrNull() ?: 0) - 1).toString())
+                },
+                errorText = errorSmall,
+                isFocused = isFocusedSmall,
+                onFocusChanged = { isFocusedSmall = it },
+                helperText = "This is a Number Field from the Android Design System",
             )
 
-            NumberField(state.copy(label = "Number Field PLACEHOLDER", placeHolderText = "Type a number"))
+            NumberField(stateSmall)
 
-            NumberField(state.copy(label = "Number Field PLACEHOLDER with BUTTONS", placeHolderText = "Type a number", showIncreaseDecreaseButtons = true))
 
-            NumberField(state.copy(label = "Number Field SELECTED", value = TextFieldValue("1")))
+            Text("Number Field MEDIUM", style = HorizonTypography.h2)
+            var valueMedium by remember { mutableStateOf(TextFieldValue("")) }
+            var isFocusedMedium by remember { mutableStateOf(false) }
+            var errorMedium by remember { mutableStateOf<String?>(null) }
+            val stateMedium = NumberFieldState(
+                label = "Number Field",
+                size = NumberFieldInputSize.Medium,
+                placeHolderText = "Type 'NaN' to see the error state",
+                value = valueMedium,
+                onValueChange = {
+                    valueMedium = it
+                    errorMedium = if (it.text.toIntOrNull() == null) {
+                        "This is an error message"
+                    } else {
+                        null
+                    }
+                },
+                showIncreaseDecreaseButtons = true,
+                onIncreaseButtonClick = {
+                    valueMedium = TextFieldValue(((valueMedium.text.toIntOrNull() ?: 0) + 1).toString())
+                },
+                onDecreaseButtonClick = {
+                    valueMedium = TextFieldValue(((valueMedium.text.toIntOrNull() ?: 0) - 1).toString())
+                },
+                errorText = errorMedium,
+                isFocused = isFocusedMedium,
+                onFocusChanged = { isFocusedMedium = it },
+                helperText = "This is a Number Field from the Android Design System",
+            )
 
-            NumberField(state.copy(label = "Number Field FOCUSED", isFocused = true))
-
-            NumberField(state.copy(label = "Number Field ERROR", errorText = "This is an error message"))
-
-            NumberField(state.copy(label = "Number Field DISABLED", enabled = false, value = TextFieldValue("1")))
+            NumberField(stateMedium)
         }
     }
 }
