@@ -68,6 +68,7 @@ import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.tryRequestFocus
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -99,15 +100,6 @@ fun CalendarScreen(
                         actionHandler(CalendarAction.SnackbarDismissed)
                     }
                 }
-            }
-        }
-        val todayTapped = calendarScreenUiState.calendarUiState.todayTapped
-        LaunchedEffect(todayTapped) {
-            if (todayTapped) {
-                focusManager.clearFocus(true)
-                delay(200)
-                todayFocusRequester.requestFocus()
-                actionHandler(CalendarAction.TodayTapHandled)
             }
         }
         Scaffold(
@@ -153,7 +145,7 @@ fun CalendarScreen(
                     )
                     // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
                     LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
-                        focusRequester.requestFocus()
+                        focusRequester.tryRequestFocus()
                     })
                 }
             },
@@ -169,6 +161,15 @@ fun CalendarScreen(
                     Column {
                         Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth(), todayFocusRequester)
                         CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler, Modifier.testTag("calendarEvents"))
+                    }
+                    val todayTapped = calendarScreenUiState.calendarUiState.todayTapped
+                    LaunchedEffect(todayTapped) {
+                        if (todayTapped) {
+                            focusManager.clearFocus(true)
+                            delay(200)
+                            todayFocusRequester.tryRequestFocus()
+                            actionHandler(CalendarAction.TodayTapHandled)
+                        }
                     }
                 }
             },

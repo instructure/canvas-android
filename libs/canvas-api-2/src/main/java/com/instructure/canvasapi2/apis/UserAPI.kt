@@ -36,6 +36,9 @@ object UserAPI {
 
     interface UsersInterface {
 
+        @GET("users/self?include[]=uuid")
+        suspend fun getSelfWithUUID(@Tag restParams: RestParams): DataResult<User>
+
         @GET("users/self/colors")
         fun getColors(): Call<CanvasColor>
 
@@ -53,6 +56,9 @@ object UserAPI {
 
         @GET("users/self/features")
         fun getSelfFeatures(): Call<List<CanvasFeatureFlag>>
+
+        @GET("users/self/features")
+        suspend fun getSelfFeatures(@Tag params: RestParams): DataResult<List<CanvasFeatureFlag>>
 
         @PUT("users/self/settings")
         fun setHideColorOverlaySetting(@Query("hide_dashcard_color_overlays") hideOverlay: Boolean): Call<UserSettings>

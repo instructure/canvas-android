@@ -36,8 +36,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 74
-        versionName = '1.37.0'
+        versionCode = 76
+        versionName = '1.38.1'
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -307,6 +307,9 @@ dependencies {
     testImplementation Libs.HAMCREST
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
 }
 
 apply plugin: 'com.google.gms.google-services'

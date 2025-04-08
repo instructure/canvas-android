@@ -14,8 +14,17 @@
  *     limitations under the License.
  */    package com.instructure.pandautils.utils
 
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 
 val DrawableId = SemanticsPropertyKey<Int>("DrawableResId")
 var SemanticsPropertyReceiver.drawableId by DrawableId
+
+fun FocusRequester.tryRequestFocus() {
+    try {
+        this.requestFocus()
+    } catch (e: IllegalStateException) {
+        // We can ignore
+    }
+}

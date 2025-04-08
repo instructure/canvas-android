@@ -18,11 +18,17 @@
 package com.instructure.parentapp.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.instructure.canvas.espresso.common.pages.ReminderPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.GradesPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.parentapp.features.login.LoginActivity
@@ -68,6 +74,12 @@ abstract class ParentComposeTest : ParentTest() {
     protected val gradesPage = GradesPage(composeTestRule)
     protected val calendarScreenPage = CalendarScreenPage(composeTestRule)
     protected val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
+    protected val calendarEventCreateEditPage = CalendarEventCreateEditPage(composeTestRule)
+    protected val calendarToDoCreateUpdatePage = CalendarToDoCreateUpdatePage(composeTestRule)
+    protected val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
+    protected val calendarFilterPage = CalendarFilterPage(composeTestRule)
+    protected val reminderPage = ReminderPage(composeTestRule)
+    protected val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }

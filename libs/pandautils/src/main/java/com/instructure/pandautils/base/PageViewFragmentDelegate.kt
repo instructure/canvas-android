@@ -33,16 +33,15 @@ class PageViewFragmentDelegate<T>(
 
     private val visibilityTracker = PageViewVisibilityTracker()
     private val pageViewAnnotationProcessor by lazy {
-        val pageViewUtils = EarlyEntryPoints.get(
-            fragment.requireActivity().applicationContext,
-            PageViewEntryPoint::class.java
-        ).pageViewUtils()
-        PageViewAnnotationProcessor(fragment::class.java, fragment, pageViewUtils)
+        fragment.activity?.applicationContext?.let {
+            val pageViewUtils = EarlyEntryPoints.get(it, PageViewEntryPoint::class.java).pageViewUtils()
+            PageViewAnnotationProcessor(fragment::class.java, fragment, pageViewUtils)
+        }
     }
 
     fun completePageViewPrerequisite(prerequisite: String) {
         if (visibilityTracker.trackCustom(prerequisite, true, fragment)) {
-            pageViewAnnotationProcessor.startEvent()
+            pageViewAnnotationProcessor?.startEvent()
         }
     }
 
@@ -63,9 +62,9 @@ class PageViewFragmentDelegate<T>(
 
     fun onHiddenChanged(hidden: Boolean) {
         if (visibilityTracker.trackHidden(hidden, fragment)) {
-            pageViewAnnotationProcessor.startEvent()
+            pageViewAnnotationProcessor?.startEvent()
         } else {
-            pageViewAnnotationProcessor.stopEvent()
+            pageViewAnnotationProcessor?.stopEvent()
         }
     }
 
@@ -73,29 +72,29 @@ class PageViewFragmentDelegate<T>(
     fun setUserVisibleHint(isVisibleToUser: Boolean) {
         if (fragment.isAdded) {
             if (visibilityTracker.trackUserHint(isVisibleToUser, fragment)) {
-                pageViewAnnotationProcessor.startEvent()
+                pageViewAnnotationProcessor?.startEvent()
             } else {
-                pageViewAnnotationProcessor.stopEvent()
+                pageViewAnnotationProcessor?.stopEvent()
             }
         }
     }
 
     fun onResume() {
         if (visibilityTracker.trackResume(true, fragment)) {
-            pageViewAnnotationProcessor.startEvent()
+            pageViewAnnotationProcessor?.startEvent()
         }
     }
 
     fun onPause() {
         visibilityTracker.trackResume(false, fragment)
-        pageViewAnnotationProcessor.stopEvent()
+        pageViewAnnotationProcessor?.stopEvent()
     }
 
     fun onPageViewWindowFocusChanged(hasFocus: Boolean) {
         if (visibilityTracker.trackCustom("windowFocus", hasFocus, fragment)) {
-            pageViewAnnotationProcessor.startEvent()
+            pageViewAnnotationProcessor?.startEvent()
         } else {
-            pageViewAnnotationProcessor.stopEvent()
+            pageViewAnnotationProcessor?.stopEvent()
         }
     }
 }

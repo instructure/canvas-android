@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.LtiType
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
@@ -170,7 +171,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.NoneContent
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.OnPaperContent
             Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw.orEmpty() -> {
-                if (assignment?.isAllowedToSubmit == true)
+                if (assignment != null && (assignment.isAllowedToSubmit || submission?.workflowState != "unsubmitted"))
                     SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiTool, assignment.name.orEmpty(), assignment.ltiToolType())
                 else SubmissionDetailsContentType.LockedContent
             }
@@ -179,12 +180,16 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 
                 // LTI submission
-                Assignment.SubmissionType.BASIC_LTI_LAUNCH -> SubmissionDetailsContentType.ExternalToolContent(
-                    canvasContext,
-                    ltiTool,
-                    title = assignment?.name.orEmpty(),
-                    assignment?.ltiToolType() ?: LtiType.EXTERNAL_TOOL
-                )
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH -> {
+                    val ltiUrl = submission.previewUrl.validOrNull() ?: assignment?.url?.validOrNull() ?: assignment?.htmlUrl ?: ""
+                    SubmissionDetailsContentType.ExternalToolContent(
+                        canvasContext,
+                        null,
+                        title = assignment?.name.orEmpty(),
+                        assignment?.ltiToolType() ?: LtiType.EXTERNAL_TOOL,
+                        ltiUrl
+                    )
+                }
 
                 // Text submission
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> SubmissionDetailsContentType.TextContent(submission.body ?: "")

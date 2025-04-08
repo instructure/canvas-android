@@ -12,27 +12,27 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.student.di
+ *
+ *
+ */
 
-import androidx.work.WorkManager
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
+package com.instructure.student.di
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.greenrobot.eventbus.EventBus
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class CreateSubmissionModule {
+class EventBusModule {
 
     @Provides
-    fun provideSubmissionHelper(
-        studentDb: StudentDb,
-        apiPrefs: ApiPrefs,
-        workManager: WorkManager
-    ): SubmissionHelper {
-        return SubmissionHelper(studentDb, apiPrefs, workManager)
+    @Singleton
+    fun provideEventBus(): EventBus {
+        return EventBus.getDefault()
     }
 }
+

@@ -219,6 +219,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Late Student",
+                false,
                 null,
                 listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -228,6 +229,7 @@ class SubmissionListViewModelTest {
                 2L,
                 2L,
                 "On Time Student",
+                false,
                 null,
                 listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -237,6 +239,7 @@ class SubmissionListViewModelTest {
                 3L,
                 3L,
                 "Missing Student",
+                false,
                 null,
                 listOf(SubmissionTag.MISSING),
                 "-",
@@ -246,6 +249,7 @@ class SubmissionListViewModelTest {
                 4L,
                 4L,
                 "Good Graded Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10",
@@ -255,6 +259,7 @@ class SubmissionListViewModelTest {
                 5L,
                 5L,
                 "Bad Graded Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "0",
@@ -264,6 +269,7 @@ class SubmissionListViewModelTest {
                 6L,
                 6L,
                 "Excused Student",
+                false,
                 null,
                 listOf(SubmissionTag.EXCUSED),
                 "",
@@ -273,6 +279,7 @@ class SubmissionListViewModelTest {
                 7L,
                 7L,
                 "Updated Grade Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10",
@@ -282,6 +289,7 @@ class SubmissionListViewModelTest {
                 8L,
                 8L,
                 "Not Submitted Student",
+                false,
                 null,
                 listOf(SubmissionTag.NOT_SUBMITTED),
                 "-",
@@ -309,6 +317,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Late Student",
+                false,
                 null,
                 listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -336,6 +345,7 @@ class SubmissionListViewModelTest {
                 4L,
                 4L,
                 "Good Graded Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10",
@@ -345,6 +355,7 @@ class SubmissionListViewModelTest {
                 5L,
                 5L,
                 "Bad Graded Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "0",
@@ -354,6 +365,7 @@ class SubmissionListViewModelTest {
                 6L,
                 6L,
                 "Excused Student",
+                false,
                 null,
                 listOf(SubmissionTag.EXCUSED),
                 "",
@@ -381,6 +393,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Late Student",
+                false,
                 null,
                 listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -390,6 +403,7 @@ class SubmissionListViewModelTest {
                 2L,
                 2L,
                 "On Time Student",
+                false,
                 null,
                 listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -399,6 +413,7 @@ class SubmissionListViewModelTest {
                 3L,
                 3L,
                 "Missing Student",
+                false,
                 null,
                 listOf(SubmissionTag.MISSING),
                 "-",
@@ -408,6 +423,7 @@ class SubmissionListViewModelTest {
                 7L,
                 7L,
                 "Updated Grade Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10",
@@ -435,6 +451,7 @@ class SubmissionListViewModelTest {
                 8L,
                 8L,
                 "Not Submitted Student",
+                false,
                 null,
                 listOf(SubmissionTag.NOT_SUBMITTED),
                 "-",
@@ -462,6 +479,7 @@ class SubmissionListViewModelTest {
                 4L,
                 4L,
                 "Good Graded Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10",
@@ -471,6 +489,7 @@ class SubmissionListViewModelTest {
                 7L,
                 7L,
                 "Updated Grade Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10",
@@ -498,6 +517,7 @@ class SubmissionListViewModelTest {
                 5L,
                 5L,
                 "Bad Graded Student",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "0",
@@ -567,6 +587,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Student 1",
+                false,
                 null,
                 listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -616,6 +637,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Student 1",
+                false,
                 null,
                 listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -625,6 +647,7 @@ class SubmissionListViewModelTest {
                 2L,
                 2L,
                 "Student 2",
+                false,
                 null,
                 listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -727,6 +750,7 @@ class SubmissionListViewModelTest {
                 2L,
                 2L,
                 "On Time Student",
+                false,
                 null,
                 listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
                 "-",
@@ -847,6 +871,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Student 1",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "Complete",
@@ -856,6 +881,7 @@ class SubmissionListViewModelTest {
                 2L,
                 2L,
                 "Student 2",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "Incomplete",
@@ -913,6 +939,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Student 1",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "85.12%",
@@ -922,6 +949,7 @@ class SubmissionListViewModelTest {
                 2L,
                 2L,
                 "Student 2",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10%",
@@ -1003,6 +1031,7 @@ class SubmissionListViewModelTest {
                 1L,
                 1L,
                 "Student 1",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "85.123%",
@@ -1012,6 +1041,7 @@ class SubmissionListViewModelTest {
                 2L,
                 2L,
                 "Student 2",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10%",
@@ -1021,6 +1051,7 @@ class SubmissionListViewModelTest {
                 3L,
                 3L,
                 "Student 3",
+                false,
                 null,
                 listOf(SubmissionTag.GRADED),
                 "10%",
@@ -1032,6 +1063,44 @@ class SubmissionListViewModelTest {
             assert(viewModel.uiState.value.submissions.contains(it))
         }
         assertEquals(true, viewModel.uiState.value.anonymousGrading)
+    }
+
+    @Test
+    fun `Created by Student View`() = runTest {
+        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Student 1", isFakeStudent = true),
+                ),
+                submission = Submission(
+                    id = 1L,
+                    attempt = 1L,
+                    grade = "85.123%",
+                    score = 85.123
+                ),
+            )
+        )
+
+        every { savedStateHandle.get<Assignment>(SubmissionListFragment.ASSIGNMENT) } returns Assignment(
+            1L,
+            name = "Assignment 1",
+            submissionTypesRaw = listOf("online_text_entry")
+        )
+
+        val viewModel = createViewModel()
+
+        val excepted = SubmissionUiState(
+            1L,
+            1L,
+            "Student 1",
+            true,
+            null,
+            listOf(SubmissionTag.GRADED),
+            "85.123%",
+            true
+        )
+
+        assertEquals(excepted, viewModel.uiState.value.submissions.first())
     }
 
     private fun createViewModel(): SubmissionListViewModel {

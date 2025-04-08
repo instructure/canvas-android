@@ -33,7 +33,6 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
 import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -97,7 +96,7 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
     }
 
     @Test
-    fun `UploadMediaComment effect results in calling SubmissionService startMediaCommentUpload`() {
+    fun `UploadMediaComment effect results in calling SubmissionHelper startMediaCommentUpload`() {
         val effect = SubmissionCommentsEffect.UploadMediaComment(
             file = File("test"),
             assignmentId = 123L,
@@ -106,7 +105,6 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             isGroupMessage = false,
             attemptId = 1
         )
-        mockkObject(SubmissionService.Companion)
         every {
             submissionHelper.startMediaCommentUpload(any(), any(), any(), any(), any(), any())
         } returns Unit
@@ -229,7 +227,7 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
     }
 
     @Test
-    fun `SendTextComment effect results in calling SubmissionService startCommentUpload`() {
+    fun `SendTextComment effect results in calling SubmissionHelper startCommentUpload`() {
         val effect = SubmissionCommentsEffect.SendTextComment(
             message = "Test message",
             assignmentId = 123L,
@@ -238,11 +236,6 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             isGroupMessage = false,
             attemptId = 1
         )
-
-        mockkObject(SubmissionService.Companion)
-        every {
-            submissionHelper.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
-        } returns Unit
 
         connection.accept(effect)
 
@@ -298,37 +291,23 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
     }
 
     @Test
-    fun `RetryCommentUpload effect results in calling SubmissionService retryCommentUpload`() {
+    fun `RetryCommentUpload effect results in calling SubmissionHelper retryCommentUpload`() {
         val effect = SubmissionCommentsEffect.RetryCommentUpload(123L)
-        mockkObject(SubmissionService.Companion)
-        every {
-            submissionHelper.retryCommentUpload(any())
-        } returns Unit
-
         connection.accept(effect)
 
         verify(timeout = 100) {
             submissionHelper.retryCommentUpload(123L)
         }
-
-        confirmVerified(SubmissionService)
     }
 
     @Test
-    fun ` DeleteCommentEffect effect results in calling SubmissionService deletePendingComment`() {
+    fun ` DeleteCommentEffect effect results in calling SubmissionHelper deletePendingComment`() {
         val effect = SubmissionCommentsEffect.DeletePendingComment(123L)
-        mockkObject(SubmissionService.Companion)
-        every {
-            submissionHelper.deletePendingComment(any())
-        } returns Unit
-
         connection.accept(effect)
 
         verify(timeout = 100) {
             submissionHelper.deletePendingComment(123L)
         }
-
-        confirmVerified(SubmissionService)
     }
 
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {

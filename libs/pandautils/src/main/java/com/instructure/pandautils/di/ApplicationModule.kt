@@ -21,6 +21,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
 import android.webkit.CookieManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.WorkManager
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -122,7 +123,7 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideHtmlParses(
+    fun provideHtmlParser(
         localFileDao: LocalFileDao,
         apiPrefs: ApiPrefs,
         fileFolderDao: FileFolderDao,
@@ -168,6 +169,12 @@ class ApplicationModule {
         apiPrefs: ApiPrefs
     ): WebViewAuthenticator {
         return WebViewAuthenticator(oAuthApi, apiPrefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalBroadcastManager(@ApplicationContext context: Context): LocalBroadcastManager {
+        return LocalBroadcastManager.getInstance(context)
     }
 
     @Provides

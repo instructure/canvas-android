@@ -315,13 +315,25 @@ class SubmissionDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `EXTERNAL_TOOL with locked assignment results in SubmissionDetailsContentType of LockedContent`() {
+    fun `EXTERNAL_TOOL with locked assignment results in SubmissionDetailsContentType of LockedContent without Submission`() {
+        verifyGetSubmissionContentType(
+            assignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
+                lockedForUser = true),
+            submission.copy(workflowState = "unsubmitted"),
+            SubmissionDetailsContentType.LockedContent,
+            ltiTool
+        )
+    }
+
+    @Test
+    fun `EXTERNAL_TOOL with locked assignment results in SubmissionDetailsContentType of ExternalToolContent with Submission`() {
         verifyGetSubmissionContentType(
             assignment.copy(
                 submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
                 lockedForUser = true),
             submission,
-            SubmissionDetailsContentType.LockedContent,
+            SubmissionDetailsContentType.ExternalToolContent(course, ltiTool, assignment.name!!),
             ltiTool
         )
     }
@@ -388,7 +400,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(previewUrl = url, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, ltiTool, assignment.name!!),
+            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, null, assignment.name!!, ltiUrl = url),
             lti = ltiTool
         )
     }

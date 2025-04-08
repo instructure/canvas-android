@@ -71,7 +71,7 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
                 StudentContextItem(course, user)
             }
 
-            _uiState.update { it.copy(screenState = ScreenState.Data, studentContextItems = studentContextItems) }
+            _uiState.update { it.copy(screenState = ScreenState.Data, studentContextItems = studentContextItems.distinct()) }
         }
     }
 
