@@ -16,21 +16,21 @@
  */
 package com.instructure.horizon.horizonui.organisms.inputs.common
 
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -47,52 +47,54 @@ fun InputDropDownPopup(
     isMenuOpen: Boolean,
     options: List<String>,
     verticalOffsetPx: Int,
+    width: Dp,
     modifier: Modifier = Modifier,
     onMenuOpenChanged: (Boolean) -> Unit,
     onOptionSelected: (String) -> Unit,
 ) {
     Popup(
-        alignment = Alignment.TopCenter,
-        offset = IntOffset(0, verticalOffsetPx + SpaceSize.SPACE_8.value.toPx),
+        alignment = Alignment.TopStart,
+        offset = IntOffset(
+            -SpaceSize.SPACE_8.value.toPx,
+            verticalOffsetPx + SpaceSize.SPACE_8.value.toPx
+        ),
         onDismissRequest = { onMenuOpenChanged(false) },
         properties = PopupProperties(focusable = isMenuOpen)
     ) {
-        AnimatedContent(
+        AnimatedVisibility(
             isMenuOpen,
-            transitionSpec = {
-                expandVertically() togetherWith shrinkVertically()
-            },
+            enter = expandVertically(expandFrom = Alignment.Top),
+            exit = shrinkVertically(shrinkTowards = Alignment.Top),
             label = "InputDropDownPopupAnimation",
         ) {
-            if (it) {
-                Card(
-                    modifier = modifier
-                        .padding(horizontal = 4.dp),
-                    shape = HorizonCornerRadius.level2,
-                    colors = CardDefaults.cardColors()
-                        .copy(containerColor = HorizonColors.Surface.cardPrimary()),
-                    elevation = CardDefaults.elevatedCardElevation(
-                        defaultElevation = HorizonElevation.level3,
-                        pressedElevation = HorizonElevation.level3,
-                        focusedElevation = HorizonElevation.level3,
-                        disabledElevation = HorizonElevation.level3,
-                        hoveredElevation = HorizonElevation.level3,
-                        draggedElevation = HorizonElevation.level3
-                    ),
-                ) {
-                    Column {
-                        options.forEach { selectionOption ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onOptionSelected(selectionOption)
-                                        onMenuOpenChanged(false)
-                                    }
-                            ) {
-                                SingleSelectItem(selectionOption)
-                            }
+            Card(
+                modifier = modifier
+                    .padding(bottom = 8.dp) // to avoid shadow clipping during animation
+                    .padding(horizontal = 8.dp) // to avoid shadow clipping during animation
+                    .width(width),
+                shape = HorizonCornerRadius.level2,
+                colors = CardDefaults.cardColors()
+                    .copy(containerColor = HorizonColors.Surface.cardPrimary()),
+                elevation = CardDefaults.elevatedCardElevation(
+                    defaultElevation = HorizonElevation.level3,
+                    pressedElevation = HorizonElevation.level3,
+                    focusedElevation = HorizonElevation.level3,
+                    disabledElevation = HorizonElevation.level3,
+                    hoveredElevation = HorizonElevation.level3,
+                    draggedElevation = HorizonElevation.level3
+                ),
+            ) {
+                Column {
+                    options.forEach { selectionOption ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clickable {
+                                    onOptionSelected(selectionOption)
+                                    onMenuOpenChanged(false)
+                                }
+                        ) {
+                            SingleSelectItem(selectionOption)
                         }
                     }
                 }

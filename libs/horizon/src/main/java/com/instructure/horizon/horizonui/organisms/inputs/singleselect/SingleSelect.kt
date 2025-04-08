@@ -17,7 +17,6 @@
 package com.instructure.horizon.horizonui.organisms.inputs.singleselect
 
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,17 +66,18 @@ fun SingleSelect(
         Column(
             modifier = modifier
         ) {
+            val localDensity = LocalDensity.current
             var heightInPx by remember { mutableIntStateOf(0) }
+            var width by remember { mutableStateOf(0.dp) }
             InputContainer(
                 isFocused = state.isFocused || state.isMenuOpen,
                 isError = state.errorText != null,
                 enabled = state.enabled,
+                onClick = { state.onMenuOpenChanged(!state.isMenuOpen) },
                 modifier = Modifier
-                    .clickable(enabled = state.enabled) {
-                        state.onMenuOpenChanged(!state.isMenuOpen)
-                    }
                     .onGloballyPositioned {
                         heightInPx = it.size.height
+                        width = with(localDensity) { it.size.width.toDp() }
                     }
             ) {
                 SingleSelectContent(state)
@@ -84,12 +86,13 @@ fun SingleSelect(
             InputDropDownPopup(
                 isMenuOpen = state.isMenuOpen,
                 options = state.options,
+                width = width,
                 verticalOffsetPx = heightInPx,
                 onMenuOpenChanged = state.onMenuOpenChanged,
                 onOptionSelected = { selectedOption ->
                     state.onOptionSelected(selectedOption)
                     state.onMenuOpenChanged(false)
-                }
+                },
             )
         }
     }

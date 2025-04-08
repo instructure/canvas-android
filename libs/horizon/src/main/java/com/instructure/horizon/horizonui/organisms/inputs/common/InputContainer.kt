@@ -18,6 +18,7 @@ package com.instructure.horizon.horizonui.organisms.inputs.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
@@ -46,6 +47,7 @@ fun InputContainer(
     isError: Boolean,
     enabled: Boolean,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     Box(
@@ -77,6 +79,7 @@ fun InputContainer(
                 HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
                 HorizonCornerRadius.level1_5
             )
+            .clickable(enabled = enabled) { onClick?.invoke() }
             .alpha(if (enabled) 1f else 0.5f)
     ) {
         content()
