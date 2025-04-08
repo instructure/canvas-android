@@ -56,11 +56,13 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState) {
-    Scaffold(containerColor = HorizonColors.Surface.pagePrimary(), topBar = {
-        HomeScreenTopBar(uiState, modifier = Modifier.height(56.dp))
-    }) { paddingValues ->
+    Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
         LoadingStateWrapper(loadingState = uiState.loadingState) {
-            LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 36.dp), modifier = Modifier.padding(paddingValues), content = {
+            LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
+                item {
+                    HomeScreenTopBar(uiState, modifier = Modifier.height(56.dp))
+                    HorizonSpace(SpaceSize.SPACE_36)
+                }
                 items(uiState.coursesUiState) { courseItem ->
                     DashboardCourseItem(courseItem)
                 }
@@ -72,7 +74,7 @@ fun DashboardScreen(uiState: DashboardUiState) {
 @Composable
 private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Modifier) {
     val buttonModifier = Modifier.shadow(HorizonElevation.level4, shape = CircleShape)
-    Row(modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp), verticalAlignment = Alignment.Bottom) {
+    Row(verticalAlignment = Alignment.Bottom, modifier = modifier) {
         GlideImage(
             model = uiState.logoUrl,
             contentDescription = stringResource(R.string.a11y_institutionLogoContentDescription),
