@@ -22,8 +22,11 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -84,6 +87,8 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
                 .assertIsDisplayed()
                 .performClick()
         }
+
+        composeTestRule.waitForIdle()
 
     }
 
@@ -149,5 +154,9 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
             useUnmergedTree = true
         )
             .assertDoesNotExist()
+    }
+
+    fun refresh() {
+        composeTestRule.onRoot().performTouchInput { swipeDown() }
     }
 }

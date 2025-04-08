@@ -19,6 +19,7 @@ package com.instructure.teacher.features.assignment.submission
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -268,7 +269,7 @@ private fun SubmissionListItem(
                 imageUrl = submissionListUiState.avatarUrl,
                 name = submissionListUiState.userName,
             )
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
                     text = if (anonymousGrading) stringResource(R.string.anonymousStudentLabel) else submissionListUiState.userName,
                     fontSize = 16.sp,
@@ -276,6 +277,13 @@ private fun SubmissionListItem(
                     color = colorResource(id = R.color.textDarkest),
                     fontWeight = FontWeight.SemiBold
                 )
+                if (submissionListUiState.isFakeStudent) {
+                    Text(
+                        text = stringResource(R.string.createdByStudentView),
+                        fontSize = 12.sp,
+                        color = colorResource(id = R.color.textDark)
+                    )
+                }
                 FlowRow(modifier = Modifier.padding(end = 8.dp)) {
                     submissionListUiState.tags.forEach { tag ->
                         SubmissionTag(tag, tag != submissionListUiState.tags.last())
@@ -354,6 +362,7 @@ fun SubmissionListScreenPreview() {
                     1,
                     1,
                     "Test User",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
                     null
@@ -362,6 +371,7 @@ fun SubmissionListScreenPreview() {
                     2,
                     2,
                     "Test User 2",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
                     null
@@ -370,6 +380,7 @@ fun SubmissionListScreenPreview() {
                     3,
                     3,
                     "Test User 3",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.NOT_SUBMITTED),
                     null
@@ -378,6 +389,7 @@ fun SubmissionListScreenPreview() {
                     4,
                     4,
                     "Test User 4",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.MISSING),
                     null
@@ -386,6 +398,7 @@ fun SubmissionListScreenPreview() {
                     5,
                     5,
                     "Test User 5",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.GRADED),
                     "100%"
@@ -394,6 +407,7 @@ fun SubmissionListScreenPreview() {
                     6,
                     6,
                     "Test User 6",
+                    true,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.EXCUSED),
                     "Excused"
@@ -418,14 +432,22 @@ fun SubmissionListScreenDarkPreview() {
                     1,
                     1,
                     "Test User",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING, SubmissionTag.MISSING, SubmissionTag.EXCUSED, SubmissionTag.NOT_SUBMITTED),
+                    listOf(
+                        SubmissionTag.LATE,
+                        SubmissionTag.NEEDS_GRADING,
+                        SubmissionTag.MISSING,
+                        SubmissionTag.EXCUSED,
+                        SubmissionTag.NOT_SUBMITTED
+                    ),
                     null
                 ),
                 SubmissionUiState(
                     2,
                     2,
                     "Test User 2",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
                     null
@@ -434,6 +456,7 @@ fun SubmissionListScreenDarkPreview() {
                     3,
                     3,
                     "Test User 3",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.NOT_SUBMITTED),
                     null
@@ -442,6 +465,7 @@ fun SubmissionListScreenDarkPreview() {
                     4,
                     4,
                     "Test User 4",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.MISSING),
                     null
@@ -450,6 +474,7 @@ fun SubmissionListScreenDarkPreview() {
                     5,
                     5,
                     "Test User 5",
+                    false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.GRADED),
                     "100%"
@@ -458,6 +483,7 @@ fun SubmissionListScreenDarkPreview() {
                     6,
                     6,
                     "Test User 6",
+                    true,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(SubmissionTag.EXCUSED),
                     "Excused",

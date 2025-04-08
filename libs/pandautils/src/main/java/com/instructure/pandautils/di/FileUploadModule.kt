@@ -18,8 +18,10 @@ package com.instructure.pandautils.di
 
 import android.content.ContentResolver
 import android.content.Context
+import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.NotoriousUploader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +40,15 @@ class FileUploadModule {
     @Provides
     fun provideFileUploadUtilsHelper(@ApplicationContext context: Context, contentResolver: ContentResolver, fileUploadUtils: FileUploadUtils): FileUploadUtilsHelper {
         return FileUploadUtilsHelper(fileUploadUtils, context, contentResolver)
+    }
+
+    @Provides
+    fun provideNotoriousUploader(): NotoriousUploader {
+        return NotoriousUploader
+    }
+
+    @Provides
+    fun provideFileUploadManager(): FileUploadManager {
+        return FileUploadManager
     }
 }

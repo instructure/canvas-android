@@ -27,11 +27,12 @@ data class GradePreferencesUiState(
     val canvasContextColor: Int = android.graphics.Color.BLACK,
     val courseName: String = "",
     val gradingPeriods: List<GradingPeriod> = emptyList(),
+    val defaultGradingPeriod: GradingPeriod? = null,
     val selectedGradingPeriod: GradingPeriod? = null,
     val sortBy: SortBy = SortBy.DUE_DATE
 ) {
     val isDefault: Boolean
-        get() = selectedGradingPeriod == null && sortBy == SortBy.DUE_DATE
+        get() = selectedGradingPeriod == defaultGradingPeriod && sortBy == SortBy.DUE_DATE
 }
 
 enum class SortBy(@StringRes val titleRes: Int) {

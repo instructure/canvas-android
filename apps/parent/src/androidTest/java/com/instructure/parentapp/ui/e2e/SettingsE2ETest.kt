@@ -21,15 +21,19 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.checkToastText
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.ViewUtils
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.seedData
 import com.instructure.parentapp.utils.tokenLogin
@@ -153,5 +157,75 @@ class SettingsE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG,"Assert that the Instructure company logo has been displayed on the About page.")
         aboutPage.assertInstructureLogoDisplayed()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
+    fun testInboxSignatureE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, courses = 1, parents = 1)
+        val course = data.coursesList[0]
+        val parent = data.parentsList[0]
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        leftSideNavigationDrawerPage.clickSettings()
+
+        Log.d(ASSERTION_TAG, "Assert that by default the Inbox Signature is 'Not Set'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Not Set")
+
+        Log.d(STEP_TAG, "Click on the 'Inbox Signature' settings.")
+        settingsPage.clickOnSettingsItem("Inbox Signature")
+
+        Log.d(ASSERTION_TAG, "Assert that by default the 'Inbox Signature' toggle is turned off.")
+        inboxSignatureSettingsPage.assertSignatureEnabledState(false)
+
+        val signatureText = "President of AC Milan\nVice President of Ferencvaros"
+
+        Log.d(STEP_TAG, "Turn on the 'Inbox Signature' and set the inbox signature text to: '$signatureText'. Save the changes.")
+        inboxSignatureSettingsPage.toggleSignatureEnabledState()
+        inboxSignatureSettingsPage.changeSignatureText(signatureText)
+        inboxSignatureSettingsPage.saveChanges()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Inbox settings saved!' toast message is displayed.")
+        checkToastText(R.string.inboxSignatureSettingsUpdated, activityRule.activity)
+
+        Log.d(STEP_TAG, "Refresh the Settings page.")
+        settingsPage.refresh()
+
+        Log.d(ASSERTION_TAG, "Assert that the Inbox Signature became 'Enabled'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Enabled")
+
+        Log.d(STEP_TAG, "Click on the 'Inbox Signature' settings.")
+        settingsPage.clickOnSettingsItem("Inbox Signature")
+
+        Log.d(ASSERTION_TAG, "Assert that the previously changed inbox signature text has been really set to: '$signatureText' and the toggle has turned off.")
+        inboxSignatureSettingsPage.assertSignatureText(signatureText)
+        inboxSignatureSettingsPage.assertSignatureEnabledState(true)
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Open 'Inbox' menu.")
+        leftSideNavigationDrawerPage.clickInbox()
+
+        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        inboxPage.pressNewMessageButton()
+        inboxCoursePickerPage.selectCourseWithUser(course.name, student.shortName)
+
+        Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature text is displayed by default when the user opens the Compose New Message Page.")
+        inboxComposeMessagePage.assertBodyText("\n\n---\nPresident of AC Milan\nVice President of Ferencvaros")
     }
 }

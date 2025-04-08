@@ -36,7 +36,13 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentModuleListBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
@@ -162,7 +168,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 // Remove all the subheaders and stuff.
                 val groups = recyclerAdapter?.groups ?: arrayListOf()
 
-                val moduleItemsArray = groups.indices.mapTo(ArrayList()) { recyclerAdapter?.getItems(groups[it]) ?: arrayListOf() }
+                val moduleItemsArray = groups.indices.mapTo(ArrayList()) { recyclerAdapter?.getItems(groups[it]) }
                 val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(
                     requireContext(), moduleItem.id, groups, moduleItemsArray
                 )
