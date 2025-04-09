@@ -36,7 +36,8 @@ class LearnViewModel @Inject constructor(
     }
 
     private fun getInProgressCourse(forceRefresh: Boolean = false) = viewModelScope.launch {
-        _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = true))
+        _state.value =
+            state.value.copy(screenState = state.value.screenState.copy(isLoading = true))
         learnRepository.getCoursesWithProgress(forceNetwork = forceRefresh).onSuccess { courses ->
             val course = courses.firstOrNull()
             _state.value = state.value.copy(
@@ -44,7 +45,12 @@ class LearnViewModel @Inject constructor(
                 course = course
             )
         }.onFailure {
-            _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = false, errorMessage = it?.message))
+            _state.value = state.value.copy(
+                screenState = state.value.screenState.copy(
+                    isLoading = false,
+                    errorMessage = it?.message
+                )
+            )
         }
     }
 }

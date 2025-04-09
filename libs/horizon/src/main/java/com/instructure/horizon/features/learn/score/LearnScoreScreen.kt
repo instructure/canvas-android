@@ -38,7 +38,7 @@ fun LearnScoreScreen(modifier: Modifier = Modifier) {
             .clip(HorizonCornerRadius.level5)
             .background(HorizonColors.Surface.cardPrimary())
             .padding(vertical = 8.dp)
-    ){
+    ) {
         Text("Score Screen")
     }
 }

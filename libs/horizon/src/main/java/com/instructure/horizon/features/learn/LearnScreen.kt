@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,18 +51,14 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearnScreen(state: LearnUiState) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
     ) { padding ->
-        LoadingStateWrapper(state.screenState, Modifier.padding(padding)) {
-            LearnScreenWrapper(state, Modifier.fillMaxSize())
-        }
+            LearnScreenWrapper(state, Modifier.padding(padding))
     }
 }
 
@@ -102,12 +97,18 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
             contentPadding = PaddingValues(horizontal = 8.dp),
             beyondViewportPageCount = 4
         ) { index ->
-            val scaleAnimation by animateFloatAsState(if (index == pagerState.currentPage) 1f else 0.8f, label = "SelectedTabAnimation")
-            val cornerAnimation by animateDpAsState(if (index == pagerState.currentPage) 0.dp else 32.dp, label = "SelectedTabCornerAnimation")
+            val scaleAnimation by animateFloatAsState(
+                if (index == pagerState.currentPage) 1f else 0.8f,
+                label = "SelectedTabAnimation"
+            )
+            val cornerAnimation by animateDpAsState(
+                if (index == pagerState.currentPage) 0.dp else 32.dp,
+                label = "SelectedTabCornerAnimation"
+            )
             Box(
-              modifier = Modifier
-                  .fillMaxSize()
-                  .scale(scaleAnimation)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .scale(scaleAnimation)
             ) {
                 when (index) {
                     0 -> LearnOverviewScreen(
@@ -115,6 +116,7 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
                         Modifier
                             .clip(RoundedCornerShape(cornerAnimation))
                     )
+
                     1 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
                     2 -> LearnScoreScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
                     3 -> LearnNotesScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
