@@ -40,6 +40,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -55,6 +56,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import java.time.OffsetDateTime
 import java.util.Date
 
 
@@ -84,6 +86,7 @@ class GradesViewModelTest {
         every { savedStateHandle.get<Long>(COURSE_ID_KEY) } returns 1
         every { gradesBehaviour.canvasContextColor } returns 1
         coEvery { gradesRepository.getCourseGrade(any(), any(), any(), any()) } returns CourseGrade()
+        every { gradesRepository.getSortBy() } returns null
 
         every { context.getString(R.string.gradesNoDueDate) } returns "No due date"
         every { context.getString(R.string.due, any()) } answers { "Due ${(call.invocation.args[1] as Array<*>)[0]}" }
@@ -102,7 +105,9 @@ class GradesViewModelTest {
     @Test
     fun `Load grades`() {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
-        val gradingPeriods = listOf(GradingPeriod(id = 1))
+        val startDate = OffsetDateTime.now().minusDays(30).withNano(0)
+        val endDate = OffsetDateTime.now().plusDays(20).withNano(0)
+        val gradingPeriods = listOf(GradingPeriod(id = 1, startDate = startDate.toString(), endDate = endDate.toString()))
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns gradingPeriods
         val assignmentGroups = listOf(
             AssignmentGroup(
@@ -131,7 +136,9 @@ class GradesViewModelTest {
             gradePreferencesUiState = GradePreferencesUiState(
                 canvasContextColor = 1,
                 courseName = "Course 1",
-                gradingPeriods = gradingPeriods
+                gradingPeriods = gradingPeriods,
+                defaultGradingPeriod = gradingPeriods.first(),
+                selectedGradingPeriod = gradingPeriods.first()
             ),
             items = listOf(
                 AssignmentGroupUiState(
@@ -752,6 +759,19 @@ class GradesViewModelTest {
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Get saved sorting preference, save when updating preferences`() {
+        coEvery { gradesRepository.getSortBy() } returns SortBy.GROUP
+
+        createViewModel()
+
+        Assert.assertEquals(SortBy.GROUP, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+
+        viewModel.handleAction(GradesAction.GradePreferencesUpdated(null, SortBy.DUE_DATE))
+
+        verify { gradesRepository.setSortBy(SortBy.DUE_DATE) }
     }
 
     private fun createViewModel() {
