@@ -54,6 +54,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentQuizDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -146,7 +147,24 @@ class QuizDetailsFragment : BasePresenterFragment<
 
     override fun populateQuizDetails(quiz: Quiz): Unit = with(binding) {
         this@QuizDetailsFragment.quiz = quiz
-        toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(quiz) }
+        toolbar.setupMenu(R.menu.menu_assignment_details) { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_edit -> {
+                    openEditPage(quiz)
+                }
+
+                R.id.menu_speedGrader -> {
+                    SpeedGraderActivity.createIntent(
+                        requireContext(),
+                        course.id,
+                        quiz._assignment?.id ?: quizId,
+                        -1
+                    ).let {
+                        startActivity(it)
+                    }
+                }
+            }
+        }
         swipeRefreshLayout.isRefreshing = false
         setupViews(quiz)
         setupListeners(quiz)
