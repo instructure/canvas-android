@@ -38,6 +38,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import com.instructure.pandautils.R
@@ -64,7 +66,9 @@ fun CanvasTheme(content: @Composable () -> Unit) {
 }
 
 private val lato = FontFamily(
-    Font(R.font.lato_regular)
+    Font(R.font.lato_regular, weight = FontWeight.Normal),
+    Font(R.font.lato_semibold, weight = FontWeight.SemiBold),
+    Font(R.font.lato_italic, style = FontStyle.Italic),
 )
 
 private var typography = Typography(
