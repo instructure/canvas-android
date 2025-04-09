@@ -19,9 +19,7 @@ package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.pandautils.features.grades.GradesBehaviour
 import com.instructure.pandautils.features.grades.GradesRepository
-import com.instructure.parentapp.features.grades.ParentGradesBehaviour
 import com.instructure.parentapp.features.grades.ParentGradesRepository
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.Module
@@ -40,12 +38,5 @@ class GradesModule {
         parentPrefs: ParentPrefs
     ): GradesRepository {
         return ParentGradesRepository(assignmentApi, courseApi, parentPrefs)
-    }
-
-    @Provides
-    fun provideGradesBehaviour(
-        parentPrefs: ParentPrefs
-    ): GradesBehaviour {
-        return ParentGradesBehaviour(parentPrefs)
     }
 }

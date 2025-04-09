@@ -96,7 +96,7 @@ class GradesListNetworkDataSource(
     override suspend fun getUserEnrollmentsForGradingPeriod(
         courseId: Long,
         userId: Long,
-        gradingPeriodId: Long,
+        gradingPeriodId: Long?,
         forceNetwork: Boolean
     ): List<Enrollment> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

@@ -71,7 +71,7 @@ import com.instructure.student.features.discussion.details.DiscussionDetailsFrag
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.list.FileListFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.grades.GradesFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
@@ -213,12 +213,12 @@ object RouteMatcher : BaseRouteMatcher() {
         if (ApiPrefs.showElementaryView) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), ElementaryCourseFragment::class.java, tabId = Tab.GRADES_ID))
         } else {
-            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesFragment::class.java))
         }
         routes.add(
             Route(
                 courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"),
-                GradesListFragment::class.java,
+                GradesFragment::class.java,
                 AssignmentDetailsFragment::class.java
             )
         )

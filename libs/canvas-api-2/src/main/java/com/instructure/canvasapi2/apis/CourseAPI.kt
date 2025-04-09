@@ -167,7 +167,7 @@ object CourseAPI {
         suspend fun getUserEnrollmentsForGradingPeriod(
             @Path("courseId") courseId: Long,
             @Query("user_id") userId: Long,
-            @Query("grading_period_id") gradingPeriodId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long?,
             @Tag params: RestParams
         ): DataResult<List<Enrollment>>
 

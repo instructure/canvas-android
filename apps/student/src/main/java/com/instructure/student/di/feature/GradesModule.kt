@@ -17,8 +17,21 @@
 
 package com.instructure.student.di.feature
 
-import com.instructure.pandautils.features.grades.GradesBehaviour
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
+import com.instructure.pandautils.room.offline.facade.SubmissionFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.grades.GradesListRepository
+import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
+import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,12 +42,33 @@ import dagger.hilt.android.components.ViewModelComponent
 class GradesModule {
 
     @Provides
-    fun provideGradesRepository(): GradesRepository {
-        throw NotImplementedError()
+    fun provideGradesListLocalDataSource(
+        courseFacade: CourseFacade,
+        enrollmentFacade: EnrollmentFacade,
+        assignmentFacade: AssignmentFacade,
+        submissionFacade: SubmissionFacade
+    ): GradesListLocalDataSource {
+        return GradesListLocalDataSource(courseFacade, enrollmentFacade, assignmentFacade, submissionFacade)
     }
 
     @Provides
-    fun provideGradesBehaviour(): GradesBehaviour {
-        throw NotImplementedError()
+    fun provideGradesListNetworkDataSource(
+        courseApi: CourseAPI.CoursesInterface,
+        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
+        assignmentApi: AssignmentAPI.AssignmentInterface,
+        submissionApi: SubmissionAPI.SubmissionInterface
+    ): GradesListNetworkDataSource {
+        return GradesListNetworkDataSource(courseApi, enrollmentApi, assignmentApi, submissionApi)
+    }
+
+    @Provides
+    fun provideGradesRepository(
+        localDataSource: GradesListLocalDataSource,
+        networkDataSource: GradesListNetworkDataSource,
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider,
+        apiPrefs: ApiPrefs
+    ): GradesRepository {
+        return GradesListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, apiPrefs)
     }
 }

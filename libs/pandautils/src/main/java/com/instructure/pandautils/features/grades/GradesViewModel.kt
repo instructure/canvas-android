@@ -52,7 +52,6 @@ const val COURSE_ID_KEY = "course-id"
 @HiltViewModel
 class GradesViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val gradesBehaviour: GradesBehaviour,
     private val repository: GradesRepository,
     private val gradeFormatter: GradeFormatter,
     savedStateHandle: SavedStateHandle
@@ -77,13 +76,9 @@ class GradesViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
-                    canvasContextColor = gradesBehaviour.canvasContextColor,
                     isLoading = it.items.isEmpty(),
                     isRefreshing = it.items.isNotEmpty(),
-                    isError = false,
-                    gradePreferencesUiState = it.gradePreferencesUiState.copy(
-                        canvasContextColor = gradesBehaviour.canvasContextColor
-                    )
+                    isError = false
                 )
             }
 

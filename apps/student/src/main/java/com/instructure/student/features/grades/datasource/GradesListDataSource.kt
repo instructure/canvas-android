@@ -46,7 +46,7 @@ interface GradesListDataSource {
     suspend fun getUserEnrollmentsForGradingPeriod(
         courseId: Long,
         userId: Long,
-        gradingPeriodId: Long,
+        gradingPeriodId: Long?,
         forceNetwork: Boolean
     ): List<Enrollment>
 

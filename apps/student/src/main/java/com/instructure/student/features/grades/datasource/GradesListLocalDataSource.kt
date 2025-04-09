@@ -17,7 +17,11 @@
 
 package com.instructure.student.features.grades.datasource
 
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
@@ -67,10 +71,14 @@ class GradesListLocalDataSource(
     override suspend fun getUserEnrollmentsForGradingPeriod(
         courseId: Long,
         userId: Long,
-        gradingPeriodId: Long,
+        gradingPeriodId: Long?,
         forceNetwork: Boolean
     ): List<Enrollment> {
-        return enrollmentFacade.getEnrollmentsByGradingPeriodId(gradingPeriodId)
+        return gradingPeriodId?.let {
+            enrollmentFacade.getEnrollmentsByGradingPeriodId(it)
+        } ?: run {
+            enrollmentFacade.getEnrollmentsByCourseId(courseId)
+        }
     }
 
     override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {

@@ -24,7 +24,6 @@ import com.instructure.pandautils.R
 
 data class GradePreferencesUiState(
     val show: Boolean = false,
-    val canvasContextColor: Int = android.graphics.Color.BLACK,
     val courseName: String = "",
     val gradingPeriods: List<GradingPeriod> = emptyList(),
     val selectedGradingPeriod: GradingPeriod? = null,
