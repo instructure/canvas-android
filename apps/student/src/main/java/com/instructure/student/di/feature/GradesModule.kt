@@ -32,6 +32,7 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.grades.GradesListRepository
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
 import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
+import com.instructure.student.util.StudentPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,8 +68,9 @@ class GradesModule {
         networkDataSource: GradesListNetworkDataSource,
         networkStateProvider: NetworkStateProvider,
         featureFlagProvider: FeatureFlagProvider,
-        apiPrefs: ApiPrefs
+        apiPrefs: ApiPrefs,
+        studentPrefs: StudentPrefs
     ): GradesRepository {
-        return GradesListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, apiPrefs)
+        return GradesListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, apiPrefs, studentPrefs)
     }
 }

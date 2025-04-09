@@ -20,22 +20,22 @@ import com.instructure.canvasapi2.utils.*
 
 object StudentPrefs : PrefManager("candroidSP") {
 
-    
     var tempCaptureUri by NStringPref()
 
-    
     var showGradesOnCard by BooleanPref(true)
 
     var hideCourseColorOverlay by BooleanPref(false)
 
-    
     var staleFolderIds by SetPref(Long::class)
 
     var conferenceDashboardBlacklist by StringSetPref()
 
     var listDashboard by BooleanPref()
 
+    var gradesSortBy: String? by NStringPref(null, "grades_sort_by")
+
     override fun keepBaseProps() = listOf(
-            ::showGradesOnCard
+        ::showGradesOnCard,
+        ::gradesSortBy
     )
 }

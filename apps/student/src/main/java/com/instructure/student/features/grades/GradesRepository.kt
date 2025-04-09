@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -32,13 +33,15 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.features.grades.datasource.GradesListDataSource
 import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
 import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
+import com.instructure.student.util.StudentPrefs
 
 class GradesListRepository(
     localDataSource: GradesListLocalDataSource,
     networkDataSource: GradesListNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val studentPrefs: StudentPrefs
 ) : Repository<GradesListDataSource>(
     localDataSource,
     networkDataSource,
@@ -76,5 +79,15 @@ class GradesListRepository(
         } ?: run {
             course.getCourseGrade(true)
         }
+    }
+
+    override fun getSortBy(): SortBy? {
+        return studentPrefs.gradesSortBy?.let {
+            SortBy.valueOf(it)
+        }
+    }
+
+    override fun setSortBy(sortBy: SortBy) {
+        studentPrefs.gradesSortBy = sortBy.name
     }
 }

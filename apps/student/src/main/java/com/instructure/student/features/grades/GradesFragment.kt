@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -35,18 +36,22 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_GRADES_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.grades.AppBarUiState
 import com.instructure.pandautils.features.grades.COURSE_ID_KEY
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
+import com.instructure.pandautils.features.grades.GradesViewModelAction
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 
 @ScreenView(SCREEN_VIEW_GRADES_LIST)
@@ -68,6 +73,7 @@ class GradesFragment : ParentFragment(), Bookmarkable {
         savedInstanceState: Bundle?
     ): View {
         applyTheme()
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
@@ -94,6 +100,17 @@ class GradesFragment : ParentFragment(), Bookmarkable {
     override fun title(): String = getString(R.string.grades)
 
     override fun getSelectedParamName(): String = RouterParams.ASSIGNMENT_ID
+
+    private fun handleAction(action: GradesViewModelAction) {
+        when (action) {
+            is GradesViewModelAction.NavigateToAssignmentDetails -> {
+                RouteMatcher.route(
+                    requireActivity(),
+                    AssignmentDetailsFragment.makeRoute(canvasContext, action.assignmentId)
+                )
+            }
+        }
+    }
 
     companion object {
         fun newInstance(route: Route): GradesFragment? {
