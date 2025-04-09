@@ -61,4 +61,8 @@
     </plurals>
     <string name="moduleHeader_pastDue">%1$d Past Due</string>
     <string name="a11y_institutionLogoContentDescription">Institution logo</string>
+    <string name="myProgress">My Progress</string>
+    <string name="overview">Overview</string>
+    <string name="scores">Scores</string>
+    <string name="notes">Notes</string>
 </resources>
