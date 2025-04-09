@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -77,7 +78,9 @@ import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterScreen
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentStatusFilterOption
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.color
@@ -150,11 +153,21 @@ private fun AppBar(
         subtitle = state.subtitle,
         actions = {
             if (state.state != ScreenState.Loading) {
-                IconButton(onClick = { screenActionHandler(AssignmentListScreenEvent.OpenFilterScreen) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_filter),
-                        contentDescription = stringResource(R.string.a11y_filterAssignments)
-                    )
+                if (!state.searchBarExpanded) {
+                    val isAssignmentFilterActive = !(state.selectedFilterData.selectedAssignmentFilters.isEmpty()
+                            || state.selectedFilterData.selectedAssignmentFilters.contains(AssignmentFilter.All)
+                            || state.selectedFilterData.selectedAssignmentFilters.containsAll(state.filterOptions?.assignmentFilters?.assignmentFilterOptions ?: emptyList()))
+                    val isStatusFilterActive = !(state.selectedFilterData.selectedAssignmentStatusFilter == null
+                            || state.selectedFilterData.selectedAssignmentStatusFilter == AssignmentStatusFilterOption.All)
+                    val isGradingPeriodFilterActive = state.selectedFilterData.selectedGradingPeriodFilter != state.currentGradingPeriod
+                    val isFilterActive = isAssignmentFilterActive || isStatusFilterActive || isGradingPeriodFilterActive
+                    IconButton(onClick = { screenActionHandler(AssignmentListScreenEvent.OpenFilterScreen) }) {
+                        Icon(
+                            painter = painterResource(id = if (isFilterActive) R.drawable.ic_filter_filled else R.drawable.ic_filter),
+                            tint = colorResource(R.color.backgroundLightest),
+                            contentDescription = stringResource(R.string.a11y_filterAssignments)
+                        )
+                    }
                 }
                 SearchBarLive(
                     icon = R.drawable.ic_search_white_24dp,
@@ -205,6 +218,11 @@ private fun AppBar(
                     }
                 }
             }
+        },
+        navIconRes = if (state.searchBarExpanded) {
+            null
+        } else {
+            R.drawable.ic_back_arrow
         },
         backgroundColor = Color(state.course.color),
         contentColor = colorResource(R.color.backgroundLightest),
@@ -303,38 +321,43 @@ private fun AssignmentListContentView(
     contextColor: Color,
     listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
 ) {
-    Column {
-        val selectedGradingPeriod = state.selectedFilterData.selectedGradingPeriodFilter
-        val gradingPeriodName = if (selectedGradingPeriod != null) selectedGradingPeriod.title.orEmpty() else stringResource(R.string.all)
-        val gradingPeriodContentDescription = stringResource(R.string.gradingPeriod) + " " + if (selectedGradingPeriod != null) selectedGradingPeriod.title else stringResource(R.string.all)
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(16.dp)
-                .clearAndSetSemantics { contentDescription = gradingPeriodContentDescription }
-        ) {
-            Text(
-                stringResource(R.string.gradingPeriod),
-                color = colorResource(id = R.color.textDark),
-                fontSize = 14.sp,
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                gradingPeriodName,
-                color = colorResource(id = R.color.textDarkest),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 22.sp,
-            )
+    GroupedListView(
+        modifier = Modifier
+            .testTag("assignmentList"),
+        state = state.listState,
+        itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
+        actionHandler = listActionHandler,
+        headerView = if (state.gradingPeriods.isEmpty()) {
+            null
+        } else {
+            { GradingPeriodHeader(state.selectedFilterData.selectedGradingPeriodFilter) }
         }
+    )
+}
 
-        GroupedListView(
-            modifier = Modifier
-                .testTag("assignmentList"),
-            state = state.listState,
-            itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
-            actionHandler = listActionHandler
+@Composable
+private fun GradingPeriodHeader(selectedGradingPeriod: GradingPeriod?) {
+    val gradingPeriodName = selectedGradingPeriod?.title?.orEmpty() ?: stringResource(R.string.all)
+    val gradingPeriodContentDescription = stringResource(R.string.gradingPeriod) + " " + if (selectedGradingPeriod != null) selectedGradingPeriod.title else stringResource(R.string.all)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(16.dp)
+            .clearAndSetSemantics { contentDescription = gradingPeriodContentDescription }
+    ) {
+        Text(
+            stringResource(R.string.gradingPeriod),
+            color = colorResource(id = R.color.textDark),
+            fontSize = 14.sp,
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            gradingPeriodName,
+            color = colorResource(id = R.color.textDarkest),
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 22.sp,
         )
     }
 }

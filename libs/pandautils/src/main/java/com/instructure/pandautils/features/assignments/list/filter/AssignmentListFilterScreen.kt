@@ -161,7 +161,7 @@ fun AssignmentListFilterScreen(
                 onItemSelected = { selectedFilters = selectedFilters.copy(selectedGroupByOption = it) }
             )
 
-            gradingPeriodOptions?.let {
+            if (gradingPeriodOptions != null && gradingPeriodOptions.size > 1) {
                 SingleChoicePicker(
                     title = stringResource(R.string.gradingPeriodHeading),
                     items = gradingPeriodOptions,

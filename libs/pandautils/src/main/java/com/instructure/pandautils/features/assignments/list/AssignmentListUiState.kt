@@ -21,6 +21,7 @@ data class AssignmentListUiState(
     val screenOption: AssignmentListScreenOption = AssignmentListScreenOption.List,
     val allAssignments: List<Assignment> = emptyList(),
     val gradingPeriods: List<GradingPeriod> = emptyList(),
+    val currentGradingPeriod: GradingPeriod? = null,
     val assignmentGroups: List<AssignmentGroup> = emptyList(),
     val gradingPeriodsWithAssignments: Map<GradingPeriod, List<Assignment>> = emptyMap(),
     val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList()),

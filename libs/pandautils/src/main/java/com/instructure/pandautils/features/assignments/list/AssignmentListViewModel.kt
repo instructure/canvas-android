@@ -104,6 +104,7 @@ class AssignmentListViewModel @Inject constructor(
                         allAssignments = allAssignment,
                         assignmentGroups = assignmentGroups,
                         gradingPeriods = gradingPeriods,
+                        currentGradingPeriod = getCurrentGradingPeriod(gradingPeriods),
                         gradingPeriodsWithAssignments = gradingPeriodAssignments,
                         listState = GroupedListViewState(
                             assignmentGroups.map { group ->
@@ -245,10 +246,10 @@ class AssignmentListViewModel @Inject constructor(
         filteredAssignments = assignmentFilters.flatMap { assignmentFilter ->
             when(assignmentFilter) {
                 AssignmentFilter.All -> filteredAssignments
-                AssignmentFilter.NotYetSubmitted -> filteredAssignments.filter { !it.isSubmitted }
-                AssignmentFilter.ToBeGraded -> filteredAssignments.filter { it.isSubmitted && !it.isGraded() }
-                AssignmentFilter.Graded -> filteredAssignments.filter { it.isGraded() }
-                AssignmentFilter.Other -> filteredAssignments.filterNot { !it.isSubmitted || it.isSubmitted && !it.isGraded() || it.isGraded() }
+                AssignmentFilter.NotYetSubmitted -> filteredAssignments.filter { !it.isSubmitted && it.isOnlineSubmissionType }
+                AssignmentFilter.ToBeGraded -> filteredAssignments.filter { it.isSubmitted && !it.isGraded() && it.isOnlineSubmissionType }
+                AssignmentFilter.Graded -> filteredAssignments.filter { it.isGraded() && it.isOnlineSubmissionType }
+                AssignmentFilter.Other -> filteredAssignments.filterNot { (!it.isSubmitted && it.isOnlineSubmissionType) || (it.isSubmitted && !it.isGraded() && it.isOnlineSubmissionType) || (it.isGraded() && it.isOnlineSubmissionType) }
                 AssignmentFilter.NeedsGrading -> filteredAssignments.filter { it.needsGradingCount > 0 }
                 AssignmentFilter.NotSubmitted -> filteredAssignments.filter { it.unpublishable }
             }
