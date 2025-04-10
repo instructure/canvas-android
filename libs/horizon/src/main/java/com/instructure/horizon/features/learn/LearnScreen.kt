@@ -58,7 +58,7 @@ fun LearnScreen(state: LearnUiState) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
     ) { padding ->
-            LearnScreenWrapper(state, Modifier.padding(padding))
+        LearnScreenWrapper(state, Modifier.padding(padding))
     }
 }
 
@@ -116,7 +116,6 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
                         Modifier
                             .clip(RoundedCornerShape(cornerAnimation))
                     )
-
                     1 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
                     2 -> LearnScoreScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
                     3 -> LearnNotesScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
