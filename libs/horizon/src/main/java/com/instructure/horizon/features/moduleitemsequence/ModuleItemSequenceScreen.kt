@@ -54,6 +54,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -111,7 +112,6 @@ private fun ModuleItemSequenceContent(
             modifier = Modifier.animateContentSize(
                 animationSpec = tween(
                     durationMillis = 200,
-                    delayMillis = 200,
                     easing = FastOutSlowInEasing
                 )
             )
@@ -130,15 +130,8 @@ private fun ModuleItemSequenceContent(
             }
         ) {
             ModuleItemPager(pagerState = pagerState) { page ->
-                val moduleItem = uiState.items[page]
-                Text(
-                    text = "${moduleItem.moduleItemName}\n type: ${moduleItem.moduleItemContent!!::class.simpleName}",
-                    style = HorizonTypography.h2,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    textAlign = TextAlign.Center
-                )
+                val moduleItemUiState = uiState.items[page]
+                ModuleItemContentScreen(moduleItemUiState, modifier = Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp))
             }
         }
     }
@@ -208,6 +201,26 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
                 .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
         ) {
             content(page)
+        }
+    }
+}
+
+@Composable
+private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, modifier: Modifier = Modifier) {
+    when (moduleItemUiState.moduleItemContent) {
+        is ModuleItemContent.Locked -> LockedContentScreen(
+            lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
+            modifier = modifier
+        )
+        else -> {
+            Text(
+                text = "${moduleItemUiState.moduleItemName}\n type: ${moduleItemUiState.moduleItemContent!!::class.simpleName}",
+                style = HorizonTypography.h2,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

@@ -23,6 +23,7 @@ import androidx.navigation.toRoute
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItem.Type
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -83,14 +84,17 @@ class ModuleItemSequenceViewModel @Inject constructor(
     }
 
     private fun createModuleItemUiState(item: ModuleItem, modules: List<ModuleObject>): ModuleItemUiState? {
-        val moduleItemContent: ModuleItemContent? = when (item.type) {
-            Type.Page.name -> ModuleItemContent.Page(item.pageUrl.orEmpty())
-            Type.Assignment.name -> ModuleItemContent.Assignment(item.contentId)
-            Type.Quiz.name -> ModuleItemContent.Assessment(item.contentId)
-            Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.htmlUrl.orEmpty())
-            Type.ExternalTool.name -> ModuleItemContent.ExternalTool(item.htmlUrl.orEmpty())
-            Type.File.name -> ModuleItemContent.File(item.url.orEmpty())
-            else -> null
+
+        val moduleItemContent: ModuleItemContent?
+        when {
+            item.isLocked() -> moduleItemContent = ModuleItemContent.Locked(item.moduleDetails?.lockExplanation ?: context.getString(R.string.modulePager_locked))
+            item.type == Type.Page.name -> moduleItemContent = ModuleItemContent.Page(item.pageUrl.orEmpty())
+            item.type == Type.Assignment.name -> moduleItemContent = ModuleItemContent.Assignment(item.contentId)
+            item.type == Type.Quiz.name -> moduleItemContent = ModuleItemContent.Assessment(item.contentId)
+            item.type == Type.ExternalUrl.name -> moduleItemContent = ModuleItemContent.ExternalLink(item.htmlUrl.orEmpty())
+            item.type == Type.ExternalTool.name -> moduleItemContent = ModuleItemContent.ExternalTool(item.htmlUrl.orEmpty())
+            item.type == Type.File.name -> moduleItemContent = ModuleItemContent.File(item.url.orEmpty())
+            else -> moduleItemContent = null
         }
 
         if (moduleItemContent == null) {

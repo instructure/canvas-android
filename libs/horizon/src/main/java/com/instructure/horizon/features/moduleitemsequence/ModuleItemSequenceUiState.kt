@@ -42,4 +42,5 @@ sealed class ModuleItemContent {
     data class File(val url: String) : ModuleItemContent()
     data class ExternalTool(val url: String) : ModuleItemContent()
     data class Assessment(val quizId: Long) : ModuleItemContent()
+    data class Locked(val lockExplanation: String) : ModuleItemContent()
 }
