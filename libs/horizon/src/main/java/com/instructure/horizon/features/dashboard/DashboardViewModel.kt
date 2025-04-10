@@ -44,13 +44,13 @@ class DashboardViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-//        viewModelScope.tryLaunch {
-//            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
-//            loadData(forceNetwork = false)
-//            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
-//        } catch {
-//            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
-//        }
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
+            loadData(forceNetwork = false)
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+        } catch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+        }
     }
 
     fun refresh() {

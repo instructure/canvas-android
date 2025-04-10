@@ -18,6 +18,7 @@ package com.instructure.horizon.features.learn.overview
 
 import android.webkit.WebView
 import androidx.compose.foundation.background
+import androidx.compose.foundation.content.MediaType.Companion.HtmlText
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
