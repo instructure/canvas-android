@@ -17,13 +17,13 @@
 package com.instructure.horizon.features.learn
 
 import androidx.annotation.StringRes
-import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.horizon.R
-import com.instructure.horizon.util.ScreenState
+import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class LearnUiState(
-    val screenState: ScreenState = ScreenState.Loading,
-    val course: Course? = null,
+    val screenState: LoadingState = LoadingState(),
+    val course: CourseWithProgress? = null,
     val availableTabs: List<LearnTab> = LearnTab.entries,
 )
 
@@ -31,5 +31,5 @@ enum class LearnTab(@StringRes val titleRes: Int, ) {
     MyProgress(titleRes = R.string.myProgress),
     Overview(titleRes = R.string.overview),
     Scores(titleRes = R.string.scores),
-    Notes(titleRes = R.string.notes);
+    Notes(titleRes = R.string.notes),
 }

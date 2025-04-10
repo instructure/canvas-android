@@ -17,11 +17,34 @@
 package com.instructure.horizon.features.learn
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class LearnViewModel @Inject constructor(): ViewModel() {
+@HiltViewModel
+class LearnViewModel @Inject constructor(
+    private val learnRepository: LearnRepository,
+): ViewModel() {
     private val _state = MutableStateFlow(LearnUiState())
     val state = _state.asStateFlow()
+
+    init {
+        getInProgressCourse()
+    }
+
+    private fun getInProgressCourse() = viewModelScope.launch {
+        _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = true))
+        learnRepository.getCoursesWithProgress(forceNetwork = true).onSuccess { courses ->
+            val course = courses.firstOrNull { it.progress != null } ?: courses.firstOrNull()
+            _state.value = state.value.copy(
+                screenState = state.value.screenState.copy(isLoading = false),
+                course = course
+            )
+        }.onFailure {
+            _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = false, errorMessage = it?.message))
+        }
+    }
 }

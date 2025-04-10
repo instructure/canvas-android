@@ -19,17 +19,22 @@ package com.instructure.horizon.horizonui.organisms.tabrow
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,20 +59,38 @@ fun<T> TabRow(
     tab: @Composable (T, Boolean, Modifier) -> Unit,
 ) {
     val localDensity = LocalDensity.current
+    val scrollState = rememberScrollState()
+    var containerWidth by remember { mutableIntStateOf(0) }
+    var tabRowWidth by remember { mutableIntStateOf(0) }
     var sizes by remember { mutableStateOf(tabs.map { 0 }) }
     val spacingPx = with(localDensity) { spacing.toPx().toInt() }
     val currentOffset by animateIntAsState(
-        sizes.take(selectedIndex).sumOf { it } + (selectedIndex + 1) * spacingPx,
+        sizes.take(selectedIndex).sumOf { it }
+                + (selectedIndex) * spacingPx
+                - scrollState.value
+                + ((containerWidth - tabRowWidth) / 2).coerceAtLeast(0)
+        ,
         label = "IndicatorAnimation"
     )
 
-    Box {
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxWidth()
+            .onGloballyPositioned {
+                containerWidth = it.size.width
+            }
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
-            modifier = modifier
+            modifier = Modifier
+                .horizontalScroll(scrollState)
+                .onGloballyPositioned {
+                    tabRowWidth = it.size.width
+                }
         ) {
-            Spacer(modifier = Modifier.width(spacing))
             tabs.forEachIndexed { index, tabItem ->
                 tab(
                     tabItem,
@@ -75,15 +98,19 @@ fun<T> TabRow(
                     Modifier
                         .onGloballyPositioned { coordinates ->
                             val width = coordinates.size.width
-                            sizes = sizes.toMutableList().apply {
-                                this[index] = width
-                            }
+                            sizes = sizes
+                                .toMutableList()
+                                .apply {
+                                    this[index] = width
+                                }
                         }
                         .clickable {
                             onTabSelected(index)
                         }
                 )
-                Spacer(modifier = Modifier.width(spacing))
+                if (index != tabs.lastIndex) {
+                    Spacer(modifier = Modifier.width(spacing))
+                }
             }
         }
         val width = with(localDensity) { sizes[selectedIndex].toDp() }
@@ -114,6 +141,6 @@ fun TabRowPreview() {
         selectedIndex = 0,
         onTabSelected = {},
         tab = { tab, isSelected, modifier -> Text(tab) },
-        modifier = Modifier
+        modifier = Modifier.padding(vertical = 4.dp)
     )
 }

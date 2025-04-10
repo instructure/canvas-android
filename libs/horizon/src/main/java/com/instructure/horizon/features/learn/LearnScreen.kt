@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.note.LearnNotesScreen
 import com.instructure.horizon.features.learn.overview.LearnOverviewScreen
 import com.instructure.horizon.features.learn.progress.LearnProgressScreen
@@ -38,15 +40,22 @@ import com.instructure.horizon.features.learn.score.LearnScoreScreen
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearnScreen(viewModel: LearnViewModel) {
     val state by viewModel.state.collectAsState()
     HorizonTheme {
-        Scaffold { padding ->
-            LearnScreenWrapper(state, Modifier.padding(padding))
+        Scaffold(
+            containerColor = HorizonColors.Surface.pagePrimary(),
+        ) { padding ->
+            LoadingStateWrapper(state.screenState, Modifier.padding(padding)) {
+                LearnScreenWrapper(state, Modifier.fillMaxSize())
+            }
         }
     }
 }
@@ -57,16 +66,36 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
     val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = modifier.fillMaxSize()) {
+        Text(
+            text = state.course?.course?.name ?: stringResource(R.string.course),
+            style = HorizonTypography.h3,
+            color = HorizonColors.Text.title(),
+            modifier = Modifier
+                .padding(start = 24.dp, end = 24.dp, top = 24.dp)
+        )
+
+        ProgressBar(
+            progress = state.course?.progress ?: 0.0,
+            modifier = Modifier
+                .padding(horizontal = 24.dp, vertical = 16.dp)
+        )
+
         TabRow(
             tabs = state.availableTabs,
             selectedIndex = pagerState.currentPage,
             onTabSelected = { coroutineScope.launch { pagerState.animateScrollToPage(it) } },
             tab = { tab, isSelected, modifier -> Tab(tab, isSelected, modifier) },
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp)
         )
-        HorizontalPager(pagerState) {
-            when (pagerState.currentPage) {
+        HorizontalPager(
+            pagerState,
+            pageSpacing = 16.dp,
+        ) { index ->
+            when (index) {
                 0 -> LearnProgressScreen()
-                1 -> LearnOverviewScreen()
+                1 -> LearnOverviewScreen(state.course?.course)
                 2 -> LearnScoreScreen()
                 3 -> LearnNotesScreen()
             }

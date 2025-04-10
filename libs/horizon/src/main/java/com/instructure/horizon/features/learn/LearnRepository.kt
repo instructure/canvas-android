@@ -14,12 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.util
+package com.instructure.horizon.features.learn
 
-sealed class ScreenState {
-    data object Loading : ScreenState()
-    data object Refresh : ScreenState()
-    data object Empty : ScreenState()
-    data class Error(val message: String) : ScreenState()
-    data class Content<T>(val data: T) : ScreenState()
+import com.instructure.canvasapi2.managers.GetCoursesManager
+import com.instructure.canvasapi2.utils.ApiPrefs
+import javax.inject.Inject
+
+class LearnRepository @Inject constructor(
+    private val getCoursesManager: GetCoursesManager,
+    private val apiPrefs: ApiPrefs
+) {
+    suspend fun getCoursesWithProgress(forceNetwork: Boolean) = getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork)
 }
