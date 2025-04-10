@@ -50,7 +50,7 @@ object OAuthManager {
 
     fun refreshTokenAsync() = apiAsync {
         val adapter = RestBuilder()
-        val params = RestParams(isForceReadFromNetwork = true)
+        val params = RestParams(isForceReadFromNetwork = true, shouldRefreshToken = false)
         OAuthAPI.refreshAccessTokenWithCallback(adapter, params, it)
     }
 

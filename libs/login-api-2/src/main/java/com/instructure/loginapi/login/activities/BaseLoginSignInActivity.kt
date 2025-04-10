@@ -522,6 +522,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                             }
                             LoginPrefs.lastSavedLogin = SavedLoginInfo(accountDomain, canvasLogin)
                             navigation.startLogin(viewModel, false)
+                            tokenRefresher.loggedOut = false
                         }
                     }
                 })

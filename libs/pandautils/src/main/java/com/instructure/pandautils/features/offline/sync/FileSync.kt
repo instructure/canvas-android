@@ -105,7 +105,7 @@ class FileSync(
 
         val nonPublicFileIds = internalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
         val nonPublicFiles = nonPublicFileIds.map {
-            fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
+            fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false, shouldRefreshToken = false)).dataOrNull
         }.filterNotNull()
 
         fileFolderDao.insertAll(nonPublicFiles.map { FileFolderEntity(it.copy(isHidden = true)) })

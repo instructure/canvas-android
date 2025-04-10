@@ -2,11 +2,13 @@ package com.instructure.canvasapi2
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.CanvasAuthError
-import com.instructure.canvasapi2.utils.ApiPrefs
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.Request
 import okhttp3.Response
 import org.greenrobot.eventbus.EventBus
@@ -17,27 +19,41 @@ private const val RETRY_HEADER = "mobile_refresh"
 class TokenRefresher(
     private val context: Context,
     private val loginRouter: LoginRouter,
-    private val apiPrefs: ApiPrefs,
-    private val eventBus: EventBus) {
+    private val eventBus: EventBus
+) {
 
     var refreshState: TokenRefreshState? = null
-    var loggingOut = false
+    var loggedOut = false
 
     fun refresh(response: Response): Request? {
-        if (loggingOut) return null
-
-        if (refreshState != null && refreshState is TokenRefreshState.Refreshing) {
-            return waitForRefresh(response, false)
-        }
         refreshState = TokenRefreshState.Refreshing
-        launchLogin()
         return waitForRefresh(response)
     }
 
-    private fun waitForRefresh(response: Response, logoutOnFailure: Boolean = true): Request? {
-        runBlocking {
-            while (refreshState is TokenRefreshState.Refreshing) {
-                delay(1000)
+    private fun waitForRefresh(response: Response): Request? = synchronized(this) {
+        if (refreshState == TokenRefreshState.Refreshing) {
+            launchLogin()
+        }
+
+        while (refreshState == TokenRefreshState.Refreshing) {
+            runBlocking(Dispatchers.Unconfined) {
+                withTimeoutOrNull(5000) {
+                    while (refreshState == TokenRefreshState.Refreshing) {
+                        delay(1000)
+                        Log.d("ASDFGASDFG", "Waiting for refresh")
+                    }
+                } ?: run {
+                    refreshState = TokenRefreshState.Failed
+                }
+
+                withTimeoutOrNull(2 * 60 * 1000) {
+                    while (refreshState == TokenRefreshState.LoginStarted) {
+                        delay(1000)
+                        Log.d("ASDFGASDFG", "Waiting for login")
+                    }
+                } ?: run {
+                    refreshState = TokenRefreshState.Failed
+                }
             }
         }
 
@@ -56,14 +72,18 @@ class TokenRefresher(
                         ) // Mark retry to prevent infinite recursion
                         .build()
                 } catch (e: Exception) {
-                    eventBus.post(CanvasAuthError("Failed to authenticate"))
+                    if (!loggedOut) {
+                        eventBus.post(CanvasAuthError("Failed to authenticate"))
+                        loggedOut = true
+                    }
                     null
                 }
             }
 
             is TokenRefreshState.Failed -> {
-                if (logoutOnFailure) {
+                if (!loggedOut) {
                     eventBus.post(CanvasAuthError("Failed to authenticate"))
+                    loggedOut = true
                 }
                 newRequest = null
             }
@@ -95,6 +115,7 @@ class TokenRefresher(
 
 sealed class TokenRefreshState {
     data object Refreshing : TokenRefreshState()
+    data object LoginStarted : TokenRefreshState()
     data object Failed : TokenRefreshState()
     data object Restart : TokenRefreshState()
     data class Success(val token: String) : TokenRefreshState()

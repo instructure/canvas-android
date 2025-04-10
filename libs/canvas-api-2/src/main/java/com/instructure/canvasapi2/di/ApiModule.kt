@@ -375,8 +375,8 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, apiPrefs: ApiPrefs, eventBus: EventBus): TokenRefresher {
-        return TokenRefresher(context, loginRouter, apiPrefs, eventBus)
+    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
+        return TokenRefresher(context, loginRouter, eventBus)
     }
 }
 

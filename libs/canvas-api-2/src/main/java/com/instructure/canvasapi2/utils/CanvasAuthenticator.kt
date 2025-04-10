@@ -16,8 +16,10 @@
 package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
+import android.util.Log
 import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
 import com.instructure.canvasapi2.models.OAuthTokenResponse
@@ -50,6 +52,12 @@ class CanvasAuthenticator(private val tokenRefresher: TokenRefresher) : Authenti
             // Can't refresh the users access token - log the user out
             EventBus.getDefault().post(CanvasAuthError("No client id or secret for refresh token"))
             return null // Indicate authentication was not successful
+        }
+
+        val restParams = response.request.tag() as? RestParams
+        if (restParams?.shouldRefreshToken == false) {
+            Log.d("ASDFGASDFG", "Should not refresh token")
+            return null
         }
 
         return try {
