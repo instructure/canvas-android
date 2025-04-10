@@ -34,6 +34,7 @@ data class DashboardCourseUiState(
     val courseProgress: Double,
     val nextModuleName: String,
     val nextModuleItemName: String,
+    val nextModuleItemId: Long,
     val progressLabel: String? = null,
     val remainingTime: String? = null,
     val learningObjectType: LearningObjectType? = null,

@@ -33,7 +33,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckBox
@@ -197,9 +196,15 @@ object ViewStyler {
         activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
-    fun setStatusBarColor(activity: Activity, @ColorRes color: Int) {
-        activity.window.statusBarColor = ContextCompat.getColor(activity, color)
-        activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    fun setStatusBarColor(activity: Activity, @ColorInt color: Int, lightIcons: Boolean = false) {
+        activity.window.statusBarColor = color
+        var flags = activity.window.decorView.systemUiVisibility
+        flags = if (lightIcons) {
+            flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        } else {
+            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
+        activity.window.decorView.systemUiVisibility = flags
     }
 
     fun colorImageView(imageView: ImageView, color: Int) {

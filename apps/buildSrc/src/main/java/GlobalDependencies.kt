@@ -191,6 +191,8 @@ object Libs {
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_KTX = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
+
+    const val KOTLIN_SERIALIZABLE = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
 }
 
 object Plugins {

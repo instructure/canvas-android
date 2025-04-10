@@ -38,6 +38,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -53,9 +55,10 @@ import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.navigation.MainNavigationRoute
 
 @Composable
-fun DashboardScreen(uiState: DashboardUiState) {
+fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController) {
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
         LoadingStateWrapper(loadingState = uiState.loadingState) {
             LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
@@ -64,7 +67,9 @@ fun DashboardScreen(uiState: DashboardUiState) {
                     HorizonSpace(SpaceSize.SPACE_36)
                 }
                 items(uiState.coursesUiState) { courseItem ->
-                    DashboardCourseItem(courseItem)
+                    DashboardCourseItem(courseItem, onClick = {
+                        mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseItem.courseId, courseItem.nextModuleItemId))
+                    })
                 }
             })
         }
@@ -81,16 +86,26 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
             modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(iconRes = R.drawable.menu_book_notebook, onClick = uiState.onNotebookClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
+        IconButton(
+            iconRes = R.drawable.menu_book_notebook,
+            onClick = uiState.onNotebookClick,
+            modifier = buttonModifier,
+            color = IconButtonColor.INVERSE
+        )
         HorizonSpace(SpaceSize.SPACE_8)
-        IconButton(iconRes = R.drawable.notifications, onClick = uiState.onNotificationsClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
+        IconButton(
+            iconRes = R.drawable.notifications,
+            onClick = uiState.onNotificationsClick,
+            modifier = buttonModifier,
+            color = IconButtonColor.INVERSE
+        )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(iconRes = R.drawable.mail, onClick = uiState.onInboxClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
     }
 }
 
 @Composable
-private fun DashboardCourseItem(courseItem: DashboardCourseUiState, modifier: Modifier = Modifier) {
+private fun DashboardCourseItem(courseItem: DashboardCourseUiState, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(text = courseItem.courseName, style = HorizonTypography.h1)
         HorizonSpace(SpaceSize.SPACE_24)
@@ -106,7 +121,7 @@ private fun DashboardCourseItem(courseItem: DashboardCourseUiState, modifier: Mo
                 remainingTime = courseItem.remainingTime,
                 dueDate = courseItem.dueDate,
                 learningObjectType = courseItem.learningObjectType,
-                onClick = courseItem.onClick
+                onClick = onClick
             )
         )
         HorizonSpace(SpaceSize.SPACE_24)
@@ -117,5 +132,5 @@ private fun DashboardCourseItem(courseItem: DashboardCourseUiState, modifier: Mo
 @Preview
 private fun DashboardScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DashboardScreen(DashboardUiState())
+    DashboardScreen(DashboardUiState(), mainNavController = rememberNavController())
 }

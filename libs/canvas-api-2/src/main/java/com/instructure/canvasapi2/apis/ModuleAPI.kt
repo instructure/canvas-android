@@ -45,13 +45,24 @@ object ModuleAPI {
         fun getFirstPageModulesWithItems(@Path("contextId") contextId: Long) : Call<List<ModuleObject>>
 
         @GET("{contextType}/{contextId}/modules?include[]=items&include[]=content_details")
-        suspend fun getFirstPageModulesWithItems(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<ModuleObject>>
+        suspend fun getFirstPageModulesWithItems(
+            @Path("contextType") contextType: String,
+            @Path("contextId") contextId: Long,
+            @Tag params: RestParams,
+            @Query("include[]") includes: List<String> = emptyList()
+        ): DataResult<List<ModuleObject>>
 
         @GET("{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
         fun getFirstPageModuleItems(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long) : Call<List<ModuleItem>>
 
         @GET("{contextType}/{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
-        suspend fun getFirstPageModuleItems(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Tag params: RestParams) : DataResult<List<ModuleItem>>
+        suspend fun getFirstPageModuleItems(
+            @Path("contextType") contextType: String,
+            @Path("contextId") contextId: Long,
+            @Path("moduleId") moduleId: Long,
+            @Tag params: RestParams,
+            @Query("include[]") includes: List<String> = emptyList()
+        ): DataResult<List<ModuleItem>>
 
         @GET
         fun getNextPageModuleItemList(@Url nextURL: String) : Call<List<ModuleItem>>

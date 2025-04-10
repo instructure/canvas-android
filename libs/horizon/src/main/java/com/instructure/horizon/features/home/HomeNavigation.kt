@@ -41,12 +41,12 @@ sealed class HomeNavigationRoute(val route: String) {
 }
 
 @Composable
-fun HomeNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
+fun HomeNavigation(navController: NavHostController, mainNavController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController, startDestination = HomeNavigationRoute.Dashboard.route, modifier = modifier) {
         composable(HomeNavigationRoute.Dashboard.route) {
             val viewModel = hiltViewModel<DashboardViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            DashboardScreen(uiState)
+            DashboardScreen(uiState, mainNavController)
         }
         composable(HomeNavigationRoute.Courses.route) {
             ShowroomScreen(navController)

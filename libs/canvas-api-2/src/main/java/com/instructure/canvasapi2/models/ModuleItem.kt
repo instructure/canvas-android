@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.util.Calendar
 
 @Parcelize
 data class ModuleItem(
@@ -56,6 +57,9 @@ data class ModuleItem(
     var masteryPathsItemId: Long = 0 // Helper variable
 ) : CanvasModel<ModuleItem>() {
     override val comparisonString get() = title
+
+    val overDue: Boolean
+        get() = moduleDetails?.dueDate?.before(Calendar.getInstance().time) ?: false
 
     enum class Type {
         Assignment, Discussion, File, Page, SubHeader, Quiz, ExternalUrl, ExternalTool, Locked, ChooseAssignmentGroup

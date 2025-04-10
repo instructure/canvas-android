@@ -85,6 +85,7 @@ class DashboardViewModel @Inject constructor(
                             courseProgress = course.progress,
                             nextModuleName = nextModuleResult?.name ?: "",
                             nextModuleItemName = nextModuleItemResult.title ?: "",
+                            nextModuleItemId = nextModuleItemResult.id,
                             progressLabel = getProgressLabel(course.progress),
                             remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
                             learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
