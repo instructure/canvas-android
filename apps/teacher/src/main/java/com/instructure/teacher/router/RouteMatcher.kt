@@ -58,6 +58,7 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
@@ -412,7 +413,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private fun handleSpeedGraderRoute(context: Context, route: Route) {
         Logger.i("RouteMatcher:handleSpeedGraderRoute()")
-        context.startActivity(SpeedGraderActivity.createIntent(context, route))
+        route.primaryClass = SpeedGraderFragment::class.java
+        handleFullscreenRoute(context, route)
     }
 
     private fun handleWebViewRoute(context: Context, route: Route) {
@@ -517,6 +519,7 @@ object RouteMatcher : BaseRouteMatcher() {
             ViewHtmlFragment::class.java.isAssignableFrom(cls) -> fragment = ViewHtmlFragment.newInstance(route.arguments)
             ViewUnsupportedFileFragment::class.java.isAssignableFrom(cls) -> fragment = ViewUnsupportedFileFragment.newInstance(route.arguments)
             ChooseRecipientsFragment::class.java.isAssignableFrom(cls) -> fragment = ChooseRecipientsFragment.newInstance(route.arguments)
+            SpeedGraderFragment::class.java.isAssignableFrom(cls) -> fragment = SpeedGraderFragment.newInstance(route.arguments)
             SpeedGraderQuizWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = SpeedGraderQuizWebViewFragment.newInstance(route.arguments)
             AnnotationCommentListFragment::class.java.isAssignableFrom(cls) -> fragment = AnnotationCommentListFragment.newInstance(route.arguments)
             CreateDiscussionWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = CreateDiscussionWebViewFragment.newInstance(route)

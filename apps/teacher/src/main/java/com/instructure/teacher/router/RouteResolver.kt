@@ -21,6 +21,7 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
@@ -199,6 +200,8 @@ object RouteResolver {
             fragment = LtiLaunchFragment.newInstance(route)
         } else if (PeopleListFragment::class.java.isAssignableFrom(cls)) {
             fragment = PeopleListFragment.newInstance(canvasContext!!)
+        } else if (SpeedGraderFragment::class.java.isAssignableFrom(cls)) {
+            fragment = SpeedGraderFragment.newInstance(route)
         } else if (StudentContextFragment::class.java.isAssignableFrom(cls)) {
             fragment = StudentContextFragment.newInstance(route.arguments)
         } else if (AttendanceListFragment::class.java.isAssignableFrom(cls)) {
