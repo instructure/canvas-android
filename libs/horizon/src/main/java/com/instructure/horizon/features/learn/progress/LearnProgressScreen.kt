@@ -16,16 +16,28 @@
  */
 package com.instructure.horizon.features.learn.progress
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 
 @Composable
-fun LearnProgressScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize()
+fun LearnProgressScreen(modifier: Modifier = Modifier) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .clip(HorizonCornerRadius.level5)
+            .background(HorizonColors.Surface.cardPrimary())
+            .padding(vertical = 8.dp)
     ) {
         Text("Progress Screen")
     }

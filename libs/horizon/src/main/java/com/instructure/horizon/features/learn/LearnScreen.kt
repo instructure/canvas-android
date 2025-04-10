@@ -15,12 +15,16 @@
  */
 package com.instructure.horizon.features.learn
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,6 +34,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
@@ -92,12 +98,21 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
         HorizontalPager(
             pagerState,
             pageSpacing = 16.dp,
+            contentPadding = PaddingValues(horizontal = 8.dp),
         ) { index ->
-            when (index) {
-                0 -> LearnProgressScreen()
-                1 -> LearnOverviewScreen(state.course?.course)
-                2 -> LearnScoreScreen()
-                3 -> LearnNotesScreen()
+            val scaleAnimation by animateFloatAsState(if (index == pagerState.currentPage) 1f else 0.8f, label = "SelectedTabAnimation")
+            val cornerAnimation by animateDpAsState(if (index == pagerState.currentPage) 0.dp else 32.dp, label = "SelectedTabCornerAnimation")
+            Box(
+              modifier = Modifier
+                  .fillMaxSize()
+                  .scale(scaleAnimation)
+            ) {
+                when (index) {
+                    0 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                    1 -> LearnOverviewScreen(state.course?.course?.syllabusBody, Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                    2 -> LearnScoreScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                    3 -> LearnNotesScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                }
             }
         }
     }

@@ -31,17 +31,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
-import com.instructure.canvasapi2.models.Course
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 
 @Composable
 fun LearnOverviewScreen(
-    course: Course?,
+    summaryText: String?,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .clip(HorizonCornerRadius.level5)
             .background(HorizonColors.Surface.cardPrimary())
@@ -53,7 +53,7 @@ fun LearnOverviewScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             HtmlText(
-                course?.syllabusBody.orEmpty(),
+                summaryText.orEmpty(),
                 Modifier.padding(24.dp)
             )
         }
