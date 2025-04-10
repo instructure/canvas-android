@@ -17,8 +17,12 @@
 
 package com.instructure.horizon.features.moduleitemsequence
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -103,11 +107,21 @@ private fun ModuleItemSequenceContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        ModuleHeaderContainer(
-            uiState = uiState,
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp),
-            onBackPressed = onBackPressed
-        )
+        Box(
+            modifier = Modifier.animateContentSize(
+                animationSpec = tween(
+                    durationMillis = 200,
+                    delayMillis = 200,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        ) {
+            ModuleHeaderContainer(
+                uiState = uiState,
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp),
+                onBackPressed = onBackPressed
+            )
+        }
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
@@ -173,7 +187,7 @@ private fun ModuleHeaderContainer(uiState: ModuleItemSequenceUiState, onBackPres
         }
         if (uiState.currentItem?.pillText != null) {
             HorizonSpace(SpaceSize.SPACE_12)
-            Pill(label = uiState.currentItem?.pillText.orEmpty(), type = PillType.INVERSE, case = PillCase.TITLE)
+            Pill(label = uiState.currentItem.pillText, type = PillType.INVERSE, case = PillCase.TITLE)
         }
     }
 }
