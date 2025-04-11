@@ -66,31 +66,42 @@ class DashboardViewModel @Inject constructor(
     private suspend fun loadData(forceNetwork: Boolean) {
         val courses = dashboardRepository.getCoursesWithProgress(forceNetwork = forceNetwork)
         if (courses.isSuccess) {
-            val coursesResult = courses.dataOrThrow
+            val coursesResult = courses.dataOrThrow.filter { it.progress != null && it.nextUpModuleId != null && it.nextUpModuleItemId != null }
             val courseUiStates = coursesResult.map { course ->
                 viewModelScope.async {
-                    val nextModule = dashboardRepository.getNextModule(course.course.id, course.nextUpModuleId, forceNetwork = true)
-                    val nextModuleItem = dashboardRepository.getNextModuleItem(
-                        course.course.id,
-                        course.nextUpModuleId,
-                        course.nextUpModuleItemId,
-                        forceNetwork = true
-                    )
-                    if (nextModuleItem.isSuccess) {
-                        val nextModuleResult = nextModule.dataOrNull
-                        val nextModuleItemResult = nextModuleItem.dataOrThrow
-                        DashboardCourseUiState(
-                            courseId = course.course.id,
-                            courseName = course.course.name,
-                            courseProgress = course.progress,
-                            nextModuleName = nextModuleResult?.name ?: "",
-                            nextModuleItemName = nextModuleItemResult.title ?: "",
-                            progressLabel = getProgressLabel(course.progress),
-                            remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
-                            learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
-                            dueDate = nextModuleItemResult.moduleDetails?.dueDate,
-                            onClick = { onCourseClick(course.course.id) }
+                    val nextModuleId = course.nextUpModuleId
+                    val nextModuleItemId = course.nextUpModuleItemId
+                    if (nextModuleId != null && nextModuleItemId != null) {
+                        val nextModule = dashboardRepository.getNextModule(
+                            course.course.id,
+                            nextModuleId,
+                            forceNetwork = true
                         )
+                        val nextModuleItem = dashboardRepository.getNextModuleItem(
+                            course.course.id,
+                            nextModuleId,
+                            nextModuleItemId,
+                            forceNetwork = true
+                        )
+                        if (nextModuleItem.isSuccess) {
+                            val nextModuleResult = nextModule.dataOrNull
+                            val nextModuleItemResult = nextModuleItem.dataOrThrow
+                            DashboardCourseUiState(
+                                courseId = course.course.id,
+                                courseName = course.course.name,
+                                courseProgress = course.progress ?: 0.0,
+                                nextModuleName = nextModuleResult?.name ?: "",
+                                nextModuleItemName = nextModuleItemResult.title ?: "",
+                                progressLabel = getProgressLabel(course.progress ?: 0.0),
+                                remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
+                                learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
+                                dueDate = nextModuleItemResult.moduleDetails?.dueDate,
+                                onClick = { onCourseClick(course.course.id) }
+                            )
+                        } else {
+                            handleError()
+                            null
+                        }
                     } else {
                         handleError()
                         null

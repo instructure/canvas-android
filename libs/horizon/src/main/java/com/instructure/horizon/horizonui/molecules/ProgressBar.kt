@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -50,12 +51,16 @@ enum class ProgressBarNumberStyle {
 
 @Composable
 fun ProgressBar(progress: Double, modifier: Modifier = Modifier, numberStyle: ProgressBarNumberStyle = ProgressBarNumberStyle.OUTSIDE) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Box(
-            modifier
+            Modifier
                 .border(width = 2.dp, shape = HorizonCornerRadius.level6, color = HorizonColors.Surface.institution())
                 .height(28.dp)
                 .weight(1f)
+                .clip(HorizonCornerRadius.level6)
         ) {
             Box(
                 contentAlignment = Alignment.CenterEnd,
@@ -64,6 +69,7 @@ fun ProgressBar(progress: Double, modifier: Modifier = Modifier, numberStyle: Pr
                     .fillMaxWidth((progress.toFloat() / 100f))
                     .height(28.dp)
                     .padding(end = 8.dp)
+                    .clip(HorizonCornerRadius.level6)
             ) {
                 if (numberStyle == ProgressBarNumberStyle.INSIDE && progress >= 10.0) {
                     ProgressBarNumber(progress = progress, color = HorizonColors.PrimitivesWhite.white10())
@@ -130,6 +136,13 @@ fun ProgressBarSmall(progress: Double, label: String, modifier: Modifier = Modif
 private fun ProgressBarOutsidePreview() {
     ContextKeeper.appContext = LocalContext.current
     ProgressBar(progress = 50.0, numberStyle = ProgressBarNumberStyle.OUTSIDE)
+}
+
+@Composable
+@Preview
+private fun ProgressBarOutsideLowValuePreview() {
+    ContextKeeper.appContext = LocalContext.current
+    ProgressBar(progress = 5.0, numberStyle = ProgressBarNumberStyle.OUTSIDE)
 }
 
 @Composable

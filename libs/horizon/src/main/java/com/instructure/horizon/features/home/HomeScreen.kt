@@ -66,7 +66,7 @@ data class BottomNavItem(
 
 private val bottomNavItems = listOf(
     BottomNavItem(HomeNavigationRoute.Dashboard.route, R.string.bottomNav_home, R.drawable.home, R.drawable.home_filled),
-    BottomNavItem(HomeNavigationRoute.Courses.route, R.string.bottomNav_learn, R.drawable.book_2, R.drawable.book_2_filled),
+    BottomNavItem(HomeNavigationRoute.Learn.route, R.string.bottomNav_learn, R.drawable.book_2, R.drawable.book_2_filled),
     BottomNavItem(MainNavigationRoute.AiAssistant.route, R.string.bottomNav_aiAssist, R.drawable.ai, R.drawable.ai_filled),
     BottomNavItem(HomeNavigationRoute.Skillspace.route, R.string.bottomNav_skillspace, R.drawable.hub, R.drawable.hub_filled),
     BottomNavItem(
