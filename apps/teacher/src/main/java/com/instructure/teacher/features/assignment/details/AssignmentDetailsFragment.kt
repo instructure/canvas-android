@@ -357,8 +357,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     //endregion
 
     override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
-        allTitle?.setTextColor(course.color)
-        allIcon?.setColorFilter(course.color)
+        allTitle.setTextColor(course.color)
+        allIcon.setColorFilter(course.color)
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)

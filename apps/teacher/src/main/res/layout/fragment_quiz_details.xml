@@ -307,28 +307,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="no"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:orientation="vertical">
 
-                    <TextView
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="yes"
-                        android:text="@string/submissions"
-                        android:textColor="@color/textDark"/>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:importantForAccessibility="no">
-
-                        <include
-                            android:id="@+id/donutGroup"
-                            layout="@layout/view_submissions_donut_group" />
-
-                    </FrameLayout>
+                    <include
+                        android:id="@+id/donutGroup"
+                        layout="@layout/view_submissions_donut_group" />
 
                 </LinearLayout>
 

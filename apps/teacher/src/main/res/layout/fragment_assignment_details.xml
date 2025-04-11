@@ -377,16 +377,9 @@
                     android:importantForAccessibility="no"
                     android:orientation="vertical">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no">
-
-                        <include
-                            android:id="@+id/donutGroup"
-                            layout="@layout/view_submissions_donut_group" />
-
-                    </FrameLayout>
+                    <include
+                        android:id="@+id/donutGroup"
+                        layout="@layout/view_submissions_donut_group" />
 
                 </LinearLayout>
 
