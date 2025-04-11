@@ -99,6 +99,7 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
             pagerState,
             pageSpacing = 16.dp,
             contentPadding = PaddingValues(horizontal = 8.dp),
+            beyondViewportPageCount = 4
         ) { index ->
             val scaleAnimation by animateFloatAsState(if (index == pagerState.currentPage) 1f else 0.8f, label = "SelectedTabAnimation")
             val cornerAnimation by animateDpAsState(if (index == pagerState.currentPage) 0.dp else 32.dp, label = "SelectedTabCornerAnimation")
