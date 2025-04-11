@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,25 +12,11 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
- *
  */
+package com.instructure.canvasapi2
 
-package com.instructure.teacher.di
+import android.content.Intent
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import org.greenrobot.eventbus.EventBus
-
-@Module
-@InstallIn(ViewModelComponent::class)
-class EventBusModule {
-
-    @Provides
-    fun provideEventBus(): EventBus {
-        return EventBus.getDefault()
-    }
+interface LoginRouter {
+    fun loginIntent(): Intent
 }
-

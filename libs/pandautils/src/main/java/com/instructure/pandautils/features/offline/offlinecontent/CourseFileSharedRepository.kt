@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.depaginate
 class CourseFileSharedRepository(private val fileFolderApi: FileFolderAPI.FilesFoldersInterface) {
 
     suspend fun getCourseFoldersAndFiles(courseId: Long): List<FileFolder> {
-        val params = RestParams(isForceReadFromNetwork = true)
+        val params = RestParams(isForceReadFromNetwork = true, shouldRefreshToken = false)
         val rootFolderResult =
             fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
 
@@ -35,21 +35,21 @@ class CourseFileSharedRepository(private val fileFolderApi: FileFolderAPI.FilesF
 
         val result = mutableListOf<FileFolder>()
 
-        result.addAll(getAllFoldersAndFiles(rootFolderResult.dataOrThrow))
+        result.addAll(getAllFoldersAndFiles(rootFolderResult.dataOrThrow, params))
 
         return result
     }
 
-    private suspend fun getAllFoldersAndFiles(folder: FileFolder): List<FileFolder> {
+    private suspend fun getAllFoldersAndFiles(folder: FileFolder, params: RestParams): List<FileFolder> {
         val result = mutableListOf<FileFolder>()
         result.add(folder)
-        val subFolders = getFolders(folder)
+        val subFolders = getFolders(folder, params)
 
-        val currentFolderFiles = getFiles(folder)
+        val currentFolderFiles = getFiles(folder, params)
         result.addAll(currentFolderFiles)
 
         for (subFolder in subFolders) {
-            val subFolderFiles = getAllFoldersAndFiles(subFolder)
+            val subFolderFiles = getAllFoldersAndFiles(subFolder, params)
             result.addAll(subFolderFiles)
         }
 
@@ -63,36 +63,34 @@ class CourseFileSharedRepository(private val fileFolderApi: FileFolderAPI.FilesF
 
         if (rootFolderResult.isFail) return emptyList()
 
-        return getAllFiles(rootFolderResult.dataOrThrow)
+        return getAllFiles(rootFolderResult.dataOrThrow, params)
     }
 
-    private suspend fun getAllFiles(folder: FileFolder): List<FileFolder> {
+    private suspend fun getAllFiles(folder: FileFolder, params: RestParams): List<FileFolder> {
         val result = mutableListOf<FileFolder>()
-        val subFolders = getFolders(folder)
+        val subFolders = getFolders(folder, params)
 
-        val currentFolderFiles = getFiles(folder)
+        val currentFolderFiles = getFiles(folder, params)
         result.addAll(currentFolderFiles)
 
         for (subFolder in subFolders) {
-            val subFolderFiles = getAllFiles(subFolder)
+            val subFolderFiles = getAllFiles(subFolder, params)
             result.addAll(subFolderFiles)
         }
 
         return result
     }
 
-    private suspend fun getFolders(folder: FileFolder): List<FileFolder> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val foldersResult = fileFolderApi.getFirstPageFolders(folder.id, params).depaginate { nextUrl ->
+    private suspend fun getFolders(folder: FileFolder, params: RestParams): List<FileFolder> {
+        val foldersResult = fileFolderApi.getFirstPageFolders(folder.id, params.copy(usePerPageQueryParam = true)).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
 
         return foldersResult.dataOrNull.orEmpty().filterValidFileFolders()
     }
 
-    private suspend fun getFiles(folder: FileFolder): List<FileFolder> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        val filesResult = fileFolderApi.getFirstPageFiles(folder.id, params).depaginate { nextUrl ->
+    private suspend fun getFiles(folder: FileFolder, params: RestParams): List<FileFolder> {
+        val filesResult = fileFolderApi.getFirstPageFiles(folder.id, params.copy(usePerPageQueryParam = true)).depaginate { nextUrl ->
             fileFolderApi.getNextPageFileFoldersList(nextUrl, params)
         }
 
