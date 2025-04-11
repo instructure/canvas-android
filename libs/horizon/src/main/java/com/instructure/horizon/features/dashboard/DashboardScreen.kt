@@ -26,14 +26,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,8 +47,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
@@ -78,7 +76,6 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 
 @Composable
 private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Modifier) {
-    val buttonModifier = Modifier.shadow(HorizonElevation.level4, shape = CircleShape)
     Row(verticalAlignment = Alignment.Bottom, modifier = modifier) {
         GlideImage(
             model = uiState.logoUrl,
@@ -89,18 +86,23 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
         IconButton(
             iconRes = R.drawable.menu_book_notebook,
             onClick = uiState.onNotebookClick,
-            modifier = buttonModifier,
-            color = IconButtonColor.INVERSE
+            color = IconButtonColor.INVERSE,
+            elevation = HorizonElevation.level4,
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.notifications,
             onClick = uiState.onNotificationsClick,
-            modifier = buttonModifier,
+            elevation = HorizonElevation.level4,
             color = IconButtonColor.INVERSE
         )
         HorizonSpace(SpaceSize.SPACE_8)
-        IconButton(iconRes = R.drawable.mail, onClick = uiState.onInboxClick, modifier = buttonModifier, color = IconButtonColor.INVERSE)
+        IconButton(
+            iconRes = R.drawable.mail,
+            onClick = uiState.onInboxClick,
+            elevation = HorizonElevation.level4,
+            color = IconButtonColor.INVERSE
+        )
     }
 }
 

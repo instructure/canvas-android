@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +41,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.pandautils.compose.modifiers.conditional
 
 enum class IconButtonSize(val size: Dp, val badgeOffset: Dp) {
     SMALL(32.dp, 8.dp),
@@ -66,7 +68,7 @@ enum class IconButtonColor(
     AI(
         HorizonColors.Surface.aiGradientStart(),
         HorizonColors.Icon.surfaceColored(),
-        secondaryBackgroundColor =  HorizonColors.Surface.aiGradientEnd()
+        secondaryBackgroundColor = HorizonColors.Surface.aiGradientEnd()
     ),
 }
 
@@ -76,25 +78,32 @@ fun IconButton(
     modifier: Modifier = Modifier,
     size: IconButtonSize = IconButtonSize.NORMAL,
     color: IconButtonColor = IconButtonColor.BLACK,
+    elevation: Dp? = null,
     enabled: Boolean = true,
     contentDescription: String? = null,
     onClick: () -> Unit = {},
     badge: @Composable (() -> Unit)? = null
 ) {
-    val buttonModifier = if (enabled) modifier else modifier.alpha(0.5f)
-    val gradientModifier = color.secondaryBackgroundColor?.let {
-        buttonModifier.background(
-            brush = Brush.verticalGradient(
-                colors = listOf(color.backgroundColor, it)
-            ), shape = HorizonCornerRadius.level6, alpha = if (enabled) 1f else 0.5f
-        )
-    } ?: buttonModifier
+    val buttonModifier = Modifier
+        .conditional(!enabled) {
+            alpha(0.5f)
+        }
+        .conditional(elevation != null) {
+            shadow(elevation = elevation!!, shape = CircleShape)
+        }
+        .conditional(color.secondaryBackgroundColor != null) {
+            background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(color.backgroundColor, color.secondaryBackgroundColor!!)
+                ), shape = HorizonCornerRadius.level6, alpha = if (enabled) 1f else 0.5f
+            )
+        }
     val buttonBackgroundColor = if (color.secondaryBackgroundColor == null) color.backgroundColor else Color.Transparent
-    Box(contentAlignment = Alignment.TopEnd) {
+    Box(contentAlignment = Alignment.TopEnd, modifier = modifier) {
         IconButton(
             onClick = onClick,
             enabled = enabled,
-            modifier = gradientModifier
+            modifier = buttonModifier
                 .background(shape = CircleShape, color = buttonBackgroundColor)
                 .border(HorizonBorder.level1(color.borderColor), shape = CircleShape)
                 .size(size.size)

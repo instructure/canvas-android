@@ -69,4 +69,5 @@
     <string name="modulePager_overdue">Overdue</string>
     <string name="modulePager_locked">This content is locked.</string>
     <string name="learningObject_locked">Locked Content</string>
+    <string name="moduleProgressScreen_title">My Progress</string>
 </resources>

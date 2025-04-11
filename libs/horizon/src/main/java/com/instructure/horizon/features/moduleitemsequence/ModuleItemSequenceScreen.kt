@@ -35,7 +35,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -44,7 +43,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
+import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -86,6 +85,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             pagerState.animateScrollToPage(uiState.currentPosition)
         }
     }
+    if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState)
     Scaffold(containerColor = HorizonColors.Surface.institution(), bottomBar = {
         ModuleItemSequenceBottomBar(
             showNextButton = uiState.currentPosition < uiState.items.size - 1,
@@ -138,7 +138,11 @@ private fun ModuleItemSequenceContent(
 }
 
 @Composable
-private fun ModuleHeaderContainer(uiState: ModuleItemSequenceUiState, onBackPressed: () -> Unit, modifier: Modifier = Modifier) {
+private fun ModuleHeaderContainer(
+    uiState: ModuleItemSequenceUiState,
+    onBackPressed: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
             IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
@@ -161,7 +165,7 @@ private fun ModuleHeaderContainer(uiState: ModuleItemSequenceUiState, onBackPres
                     textAlign = TextAlign.Center
                 )
             }
-            IconButton(iconRes = R.drawable.list_alt, color = IconButtonColor.INSTITUTION)
+            IconButton(iconRes = R.drawable.list_alt, color = IconButtonColor.INSTITUTION, onClick = uiState.onProgressClick)
         }
         if (!uiState.currentItem?.detailTags.isNullOrEmpty()) {
             HorizonSpace(SpaceSize.SPACE_24)
@@ -212,6 +216,7 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, modifi
             lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
             modifier = modifier
         )
+
         else -> {
             Text(
                 text = "${moduleItemUiState.moduleItemName}\n type: ${moduleItemUiState.moduleItemContent!!::class.simpleName}",
@@ -233,23 +238,22 @@ private fun ModuleItemSequenceBottomBar(
     onPreviousClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val buttonModifier = Modifier.shadow(HorizonElevation.level4, shape = CircleShape)
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
         Row(modifier = modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
             if (showPreviousButton) IconButton(
                 iconRes = R.drawable.chevron_left,
                 color = IconButtonColor.INVERSE,
-                modifier = buttonModifier,
+                elevation = HorizonElevation.level4,
                 onClick = onPreviousClick
             )
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
-                IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, modifier = buttonModifier)
-                IconButton(iconRes = R.drawable.menu_book_notebook, color = IconButtonColor.INVERSE, modifier = buttonModifier)
+                IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, elevation = HorizonElevation.level4,)
+                IconButton(iconRes = R.drawable.menu_book_notebook, color = IconButtonColor.INVERSE, elevation = HorizonElevation.level4)
             }
             if (showNextButton) IconButton(
                 iconRes = R.drawable.chevron_right,
                 color = IconButtonColor.INVERSE,
-                modifier = buttonModifier,
+                elevation = HorizonElevation.level4,
                 onClick = onNextClick
             )
         }

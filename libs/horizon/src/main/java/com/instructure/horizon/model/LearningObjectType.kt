@@ -25,7 +25,7 @@ enum class LearningObjectType(@StringRes val stringRes: Int, @DrawableRes val ic
     FILE(R.string.learningObject_File, R.drawable.attach_file, "File"),
     EXTERNAL_TOOL(R.string.learningObject_externalTool, R.drawable.note_alt, "ExternalTool"),
     EXTERNAL_URL(R.string.learningObject_externalLink, R.drawable.link, "ExternalUrl"),
-    ASSESSMENT(R.string.learningObject_assessment, R.drawable.fact_check, "Quiz"), // TODO Double check this
+    ASSESSMENT(R.string.learningObject_assessment, R.drawable.fact_check, "Quiz"),
     UNKNOWN(R.string.learningObject_page, R.drawable.text_snippet, "");
 
     companion object {
