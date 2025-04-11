@@ -104,7 +104,9 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed." +
                 "Assert that the needs grading count under the corresponding assignment is 1.")
-        assignmentListPage.refresh()
+        composeTestRule.waitForIdle()
+        assignmentListPage.refreshAssignmentList()
+        composeTestRule.waitForIdle()
         assignmentListPage.assertHasAssignment(assignment[0])
 
         Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert the numbers of 'Not Submitted' and 'Needs Grading' submissions.")
@@ -144,6 +146,9 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Navigate back to Assignment List Page, open the '${assignment[0].name}' assignment and publish it. Click on Save.")
         Espresso.pressBack()
+        composeTestRule.waitForIdle()
+        Espresso.pressBack()
+        composeTestRule.waitForIdle()
         assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.clickPublishSwitch()
@@ -169,7 +174,8 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as UNPUBLISHED. Open the quiz assignment again.")
         Espresso.pressBack()
-        assignmentListPage.assertAssignmentUnPublished(quizAssignment[0].name)
+        assignmentListPage.refreshAssignmentList()
+        assignmentListPage.assertPublishedState(quizAssignment[0].name, false)
         assignmentListPage.clickAssignment(quizAssignment[0])
 
         Log.d(STEP_TAG, "Open Edit Page and re-publish the assignment, then click on Save. Assert that the quiz assignment is published automatically.")
@@ -180,7 +186,8 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back to Assignment List page. Assert that the '${quizAssignment[0].name}' quiz displays as PUBLISHED.")
         Espresso.pressBack()
-        assignmentListPage.assertAssignmentPublished(quizAssignment[0].name)
+        assignmentListPage.refreshAssignmentList()
+        assignmentListPage.assertPublishedState(quizAssignment[0].name, true)
 
         Log.d(STEP_TAG, "Open the '${assignment[0].name}' assignment.")
         assignmentListPage.clickAssignment(assignment[0])
@@ -231,21 +238,22 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back to Assignment List Page. Assert that the '${assignment[0].name}' assignment has 1 'Needs Grading' submission.")
         Espresso.pressBack()
-        assignmentListPage.assertHasAssignment(assignment[0])
-        assignmentListPage.assertNeedsGradingCountOfAssignment(assignment[0].name, 1)
+        assignmentListPage.refreshAssignmentList()
+        assignmentListPage.assertHasAssignment(quizAssignment[0], needsGradingCount = null)
+        assignmentListPage.assertHasAssignment(assignment[0], needsGradingCount = 1)
 
         Log.d(STEP_TAG,"Click on Search button and type '${quizAssignment[0].name}' to the search input field.")
-        assignmentListPage.searchable.clickOnSearchButton()
-        assignmentListPage.searchable.typeToSearchBar(quizAssignment[0].name)
+        assignmentListPage.searchBar.clickOnSearchButton()
+        assignmentListPage.searchBar.typeToSearchBar(quizAssignment[0].name)
 
         Log.d(STEP_TAG, "Assert that the '${quizAssignment[0].name}' quiz assignment is the only one which is displayed because it matches the search text.")
-        assignmentListPage.assertHasAssignment(quizAssignment[0])
-        assignmentListPage.assertAssignmentNotDisplayed(assignment[0])
+        assignmentListPage.assertHasAssignment(quizAssignment[0], needsGradingCount = null)
+        assignmentListPage.assertAssignmentNotDisplayed(assignment[0].name)
 
         Log.d(STEP_TAG,"Clear search input field value and assert if both of the assignment are displayed again on the Assignment List Page.")
-        assignmentListPage.searchable.clickOnClearSearchButton()
-        assignmentListPage.assertHasAssignment(assignment[0])
-        assignmentListPage.assertHasAssignment(quizAssignment[0])
+        assignmentListPage.searchBar.clickOnClearSearchButton()
+        assignmentListPage.assertHasAssignment(assignment[0], needsGradingCount = 1)
+        assignmentListPage.assertHasAssignment(quizAssignment[0], needsGradingCount = null)
 
         val newAssignmentName = "New Assignment Name"
         Log.d(STEP_TAG,"Edit ${assignment[0].name} assignment's name  to: $newAssignmentName.")

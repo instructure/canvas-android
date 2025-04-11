@@ -27,6 +27,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabl
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHiddenFields
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
+import com.instructure.pandautils.utils.ScreenState
 import java.util.EnumMap
 import kotlin.math.max
 
@@ -43,7 +44,7 @@ data class InboxComposeUiState(
     val subject: TextFieldValue = TextFieldValue(""),
     val body: TextFieldValue = TextFieldValue(""),
     val attachments: List<AttachmentCardItem> = emptyList(),
-    val screenState: ScreenState = ScreenState.Data,
+    val screenState: ScreenState = ScreenState.Content,
     val showConfirmationDialog: Boolean = false,
     val hiddenBodyMessage: String? = null,
     val enableCustomBackHandler: Boolean = true,
@@ -107,7 +108,7 @@ data class RecipientPickerUiState(
     val selectedRecipients: List<Recipient> = emptyList(),
     val searchValue: TextFieldValue = TextFieldValue(""),
     val screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
-    val screenState: ScreenState = ScreenState.Data,
+    val screenState: ScreenState = ScreenState.Content,
 )
 
 sealed class RecipientPickerActionHandler {
@@ -122,11 +123,4 @@ sealed class RecipientPickerActionHandler {
 sealed class RecipientPickerScreenOption {
     data object Roles : RecipientPickerScreenOption()
     data object Recipients : RecipientPickerScreenOption()
-}
-
-sealed class ScreenState {
-    data object Loading: ScreenState()
-    data object Data: ScreenState()
-    data object Empty: ScreenState()
-    data object Error: ScreenState()
 }

@@ -73,10 +73,10 @@ import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
-import com.instructure.pandautils.features.inbox.details.ScreenState
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.InboxMessageView
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.ThemePrefs
 import java.time.ZonedDateTime
 
@@ -166,7 +166,7 @@ private fun InboxDetailsScreenContent(
                 InboxDetailsEmpty(actionHandler)
             }
 
-            ScreenState.Success -> {
+            ScreenState.Content -> {
                 InboxDetailsContentView(uiState, actionHandler, messageActionHandler)
             }
         }
@@ -507,6 +507,6 @@ fun InboxDetailsScreenContentPreview() {
         conversationId = 1,
         conversation = conversation,
         messageStates = messageStates,
-        state = ScreenState.Success
+        state = ScreenState.Content
     ))
 }

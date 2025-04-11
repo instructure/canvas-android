@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.calendar.CalendarRouter
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
@@ -28,7 +29,6 @@ import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
-import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.fragments.DiscussionsListFragment
 import com.instructure.teacher.router.RouteMatcher
 

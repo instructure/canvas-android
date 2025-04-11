@@ -20,9 +20,9 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
-import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.router.RouteMatcher
@@ -39,7 +39,7 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
     }
 
     override fun openAssignments(course: Course) {
-        RouteMatcher.route(activity, AssignmentListFragment.makeRoute(course))
+        RouteMatcher.route(activity, AssignmentListFragment.makeRoute(course.id))
     }
 
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) {

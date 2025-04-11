@@ -31,9 +31,9 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.features.inbox.details.ConfirmationDialogState
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
-import com.instructure.pandautils.features.inbox.details.ScreenState
 import com.instructure.pandautils.features.inbox.details.composables.InboxDetailsScreen
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
+import com.instructure.pandautils.utils.ScreenState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -274,7 +274,7 @@ class InboxDetailsScreenTest {
     private fun getUiState(
         id: Long = 1,
         conversation: Conversation? = null,
-        state: ScreenState = ScreenState.Success,
+        state: ScreenState = ScreenState.Content,
         confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState()
     ): InboxDetailsUiState {
         return InboxDetailsUiState(

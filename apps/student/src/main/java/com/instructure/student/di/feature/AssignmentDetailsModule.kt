@@ -62,8 +62,7 @@ class AssignmentDetailsFragmentModule {
 }
 @Module
 @InstallIn(ViewModelComponent::class)
-class AssignmentDetailsModule {
-
+class AssignmentDetailsViewModelModule {
     @Provides
     fun provideAssignmentDetailsLocalDataSource(
         courseFacade: CourseFacade,

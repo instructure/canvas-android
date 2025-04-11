@@ -43,7 +43,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.student.R
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -56,7 +56,7 @@ import java.io.OutputStream
 import java.util.Date
 
 @HiltAndroidTest
-class PdfInteractionTest : StudentTest() {
+class PdfInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     val pdfFileName = "samplepdf.pdf"
@@ -163,8 +163,7 @@ class PdfInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD), description = assignmentDescriptionHtml)
 
-        assignmentListPage.waitForPage()
-        assignmentListPage.refresh()
+        assignmentListPage.refreshAssignmentList()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.assertAssignmentDetails(assignment)
 
@@ -247,7 +246,6 @@ class PdfInteractionTest : StudentTest() {
 
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.waitForPage()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.goToSubmissionDetails()

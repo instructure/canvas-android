@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.assignmentlist.datasource
+package com.instructure.student.features.assignments.list.datasource
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriodResponse
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -119,8 +118,8 @@ class AssignmentListNetworkDataSourceTest {
         Assert.assertEquals(expected, result)
     }
 
-    @Test
-    fun `Get course failure returns null`() = runTest {
+    @Test(expected = IllegalStateException::class)
+    fun `Get course failure throws exception`() = runTest {
         coEvery { coursesApi.getCourseWithGrade(any(), any()) } returns DataResult.Fail()
 
         val result = dataSource.getCourseWithGrade(1, true)

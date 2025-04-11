@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
@@ -28,7 +29,6 @@ import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
