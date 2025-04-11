@@ -152,7 +152,7 @@ class FileSync(
         try {
             val downloadResult = fileDownloadApi.downloadFile(
                 fileSyncData.fileUrl,
-                RestParams(shouldIgnoreToken = fileSyncData.externalFile)
+                RestParams(shouldIgnoreToken = fileSyncData.externalFile, shouldRefreshToken = false)
             )
 
             // External images can fail for various reasons (for example the file is no longer available),

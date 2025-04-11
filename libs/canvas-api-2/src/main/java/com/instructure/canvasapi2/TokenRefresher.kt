@@ -2,10 +2,8 @@ package com.instructure.canvasapi2
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.CanvasAuthError
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
@@ -36,20 +34,10 @@ class TokenRefresher(
         }
 
         while (refreshState == TokenRefreshState.Refreshing) {
-            runBlocking(Dispatchers.Unconfined) {
-                withTimeoutOrNull(5000) {
+            runBlocking {
+                withTimeoutOrNull(2 * 60 * 1000) {
                     while (refreshState == TokenRefreshState.Refreshing) {
                         delay(1000)
-                        Log.d("ASDFGASDFG", "Waiting for refresh")
-                    }
-                } ?: run {
-                    refreshState = TokenRefreshState.Failed
-                }
-
-                withTimeoutOrNull(2 * 60 * 1000) {
-                    while (refreshState == TokenRefreshState.LoginStarted) {
-                        delay(1000)
-                        Log.d("ASDFGASDFG", "Waiting for login")
                     }
                 } ?: run {
                     refreshState = TokenRefreshState.Failed
@@ -115,7 +103,6 @@ class TokenRefresher(
 
 sealed class TokenRefreshState {
     data object Refreshing : TokenRefreshState()
-    data object LoginStarted : TokenRefreshState()
     data object Failed : TokenRefreshState()
     data object Restart : TokenRefreshState()
     data class Success(val token: String) : TokenRefreshState()

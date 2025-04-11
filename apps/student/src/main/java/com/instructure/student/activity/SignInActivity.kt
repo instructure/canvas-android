@@ -19,7 +19,6 @@ package com.instructure.student.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.instructure.canvasapi2.TokenRefreshState
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SIGN_IN
@@ -30,11 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_SIGN_IN)
 @AndroidEntryPoint
 class SignInActivity : BaseLoginSignInActivity() {
-
-    override fun onResume() {
-        super.onResume()
-        tokenRefresher.refreshState = TokenRefreshState.LoginStarted
-    }
 
     override fun userAgent(): String {
         return "candroid"
