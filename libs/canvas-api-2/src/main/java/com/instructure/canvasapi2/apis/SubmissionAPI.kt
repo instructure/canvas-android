@@ -92,16 +92,6 @@ object SubmissionAPI {
 
         @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionComment(
-                @Path("courseId") courseId: Long,
-                @Path("assignmentId") assignmentId: Long,
-                @Path("userId") userId: Long,
-                @Query("comment[text_comment]") comment: String,
-                @Query("comment[group_comment]") isGroupComment: Boolean,
-                @Query("comment[file_ids][]") attachments: List<Long>
-        ): Call<Submission>
-
-        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
-        fun postSubmissionComment(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,
             @Path("userId") userId: Long,
@@ -111,19 +101,35 @@ object SubmissionAPI {
             @Query("comment[file_ids][]") attachments: List<Long>
         ): Call<Submission>
 
-        @POST("{contextId}/assignments/{assignmentId}/submissions")
-        fun postTextSubmission(
-                @Path("contextId") contextId: Long,
-                @Path("assignmentId") assignmentId: Long,
-                @Query("submission[submission_type]") submissionType: String,
-                @Query(value = "submission[body]", encoded = true) text: String): Call<Submission>
+        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
+        suspend fun postSubmissionComment(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Path("userId") userId: Long,
+            @Query("comment[text_comment]") comment: String,
+            @Query("comment[attempt]") attemptId: Long?,
+            @Query("comment[group_comment]") isGroupComment: Boolean,
+            @Query("comment[file_ids][]") attachments: List<Long>,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
 
-        @POST("{contextId}/assignments/{assignmentId}/submissions")
-        fun postUrlSubmission(
-                @Path("contextId") contextId: Long,
-                @Path("assignmentId") assignmentId: Long,
-                @Query("submission[submission_type]") submissionType: String,
-                @Query("submission[url]") url: String): Call<Submission>
+        @POST("courses/{contextId}/assignments/{assignmentId}/submissions")
+        suspend fun postTextSubmission(
+            @Path("contextId") contextId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Query("submission[submission_type]") submissionType: String,
+            @Query(value = "submission[body]", encoded = true) text: String,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
+
+        @POST("courses/{contextId}/assignments/{assignmentId}/submissions")
+        suspend fun postUrlSubmission(
+            @Path("contextId") contextId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Query("submission[submission_type]") submissionType: String,
+            @Query("submission[url]") url: String,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
 
         @PUT("{contextId}/assignments/{assignmentId}/submissions/{userId}")
         fun postMediaSubmissionComment(
@@ -155,12 +161,31 @@ object SubmissionAPI {
                 @Query("submission[media_comment_id]") notoriousId: String,
                 @Query("submission[media_comment_type]") mediaType: String): Call<Submission>
 
+        @POST("courses/{contextId}/assignments/{assignmentId}/submissions")
+        suspend fun postMediaSubmission(
+            @Path("contextId") contextId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Query("submission[submission_type]") submissionType: String,
+            @Query("submission[media_comment_id]") notoriousId: String,
+            @Query("submission[media_comment_type]") mediaType: String,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
+
         @POST("courses/{courseId}/assignments/{assignmentId}/submissions")
         fun postSubmissionAttachments(
                 @Path("courseId") courseId: Long,
                 @Path("assignmentId") assignmentId: Long,
                 @Query("submission[submission_type]") submissionType: String,
                 @Query("submission[file_ids][]") attachments: List<Long>): Call<Submission>
+
+        @POST("courses/{courseId}/assignments/{assignmentId}/submissions")
+        suspend fun postSubmissionAttachments(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Query("submission[submission_type]") submissionType: String,
+            @Query("submission[file_ids][]") attachments: List<Long>,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
 
         @FormUrlEncoded
         @POST("{contextId}/assignments/{assignmentId}/submissions")
@@ -170,6 +195,16 @@ object SubmissionAPI {
             @Field("submission[submission_type]") submissionType: String,
             @Field("submission[annotatable_attachment_id]") annotatableAttachmentId: Long
         ): Call<Submission>
+
+        @FormUrlEncoded
+        @POST("courses/{contextId}/assignments/{assignmentId}/submissions")
+        suspend fun postStudentAnnotationSubmission(
+            @Path("contextId") contextId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Field("submission[submission_type]") submissionType: String,
+            @Field("submission[annotatable_attachment_id]") annotatableAttachmentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
 
         @GET
         fun getLtiFromAuthenticationUrl(@Url url: String): Call<LTITool>
@@ -211,24 +246,12 @@ object SubmissionAPI {
         }
     }
 
-    fun postTextSubmission(contextId: Long, assignmentId: Long, text: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postTextSubmission(contextId, assignmentId, "online_text_entry", text)).enqueue(callback)
-    }
-
-    fun postUrlSubmission(contextId: Long, assignmentId: Long, submissionType: String, url: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<Submission>) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postUrlSubmission(contextId, assignmentId, submissionType, url)).enqueue(callback)
-    }
-
     fun getLtiFromAuthenticationUrl(url: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<LTITool>) {
         callback.addCall(adapter.build(SubmissionInterface::class.java, params).getLtiFromAuthenticationUrl(url)).enqueue(callback)
     }
 
     fun postSubmissionGrade(courseId: Long, assignmentId: Long, userId: Long, assignmentScore: String, isExcused: Boolean, adapter: RestBuilder, callback: StatusCallback<Submission>, params: RestParams) {
         callback.addCall(adapter.build(SubmissionInterface::class.java, params).postSubmissionGrade(courseId, assignmentId, userId, assignmentScore, isExcused)).enqueue(callback)
-    }
-
-    fun postSubmissionComment(courseId: Long, assignmentID: Long, userID: Long, comment: String, isGroupMessage: Boolean, attachmentsIds: List<Long>, adapter: RestBuilder, callback: StatusCallback<Submission>, params: RestParams) {
-        callback.addCall(adapter.build(SubmissionInterface::class.java, params).postSubmissionComment(courseId, assignmentID, userID, comment, isGroupMessage, attachmentsIds)).enqueue(callback)
     }
 
     fun postSubmissionComment(
@@ -279,7 +302,7 @@ object SubmissionAPI {
 
     fun postSubmissionAttachmentsSynchronous(courseId: Long, assignmentId: Long, attachmentsIds: List<Long>, adapter: RestBuilder, params: RestParams): Submission? {
         return try {
-            adapter.build(SubmissionInterface::class.java, params).postSubmissionAttachments(courseId, assignmentId, "online_upload", attachmentsIds).execute().body()
+            adapter.build(SubmissionInterface::class.java, params).postSubmissionAttachments(courseId, assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD.apiString, attachmentsIds).execute().body()
         } catch (e: Exception) {
             null
         }

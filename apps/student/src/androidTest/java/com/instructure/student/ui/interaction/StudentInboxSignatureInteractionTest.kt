@@ -15,6 +15,10 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.compose.ui.platform.ComposeView
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.InboxSignatureInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
@@ -29,6 +33,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.Matchers
 
 @HiltAndroidTest
 @UninstallModules(GraphQlApiModule::class)
@@ -62,5 +67,22 @@ class StudentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
         settingsPage.clickOnSettingsItem("Inbox Signature")
 
         composeTestRule.waitForIdle()
+    }
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheck(
+                SpeakableTextPresentCheck::class.java
+            ),
+            AccessibilityCheckResultUtils.matchesViews(
+                ViewMatchers.withParent(
+                    ViewMatchers.withClassName(
+                        Matchers.equalTo(ComposeView::class.java.name)
+                    )
+                )
+            )
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
     }
 }

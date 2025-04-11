@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.util.ParentPrefs
 
@@ -36,7 +37,7 @@ import com.instructure.parentapp.util.ParentPrefs
 class ParentGradesRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val courseApi: CourseAPI.CoursesInterface,
-    parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs
 ) : GradesRepository {
 
     override val studentId = parentPrefs.currentStudent?.id.orDefault()
@@ -51,6 +52,7 @@ class ParentGradesRepository(
                 val filteredAssignments = group.assignments
                     .filter { assignment -> assignment.published }
                     .filter { assignment -> getGradingTypeFromAPIString(assignment.gradingType.orEmpty()) != Assignment.GradingType.NOT_GRADED }
+                    .filter { assignment -> assignment.submissionList.isNullOrEmpty() || assignment.submissionList?.any { submission -> submission.userId == studentId } == true}
                 group.copy(assignments = filteredAssignments).toAssignmentGroup(studentId)
             }
         }.dataOrThrow
@@ -84,5 +86,15 @@ class ParentGradesRepository(
             enrollment,
             firstEnrollment == null && gradingPeriodId == null
         )
+    }
+
+    override fun getSortBy(): SortBy? {
+        return parentPrefs.gradesSortBy?.let {
+            SortBy.valueOf(it)
+        }
+    }
+
+    override fun setSortBy(sortBy: SortBy) {
+        parentPrefs.gradesSortBy = sortBy.name
     }
 }
