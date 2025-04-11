@@ -38,8 +38,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 274
-        versionName = '7.10.1'
+        versionCode = 275
+        versionName = '7.11.0'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
