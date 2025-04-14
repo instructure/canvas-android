@@ -73,4 +73,8 @@
     <string name="scoresItemStatus">Status:</string>
     <string name="scoresItemResult">Result: %1$s/%2$s</string>
     <string name="noFeedback">-</string>
+    <string name="sortBy">Sort By</string>
+    <string name="assignmentGroupWeights">Assignment Group Weights</string>
+    <string name="percentageValue">%1$s\%%</string>
+    <string name="averageScoreHeader">Average Score: %1$s\%%</string>
 </resources>

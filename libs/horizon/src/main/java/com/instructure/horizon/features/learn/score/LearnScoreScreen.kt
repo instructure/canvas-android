@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.learn.score
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -96,8 +97,11 @@ private fun LearnScoreContent(
     LazyColumn(modifier = modifier) {
         item {
             CollapsableContentCard(
-                title = "Average Score: ${state.grades?.currentScore.orDefault().stringValueWithoutTrailingZeros}%",
-                expandableSubtitle = "Assignment Group Weights",
+                title = stringResource(
+                    R.string.averageScoreHeader,
+                    state.grades?.currentScore.orDefault().stringValueWithoutTrailingZeros
+                ),
+                expandableSubtitle = stringResource(R.string.assignmentGroupWeights),
                 expanded = isExpanded,
                 onExpandChanged = { isExpanded = it },
                 expandableContent = {
@@ -136,7 +140,7 @@ private fun AssignmentsContent(
         ) {
             SingleSelect(
                 state = SingleSelectState(
-                    label = "Sort By",
+                    label = stringResource(R.string.sortBy),
                     isFocused = isSelectFocused,
                     isMenuOpen = isSelectOpen,
                     size = SingleSelectInputSize.Medium,
@@ -155,15 +159,22 @@ private fun AssignmentsContent(
                     .padding(horizontal = 24.dp)
             )
 
-            state.sortedAssignments.forEach { assignment ->
+            AnimatedContent(
+                state.sortedAssignments,
+                label = "AssignmentsContentAnimation",
+            ) { assignments ->
                 Column {
-                    AssignmentItem(assignment)
+                    assignments.forEach { assignment ->
+                        Column {
+                            AssignmentItem(assignment)
 
-                    if (assignment != state.sortedAssignments.last()) {
-                        HorizontalDivider(
-                            color = HorizonColors.Surface.pagePrimary(),
-                            thickness = 1.dp
-                        )
+                            if (assignment != state.sortedAssignments.last()) {
+                                HorizontalDivider(
+                                    color = HorizonColors.Surface.pagePrimary(),
+                                    thickness = 1.dp
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -309,7 +320,10 @@ private fun GroupWeightItem(assignmentGroup: AssignmentGroup) {
             HorizonSpace(SpaceSize.SPACE_8)
 
             Text(
-                text = "${assignmentGroup.groupWeight.stringValueWithoutTrailingZeros}%",
+                text = stringResource(
+                    R.string.percentageValue,
+                    assignmentGroup.groupWeight.stringValueWithoutTrailingZeros
+                ),
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body()
             )
