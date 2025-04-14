@@ -30,9 +30,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
-import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOverFlowItem
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
@@ -196,19 +194,11 @@ class AssignmentListScreenTest {
                 subtitle = "Course",
                 allAssignments = assignmentGroups.flatMap { it.assignments },
                 assignmentGroups = assignmentGroups,
-                listState = GroupedListViewState(
-                    groups = listOf(
-                        AssignmentGroupState(
-                            id = assignmentGroups[0].id,
-                            title = assignmentGroups[0].name ?: "",
-                            items = assignmentGroups[0].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) }
-                        ),
-                        AssignmentGroupState(
-                            id = assignmentGroups[1].id,
-                            title = assignmentGroups[1].name ?: "",
-                            items = assignmentGroups[1].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) }
-                        ),
-                    )
+                listState = mapOf(
+                    assignmentGroups[0].name.orEmpty() to
+                            assignmentGroups[0].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) },
+                    assignmentGroups[1].name.orEmpty() to
+                            assignmentGroups[1].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) }
                 ),
                 screenOption = AssignmentListScreenOption.List,
                 overFlowItems = listOf(AssignmentListMenuOverFlowItem("Item 1", {})),
