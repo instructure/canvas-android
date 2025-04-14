@@ -43,7 +43,12 @@ class ModuleItemCardStateMapper @Inject constructor(
         // Some types are not supported in Horizon (eg. Discussion) so we return null and filter them out
         if (learningObjectType == LearningObjectType.UNKNOWN) return null
 
-        val learningObjectStatus = LearningObjectStatus.OPTIONAL // TODO
+        val completionRequirement = moduleItem.completionRequirement
+        val learningObjectStatus = when {
+            completionRequirement == null -> LearningObjectStatus.OPTIONAL
+            completionRequirement.completed -> learningObjectType.completedStatus
+            else -> LearningObjectStatus.REQUIRED
+        }
 
         val points = moduleItem.moduleDetails?.pointsPossible?.toDoubleOrNull()?.toInt()
         val pointsString = points?.let {
