@@ -21,6 +21,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,17 +31,26 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,6 +62,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -71,20 +82,13 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toPx
 import kotlin.math.abs
 
 @Composable
 fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleItemSequenceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
     if (activity != null) ViewStyler.setStatusBarColor(activity, ThemePrefs.brandColor, true)
-    val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
-    LaunchedEffect(key1 = uiState.currentPosition) {
-        if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
-            pagerState.scrollToPage(uiState.currentPosition)
-        } else {
-            pagerState.animateScrollToPage(uiState.currentPosition)
-        }
-    }
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
     Scaffold(containerColor = HorizonColors.Surface.institution(), bottomBar = {
         ModuleItemSequenceBottomBar(
@@ -94,7 +98,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             onPreviousClick = uiState.onPreviousClick
         )
     }) { contentPadding ->
-        ModuleItemSequenceContent(modifier = Modifier.padding(contentPadding), uiState = uiState, pagerState = pagerState, onBackPressed = {
+        ModuleItemSequenceContent(modifier = Modifier.padding(contentPadding), uiState = uiState, onBackPressed = {
             navController.popBackStack()
         })
     }
@@ -103,10 +107,32 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
 @Composable
 private fun ModuleItemSequenceContent(
     uiState: ModuleItemSequenceUiState,
-    pagerState: PagerState,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val contentScrollState = rememberScrollState()
+    var isCollapsed by remember { mutableStateOf(false) }
+    var expandOverrideClicked by remember { mutableStateOf(false) }
+
+    LaunchedEffect(contentScrollState) {
+        snapshotFlow { contentScrollState.value }
+            .collect { offset ->
+                isCollapsed = offset > 100.toPx
+            }
+    }
+
+    val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
+    LaunchedEffect(key1 = uiState.currentPosition) {
+        isCollapsed = false
+        expandOverrideClicked = false
+        contentScrollState.scrollTo(0)
+        if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
+            pagerState.scrollToPage(uiState.currentPosition)
+        } else {
+            pagerState.animateScrollToPage(uiState.currentPosition)
+        }
+    }
+
     Column(modifier = modifier) {
         Box(
             modifier = Modifier.animateContentSize(
@@ -118,7 +144,14 @@ private fun ModuleItemSequenceContent(
         ) {
             ModuleHeaderContainer(
                 uiState = uiState,
-                modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp),
+                modifier = Modifier.conditional(isCollapsed && !expandOverrideClicked) {
+                    clickable {
+                        isCollapsed = !isCollapsed
+                        expandOverrideClicked = true
+                    }
+                }.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp).then(
+                    if (isCollapsed && !expandOverrideClicked) Modifier.height(0.dp) else Modifier.wrapContentHeight()
+                ),
                 onBackPressed = onBackPressed
             )
         }
@@ -131,7 +164,7 @@ private fun ModuleItemSequenceContent(
         ) {
             ModuleItemPager(pagerState = pagerState) { page ->
                 val moduleItemUiState = uiState.items[page]
-                ModuleItemContentScreen(moduleItemUiState, modifier = Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp))
+                ModuleItemContentScreen(moduleItemUiState, modifier = Modifier.padding(horizontal = 24.dp).verticalScroll(contentScrollState))
             }
         }
     }
@@ -218,14 +251,10 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, modifi
         )
 
         else -> {
-            Text(
-                text = "${moduleItemUiState.moduleItemName}\n type: ${moduleItemUiState.moduleItemContent!!::class.simpleName}",
-                style = HorizonTypography.h2,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                textAlign = TextAlign.Center
-            )
+            DummyContentScreen(
+                moduleItemName = moduleItemUiState.moduleItemName,
+                moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
+                modifier = modifier)
         }
     }
 }

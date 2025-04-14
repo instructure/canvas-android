@@ -16,30 +16,31 @@
 package com.instructure.horizon.features.moduleitemsequence.content
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.instructure.horizon.R
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.Pill
-import com.instructure.horizon.horizonui.molecules.PillCase
-import com.instructure.horizon.horizonui.molecules.PillStyle
-import com.instructure.horizon.horizonui.molecules.PillType
-import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 
+// TODO This is temporary to showcase header scrolling until we have the learning object pages
 @Composable
-fun LockedContentScreen(lockExplanation: String, modifier: Modifier = Modifier) {
+fun DummyContentScreen(moduleItemName: String, moduleItemType: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        HorizonSpace(SpaceSize.SPACE_24)
-        Pill(
-            label = stringResource(R.string.learningObject_locked),
-            style = PillStyle.INLINE,
-            type = PillType.LEARNING_OBJECT_TYPE,
-            case = PillCase.TITLE,
-            iconRes = R.drawable.lock
-        )
-        HorizonSpace(SpaceSize.SPACE_16)
-        ComposeCanvasWebViewWrapper(html = lockExplanation)
+        repeat(20) {
+            Text(
+                text = "$moduleItemName\n type: $moduleItemType",
+                style = HorizonTypography.h2,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                textAlign = TextAlign.Center
+            )
+            HorizonSpace(SpaceSize.SPACE_48)
+        }
     }
 }
