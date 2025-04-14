@@ -106,7 +106,7 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                     }
                 }
                 Spacer(modifier = Modifier.width(24.dp))
-                IconButton(iconRes = R.drawable.arrow_forward, color = IconButtonColor.INSTITUTION)
+                if (onClick != null) IconButton(iconRes = R.drawable.arrow_forward, color = IconButtonColor.INSTITUTION, onClick = onClick)
             }
         }
     }
