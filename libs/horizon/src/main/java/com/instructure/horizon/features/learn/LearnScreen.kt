@@ -17,6 +17,7 @@ package com.instructure.horizon.features.learn
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -49,8 +51,10 @@ import com.instructure.horizon.features.learn.score.LearnScoreScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ProgressBar
+import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.compose.composables.ErrorContent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,7 +62,19 @@ fun LearnScreen(state: LearnUiState) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
     ) { padding ->
-        LearnScreenWrapper(state, Modifier.padding(padding))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when {
+                state.screenState.isError -> ErrorContent(state.screenState.errorMessage.orEmpty())
+                state.screenState.isLoading -> LoadingContent()
+                else -> LearnScreenWrapper(state, Modifier.fillMaxSize())
+            }
+        }
     }
 }
 
@@ -145,6 +161,16 @@ private fun Tab(tab: LearnTab, isSelected: Boolean, modifier: Modifier = Modifie
                 .padding(top = 20.dp)
         )
     }
+}
+
+@Composable
+private fun LoadingContent() {
+    Spinner()
+}
+
+@Composable
+private fun ErrorContent(errorText: String) {
+    Text(text = errorText, style = HorizonTypography.h3)
 }
 
 @Composable

@@ -20,6 +20,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -94,7 +95,10 @@ private fun LearnScoreContent(
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(bottom = 4.dp)
+    ) {
         item {
             CollapsableContentCard(
                 title = stringResource(

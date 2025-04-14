@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,36 +34,57 @@ class LearnScoreViewModel @Inject constructor(
     private val learnScoreRepository: LearnScoreRepository,
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(LearnScoreUiState())
+    private val _uiState = MutableStateFlow(
+        LearnScoreUiState(
+            screenState = LoadingState(
+                onRefresh = ::refresh,
+            ),
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
-    fun loadState(courseId: Long, forceRefresh: Boolean = false) {
+    fun loadState(courseId: Long) {
         _uiState.update {
             it.copy(
-                screenState = _uiState.value.screenState.copy(isLoading = true),
+                screenState = it.screenState.copy(isLoading = true),
                 courseId = courseId,
             )
         }
-
         viewModelScope.tryLaunch {
-            val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh)
-            val enrollments = learnScoreRepository.getEnrollments(courseId, forceRefresh)
-            val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
-
-            sortAssignments(assignmentGroups)
+            getData(courseId)
             _uiState.update {
-                it.copy(
-                    screenState = _uiState.value.screenState.copy(isLoading = false),
-                    assignmentGroups = assignmentGroups,
-                    grades = grades,
-                )
+                it.copy(screenState = it.screenState.copy(isLoading = false))
             }
         } catch { exception ->
             _uiState.update {
                 it.copy(
-                    screenState = _uiState.value.screenState.copy(isLoading = false, errorMessage = exception.message),
+                    screenState = it.screenState.copy(isLoading = false, errorMessage = exception.message),
                 )
             }
+        }
+    }
+
+    private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
+        val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh)
+        val enrollments = learnScoreRepository.getEnrollments(courseId, forceRefresh)
+        val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
+
+        sortAssignments(assignmentGroups)
+        _uiState.update {
+            it.copy(
+                assignmentGroups = assignmentGroups,
+                grades = grades,
+            )
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = true)) }
+            getData(uiState.value.courseId, forceRefresh = true)
+            _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
+        } catch {
+            _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         }
     }
 
