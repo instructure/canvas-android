@@ -52,7 +52,7 @@ class ModuleItemCardStateMapper @Inject constructor(
 
         val points = moduleItem.moduleDetails?.pointsPossible?.toDoubleOrNull()?.toInt()
         val pointsString = points?.let {
-            context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, it, it)
+            context.resources.getQuantityString(R.plurals.moduleItemCard_pointsPossible, it, it)
         }
 
         return ModuleItemCardState(

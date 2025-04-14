@@ -71,4 +71,8 @@
     <string name="learningObject_locked">Locked Content</string>
     <string name="moduleProgressScreen_title">My Progress</string>
     <string name="moduleProgressScreen_error">Failed to load learning objects.</string>
+    <plurals name="moduleItemCard_pointsPossible">
+        <item quantity="one">%d pt</item>
+        <item quantity="other">%d pts</item>
+    </plurals>
 </resources>
