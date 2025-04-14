@@ -16,7 +16,10 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,12 +30,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -49,66 +55,73 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.orDefault
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun<GROUP: GroupedListViewGroup<GROUP_ITEM>, GROUP_ITEM: GroupedListViewGroupItem> GroupedListView(
-    state: GroupedListViewState<GROUP>,
+fun<GROUP, ITEM> GroupedListView(
+    items: Map<GROUP, List<ITEM>>,
     headerView: (@Composable () -> Unit)? = null,
-    groupHeaderView: @Composable (GROUP, () -> Unit) -> Unit = { group, onClick -> GroupedListGroupHeaderView(group, onClick) },
-    itemView: @Composable (GROUP_ITEM, Modifier) -> Unit,
+    groupHeaderView: @Composable (GROUP, Boolean, () -> Unit) -> Unit = { group, isExpanded, onClick -> GroupedListGroupHeaderView(group, isExpanded, onClick) },
+    itemView: @Composable (ITEM, Modifier) -> Unit,
     modifier: Modifier = Modifier,
-    actionHandler: (GroupedListViewEvent<GROUP, GROUP_ITEM>) -> Unit
+    actionHandler: (GroupedListViewEvent<ITEM>) -> Unit
 ) {
-
+    var groupExpandedState by remember { mutableStateOf(items.keys.associateWith { true }) }
     LazyColumn(
         modifier = modifier
     ) {
         item {
             headerView?.let { it() }
         }
-        state.groups.forEach { group ->
+        items.keys.forEach { group ->
             stickyHeader {
-                groupHeaderView(group) {
-                    actionHandler(GroupedListViewEvent.GroupClicked(group))
+                groupHeaderView(group, groupExpandedState[group].orDefault()) {
+                    groupExpandedState[group]?.let { isExpanded ->
+                        groupExpandedState = groupExpandedState.toMutableMap().apply {
+                            this[group] = !isExpanded
+                        }
+                    }
                 }
             }
-            if (group.isExpanded) {
-                items(group.items) { item ->
-                    itemView(
-                        item,
-                        Modifier.clickable {
-                            actionHandler(GroupedListViewEvent.ItemClicked(item))
+            item {
+                AnimatedVisibility(
+                    groupExpandedState[group].orDefault(),
+                    enter = expandVertically(expandFrom = Alignment.Top),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top),
+                    label = "GroupExpandAnimation"
+                    ) {
+                    Column {
+                        items[group]?.forEach { item ->
+                            itemView(
+                                item,
+                                Modifier.clickable {
+                                    actionHandler(GroupedListViewEvent.ItemClicked(item))
+                                }
+                            )
                         }
-                    )
+                    }
                 }
             }
         }
     }
 }
 
-private fun Modifier.conditional(condition : Boolean, modifier : Modifier.() -> Modifier) : Modifier {
-    return if (condition) {
-        then(modifier(Modifier))
-    } else {
-        this
-    }
-}
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun
-        <GROUP: GroupedListViewGroup<GROUP_ITEM>,
-        GROUP_ITEM: GroupedListViewGroupItem>
-    GroupedListGroupHeaderView(group: GROUP, onClick: () -> Unit) {
+private fun<GROUP> GroupedListGroupHeaderView(
+    group: GROUP,
+    isExpanded: Boolean,
+    onClick: () -> Unit
+) {
     val headerContentDescription = stringResource(
-        if (group.isExpanded) {
+        if (isExpanded) {
             R.string.content_description_collapse_content_with_param
         } else {
             R.string.content_description_expand_content_with_param
-        }, group.title
+        }, group.toString()
     )
-    val iconRotation by animateFloatAsState(targetValue = if (group.isExpanded) 180f else 0f, label = "expandedIconRotation")
+    val iconRotation by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f, label = "expandedIconRotation")
 
     Column(
         modifier = Modifier
@@ -132,7 +145,7 @@ private fun
                 )
         ) {
             Text(
-                text = group.title,
+                text = group.toString(),
                 color = colorResource(id = R.color.textDark),
                 fontSize = 14.sp,
                 modifier = Modifier.semantics {
@@ -156,62 +169,26 @@ private fun
 @Preview
 @Composable
 private fun GroupedListViewPreview() {
-    val state = GroupedListViewState(
-        groups = listOf(
-            GroupedListViewGroup(
-                id = "1",
-                title = "Group 1",
-                isExpanded = true,
-                items = listOf(
-                    GroupedListViewGroupItem(id = "1.1"),
-                    GroupedListViewGroupItem(id = "1.2"),
-                    GroupedListViewGroupItem(id = "1.3")
-                )
-            ),
-            GroupedListViewGroup(
-                id = "2",
-                title = "Group 2",
-                isExpanded = true,
-                items = listOf(
-                    GroupedListViewGroupItem(id = "2.1"),
-                    GroupedListViewGroupItem(id = "2.2"),
-                    GroupedListViewGroupItem(id = "2.3")
-                )
-            )
-        )
-    )
 
     GroupedListView(
-        state = state,
+        items = mapOf(
+            "Group 1" to listOf("Item 1", "Item 2"),
+            "Group 2" to listOf("Item 3", "Item 4"),
+            "Group 3" to listOf("Item 5", "Item 6")
+        ),
         headerView = {
             Text("Header")
         },
-        groupHeaderView = { group, onClick ->
-            GroupedListGroupHeaderView(group, onClick)
+        groupHeaderView = { group, isExpanded, onClick ->
+            GroupedListGroupHeaderView(group, isExpanded, onClick)
         },
         itemView = { item, _ ->
-            Text("Item ${item.id}")
+            Text(item)
         },
         actionHandler = {}
     )
 }
 
-data class GroupedListViewState<GROUP>(
-    val groups: List<GROUP>,
-)
-
-open class GroupedListViewGroup<GROUP_ITEM: GroupedListViewGroupItem>(
-    val id: Any?,
-    val title: String,
-    val isExpanded: Boolean,
-    val items: List<GROUP_ITEM>
-)
-
-open class GroupedListViewGroupItem(
-    val id: Any?
-)
-
-sealed class GroupedListViewEvent<GROUP: GroupedListViewGroup<GROUP_ITEM>, GROUP_ITEM: GroupedListViewGroupItem> {
-    data class GroupClicked<GROUP: GroupedListViewGroup<GROUP_ITEM>, GROUP_ITEM: GroupedListViewGroupItem>(val group: GROUP) : GroupedListViewEvent<GROUP, GROUP_ITEM>()
-    data class ItemClicked<GROUP: GroupedListViewGroup<GROUP_ITEM>, GROUP_ITEM: GroupedListViewGroupItem>(val groupItem: GROUP_ITEM) : GroupedListViewEvent<GROUP, GROUP_ITEM>()
+sealed class GroupedListViewEvent<ITEM> {
+    data class ItemClicked<ITEM>(val groupItem: ITEM) : GroupedListViewEvent<ITEM>()
 }

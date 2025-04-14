@@ -69,12 +69,10 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.GroupedListView
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
-import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SearchBarLive
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
-import com.instructure.pandautils.features.assignments.list.AssignmentGroupState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
 import com.instructure.pandautils.features.assignments.list.AssignmentListUiState
@@ -97,7 +95,7 @@ fun AssignmentListScreen(
     state: AssignmentListUiState,
     contextColor: Color,
     screenActionHandler: (AssignmentListScreenEvent) -> Unit,
-    listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
+    listActionHandler: (GroupedListViewEvent<AssignmentGroupItemState>) -> Unit
 ) {
     CanvasTheme {
         when (state.screenOption) {
@@ -237,7 +235,7 @@ private fun AssignmentListWrapper(
     contextColor: Color,
     modifier: Modifier = Modifier,
     screenActionHandler: (AssignmentListScreenEvent) -> Unit,
-    listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
+    listActionHandler: (GroupedListViewEvent<AssignmentGroupItemState>) -> Unit
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isRefreshing,
@@ -319,12 +317,12 @@ private fun AssignmentListWrapper(
 private fun AssignmentListContentView(
     state: AssignmentListUiState,
     contextColor: Color,
-    listActionHandler: (GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) -> Unit
+    listActionHandler: (GroupedListViewEvent<AssignmentGroupItemState>) -> Unit
 ) {
     GroupedListView(
         modifier = Modifier
             .testTag("assignmentList"),
-        state = state.listState,
+        items = state.listState,
         itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
         actionHandler = listActionHandler,
         headerView = if (state.gradingPeriods.isEmpty()) {
@@ -542,49 +540,39 @@ fun AssignmentListPreview() {
         course = course,
         subtitle = "Course 1",
         state = ScreenState.Content,
-        listState = GroupedListViewState(
-            groups = listOf(
-                AssignmentGroupState(
-                    id = 1,
-                    title = "Group 1",
-                    items = listOf(
-                        AssignmentGroupItemState(
-                            course,
-                            Assignment(name = "Assignment 1"),
-                            showDueDate = true,
-                            showGrade = true,
-                            showSubmissionState = true
-                        ),
-                        AssignmentGroupItemState(
-                            course,
-                            Assignment(name = "Assignment 2"),
-                            showPublishStateIcon = true,
-                            showClosedState = true,
-                            showDueDate = true,
-                            showMaxPoints = true,
-                        ),
-                    )
+        listState = mapOf(
+            "Group 1" to listOf(
+                AssignmentGroupItemState(
+                    course,
+                    Assignment(name = "Assignment 1"),
+                    showDueDate = true,
+                    showGrade = true,
+                    showSubmissionState = true
                 ),
-                AssignmentGroupState(
-                    id = 2,
-                    title = "Group 2",
-                    items = listOf(
-                        AssignmentGroupItemState(
-                            course,
-                            Assignment(name = "Assignment 3"),
-                            showDueDate = true,
-                            showGrade = true,
-                            showSubmissionState = true
-                        ),
-                        AssignmentGroupItemState(
-                            course,
-                            Assignment(name = "Assignment 4"),
-                            showPublishStateIcon = true,
-                            showClosedState = true,
-                            showDueDate = true,
-                            showMaxPoints = true,
-                        ),
-                    )
+                AssignmentGroupItemState(
+                    course,
+                    Assignment(name = "Assignment 2"),
+                    showPublishStateIcon = true,
+                    showClosedState = true,
+                    showDueDate = true,
+                    showMaxPoints = true,
+                ),
+            ),
+            "Group 2" to listOf(
+                AssignmentGroupItemState(
+                    course,
+                    Assignment(name = "Assignment 3"),
+                    showDueDate = true,
+                    showGrade = true,
+                    showSubmissionState = true
+                ),
+                AssignmentGroupItemState(
+                    course,
+                    Assignment(name = "Assignment 4"),
+                    showPublishStateIcon = true,
+                    showClosedState = true,
+                    showDueDate = true,
+                    showMaxPoints = true,
                 ),
             )
         ),

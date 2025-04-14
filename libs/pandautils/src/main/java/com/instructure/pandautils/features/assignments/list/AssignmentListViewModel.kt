@@ -31,7 +31,6 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
-import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
@@ -106,17 +105,11 @@ class AssignmentListViewModel @Inject constructor(
                         gradingPeriods = gradingPeriods,
                         currentGradingPeriod = getCurrentGradingPeriod(gradingPeriods),
                         gradingPeriodsWithAssignments = gradingPeriodAssignments,
-                        listState = GroupedListViewState(
-                            assignmentGroups.map { group ->
-                                AssignmentGroupState(
-                                    group.id,
-                                    group.name.orEmpty(),
-                                    group.assignments.map { assignment ->
-                                        assignmentListBehavior.getAssignmentGroupItemState(course, assignment)
-                                    }
-                                )
+                        listState = assignmentGroups.associate { assignmentGroup ->
+                            assignmentGroup.name.orEmpty() to assignmentGroup.assignments.map { assignment ->
+                                assignmentListBehavior.getAssignmentGroupItemState(course, assignment)
                             }
-                        ),
+                        },
                         filterOptions = AssignmentListFilterOptions(
                             assignmentFilters = assignmentListBehavior.getAssignmentFilters(),
                             assignmentStatusFilters = assignmentListBehavior.getAssignmentStatusFilters(),
@@ -135,7 +128,7 @@ class AssignmentListViewModel @Inject constructor(
                 val listState = performFilters()
                 _uiState.update {
                     it.copy(
-                        state = if (listState.groups.isEmpty()) ScreenState.Empty else ScreenState.Content,
+                        state = if (listState.keys.isEmpty()) ScreenState.Empty else ScreenState.Content,
                         listState = listState
                     )
                 }
@@ -147,29 +140,8 @@ class AssignmentListViewModel @Inject constructor(
         }
     }
 
-    fun handleListEvent(event: GroupedListViewEvent<AssignmentGroupState, AssignmentGroupItemState>) {
+    fun handleListEvent(event: GroupedListViewEvent<AssignmentGroupItemState>) {
         when (event) {
-            is GroupedListViewEvent.GroupClicked -> {
-                _uiState.update {
-                    it.copy(
-                        listState = it.listState.copy(
-                            groups = it.listState.groups.map { group ->
-                                if (group.id == event.group.id) {
-                                    AssignmentGroupState(
-                                        group.id as? Long ?: 0,
-                                        group.title,
-                                        group.items,
-                                        !group.isExpanded
-                                    )
-                                } else {
-                                    group
-                                }
-                            }
-                        )
-                    )
-                }
-            }
-
             is GroupedListViewEvent.ItemClicked -> {
                 viewModelScope.launch {
                     _events.send(AssignmentListFragmentEvent.NavigateToAssignment(uiState.value.course, event.groupItem.assignment))
@@ -190,7 +162,7 @@ class AssignmentListViewModel @Inject constructor(
                 val listState = performFilters()
                 _uiState.update {
                     it.copy(
-                        state = if (listState.groups.isEmpty()) ScreenState.Empty else ScreenState.Content,
+                        state = if (listState.keys.isEmpty()) ScreenState.Empty else ScreenState.Content,
                         listState = listState
                     )
                 }
@@ -218,7 +190,7 @@ class AssignmentListViewModel @Inject constructor(
                 val listState = performFilters()
                 _uiState.update {
                     it.copy(
-                        state = if (listState.groups.isEmpty()) ScreenState.Empty else ScreenState.Content,
+                        state = if (listState.keys.isEmpty()) ScreenState.Empty else ScreenState.Content,
                         listState = listState
                     )
                 }
@@ -233,10 +205,10 @@ class AssignmentListViewModel @Inject constructor(
         }
     }
 
-    private fun performFilters(): GroupedListViewState<AssignmentGroupState> {
+    private fun performFilters(): Map<String, List<AssignmentGroupItemState>> {
         val searchQuery = uiState.value.searchQuery
         val allAssignments = uiState.value.allAssignments.filter { it.name?.contains(searchQuery, true) ?: true }
-        var filteredAssignments = allAssignments.toSet()
+        var filteredAssignments = allAssignments
         val course = uiState.value.course
         val selectedFilters = uiState.value.selectedFilterData
 
@@ -253,13 +225,13 @@ class AssignmentListViewModel @Inject constructor(
                 AssignmentFilter.NeedsGrading -> filteredAssignments.filter { it.needsGradingCount > 0 }
                 AssignmentFilter.NotSubmitted -> filteredAssignments.filter { it.unpublishable }
             }
-        }.toSet()
+        }
 
         selectedFilters.selectedAssignmentStatusFilter?.let { statusFilter ->
             filteredAssignments = when (statusFilter) {
                 AssignmentStatusFilterOption.All -> filteredAssignments
-                AssignmentStatusFilterOption.Published -> filteredAssignments.filter { it.published }.toSet()
-                AssignmentStatusFilterOption.Unpublished -> filteredAssignments.filter { !it.published }.toSet()
+                AssignmentStatusFilterOption.Published -> filteredAssignments.filter { it.published }
+                AssignmentStatusFilterOption.Unpublished -> filteredAssignments.filter { !it.published }
             }
         }
 
@@ -268,9 +240,11 @@ class AssignmentListViewModel @Inject constructor(
                 filteredAssignments = filteredAssignments.filter {
                     uiState.value.gradingPeriodsWithAssignments[gradingPeriodFilter]?.map { it.id }
                         ?.contains(it.id).orDefault()
-                }.toSet()
+                }
             }
         }
+
+        filteredAssignments = filteredAssignments.sortedBy { it.id }.distinct()
 
         val groups = when(selectedFilters.selectedGroupByOption) {
             AssignmentGroupByOption.DueDate -> {
@@ -278,39 +252,29 @@ class AssignmentListViewModel @Inject constructor(
                     it.dueDate == null
                 }
                 val upcoming = filteredAssignments.filter {
-                    it.dueDate != null && (it.dueDate ?: Date()) > Date()
+                    it.dueDate != null && (it.dueDate ?: Date()) >= Date()
                 }
                 val past = filteredAssignments.filter {
                     it.dueDate != null && (it.dueDate ?: Date()) < Date()
                 }
-                listOf(
-                    AssignmentGroupState(
-                        id = 0,
-                        title = resources.getString(R.string.overdueAssignments),
-                        items = past.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                    ),
-                    AssignmentGroupState(
-                        id = 1,
-                        title = resources.getString(R.string.upcomingAssignments),
-                        items = upcoming.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                    ),
-                    AssignmentGroupState(
-                        id = 2,
-                        title = resources.getString(R.string.undatedAssignments),
-                        items = undated.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                    )
+                mapOf(
+                    resources.getString(R.string.overdueAssignments) to
+                        past.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
+
+                    resources.getString(R.string.upcomingAssignments) to
+                        upcoming.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
+
+                    resources.getString(R.string.undatedAssignments) to
+                        undated.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
                 )
             }
             AssignmentGroupByOption.AssignmentGroup -> {
                 filteredAssignments
                     .groupBy { it.assignmentGroupId }
                     .map { (key, value) ->
-                        AssignmentGroupState(
-                            id = key,
-                            title = uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty(),
-                            items = value.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                        )
-                    }
+                        uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty() to
+                            value.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
+                    }.toMap()
             }
             AssignmentGroupByOption.AssignmentType -> {
                 val discussionsGroup = filteredAssignments.filter {
@@ -321,27 +285,20 @@ class AssignmentListViewModel @Inject constructor(
                 }.toSet()
                 val assignmentGroup = filteredAssignments - discussionsGroup - quizzesGroup
 
-                listOf(
-                    AssignmentGroupState(
-                        id = 0,
-                        title = resources.getString(R.string.assignments),
-                        items = assignmentGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                    ),
-                    AssignmentGroupState(
-                        id = 1,
-                        title = resources.getString(R.string.discussion),
-                        items = discussionsGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                    ),
-                    AssignmentGroupState(
-                        id = 2,
-                        title = resources.getString(R.string.quizzes),
-                        items = quizzesGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                    )
+                mapOf(
+                    resources.getString(R.string.assignments) to
+                        assignmentGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
+
+                    resources.getString(R.string.discussion) to
+                        discussionsGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
+
+                    resources.getString(R.string.quizzes) to
+                        quizzesGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
                 )
             }
-        }.filter { it.items.isNotEmpty() }
+        }.filter { it.value.isNotEmpty() }
 
-        return GroupedListViewState(groups)
+        return groups
     }
 
     private fun getCurrentGradingPeriod(gradingPeriods: List<GradingPeriod>): GradingPeriod? {

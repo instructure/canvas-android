@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
@@ -93,6 +94,13 @@ class AssignmentListViewModelTest {
         coEvery { repository.updateSelectedOptions(any()) } just runs
         every { behavior.getAssignmentFilters() } returns AssignmentListFilterData(emptyList(), AssignmentListFilterType.SingleChoice)
         every { behavior.getAssignmentGroupItemState(any(), any()) } returns mockk(relaxed = true)
+
+        every { resources.getString(R.string.overdueAssignments) } returns "Overdue Assignments"
+        every { resources.getString(R.string.upcomingAssignments) } returns "Upcoming Assignments"
+        every { resources.getString(R.string.undatedAssignments) } returns "Undated Assignments"
+        every { resources.getString(R.string.assignments) } returns "Assignments"
+        every { resources.getString(R.string.discussion) } returns "Discussions"
+        every { resources.getString(R.string.quizzes) } returns "Quizzes"
     }
 
     @After
@@ -135,40 +143,6 @@ class AssignmentListViewModelTest {
         viewModel.handleListEvent(GroupedListViewEvent.ItemClicked(groupItem))
 
         assertEquals(AssignmentListFragmentEvent.NavigateToAssignment(viewModel.uiState.value.course, assignment), events.last())
-    }
-
-    @Test
-    fun `Test List group click event handler`() = runTest {
-        val assignmentGroups = listOf(
-            AssignmentGroup(
-                id = 1,
-                name = "Group 1",
-                assignments = listOf(
-                    Assignment(
-                        id = 1,
-                        name = "Assignment 1",
-                    ),
-                )
-            ),
-        )
-        val groupItem = AssignmentGroupItemState(course, assignmentGroups.first().assignments.first())
-        every { behavior.getAssignmentGroupItemState(course, assignmentGroups.first().assignments.first()) } returns groupItem
-        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
-        coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns emptyList()
-        val viewModel = getViewModel()
-
-        var group = viewModel.uiState.value.listState.groups.first()
-        assertEquals(true, group.isExpanded)
-
-        viewModel.handleListEvent(GroupedListViewEvent.GroupClicked(group))
-
-        group = viewModel.uiState.value.listState.groups.first()
-        assertEquals(false, group.isExpanded)
-
-        viewModel.handleListEvent(GroupedListViewEvent.GroupClicked(group))
-
-        group = viewModel.uiState.value.listState.groups.first()
-        assertEquals(true, group.isExpanded)
     }
 
     @Test
@@ -286,15 +260,15 @@ class AssignmentListViewModelTest {
 
         var newFilter = AssignmentListSelectedFilters(selectedAssignmentStatusFilter = AssignmentStatusFilterOption.All)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment1, assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment1, assignment2), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentStatusFilter = AssignmentStatusFilterOption.Published)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment1), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment1), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentStatusFilter = AssignmentStatusFilterOption.Unpublished)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment2), viewModel.uiState.value.listState.values.first().map { it.assignment })
     }
 
     @Test
@@ -337,15 +311,15 @@ class AssignmentListViewModelTest {
             AssignmentFilter.NotSubmitted
         ))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment1, assignment2, assignment3), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment1, assignment2, assignment3), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.NeedsGrading))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment2), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.NotSubmitted))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment2, assignment3), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment2, assignment3), viewModel.uiState.value.listState.values.first().map { it.assignment })
     }
 
     @Test
@@ -392,32 +366,37 @@ class AssignmentListViewModelTest {
 
         var newFilter = AssignmentListSelectedFilters(selectedGradingPeriodFilter = null)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment1, assignment2, assignment3), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment1, assignment2, assignment3), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedGradingPeriodFilter = gradingPeriod1)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment1), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment1), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedGradingPeriodFilter = gradingPeriod2)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(assignment2), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(assignment2), viewModel.uiState.value.listState.values.first().map { it.assignment })
     }
 
     @Test
     fun `Test Assignment status filter`() = runTest {
         val gradedAssignment = Assignment(
             id = 1,
+            assignmentGroupId = 1,
             name = "Assignment 1",
-            submission = Submission(grade = "A", workflowState = "graded", postedAt = Date())
+            submission = Submission(grade = "A", workflowState = "graded", submittedAt = Date(), postedAt = Date()),
+            submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString)
         )
         val notGradedAssignment = Assignment(
             id = 2,
             name = "Assignment 2",
-            submission = Submission(grade = null, workflowState = "submitted", postedAt = null)
+            assignmentGroupId = 1,
+            submission = Submission(grade = null, workflowState = "submitted", submittedAt = Date(), postedAt = null),
+            submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString)
         )
         val notSubmittedAssignment = Assignment(
             id = 3,
             name = "Assignment 3",
+            assignmentGroupId = 1,
             submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString)
         )
         val assignmentGroups = listOf(
@@ -443,19 +422,19 @@ class AssignmentListViewModelTest {
             AssignmentFilter.Other,
         ))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(notSubmittedAssignment, notGradedAssignment, gradedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(gradedAssignment, notGradedAssignment, notSubmittedAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.NotYetSubmitted))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(notSubmittedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(notSubmittedAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.ToBeGraded))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(notGradedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(notGradedAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(gradedAssignment), viewModel.uiState.value.listState.groups.first().items.map { it.assignment })
+        assertEquals(listOf(gradedAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
     }
 
     @Test
@@ -543,15 +522,15 @@ class AssignmentListViewModelTest {
 
         var newFilter = AssignmentListSelectedFilters(selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(assignmentGroups.map { it.assignments }, viewModel.uiState.value.listState.groups.map { it.items.map{ it.assignment } })
+        assertEquals(assignmentGroups.map { it.assignments }, viewModel.uiState.value.listState.values.map { it.map { it.assignment } } )
 
         newFilter = newFilter.copy(selectedGroupByOption = AssignmentGroupByOption.DueDate)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(dueDateGroups.map { it.assignments }, viewModel.uiState.value.listState.groups.map { it.items.map{ it.assignment } })
+        assertEquals(dueDateGroups.map { it.assignments }, viewModel.uiState.value.listState.values.map { it.map { it.assignment } } )
 
         newFilter = newFilter.copy(selectedGroupByOption = AssignmentGroupByOption.AssignmentType)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(typeGroups.map { it.assignments }, viewModel.uiState.value.listState.groups.map { it.items.map{ it.assignment } })
+        assertEquals(typeGroups.map { it.assignments }, viewModel.uiState.value.listState.values.map { it.map{ it.assignment } } )
     }
 
     private fun getViewModel(): AssignmentListViewModel {

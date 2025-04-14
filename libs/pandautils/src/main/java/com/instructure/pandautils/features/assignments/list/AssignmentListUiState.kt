@@ -5,9 +5,6 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.pandautils.compose.composables.GroupedListViewGroup
-import com.instructure.pandautils.compose.composables.GroupedListViewGroupItem
-import com.instructure.pandautils.compose.composables.GroupedListViewState
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.utils.ScreenState
@@ -24,7 +21,7 @@ data class AssignmentListUiState(
     val currentGradingPeriod: GradingPeriod? = null,
     val assignmentGroups: List<AssignmentGroup> = emptyList(),
     val gradingPeriodsWithAssignments: Map<GradingPeriod, List<Assignment>> = emptyMap(),
-    val listState: GroupedListViewState<AssignmentGroupState> = GroupedListViewState(emptyList()),
+    val listState: Map<String, List<AssignmentGroupItemState>> = emptyMap(),
     val filterOptions: AssignmentListFilterOptions? = null,
     val selectedFilterData: AssignmentListSelectedFilters = AssignmentListSelectedFilters(),
     val searchQuery: String = "",
@@ -38,19 +35,7 @@ data class AssignmentListMenuOverFlowItem(
     val onClick: () -> Unit
 )
 
-class AssignmentGroupState(
-    id: Long,
-    title: String,
-    items: List<AssignmentGroupItemState>,
-    initiallyExpanded: Boolean = true
-): GroupedListViewGroup<AssignmentGroupItemState>(
-    id = id,
-    title = title,
-    items = items,
-    isExpanded = initiallyExpanded
-)
-
-class AssignmentGroupItemState(
+data class AssignmentGroupItemState(
     val course: Course,
     val assignment: Assignment,
     val showPublishStateIcon: Boolean = false,
@@ -60,7 +45,7 @@ class AssignmentGroupItemState(
     val showGrade: Boolean = false,
     val showNeedsGrading: Boolean = false,
     val showMaxPoints: Boolean = false
-): GroupedListViewGroupItem(assignment.id)
+)
 
 sealed class AssignmentListFragmentEvent {
     data class NavigateToAssignment(val canvasContext: CanvasContext, val assignment: Assignment): AssignmentListFragmentEvent()
