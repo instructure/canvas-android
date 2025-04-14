@@ -65,4 +65,12 @@
     <string name="overview">Overview</string>
     <string name="scores">Scores</string>
     <string name="notes">Notes</string>
+    <string name="assignmentName">Assignment Name</string>
+    <string name="dueDate">Due Date</string>
+    <string name="scoresItemassignmentName">Name: %1$s</string>
+    <string name="scoresItemDueDate">Date: %1$s</string>
+    <string name="noDueDate">No Due Date</string>
+    <string name="scoresItemStatus">Status:</string>
+    <string name="scoresItemResult">Result: %1$s/%2$s</string>
+    <string name="noFeedback">-</string>
 </resources>

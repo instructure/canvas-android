@@ -19,6 +19,7 @@ package com.instructure.horizon.features.learn.score
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,6 +48,8 @@ class LearnScoreViewModel @Inject constructor(
             val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh)
             val enrollments = learnScoreRepository.getEnrollments(courseId, forceRefresh)
             val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
+
+            sortAssignments(assignmentGroups)
             _uiState.update {
                 it.copy(
                     screenState = _uiState.value.screenState.copy(isLoading = false),
@@ -63,4 +66,16 @@ class LearnScoreViewModel @Inject constructor(
         }
     }
 
+    fun updateSelectedSortOption(sortOption: LearnScoreSortOption) {
+        _uiState.update { it.copy(selectedSortOption = sortOption) }
+        sortAssignments(uiState.value.assignmentGroups)
+    }
+
+    private fun sortAssignments(assignmentGroups: List<AssignmentGroup>) {
+        val sortedAssignments = when (_uiState.value.selectedSortOption) {
+            LearnScoreSortOption.AssignmentName -> assignmentGroups.flatMap { it.assignments }.sortedBy { it.name }
+            LearnScoreSortOption.DueDate -> assignmentGroups.flatMap { it.assignments }.sortedBy { it.dueAt }
+        }
+        _uiState.update { it.copy(sortedAssignments = sortedAssignments) }
+    }
 }

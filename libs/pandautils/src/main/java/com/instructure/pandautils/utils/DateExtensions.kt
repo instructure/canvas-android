@@ -92,11 +92,13 @@ fun Date.toLocalTime(): LocalTime {
     return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalTime()
 }
 
-fun Date.toFormattedString(): String = DateFormat.getDateTimeInstance(
-    DateFormat.MEDIUM,
-    DateFormat.SHORT,
-    Locale.getDefault()
-).format(this)
+fun Date.toFormattedString(
+    dateFormat: Int = DateFormat.MEDIUM,
+    timeFormat: Int = DateFormat.SHORT,
+    locale: Locale = Locale.getDefault()
+): String {
+    return DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).format(this)
+}
 
 fun String.formatIsoDuration(context: Context): String {
     return try {

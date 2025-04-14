@@ -18,6 +18,7 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
@@ -147,5 +148,24 @@ fun Assignment.getGrade(
         "incomplete" -> return DisplayGrade(context.getString(R.string.gradeIncomplete))
         // Other remaining case is where the grade is displayed as a percentage
         else -> if (restrictQuantitativeData) DisplayGrade() else DisplayGrade(grade, gradeContentDescription)
+    }
+}
+
+sealed class AssignmentStatus(@StringRes val label: Int) {
+    data object NotSubmitted : AssignmentStatus(R.string.notSubmitted)
+    data object Submitted : AssignmentStatus(R.string.submitted)
+    data object Graded : AssignmentStatus(R.string.gradedSubmissionLabel)
+    data object Excused : AssignmentStatus(R.string.excused)
+    data object Missing : AssignmentStatus(R.string.missingAssignment)
+    data object Late : AssignmentStatus(R.string.late)
+}
+fun Assignment.getStatus(): AssignmentStatus {
+    return when {
+        this.isGraded() -> AssignmentStatus.Graded
+        this.submission?.excused.orDefault() -> AssignmentStatus.Excused
+        this.submission?.missing.orDefault() -> AssignmentStatus.Missing
+        this.submission?.late.orDefault() -> AssignmentStatus.Late
+        this.isSubmitted.orDefault() -> AssignmentStatus.Submitted
+        else -> AssignmentStatus.NotSubmitted
     }
 }
