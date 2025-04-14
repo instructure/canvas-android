@@ -39,9 +39,16 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizonTheme(content: @Composable () -> Unit) {
-    MaterialTheme {
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            surfaceContainerLow = HorizonColors.Surface.pageTertiary(),
+        )
+    ) {
         CompositionLocalProvider(
-            LocalRippleConfiguration provides RippleConfiguration(color = HorizonColors.Surface.overlayGrey(), getRippleAlpha(isSystemInDarkTheme())),
+            LocalRippleConfiguration provides RippleConfiguration(
+                color = HorizonColors.Surface.overlayGrey(),
+                getRippleAlpha(isSystemInDarkTheme())
+            ),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
             LocalTextStyle provides HorizonTypography.p1,
             content = content

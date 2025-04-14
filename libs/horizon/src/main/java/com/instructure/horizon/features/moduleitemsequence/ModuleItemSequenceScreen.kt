@@ -85,7 +85,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             pagerState.animateScrollToPage(uiState.currentPosition)
         }
     }
-    if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState)
+    if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
     Scaffold(containerColor = HorizonColors.Surface.institution(), bottomBar = {
         ModuleItemSequenceBottomBar(
             showNextButton = uiState.currentPosition < uiState.items.size - 1,

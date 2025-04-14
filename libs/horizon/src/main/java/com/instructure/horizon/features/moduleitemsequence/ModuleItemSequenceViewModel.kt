@@ -73,24 +73,15 @@ class ModuleItemSequenceViewModel @Inject constructor(
     init {
         viewModelScope.tryLaunch {
             _uiState.update {
-                it.copy(
-                    loadingState = it.loadingState.copy(isLoading = true),
-                    progressScreenState = it.progressScreenState.copy(loading = true)
-                )
+                it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
             loadData()
             _uiState.update {
-                it.copy(
-                    loadingState = it.loadingState.copy(isLoading = false),
-                    progressScreenState = it.progressScreenState.copy(loading = false)
-                )
+                it.copy(loadingState = it.loadingState.copy(isLoading = false))
             }
         } catch {
             _uiState.update {
-                it.copy(
-                    loadingState = it.loadingState.copy(isLoading = false, isError = true),
-                    progressScreenState = it.progressScreenState.copy(loading = false)
-                )
+                it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
         }
     }
@@ -120,7 +111,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 items = items,
                 currentPosition = initialPosition,
                 currentItem = getCurrentItem(initialPosition, items),
-                progressScreenState = it.progressScreenState.copy(pages = progressPages, currentPosition = getProgressPosition(moduleItemId, progressPages)),
+                progressScreenState = it.progressScreenState.copy(
+                    pages = progressPages,
+                    currentPosition = getProgressPosition(moduleItemId, progressPages)
+                ),
             )
         }
     }
@@ -215,11 +209,20 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val currentModuleItemId = _uiState.value.currentItem?.moduleItemId ?: -1L
         val progressPosition = getProgressPosition(currentModuleItemId)
         _uiState.update {
-            it.copy(progressScreenState = it.progressScreenState.copy(visible = true, currentPosition = progressPosition, selectedModuleItemId = currentModuleItemId))
+            it.copy(
+                progressScreenState = it.progressScreenState.copy(
+                    visible = true,
+                    currentPosition = progressPosition,
+                    selectedModuleItemId = currentModuleItemId
+                )
+            )
         }
     }
 
-    private fun getProgressPosition(moduleItemId: Long, progressPages: List<ProgressPageUiState> = _uiState.value.progressScreenState.pages): Int {
+    private fun getProgressPosition(
+        moduleItemId: Long,
+        progressPages: List<ProgressPageUiState> = _uiState.value.progressScreenState.pages
+    ): Int {
         val moduleId = moduleItems.find { moduleItemId == it.id }?.moduleId
         val position = progressPages.indexOfFirst { it.moduleId == moduleId }
         return if (position != -1) position else 0

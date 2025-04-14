@@ -19,7 +19,6 @@ import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardState
 
 data class ProgressScreenUiState(
     val visible: Boolean = false,
-    val loading: Boolean = false,
     val pages: List<ProgressPageUiState> = emptyList(),
     val currentPosition: Int = 0,
     val selectedModuleItemId: Long = -1,
