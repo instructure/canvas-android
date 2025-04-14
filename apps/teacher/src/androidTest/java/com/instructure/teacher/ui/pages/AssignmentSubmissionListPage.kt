@@ -20,7 +20,6 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasAnyDescendant
-import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -28,8 +27,11 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.requestFocus
 import androidx.compose.ui.test.swipeDown
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -59,9 +61,28 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      * @param canvasUser
      */
     fun assertHasStudentSubmission(canvasUser: CanvasUserApiModel) {
-        composeTestRule.onNodeWithText(canvasUser.name, useUnmergedTree = true)
+        composeTestRule.onNode(hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name), useUnmergedTree = true)
             .performScrollTo()
             .assertIsDisplayed()
+    }
+
+    /**
+     * Type the 'searchText' to the search input field.
+     */
+    fun searchSubmission(searchText: String) {
+        composeTestRule.onNodeWithTag("searchField")
+            .requestFocus()
+            .performClick()
+            .performTextInput(searchText)
+        composeTestRule.onNodeWithTag("searchField").performImeAction()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Clear the search input field.
+     */
+    fun clearSearch() {
+        composeTestRule.onNodeWithTag("clearButton").performClick()
     }
 
     /**
@@ -69,7 +90,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      *
      */
     fun assertFilterLabelAllSubmissions() {
-        composeTestRule.onNodeWithText("All submissions").assertIsDisplayed()
+        composeTestRule.onNodeWithText("All Submissions").assertIsDisplayed()
     }
 
     /**
@@ -85,7 +106,16 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      *
      */
     fun assertStudentScoreText(studentName: String, scoreText: String) {
-        composeTestRule.onNode(hasText(scoreText) and hasAnySibling(hasAnyDescendant(hasText(studentName))), useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNode(
+            hasTestTag("scoreText") and(
+                hasParent(
+                    hasTestTag("submissionListItem").and(
+                        hasAnyDescendant(hasText(studentName) and hasTestTag("submissionListItemStudentName"))
+                    )
+                )
+            ), useUnmergedTree = true
+        ).assertIsDisplayed()
     }
 
     /**

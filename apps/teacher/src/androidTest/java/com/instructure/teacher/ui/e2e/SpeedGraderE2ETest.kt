@@ -174,10 +174,12 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Espresso.pressBack()
         assignmentSubmissionListPage.refresh()
 
+        Log.d(ASSERTION_TAG, "Assert that the 'All Submissions' filter text is displayed.")
+        assignmentSubmissionListPage.assertFilterLabelAllSubmissions()
+
         Log.d(STEP_TAG,"Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
 
-        //Assert to all possible submission filter text (and section?)
         Log.d(STEP_TAG,"Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogOk()
@@ -203,7 +205,15 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of '${student.name}' student is displayed.")
         assignmentDetailsPage.clickAllSubmissions()
 
-        //TODO: Test searching here
+        Log.d(STEP_TAG, "Type the '${gradedStudent.name}' student's name into the search input field.")
+        assignmentSubmissionListPage.searchSubmission(gradedStudent.name)
+
+        Log.d(ASSERTION_TAG,"Assert that there is one submission displayed and that is for '${gradedStudent.name}' student.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(gradedStudent)
+
+        Log.d(STEP_TAG, "Clear the search field.")
+        assignmentSubmissionListPage.clearSearch()
 
         Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
         assignmentSubmissionListPage.clickOnPostPolicies()
