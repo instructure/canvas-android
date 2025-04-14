@@ -23,7 +23,7 @@ class EnabledTabsImpl: EnabledTabs {
 
         val pathSegments = uri.pathSegments
         val relativePath = uri.path?.replaceBefore("/courses/$courseId", "")
-        // Details urls should be accepted, like /assignments/1, but assignments/syllabus should not,,
+        // Details urls should be accepted, like /assignments/1, but assignments/syllabus should not
         return when {
             pathSegments.last() == "grades" -> true
             pathSegments.last() == "discussion_topics" -> true
