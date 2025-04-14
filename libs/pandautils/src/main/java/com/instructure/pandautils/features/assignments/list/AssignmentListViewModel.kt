@@ -95,6 +95,17 @@ class AssignmentListViewModel @Inject constructor(
                     )
                         .flatMap { it.assignments }
                 }
+                val selectedFilters = if (forceRefresh) {
+                    uiState.value.selectedFilterData
+                } else {
+                    repository.getSelectedOptions(
+                        apiPrefs.fullDomain,
+                        apiPrefs.user?.id.orDefault(),
+                        course.id
+                    )?.toModel()?.copy(selectedGradingPeriodFilter = getCurrentGradingPeriod(gradingPeriods))
+                        ?: assignmentListBehavior.getDefaultSelection(getCurrentGradingPeriod(gradingPeriods))
+                }
+
                 _uiState.update {
                     it.copy(
                         isRefreshing = false,
@@ -116,12 +127,7 @@ class AssignmentListViewModel @Inject constructor(
                             groupByOptions = assignmentListBehavior.getGroupByOptions(),
                             gradingPeriodOptions = listOf(null) + gradingPeriods
                         ),
-                        selectedFilterData = repository.getSelectedOptions(
-                            apiPrefs.fullDomain,
-                            apiPrefs.user?.id.orDefault(),
-                            course.id
-                        )?.toModel()?.copy(selectedGradingPeriodFilter = getCurrentGradingPeriod(gradingPeriods))
-                            ?: assignmentListBehavior.getDefaultSelection(getCurrentGradingPeriod(gradingPeriods))
+                        selectedFilterData = selectedFilters
                     )
                 }
 

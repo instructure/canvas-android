@@ -250,13 +250,7 @@ private fun AssignmentListWrapper(
     ) {
         when (state.state) {
             ScreenState.Loading -> {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .fillMaxSize()
-                        .background(colorResource(R.color.backgroundLightest))
-                ) {
+                AssignmentListScreenContainer(modifier = modifier) {
                     Loading()
                 }
             }
@@ -270,15 +264,7 @@ private fun AssignmentListWrapper(
             }
 
             ScreenState.Empty -> {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .fillMaxSize()
-                        .background(colorResource(R.color.backgroundLightest))
-                        .verticalScroll(rememberScrollState())
-                        .testTag("assignmentList"),
-                ){
+                AssignmentListScreenContainer(modifier = modifier) {
                     EmptyContent(
                         emptyMessage = stringResource(R.string.noAssignments),
                         imageRes = R.drawable.ic_no_events
@@ -287,15 +273,7 @@ private fun AssignmentListWrapper(
             }
 
             ScreenState.Error -> {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .fillMaxSize()
-                        .background(colorResource(R.color.backgroundLightest))
-                        .verticalScroll(rememberScrollState())
-                        .testTag("assignmentList"),
-                ){
+                AssignmentListScreenContainer(modifier = modifier) {
                     ErrorContent(
                         errorMessage = stringResource(R.string.errorLoadingAssignments),
                         retryClick = { screenActionHandler(AssignmentListScreenEvent.Refresh) }
@@ -310,6 +288,24 @@ private fun AssignmentListWrapper(
             state = pullRefreshState,
             contentColor = Color(state.course.color),
         )
+    }
+}
+
+@Composable
+private fun AssignmentListScreenContainer(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxSize()
+            .background(colorResource(R.color.backgroundLightest))
+            .verticalScroll(rememberScrollState())
+            .testTag("assignmentList"),
+    ) {
+        content()
     }
 }
 
