@@ -93,7 +93,6 @@ class TokenRefresher(
             }
 
             is TokenRefreshState.Restart -> {
-                launchLogin()
                 refreshState = TokenRefreshState.Refreshing
                 newRequest = waitForRefresh(response)
             }

@@ -125,7 +125,7 @@ class SubmissionWorker @AssistedInject constructor(
     }
 
     private suspend fun showConfetti() {
-        val featuresResult = userApi.getSelfFeatures(RestParams(shouldRefreshToken = false))
+        val featuresResult = userApi.getSelfFeatures(RestParams(shouldLoginOnTokenError = false))
         if (featuresResult.isSuccess) {
             featuresResult.dataOrNull?.find { it.feature == "disable_celebrations" }?.let {
                 if (it.flag.state == "off" || it.flag.state == "allowed") {
@@ -147,7 +147,7 @@ class SubmissionWorker @AssistedInject constructor(
         val params = RestParams(
             canvasContext = submission.canvasContext,
             domain = apiPrefs.overrideDomains[submission.canvasContext.id],
-            shouldRefreshToken = false
+            shouldLoginOnTokenError = false
         )
         val result = submissionApi.postTextSubmission(
             submission.canvasContext.id,
@@ -165,7 +165,7 @@ class SubmissionWorker @AssistedInject constructor(
         val params = RestParams(
             canvasContext = submission.canvasContext,
             domain = apiPrefs.overrideDomains[submission.canvasContext.id],
-            shouldRefreshToken = false
+            shouldLoginOnTokenError = false
         )
         val type =
             if (isLti) Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString else Assignment.SubmissionType.ONLINE_URL.apiString
@@ -213,7 +213,7 @@ class SubmissionWorker @AssistedInject constructor(
             val params = RestParams(
                 canvasContext = submission.canvasContext,
                 domain = apiPrefs.overrideDomains[submission.canvasContext.id],
-                shouldRefreshToken = false
+                shouldLoginOnTokenError = false
             )
             val mediaSubmissionResult = submissionApi.postMediaSubmission(
                 submission.canvasContext.id,
@@ -262,7 +262,7 @@ class SubmissionWorker @AssistedInject constructor(
         val params = RestParams(
             canvasContext = submission.canvasContext,
             domain = apiPrefs.overrideDomains[submission.canvasContext.id],
-            shouldRefreshToken = false
+            shouldLoginOnTokenError = false
         )
         val result = submissionApi.postSubmissionAttachments(
             submission.canvasContext.id,
@@ -519,7 +519,7 @@ class SubmissionWorker @AssistedInject constructor(
             val params = RestParams(
                 canvasContext = comment.canvasContext,
                 domain = apiPrefs.overrideDomains[comment.canvasContext.id],
-                shouldRefreshToken = false
+                shouldLoginOnTokenError = false
             )
             val postCommentResult = notoriousResult?.let { result ->
                 submissionApi.postMediaSubmissionComment(
@@ -588,7 +588,7 @@ class SubmissionWorker @AssistedInject constructor(
         val params = RestParams(
             canvasContext = submission.canvasContext,
             domain = apiPrefs.overrideDomains[submission.canvasContext.id],
-            shouldRefreshToken = false
+            shouldLoginOnTokenError = false
         )
         val result = submissionApi.postStudentAnnotationSubmission(
             submission.canvasContext.id,

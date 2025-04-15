@@ -20,8 +20,6 @@ import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
-import com.instructure.canvasapi2.models.OAuthTokenResponse
-import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -52,24 +50,28 @@ class CanvasAuthenticator(private val tokenRefresher: TokenRefresher) : Authenti
             return null // Indicate authentication was not successful
         }
 
-        val params = response.request.restParams()
-        if (params?.shouldRefreshToken == false) {
-            return null
-        }
-
-        return try {
-            val refreshed: OAuthTokenResponse
-            runBlocking {
-                refreshed = OAuthManager.refreshTokenAsync().await().dataOrThrow
-                ApiPrefs.accessToken = refreshed.accessToken!!
+        val refreshTokenResponse = OAuthManager.refreshToken()
+        refreshTokenResponse.onSuccess {
+            refreshTokenResponse.dataOrNull?.accessToken?.let {
+                ApiPrefs.accessToken = it
             }
-            response.request.newBuilder()
-                .header(AUTH_HEADER, OAuthAPI.authBearer(refreshed.accessToken!!))
+
+            return response.request.newBuilder()
+                .header(AUTH_HEADER, OAuthAPI.authBearer(ApiPrefs.accessToken))
                 .header(RETRY_HEADER, RETRY_HEADER) // Mark retry to prevent infinite recursion
                 .build()
-        } catch (e: Exception) {
-            tokenRefresher.refresh(response)
         }
+
+        refreshTokenResponse.onFail<Failure> {
+            val params = response.request.restParams()
+            if (params?.shouldLoginOnTokenError == false) {
+                return null
+            }
+            return tokenRefresher.refresh(response)
+        }
+
+        logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE)
+        return null // Indicate authentication was not successful
     }
 
     private fun logAuthAnalytics(eventString: String) {

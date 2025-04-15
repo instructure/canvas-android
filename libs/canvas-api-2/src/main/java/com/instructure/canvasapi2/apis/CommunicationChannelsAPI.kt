@@ -62,7 +62,7 @@ object CommunicationChannelsAPI {
 
     fun deletePushCommunicationChannelSynchronous(registrationId: String) {
         try {
-            RestBuilder().build(CommunicationChannelInterface::class.java, RestParams(shouldRefreshToken = false))
+            RestBuilder().build(CommunicationChannelInterface::class.java, RestParams(shouldLoginOnTokenError = false))
                 .deletePushCommunicationChannel(registrationId)
                 .execute()
         } catch (e: Exception) {

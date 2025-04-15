@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.depaginate
 class CourseFileSharedRepository(private val fileFolderApi: FileFolderAPI.FilesFoldersInterface) {
 
     suspend fun getCourseFoldersAndFiles(courseId: Long): List<FileFolder> {
-        val params = RestParams(isForceReadFromNetwork = true, shouldRefreshToken = false)
+        val params = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val rootFolderResult =
             fileFolderApi.getRootFolderForContext(courseId, CanvasContext.Type.COURSE.apiString, params)
 
