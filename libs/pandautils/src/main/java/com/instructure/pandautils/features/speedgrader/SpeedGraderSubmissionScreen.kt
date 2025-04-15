@@ -33,8 +33,7 @@ import com.instructure.pandautils.compose.composables.HorizontalDraggableResizab
 fun SpeedGraderSubmissionScreen(
 ) {
 
-    val horizontal = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED ||
-            currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM
+    val horizontal = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
 
     if (horizontal) {
         HorizontalDraggableResizableLayout(
