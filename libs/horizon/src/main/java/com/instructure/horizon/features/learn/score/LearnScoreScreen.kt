@@ -41,12 +41,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -62,6 +65,7 @@ import com.instructure.horizon.horizonui.organisms.cards.CollapsableContentCard
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.utils.AssignmentStatus
 import com.instructure.pandautils.utils.getStatus
@@ -333,4 +337,40 @@ private fun GroupWeightItem(assignmentGroup: AssignmentGroup) {
             )
         }
     }
+}
+
+@Composable
+@Preview
+fun LearnScoreContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val assignmentGroups = listOf(
+        AssignmentGroup(
+            id = 1L,
+            name = "Group 1",
+            groupWeight = 20.0,
+            assignments = listOf(
+                Assignment(id = 1, name = "Assignment 1"),
+                Assignment(id = 2, name = "Assignment 2")
+            )
+        ),
+        AssignmentGroup(
+            id = 2L,
+            name = "Group 2",
+            groupWeight = 30.0,
+            assignments = listOf(
+                Assignment(id = 3, name = "Assignment 4"),
+                Assignment(id = 4, name = "Assignment 4")
+            )
+        )
+    )
+    LearnScoreContent(
+        state = LearnScoreUiState(
+            screenState = LoadingState(),
+            grades = null,
+            assignmentGroups = assignmentGroups,
+            sortedAssignments = assignmentGroups.flatMap { it.assignments },
+            selectedSortOption = LearnScoreSortOption.DueDate
+        ),
+        onSelectedSortOptionChanged = {}
+    )
 }
