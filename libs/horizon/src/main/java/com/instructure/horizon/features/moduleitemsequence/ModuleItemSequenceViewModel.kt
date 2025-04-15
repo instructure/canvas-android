@@ -66,6 +66,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
+    private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
+    private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
 
     private var modules = emptyList<ModuleObject>()
     private var moduleItems = emptyList<ModuleItem>()
@@ -90,10 +92,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val moduleItemId = if (moduleItemId != null) {
             moduleItemId
         } else {
-            // TODO Handle case when coming from a learning object link, not in the scope of this ticket, we always navigate from module items
-            //val moduleItemSequence = repository.getModuleItemSequence(courseId, moduleItemId ?: 0L)
-            //moduleItemSequence.items?.firstOrNull()?.id
-            -1L
+            val assetType = moduleItemAssetType ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
+            val assetId = moduleItemAssetId ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
+            val moduleItemSequence = repository.getModuleItemSequence(courseId, assetType, assetId)
+            moduleItemSequence.items?.firstOrNull()?.current?.id ?: -1L
         }
 
         modules = repository.getModulesWithItems(courseId)

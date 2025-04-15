@@ -34,8 +34,14 @@ import kotlinx.serialization.Serializable
 sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
     data object AiAssistant : MainNavigationRoute("ai")
+
     @Serializable
-    data class ModuleItemSequence(val courseId: Long, val moduleItemId: Long?) :
+    data class ModuleItemSequence(
+        val courseId: Long,
+        val moduleItemId: Long? = null,
+        val moduleItemAssetType: String? = null,
+        val moduleItemAssetId: String? = null
+    ) :
         MainNavigationRoute("module_item_sequence")
 }
 

@@ -26,13 +26,13 @@ import javax.inject.Inject
 
 class ModuleItemSequenceRepository @Inject constructor(private val moduleApi: ModuleAPI.ModuleInterface) {
 
-    suspend fun getModuleItemSequence(courseId: Long, moduleItemId: Long): ModuleItemSequence {
+    suspend fun getModuleItemSequence(courseId: Long, assetType: String, assetId: String): ModuleItemSequence {
         val params = RestParams(isForceReadFromNetwork = true)
         return moduleApi.getModuleItemSequence(
             CanvasContext.Type.COURSE.apiString,
             courseId,
-            "ModuleItem",
-            moduleItemId.toString(),
+            assetType,
+            assetId,
             params
         ).dataOrThrow
     }
