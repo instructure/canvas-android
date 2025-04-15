@@ -39,7 +39,7 @@ class LearnViewModel @Inject constructor(
     private fun getInProgressCourse(forceRefresh: Boolean = false) = viewModelScope.tryLaunch {
         _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = true))
         val courses = learnRepository.getCoursesWithProgress(forceNetwork = forceRefresh)
-        val course = courses.firstOrNull { it.progress != null } ?: courses.first()
+        val course = courses.first()
         _state.value = state.value.copy(
             screenState = state.value.screenState.copy(isLoading = false),
             course = course,
