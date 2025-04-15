@@ -20,12 +20,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.viewModels
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SpeedGraderFragment : BaseCanvasFragment() {
+
+    private val viewModel: SpeedGraderViewModel by viewModels()
+
+    private val courseId by LongArg(key = Const.COURSE_ID)
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        ThemePrefs.reapplyCanvasTheme(requireActivity())
+        ViewStyler.setStatusBarDark(requireActivity(), CanvasContext.emptyCourseContext(courseId).color)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +56,10 @@ class SpeedGraderFragment : BaseCanvasFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CanvasTheme {
-                    SpeedGraderScreen()
+                    val uiState by viewModel.uiState.collectAsState()
+                    SpeedGraderScreen(uiState) {
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
                 }
             }
         }
@@ -43,11 +67,15 @@ class SpeedGraderFragment : BaseCanvasFragment() {
 
     companion object {
         fun newInstance(route: Route): SpeedGraderFragment {
-            return SpeedGraderFragment()
+            return SpeedGraderFragment().apply {
+                arguments = route.arguments
+            }
         }
 
         fun newInstance(bundle: Bundle): SpeedGraderFragment {
-            return SpeedGraderFragment()
+            return SpeedGraderFragment().apply {
+                arguments = bundle
+            }
         }
     }
 }

@@ -22,19 +22,28 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 
 @Composable
-fun SpeedGraderScreen() {
+fun SpeedGraderScreen(
+    uiState: SpeedGraderUiState,
+    navigationActionClick: () -> Unit
+) {
 
     val pagerState = rememberPagerState(pageCount = { 3 })
     Scaffold(
         topBar = {
             CanvasAppBar(
-                title = "Speed Grader",
-                navigationActionClick = {},
-                navIconRes = R.drawable.ic_back_arrow,)
+                title = uiState.assignmentName,
+                subtitle = uiState.courseName,
+                backgroundColor = Color(uiState.courseColor),
+                navigationActionClick = navigationActionClick,
+                navIconRes = R.drawable.ic_back_arrow,
+                textColor = colorResource(id = R.color.textLightest),
+            )
         },
     ) { padding ->
         HorizontalPager(modifier = Modifier.padding(padding), state = pagerState) {
