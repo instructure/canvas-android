@@ -24,18 +24,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.account.AccountScreen
-import com.instructure.horizon.features.courses.CoursesScreen
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
+import com.instructure.horizon.features.learn.LearnScreen
+import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.horizonui.showroom.ShowroomContent
 import com.instructure.horizon.horizonui.showroom.ShowroomItem
-import com.instructure.horizon.horizonui.showroom.ShowroomScreen
 import com.instructure.horizon.horizonui.showroom.showroomItems
 
 sealed class HomeNavigationRoute(val route: String) {
     data object Dashboard : HomeNavigationRoute("dashboard")
-    data object Courses : HomeNavigationRoute("courses")
+    data object Learn : HomeNavigationRoute("learn")
     data object Skillspace : HomeNavigationRoute("skillspace")
     data object Account : HomeNavigationRoute("account")
 }
@@ -48,8 +48,10 @@ fun HomeNavigation(navController: NavHostController, modifier: Modifier = Modifi
             val uiState by viewModel.uiState.collectAsState()
             DashboardScreen(uiState)
         }
-        composable(HomeNavigationRoute.Courses.route) {
-            ShowroomScreen(navController)
+        composable(HomeNavigationRoute.Learn.route) {
+            val viewModel = hiltViewModel<LearnViewModel>()
+            val uiState by viewModel.state.collectAsState()
+            LearnScreen(uiState)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             SkillspaceScreen()

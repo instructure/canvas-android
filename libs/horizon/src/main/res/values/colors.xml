@@ -205,7 +205,7 @@
     <color name="text_linkSecondary">#0A5A9E</color>
     <color name="text_placeholder">#6A7883</color>
     <color name="text_surfaceColored">#FFFFFF</color>
-    <color name="text_surfaceInverseSecondary">#273540</color>
+    <color name="text_surfaceInverseSecondary">#0A1B2A</color>
     <color name="text_error">#C71F23</color>
     <color name="text_success">#03893D</color>
     <color name="text_warning">#B34000</color>

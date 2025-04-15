@@ -17,6 +17,7 @@ package com.instructure.horizon.features.dashboard
 
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.managers.GetCoursesManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
@@ -30,7 +31,9 @@ class DashboardRepository @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val apiPrefs: ApiPrefs
 ) {
-    suspend fun getCoursesWithProgress(forceNetwork: Boolean) = getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork)
+    suspend fun getCoursesWithProgress(forceNetwork: Boolean): DataResult<List<CourseWithProgress>> {
+        return getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork)
+    }
 
     suspend fun getNextModule(courseId: Long, moduleId: Long, forceNetwork: Boolean): DataResult<ModuleObject> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
