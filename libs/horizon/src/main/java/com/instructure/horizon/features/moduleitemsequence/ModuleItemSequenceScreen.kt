@@ -111,20 +111,28 @@ private fun ModuleItemSequenceContent(
     modifier: Modifier = Modifier
 ) {
     val contentScrollState = rememberScrollState()
+    var isCollapsedByScroll by remember { mutableStateOf(false) }
     var isCollapsed by remember { mutableStateOf(false) }
-    var expandOverrideClicked by remember { mutableStateOf(false) }
 
     LaunchedEffect(contentScrollState) {
         snapshotFlow { contentScrollState.value }
             .collect { offset ->
-                isCollapsed = offset > 100.toPx
+                if (offset > 100.toPx) {
+                    if (!isCollapsedByScroll) {
+                        isCollapsedByScroll = true
+                        isCollapsed = true
+                    }
+                } else {
+                    isCollapsedByScroll = false
+                    isCollapsed = false
+                }
             }
     }
 
     val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
     LaunchedEffect(key1 = uiState.currentPosition) {
+        isCollapsedByScroll = false
         isCollapsed = false
-        expandOverrideClicked = false
         contentScrollState.scrollTo(0)
         if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
             pagerState.scrollToPage(uiState.currentPosition)
@@ -144,14 +152,16 @@ private fun ModuleItemSequenceContent(
         ) {
             ModuleHeaderContainer(
                 uiState = uiState,
-                modifier = Modifier.conditional(isCollapsed && !expandOverrideClicked) {
-                    clickable {
-                        isCollapsed = !isCollapsed
-                        expandOverrideClicked = true
+                modifier = Modifier
+                    .conditional(isCollapsedByScroll) {
+                        clickable {
+                            isCollapsed = !isCollapsed
+                        }
                     }
-                }.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp).then(
-                    if (isCollapsed && !expandOverrideClicked) Modifier.height(0.dp) else Modifier.wrapContentHeight()
-                ),
+                    .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
+                    .then(
+                        if (isCollapsed) Modifier.height(0.dp) else Modifier.wrapContentHeight()
+                    ),
                 onBackPressed = onBackPressed
             )
         }
@@ -164,7 +174,12 @@ private fun ModuleItemSequenceContent(
         ) {
             ModuleItemPager(pagerState = pagerState) { page ->
                 val moduleItemUiState = uiState.items[page]
-                ModuleItemContentScreen(moduleItemUiState, modifier = Modifier.padding(horizontal = 24.dp).verticalScroll(contentScrollState))
+                ModuleItemContentScreen(
+                    moduleItemUiState,
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .verticalScroll(contentScrollState)
+                )
             }
         }
     }
@@ -254,7 +269,8 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, modifi
             DummyContentScreen(
                 moduleItemName = moduleItemUiState.moduleItemName,
                 moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
-                modifier = modifier)
+                modifier = modifier
+            )
         }
     }
 }
@@ -276,7 +292,7 @@ private fun ModuleItemSequenceBottomBar(
                 onClick = onPreviousClick
             )
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
-                IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, elevation = HorizonElevation.level4,)
+                IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, elevation = HorizonElevation.level4)
                 IconButton(iconRes = R.drawable.menu_book_notebook, color = IconButtonColor.INVERSE, elevation = HorizonElevation.level4)
             }
             if (showNextButton) IconButton(
