@@ -109,7 +109,7 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     val currentPage = uiState.pages[uiState.currentPosition]
     AnimatedContent(
         currentPage,
-        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
+        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None }, label = "lazyListContent",
     ) { currentPageTarget ->
         val animationModifier = Modifier.conditional(uiState.movingDirection != 0) {
             animateEnterExit(
