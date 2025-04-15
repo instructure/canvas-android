@@ -139,6 +139,13 @@ dependencies {
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODEL
     implementation project(':rceditor')
+    implementation 'androidx.compose.material3.adaptive:adaptive'
+    implementation 'androidx.compose.material3.adaptive:adaptive-layout'
+    implementation 'androidx.compose.material3.adaptive:adaptive-navigation'
+    implementation 'androidx.compose.material3:material3:1.4.0-alpha12'
+    implementation "androidx.compose.material3:material3-window-size-class:1.3.2"
+    implementation("androidx.window:window:1.3.0")
+    implementation("androidx.window:window-core:1.3.0")
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT

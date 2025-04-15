@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.Text
 import androidx.compose.ui.platform.ComposeView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.base.BaseCanvasFragment
@@ -36,7 +35,7 @@ class SpeedGraderFragment : BaseCanvasFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CanvasTheme {
-                    Text("SPEEDGRADER")
+                    SpeedGraderScreen()
                 }
             }
         }
