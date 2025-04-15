@@ -28,8 +28,8 @@ data class LearnUiState(
 )
 
 enum class LearnTab(@StringRes val titleRes: Int, ) {
-    MyProgress(titleRes = R.string.myProgress),
     Overview(titleRes = R.string.overview),
+    MyProgress(titleRes = R.string.myProgress),
     Scores(titleRes = R.string.scores),
     Notes(titleRes = R.string.notes),
 }

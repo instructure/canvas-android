@@ -29,39 +29,40 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.note.LearnNotesScreen
 import com.instructure.horizon.features.learn.overview.LearnOverviewScreen
 import com.instructure.horizon.features.learn.progress.LearnProgressScreen
 import com.instructure.horizon.features.learn.score.LearnScoreScreen
-import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnScreen(viewModel: LearnViewModel) {
-    val state by viewModel.state.collectAsState()
-    HorizonTheme {
-        Scaffold(
-            containerColor = HorizonColors.Surface.pagePrimary(),
-        ) { padding ->
-            LoadingStateWrapper(state.screenState, Modifier.padding(padding)) {
-                LearnScreenWrapper(state, Modifier.fillMaxSize())
-            }
+fun LearnScreen(state: LearnUiState) {
+    Scaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
+    ) { padding ->
+        LoadingStateWrapper(state.screenState, Modifier.padding(padding)) {
+            LearnScreenWrapper(state, Modifier.fillMaxSize())
         }
     }
 }
@@ -109,13 +110,12 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
                   .scale(scaleAnimation)
             ) {
                 when (index) {
-                    0 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
-                    1 -> LearnOverviewScreen(
+                    0 -> LearnOverviewScreen(
                         state.course?.course?.syllabusBody,
                         Modifier
-                            .padding(horizontal = 24.dp)
                             .clip(RoundedCornerShape(cornerAnimation))
                     )
+                    1 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
                     2 -> LearnScoreScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
                     3 -> LearnNotesScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
                 }
@@ -143,4 +143,49 @@ private fun Tab(tab: LearnTab, isSelected: Boolean, modifier: Modifier = Modifie
                 .padding(top = 20.dp)
         )
     }
+}
+
+@Composable
+@Preview
+fun LearnScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = LearnUiState(
+        screenState = LoadingState(isLoading = true),
+        course = null,
+        availableTabs = LearnTab.entries
+    )
+    LearnScreen(state)
+}
+
+@Composable
+@Preview
+fun LearnScreenErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = LearnUiState(
+        screenState = LoadingState(isError = true, errorMessage = "Error loading course"),
+        course = null,
+        availableTabs = LearnTab.entries
+    )
+    LearnScreen(state)
+}
+
+@Composable
+@Preview
+fun LearnScreenContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = LearnUiState(
+        screenState = LoadingState(),
+        course = CourseWithProgress(
+            course = Course(
+                id = 123,
+                name = "Course Name",
+                syllabusBody = "Course Overview",
+            ),
+            progress = 0.5,
+            nextUpModuleItemId = null,
+            nextUpModuleId = null,
+        ),
+        availableTabs = LearnTab.entries
+    )
+    LearnScreen(state)
 }

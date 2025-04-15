@@ -45,12 +45,12 @@ fun LearnOverviewScreen(
             .fillMaxSize()
             .clip(HorizonCornerRadius.level5)
             .background(HorizonColors.Surface.cardPrimary())
-            .padding(vertical = 8.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
+                .padding(24.dp)
         ) {
             ComposeCanvasWebViewWrapper(
                 html = summaryText ?: "",
