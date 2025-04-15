@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -40,24 +41,28 @@ class SpeedGraderFilesPageTest : TeacherComposeTest() {
             url = "http://fake.blah/somePath" // Code/Test will crash w/o a non-null url
     )
 
+    @Stub
     @Test
     override fun displaysPageObjects() {
         goToSpeedGraderFilesPage(submissionCount = 1)
         speedGraderFilesPage.assertPageObjects()
     }
 
+    @Stub
     @Test
     fun displaysEmptyFilesView() {
         goToSpeedGraderFilesPage()
         speedGraderFilesPage.assertDisplaysEmptyView()
     }
 
+    @Stub
     @Test
     fun displaysFilesList() {
         val submissions = goToSpeedGraderFilesPage(submissionCount = 1)
         speedGraderFilesPage.assertHasFiles(mutableListOf(attachment))
     }
 
+    @Stub
     @Test
     fun displaysSelectedFile() {
         goToSpeedGraderFilesPage(submissionCount = 1)

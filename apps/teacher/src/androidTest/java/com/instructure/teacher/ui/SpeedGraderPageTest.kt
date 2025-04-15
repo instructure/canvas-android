@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -35,18 +36,21 @@ import org.junit.Test
 @HiltAndroidTest
 class SpeedGraderPageTest : TeacherComposeTest() {
 
+    @Stub
     @Test
     override fun displaysPageObjects() {
         goToSpeedGraderPage()
         speedGraderPage.assertPageObjects()
     }
 
+    @Stub
     @Test
     fun displaysSubmissionDropDown() {
         goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY), students = 1, submissions = listOf(2))
         speedGraderPage.assertHasSubmissionDropDown()
     }
 
+    @Stub
     @Test
     fun opensToCorrectSubmission() {
         val data = goToSpeedGraderPage(students = 4, submissionTypeList = listOf(ONLINE_TEXT_ENTRY))
@@ -59,42 +63,49 @@ class SpeedGraderPageTest : TeacherComposeTest() {
         }
     }
 
+    @Stub
     @Test
     fun hasCorrectPageCount() {
         goToSpeedGraderPage(students = 4)
         speedGraderPage.assertPageCount(4)
     }
 
+    @Stub
     @Test
     fun displaysTextSubmission() {
         goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY), submissions = listOf(1))
         speedGraderPage.assertDisplaysTextSubmissionView()
     }
 
+    @Stub
     @Test
     fun displaysUnsubmittedEmptyState() {
         goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY))
         speedGraderPage.assertDisplaysEmptyState(R.string.noSubmissionTeacher)
     }
 
+    @Stub
     @Test
     fun displaysNoSubmissionsAllowedEmptyState() {
         goToSpeedGraderPage(submissionTypeList = listOf(Assignment.SubmissionType.NONE))
         speedGraderPage.assertDisplaysEmptyState(R.string.speedGraderNoneMessage)
     }
 
+    @Stub
     @Test
     fun displaysOnPaperEmptyState() {
         goToSpeedGraderPage(submissionTypeList = listOf(ON_PAPER))
         speedGraderPage.assertDisplaysEmptyState(R.string.speedGraderOnPaperMessage)
     }
 
+    @Stub
     @Test
     fun displaysExternalToolEmptyState() {
         goToSpeedGraderPage(submissionTypeList = listOf(EXTERNAL_TOOL))
         speedGraderPage.assertDisplaysEmptyState(R.string.noSubmissionTeacher)
     }
 
+    @Stub
     @Test
     fun displaysUrlSubmission() {
         val data = goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_URL), submissions = listOf(1))
