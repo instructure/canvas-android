@@ -19,6 +19,4 @@ interface LegalRouter {
     fun routeToTermsOfService(html: String)
 
     fun routeToPrivacyPolicy()
-
-    fun routeToOpenSource()
 }

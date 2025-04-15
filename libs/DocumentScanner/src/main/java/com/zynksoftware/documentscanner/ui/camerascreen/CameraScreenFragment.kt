@@ -25,7 +25,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import com.tbruyelle.rxpermissions3.RxPermissions
+import androidx.core.content.ContextCompat
 import com.zynksoftware.documentscanner.R
 import com.zynksoftware.documentscanner.common.extensions.hide
 import com.zynksoftware.documentscanner.common.extensions.show
@@ -40,6 +40,14 @@ import java.io.FileNotFoundException
 
 
 internal class CameraScreenFragment: BaseFragment<FragmentCameraScreenBinding>(FragmentCameraScreenBinding::inflate), ScanSurfaceListener  {
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            startCamera()
+        } else {
+            onError(DocumentScannerErrorModel(DocumentScannerErrorModel.ErrorMessage.CAMERA_PERMISSION_REFUSED_GO_TO_SETTINGS))
+        }
+    }
 
     private val filePickerContract = registerForActivityResult(ActivityResultContracts.GetContent()) {
         handleSelectedFile(it)
@@ -97,21 +105,13 @@ internal class CameraScreenFragment: BaseFragment<FragmentCameraScreenBinding>(F
     }
 
     private fun checkForCameraPermissions() {
-        RxPermissions(this)
-            .requestEach(Manifest.permission.CAMERA)
-            .subscribe { permission ->
-                when {
-                    permission.granted -> {
-                        startCamera()
-                    }
-                    permission.shouldShowRequestPermissionRationale -> {
-                        onError(DocumentScannerErrorModel(DocumentScannerErrorModel.ErrorMessage.CAMERA_PERMISSION_REFUSED_WITHOUT_NEVER_ASK_AGAIN))
-                    }
-                    else -> {
-                        onError(DocumentScannerErrorModel(DocumentScannerErrorModel.ErrorMessage.CAMERA_PERMISSION_REFUSED_GO_TO_SETTINGS))
-                    }
-                }
+        ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA).let {
+            if (it == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                startCamera()
+            } else {
+                requestCameraPermission.launch(Manifest.permission.CAMERA)
             }
+        }
     }
 
     private fun startCamera() {

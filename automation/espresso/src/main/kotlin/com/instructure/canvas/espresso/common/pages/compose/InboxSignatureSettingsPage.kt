@@ -15,10 +15,12 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -28,11 +30,15 @@ import com.instructure.espresso.page.BasePage
 
 class InboxSignatureSettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
+    @OptIn(ExperimentalTestApi::class)
     fun assertSignatureText(signatureText: String) {
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag("textFieldWithHeaderTextField"), 5000)
         composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").assertTextEquals(signatureText)
     }
 
+    @OptIn(ExperimentalTestApi::class)
     fun assertSignatureEnabledState(enabled: Boolean) {
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag("switch"), 5000)
         val node = composeTestRule.onNodeWithTag("switch")
         node.assertIsToggleable()
 

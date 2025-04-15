@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 
 
 interface GradesRepository {
@@ -32,4 +33,6 @@ interface GradesRepository {
     suspend fun loadEnrollments(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<Enrollment>
     suspend fun loadCourse(courseId: Long, forceRefresh: Boolean): Course
     fun getCourseGrade(course: Course, studentId: Long, enrollments: List<Enrollment>, gradingPeriodId: Long?): CourseGrade?
+    fun getSortBy(): SortBy?
+    fun setSortBy(sortBy: SortBy)
 }

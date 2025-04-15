@@ -81,31 +81,4 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/openSource"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/listPreferredItemHeightSmall"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_github" />
-
-        <TextView
-            android:id="@+id/openSourceLabel"
-            style="@style/TextFont.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:gravity="center_vertical"
-            android:text="@string/canvasOnGithub"
-            android:textColor="@color/textDarkest"
-            android:textSize="16sp" />
-
-    </LinearLayout>
 </LinearLayout>

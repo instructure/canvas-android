@@ -26,7 +26,7 @@ object ModuleProgressionUtility {
         context: Context,
         moduleItemId: Long,
         modules: ArrayList<ModuleObject>,
-        moduleItems: ArrayList<ArrayList<ModuleItem>>
+        moduleItems: ArrayList<ArrayList<ModuleItem>?>
     ): ModuleHelper {
         // We want to give CourseModuleProgressionFragment an arrayList without SubHeaders and ExternalTool moduleItems.
         // We currently don't display them and there isn't a good way to just skip over them during the progression.
@@ -34,12 +34,18 @@ object ModuleProgressionUtility {
         // checks/math to account for skipping over sub-headers and external tools.
 
         // Remove all the subHeaders and external tools items from the children list. We won't display them in module progression
-        val headerlessItems = ArrayList<ArrayList<ModuleItem>>()
+        val headerlessItems = ArrayList<ArrayList<ModuleItem>?>()
         for (i in modules.indices) {
+            val moduleGroup = moduleItems[i]
+            if (moduleGroup == null) {
+                headerlessItems.add(null)
+                continue
+            }
             headerlessItems.add(ArrayList())
-            for (k in moduleItems[i].indices) {
-                if (shouldAddModuleItem(context, moduleItems[i][k])) {
-                    headerlessItems[i].add(moduleItems[i][k])
+            for (k in moduleGroup.indices) {
+                val moduleItem = moduleGroup[k]
+                if (shouldAddModuleItem(context, moduleItem)) {
+                    headerlessItems[i]?.add(moduleItem)
                 }
             }
         }
@@ -50,8 +56,9 @@ object ModuleProgressionUtility {
         var newGroupPos = 0
         var newChildPos = 0
         for (i in headerlessItems.indices) {
-            for (k in headerlessItems[i].indices) {
-                if (moduleItemId == headerlessItems[i][k].id) {
+            val moduleGroup = headerlessItems[i] ?: continue
+            for (k in moduleGroup.indices) {
+                if (moduleItemId == moduleGroup[k].id) {
                     newGroupPos = i
                     newChildPos = k
                     break
@@ -62,7 +69,7 @@ object ModuleProgressionUtility {
     }
 
     data class ModuleHelper(
-        var strippedModuleItems: ArrayList<ArrayList<ModuleItem>>,
+        var strippedModuleItems: ArrayList<ArrayList<ModuleItem>?>,
         var newGroupPosition: Int = 0,
         var newChildPosition: Int = 0
     )
