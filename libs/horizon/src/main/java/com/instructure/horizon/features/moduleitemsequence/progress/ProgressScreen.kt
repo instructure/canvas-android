@@ -175,6 +175,7 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
                             text = item.name,
                             style = HorizonTypography.p2,
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(top = 8.dp)
                                 .then(animationModifier)
                         )
