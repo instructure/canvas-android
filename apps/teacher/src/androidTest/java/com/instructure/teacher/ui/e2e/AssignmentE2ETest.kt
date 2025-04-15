@@ -322,7 +322,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentDueDatesPage.assertDueDateTime("Due $dueDateForStudentSpecially")
     }
 
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.COMMENTS, TestCategory.E2E)
