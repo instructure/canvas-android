@@ -21,6 +21,7 @@ data class ProgressScreenUiState(
     val visible: Boolean = false,
     val pages: List<ProgressPageUiState> = emptyList(),
     val currentPosition: Int = 0,
+    val movingDirection: Int = 0,
     val selectedModuleItemId: Long = -1,
     val onCloseClick: () -> Unit = {},
     val onPreviousClick: () -> Unit = {},

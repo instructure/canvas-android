@@ -215,6 +215,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 progressScreenState = it.progressScreenState.copy(
                     visible = true,
                     currentPosition = progressPosition,
+                    movingDirection = 0,
                     selectedModuleItemId = currentModuleItemId
                 )
             )
@@ -238,14 +239,14 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun progressPreviousClicked() {
         if (_uiState.value.progressScreenState.currentPosition > 0) {
             val newPosition = _uiState.value.progressScreenState.currentPosition - 1
-            _uiState.update { it.copy(progressScreenState = it.progressScreenState.copy(currentPosition = newPosition)) }
+            _uiState.update { it.copy(progressScreenState = it.progressScreenState.copy(currentPosition = newPosition, movingDirection = -1)) }
         }
     }
 
     private fun progressNextClicked() {
         if (_uiState.value.progressScreenState.currentPosition < _uiState.value.progressScreenState.pages.size - 1) {
             val newPosition = _uiState.value.progressScreenState.currentPosition + 1
-            _uiState.update { it.copy(progressScreenState = it.progressScreenState.copy(currentPosition = newPosition)) }
+            _uiState.update { it.copy(progressScreenState = it.progressScreenState.copy(currentPosition = newPosition, movingDirection = 1)) }
         }
     }
 

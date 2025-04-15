@@ -17,6 +17,12 @@
 
 package com.instructure.horizon.features.moduleitemsequence.progress
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +63,7 @@ import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectStatus
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, modifier: Modifier = Modifier) {
@@ -100,41 +107,78 @@ fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, m
 @Composable
 private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     val currentPage = uiState.pages[uiState.currentPosition]
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(top = 24.dp, bottom = 64.dp)) {
-        item {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .align(Alignment.Center),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(painterResource(R.drawable.list_alt), contentDescription = null, tint = HorizonColors.Icon.default())
-                HorizonSpace(SpaceSize.SPACE_8)
-                Text(text = stringResource(R.string.moduleProgressScreen_title), style = HorizonTypography.h3)
-            }
-        }
-        item {
-            Text(
-                text = currentPage.moduleName,
-                style = HorizonTypography.labelLargeBold,
-                modifier = Modifier.padding(top = 16.dp)
+    AnimatedContent(
+        currentPage,
+        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
+    ) { currentPageTarget ->
+        val animationModifier = Modifier.conditional(uiState.movingDirection != 0) {
+            animateEnterExit(
+            enter = slideInHorizontally(
+                initialOffsetX = { it * uiState.movingDirection },
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { -it * uiState.movingDirection },
             )
+        )
         }
-        items(currentPage.items.size) { index ->
-            when (val item = currentPage.items[index]) {
-                is ProgressPageItem.ModuleItem -> {
-                    val selected = uiState.selectedModuleItemId == item.moduleItemId
-                    ModuleItemCard(state = item.moduleItemCardState.copy(selected = selected))
-                }
-
-                is ProgressPageItem.SubHeader -> {
-                    Text(
-                        text = item.name,
-                        style = HorizonTypography.p2,
-                        modifier = Modifier.padding(top = 8.dp)
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(top = 24.dp, bottom = 64.dp)
+        ) {
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .align(Alignment.Center),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painterResource(R.drawable.list_alt),
+                        contentDescription = null,
+                        tint = HorizonColors.Icon.default()
                     )
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    Text(
+                        text = stringResource(R.string.moduleProgressScreen_title),
+                        style = HorizonTypography.h3
+                    )
+                }
+            }
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(animationModifier)
+                ){
+                    Text(
+                        text = currentPageTarget.moduleName,
+                        style = HorizonTypography.labelLargeBold,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+            }
+            items(currentPageTarget.items.size) { index ->
+                when (val item = currentPageTarget.items[index]) {
+                    is ProgressPageItem.ModuleItem -> {
+                        val selected = uiState.selectedModuleItemId == item.moduleItemId
+                        ModuleItemCard(
+                            state = item.moduleItemCardState.copy(selected = selected),
+                            modifier = animationModifier
+                        )
+                    }
+
+                    is ProgressPageItem.SubHeader -> {
+                        Text(
+                            text = item.name,
+                            style = HorizonTypography.p2,
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .then(animationModifier)
+                        )
+                    }
                 }
             }
         }
