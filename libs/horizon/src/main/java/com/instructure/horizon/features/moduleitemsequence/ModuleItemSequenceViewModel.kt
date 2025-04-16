@@ -146,7 +146,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 item.moduleDetails?.lockExplanation ?: context.getString(R.string.modulePager_locked)
             )
 
-            item.type == Type.Page.name -> ModuleItemContent.Page(item.pageUrl.orEmpty())
+            item.type == Type.Page.name -> ModuleItemContent.Page(courseId, item.pageUrl.orEmpty())
             item.type == Type.Assignment.name -> ModuleItemContent.Assignment(item.contentId)
             item.type == Type.Quiz.name -> ModuleItemContent.Assessment(item.contentId)
             item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.htmlUrl.orEmpty())

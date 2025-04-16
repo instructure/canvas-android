@@ -20,6 +20,7 @@ package com.instructure.horizon.features.moduleitemsequence
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +40,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -64,6 +64,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -162,7 +163,8 @@ private fun ModuleItemSequenceContent(
                     .then(
                         if (isCollapsed) Modifier.height(0.dp) else Modifier.wrapContentHeight()
                     ),
-                onBackPressed = onBackPressed
+                onBackPressed = onBackPressed,
+                buttonsEnabled = !isCollapsed
             )
         }
         LoadingStateWrapper(
@@ -176,9 +178,7 @@ private fun ModuleItemSequenceContent(
                 val moduleItemUiState = uiState.items[page]
                 ModuleItemContentScreen(
                     moduleItemUiState,
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .verticalScroll(contentScrollState)
+                    scrollState = contentScrollState,
                 )
             }
         }
@@ -189,11 +189,12 @@ private fun ModuleItemSequenceContent(
 private fun ModuleHeaderContainer(
     uiState: ModuleItemSequenceUiState,
     onBackPressed: () -> Unit,
+    buttonsEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
+            if (buttonsEnabled) IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -213,7 +214,7 @@ private fun ModuleHeaderContainer(
                     textAlign = TextAlign.Center
                 )
             }
-            IconButton(iconRes = R.drawable.list_alt, color = IconButtonColor.INSTITUTION, onClick = uiState.onProgressClick)
+            if (buttonsEnabled) IconButton(iconRes = R.drawable.list_alt, color = IconButtonColor.INSTITUTION, onClick = uiState.onProgressClick)
         }
         if (!uiState.currentItem?.detailTags.isNullOrEmpty()) {
             HorizonSpace(SpaceSize.SPACE_24)
@@ -258,17 +259,23 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 }
 
 @Composable
-private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, modifier: Modifier = Modifier) {
+private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
     when (moduleItemUiState.moduleItemContent) {
         is ModuleItemContent.Locked -> LockedContentScreen(
             lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
+            scrollState = scrollState,
             modifier = modifier
         )
+
+        is ModuleItemContent.Page -> {
+            PageDetailsContentScreen(moduleItemUiState.moduleItemContent, scrollState, modifier = modifier)
+        }
 
         else -> {
             DummyContentScreen(
                 moduleItemName = moduleItemUiState.moduleItemName,
                 moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
+                scrollState = scrollState,
                 modifier = modifier
             )
         }

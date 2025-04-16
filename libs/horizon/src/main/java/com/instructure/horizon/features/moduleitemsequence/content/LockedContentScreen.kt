@@ -15,14 +15,26 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Pill
@@ -32,18 +44,33 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 
 @Composable
-fun LockedContentScreen(lockExplanation: String, modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        HorizonSpace(SpaceSize.SPACE_24)
-        Pill(
-            label = stringResource(R.string.learningObject_locked),
-            style = PillStyle.INLINE,
-            type = PillType.LEARNING_OBJECT_TYPE,
-            case = PillCase.TITLE,
-            iconRes = R.drawable.lock
-        )
-        HorizonSpace(SpaceSize.SPACE_16)
-        ComposeCanvasWebViewWrapper(html = lockExplanation)
+fun LockedContentScreen(lockExplanation: String, scrollState: ScrollState, modifier: Modifier = Modifier) {
+    Box(
+        contentAlignment = Alignment.TopCenter,
+        modifier = modifier
+            .fillMaxSize()
+            .clip(HorizonCornerRadius.level5)
+            .background(HorizonColors.Surface.cardPrimary())
+    ) {
+        Column(
+            modifier = modifier
+                .padding(horizontal = 16.dp)
+                .verticalScroll(scrollState)
+        ) {
+            HorizonSpace(SpaceSize.SPACE_24)
+            Pill(
+                label = stringResource(R.string.learningObject_locked),
+                style = PillStyle.INLINE,
+                type = PillType.LEARNING_OBJECT_TYPE,
+                case = PillCase.TITLE,
+                iconRes = R.drawable.lock,
+                modifier = Modifier.padding(horizontal = 8.dp),
+            )
+            HorizonSpace(SpaceSize.SPACE_16)
+            ComposeCanvasWebViewWrapper(
+                html = lockExplanation,
+            )
+        }
     }
 }
 
@@ -52,6 +79,7 @@ fun LockedContentScreen(lockExplanation: String, modifier: Modifier = Modifier) 
 fun LockedContentScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     LockedContentScreen(
-        lockExplanation = "This page is part of the module and hasnt been unlocked yet."
+        lockExplanation = "This page is part of the module and hasnt been unlocked yet.",
+        rememberScrollState()
     )
 }
