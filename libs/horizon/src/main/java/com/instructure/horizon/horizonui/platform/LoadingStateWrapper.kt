@@ -74,11 +74,11 @@ fun LoadingStateWrapper(
         }
     }
 
-    Scaffold(containerColor = containerColor, snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
+    Scaffold(containerColor = containerColor, snackbarHost = { SnackbarHost(snackbarHostState) }, modifier = modifier) { paddingValues ->
         PullToRefreshBox(
             isRefreshing = loadingState.isRefreshing,
             onRefresh = loadingState.onRefresh,
-            modifier = modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues),
             state = state,
             indicator = {
                 Indicator(
