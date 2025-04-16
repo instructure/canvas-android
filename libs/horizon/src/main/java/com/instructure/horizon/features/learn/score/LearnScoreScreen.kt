@@ -68,8 +68,6 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.utils.AssignmentStatus
-import com.instructure.pandautils.utils.getStatus
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import com.instructure.pandautils.utils.toFormattedString
 import java.text.DateFormat
@@ -107,7 +105,7 @@ private fun LearnScoreContent(
             CollapsableContentCard(
                 title = stringResource(
                     R.string.averageScoreHeader,
-                    state.grades?.currentScore.orDefault().stringValueWithoutTrailingZeros
+                    state.currentScore.orEmpty()
                 ),
                 expandableSubtitle = stringResource(R.string.assignmentGroupWeights),
                 expanded = isExpanded,
@@ -191,7 +189,7 @@ private fun AssignmentsContent(
 }
 
 @Composable
-private fun AssignmentItem(assignment: Assignment) {
+private fun AssignmentItem(assignment: AssignmentScoreItem) {
     Column(
         modifier = Modifier
             .padding(vertical = 16.dp)
@@ -236,7 +234,7 @@ private fun AssignmentItem(assignment: Assignment) {
         Text(
             text = stringResource(
                 R.string.scoresItemResult,
-                assignment.lastActualSubmission?.score?.stringValueWithoutTrailingZeros ?: "-",
+                assignment.lastScore?.stringValueWithoutTrailingZeros ?: "-",
                 assignment.pointsPossible.stringValueWithoutTrailingZeros
             ),
             style = HorizonTypography.p1,
@@ -254,7 +252,7 @@ private fun AssignmentItem(assignment: Assignment) {
                 color = HorizonColors.Text.body()
             )
 
-            if (assignment.lastActualSubmission?.submissionComments?.isNotEmpty().orDefault()) {
+            if (assignment.submissionCommentsCount > 0) {
                 Icon(
                     painter = painterResource(R.drawable.mark_unread_chat_alt),
                     contentDescription = null,
@@ -262,7 +260,7 @@ private fun AssignmentItem(assignment: Assignment) {
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
                 Text(
-                    text = (assignment.lastActualSubmission?.submissionComments?.size ?: 0).toString(),
+                    text = (assignment.submissionCommentsCount).toString(),
                     style = HorizonTypography.p1,
                     color = HorizonColors.Text.body()
                 )
@@ -278,8 +276,8 @@ private fun AssignmentItem(assignment: Assignment) {
 }
 
 @Composable
-private fun AssignmentStatusPill(assignment: Assignment) {
-    val status = assignment.getStatus()
+private fun AssignmentStatusPill(assignment: AssignmentScoreItem) {
+    val status = assignment.status
     val pillType = if (status == AssignmentStatus.Late || status == AssignmentStatus.Missing) {
         PillType.DANGER
     } else {
@@ -295,7 +293,7 @@ private fun AssignmentStatusPill(assignment: Assignment) {
 }
 
 @Composable
-private fun GroupWeightsContent(assignmentGroups: List<AssignmentGroup>) {
+private fun GroupWeightsContent(assignmentGroups: List<AssignmentGroupScoreItem>) {
     Column {
         assignmentGroups.forEachIndexed { index, item ->
             GroupWeightItem(item)
@@ -311,7 +309,7 @@ private fun GroupWeightsContent(assignmentGroups: List<AssignmentGroup>) {
 }
 
 @Composable
-private fun GroupWeightItem(assignmentGroup: AssignmentGroup) {
+private fun GroupWeightItem(assignmentGroup: AssignmentGroupScoreItem) {
     Column(
         modifier = Modifier
             .padding(vertical = 16.dp)
@@ -330,7 +328,7 @@ private fun GroupWeightItem(assignmentGroup: AssignmentGroup) {
             Text(
                 text = stringResource(
                     R.string.percentageValue,
-                    assignmentGroup.groupWeight.stringValueWithoutTrailingZeros
+                    assignmentGroup.groupWeight
                 ),
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body()
@@ -366,9 +364,9 @@ fun LearnScoreContentPreview() {
     LearnScoreContent(
         state = LearnScoreUiState(
             screenState = LoadingState(),
-            grades = null,
-            assignmentGroups = assignmentGroups,
-            sortedAssignments = assignmentGroups.flatMap { it.assignments },
+            currentScore = null,
+            assignmentGroups = assignmentGroups.map { AssignmentGroupScoreItem(it) },
+            sortedAssignments = assignmentGroups.flatMap { it.assignments.map { AssignmentScoreItem(it) } },
             selectedSortOption = LearnScoreSortOption.DueDate
         ),
         onSelectedSortOptionChanged = {}

@@ -16,14 +16,18 @@
  */
 package com.instructure.horizon.features.learn.score
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,6 +35,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LearnScoreViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val learnScoreRepository: LearnScoreRepository,
 ): ViewModel() {
 
@@ -38,6 +43,7 @@ class LearnScoreViewModel @Inject constructor(
         LearnScoreUiState(
             screenState = LoadingState(
                 onRefresh = ::refresh,
+                onErrorSnackbarDismiss = ::dismissSnackbar,
             ),
         )
     )
@@ -58,14 +64,16 @@ class LearnScoreViewModel @Inject constructor(
         } catch { exception ->
             _uiState.update {
                 it.copy(
-                    screenState = it.screenState.copy(isLoading = false, errorMessage = exception.message),
+                    screenState = it.screenState.copy(isLoading = false, isError = true, errorMessage = context.getString(
+                        R.string.failedToLoadScores
+                    )),
                 )
             }
         }
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
-        val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh)
+        val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh).map { AssignmentGroupScoreItem(it) }
         val enrollments = learnScoreRepository.getEnrollments(courseId, forceRefresh)
         val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
 
@@ -73,7 +81,7 @@ class LearnScoreViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 assignmentGroups = assignmentGroups,
-                grades = grades,
+                currentScore = grades?.currentScore.orDefault().stringValueWithoutTrailingZeros,
             )
         }
     }
@@ -84,7 +92,7 @@ class LearnScoreViewModel @Inject constructor(
             getData(uiState.value.courseId, forceRefresh = true)
             _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         } catch {
-            _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
+            _uiState.update { it.copy(screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.errorOccurred), isRefreshing = false)) }
         }
     }
 
@@ -93,11 +101,17 @@ class LearnScoreViewModel @Inject constructor(
         sortAssignments(uiState.value.assignmentGroups)
     }
 
-    private fun sortAssignments(assignmentGroups: List<AssignmentGroup>) {
+    private fun sortAssignments(assignmentGroups: List<AssignmentGroupScoreItem>) {
         val sortedAssignments = when (_uiState.value.selectedSortOption) {
-            LearnScoreSortOption.AssignmentName -> assignmentGroups.flatMap { it.assignments }.sortedBy { it.name }
-            LearnScoreSortOption.DueDate -> assignmentGroups.flatMap { it.assignments }.sortedBy { it.dueAt }
+            LearnScoreSortOption.AssignmentName -> assignmentGroups.flatMap { it.assignmentItems }.sortedBy { it.name }
+            LearnScoreSortOption.DueDate -> assignmentGroups.flatMap { it.assignmentItems }.sortedBy { it.dueDate }
         }
         _uiState.update { it.copy(sortedAssignments = sortedAssignments) }
+    }
+
+    private fun dismissSnackbar() {
+        _uiState.update {
+            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+        }
     }
 }

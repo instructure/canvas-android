@@ -151,13 +151,13 @@ fun Assignment.getGrade(
     }
 }
 
-sealed class AssignmentStatus(@StringRes val label: Int) {
-    data object NotSubmitted : AssignmentStatus(R.string.notSubmitted)
-    data object Submitted : AssignmentStatus(R.string.submitted)
-    data object Graded : AssignmentStatus(R.string.gradedSubmissionLabel)
-    data object Excused : AssignmentStatus(R.string.excused)
-    data object Missing : AssignmentStatus(R.string.missingAssignment)
-    data object Late : AssignmentStatus(R.string.late)
+enum class AssignmentStatus(@StringRes val label: Int) {
+    NotSubmitted(R.string.notSubmitted),
+    Submitted(R.string.submitted),
+    Graded(R.string.gradedSubmissionLabel),
+    Excused(R.string.excused),
+    Missing(R.string.missingAssignment),
+    Late(R.string.late),
 }
 fun Assignment.getStatus(): AssignmentStatus {
     return when {
