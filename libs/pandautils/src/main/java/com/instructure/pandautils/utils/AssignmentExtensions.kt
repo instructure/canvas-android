@@ -155,7 +155,7 @@ enum class AssignmentStatus(@StringRes val label: Int) {
     NotSubmitted(R.string.notSubmitted),
     Submitted(R.string.submitted),
     Graded(R.string.gradedSubmissionLabel),
-    Excused(R.string.excused),
+    Excused(R.string.excusedStatusLabel),
     Missing(R.string.missingAssignment),
     Late(R.string.late),
 }
