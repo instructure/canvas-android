@@ -67,7 +67,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.pandautils.utils.AssignmentStatus
+import com.instructure.horizon.model.AssignmentStatus
 import com.instructure.pandautils.utils.formatDayMonthYear
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 

@@ -92,4 +92,10 @@
         <item quantity="one">%d pt</item>
         <item quantity="other">%d pts</item>
     </plurals>
+    <string name="notSubmittedStatusLabel">Not Submitted</string>
+    <string name="submittedStatusLabel">Submitted</string>
+    <string name="gradedStatusLabel">Graded</string>
+    <string name="excusedStatusLabel">Excused</string>
+    <string name="missingStatusLabel">Missing</string>
+    <string name="lateStatusLabel">Late</string>
 </resources>

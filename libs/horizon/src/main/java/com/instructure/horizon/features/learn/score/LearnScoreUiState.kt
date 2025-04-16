@@ -5,8 +5,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.pandautils.utils.AssignmentStatus
-import com.instructure.pandautils.utils.getStatus
+import com.instructure.horizon.model.AssignmentStatus
+import com.instructure.horizon.model.getStatus
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import java.util.Date
 
