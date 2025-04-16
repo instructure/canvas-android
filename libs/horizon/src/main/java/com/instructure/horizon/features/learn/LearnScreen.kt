@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -29,16 +30,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.models.Course
@@ -54,7 +65,6 @@ import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.pandautils.compose.composables.ErrorContent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -82,60 +92,91 @@ fun LearnScreen(state: LearnUiState) {
 private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
+    var appBarHeight by remember { mutableIntStateOf(0) }
+    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(appBarHeight)) }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        Text(
-            text = state.course?.course?.name ?: stringResource(R.string.course),
-            style = HorizonTypography.h3,
-            color = HorizonColors.Text.title(),
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(nestedScrollConnection)
+    ) {
+        Column(
             modifier = Modifier
-                .padding(start = 24.dp, end = 24.dp, top = 24.dp)
-        )
-
-        ProgressBar(
-            progress = state.course?.progress ?: 0.0,
-            modifier = Modifier
-                .padding(horizontal = 24.dp, vertical = 16.dp)
-        )
-
-        TabRow(
-            tabs = state.availableTabs,
-            selectedIndex = pagerState.currentPage,
-            onTabSelected = { coroutineScope.launch { pagerState.animateScrollToPage(it) } },
-            tab = { tab, isSelected, modifier -> Tab(tab, isSelected, modifier) },
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 24.dp)
-        )
-        HorizontalPager(
-            pagerState,
-            pageSpacing = 16.dp,
-            contentPadding = PaddingValues(horizontal = 8.dp),
-            beyondViewportPageCount = 4
-        ) { index ->
-            val scaleAnimation by animateFloatAsState(if (index == pagerState.currentPage) 1f else 0.8f, label = "SelectedTabAnimation")
-            val cornerAnimation by animateDpAsState(
-                if (index == pagerState.currentPage) {
-                    0.dp
-                } else {
-                    if (index == 2) 16.dp else 32.dp
-                },
-                label = "SelectedTabCornerAnimation"
-            )
-            Box(
+                .offset { IntOffset(0, nestedScrollConnection.appBarOffset) }
+                .onGloballyPositioned { coordinates ->
+                    if (appBarHeight == 0) {
+                        appBarHeight = coordinates.size.height
+                        nestedScrollConnection =
+                            CollapsingAppBarNestedScrollConnection(appBarHeight)
+                    }
+                }
+        ) {
+            Text(
+                text = state.course?.course?.name ?: stringResource(R.string.course),
+                style = HorizonTypography.h3,
+                color = HorizonColors.Text.title(),
                 modifier = Modifier
-                    .fillMaxSize()
-                    .scale(scaleAnimation)
-            ) {
-                when (index) {
-                    0 -> LearnOverviewScreen(
-                        state.course?.course?.syllabusBody,
-                        Modifier
-                            .clip(RoundedCornerShape(cornerAnimation))
-                    )
-                    1 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
-                    2 -> LearnScoreScreen(state.course?.course?.id ?: -1, Modifier.clip(RoundedCornerShape(cornerAnimation)))
-                    3 -> LearnNotesScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                    .padding(start = 24.dp, end = 24.dp, top = 24.dp)
+            )
+
+            ProgressBar(
+                progress = state.course?.progress ?: 0.0,
+                modifier = Modifier
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+            )
+        }
+        val density = LocalDensity.current
+        Column(
+            modifier = Modifier
+                .padding(top = with(density) { appBarHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
+        ) {
+            TabRow(
+                tabs = state.availableTabs,
+                selectedIndex = pagerState.currentPage,
+                onTabSelected = { coroutineScope.launch { pagerState.animateScrollToPage(it) } },
+                tab = { tab, isSelected, modifier -> Tab(tab, isSelected, modifier) },
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 24.dp)
+            )
+            HorizontalPager(
+                pagerState,
+                pageSpacing = 16.dp,
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                beyondViewportPageCount = 4
+            ) { index ->
+                val scaleAnimation by animateFloatAsState(
+                    if (index == pagerState.currentPage) 1f else 0.8f,
+                    label = "SelectedTabAnimation"
+                )
+                val cornerAnimation by animateDpAsState(
+                    if (index == pagerState.currentPage) {
+                        0.dp
+                    } else {
+                        if (index == 2) 16.dp else 32.dp
+                    },
+                    label = "SelectedTabCornerAnimation"
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .scale(scaleAnimation)
+                ) {
+                    when (index) {
+                        0 -> LearnOverviewScreen(
+                            state.course?.course?.syllabusBody,
+                            Modifier
+                                .clip(RoundedCornerShape(cornerAnimation))
+                        )
+
+                        1 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                        2 -> LearnScoreScreen(
+                            state.course?.course?.id ?: -1,
+                            Modifier.clip(RoundedCornerShape(cornerAnimation))
+                        )
+
+                        3 -> LearnNotesScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                    }
                 }
             }
         }
@@ -171,6 +212,23 @@ private fun LoadingContent() {
 @Composable
 private fun ErrorContent(errorText: String) {
     Text(text = errorText, style = HorizonTypography.h3)
+}
+
+private class CollapsingAppBarNestedScrollConnection(
+    val appBarMaxHeight: Int
+) : NestedScrollConnection {
+
+    var appBarOffset: Int by mutableIntStateOf(0)
+        private set
+
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val delta = available.y.toInt()
+        val newOffset = appBarOffset + delta
+        val previousOffset = appBarOffset
+        appBarOffset = newOffset.coerceIn(-appBarMaxHeight, 0)
+        val consumed = appBarOffset - previousOffset
+        return Offset(0f, consumed.toFloat())
+    }
 }
 
 @Composable
