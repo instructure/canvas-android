@@ -123,7 +123,7 @@
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
-                        android:onClick="@{() -> itemViewModel.handleInvitation(false)}">
+                        app:onClickWithNetworkCheck="@{() -> itemViewModel.handleInvitation(false)}">
 
                         <Button
                             android:id="@+id/declineButton"
@@ -149,7 +149,7 @@
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
-                        android:onClick="@{() -> itemViewModel.handleInvitation(true)}">
+                        app:onClickWithNetworkCheck="@{() -> itemViewModel.handleInvitation(true)}">
 
                         <Button
                             android:id="@+id/acceptButton"
