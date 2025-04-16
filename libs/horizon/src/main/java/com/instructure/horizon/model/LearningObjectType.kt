@@ -19,13 +19,18 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.instructure.horizon.R
 
-enum class LearningObjectType(@StringRes val stringRes: Int, @DrawableRes val iconRes: Int, val apiString: String) {
-    ASSIGNMENT(R.string.learningObject_assignment, R.drawable.edit_document_assignment, "Assignment"),
+enum class LearningObjectType(
+    @StringRes val stringRes: Int,
+    @DrawableRes val iconRes: Int,
+    val apiString: String,
+    val completedStatus: LearningObjectStatus = LearningObjectStatus.VIEWED
+) {
+    ASSIGNMENT(R.string.learningObject_assignment, R.drawable.edit_document_assignment, "Assignment", LearningObjectStatus.SUBMITTED),
     PAGE(R.string.learningObject_page, R.drawable.text_snippet, "Page"),
     FILE(R.string.learningObject_File, R.drawable.attach_file, "File"),
     EXTERNAL_TOOL(R.string.learningObject_externalTool, R.drawable.note_alt, "ExternalTool"),
     EXTERNAL_URL(R.string.learningObject_externalLink, R.drawable.link, "ExternalUrl"),
-    ASSESSMENT(R.string.learningObject_assessment, R.drawable.fact_check, "Quiz"), // TODO Double check this
+    ASSESSMENT(R.string.learningObject_assessment, R.drawable.fact_check, "Quiz", LearningObjectStatus.SUBMITTED),
     UNKNOWN(R.string.learningObject_page, R.drawable.text_snippet, "");
 
     companion object {

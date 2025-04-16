@@ -5,6 +5,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 android {
@@ -71,4 +72,5 @@ dependencies {
 
     implementation(Libs.VIEW_MODEL)
     implementation(Libs.HILT_COMPOSE_NAVIGATION)
+    implementation(Libs.KOTLIN_SERIALIZABLE)
 }

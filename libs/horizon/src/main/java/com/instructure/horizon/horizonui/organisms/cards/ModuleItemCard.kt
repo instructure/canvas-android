@@ -58,7 +58,7 @@ data class ModuleItemCardState(
     val selected: Boolean = false,
     val remainingTime: String? = null,
     val dueDate: Date? = null,
-    val pastDue: Boolean = false, // TODO: I am not sure if this should be handled here, we will revisit this once we have real data
+    val pastDue: Boolean = false,
     val points: String? = null,
     val onClick: (() -> Unit)? = null
 )

@@ -16,6 +16,8 @@
 package com.instructure.horizon.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -24,10 +26,23 @@ import androidx.navigation.compose.composable
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
+import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
+import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
     data object AiAssistant : MainNavigationRoute("ai")
+
+    @Serializable
+    data class ModuleItemSequence(
+        val courseId: Long,
+        val moduleItemId: Long? = null,
+        val moduleItemAssetType: String? = null,
+        val moduleItemAssetId: String? = null
+    ) :
+        MainNavigationRoute("module_item_sequence")
 }
 
 @Composable
@@ -42,6 +57,11 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         }
         composable(MainNavigationRoute.AiAssistant.route) {
             AiAssistantScreen(navController)
+        }
+        composable<MainNavigationRoute.ModuleItemSequence> {
+            val viewModel = hiltViewModel<ModuleItemSequenceViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            ModuleItemSequenceScreen(navController, uiState)
         }
     }
 }

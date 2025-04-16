@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -45,7 +46,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
-import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.molecules.IconButton
@@ -84,23 +84,21 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val activity = LocalContext.current.getActivityOrNull()
-    if (activity != null) ViewStyler.setStatusBarColor(activity, R.color.surface_pagePrimary)
+    if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
 
     LaunchedEffect(key1 = uiState.theme) {
         val theme = uiState.theme
         if (theme != null && activity != null && !ThemePrefs.isThemeApplied) ThemePrefs.applyCanvasTheme(theme, activity)
     }
-    HorizonTheme {
-        Scaffold(content = { padding ->
-            if (uiState.initialDataLoading) {
-                Spinner(modifier = Modifier.fillMaxSize())
-            } else {
-                HomeNavigation(navController, Modifier.padding(padding))
-            }
-        }, containerColor = HorizonColors.Surface.pagePrimary(), bottomBar = {
-            BottomNavigationBar(navController, currentDestination, parentNavController)
-        })
-    }
+    Scaffold(content = { padding ->
+        if (uiState.initialDataLoading) {
+            Spinner(modifier = Modifier.fillMaxSize())
+        } else {
+            HomeNavigation(navController, parentNavController, Modifier.padding(padding))
+        }
+    }, containerColor = HorizonColors.Surface.pagePrimary(), bottomBar = {
+        BottomNavigationBar(navController, currentDestination, parentNavController)
+    })
 }
 
 @Composable
@@ -137,9 +135,15 @@ private fun BottomNavigationBar(
 
 @Composable
 fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    IconButton(modifier = modifier
-        .requiredSize(44.dp)
-        .weight(1f), onClick = onClick, contentDescription = stringResource(item.label), iconRes = R.drawable.ai, color = IconButtonColor.AI)
+    IconButton(
+        modifier = modifier
+            .requiredSize(44.dp)
+            .weight(1f),
+        onClick = onClick,
+        contentDescription = stringResource(item.label),
+        iconRes = R.drawable.ai,
+        color = IconButtonColor.AI
+    )
 }
 
 @Preview
