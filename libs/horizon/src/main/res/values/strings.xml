@@ -75,7 +75,7 @@
     <string name="noFeedback">-</string>
     <string name="sortBy">Sort By</string>
     <string name="assignmentGroupWeights">Assignment Group Weights</string>
-    <string name="percentageValue">%1$s\%%</string>
+    <string name="weightPercentageValue">Weight: %1$s\%%</string>
     <string name="averageScoreHeader">Average Score: %1$s\%%</string>
     <string name="failedToLoadScores">Failed to load Scores</string>
     <string name="modulePager_dueDate">Due %1$s</string>

@@ -104,7 +104,9 @@ class LearnScoreViewModel @Inject constructor(
     private fun sortAssignments(assignmentGroups: List<AssignmentGroupScoreItem>) {
         val sortedAssignments = when (_uiState.value.selectedSortOption) {
             LearnScoreSortOption.AssignmentName -> assignmentGroups.flatMap { it.assignmentItems }.sortedBy { it.name }
-            LearnScoreSortOption.DueDate -> assignmentGroups.flatMap { it.assignmentItems }.sortedBy { it.dueDate }
+            LearnScoreSortOption.DueDate -> assignmentGroups.flatMap { it.assignmentItems }.sortedWith(
+                compareBy(nullsLast()) { it.dueDate }
+            )
         }
         _uiState.update { it.copy(sortedAssignments = sortedAssignments) }
     }

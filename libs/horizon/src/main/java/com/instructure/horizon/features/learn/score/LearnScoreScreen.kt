@@ -68,9 +68,8 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.utils.AssignmentStatus
+import com.instructure.pandautils.utils.formatDayMonthYear
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
-import com.instructure.pandautils.utils.toFormattedString
-import java.text.DateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,30 +97,37 @@ private fun LearnScoreContent(
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier
+            .padding(horizontal = 24.dp),
         contentPadding = PaddingValues(bottom = 4.dp)
     ) {
         item {
-            CollapsableContentCard(
-                title = stringResource(
-                    R.string.averageScoreHeader,
-                    state.currentScore.orEmpty()
-                ),
-                expandableSubtitle = stringResource(R.string.assignmentGroupWeights),
-                expanded = isExpanded,
-                onExpandChanged = { isExpanded = it },
-                expandableContent = {
-                    GroupWeightsContent(state.assignmentGroups)
-                },
-            )
+            Column {
+                CollapsableContentCard(
+                    title = stringResource(
+                        R.string.averageScoreHeader,
+                        state.currentScore.orEmpty()
+                    ),
+                    expandableSubtitle = stringResource(R.string.assignmentGroupWeights),
+                    expanded = isExpanded,
+                    onExpandChanged = { isExpanded = it },
+                    expandableContent = {
+                        GroupWeightsContent(state.assignmentGroups)
+                    },
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
 
         item {
-            AssignmentsContent(state, onSelectedSortOptionChanged = {
-                onSelectedSortOptionChanged(it)
-            })
+            Column {
+                AssignmentsContent(state, onSelectedSortOptionChanged = {
+                    onSelectedSortOptionChanged(it)
+                })
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
@@ -207,7 +213,7 @@ private fun AssignmentItem(assignment: AssignmentScoreItem) {
         Text(
             text = stringResource(
                 R.string.scoresItemDueDate,
-                assignment.dueDate?.toFormattedString(DateFormat.SHORT) ?: stringResource(R.string.noDueDate)
+                assignment.dueDate?.formatDayMonthYear() ?: stringResource(R.string.noDueDate)
             ),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body()
@@ -286,7 +292,7 @@ private fun AssignmentStatusPill(assignment: AssignmentScoreItem) {
     Pill(
         label = stringResource(status.label),
         style = PillStyle.OUTLINE,
-        case = PillCase.UPPERCASE,
+        case = PillCase.TITLE,
         type = pillType,
         size = PillSize.SMALL
     )
@@ -327,7 +333,7 @@ private fun GroupWeightItem(assignmentGroup: AssignmentGroupScoreItem) {
 
             Text(
                 text = stringResource(
-                    R.string.percentageValue,
+                    R.string.weightPercentageValue,
                     assignmentGroup.groupWeight
                 ),
                 style = HorizonTypography.p1,
