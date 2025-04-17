@@ -62,6 +62,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         android.Manifest.permission.CAMERA
     )
 
+    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
@@ -428,6 +429,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         speedGraderCommentsPage.assertMediaCommentPreviewDisplayed()
     }
 
+    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)

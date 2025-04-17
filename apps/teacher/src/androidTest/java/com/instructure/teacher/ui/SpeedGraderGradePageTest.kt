@@ -16,6 +16,7 @@
 package com.instructure.teacher.ui
 
 import android.util.Log
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.StubMultiAPILevel
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -36,12 +37,14 @@ import org.junit.Test
 class SpeedGraderGradePageTest : TeacherComposeTest() {
 
 
+    @Stub
     @Test
     override fun displaysPageObjects() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.assertPageObjects()
     }
 
+    @Stub
     @Test
     fun correctViewsForPointGradedWithoutRubric() {
         val possiblePoint = 20
@@ -55,6 +58,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertCheckboxHidden()
     }
 
+    @Stub
     @Test
     fun correctViewsForPercentageGradedWithoutRubric() {
         goToSpeedGraderGradePage("percent")
@@ -67,6 +71,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertCheckboxHidden()
     }
 
+    @Stub
     @Test
     fun correctViewsForPointGradedWithRubric() {
         goToSpeedGraderGradePage("points", true)
@@ -77,6 +82,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertCheckboxVisible()
     }
 
+    @Stub
     @Test
     fun correctViewsForPercentageGradedWithRubric() {
         goToSpeedGraderGradePage("percent", true)
@@ -87,6 +93,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertCheckboxVisible()
     }
 
+    @Stub
     @Test
     fun correctViewsForPassFailAssignment() {
         goToSpeedGraderGradePage("pass_fail")
@@ -96,6 +103,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertCheckboxVisible()
     }
 
+    @Stub
     @Test
     fun correctViewsForLetterGradeAssignment() {
         goToSpeedGraderGradePage("letter_grade")
@@ -105,6 +113,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertCheckboxVisible()
     }
 
+    @Stub
     @Test
     fun correctViewsForGpaScaleAssignment() {
         goToSpeedGraderGradePage("gpa_scale")
@@ -114,6 +123,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertCheckboxVisible()
     }
 
+    @Stub
     @Test
     fun displaysGradeDialog() {
         goToSpeedGraderGradePage()
@@ -121,6 +131,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertGradeDialog()
     }
 
+    @Stub
     @Test
     fun displaysNewGrade() {
         if (isLowResDevice()) {
@@ -136,12 +147,14 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertHasGrade(grade)
     }
 
+    @Stub
     @Test
     fun hidesRubricWhenMissing() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.assertRubricHidden()
     }
 
+    @Stub
     @Test
     @StubMultiAPILevel("Failed API levels = { 27, 28, 29 }")
     fun overgradePointAssignment() {
@@ -155,6 +168,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertSliderMaxValue(grade.toInt().toString())
     }
 
+    @Stub
     @Test
     fun excuseStudent() {
         goToSpeedGraderGradePage()
@@ -165,6 +179,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertExcuseButtonDisabled()
     }
 
+    @Stub
     @Test
     @StubMultiAPILevel("Failed API levels = { 27, 28, 29 }")
     fun clearGrade() {

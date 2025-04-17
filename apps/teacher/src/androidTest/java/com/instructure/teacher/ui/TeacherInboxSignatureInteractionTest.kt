@@ -17,11 +17,13 @@ package com.instructure.teacher.ui
 
 import com.instructure.canvas.espresso.common.interaction.InboxSignatureInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
@@ -51,6 +53,10 @@ class TeacherInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val personContextManager: StudentContextManager = FakeStudentContextManager()
+
+    @BindValue
+    @JvmField
+    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
 
     private val dashboardPage = DashboardPage()
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()

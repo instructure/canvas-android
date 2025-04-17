@@ -21,9 +21,11 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.InboxSignatureInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
@@ -43,6 +45,10 @@ class ParentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
+
+    @BindValue
+    @JvmField
+    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
 
     private val dashboardPage = DashboardPage()
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
