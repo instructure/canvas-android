@@ -72,6 +72,7 @@ fun PageDetailsContentScreen(
                     applyOnWebView = {
                         canvasEmbeddedWebViewCallback = embeddedWebViewCallback
                         canvasWebViewClientCallback = webViewClientCallback
+                        overrideHtmlFormatColors = HorizonColors.htmlFormatColors
                     }
                 )
                 HorizonSpace(SpaceSize.SPACE_48)
