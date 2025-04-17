@@ -17,6 +17,7 @@
 
 package com.instructure.horizon.features.moduleitemsequence
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -64,6 +65,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
@@ -85,6 +87,7 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -93,6 +96,7 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toPx
 import kotlin.math.abs
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleItemSequenceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
@@ -107,7 +111,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         )
     }) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
-            ModuleItemSequenceContent(uiState = uiState, onBackPressed = {
+            ModuleItemSequenceContent(uiState = uiState, navController = navController, onBackPressed = {
                 navController.popBackStack()
             })
             val markAsDoneState = uiState.currentItem?.markAsDoneUiState
@@ -153,9 +157,11 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
     }
 }
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 private fun ModuleItemSequenceContent(
     uiState: ModuleItemSequenceUiState,
+    navController: NavHostController,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -211,6 +217,11 @@ private fun ModuleItemSequenceContent(
             }
         ) {
             if (uiState.currentPosition != -1) {
+                val homeEntry = remember { navController.getBackStackEntry(MainNavigationRoute.Home.route) }
+                LaunchedEffect(Unit) {
+                    homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+                }
+
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
                 LaunchedEffect(key1 = uiState.currentPosition) {
                     isCollapsedByScroll = false

@@ -17,6 +17,7 @@
 
 package com.instructure.horizon.features.dashboard
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,8 +60,26 @@ import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 
+const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
+
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController) {
+
+    val parentEntry = remember { mainNavController.getBackStackEntry("home") }
+    val savedStateHandle = parentEntry.savedStateHandle
+
+    val refreshFlow = remember { savedStateHandle.getStateFlow("shouldRefreshDashboard", false) }
+
+    val shouldRefresh by refreshFlow.collectAsState()
+
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
+            uiState.loadingState.onRefresh()
+            savedStateHandle[SHOULD_REFRESH_DASHBOARD] = false
+        }
+    }
+
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
         LoadingStateWrapper(loadingState = uiState.loadingState) {
             LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
