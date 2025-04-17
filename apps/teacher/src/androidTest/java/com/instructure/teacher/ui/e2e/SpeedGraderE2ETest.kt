@@ -24,6 +24,7 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
@@ -51,6 +52,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)

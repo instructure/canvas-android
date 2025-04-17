@@ -2,9 +2,9 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 34
+    const val COMPILE_SDK = 35
     const val MIN_SDK = 26
-    const val TARGET_SDK = 34
+    const val TARGET_SDK = 35
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "8.6.1"
@@ -184,7 +184,9 @@ object Libs {
     const val COMPOSE_UI = "androidx.compose.ui:ui-android"
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
-    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3"
+    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3:1.4.0-alpha12"
+    const val COMPOSE_ADAPTIVE = "androidx.compose.material3.adaptive:adaptive"
+    const val COMPOSE_MATERIAL3_WINDOW_SIZE = "androidx.compose.material3:material3-window-size-class"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"

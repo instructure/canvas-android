@@ -140,6 +140,7 @@ dependencies {
     implementation Libs.VIEW_MODEL
     implementation project(':rceditor')
 
+
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
@@ -229,6 +230,8 @@ dependencies {
     api Libs.COMPOSE_UI
     api Libs.ANDROIDX_COMPOSE_ACTIVITY
     api Libs.GLIDE_COMPOSE
+    api Libs.COMPOSE_ADAPTIVE
+    api Libs.COMPOSE_MATERIAL3_WINDOW_SIZE
 
     implementation Libs.FLEXBOX_LAYOUT
 

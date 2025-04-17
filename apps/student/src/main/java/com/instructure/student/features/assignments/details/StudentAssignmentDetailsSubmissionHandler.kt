@@ -18,6 +18,7 @@ package com.instructure.student.features.assignments.details
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -134,7 +135,11 @@ class StudentAssignmentDetailsSubmissionHandler(
                     }
                     if (isUploading && submission.errorFlag) {
                         data.value?.attempts = attempts?.toMutableList()?.apply {
-                            if (isNotEmpty()) removeFirst()
+                            if (isNotEmpty()) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                                removeFirst()
+                            } else {
+                                removeAt(0)
+                            }
                             add(0, AssignmentDetailsAttemptItemViewModel(
                                 AssignmentDetailsAttemptViewData(
                                     resources.getString(R.string.attempt, attempts.size),

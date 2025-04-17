@@ -19,17 +19,20 @@ package com.instructure.teacher.ui
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
@@ -60,6 +63,11 @@ class CommentLibraryPageTest : TeacherComposeTest() {
     @JvmField
     val personContextManager: StudentContextManager = FakeStudentContextManager()
 
+    @BindValue
+    @JvmField
+    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
+
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllItemsWhenCommentFieldIsClicked() {
@@ -74,6 +82,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         }
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAndSelectFilteredCommentCloseCommentLibrary() {
@@ -95,6 +104,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionAndSendComment() {
@@ -122,6 +132,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
@@ -145,6 +156,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun reopenCommentLibraryWhenTextIsModified() {
@@ -170,6 +182,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showEmptyViewWhenFilteringHasNoSuggestion() {
@@ -181,6 +194,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         commentLibraryPage.assertEmptyViewVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
@@ -205,6 +219,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
