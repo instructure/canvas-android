@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -49,6 +50,8 @@ class LearnScoreViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
+    private var assignments: List<Assignment> = emptyList()
+
     fun loadState(courseId: Long) {
         _uiState.update {
             it.copy(
@@ -73,14 +76,15 @@ class LearnScoreViewModel @Inject constructor(
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
-        val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh).map { AssignmentGroupScoreItem(it) }
+        val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh)
+        val assignmentGroupItems = assignmentGroups.map { AssignmentGroupScoreItem(it) }
         val enrollments = learnScoreRepository.getEnrollments(courseId, forceRefresh)
         val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
-
-        sortAssignments(assignmentGroups)
+        assignments = assignmentGroups.flatMap { it.assignments }
+        sortAssignments(assignmentGroupItems)
         _uiState.update {
             it.copy(
-                assignmentGroups = assignmentGroups,
+                assignmentGroups = assignmentGroupItems,
                 currentScore = grades?.currentScore.orDefault().stringValueWithoutTrailingZeros,
             )
         }
