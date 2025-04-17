@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -64,10 +64,13 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     HomeScreenTopBar(uiState, modifier = Modifier.height(56.dp))
                     HorizonSpace(SpaceSize.SPACE_36)
                 }
-                items(uiState.coursesUiState) { courseItem ->
+                itemsIndexed(uiState.coursesUiState) { index, courseItem ->
                     DashboardCourseItem(courseItem, onClick = {
                         mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseItem.courseId, courseItem.nextModuleItemId))
                     })
+                    if (index < uiState.coursesUiState.size - 1) {
+                        HorizonSpace(SpaceSize.SPACE_48)
+                    }
                 }
             })
         }
@@ -113,19 +116,25 @@ private fun DashboardCourseItem(courseItem: DashboardCourseUiState, onClick: () 
         HorizonSpace(SpaceSize.SPACE_24)
         ProgressBar(progress = courseItem.courseProgress)
         HorizonSpace(SpaceSize.SPACE_36)
-        Text(text = stringResource(R.string.dashboard_resumeLearning), style = HorizonTypography.h3)
-        HorizonSpace(SpaceSize.SPACE_12)
-        LearningObjectCard(
-            LearningObjectCardState(
-                moduleTitle = courseItem.nextModuleName,
-                learningObjectTitle = courseItem.nextModuleItemName,
-                progressLabel = courseItem.progressLabel,
-                remainingTime = courseItem.remainingTime,
-                dueDate = courseItem.dueDate,
-                learningObjectType = courseItem.learningObjectType,
-                onClick = onClick
+        if (courseItem.completed) {
+            Text(text = stringResource(R.string.dashboard_courseCompleted), style = HorizonTypography.h3)
+            HorizonSpace(SpaceSize.SPACE_12)
+            Text(text = stringResource(R.string.dashboard_courseCompletedDescription), style = HorizonTypography.p1)
+        } else {
+            Text(text = stringResource(R.string.dashboard_resumeLearning), style = HorizonTypography.h3)
+            HorizonSpace(SpaceSize.SPACE_12)
+            LearningObjectCard(
+                LearningObjectCardState(
+                    moduleTitle = courseItem.nextModuleName.orEmpty(),
+                    learningObjectTitle = courseItem.nextModuleItemName.orEmpty(),
+                    progressLabel = courseItem.progressLabel,
+                    remainingTime = courseItem.remainingTime,
+                    dueDate = courseItem.dueDate,
+                    learningObjectType = courseItem.learningObjectType,
+                    onClick = onClick
+                )
             )
-        )
+        }
         HorizonSpace(SpaceSize.SPACE_24)
     }
 }
