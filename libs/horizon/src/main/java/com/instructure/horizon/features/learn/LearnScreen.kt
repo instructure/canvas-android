@@ -169,7 +169,10 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
                                 .clip(RoundedCornerShape(cornerAnimation))
                         )
 
-                        1 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                        1 -> LearnProgressScreen(
+                            state.course?.course?.id ?: -1,
+                            Modifier.clip(RoundedCornerShape(cornerAnimation))
+                        )
                         2 -> LearnScoreScreen(
                             state.course?.course?.id ?: -1,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
