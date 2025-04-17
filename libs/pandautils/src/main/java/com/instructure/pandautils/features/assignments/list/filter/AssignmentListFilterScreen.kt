@@ -88,7 +88,7 @@ fun AssignmentListFilterScreen(
                     items = assignmentFilterOptions.assignmentFilterOptions,
                     stringValueOfItem = {
                         when (it) {
-                            AssignmentFilter.All -> stringResource(R.string.all)
+                            AssignmentFilter.All -> stringResource(R.string.allAssignments)
                             AssignmentFilter.NotYetSubmitted -> stringResource(R.string.notYetSubmitted)
                             AssignmentFilter.ToBeGraded -> stringResource(R.string.toBeGraded)
                             AssignmentFilter.Graded -> stringResource(R.string.graded)
@@ -135,7 +135,7 @@ fun AssignmentListFilterScreen(
                     items = assignmentStatusFilterOptions,
                     stringValueOfItem = {
                         when (it) {
-                            AssignmentStatusFilterOption.All -> stringResource(R.string.all)
+                            AssignmentStatusFilterOption.All -> stringResource(R.string.allAssignments)
                             AssignmentStatusFilterOption.Published -> stringResource(R.string.published)
                             AssignmentStatusFilterOption.Unpublished -> stringResource(R.string.unpublished)
                         }

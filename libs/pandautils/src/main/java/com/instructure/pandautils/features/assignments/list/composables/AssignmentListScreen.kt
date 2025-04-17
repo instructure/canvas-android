@@ -264,11 +264,26 @@ private fun AssignmentListWrapper(
             }
 
             ScreenState.Empty -> {
-                AssignmentListScreenContainer(modifier = modifier) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(colorResource(R.color.backgroundLightest))
+                        .verticalScroll(rememberScrollState())
+                        .testTag("assignmentList"),
+                ) {
+                    if (state.gradingPeriods.isNotEmpty()) {
+                        GradingPeriodHeader(state.selectedFilterData.selectedGradingPeriodFilter)
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
                     EmptyContent(
                         emptyMessage = stringResource(R.string.noAssignments),
                         imageRes = R.drawable.ic_no_events
                     )
+
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
 
@@ -417,8 +432,16 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                     }
                 }
                 if (item.showDueDate) {
+                    val dueDate = assignment.dueDate
                     Text(
-                        assignment.dueDate?.toFormattedString() ?: stringResource(R.string.noDueDate),
+                        if (dueDate == null) {
+                            stringResource(R.string.noDueDate)
+                        } else {
+                            stringResource(
+                                R.string.dueAssignmentListItem,
+                                dueDate.toFormattedString()
+                            )
+                        },
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
