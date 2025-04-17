@@ -31,6 +31,7 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPage
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageUiState
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreenUiState
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.formatDayMonth
 import com.instructure.pandautils.utils.formatIsoDuration
@@ -54,6 +55,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val _uiState =
         MutableStateFlow(
             ModuleItemSequenceUiState(
+                loadingState = LoadingState(onRefresh = ::refresh),
                 onPreviousClick = ::previousClicked,
                 onNextClick = ::nextClicked,
                 onProgressClick = ::progressClicked,
@@ -276,6 +278,11 @@ class ModuleItemSequenceViewModel @Inject constructor(
         return if (position != -1) position else 0
     }
 
+    private fun refresh() {
+        _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
+        reloadData()
+    }
+
     private fun reloadData() {
         viewModelScope.tryLaunch {
             modules = repository.getModulesWithItems(courseId)
@@ -288,7 +295,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    loadingState = it.loadingState.copy(isLoading = false),
+                    loadingState = it.loadingState.copy(isLoading = false, isRefreshing = false),
                     items = items,
                     currentPosition = _uiState.value.currentPosition,
                     currentItem = getCurrentItem(_uiState.value.currentPosition, items),
