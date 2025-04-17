@@ -111,7 +111,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
                 navController.popBackStack()
             })
             val markAsDoneState = uiState.currentItem?.markAsDoneUiState
-            if (markAsDoneState != null) {
+            if (markAsDoneState != null && !uiState.currentItem.isLoading) {
                 MarkAsDoneButton(markAsDoneState)
             }
         }

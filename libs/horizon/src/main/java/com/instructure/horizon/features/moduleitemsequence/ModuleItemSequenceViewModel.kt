@@ -16,7 +16,6 @@
 package com.instructure.horizon.features.moduleitemsequence
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -234,12 +233,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
             val newItems = _uiState.value.items.mapNotNull {
                 if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules) else it
             }
-            _uiState.update { it.copy(items = newItems) }
+            val currentItem = getCurrentItem(items = newItems)
+            _uiState.update { it.copy(items = newItems, currentItem = currentItem) }
         } catch {
             // TODO Handle error
+            val currentItem = getCurrentItem()
             _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isError = true)
-                )
+                it.copy(loadingState = it.loadingState.copy(isError = true), currentItem = currentItem)
             }
         }
     }
