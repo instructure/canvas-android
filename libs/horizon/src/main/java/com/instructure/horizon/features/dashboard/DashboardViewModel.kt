@@ -96,8 +96,7 @@ class DashboardViewModel @Inject constructor(
                                 progressLabel = getProgressLabel(course.progress ?: 0.0),
                                 remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
                                 learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
-                                dueDate = nextModuleItemResult.moduleDetails?.dueDate,
-                                onClick = { onCourseClick(course.course.id) }
+                                dueDate = nextModuleItemResult.moduleDetails?.dueDate
                             )
                         } else {
                             handleError()
@@ -145,9 +144,5 @@ class DashboardViewModel @Inject constructor(
         _uiState.update {
             it.copy(loadingState = it.loadingState.copy(errorSnackbar = null))
         }
-    }
-
-    private fun onCourseClick(courseId: Long) {
-        // TODO Navigate to module item
     }
 }

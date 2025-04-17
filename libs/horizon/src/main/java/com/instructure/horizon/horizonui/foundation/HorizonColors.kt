@@ -21,8 +21,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import com.instructure.horizon.R
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.views.HtmlFormatColors
 
 object HorizonColors {
+    val htmlFormatColors = HtmlFormatColors(
+        backgroundColorRes = R.color.surface_pageSecondary,
+        textColor = R.color.text_body,
+        linkColor = R.color.text_link,
+        visitedLinkColor = R.color.text_linkSecondary
+    )
+
     object PrimitivesBlue {
         @Composable
         fun blue12() = colorResource(R.color.primitives_blue12)

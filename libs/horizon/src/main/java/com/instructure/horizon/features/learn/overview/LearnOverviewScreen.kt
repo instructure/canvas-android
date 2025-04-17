@@ -57,6 +57,7 @@ fun LearnOverviewScreen(
                 applyOnWebView = {
                     canvasEmbeddedWebViewCallback = embeddedWebViewCallback
                     canvasWebViewClientCallback = webViewClientCallback
+                    overrideHtmlFormatColors = HorizonColors.htmlFormatColors
                 },
             )
         }

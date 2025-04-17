@@ -98,4 +98,6 @@
     <string name="excusedStatusLabel">Excused</string>
     <string name="missingStatusLabel">Missing</string>
     <string name="lateStatusLabel">Late</string>
+    <string name="modulePager_markAsDone">Mark as Done</string>
+    <string name="modulePager_done">Done</string>
 </resources>
