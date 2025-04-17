@@ -21,7 +21,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class ModuleItemSequenceUiState(
     val loadingState: LoadingState = LoadingState(),
     val items: List<ModuleItemUiState> = emptyList(),
-    val currentPosition: Int = 0,
+    val currentPosition: Int = -1,
     val currentItem: ModuleItemUiState? = null,
     val progressScreenState: ProgressScreenUiState = ProgressScreenUiState(),
     val onPreviousClick: () -> Unit = {},

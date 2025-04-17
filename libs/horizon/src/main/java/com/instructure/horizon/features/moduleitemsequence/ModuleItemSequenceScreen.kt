@@ -178,18 +178,6 @@ private fun ModuleItemSequenceContent(
             }
     }
 
-    val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
-    LaunchedEffect(key1 = uiState.currentPosition) {
-        isCollapsedByScroll = false
-        isCollapsed = false
-        contentScrollState.scrollTo(0)
-        if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
-            pagerState.scrollToPage(uiState.currentPosition)
-        } else {
-            pagerState.animateScrollToPage(uiState.currentPosition)
-        }
-    }
-
     Column(modifier = modifier) {
         Box(
             modifier = Modifier.animateContentSize(
@@ -222,12 +210,26 @@ private fun ModuleItemSequenceContent(
                 background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
             }
         ) {
-            ModuleItemPager(pagerState = pagerState) { page ->
-                val moduleItemUiState = uiState.items[page]
-                ModuleItemContentScreen(
-                    moduleItemUiState,
-                    scrollState = contentScrollState,
-                )
+            if (uiState.currentPosition != -1) {
+                val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
+                LaunchedEffect(key1 = uiState.currentPosition) {
+                    isCollapsedByScroll = false
+                    isCollapsed = false
+                    contentScrollState.scrollTo(0)
+                    if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
+                        pagerState.scrollToPage(uiState.currentPosition)
+                    } else {
+                        pagerState.animateScrollToPage(uiState.currentPosition)
+                    }
+                }
+
+                ModuleItemPager(pagerState = pagerState) { page ->
+                    val moduleItemUiState = uiState.items[page]
+                    ModuleItemContentScreen(
+                        moduleItemUiState,
+                        scrollState = contentScrollState,
+                    )
+                }
             }
         }
     }
