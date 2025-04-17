@@ -81,9 +81,10 @@ class LearnScoreViewModel @Inject constructor(
         val enrollments = learnScoreRepository.getEnrollments(courseId, forceRefresh)
         val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
         assignments = assignmentGroups.flatMap { it.assignments }
-        sortAssignments(assignmentGroupItems)
+        val sortedAssignments = sortAssignments()
         _uiState.update {
             it.copy(
+                sortedAssignments = sortedAssignments,
                 assignmentGroups = assignmentGroupItems,
                 currentScore = grades?.currentScore.orDefault().stringValueWithoutTrailingZeros,
             )
@@ -102,17 +103,17 @@ class LearnScoreViewModel @Inject constructor(
 
     fun updateSelectedSortOption(sortOption: LearnScoreSortOption) {
         _uiState.update { it.copy(selectedSortOption = sortOption) }
-        sortAssignments(uiState.value.assignmentGroups)
+        val sortedAssignments = sortAssignments()
+        _uiState.update { it.copy(sortedAssignments = sortedAssignments) }
     }
 
-    private fun sortAssignments(assignmentGroups: List<AssignmentGroupScoreItem>) {
-        val sortedAssignments = when (_uiState.value.selectedSortOption) {
-            LearnScoreSortOption.AssignmentName -> assignmentGroups.flatMap { it.assignmentItems }.sortedBy { it.name }
-            LearnScoreSortOption.DueDate -> assignmentGroups.flatMap { it.assignmentItems }.sortedWith(
+    private fun sortAssignments(): List<AssignmentScoreItem> {
+        return when (_uiState.value.selectedSortOption) {
+            LearnScoreSortOption.AssignmentName -> assignments.sortedBy { it.name }
+            LearnScoreSortOption.DueDate -> assignments.sortedWith(
                 compareBy(nullsLast()) { it.dueDate }
             )
-        }
-        _uiState.update { it.copy(sortedAssignments = sortedAssignments) }
+        }.map { AssignmentScoreItem(it) }
     }
 
     private fun dismissSnackbar() {

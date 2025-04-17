@@ -39,12 +39,10 @@ data class AssignmentScoreItem(
 
 data class AssignmentGroupScoreItem(
     val name: String,
-    val assignmentItems: List<AssignmentScoreItem>,
     val groupWeight: String,
 ) {
     constructor(assignmentGroup: AssignmentGroup): this(
         name = assignmentGroup.name.orEmpty(),
-        assignmentItems = assignmentGroup.assignments.map { AssignmentScoreItem(it) },
         groupWeight = assignmentGroup.groupWeight.stringValueWithoutTrailingZeros
     )
 }
