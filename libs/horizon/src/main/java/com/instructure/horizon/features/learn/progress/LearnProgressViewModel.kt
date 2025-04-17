@@ -75,14 +75,15 @@ class LearnProgressViewModel @Inject constructor(
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
         val modules = repository.getModuleItems(courseId, forceRefresh)
 
-        val moduleItemStates = modules.associate { module ->
+        val moduleItemStates = modules.associateWith { module ->
             moduleHeaderStateMapper.mapModuleObjectToHeaderState(
                 module,
-                modules
+                modules,
+                ::moduleHeaderSelected
             ) to module.items.mapNotNull { moduleItem ->
-                moduleItemCardStateMapper.mapModuleItemToCardState(moduleItem, {})
+                moduleItemCardStateMapper.mapModuleItemToCardState(moduleItem, ::moduleItemSelected)
             }
-        }
+        }.mapKeys { it.key.id }
 
         _uiState.update { it.copy(moduleItemStates = moduleItemStates) }
     }
@@ -95,6 +96,26 @@ class LearnProgressViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(screenState = it.screenState.copy(errorSnackbar = context.getString(
                 R.string.errorOccurred), isRefreshing = false)) }
+        }
+    }
+
+    private fun moduleItemSelected(moduleItemId: Long) {
+
+    }
+
+    private fun moduleHeaderSelected(moduleId: Long) {
+        _uiState.update {
+            it.copy(
+                moduleItemStates = it.moduleItemStates.toMutableMap().apply {
+                    it.moduleItemStates[moduleId]?.let { moduleItemState ->
+                        this[moduleId] = moduleItemState.copy(
+                            first = moduleItemState.first.copy(
+                                expanded = !moduleItemState.first.expanded,
+                            )
+                        )
+                    }
+                },
+            )
         }
     }
 

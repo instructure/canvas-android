@@ -7,5 +7,5 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class LearnProgressUiState(
     val courseId: Long = -1,
     val screenState: LoadingState = LoadingState(),
-    val moduleItemStates: Map<ModuleHeaderState, List<ModuleItemCardState>> = emptyMap()
+    val moduleItemStates: Map<Long, Pair<ModuleHeaderState, List<ModuleItemCardState>>> = emptyMap()
 )

@@ -65,17 +65,15 @@ private fun LearnProgressContent(
             contentPadding = PaddingValues(24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(state.moduleItemStates.keys.toList()) { moduleHeaderState ->
+            items(state.moduleItemStates.values.toList()) { moduleHeaderState ->
                 ModuleContainer(
-                    state = moduleHeaderState,
+                    state = moduleHeaderState.first,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    state.moduleItemStates[moduleHeaderState]?.let { moduleItemStates ->
-                        moduleItemStates.forEach { moduleItemState ->
-                            ModuleItemCard(
-                                state = moduleItemState,
-                            )
-                        }
+                    moduleHeaderState.second.forEach { moduleItemState ->
+                        ModuleItemCard(
+                            state = moduleItemState,
+                        )
                     }
                 }
             }

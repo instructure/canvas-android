@@ -33,6 +33,7 @@ class ModuleHeaderStateMapper @Inject constructor(
     fun mapModuleObjectToHeaderState(
         module: ModuleObject,
         allModules: List<ModuleObject>,
+        onClick: (Long) -> Unit,
     ): ModuleHeaderState {
         return ModuleHeaderState(
             title = module.name.orEmpty(),
@@ -43,6 +44,7 @@ class ModuleHeaderStateMapper @Inject constructor(
                 module.items.all { it.completionRequirement == null } -> ModuleStatus.OPTIONAL
                 else -> ModuleStatus.NOT_STARTED
             },
+            onClick = { onClick(module.id) },
             subtitle = lockedExplanation(module, allModules),
             itemCount = module.items.size,
             pastDueCount = module.items.count { it.overDue },
