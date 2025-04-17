@@ -106,6 +106,7 @@ fun InboxSignatureContent(uiState: InboxSignatureUiState, actionHandler: (InboxS
             color = colorResource(R.color.textDarkest)
         )
         LabelSwitchRow(
+            modifier = Modifier.fillMaxWidth(),
             label = stringResource(com.instructure.pandares.R.string.inboxSignatureSwitchLabel),
             checked = uiState.signatureEnabled,
             onCheckedChange = {

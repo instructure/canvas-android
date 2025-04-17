@@ -20,6 +20,8 @@ import android.view.LayoutInflater
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -54,6 +56,7 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentQuizDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -146,7 +149,24 @@ class QuizDetailsFragment : BasePresenterFragment<
 
     override fun populateQuizDetails(quiz: Quiz): Unit = with(binding) {
         this@QuizDetailsFragment.quiz = quiz
-        toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(quiz) }
+        toolbar.setupMenu(R.menu.menu_assignment_details) { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_edit -> {
+                    openEditPage(quiz)
+                }
+
+                R.id.menu_speedGrader -> {
+                    SpeedGraderActivity.createIntent(
+                        requireContext(),
+                        course.id,
+                        quiz._assignment?.id ?: quizId,
+                        -1
+                    ).let {
+                        startActivity(it)
+                    }
+                }
+            }
+        }
         swipeRefreshLayout.isRefreshing = false
         setupViews(quiz)
         setupListeners(quiz)
@@ -333,11 +353,13 @@ class QuizDetailsFragment : BasePresenterFragment<
         return getString(R.string.quiz_details_until, toDate)
     }
     override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
-
+        allTitle.setTextColor(course.color)
+        allIcon.setColorFilter(course.color)
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)
-        gradedChart.setSelectedColor(ThemePrefs.brandColor)
+        gradedChart.setSelectedColor(course.color)
+        gradedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         gradedChart.setCenterText(gradedStudents.toString())
         gradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_graded).format(gradedStudents, totalStudents)
         gradedProgressBar.setGone()
@@ -345,7 +367,8 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         ungradedChart.setSelected(needsGradingCount)
         ungradedChart.setTotal(totalStudents)
-        ungradedChart.setSelectedColor(ThemePrefs.brandColor)
+        ungradedChart.setSelectedColor(course.color)
+        ungradedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         ungradedChart.setCenterText(needsGradingCount.toString())
         ungradedLabel.text = requireContext().resources.getQuantityText(R.plurals.needsGradingNoQuantity, needsGradingCount)
         ungradedWrapper.contentDescription = getString(R.string.content_description_submission_donut_needs_grading).format(needsGradingCount, totalStudents)
@@ -354,7 +377,8 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         notSubmittedChart.setSelected(notSubmitted)
         notSubmittedChart.setTotal(totalStudents)
-        notSubmittedChart.setSelectedColor(ThemePrefs.brandColor)
+        notSubmittedChart.setSelectedColor(course.color)
+        notSubmittedChart.setUnselectedColor(Color(course.color).copy(alpha = 0.2f).toArgb())
         notSubmittedChart.setCenterText(notSubmitted.toString())
         notSubmittedWrapper.contentDescription = getString(R.string.content_description_submission_donut_unsubmitted).format(notSubmitted, totalStudents)
         notSubmittedProgressBar.setGone()

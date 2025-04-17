@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -90,10 +91,10 @@ import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
-import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.features.inbox.utils.AttachmentCard
 import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.handleUrlAt
 import com.instructure.pandautils.utils.linkify
 
@@ -258,6 +259,7 @@ private fun InboxComposeScreenContent(
 
         if (uiState.hiddenFields.isSendIndividualHidden.not()) {
             LabelSwitchRow(
+                modifier = Modifier.fillMaxWidth(),
                 label = stringResource(R.string.sendIndividualMessage),
                 subtitle =
                     if (uiState.isSendIndividualMandatory)
@@ -473,7 +475,7 @@ fun InboxComposeScreenPreview() {
         sendIndividual = true,
         subject = TextFieldValue("Test Subject"),
         body = TextFieldValue("Test Body"),
-        screenState = ScreenState.Data,
+        screenState = ScreenState.Content,
         showConfirmationDialog = false,
     )
     InboxComposeScreen(
@@ -496,7 +498,7 @@ fun InboxComposeScreenConfirmDialogPreview() {
         sendIndividual = true,
         subject = TextFieldValue("Test Subject"),
         body = TextFieldValue("Test Body"),
-        screenState = ScreenState.Data,
+        screenState = ScreenState.Content,
         showConfirmationDialog = true,
     )
     InboxComposeScreen(

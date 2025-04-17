@@ -36,7 +36,7 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
@@ -46,7 +46,7 @@ import org.junit.Test
 import java.io.File
 
 @HiltAndroidTest
-class PickerSubmissionUploadInteractionTest : StudentTest() {
+class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     private val mockedFileName = "sample.jpg" // A file in our assets area

@@ -2021,6 +2021,33 @@
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Signature text</string>
     <string name="due_dateTime">Due: %1$s, %2$s</string>
+    <string name="noDueDate">No Due Date</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Needs Grading</string>
+    <string name="assignmentListTitle">Assignment list</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d point</item>
+        <item quantity="other">%d points</item>
+    </plurals>
+    <string name="noAssignments">No assignments</string>
+    <string name="assignmentGroup">Assignment Group</string>
+    <string name="assignmentType">Assignment Type</string>
+    <string name="dueDate">Due Date</string>
+    <string name="needsGrading">Needs Grading</string>
+    <string name="published">Published</string>
+    <string name="unpublished">Unpublished</string>
+    <string name="notYetSubmitted">Not Yet Submitted</string>
+    <string name="toBeGraded">To Be Graded</string>
+    <string name="graded">Graded</string>
+    <string name="other">Other</string>
+    <string name="a11y_filterAssignments">Filter Assignments</string>
+    <string name="assignmentFilter">Assignment Filter</string>
+    <string name="groupedBy">Grouped By</string>
+    <string name="gradingPeriod">Grading Period:</string>
+    <string name="gradingPeriodHeading">Grading Period</string>
+    <string name="gradePreferences">Grade Preferences</string>
+    <string name="allAssignments">All Assignments</string>
+    <string name="statusFilter">Status Filter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
     <string name="a11y_contentDescription_postPolicy">Post policy</string>
     <string name="late">Late</string>
@@ -2034,4 +2061,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="loginRefreshSameUserError">You must login with the same user.</string>
+    <string name="errorLoadingAssignments">An error occurred while loading assignments</string>
+    <string name="a11y_searchAssignments">Search Assignments</string>
+    <string name="dueAssignmentListItem">Due %1$s</string>
 </resources>
