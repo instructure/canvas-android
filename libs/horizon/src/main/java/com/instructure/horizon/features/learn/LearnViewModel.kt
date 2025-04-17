@@ -18,10 +18,11 @@ package com.instructure.horizon.features.learn
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,16 +36,15 @@ class LearnViewModel @Inject constructor(
         getInProgressCourse()
     }
 
-    private fun getInProgressCourse(forceRefresh: Boolean = false) = viewModelScope.launch {
+    private fun getInProgressCourse(forceRefresh: Boolean = false) = viewModelScope.tryLaunch {
         _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = true))
-        learnRepository.getCoursesWithProgress(forceNetwork = forceRefresh).onSuccess { courses ->
-            val course = courses.firstOrNull()
-            _state.value = state.value.copy(
-                screenState = state.value.screenState.copy(isLoading = false),
-                course = course
-            )
-        }.onFailure {
-            _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = false, errorMessage = it?.message))
-        }
+        val courses = learnRepository.getCoursesWithProgress(forceNetwork = forceRefresh)
+        val course = courses.first()
+        _state.value = state.value.copy(
+            screenState = state.value.screenState.copy(isLoading = false),
+            course = course,
+        )
+    } catch {
+        _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = false, errorMessage = it?.message))
     }
 }

@@ -63,13 +63,13 @@ fun MultiSelect(
         helperText = state.helperText,
         errorText = state.errorText,
         required = state.required,
-        modifier = Modifier
+        modifier = modifier
             .onFocusChanged {
                 state.onFocusChanged(it.isFocused)
             }
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
         ) {
             val localDensity = LocalDensity.current
             var heightInPx by remember { mutableIntStateOf(0) }
