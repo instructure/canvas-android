@@ -129,7 +129,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         if(assignmentDueAt != null) {
             composeTestRule.onNode(
                 hasText(assignmentName).and(
-                    hasParent(hasAnyDescendant(hasText(assignmentDueAt.toDate()!!.toFormattedString())))
+                    hasParent(hasAnyDescendant(hasText("Due ${assignmentDueAt.toDate()!!.toFormattedString()}")))
                 )
             )
             .assertIsDisplayed()
