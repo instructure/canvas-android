@@ -39,6 +39,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,8 +93,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val moduleItemId = if (moduleItemId != null) {
             moduleItemId
         } else {
-            val assetType = moduleItemAssetType ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
-            val assetId = moduleItemAssetId ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
+            val assetType = moduleItemAssetType
+                ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
+            val assetId = moduleItemAssetId
+                ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
             val moduleItemSequence = repository.getModuleItemSequence(courseId, assetType, assetId)
             moduleItemSequence.items?.firstOrNull()?.current?.id ?: -1L
         }
@@ -159,13 +162,24 @@ class ModuleItemSequenceViewModel @Inject constructor(
             return null
         }
 
+        val completionRequirement = item.completionRequirement
+        val markDoneUiState =
+            if (completionRequirement != null && ModuleItem.MUST_MARK_DONE == completionRequirement.type && !item.isLocked()) {
+                MarkAsDoneUiState(isDone = completionRequirement.completed, onMarkAsDoneClick = {
+                    markItemAsDone(item)
+                }, onMarkAsNotDoneClick = {
+                    markItemAsNotDone(item)
+                })
+            } else null
+
         return ModuleItemUiState(
             moduleName = modules.find { item.moduleId == it.id }?.name.orEmpty(),
             moduleItemName = item.title.orEmpty(),
             moduleItemId = item.id,
             moduleItemContent = moduleItemContent,
             detailTags = createDetailTags(item),
-            pillText = createPillText(item)
+            pillText = createPillText(item),
+            markAsDoneUiState = markDoneUiState
         )
     }
 
@@ -203,7 +217,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentItem(position: Int, items: List<ModuleItemUiState> = _uiState.value.items): ModuleItemUiState? {
+    private fun getCurrentItem(
+        position: Int = _uiState.value.currentPosition,
+        items: List<ModuleItemUiState> = _uiState.value.items
+    ): ModuleItemUiState? {
         return items.getOrNull(position)
     }
 
@@ -239,14 +256,28 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun progressPreviousClicked() {
         if (_uiState.value.progressScreenState.currentPosition > 0) {
             val newPosition = _uiState.value.progressScreenState.currentPosition - 1
-            _uiState.update { it.copy(progressScreenState = it.progressScreenState.copy(currentPosition = newPosition, movingDirection = -1)) }
+            _uiState.update {
+                it.copy(
+                    progressScreenState = it.progressScreenState.copy(
+                        currentPosition = newPosition,
+                        movingDirection = -1
+                    )
+                )
+            }
         }
     }
 
     private fun progressNextClicked() {
         if (_uiState.value.progressScreenState.currentPosition < _uiState.value.progressScreenState.pages.size - 1) {
             val newPosition = _uiState.value.progressScreenState.currentPosition + 1
-            _uiState.update { it.copy(progressScreenState = it.progressScreenState.copy(currentPosition = newPosition, movingDirection = 1)) }
+            _uiState.update {
+                it.copy(
+                    progressScreenState = it.progressScreenState.copy(
+                        currentPosition = newPosition,
+                        movingDirection = 1
+                    )
+                )
+            }
         }
     }
 
@@ -264,4 +295,53 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
     }
     //endregion
+
+    private fun markItemAsDone(item: ModuleItem) {
+        changeDoneState(item, true)
+    }
+
+    private fun markItemAsNotDone(item: ModuleItem) {
+        changeDoneState(item, false)
+    }
+
+    private fun changeDoneState(item: ModuleItem, markDone: Boolean) {
+        viewModelScope.launch {
+            updateMarkAsDoneStateForItem(item, loading = true)
+            val result = if (markDone) repository.markAsDone(courseId, item) else repository.markAsNotDone(courseId, item)
+            if (result.isSuccess) {
+                updateMarkAsDoneStateForItem(item, loading = false, done = markDone)
+            } else {
+                updateMarkAsDoneStateForItem(item, loading = false)
+            }
+        }
+    }
+
+    private fun updateMarkAsDoneStateForItem(item: ModuleItem, loading: Boolean, done: Boolean? = null) {
+        val currentItem = getCurrentItem()
+        val updatedCurrentItem = if (currentItem?.moduleItemId == item.id) {
+            currentItem.copy(
+                markAsDoneUiState = currentItem.markAsDoneUiState?.copy(
+                    isLoading = loading,
+                    isDone = done ?: currentItem.markAsDoneUiState.isDone
+                )
+            )
+        } else currentItem
+        _uiState.update {
+            it.copy(
+                items = it.items.map { moduleItemUiState ->
+                    if (moduleItemUiState.moduleItemId == item.id) {
+                        moduleItemUiState.copy(
+                            markAsDoneUiState = moduleItemUiState.markAsDoneUiState?.copy(
+                                isLoading = loading,
+                                isDone = done ?: moduleItemUiState.markAsDoneUiState.isDone
+                            )
+                        )
+                    } else {
+                        moduleItemUiState
+                    }
+                },
+                currentItem = updatedCurrentItem,
+            )
+        }
+    }
 }

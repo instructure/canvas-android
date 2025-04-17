@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,6 +35,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.views.CanvasWebView
 
@@ -71,8 +72,9 @@ fun PageDetailsContentScreen(
                     applyOnWebView = {
                         canvasEmbeddedWebViewCallback = embeddedWebViewCallback
                         canvasWebViewClientCallback = webViewClientCallback
-                    },
+                    }
                 )
+                HorizonSpace(SpaceSize.SPACE_48)
             }
         }
     }

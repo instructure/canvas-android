@@ -35,7 +35,15 @@ data class ModuleItemUiState(
     val moduleItemId: Long,
     val detailTags: List<String> = emptyList(),
     val pillText: String? = null,
-    val moduleItemContent: ModuleItemContent? = null
+    val moduleItemContent: ModuleItemContent? = null,
+    val markAsDoneUiState: MarkAsDoneUiState? = null,
+)
+
+data class MarkAsDoneUiState(
+    val isDone: Boolean = false,
+    val isLoading: Boolean = false,
+    val onMarkAsDoneClick: () -> Unit = {},
+    val onMarkAsNotDoneClick: () -> Unit = {},
 )
 
 sealed class ModuleItemContent {

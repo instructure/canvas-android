@@ -25,6 +25,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -55,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,11 +74,16 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillType
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ThemePrefs
@@ -99,9 +106,50 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             onPreviousClick = uiState.onPreviousClick
         )
     }) { contentPadding ->
-        ModuleItemSequenceContent(modifier = Modifier.padding(contentPadding), uiState = uiState, onBackPressed = {
-            navController.popBackStack()
-        })
+        Box(modifier = Modifier.padding(contentPadding)) {
+            ModuleItemSequenceContent(uiState = uiState, onBackPressed = {
+                navController.popBackStack()
+            })
+            val markAsDoneState = uiState.currentItem?.markAsDoneUiState
+            if (markAsDoneState != null) {
+                MarkAsDoneButton(markAsDoneState)
+            }
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .align(Alignment.BottomEnd)
+            .padding(end = 24.dp, bottom = 16.dp)
+            .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level6)
+            .animateContentSize()
+    ) {
+        if (markAsDoneState.isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level6)
+            ) {
+                Spinner(
+                    size = SpinnerSize.EXTRA_SMALL,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 22.dp, vertical = 10.dp),
+                )
+            }
+        } else {
+            Button(
+                label = stringResource(id = if (markAsDoneState.isDone) R.string.modulePager_done else R.string.modulePager_markAsDone),
+                color = ButtonColor.Ghost,
+                onClick = if (markAsDoneState.isDone) markAsDoneState.onMarkAsNotDoneClick else markAsDoneState.onMarkAsDoneClick,
+                iconPosition = ButtonIconPosition.Start(
+                    iconRes = if (markAsDoneState.isDone) R.drawable.check_box else R.drawable.check_box_outline_blank,
+                )
+            )
+        }
     }
 }
 
@@ -214,7 +262,11 @@ private fun ModuleHeaderContainer(
                     textAlign = TextAlign.Center
                 )
             }
-            if (buttonsEnabled) IconButton(iconRes = R.drawable.list_alt, color = IconButtonColor.INSTITUTION, onClick = uiState.onProgressClick)
+            if (buttonsEnabled) IconButton(
+                iconRes = R.drawable.list_alt,
+                color = IconButtonColor.INSTITUTION,
+                onClick = uiState.onProgressClick
+            )
         }
         if (!uiState.currentItem?.detailTags.isNullOrEmpty()) {
             HorizonSpace(SpaceSize.SPACE_24)
