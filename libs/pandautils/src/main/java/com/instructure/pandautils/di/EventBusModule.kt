@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,10 +12,20 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
- */
-package com.instructure.canvasapi2.pact.canvas.logic
+ */package com.instructure.pandautils.di
 
-// Common values/settings for all Pact specifications
-val PACT_TIMESTAMP_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*"
-val PACT_DATE_REGEX = "\\d{4}-\\d{2}-\\d{2}"
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import org.greenrobot.eventbus.EventBus
+
+@Module
+@InstallIn(SingletonComponent::class)
+class EventBusModule {
+
+    @Provides
+    fun provideEventBus(): EventBus {
+        return EventBus.getDefault()
+    }
+}
