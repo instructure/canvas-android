@@ -71,7 +71,7 @@ import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
-import com.instructure.pandautils.features.inbox.compose.ScreenState
+import com.instructure.pandautils.utils.ScreenState
 import java.util.EnumMap
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -120,7 +120,7 @@ fun RecipientPickerScreen(
                             }
 
                             when (uiState.screenState) {
-                                is ScreenState.Data -> {
+                                is ScreenState.Content -> {
                                     when (screenOption) {
                                         is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
                                             uiState,
@@ -482,7 +482,7 @@ fun RecipientPickerRolesScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Roles,
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             searchValue = TextFieldValue(""),
             selectedRecipients = emptyList(),
             recipientsByRole = roleRecipients,
@@ -513,7 +513,7 @@ fun RecipientPickerRecipientsScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Recipients,
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             searchValue = TextFieldValue(""),
             selectedRole = EnrollmentType.TeacherEnrollment,
             selectedRecipients = listOf(roleRecipients[EnrollmentType.TeacherEnrollment]!!.first()),
@@ -545,7 +545,7 @@ fun RecipientPickerSearchScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Roles,
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             searchValue = TextFieldValue("John"),
             selectedRecipients = listOf(roleRecipients[EnrollmentType.TeacherEnrollment]!!.first()),
             recipientsByRole = roleRecipients,

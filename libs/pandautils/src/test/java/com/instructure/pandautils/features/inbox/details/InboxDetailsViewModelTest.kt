@@ -27,6 +27,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.ScreenState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -110,7 +111,7 @@ class InboxDetailsViewModelTest {
             conversationId = conversation.id,
             conversation = conversation,
             messageStates = messageStates,
-            state = ScreenState.Success,
+            state = ScreenState.Content,
         )
 
         assertEquals(expectedUiState, viewModel.uiState.value)
@@ -156,7 +157,7 @@ class InboxDetailsViewModelTest {
             conversationId = conversation.id,
             conversation = conversation,
             messageStates = messageStates,
-            state = ScreenState.Success,
+            state = ScreenState.Content,
         )
 
         viewModel.handleAction(InboxDetailsAction.RefreshCalled)
@@ -276,7 +277,7 @@ class InboxDetailsViewModelTest {
             conversationId = newConversation.id,
             conversation = newConversation,
             messageStates = messageStates,
-            state = ScreenState.Success,
+            state = ScreenState.Content,
         )
         coEvery { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) } returns DataResult.Success(newConversation)
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(newConversation)
@@ -551,7 +552,7 @@ class InboxDetailsViewModelTest {
             conversationId = newConversation.id,
             conversation = newConversation,
             messageStates = messageStates,
-            state = ScreenState.Success,
+            state = ScreenState.Content,
         )
         coEvery { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) } returns DataResult.Success(newConversation)
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(newConversation)

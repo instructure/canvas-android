@@ -40,5 +40,5 @@ interface AssignmentListDataSource {
         forceNetwork: Boolean
     ): List<GradingPeriod>
 
-    suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course?
+    suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course
 }

@@ -35,6 +35,7 @@ import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getGrade
+import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -219,14 +220,7 @@ class GradesViewModel @Inject constructor(
             context.getString(R.string.due, "$dateText $timeText")
         } ?: context.getString(R.string.gradesNoDueDate)
 
-        val submissionStateLabel = when {
-            assignment.submission?.late.orDefault() -> SubmissionStateLabel.LATE
-            assignment.isMissing() -> SubmissionStateLabel.MISSING
-            assignment.isGraded().orDefault() -> SubmissionStateLabel.GRADED
-            assignment.submission?.submittedAt != null -> SubmissionStateLabel.SUBMITTED
-            !assignment.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
-            else -> SubmissionStateLabel.NONE
-        }
+        val submissionStateLabel = assignment.getSubmissionStateLabel()
 
         AssignmentUiState(
             id = assignment.id,
