@@ -14,19 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn
+package com.instructure.pandautils.utils
 
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.GetCoursesManager
-import com.instructure.canvasapi2.utils.ApiPrefs
-import javax.inject.Inject
+import java.text.DecimalFormat
 
-class LearnRepository @Inject constructor(
-    private val getCoursesManager: GetCoursesManager,
-    private val apiPrefs: ApiPrefs
-) {
-    suspend fun getCoursesWithProgress(forceNetwork: Boolean): List<CourseWithProgress> {
-        val courseWithProgress = getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
-        return courseWithProgress
+val Double.stringValueWithoutTrailingZeros: String
+    get() {
+        val format = DecimalFormat("0.#")
+        return format.format(this)
     }
-}
