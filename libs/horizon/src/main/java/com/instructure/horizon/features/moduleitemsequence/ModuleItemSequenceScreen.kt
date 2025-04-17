@@ -312,24 +312,36 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 
 @Composable
 private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
-    when (moduleItemUiState.moduleItemContent) {
-        is ModuleItemContent.Locked -> LockedContentScreen(
-            lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
-            scrollState = scrollState,
+    if (moduleItemUiState.isLoading) {
+        Box(
             modifier = modifier
-        )
-
-        is ModuleItemContent.Page -> {
-            PageDetailsContentScreen(moduleItemUiState.moduleItemContent, scrollState, modifier = modifier)
+                .fillMaxSize()
+                .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5),
+            contentAlignment = Alignment.Center
+        ) {
+            Spinner()
         }
-
-        else -> {
-            DummyContentScreen(
-                moduleItemName = moduleItemUiState.moduleItemName,
-                moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
+        return
+    } else {
+        when (moduleItemUiState.moduleItemContent) {
+            is ModuleItemContent.Locked -> LockedContentScreen(
+                lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
                 scrollState = scrollState,
                 modifier = modifier
             )
+
+            is ModuleItemContent.Page -> {
+                PageDetailsContentScreen(moduleItemUiState.moduleItemContent, scrollState, modifier = modifier)
+            }
+
+            else -> {
+                DummyContentScreen(
+                    moduleItemName = moduleItemUiState.moduleItemName,
+                    moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
+                    scrollState = scrollState,
+                    modifier = modifier
+                )
+            }
         }
     }
 }

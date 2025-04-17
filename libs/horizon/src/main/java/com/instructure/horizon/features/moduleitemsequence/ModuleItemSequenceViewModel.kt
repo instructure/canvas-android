@@ -16,6 +16,7 @@
 package com.instructure.horizon.features.moduleitemsequence
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,6 +35,7 @@ import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapp
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.formatDayMonth
 import com.instructure.pandautils.utils.formatIsoDuration
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -206,14 +208,39 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun previousClicked() {
         if (_uiState.value.currentPosition > 0) {
             val newPosition = _uiState.value.currentPosition - 1
-            _uiState.update { it.copy(currentPosition = newPosition, currentItem = getCurrentItem(newPosition)) }
+            pagePositionChanged(newPosition)
         }
     }
 
     private fun nextClicked() {
         if (_uiState.value.currentPosition < _uiState.value.items.size - 1) {
             val newPosition = _uiState.value.currentPosition + 1
-            _uiState.update { it.copy(currentPosition = newPosition, currentItem = getCurrentItem(newPosition)) }
+            pagePositionChanged(newPosition)
+        }
+    }
+
+    private fun pagePositionChanged(newPosition: Int) {
+        val newItems = _uiState.value.items.map {
+            it.copy(isLoading = it.moduleItemId == _uiState.value.items[newPosition].moduleItemId)
+        }
+        val currentItem = getCurrentItem(newPosition, newItems)
+        _uiState.update { it.copy(currentPosition = newPosition, currentItem = currentItem, items = newItems) }
+        loadModuleItem(newPosition, currentItem!!.moduleItemId)
+    }
+
+    private fun loadModuleItem(position: Int, moduleItemId: Long) {
+        viewModelScope.tryLaunch {
+            val moduleItem = repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            val newItems = _uiState.value.items.mapNotNull {
+                if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules) else it
+            }
+            _uiState.update { it.copy(items = newItems) }
+        } catch {
+            // TODO Handle error
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(isError = true)
+                )
+            }
         }
     }
 
@@ -228,7 +255,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val currentModuleItemId = _uiState.value.currentItem?.moduleItemId ?: -1L
         val progressPosition = getProgressPosition(currentModuleItemId)
         _uiState.update {
-            it.copy(
+            it.copy(loadingState = it.loadingState.copy(isLoading = true),
                 progressScreenState = it.progressScreenState.copy(
                     visible = true,
                     currentPosition = progressPosition,
@@ -237,6 +264,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 )
             )
         }
+        reloadData()
     }
 
     private fun getProgressPosition(
@@ -246,6 +274,35 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val moduleId = moduleItems.find { moduleItemId == it.id }?.moduleId
         val position = progressPages.indexOfFirst { it.moduleId == moduleId }
         return if (position != -1) position else 0
+    }
+
+    private fun reloadData() {
+        viewModelScope.tryLaunch {
+            modules = repository.getModulesWithItems(courseId)
+            moduleItems = modules.flatMap { it.items }
+
+            val items = modules
+                .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules) }
+
+            val progressPages = modules.map { createProgressPage(it) }
+
+            _uiState.update {
+                it.copy(
+                    loadingState = it.loadingState.copy(isLoading = false),
+                    items = items,
+                    currentPosition = _uiState.value.currentPosition,
+                    currentItem = getCurrentItem(_uiState.value.currentPosition, items),
+                    progressScreenState = it.progressScreenState.copy(
+                        pages = progressPages
+                    ),
+                )
+            }
+        } catch {
+            // TODO Handle error
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(isLoading = false, errorSnackbar = "Failed to reload items"))
+            }
+        }
     }
 
     //region Progress Screen callbacks

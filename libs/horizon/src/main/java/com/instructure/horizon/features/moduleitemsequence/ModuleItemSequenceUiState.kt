@@ -37,6 +37,7 @@ data class ModuleItemUiState(
     val pillText: String? = null,
     val moduleItemContent: ModuleItemContent? = null,
     val markAsDoneUiState: MarkAsDoneUiState? = null,
+    val isLoading: Boolean = false,
 )
 
 data class MarkAsDoneUiState(
