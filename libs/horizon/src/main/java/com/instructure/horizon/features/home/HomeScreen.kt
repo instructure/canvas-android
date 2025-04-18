@@ -111,7 +111,7 @@ private fun BottomNavigationBar(
     Surface(shadowElevation = HorizonElevation.level5) {
         NavigationBar(containerColor = HorizonColors.Surface.pageSecondary(), modifier = modifier) {
             bottomNavItems.forEach { item ->
-                val selected = currentDestination?.hierarchy?.any { it.route?.startsWith(item.route.substringBefore("?")) == true } == true
+                val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                 if (item.route == MainNavigationRoute.AiAssistant.route) {
                     AiAssistantItem(item, onClick = {
                         // This will be changed later because in this case we don't have the current screen in the background
