@@ -27,7 +27,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
-import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -62,6 +61,7 @@ import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import java.util.*

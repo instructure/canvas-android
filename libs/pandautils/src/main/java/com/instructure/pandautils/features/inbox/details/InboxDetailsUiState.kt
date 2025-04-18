@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
+import com.instructure.pandautils.utils.ScreenState
 
 data class InboxDetailsUiState(
     val conversationId: Long? = null,
@@ -60,11 +61,4 @@ sealed class InboxDetailsAction {
     data class DeleteMessage(val conversationId: Long, val message: Message) : InboxDetailsAction()
     data class UpdateState(val conversationId: Long, val workflowState: Conversation.WorkflowState) : InboxDetailsAction()
     data class UpdateStarred(val conversationId: Long, val newStarValue: Boolean) : InboxDetailsAction()
-}
-
-sealed class ScreenState {
-    data object Loading : ScreenState()
-    data object Error : ScreenState()
-    data object Empty : ScreenState()
-    data object Success : ScreenState()
 }

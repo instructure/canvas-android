@@ -50,7 +50,7 @@ fun CanvasThemedAppBar(
     navigationActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String = "",
-    @DrawableRes navIconRes: Int = R.drawable.ic_back_arrow,
+    @DrawableRes navIconRes: Int? = R.drawable.ic_back_arrow,
     navIconContentDescription: String = stringResource(id = R.string.back),
     backgroundColor: Color = Color(color = ThemePrefs.primaryColor),
     contentColor: Color = Color(color = ThemePrefs.primaryTextColor),
@@ -84,9 +84,14 @@ fun CanvasThemedAppBar(
         actions = actions,
         backgroundColor = backgroundColor,
         contentColor = contentColor,
-        navigationIcon = {
-            IconButton(onClick = navigationActionClick) {
-                Icon(painterResource(id = navIconRes), contentDescription = navIconContentDescription)
+        navigationIcon = if (navIconRes == null) null else {
+            {
+                IconButton(onClick = navigationActionClick) {
+                    Icon(
+                        painterResource(id = navIconRes),
+                        contentDescription = navIconContentDescription
+                    )
+                }
             }
         },
         modifier = modifier.testTag("toolbar"),
