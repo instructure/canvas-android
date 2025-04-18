@@ -2017,4 +2017,5 @@
     <string name="inboxSignatureScreenSubtitle">Signature will be added to the end of all messaging.</string>
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Signature text</string>
+    <string name="noDueDate">No Due Date</string>
 </resources>

@@ -244,7 +244,7 @@ class CourseSync(
     }
 
     private suspend fun fetchCalendarEvents(courseId: Long): List<ScheduleItem> {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val calendarEvents = calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.CALENDAR.apiName,
@@ -262,7 +262,7 @@ class CourseSync(
     }
 
     private suspend fun fetchCalendarAssignments(courseId: Long): List<ScheduleItem> {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val calendarAssignments = calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
@@ -281,7 +281,7 @@ class CourseSync(
 
     private suspend fun fetchPages(courseId: Long) {
         fetchTab(courseId, Tab.PAGES_ID) {
-            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             val pages = pageApi.getFirstPagePagesWithBody(courseId, CanvasContext.Type.COURSE.apiString, params)
                 .depaginate { nextUrl ->
                     pageApi.getNextPagePagesList(nextUrl, params)
@@ -300,7 +300,7 @@ class CourseSync(
             val frontPage = pageApi.getFrontPage(
                 CanvasContext.Type.COURSE.apiString,
                 courseId,
-                RestParams(isForceReadFromNetwork = true)
+                RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             ).dataOrNull
             if (frontPage != null) {
                 frontPage.body = parseHtmlContent(frontPage.body, courseId)
@@ -313,7 +313,7 @@ class CourseSync(
 
     private suspend fun fetchAssignments(courseId: Long) {
         fetchTab(courseId, Tab.ASSIGNMENTS_ID, Tab.GRADES_ID) {
-            val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
                 .depaginate { nextUrl ->
                     assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
@@ -333,7 +333,7 @@ class CourseSync(
     }
 
     private suspend fun fetchCourseDetails(courseId: Long): Course {
-        val params = RestParams(isForceReadFromNetwork = true)
+        val params = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val course = courseApi.getFullCourseContent(courseId, params).dataOrThrow
         val enrollments = course.enrollments.orEmpty().flatMap {
             enrollmentsApi.getEnrollmentsForUserInCourse(courseId, it.userId, params).dataOrThrow
@@ -354,7 +354,7 @@ class CourseSync(
 
     private suspend fun fetchUsers(courseId: Long) {
         fetchTab(courseId, Tab.PEOPLE_ID) {
-            val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)
                 .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
 
@@ -363,7 +363,7 @@ class CourseSync(
     }
 
     private suspend fun fetchQuizzes(assignmentGroups: List<AssignmentGroup>, courseId: Long) {
-        val params = RestParams(isForceReadFromNetwork = true)
+        val params = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val quizzes = mutableListOf<QuizEntity>()
         assignmentGroups.forEach { group ->
             group.assignments.forEach { assignment ->
@@ -379,7 +379,7 @@ class CourseSync(
 
     private suspend fun fetchAllQuizzes(contextType: String, courseId: Long) {
         fetchTab(courseId, Tab.QUIZZES_ID) {
-            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
                 quizApi.getNextPageQuizzesList(nextUrl, params)
             }.dataOrThrow
@@ -403,7 +403,7 @@ class CourseSync(
     private suspend fun getConferencesForContext(
         canvasContext: CanvasContext, forceNetwork: Boolean
     ): DataResult<List<Conference>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork, shouldLoginOnTokenError = false)
 
         return conferencesApi.getConferencesForContext(canvasContext.toAPIString().drop(1), params).map {
             it.conferences
@@ -414,7 +414,7 @@ class CourseSync(
 
     private suspend fun fetchDiscussions(courseId: Long) {
         fetchTab(courseId, Tab.DISCUSSIONS_ID) {
-            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             val discussions =
                 discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
                     .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrThrow
@@ -434,7 +434,7 @@ class CourseSync(
 
     private suspend fun fetchAnnouncements(courseId: Long) {
         fetchTab(courseId, Tab.ANNOUNCEMENTS_ID) {
-            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             val announcements =
                 announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
                     .depaginate { nextPage ->
@@ -458,7 +458,7 @@ class CourseSync(
     }
 
     private suspend fun fetchDiscussionDetails(discussions: List<DiscussionTopicHeader>, courseId: Long) {
-        val params = RestParams(isForceReadFromNetwork = true)
+        val params = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         discussions.forEach { discussionTopicHeader ->
             val discussionTopic = discussionApi.getFullDiscussionTopic(
                 CanvasContext.Type.COURSE.apiString,
@@ -497,7 +497,7 @@ class CourseSync(
 
     private suspend fun fetchModules(courseId: Long, courseSettings: CourseSyncSettingsWithFiles) {
         fetchTab(courseId, Tab.MODULES_ID) {
-            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+            val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             val moduleObjects = moduleApi.getFirstPageModuleObjects(
                 CanvasContext.Type.COURSE.apiString, courseId, params
             ).depaginate { nextPage ->
