@@ -108,7 +108,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     fun assertStudentScoreText(studentName: String, scoreText: String) {
 
         composeTestRule.onNode(
-            hasTestTag("scoreText") and(
+            hasTestTag("scoreText") and hasText(scoreText) and(
                 hasParent(
                     hasTestTag("submissionListItem").and(
                         hasAnyDescendant(hasText(studentName) and hasTestTag("submissionListItemStudentName"))
@@ -132,6 +132,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun clickFilterButton() {
         composeTestRule.onNodeWithTag("filterButton").performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -185,10 +186,14 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
 
     /**
      * Assert that the corresponding submission filter options are displayed.
-     *
+     * @param filterName
      */
-    fun assertSubmissionFilterOptions() {
-
+    fun assertSubmissionFilterOption(filterName: String) {
+        composeTestRule.onNode(
+            hasTestTag("filterItem")
+                .and(hasAnyChild(hasText(filterName))),
+            useUnmergedTree = true
+        ).assertIsDisplayed()
     }
 
     /**

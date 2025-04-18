@@ -180,6 +180,15 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG,"Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
 
+        Log.d(ASSERTION_TAG, "Assert that all the corresponding filter texts are displayed.")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("All Submissions")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Submitted Late")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Needs Grading")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Not Submitted")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Graded")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Scored Less Than…")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Scored More Than…")
+
         Log.d(STEP_TAG,"Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogOk()
