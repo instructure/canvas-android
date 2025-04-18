@@ -142,7 +142,7 @@ class AssignmentSubmissionListPageTest : TeacherComposeTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
 
         return data
     }
