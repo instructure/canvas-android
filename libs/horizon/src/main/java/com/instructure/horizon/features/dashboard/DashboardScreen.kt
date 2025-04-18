@@ -17,6 +17,7 @@
 
 package com.instructure.horizon.features.dashboard
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +44,9 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -56,7 +60,7 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 
 @Composable
-fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController) {
+fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
         LoadingStateWrapper(loadingState = uiState.loadingState) {
             LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
@@ -67,6 +71,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 itemsIndexed(uiState.coursesUiState) { index, courseItem ->
                     DashboardCourseItem(courseItem, onClick = {
                         mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseItem.courseId, courseItem.nextModuleItemId))
+                    }, onCourseClick = {
+                        homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId))
                     })
                     if (index < uiState.coursesUiState.size - 1) {
                         HorizonSpace(SpaceSize.SPACE_48)
@@ -110,12 +116,24 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
 }
 
 @Composable
-private fun DashboardCourseItem(courseItem: DashboardCourseUiState, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun DashboardCourseItem(
+    courseItem: DashboardCourseUiState,
+    onClick: () -> Unit,
+    onCourseClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(modifier) {
-        Text(text = courseItem.courseName, style = HorizonTypography.h1)
-        HorizonSpace(SpaceSize.SPACE_24)
-        ProgressBar(progress = courseItem.courseProgress)
-        HorizonSpace(SpaceSize.SPACE_36)
+        Column(
+            Modifier
+                .clip(HorizonCornerRadius.level1_5)
+                .clickable {
+                    onCourseClick()
+                }) {
+            Text(text = courseItem.courseName, style = HorizonTypography.h1)
+            HorizonSpace(SpaceSize.SPACE_24)
+            ProgressBar(progress = courseItem.courseProgress)
+            HorizonSpace(SpaceSize.SPACE_36)
+        }
         if (courseItem.completed) {
             Text(text = stringResource(R.string.dashboard_courseCompleted), style = HorizonTypography.h3)
             HorizonSpace(SpaceSize.SPACE_12)
@@ -143,5 +161,5 @@ private fun DashboardCourseItem(courseItem: DashboardCourseUiState, onClick: () 
 @Preview
 private fun DashboardScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DashboardScreen(DashboardUiState(), mainNavController = rememberNavController())
+    DashboardScreen(DashboardUiState(), mainNavController = rememberNavController(), homeNavController = rememberNavController())
 }

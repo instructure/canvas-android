@@ -21,8 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.instructure.horizon.features.account.AccountScreen
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
@@ -32,10 +34,16 @@ import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.horizonui.showroom.ShowroomContent
 import com.instructure.horizon.horizonui.showroom.ShowroomItem
 import com.instructure.horizon.horizonui.showroom.showroomItems
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed class HomeNavigationRoute(val route: String) {
     data object Dashboard : HomeNavigationRoute("dashboard")
-    data object Learn : HomeNavigationRoute("learn")
+    data object Learn : HomeNavigationRoute("learn?courseId={courseId}") {
+        fun withArgs(courseId: Long? = null) =
+            if (courseId != null) "learn?courseId=$courseId" else "learn"
+    }
+
     data object Skillspace : HomeNavigationRoute("skillspace")
     data object Account : HomeNavigationRoute("account")
 }
@@ -46,9 +54,15 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
         composable(HomeNavigationRoute.Dashboard.route) {
             val viewModel = hiltViewModel<DashboardViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            DashboardScreen(uiState, mainNavController)
+            DashboardScreen(uiState, mainNavController, homeNavController = navController)
         }
-        composable(HomeNavigationRoute.Learn.route) {
+        composable(
+            route = HomeNavigationRoute.Learn.route, arguments = listOf(
+                navArgument("courseId") {
+                    type = NavType.LongType
+                    defaultValue = -1
+                }
+            )) {
             val viewModel = hiltViewModel<LearnViewModel>()
             val uiState by viewModel.state.collectAsState()
             LearnScreen(uiState)
