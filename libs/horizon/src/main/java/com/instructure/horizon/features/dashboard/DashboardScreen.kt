@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -72,7 +73,13 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     DashboardCourseItem(courseItem, onClick = {
                         mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseItem.courseId, courseItem.nextModuleItemId))
                     }, onCourseClick = {
-                        homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId))
+                        homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId)) {
+                            popUpTo(homeNavController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     })
                     if (index < uiState.coursesUiState.size - 1) {
                         HorizonSpace(SpaceSize.SPACE_48)
