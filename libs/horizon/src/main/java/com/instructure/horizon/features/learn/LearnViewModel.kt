@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.learn
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
@@ -28,9 +29,12 @@ import javax.inject.Inject
 @HiltViewModel
 class LearnViewModel @Inject constructor(
     private val learnRepository: LearnRepository,
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
     private val _state = MutableStateFlow(LearnUiState())
     val state = _state.asStateFlow()
+
+    private val courseId: Long = savedStateHandle["courseId"] ?: -1L
 
     init {
         getInProgressCourse()
@@ -39,7 +43,7 @@ class LearnViewModel @Inject constructor(
     private fun getInProgressCourse(forceRefresh: Boolean = false) = viewModelScope.tryLaunch {
         _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = true))
         val courses = learnRepository.getCoursesWithProgress(forceNetwork = forceRefresh)
-        val course = courses.first()
+        val course = courses.find { it.course.id == courseId } ?: courses.first()
         _state.value = state.value.copy(
             screenState = state.value.screenState.copy(isLoading = false),
             course = course,

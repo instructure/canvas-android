@@ -44,4 +44,14 @@ class DashboardRepository @Inject constructor(
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return moduleApi.getModuleItem(CanvasContext.Type.COURSE.apiString, courseId, moduleId, moduleItemId, params)
     }
+
+    suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return moduleApi.getFirstPageModulesWithItems(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            params,
+            includes = listOf("estimated_durations")
+        )
+    }
 }
