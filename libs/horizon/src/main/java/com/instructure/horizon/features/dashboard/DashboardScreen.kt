@@ -17,7 +17,6 @@
 
 package com.instructure.horizon.features.dashboard
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -67,11 +66,10 @@ import com.instructure.horizon.navigation.MainNavigationRoute
 
 const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
 
-@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
 
-    val parentEntry = remember { mainNavController.getBackStackEntry("home") }
+    val parentEntry = remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry("home") }
     val savedStateHandle = parentEntry.savedStateHandle
 
     val refreshFlow = remember { savedStateHandle.getStateFlow("shouldRefreshDashboard", false) }
