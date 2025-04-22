@@ -463,18 +463,8 @@ class EditQuizDetailsFragment : BasePresenterFragment<
      */
     private fun assembleAssignmentPostData(): AssignmentPostBody {
         return AssignmentPostBody().apply {
-            val assignment = presenter.mAssignment
-            name = assignment.name
-            description = assignment.description
-            pointsPossible = assignment.pointsPossible
-            gradingType = assignment.gradingType
-            submissionTypes = assignment.submissionTypesRaw
-
             setGroupedDueDates(presenter.mEditDateGroups)
             notifyOfUpdate = false
-
-            // only set the published flag if we can unpublish/publish the assignment
-            published = if (assignment.unpublishable) mIsPublished else assignment.published
         }
     }
 

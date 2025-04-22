@@ -35,6 +35,7 @@ import com.instructure.pandautils.blueprint.FragmentPresenter
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.models.DueDateGroup
+import com.instructure.teacher.utils.toQuizAssignmentPostBody
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
 import kotlinx.coroutines.Job
 
@@ -107,7 +108,8 @@ class EditQuizDetailsPresenter(var mQuiz: Quiz, var mAssignment: Assignment, val
 
                 if (mQuiz.assignmentId != 0L) {
                     // This quiz has an assignment - update the overrides on the assignment
-                    mAssignment = awaitApi { AssignmentManager.editAssignment(canvasContext.id, mQuiz.assignmentId, assignmentPostData, it, true) }
+                    assignmentPostData.published = mQuiz.published
+                    mAssignment = awaitApi { AssignmentManager.editQuizAssignment(canvasContext.id, mQuiz.assignmentId, assignmentPostData.toQuizAssignmentPostBody(), it) }
                 }
 
                 QuizUpdatedEvent(mQuiz.id).post() // Post bus event
