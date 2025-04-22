@@ -101,4 +101,8 @@
     <string name="moduleWillUnlockExplanation">Will unlock on %1$s</string>
     <string name="willUnlockAfterCompletingExplanation">Will unlock after completing: %1$s</string>
     <string name="a11y_selectedCourse">Selected</string>
+    <string name="dashboard_courseCompleted">Congrats! You\'ve completed your course.</string>
+    <string name="dashboard_courseCompletedDescription">View your progress and scores on the Learn page.</string>
+    <string name="modulePager_markAsDone">Mark as Done</string>
+    <string name="modulePager_done">Done</string>
 </resources>

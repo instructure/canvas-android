@@ -21,7 +21,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class ModuleItemSequenceUiState(
     val loadingState: LoadingState = LoadingState(),
     val items: List<ModuleItemUiState> = emptyList(),
-    val currentPosition: Int = 0,
+    val currentPosition: Int = -1,
     val currentItem: ModuleItemUiState? = null,
     val progressScreenState: ProgressScreenUiState = ProgressScreenUiState(),
     val onPreviousClick: () -> Unit = {},
@@ -35,12 +35,21 @@ data class ModuleItemUiState(
     val moduleItemId: Long,
     val detailTags: List<String> = emptyList(),
     val pillText: String? = null,
-    val moduleItemContent: ModuleItemContent? = null
+    val moduleItemContent: ModuleItemContent? = null,
+    val markAsDoneUiState: MarkAsDoneUiState? = null,
+    val isLoading: Boolean = false,
+)
+
+data class MarkAsDoneUiState(
+    val isDone: Boolean = false,
+    val isLoading: Boolean = false,
+    val onMarkAsDoneClick: () -> Unit = {},
+    val onMarkAsNotDoneClick: () -> Unit = {},
 )
 
 sealed class ModuleItemContent {
     data class Assignment(val assignmentId: Long) : ModuleItemContent()
-    data class Page(val pageUrl: String) : ModuleItemContent()
+    data class Page(val courseId: Long, val pageUrl: String) : ModuleItemContent()
     data class ExternalLink(val url: String) : ModuleItemContent()
     data class File(val url: String) : ModuleItemContent()
     data class ExternalTool(val url: String) : ModuleItemContent()

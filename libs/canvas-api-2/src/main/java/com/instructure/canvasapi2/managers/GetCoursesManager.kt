@@ -36,7 +36,7 @@ class GetCoursesManager {
     }
 
     private fun mapCourse(course: GetCoursesQuery.Course?): CourseWithProgress? {
-        val progress = course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage
+        val progress = course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0
         val courseId = course?.id?.toLong()
         val courseName = course?.name
         val courseSyllabus = course?.syllabus_body
@@ -53,4 +53,4 @@ class GetCoursesManager {
     }
 }
 
-data class CourseWithProgress(val course: Course, val progress: Double?, val nextUpModuleItemId: Long?, val nextUpModuleId: Long?)
+data class CourseWithProgress(val course: Course, val progress: Double, val nextUpModuleItemId: Long?, val nextUpModuleId: Long?)

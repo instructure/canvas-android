@@ -32,12 +32,12 @@ data class DashboardCourseUiState(
     val courseId: Long,
     val courseName: String,
     val courseProgress: Double,
-    val nextModuleName: String,
-    val nextModuleItemName: String,
-    val nextModuleItemId: Long,
+    val completed: Boolean = false,
+    val nextModuleName: String? = null,
+    val nextModuleItemName: String? = null,
+    val nextModuleItemId: Long? = null,
     val progressLabel: String? = null,
     val remainingTime: String? = null,
     val learningObjectType: LearningObjectType? = null,
-    val dueDate: Date? = null,
-    val onClick: (() -> Unit)? = null
+    val dueDate: Date? = null
 )
