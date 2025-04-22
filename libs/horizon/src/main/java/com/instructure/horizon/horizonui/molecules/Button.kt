@@ -110,16 +110,16 @@ fun Button(
     onClick: () -> Unit = {},
     badge: @Composable (() -> Unit)? = null
 ) {
-    val widthModifier = if (width == ButtonWidth.FILL) modifier.fillMaxWidth() else modifier
-    val gradientModifier = color.secondaryBackgroundColor?.let {
-        widthModifier.background(
-            brush = Brush.verticalGradient(
-                colors = listOf(color.backgroundColor, it)
-            ), shape = HorizonCornerRadius.level6, alpha = if (enabled) 1f else 0.5f
-        )
-    } ?: widthModifier
     val buttonBackgroundColor = if (color.secondaryBackgroundColor == null) color.backgroundColor else Color.Transparent
-    Box(contentAlignment = Alignment.TopEnd) {
+    Box(contentAlignment = Alignment.TopEnd, modifier = modifier) {
+        val widthModifier = if (width == ButtonWidth.FILL) Modifier.fillMaxWidth() else Modifier
+        val gradientModifier = color.secondaryBackgroundColor?.let {
+            widthModifier.background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(color.backgroundColor, it)
+                ), shape = HorizonCornerRadius.level6, alpha = if (enabled) 1f else 0.5f
+            )
+        } ?: widthModifier
         Button(
             onClick = onClick,
             enabled = enabled,

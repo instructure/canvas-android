@@ -39,6 +39,5 @@ data class DashboardCourseUiState(
     val progressLabel: String? = null,
     val remainingTime: String? = null,
     val learningObjectType: LearningObjectType? = null,
-    val dueDate: Date? = null,
-    val onClick: (() -> Unit)? = null
+    val dueDate: Date? = null
 )

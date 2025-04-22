@@ -185,8 +185,4 @@ class DashboardViewModel @Inject constructor(
             it.copy(loadingState = it.loadingState.copy(errorSnackbar = null))
         }
     }
-
-    private fun onCourseClick(courseId: Long) {
-        // TODO Navigate to module item
-    }
 }

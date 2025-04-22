@@ -100,4 +100,6 @@
     <string name="lateStatusLabel">Late</string>
     <string name="dashboard_courseCompleted">Congrats! You\'ve completed your course.</string>
     <string name="dashboard_courseCompletedDescription">View your progress and scores on the Learn page.</string>
+    <string name="modulePager_markAsDone">Mark as Done</string>
+    <string name="modulePager_done">Done</string>
 </resources>

@@ -21,7 +21,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class ModuleItemSequenceRepository @Inject constructor(private val moduleApi: ModuleAPI.ModuleInterface) {
@@ -68,5 +70,24 @@ class ModuleItemSequenceRepository @Inject constructor(private val moduleApi: Mo
         ).depaginate {
             moduleApi.getNextPageModuleItemList(it, params)
         }.dataOrThrow
+    }
+
+    suspend fun getModuleItem(courseId: Long, moduleId: Long, moduleItemId: Long): ModuleItem {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return moduleApi.getModuleItem(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleId,
+            moduleItemId,
+            params
+        ).dataOrThrow
+    }
+
+    suspend fun markAsNotDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsNotDone(CanvasContext.Type.COURSE.apiString, courseId, moduleItem.moduleId, moduleItem.id, RestParams())
+    }
+
+    suspend fun markAsDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsDone(CanvasContext.Type.COURSE.apiString, courseId, moduleItem.moduleId, moduleItem.id, RestParams())
     }
 }
