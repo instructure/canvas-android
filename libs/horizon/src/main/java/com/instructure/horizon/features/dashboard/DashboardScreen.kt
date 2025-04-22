@@ -18,6 +18,7 @@
 package com.instructure.horizon.features.dashboard
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,7 +27,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,17 +38,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -64,7 +69,7 @@ const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
-fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController) {
+fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
 
     val parentEntry = remember { mainNavController.getBackStackEntry("home") }
     val savedStateHandle = parentEntry.savedStateHandle
@@ -87,10 +92,21 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     HomeScreenTopBar(uiState, modifier = Modifier.height(56.dp))
                     HorizonSpace(SpaceSize.SPACE_36)
                 }
-                items(uiState.coursesUiState) { courseItem ->
+                itemsIndexed(uiState.coursesUiState) { index, courseItem ->
                     DashboardCourseItem(courseItem, onClick = {
                         mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseItem.courseId, courseItem.nextModuleItemId))
+                    }, onCourseClick = {
+                        homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId)) {
+                            popUpTo(homeNavController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     })
+                    if (index < uiState.coursesUiState.size - 1) {
+                        HorizonSpace(SpaceSize.SPACE_48)
+                    }
                 }
             })
         }
@@ -130,25 +146,43 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
 }
 
 @Composable
-private fun DashboardCourseItem(courseItem: DashboardCourseUiState, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun DashboardCourseItem(
+    courseItem: DashboardCourseUiState,
+    onClick: () -> Unit,
+    onCourseClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(modifier) {
-        Text(text = courseItem.courseName, style = HorizonTypography.h1)
-        HorizonSpace(SpaceSize.SPACE_24)
-        ProgressBar(progress = courseItem.courseProgress)
-        HorizonSpace(SpaceSize.SPACE_36)
-        Text(text = stringResource(R.string.dashboard_resumeLearning), style = HorizonTypography.h3)
-        HorizonSpace(SpaceSize.SPACE_12)
-        LearningObjectCard(
-            LearningObjectCardState(
-                moduleTitle = courseItem.nextModuleName,
-                learningObjectTitle = courseItem.nextModuleItemName,
-                progressLabel = courseItem.progressLabel,
-                remainingTime = courseItem.remainingTime,
-                dueDate = courseItem.dueDate,
-                learningObjectType = courseItem.learningObjectType,
-                onClick = onClick
+        Column(
+            Modifier
+                .clip(HorizonCornerRadius.level1_5)
+                .clickable {
+                    onCourseClick()
+                }) {
+            Text(text = courseItem.courseName, style = HorizonTypography.h1)
+            HorizonSpace(SpaceSize.SPACE_24)
+            ProgressBar(progress = courseItem.courseProgress)
+            HorizonSpace(SpaceSize.SPACE_36)
+        }
+        if (courseItem.completed) {
+            Text(text = stringResource(R.string.dashboard_courseCompleted), style = HorizonTypography.h3)
+            HorizonSpace(SpaceSize.SPACE_12)
+            Text(text = stringResource(R.string.dashboard_courseCompletedDescription), style = HorizonTypography.p1)
+        } else {
+            Text(text = stringResource(R.string.dashboard_resumeLearning), style = HorizonTypography.h3)
+            HorizonSpace(SpaceSize.SPACE_12)
+            LearningObjectCard(
+                LearningObjectCardState(
+                    moduleTitle = courseItem.nextModuleName.orEmpty(),
+                    learningObjectTitle = courseItem.nextModuleItemName.orEmpty(),
+                    progressLabel = courseItem.progressLabel,
+                    remainingTime = courseItem.remainingTime,
+                    dueDate = courseItem.dueDate,
+                    learningObjectType = courseItem.learningObjectType,
+                    onClick = onClick
+                )
             )
-        )
+        }
         HorizonSpace(SpaceSize.SPACE_24)
     }
 }
@@ -157,5 +191,5 @@ private fun DashboardCourseItem(courseItem: DashboardCourseUiState, onClick: () 
 @Preview
 private fun DashboardScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DashboardScreen(DashboardUiState(), mainNavController = rememberNavController())
+    DashboardScreen(DashboardUiState(), mainNavController = rememberNavController(), homeNavController = rememberNavController())
 }

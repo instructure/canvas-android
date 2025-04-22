@@ -18,6 +18,9 @@ package com.instructure.horizon.features.dashboard
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -66,46 +69,10 @@ class DashboardViewModel @Inject constructor(
     private suspend fun loadData(forceNetwork: Boolean) {
         val courses = dashboardRepository.getCoursesWithProgress(forceNetwork = forceNetwork)
         if (courses.isSuccess) {
-            val coursesResult = courses.dataOrThrow.filter { it.progress != null && it.nextUpModuleId != null && it.nextUpModuleItemId != null }
+            val coursesResult = courses.dataOrThrow.filter { it.progress != null }
             val courseUiStates = coursesResult.map { course ->
                 viewModelScope.async {
-                    val nextModuleId = course.nextUpModuleId
-                    val nextModuleItemId = course.nextUpModuleItemId
-                    if (nextModuleId != null && nextModuleItemId != null) {
-                        val nextModule = dashboardRepository.getNextModule(
-                            course.course.id,
-                            nextModuleId,
-                            forceNetwork = true
-                        )
-                        val nextModuleItem = dashboardRepository.getNextModuleItem(
-                            course.course.id,
-                            nextModuleId,
-                            nextModuleItemId,
-                            forceNetwork = true
-                        )
-                        if (nextModuleItem.isSuccess) {
-                            val nextModuleResult = nextModule.dataOrNull
-                            val nextModuleItemResult = nextModuleItem.dataOrThrow
-                            DashboardCourseUiState(
-                                courseId = course.course.id,
-                                courseName = course.course.name,
-                                courseProgress = course.progress ?: 0.0,
-                                nextModuleName = nextModuleResult?.name ?: "",
-                                nextModuleItemId = nextModuleItemResult.id,
-                                nextModuleItemName = nextModuleItemResult.title ?: "",
-                                progressLabel = getProgressLabel(course.progress ?: 0.0),
-                                remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
-                                learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
-                                dueDate = nextModuleItemResult.moduleDetails?.dueDate
-                            )
-                        } else {
-                            handleError()
-                            null
-                        }
-                    } else {
-                        handleError()
-                        null
-                    }
+                    mapCourse(course, forceNetwork)
                 }
             }.awaitAll().filterNotNull()
             _uiState.update { it.copy(coursesUiState = courseUiStates, loadingState = it.loadingState.copy(isError = false)) }
@@ -113,6 +80,79 @@ class DashboardViewModel @Inject constructor(
             handleError()
         }
     }
+
+    private suspend fun mapCourse(course: CourseWithProgress, forceNetwork: Boolean): DashboardCourseUiState? {
+        val nextModuleId = course.nextUpModuleId
+        val nextModuleItemId = course.nextUpModuleItemId
+        return if (nextModuleId != null && nextModuleItemId != null) {
+            val nextModule = dashboardRepository.getNextModule(
+                course.course.id,
+                nextModuleId,
+                forceNetwork = forceNetwork
+            )
+            val nextModuleItem = dashboardRepository.getNextModuleItem(
+                course.course.id,
+                nextModuleId,
+                nextModuleItemId,
+                forceNetwork = forceNetwork
+            )
+            if (nextModuleItem.isSuccess) {
+                val nextModuleResult = nextModule.dataOrNull
+                val nextModuleItemResult = nextModuleItem.dataOrThrow
+                createCourseUiState(course, nextModuleResult, nextModuleItemResult)
+            } else {
+                handleError()
+                null
+            }
+        } else if (course.progress == 0.0) {
+
+            val modules = dashboardRepository.getFirstPageModulesWithItems(
+                course.course.id,
+                forceNetwork = forceNetwork
+            )
+
+            if (modules.isSuccess) {
+                val nextModuleItemResult = modules.dataOrThrow.flatMap { module -> module.items }.firstOrNull()
+                val nextModuleResult = modules.dataOrThrow.find { module -> module.id == nextModuleItemResult?.moduleId }
+
+                if (nextModuleItemResult == null || nextModuleResult == null) {
+                    return null
+                }
+                createCourseUiState(course, nextModuleResult, nextModuleItemResult)
+            } else {
+                handleError()
+                null
+            }
+        } else if (course.progress == 100.0) {
+            DashboardCourseUiState(
+                courseId = course.course.id,
+                courseName = course.course.name,
+                courseProgress = course.progress,
+                completed = true,
+                progressLabel = getProgressLabel(course.progress),
+            )
+        } else {
+            handleError()
+            null
+        }
+    }
+
+    private fun createCourseUiState(
+        course: CourseWithProgress,
+        nextModuleResult: ModuleObject?,
+        nextModuleItemResult: ModuleItem
+    ) = DashboardCourseUiState(
+        courseId = course.course.id,
+        courseName = course.course.name,
+        courseProgress = course.progress,
+        nextModuleName = nextModuleResult?.name ?: "",
+        nextModuleItemId = nextModuleItemResult.id,
+        nextModuleItemName = nextModuleItemResult.title ?: "",
+        progressLabel = getProgressLabel(course.progress),
+        remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
+        learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
+        dueDate = nextModuleItemResult.moduleDetails?.dueDate
+    )
 
     private fun getProgressLabel(progress: Double): String {
         return when (progress) {
