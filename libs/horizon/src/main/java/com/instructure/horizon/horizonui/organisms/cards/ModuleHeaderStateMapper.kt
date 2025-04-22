@@ -25,9 +25,7 @@ import com.instructure.pandautils.utils.formatMinuteDuration
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Date
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ModuleHeaderStateMapper @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
