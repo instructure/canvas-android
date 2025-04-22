@@ -50,7 +50,7 @@ data class MarkAsDoneUiState(
 sealed class ModuleItemContent {
     data class Assignment(val assignmentId: Long) : ModuleItemContent()
     data class Page(val courseId: Long, val pageUrl: String) : ModuleItemContent()
-    data class ExternalLink(val url: String) : ModuleItemContent()
+    data class ExternalLink(val title: String, val url: String) : ModuleItemContent()
     data class File(val url: String) : ModuleItemContent()
     data class ExternalTool(val url: String) : ModuleItemContent()
     data class Assessment(val quizId: Long) : ModuleItemContent()

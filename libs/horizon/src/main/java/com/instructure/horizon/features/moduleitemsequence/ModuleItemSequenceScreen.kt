@@ -68,6 +68,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.link.ExternalLinkContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.link.ExternalLinkUiState
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -347,6 +349,15 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
 
             is ModuleItemContent.Page -> {
                 PageDetailsContentScreen(moduleItemUiState.moduleItemContent, scrollState, modifier = modifier)
+            }
+
+            is ModuleItemContent.ExternalLink -> {
+                ExternalLinkContentScreen(
+                    ExternalLinkUiState(
+                        moduleItemUiState.moduleItemContent.title,
+                        moduleItemUiState.moduleItemContent.url
+                    ), modifier = modifier
+                )
             }
 
             else -> {

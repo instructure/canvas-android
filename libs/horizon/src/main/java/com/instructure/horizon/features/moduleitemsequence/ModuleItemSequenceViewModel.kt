@@ -161,7 +161,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 }
             }
             item.type == Type.Quiz.name -> ModuleItemContent.Assessment(item.contentId)
-            item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.htmlUrl.orEmpty())
+            item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.title.orEmpty(), item.externalUrl.orEmpty())
             item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(item.htmlUrl.orEmpty())
             item.type == Type.File.name -> ModuleItemContent.File(item.url.orEmpty())
             else -> null
