@@ -96,7 +96,6 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toPx
 import kotlin.math.abs
 
-@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleItemSequenceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
@@ -157,7 +156,6 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
     }
 }
 
-@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 private fun ModuleItemSequenceContent(
     uiState: ModuleItemSequenceUiState,
@@ -217,7 +215,8 @@ private fun ModuleItemSequenceContent(
             }
         ) {
             if (uiState.currentPosition != -1) {
-                val homeEntry = remember { navController.getBackStackEntry(MainNavigationRoute.Home.route) }
+                val homeEntry =
+                    remember(navController.currentBackStackEntry) { navController.getBackStackEntry(MainNavigationRoute.Home.route) }
                 LaunchedEffect(Unit) {
                     homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
                 }
@@ -255,7 +254,9 @@ private fun ModuleHeaderContainer(
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            if (buttonsEnabled) IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
+            if (buttonsEnabled) {
+                IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
+            }
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -275,11 +276,13 @@ private fun ModuleHeaderContainer(
                     textAlign = TextAlign.Center
                 )
             }
-            if (buttonsEnabled) IconButton(
-                iconRes = R.drawable.list_alt,
-                color = IconButtonColor.INSTITUTION,
-                onClick = uiState.onProgressClick
-            )
+            if (buttonsEnabled) {
+                IconButton(
+                    iconRes = R.drawable.list_alt,
+                    color = IconButtonColor.INSTITUTION,
+                    onClick = uiState.onProgressClick
+                )
+            }
         }
         if (!uiState.currentItem?.detailTags.isNullOrEmpty()) {
             HorizonSpace(SpaceSize.SPACE_24)
@@ -334,7 +337,6 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
         ) {
             Spinner()
         }
-        return
     } else {
         when (moduleItemUiState.moduleItemContent) {
             is ModuleItemContent.Locked -> LockedContentScreen(

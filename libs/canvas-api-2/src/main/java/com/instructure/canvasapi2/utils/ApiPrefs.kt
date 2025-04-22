@@ -145,7 +145,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     val showElementaryView
         get() = canvasForElementary && elementaryDashboardEnabledOverride
 
-    // TODO This would be probably used later just like the canvasForELementary flag if we use the Student app for Canvas Career
+    // TODO This would be probably used later just like the canvasForElementary flag if we use the Student app for Canvas Career
     // Currently this is always true on the Horizon branch so the WebView can resolve the correct font.
     val canvasCareerView by BooleanPref(defaultValue = true)
 
