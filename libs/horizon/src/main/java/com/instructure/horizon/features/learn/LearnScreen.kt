@@ -22,7 +22,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -157,7 +156,6 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
             HorizontalPager(
                 pagerState,
                 pageSpacing = 16.dp,
-                contentPadding = PaddingValues(horizontal = 8.dp),
                 beyondViewportPageCount = 4
             ) { index ->
                 val scaleAnimation by animateFloatAsState(
