@@ -268,6 +268,7 @@ fun LearnScreenContentPreview() {
                 syllabusBody = "Course Overview",
             ),
             progress = 0.5,
+            institutionName = null,
             nextUpModuleItemId = null,
             nextUpModuleId = null,
         ),

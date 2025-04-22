@@ -15,15 +15,139 @@
  */
 package com.instructure.horizon.features.account
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AccountScreen(state: AccountUiState) {
+    LoadingStateWrapper(state.screenState) {
+        AccountContentScreen(state)
+    }
+}
 
 @Composable
-fun AccountScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Account Screen")
+private fun AccountContentScreen(state: AccountUiState) {
+    LazyColumn(
+        contentPadding = PaddingValues(24.dp)
+    ) {
+        item {
+            Column {
+                Text(
+                    text = state.userName,
+                    style = HorizonTypography.h1,
+                    color = HorizonColors.Text.title()
+                )
+
+                HorizonSpace(SpaceSize.SPACE_4)
+
+                Text(
+                    text = state.accountName,
+                    style = HorizonTypography.h3,
+                    color = HorizonColors.Surface.institution()
+                )
+
+                HorizonSpace(SpaceSize.SPACE_40)
+            }
+        }
+
+        state.accountGroups.forEach { accountGroup ->
+            if (accountGroup.title != null) {
+                item {
+                    Text(
+                        text = accountGroup.title,
+                        style = HorizonTypography.h3,
+                        color = HorizonColors.Text.title(),
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            itemsIndexed(accountGroup.items) { index, accountItem  ->
+                val clipModifier = when {
+                    accountGroup.items.lastIndex == 0 -> {
+                        Modifier.clip(HorizonCornerRadius.level3)
+                    }
+                    index == 0 -> {
+                        Modifier.clip(HorizonCornerRadius.level3Top)
+                    }
+                    index == accountGroup.items.lastIndex -> {
+                        Modifier.clip(HorizonCornerRadius.level3Bottom)
+                    }
+                    else -> {
+                        Modifier
+                    }
+                }
+                AccountItem(
+                    accountItem,
+                    clipModifier
+                )
+            }
+
+            if (accountGroup != state.accountGroups.last()) {
+                item {
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AccountItem(item: AccountItemState, modifier: Modifier = Modifier) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(HorizonColors.Surface.cardPrimary())
+            .clickable { item.onClick() }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = item.title,
+                style = HorizonTypography.labelLargeBold,
+                color = HorizonColors.Text.body(),
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Icon(
+                painter = painterResource(id = item.type.icon),
+                contentDescription = null,
+                tint = HorizonColors.Icon.medium(),
+                modifier = Modifier
+                    .size(24.dp)
+            )
+        }
     }
 }

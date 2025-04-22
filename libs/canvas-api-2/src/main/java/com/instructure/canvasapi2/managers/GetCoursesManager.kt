@@ -40,17 +40,24 @@ class GetCoursesManager {
         val courseId = course?.id?.toLong()
         val courseName = course?.name
         val courseSyllabus = course?.syllabus_body
+        val institutionName = course?.account?.name
         val incompleteModulesConnection =
             course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.incompleteModulesConnection?.nodes?.firstOrNull()
         val moduleId = incompleteModulesConnection?.module?.id?.toLong()
         val moduleItemId = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.id?.toLong()
 
         return if (courseId != null && courseName != null) {
-            CourseWithProgress(Course(courseId, courseName, syllabusBody = courseSyllabus), progress, moduleItemId, moduleId)
+            CourseWithProgress(Course(courseId, courseName, syllabusBody = courseSyllabus), progress, institutionName, moduleItemId, moduleId)
         } else {
             null
         }
     }
 }
 
-data class CourseWithProgress(val course: Course, val progress: Double, val nextUpModuleItemId: Long?, val nextUpModuleId: Long?)
+data class CourseWithProgress(
+    val course: Course,
+    val progress: Double,
+    val institutionName: String?,
+    val nextUpModuleItemId: Long?,
+    val nextUpModuleId: Long?
+)

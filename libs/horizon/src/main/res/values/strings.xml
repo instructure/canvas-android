@@ -100,4 +100,14 @@
     <string name="lateStatusLabel">Late</string>
     <string name="dashboard_courseCompleted">Congrats! You\'ve completed your course.</string>
     <string name="dashboard_courseCompletedDescription">View your progress and scores on the Learn page.</string>
+    <string name="failedToLoadAccount">Failed to load Account</string>
+    <string name="accountSettingsHeading">Settings</string>
+    <string name="accountProfileLabel">Profile</string>
+    <string name="accountPasswordLabel">Password</string>
+    <string name="accountNotificationsLabel">Notifications</string>
+    <string name="accountCalendarFeedLabel">Calendar Feed</string>
+    <string name="accountAdvancedLabel">Advanced</string>
+    <string name="accountSupportHeading">Support</string>
+    <string name="accountGiveFeedbackLabel">Give Feedback</string>
+    <string name="accountBetaCommunityLabel">Beta Community</string>
 </resources>
