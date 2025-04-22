@@ -19,6 +19,7 @@ package com.instructure.horizon.features.learn.progress
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -65,7 +66,7 @@ class LearnProgressViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     screenState = it.screenState.copy(isLoading = false, isError = true, errorMessage = context.getString(
-                        R.string.failedToLoadScores
+                        R.string.failedToLoadPrgress
                     )),
                 )
             }
@@ -81,7 +82,22 @@ class LearnProgressViewModel @Inject constructor(
                 modules,
                 ::moduleHeaderSelected
             ) to module.items.mapNotNull { moduleItem ->
-                moduleItemCardStateMapper.mapModuleItemToCardState(moduleItem, ::moduleItemSelected)
+                if (moduleItem.type == ModuleItem.Type.SubHeader.name) {
+                    ModuleItemState.SubHeader(moduleItem.title ?: "")
+                } else {
+                    val cardState = moduleItemCardStateMapper.mapModuleItemToCardState(
+                        moduleItem,
+                        ::moduleItemSelected
+                    )
+
+                    if (cardState != null) {
+                        ModuleItemState.ModuleItemCard(
+                            cardState
+                        )
+                    } else {
+                        null
+                    }
+                }
             }
         }.mapKeys { it.key.id }
 

@@ -32,7 +32,7 @@ data class ModuleObject(
     val unlockAt: String? = null,
     @SerializedName("require_sequential_progress")
     val sequentialProgress: Boolean = false,
-    @SerializedName("prerequisite_ids")
+    @SerializedName("prerequisite_module_ids")
     val prerequisiteIds: LongArray? = null,
     val state: String? = null,
     @SerializedName("completed_at")

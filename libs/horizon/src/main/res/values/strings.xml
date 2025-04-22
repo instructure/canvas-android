@@ -78,6 +78,7 @@
     <string name="weightPercentageValue">Weight: %1$s\%%</string>
     <string name="averageScoreHeader">Average Score: %1$s\%%</string>
     <string name="failedToLoadScores">Failed to load Scores</string>
+    <string name="failedToLoadPrgress">Failed to load Progress</string>
     <string name="modulePager_dueDate">Due %1$s</string>
     <plurals name="modulePager_pointsPossible">
         <item quantity="one">%d Point Possible</item>
@@ -99,10 +100,12 @@
     <string name="missingStatusLabel">Missing</string>
     <string name="lateStatusLabel">Late</string>
     <string name="moduleWillUnlockExplanation">Will unlock on %1$s</string>
-    <string name="willUnlockAfterCompletingExplanation">Will unlock after completing: %1$s</string>
+    <string name="prerequisiteExplanation">Prerequisite: %1$s</string>
     <string name="a11y_selectedCourse">Selected</string>
     <string name="dashboard_courseCompleted">Congrats! You\'ve completed your course.</string>
     <string name="dashboard_courseCompletedDescription">View your progress and scores on the Learn page.</string>
     <string name="modulePager_markAsDone">Mark as Done</string>
     <string name="modulePager_done">Done</string>
+    <string name="moduleItemCompleteAllItems">Complete all items</string>
+    <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>
 </resources>
