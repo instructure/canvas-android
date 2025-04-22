@@ -16,17 +16,26 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.GroupCategoriesManager
+import com.instructure.canvasapi2.managers.QuizManager
+import com.instructure.canvasapi2.managers.SectionManager
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.models.postmodels.QuizPostBody
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
-import com.instructure.pandautils.blueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 
 class EditQuizDetailsPresenter(var mQuiz: Quiz, var mAssignment: Assignment, val canvasContext: CanvasContext) : FragmentPresenter<EditQuizDetailsView>() {
@@ -98,7 +107,7 @@ class EditQuizDetailsPresenter(var mQuiz: Quiz, var mAssignment: Assignment, val
 
                 if (mQuiz.assignmentId != 0L) {
                     // This quiz has an assignment - update the overrides on the assignment
-                    mAssignment = awaitApi { AssignmentManager.editAssignmentAllowNullValues(canvasContext.id, mQuiz.assignmentId, assignmentPostData, it) }
+                    mAssignment = awaitApi { AssignmentManager.editAssignment(canvasContext.id, mQuiz.assignmentId, assignmentPostData, it, true) }
                 }
 
                 QuizUpdatedEvent(mQuiz.id).post() // Post bus event

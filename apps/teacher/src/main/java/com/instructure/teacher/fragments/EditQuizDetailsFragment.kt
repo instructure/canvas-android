@@ -407,7 +407,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                     }
                 }
 
-                v.setupOverride(index, dueDateGroup, mEditDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
+                v.setupOverride(index, dueDateGroup, true, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
                     val args = AssigneeListFragment.makeBundle(
                             mEditDateGroups,
                             index,
@@ -463,11 +463,18 @@ class EditQuizDetailsFragment : BasePresenterFragment<
      */
     private fun assembleAssignmentPostData(): AssignmentPostBody {
         return AssignmentPostBody().apply {
+            val assignment = presenter.mAssignment
+            name = assignment.name
+            description = assignment.description
+            pointsPossible = assignment.pointsPossible
+            gradingType = assignment.gradingType
+            submissionTypes = assignment.submissionTypesRaw
+
             setGroupedDueDates(presenter.mEditDateGroups)
             notifyOfUpdate = false
 
-            // Only set the published flag if we can unpublish/publish the assignment
-            if (presenter.mAssignment.unpublishable) published = mIsPublished
+            // only set the published flag if we can unpublish/publish the assignment
+            published = if (assignment.unpublishable) mIsPublished else assignment.published
         }
     }
 
