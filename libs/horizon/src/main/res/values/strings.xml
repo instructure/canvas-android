@@ -100,4 +100,5 @@
     <string name="lateStatusLabel">Late</string>
     <string name="moduleWillUnlockExplanation">Will unlock on %1$s</string>
     <string name="willUnlockAfterCompletingExplanation">Will unlock after completing: %1$s</string>
+    <string name="a11y_selectedCourse">Selected</string>
 </resources>

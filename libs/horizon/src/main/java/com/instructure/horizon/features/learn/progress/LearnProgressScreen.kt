@@ -41,7 +41,7 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 fun LearnProgressScreen(courseId: Long, modifier: Modifier = Modifier, viewModel: LearnProgressViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(courseId) {
         viewModel.loadState(courseId)
     }
 

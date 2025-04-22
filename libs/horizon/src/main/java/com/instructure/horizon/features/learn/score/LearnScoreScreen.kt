@@ -76,7 +76,7 @@ import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 fun LearnScoreScreen(courseId: Long, modifier: Modifier = Modifier, viewModel: LearnScoreViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(courseId) {
         viewModel.loadState(courseId)
     }
 
