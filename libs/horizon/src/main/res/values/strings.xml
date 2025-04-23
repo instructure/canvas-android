@@ -122,4 +122,6 @@
     <string name="accountProfileSaveChangesLabel">Save Changes</string>
     <string name="accountProfileUpdated">User profile successfully updated</string>
     <string name="accountProfileFailedToUpdate">Failed to update user profile</string>
+    <string name="modulePager_markAsDone">Mark as Done</string>
+    <string name="modulePager_done">Done</string>
 </resources>

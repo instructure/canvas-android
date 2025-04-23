@@ -17,13 +17,16 @@
 
 package com.instructure.horizon.features.moduleitemsequence
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -39,7 +42,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -55,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,8 +65,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -71,12 +76,18 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillType
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -98,15 +109,57 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             onPreviousClick = uiState.onPreviousClick
         )
     }) { contentPadding ->
-        ModuleItemSequenceContent(modifier = Modifier.padding(contentPadding), uiState = uiState, onBackPressed = {
-            navController.popBackStack()
-        })
+        Box(modifier = Modifier.padding(contentPadding)) {
+            ModuleItemSequenceContent(uiState = uiState, navController = navController, onBackPressed = {
+                navController.popBackStack()
+            })
+            val markAsDoneState = uiState.currentItem?.markAsDoneUiState
+            if (markAsDoneState != null && !uiState.currentItem.isLoading) {
+                MarkAsDoneButton(markAsDoneState)
+            }
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .align(Alignment.BottomEnd)
+            .padding(end = 24.dp, bottom = 16.dp)
+            .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level6)
+            .animateContentSize()
+    ) {
+        if (markAsDoneState.isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level6)
+            ) {
+                Spinner(
+                    size = SpinnerSize.EXTRA_SMALL,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 22.dp, vertical = 10.dp),
+                )
+            }
+        } else {
+            Button(
+                label = stringResource(id = if (markAsDoneState.isDone) R.string.modulePager_done else R.string.modulePager_markAsDone),
+                color = ButtonColor.Ghost,
+                onClick = if (markAsDoneState.isDone) markAsDoneState.onMarkAsNotDoneClick else markAsDoneState.onMarkAsDoneClick,
+                iconPosition = ButtonIconPosition.Start(
+                    iconRes = if (markAsDoneState.isDone) R.drawable.check_box else R.drawable.check_box_outline_blank,
+                )
+            )
+        }
     }
 }
 
 @Composable
 private fun ModuleItemSequenceContent(
     uiState: ModuleItemSequenceUiState,
+    navController: NavHostController,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -127,18 +180,6 @@ private fun ModuleItemSequenceContent(
                     isCollapsed = false
                 }
             }
-    }
-
-    val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
-    LaunchedEffect(key1 = uiState.currentPosition) {
-        isCollapsedByScroll = false
-        isCollapsed = false
-        contentScrollState.scrollTo(0)
-        if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
-            pagerState.scrollToPage(uiState.currentPosition)
-        } else {
-            pagerState.animateScrollToPage(uiState.currentPosition)
-        }
     }
 
     Column(modifier = modifier) {
@@ -162,7 +203,8 @@ private fun ModuleItemSequenceContent(
                     .then(
                         if (isCollapsed) Modifier.height(0.dp) else Modifier.wrapContentHeight()
                     ),
-                onBackPressed = onBackPressed
+                onBackPressed = onBackPressed,
+                buttonsEnabled = !isCollapsed
             )
         }
         LoadingStateWrapper(
@@ -172,14 +214,32 @@ private fun ModuleItemSequenceContent(
                 background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
             }
         ) {
-            ModuleItemPager(pagerState = pagerState) { page ->
-                val moduleItemUiState = uiState.items[page]
-                ModuleItemContentScreen(
-                    moduleItemUiState,
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .verticalScroll(contentScrollState)
-                )
+            if (uiState.currentPosition != -1) {
+                val homeEntry =
+                    remember(navController.currentBackStackEntry) { navController.getBackStackEntry(MainNavigationRoute.Home.route) }
+                LaunchedEffect(Unit) {
+                    homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+                }
+
+                val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
+                LaunchedEffect(key1 = uiState.currentPosition) {
+                    isCollapsedByScroll = false
+                    isCollapsed = false
+                    contentScrollState.scrollTo(0)
+                    if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
+                        pagerState.scrollToPage(uiState.currentPosition)
+                    } else {
+                        pagerState.animateScrollToPage(uiState.currentPosition)
+                    }
+                }
+
+                ModuleItemPager(pagerState = pagerState) { page ->
+                    val moduleItemUiState = uiState.items[page]
+                    ModuleItemContentScreen(
+                        moduleItemUiState,
+                        scrollState = contentScrollState,
+                    )
+                }
             }
         }
     }
@@ -189,11 +249,14 @@ private fun ModuleItemSequenceContent(
 private fun ModuleHeaderContainer(
     uiState: ModuleItemSequenceUiState,
     onBackPressed: () -> Unit,
+    buttonsEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
+            if (buttonsEnabled) {
+                IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
+            }
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -213,7 +276,13 @@ private fun ModuleHeaderContainer(
                     textAlign = TextAlign.Center
                 )
             }
-            IconButton(iconRes = R.drawable.list_alt, color = IconButtonColor.INSTITUTION, onClick = uiState.onProgressClick)
+            if (buttonsEnabled) {
+                IconButton(
+                    iconRes = R.drawable.list_alt,
+                    color = IconButtonColor.INSTITUTION,
+                    onClick = uiState.onProgressClick
+                )
+            }
         }
         if (!uiState.currentItem?.detailTags.isNullOrEmpty()) {
             HorizonSpace(SpaceSize.SPACE_24)
@@ -258,19 +327,36 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 }
 
 @Composable
-private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, modifier: Modifier = Modifier) {
-    when (moduleItemUiState.moduleItemContent) {
-        is ModuleItemContent.Locked -> LockedContentScreen(
-            lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
+private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
+    if (moduleItemUiState.isLoading) {
+        Box(
             modifier = modifier
-        )
-
-        else -> {
-            DummyContentScreen(
-                moduleItemName = moduleItemUiState.moduleItemName,
-                moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
+                .fillMaxSize()
+                .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5),
+            contentAlignment = Alignment.Center
+        ) {
+            Spinner()
+        }
+    } else {
+        when (moduleItemUiState.moduleItemContent) {
+            is ModuleItemContent.Locked -> LockedContentScreen(
+                lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
+                scrollState = scrollState,
                 modifier = modifier
             )
+
+            is ModuleItemContent.Page -> {
+                PageDetailsContentScreen(moduleItemUiState.moduleItemContent, scrollState, modifier = modifier)
+            }
+
+            else -> {
+                DummyContentScreen(
+                    moduleItemName = moduleItemUiState.moduleItemName,
+                    moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
+                    scrollState = scrollState,
+                    modifier = modifier
+                )
+            }
         }
     }
 }

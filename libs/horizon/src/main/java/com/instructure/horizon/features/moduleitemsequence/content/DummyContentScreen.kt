@@ -15,9 +15,11 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,8 +31,8 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 
 // TODO This is temporary to showcase header scrolling until we have the learning object pages
 @Composable
-fun DummyContentScreen(moduleItemName: String, moduleItemType: String, modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
+fun DummyContentScreen(moduleItemName: String, moduleItemType: String, scrollState: ScrollState, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.verticalScroll(scrollState)) {
         repeat(20) {
             Text(
                 text = "$moduleItemName\n type: $moduleItemType",
