@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Falha ao eliminar a conversa</string>
     <string name="conversationUpdateFailed">Falha ao atualizar a conversa</string>
     <string name="sendIndividualMessage">Enviar uma mensagem individual para cada destinatário</string>
+    <string name="sendIndividualMessageIsMandatory">Só é possível enviar mensagens individuais para mais de 100 destinatários</string>
     <string name="invalidRecipients">Você não tem permissão para enviar mensagens para um ou mais dos destinatários selecionados.</string>
     <string name="newMessage">Nova mensagem</string>
     <string name="forwardMessage">Encaminhar mensagem</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Esta tarefa não está mais disponível.</string>
     <string name="editDashboardOfflineMode">Está offline</string>
+    <string name="editDashboardNoResults">Nenhum resultado</string>
+    <string name="editDashboardNoResultsMessage">Não foram encontrados itens.</string>
     <string name="editDashboardOfflineModeMessage">Atualmente, não tem quaisquer disciplinas disponíveis offline.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Sucesso na sincronização de conteúdo off-line</string>
     <string name="offlineContentSyncFailureNotificationTitle">Falha na sincronização de conteúdos offline</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Adiciona um novo item de calendário</string>
     <string name="calendarFilterCalendars">Calendários</string>
     <string name="calendarFilterUser">Utilizador</string>
+    <string name="calendarFilterFavoriteCourse">Disciplinas preferidas</string>
+    <string name="calendarFilterMoreCourse">Mais disciplinas</string>
     <string name="calendarFilterCourse">Disciplinas</string>
     <string name="calendarFilterGroup">Grupos</string>
     <string name="calendarFilterExplanationLimited">Selecione os calendários que pretende ver, até %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Sair</string>
     <string name="noStudentsError">Não existem alunos</string>
     <string name="noStudentsErrorDescription">Você não está a observar nenhum aluno.</string>
+    <string name="noStudentsRefresh">Atualizar</string>
     <string name="noGrade">Sem classificação</string>
     <string name="errorLoadingCourses">Houve um erro ao carregar as disciplinas dos seus alunos.</string>
     <string name="parentNoCourses">Sem Disciplinas</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Adicionar novo aluno</string>
     <string name="selectStudentColor">Selecionar a cor do aluno</string>
     <string name="errorSavingColor">Ocorreu um erro ao salvar a sua seleção. É favor tentar novamente.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Cor guardada com êxito</string>
     <string name="changeStudentColorLabel">Alterar cor para %s</string>
     <string name="studentColorContentDescriptionBlue">Elétrico, Azul</string>
     <string name="studentColorContentDescriptionPurple">Ameixa, Púrpura</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Shamrock, Verde</string>
     <string name="featureFlags">Bandeiras de recursos</string>
     <string name="addStudent">Adicionar aluno</string>
+    <string name="addStudentSuccessfull">Aluno adicionado com êxito</string>
     <string name="addStudentTitle">Adicionar aluno com...</string>
     <string name="addStudentQrCodeTitle">Código QR</string>
     <string name="addStudentQrCodeExplanation">Os alunos podem gerar um código QR utilizando a aplicação Canvas Student no seu dispositivo móvel</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Classificação percentual</string>
     <string name="unpairStudentTitle">Eliminar</string>
     <string name="unpairStudentMessage">Isto irá desesperar e remover todas as inscrições para este aluno da sua conta.</string>
+    <string name="unpairStudentSuccessfull">Aluno eliminado com êxito</string>
     <string name="alertSettingsMinThresholdError">Deve estar acima de %d</string>
     <string name="alertSettingsMaxThresholdError">Deve estar abaixo %d</string>
     <string name="alertSettingsErrorMessage">Ocorreu um erro ao obteres as definições de alerta.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Estamos a ter problemas em carregar as notas do teu aluno. Tenta recarregar a página ou volta mais tarde.</string>
     <string name="errorLoadingCourse">Estamos com problemas para carregar os detalhes da disciplina do teu aluno. Tenta recarregar a página ou volta mais tarde.</string>
     <string name="gradesFilterContentDescription">Filtrar</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">As preferências de nota foram atualizadas com êxito. A lista foi atualizada.</string>
     <string name="courseDetailsMessageContentDescription">Enviar uma mensagem a cerca dessa disciplina</string>
     <string name="gradeLockedContentDescription">Classificação bloqueada</string>
     <string name="gradesRefreshFailed">Falha em atualizar classificações</string>
     <string name="chooseACourseToMessage">Escolha uma disciplina para a mensagem</string>
     <string name="regardingHiddenMessage">Em relação a: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Em relação a: %1$s, Tarefa - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Em relação a: %1$s, Evento - %2$s</string>
     <string name="sendMessageAboutAssignment">"Enviar uma mensagem sobre esta tarefa"</string>
+    <string name="sendMessageAboutEvent">“Enviar uma mensagem sobre este evento”</string>
     <string name="forStudentLabel">para %1$s</string>
     <string name="view_description">Ver descrição</string>
     <string name="a11y_contentDescription_viewDescription">Ver descrição</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Falha ao atualizar a página inicial</string>
     <string name="failed_to_load_summary">Falha ao carregar o resumo</string>
     <string name="no_summary_items_to_display">Não há itens de resumo para apresentar</string>
+    <string name="a11y_summaryEventContentDescription">Evento</string>
+    <string name="a11y_summaryLockedContentDescription">Bloqueado</string>
+    <string name="a11y_summaryQuizContentDescription">Questionário</string>
+    <string name="a11y_summaryDiscussionContentDescription">Discussão</string>
+    <string name="a11y_summaryAssignmentContentDescription">Tarefa</string>
     <string name="scheduleItemNoDueDate">Sem data de limite</string>
     <string name="a11y_refresh">Atualizar</string>
     <string name="masqueradingAs">Você está a agir como %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Parcialmente verificado</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Os filtros foram atualizados</string>
+    <string name="inboxAllRecipients">Todos os destinatários</string>
+    <string name="inboxSearchIn">Pesquisar em %1$s</string>
+    <string name="a11y_studentSelectorExpand">expandir</string>
+    <string name="a11y_studentSelectorCollapse">recolher</string>
+    <string name="a11y_studentSelectorContentDescription">Toque no %s seletor de alunos, o aluno selecionado é: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Selecionar aluno %s</string>
+    <string name="inboxSettingsTitle">Caixa de entrada</string>
+    <string name="inboxSettingsInboxSignature">Assinatura da caixa de entrada</string>
+    <string name="inboxSignatureNotSet">Não definido</string>
+    <string name="inboxSignatureEnabled">Ativado</string>
+    <string name="inboxSignatureScreenTitle">Assinatura da caixa de entrada</string>
+    <string name="inboxSignatureScreenSubtitle">A assinatura será adicionada no final de todas as mensagens.</string>
+    <string name="inboxSignatureSwitchLabel">Assinatura</string>
+    <string name="inboxSignatureTextfieldHeader">Texto da assinatura</string>
+    <string name="due_dateTime">Vencimento: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filtrar</string>
+    <string name="a11y_contentDescription_postPolicy">Postar políticas</string>
+    <string name="late">Atrasado</string>
+    <string name="a11y_contentDescription_expand">Expandir</string>
+    <string name="missingTag">Em falta</string>
+    <string name="submissionFilter">Filtro de envio</string>
+    <string name="submissionMessageSubject">%1$s em %2$s</string>
+    <string name="all">Todos</string>
 </resources>

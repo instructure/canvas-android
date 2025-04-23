@@ -429,6 +429,7 @@
     <string name="conversationDeletedFailed">Не удалось удалить обсуждение</string>
     <string name="conversationUpdateFailed">Не удалось обновить обсуждение</string>
     <string name="sendIndividualMessage">Отправить индивидуальное сообщение каждому получателю</string>
+    <string name="sendIndividualMessageIsMandatory">Вы можете отправлять индивидуальные сообщения только 100 адресатам</string>
     <string name="invalidRecipients">Вы не имеете права отправлять сообщения одному или более из выбранных получателей.</string>
     <string name="newMessage">Новое сообщение</string>
     <string name="forwardMessage">Перенаправить сообщение</string>
@@ -1587,6 +1588,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Это задание более недоступно.</string>
     <string name="editDashboardOfflineMode">Вы находитесь в автономном режиме</string>
+    <string name="editDashboardNoResults">Без результатов</string>
+    <string name="editDashboardNoResultsMessage">Совпадающие элементы не найдены.</string>
     <string name="editDashboardOfflineModeMessage">В настоящее время у вас нет никаких курсов, доступных в автономном режиме.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Синхронизация автономного содержимого успешно выполнена</string>
     <string name="offlineContentSyncFailureNotificationTitle">Сбой синхронизации автономного содержимого</string>
@@ -1701,6 +1704,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Добавить новый элемент календаря</string>
     <string name="calendarFilterCalendars">Календари</string>
     <string name="calendarFilterUser">Пользователь</string>
+    <string name="calendarFilterFavoriteCourse">Избранные курсы</string>
+    <string name="calendarFilterMoreCourse">Другие курсы</string>
     <string name="calendarFilterCourse">Курсы</string>
     <string name="calendarFilterGroup">Группы</string>
     <string name="calendarFilterExplanationLimited">Выберите календари, которые вы хотите просмотреть, вплоть до %d.</string>
@@ -1837,6 +1842,7 @@
     <string name="navigationDrawerLogOut">Выйти</string>
     <string name="noStudentsError">Учащиеся отсутствуют</string>
     <string name="noStudentsErrorDescription">Вы не наблюдаете ни за одним учащимся.</string>
+    <string name="noStudentsRefresh">Обновить</string>
     <string name="noGrade">Нет оценки</string>
     <string name="errorLoadingCourses">Произошла ошибка при загрузке курсов ваших учащихся.</string>
     <string name="parentNoCourses">Курсы отсутствуют</string>
@@ -1872,6 +1878,7 @@
     <string name="addNewStudent">Добавить нового учащегося</string>
     <string name="selectStudentColor">Выбрать цвет учащегося</string>
     <string name="errorSavingColor">Произошла ошибка при сохранении вашего выбора. Попробуйте еще раз.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Цвет успешно сохранен</string>
     <string name="changeStudentColorLabel">Изменить цвет для %s</string>
     <string name="studentColorContentDescriptionBlue">Электрик, синий</string>
     <string name="studentColorContentDescriptionPurple">Слива, фиолетовый</string>
@@ -1881,6 +1888,7 @@
     <string name="studentColorContentDescriptionGreen">Трилистник, зеленый</string>
     <string name="featureFlags">Метки функций</string>
     <string name="addStudent">Добавить учащегося</string>
+    <string name="addStudentSuccessfull">Учащийся успешно добавлен</string>
     <string name="addStudentTitle">Добавить учащегося с&#8230;</string>
     <string name="addStudentQrCodeTitle">QR-код</string>
     <string name="addStudentQrCodeExplanation">Учащиеся могут генерировать QR-код с помощью приложения Canvas Student на своем мобильном устройстве</string>
@@ -1928,6 +1936,7 @@
     <string name="alertSettingsThresholdLabel">Процент оценок</string>
     <string name="unpairStudentTitle">Удалить</string>
     <string name="unpairStudentMessage">Это приведет к отключению и удалению всех зачислений для этого учащегося из вашей учетной записи.</string>
+    <string name="unpairStudentSuccessfull">Учащийся успешно удален</string>
     <string name="alertSettingsMinThresholdError">Должно быть больше %d</string>
     <string name="alertSettingsMaxThresholdError">Должно быть меньше %d</string>
     <string name="alertSettingsErrorMessage">При получении настроек оповещения произошла ошибка.</string>
@@ -1948,13 +1957,16 @@
     <string name="errorLoadingGrades">У нас возникли проблемы с загрузкой оценок вашего учащегося. Попробуйте перезагрузить страницу или проверьте еще раз через некоторое время.</string>
     <string name="errorLoadingCourse">У нас возникли проблемы с загрузкой информации о курсе вашего учащегося. Попробуйте перезагрузить страницу или проверьте еще раз через некоторое время.</string>
     <string name="gradesFilterContentDescription">Фильтровать</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Предпочтения в оценках успешно обновлены. Список был обновлен.</string>
     <string name="courseDetailsMessageContentDescription">Отправить сообщение об этом курсе</string>
     <string name="gradeLockedContentDescription">Оценка заблокирована</string>
     <string name="gradesRefreshFailed">Не удалось обновить оценки</string>
     <string name="chooseACourseToMessage">Выбрать курс для сообщения</string>
     <string name="regardingHiddenMessage">Касательно: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Касательно: %1$s, задание - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Касательно: %1$s, событие - %2$s</string>
     <string name="sendMessageAboutAssignment">«Отправить сообщение об этом задании»</string>
+    <string name="sendMessageAboutEvent">«Отправить сообщение об этом событии»</string>
     <string name="forStudentLabel">для %1$s</string>
     <string name="view_description">Просмотреть описание</string>
     <string name="a11y_contentDescription_viewDescription">Просмотреть описание</string>
@@ -1993,6 +2005,11 @@
     <string name="frontPageRefreshFailed">Не удалось обновить первую страницу</string>
     <string name="failed_to_load_summary">Не удалось загрузить сводку</string>
     <string name="no_summary_items_to_display">Нет элементов сводки для отображения</string>
+    <string name="a11y_summaryEventContentDescription">Событие</string>
+    <string name="a11y_summaryLockedContentDescription">Заблокировано</string>
+    <string name="a11y_summaryQuizContentDescription">Тест</string>
+    <string name="a11y_summaryDiscussionContentDescription">Обсуждение</string>
+    <string name="a11y_summaryAssignmentContentDescription">Задание</string>
     <string name="scheduleItemNoDueDate">Срок выполнения не задан</string>
     <string name="a11y_refresh">Обновить</string>
     <string name="masqueradingAs">Вы действуете как %s</string>
@@ -2035,4 +2052,27 @@
     <string name="a11y_indeterminate">Частично проверено</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Фильтры были обновлены</string>
+    <string name="inboxAllRecipients">Все получатели</string>
+    <string name="inboxSearchIn">Поиск в %1$s</string>
+    <string name="a11y_studentSelectorExpand">развернуть</string>
+    <string name="a11y_studentSelectorCollapse">свернуть</string>
+    <string name="a11y_studentSelectorContentDescription">Щелкните по сектору учащегося %s, выбранный учащийся: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Выбрать учащегося %s</string>
+    <string name="inboxSettingsTitle">Входящие</string>
+    <string name="inboxSettingsInboxSignature">Подпись Inbox</string>
+    <string name="inboxSignatureNotSet">Не установлено</string>
+    <string name="inboxSignatureEnabled">Включено</string>
+    <string name="inboxSignatureScreenTitle">Подпись Inbox</string>
+    <string name="inboxSignatureScreenSubtitle">Подпись будет добавляться в конце всех сообщений.</string>
+    <string name="inboxSignatureSwitchLabel">Подпись</string>
+    <string name="inboxSignatureTextfieldHeader">Текст подписи</string>
+    <string name="due_dateTime">Срок: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Фильтровать</string>
+    <string name="a11y_contentDescription_postPolicy">Политика публикации</string>
+    <string name="late">Поздно</string>
+    <string name="a11y_contentDescription_expand">Развернуть</string>
+    <string name="missingTag">Отсутствует</string>
+    <string name="submissionFilter">Фильтр отправки</string>
+    <string name="submissionMessageSubject">%1$s %2$s</string>
+    <string name="all">Все</string>
 </resources>
