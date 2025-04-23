@@ -83,6 +83,10 @@ class ModuleHeaderStateMapper @Inject constructor(
     }
 
     private fun lockedExplanation(module: ModuleObject, allModules: List<ModuleObject>): String? {
+        if (module.state != ModuleObject.State.Locked.apiString) {
+            return null
+        }
+
         val unlockDate = module.unlockDate
         if (unlockDate != null && unlockDate > Date()) {
             return context.getString(R.string.moduleWillUnlockExplanation, unlockDate.formatDayMonthYear())

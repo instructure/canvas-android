@@ -123,6 +123,7 @@ private fun ModuleSubHeader(subHeader: String, modifier: Modifier = Modifier) {
         style = HorizonTypography.labelMediumBold,
         color = HorizonColors.Text.body(),
         modifier = modifier
+            .padding(top = 16.dp)
     )
 }
 
