@@ -28,9 +28,12 @@ import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapp
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +43,9 @@ class LearnProgressViewModel @Inject constructor(
     private val moduleHeaderStateMapper: ModuleHeaderStateMapper,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
 ): ViewModel() {
+    private val _events = Channel<LearnScreenEvents>()
+    val events = _events.receiveAsFlow()
+
     private val _uiState = MutableStateFlow(
         LearnProgressUiState(
             screenState = LoadingState(
@@ -116,7 +122,14 @@ class LearnProgressViewModel @Inject constructor(
     }
 
     private fun moduleItemSelected(moduleItemId: Long) {
-
+        viewModelScope.launch {
+            _events.send(
+                LearnScreenEvents.NavigateToModuleItem(
+                    courseId = uiState.value.courseId,
+                    moduleItemId = moduleItemId
+                )
+            )
+        }
     }
 
     private fun moduleHeaderSelected(moduleId: Long) {

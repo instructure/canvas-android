@@ -14,3 +14,7 @@ sealed class ModuleItemState {
     data class SubHeader(val subHeader: String): ModuleItemState()
     data class ModuleItemCard(val cardState: ModuleItemCardState): ModuleItemState()
 }
+
+sealed class LearnScreenEvents {
+    data class NavigateToModuleItem(val courseId:  Long, val moduleItemId: Long) : LearnScreenEvents()
+}

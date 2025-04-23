@@ -59,6 +59,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -79,7 +81,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import kotlinx.coroutines.launch
 
 @Composable
-fun LearnScreen(state: LearnUiState) {
+fun LearnScreen(state: LearnUiState, mainNavController: NavController) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
     ) { padding ->
@@ -93,14 +95,14 @@ fun LearnScreen(state: LearnUiState) {
             when {
                 state.screenState.isError -> ErrorContent(state.screenState.errorMessage.orEmpty())
                 state.screenState.isLoading -> LoadingContent()
-                else -> LearnScreenWrapper(state, Modifier.fillMaxSize())
+                else -> LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
             }
         }
     }
 }
 
 @Composable
-private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifier) {
+private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavController, modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
     var appBarHeight by remember { mutableIntStateOf(0) }
@@ -184,6 +186,7 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
 
                         1 -> LearnProgressScreen(
                             state.selectedCourse?.course?.id ?: -1,
+                            mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
                         2 -> LearnScoreScreen(
@@ -346,7 +349,7 @@ fun LearnScreenLoadingPreview() {
         selectedCourse = null,
         availableTabs = LearnTab.entries
     )
-    LearnScreen(state)
+    LearnScreen(state, rememberNavController())
 }
 
 @Composable
@@ -358,7 +361,7 @@ fun LearnScreenErrorPreview() {
         selectedCourse = null,
         availableTabs = LearnTab.entries
     )
-    LearnScreen(state)
+    LearnScreen(state, rememberNavController())
 }
 
 @Composable
@@ -379,5 +382,5 @@ fun LearnScreenContentPreview() {
         ),
         availableTabs = LearnTab.entries
     )
-    LearnScreen(state)
+    LearnScreen(state, rememberNavController())
 }

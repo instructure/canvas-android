@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -46,11 +47,28 @@ import com.instructure.horizon.horizonui.organisms.cards.ModuleStatus
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.model.LearningObjectStatus
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.horizon.navigation.MainNavigationRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnProgressScreen(courseId: Long, modifier: Modifier = Modifier, viewModel: LearnProgressViewModel = hiltViewModel()) {
+fun LearnProgressScreen(
+    courseId: Long,
+    mainNavController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: LearnProgressViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsState()
+    val event by viewModel.events.collectAsState(null)
+
+    LaunchedEffect(event) {
+        when(event) {
+            is LearnScreenEvents.NavigateToModuleItem -> {
+                val event = event as LearnScreenEvents.NavigateToModuleItem
+                mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(event.courseId, event.moduleItemId))
+            }
+            else -> Unit
+        }
+    }
 
     LaunchedEffect(courseId) {
         viewModel.loadState(courseId)
