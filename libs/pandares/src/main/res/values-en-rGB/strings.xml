@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Failed to delete conversation</string>
     <string name="conversationUpdateFailed">Failed to update conversation</string>
     <string name="sendIndividualMessage">Send individual message to each recipient</string>
+    <string name="sendIndividualMessageIsMandatory">You can only send individual messages over 100 recipients</string>
     <string name="invalidRecipients">You are not allowed to send messages to one or more of the selected recipients.</string>
     <string name="newMessage">New message</string>
     <string name="forwardMessage">Forward message</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
     <string name="editDashboardOfflineMode">You are offline</string>
+    <string name="editDashboardNoResults">No results</string>
+    <string name="editDashboardNoResultsMessage">No matching items found.</string>
     <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Offline Content Sync Success</string>
     <string name="offlineContentSyncFailureNotificationTitle">Offline Content Sync Failed</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Add new calendar item</string>
     <string name="calendarFilterCalendars">Calendars</string>
     <string name="calendarFilterUser">User</string>
+    <string name="calendarFilterFavoriteCourse">Favourite courses</string>
+    <string name="calendarFilterMoreCourse">More courses</string>
     <string name="calendarFilterCourse">Courses</string>
     <string name="calendarFilterGroup">Groups</string>
     <string name="calendarFilterExplanationLimited">Select the calendars you want to see, up to %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Log out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
+    <string name="noStudentsRefresh">Refresh</string>
     <string name="noGrade">No Mark</string>
     <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
     <string name="parentNoCourses">No Courses</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Add new student</string>
     <string name="selectStudentColor">Select Student Colour</string>
     <string name="errorSavingColor">An error occurred while saving your selection. Please try again.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Colour saved successfully</string>
     <string name="changeStudentColorLabel">Change colour for %s</string>
     <string name="studentColorContentDescriptionBlue">Electric, Blue</string>
     <string name="studentColorContentDescriptionPurple">Plum, Purple</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
     <string name="featureFlags">Feature Flags</string>
     <string name="addStudent">Add Student</string>
+    <string name="addStudentSuccessfull">Student added successfully</string>
     <string name="addStudentTitle">Add student with&#8230;</string>
     <string name="addStudentQrCodeTitle">QR Code</string>
     <string name="addStudentQrCodeExplanation">Students can generate a QR code using the Canvas Student app on their mobile device</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Grade percentage</string>
     <string name="unpairStudentTitle">Delete</string>
     <string name="unpairStudentMessage">This will unpair and remove all enrolments for this student from you account.</string>
+    <string name="unpairStudentSuccessfull">Student deleted successfully</string>
     <string name="alertSettingsMinThresholdError">Must be above %d</string>
     <string name="alertSettingsMaxThresholdError">Must be below %d</string>
     <string name="alertSettingsErrorMessage">An error occurred while fetching the alert settings.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">We\'re having trouble loading your student\'s grades. Please try reloading the page or check back later.</string>
     <string name="errorLoadingCourse">We\'re having trouble loading your student\'s course details. Please try reloading the page or check back later.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Grade preferences updated successfully. The list has been refreshed.</string>
     <string name="courseDetailsMessageContentDescription">Send a message about this course</string>
     <string name="gradeLockedContentDescription">Grade locked</string>
     <string name="gradesRefreshFailed">Failed to refresh grades</string>
     <string name="chooseACourseToMessage">Choose a course to message</string>
     <string name="regardingHiddenMessage">Regarding: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Regarding: %1$s, Assignment - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Regarding: %1$s, Event - %2$s</string>
     <string name="sendMessageAboutAssignment">"Send a message about this assignment"</string>
+    <string name="sendMessageAboutEvent">"Send a message about this event"</string>
     <string name="forStudentLabel">for %1$s</string>
     <string name="view_description">View Description</string>
     <string name="a11y_contentDescription_viewDescription">View Description</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Failed to refresh front page</string>
     <string name="failed_to_load_summary">Failed to load summary</string>
     <string name="no_summary_items_to_display">No summary items to display</string>
+    <string name="a11y_summaryEventContentDescription">Event</string>
+    <string name="a11y_summaryLockedContentDescription">Locked</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Discussion</string>
+    <string name="a11y_summaryAssignmentContentDescription">Assignment</string>
     <string name="scheduleItemNoDueDate">No Due Date</string>
     <string name="a11y_refresh">Refresh</string>
     <string name="masqueradingAs">You are acting as %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Partially checked</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filters have been updated</string>
+    <string name="inboxAllRecipients">All Recipients</string>
+    <string name="inboxSearchIn">Search in %1$s</string>
+    <string name="a11y_studentSelectorExpand">expand</string>
+    <string name="a11y_studentSelectorCollapse">collapse</string>
+    <string name="a11y_studentSelectorContentDescription">Tap to %s student selector, selected student is: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Select student %s</string>
+    <string name="inboxSettingsTitle">Inbox</string>
+    <string name="inboxSettingsInboxSignature">Inbox Signature</string>
+    <string name="inboxSignatureNotSet">Not Set</string>
+    <string name="inboxSignatureEnabled">Enabled</string>
+    <string name="inboxSignatureScreenTitle">Inbox Signature</string>
+    <string name="inboxSignatureScreenSubtitle">Signature will be added to the end of all messaging.</string>
+    <string name="inboxSignatureSwitchLabel">Signature</string>
+    <string name="inboxSignatureTextfieldHeader">Signature text</string>
+    <string name="due_dateTime">Due: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Post policy</string>
+    <string name="late">Late</string>
+    <string name="a11y_contentDescription_expand">Expand</string>
+    <string name="missingTag">Missing</string>
+    <string name="submissionFilter">Submission Filter</string>
+    <string name="submissionMessageSubject">%1$s on %2$s</string>
+    <string name="all">All</string>
 </resources>

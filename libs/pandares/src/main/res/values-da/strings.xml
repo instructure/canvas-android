@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Kunne ikke slette samtalen</string>
     <string name="conversationUpdateFailed">Samtalen kunne ikke opdateres</string>
     <string name="sendIndividualMessage">Send individuel besked til hver modtager</string>
+    <string name="sendIndividualMessageIsMandatory">Du kan kun sende individuelle beskeder over 100 modtagere</string>
     <string name="invalidRecipients">Du har ikke tilladelse til sende beskeder til en eller flere af de valgte modtagere.</string>
     <string name="newMessage">Ny besked</string>
     <string name="forwardMessage">Videresend besked</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Denne opgave er ikke længere tilgængelig.</string>
     <string name="editDashboardOfflineMode">Du er offline</string>
+    <string name="editDashboardNoResults">Ingen resultater</string>
+    <string name="editDashboardNoResultsMessage">Ingen matchende elementer fundet.</string>
     <string name="editDashboardOfflineModeMessage">Du har i øjeblikket ingen fag, der er tilgængelige offline.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Offline indholdssynkronisering lykkedes</string>
     <string name="offlineContentSyncFailureNotificationTitle">Synkronisering af offlineindhold mislykkedes</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Tilføj nyt kalenderelement</string>
     <string name="calendarFilterCalendars">Kalendere</string>
     <string name="calendarFilterUser">Bruger</string>
+    <string name="calendarFilterFavoriteCourse">Favoritfag</string>
+    <string name="calendarFilterMoreCourse">Flere fag</string>
     <string name="calendarFilterCourse">Fag</string>
     <string name="calendarFilterGroup">Grupper</string>
     <string name="calendarFilterExplanationLimited">Vælg de kalendere, du vil se, op til %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Log ud</string>
     <string name="noStudentsError">Ingen studerende</string>
     <string name="noStudentsErrorDescription">Du observerer ikke nogen studerende.</string>
+    <string name="noStudentsRefresh">Opdater</string>
     <string name="noGrade">Ingen karakter</string>
     <string name="errorLoadingCourses">Der opstod en fejl under indlæsning af din studerendes fag.</string>
     <string name="parentNoCourses">Ingen kurser</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Tilføj ny studerende</string>
     <string name="selectStudentColor">Vælg den studerendes farve</string>
     <string name="errorSavingColor">Der opstod en fejl, da du forsøgte at gemme dit valg. Prøv igen.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Farve blev gemt</string>
     <string name="changeStudentColorLabel">Skift farve til %s</string>
     <string name="studentColorContentDescriptionBlue">Elektrisk, blå</string>
     <string name="studentColorContentDescriptionPurple">Blomme, lilla</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Firkløver, grøn</string>
     <string name="featureFlags">Funktionsflag</string>
     <string name="addStudent">Tilføj studerende</string>
+    <string name="addStudentSuccessfull">Den studerende blev tilføjet</string>
     <string name="addStudentTitle">Tilføj studerende med ...</string>
     <string name="addStudentQrCodeTitle">QR-kode</string>
     <string name="addStudentQrCodeExplanation">Studerende kan generere en QR-kode ved hjælp af Canvas Student-appen på deres mobilenhed</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Karakter procent</string>
     <string name="unpairStudentTitle">Slet</string>
     <string name="unpairStudentMessage">Dette vil fjerne parring og alle tilmeldinger for denne studerende fra din konto.</string>
+    <string name="unpairStudentSuccessfull">Den studerende blev slettet</string>
     <string name="alertSettingsMinThresholdError">Skal være over %d</string>
     <string name="alertSettingsMaxThresholdError">Skal være under %d</string>
     <string name="alertSettingsErrorMessage">Der opstod en fejl under hentning af varslingsindstillingerne.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Vi har problemer med at indlæse din studerendes karakterer. Prøv at genindlæse siden, eller kom tilbage senere.</string>
     <string name="errorLoadingCourse">Vi har problemer med at indlæse din studerendes fagoplysninger. Prøv at genindlæse siden, eller kom tilbage senere.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Karakterpræferencer blev opdateret. Listen er blevet opdateret.</string>
     <string name="courseDetailsMessageContentDescription">Send en besked om dette fag</string>
     <string name="gradeLockedContentDescription">Karakter låst</string>
     <string name="gradesRefreshFailed">Kunne ikke opdatere karakterer</string>
     <string name="chooseACourseToMessage">Vælg et fag at sende en meddelelse til</string>
     <string name="regardingHiddenMessage">Vedrørende: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Vedrørende: %1$s, Opgave - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Vedrørende: %1$s, Begivenhed - %2$s</string>
     <string name="sendMessageAboutAssignment">"Send en besked om denne opgave"</string>
+    <string name="sendMessageAboutEvent">"Send en besked om denne begivenhed"</string>
     <string name="forStudentLabel">for %1$s</string>
     <string name="view_description">Vis beskrivelse</string>
     <string name="a11y_contentDescription_viewDescription">Vis beskrivelse</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Forsiden kunne ikke opdateres</string>
     <string name="failed_to_load_summary">Oversigten kunne ikke indlæses</string>
     <string name="no_summary_items_to_display">Ingen oversigtselementer at vise</string>
+    <string name="a11y_summaryEventContentDescription">Begivenhed</string>
+    <string name="a11y_summaryLockedContentDescription">Låst</string>
+    <string name="a11y_summaryQuizContentDescription">Test</string>
+    <string name="a11y_summaryDiscussionContentDescription">Diskussion</string>
+    <string name="a11y_summaryAssignmentContentDescription">Opgave</string>
     <string name="scheduleItemNoDueDate">Ingen afleveringsdato</string>
     <string name="a11y_refresh">Opdater</string>
     <string name="masqueradingAs">Du fungerer som %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Delvist kontrolleret</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filtre er blevet opdateret</string>
+    <string name="inboxAllRecipients">Alle modtagere</string>
+    <string name="inboxSearchIn">Søg i %1$s</string>
+    <string name="a11y_studentSelectorExpand">udvid</string>
+    <string name="a11y_studentSelectorCollapse">skjul</string>
+    <string name="a11y_studentSelectorContentDescription">Tryk for at %s vælger af studerende, valgt studerende er: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Vælg studerende %s</string>
+    <string name="inboxSettingsTitle">Indbakke</string>
+    <string name="inboxSettingsInboxSignature">Indbakkesignatur</string>
+    <string name="inboxSignatureNotSet">Ikke indstillet</string>
+    <string name="inboxSignatureEnabled">Aktiveret</string>
+    <string name="inboxSignatureScreenTitle">Indbakkesignatur</string>
+    <string name="inboxSignatureScreenSubtitle">Signatur vil blive tilføjet til slutningen af alle beskeder.</string>
+    <string name="inboxSignatureSwitchLabel">Signatur</string>
+    <string name="inboxSignatureTextfieldHeader">Signaturtekst</string>
+    <string name="due_dateTime">Forfalder: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Politik for indlæg</string>
+    <string name="late">Sen</string>
+    <string name="a11y_contentDescription_expand">Udvid</string>
+    <string name="missingTag">Mangler</string>
+    <string name="submissionFilter">Afleveringsfilter</string>
+    <string name="submissionMessageSubject">%1$s den %2$s</string>
+    <string name="all">Alle</string>
 </resources>
