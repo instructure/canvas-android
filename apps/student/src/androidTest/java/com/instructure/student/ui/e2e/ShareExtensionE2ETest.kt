@@ -24,12 +24,14 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -132,7 +134,10 @@ class ShareExtensionE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Click on $testAssignmentOne assignment and refresh the Assignment Details Page." +
                 "Assert that the $testAssignmentOne assignment's status is 'Submitted'.")
-        assignmentListPage.clickAssignment(testAssignmentOne)
+
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            assignmentListPage.clickAssignment(testAssignmentOne)
+        }
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertAssignmentSubmitted()
 
