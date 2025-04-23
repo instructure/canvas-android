@@ -43,3 +43,7 @@ sealed class AccountItemType(@DrawableRes val icon: Int) {
     data object OpenInNew : AccountItemType(R.drawable.open_in_new)
     data object LogOut : AccountItemType(R.drawable.logout)
 }
+
+sealed class AccountEvent {
+    data class NavigateTo(val route: String) : AccountEvent()
+}

@@ -22,12 +22,16 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +39,9 @@ class AccountViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: AccountRepository,
 ): ViewModel() {
+
+    private val _events = Channel<AccountEvent>()
+    val events = _events.receiveAsFlow()
 
     private val _uiState = MutableStateFlow(AccountUiState(
         screenState = LoadingState(
@@ -66,27 +73,47 @@ class AccountViewModel @Inject constructor(
             AccountItemState(
                 title = context.getString(R.string.accountProfileLabel),
                 type = AccountItemType.Open,
-                onClick = { /* TODO: Open settings */ }
+                onClick = {
+                    viewModelScope.launch{
+                        _events.send(AccountEvent.NavigateTo(AccountRoute.Profile.route))
+                    }
+                }
             ),
             AccountItemState(
                 title = context.getString(R.string.accountPasswordLabel),
                 type = AccountItemType.Open,
-                onClick = { /* TODO: Log out */ }
+                onClick = {
+                    viewModelScope.launch{
+                        _events.send(AccountEvent.NavigateTo(AccountRoute.Password.route))
+                    }
+                }
             ),
             AccountItemState(
                 title = context.getString(R.string.accountNotificationsLabel),
                 type = AccountItemType.Open,
-                onClick = { /* TODO: Log out */ }
+                onClick = {
+                    viewModelScope.launch{
+                        _events.send(AccountEvent.NavigateTo(AccountRoute.Notifications.route))
+                    }
+                }
             ),
             AccountItemState(
                 title = context.getString(R.string.accountCalendarFeedLabel),
                 type = AccountItemType.Open,
-                onClick = { /* TODO: Log out */ }
+                onClick = {
+                    viewModelScope.launch{
+                        _events.send(AccountEvent.NavigateTo(AccountRoute.CalendarFeed.route))
+                    }
+                }
             ),
             AccountItemState(
                 title = context.getString(R.string.accountAdvancedLabel),
                 type = AccountItemType.Open,
-                onClick = { /* TODO: Log out */ }
+                onClick = {
+                    viewModelScope.launch{
+                        _events.send(AccountEvent.NavigateTo(AccountRoute.Advanced.route))
+                    }
+                }
             )
         )
     )

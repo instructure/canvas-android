@@ -110,4 +110,16 @@
     <string name="accountSupportHeading">Support</string>
     <string name="accountGiveFeedbackLabel">Give Feedback</string>
     <string name="accountBetaCommunityLabel">Beta Community</string>
+    <string name="accountFullNameLabel">Full Name</string>
+    <string name="a11yNavigateBack">Navigate back</string>
+    <string name="accountDisplayNameLabel">Display Name</string>
+    <string name="accountEmailLabel">Email</string>
+    <string name="accountEmailHelperText">Email can only be changed by your institution.</string>
+    <string name="accountEmailErrorMessage">Email must be filled out.</string>
+    <string name="accountDisplayNameErrorMessage">Display Name must be filled out.</string>
+    <string name="accountFullNameErrorMessage">Full Name must be filled out.</string>
+    <string name="accountProfileErrorMessage">Failed to Load Profile data</string>
+    <string name="accountProfileSaveChangesLabel">Save Changes</string>
+    <string name="accountProfileUpdated">User profile successfully updated</string>
+    <string name="accountProfileFailedToUpdate">Failed to update user profile</string>
 </resources>

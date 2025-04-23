@@ -31,21 +31,40 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountScreen(state: AccountUiState) {
+fun AccountScreen(
+    state: AccountUiState,
+    events: Flow<AccountEvent>,
+    navController: NavController
+) {
+    val event by events.collectAsState(null)
+    LaunchedEffect(event) {
+        when(event) {
+            is AccountEvent.NavigateTo -> {
+                navController.navigate((event as AccountEvent.NavigateTo).route)
+            }
+            else -> Unit
+        }
+    }
+
     LoadingStateWrapper(state.screenState) {
         AccountContentScreen(state)
     }
