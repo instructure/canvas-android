@@ -31,9 +31,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,32 +43,18 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountScreen(
-    state: AccountUiState,
-    events: Flow<AccountEvent>,
-    navController: NavController
-) {
-    val event by events.collectAsState(null)
-    LaunchedEffect(event) {
-        when(event) {
-            is AccountEvent.NavigateTo -> {
-                navController.navigate((event as AccountEvent.NavigateTo).route)
-            }
-            else -> Unit
-        }
-    }
-
+    state: AccountUiState, navController: NavController) {
     LoadingStateWrapper(state.screenState) {
-        AccountContentScreen(state)
+        AccountContentScreen(state, navController)
     }
 }
 
 @Composable
-private fun AccountContentScreen(state: AccountUiState) {
+private fun AccountContentScreen(state: AccountUiState, navController: NavController) {
     LazyColumn(
         contentPadding = PaddingValues(24.dp)
     ) {
@@ -126,6 +109,7 @@ private fun AccountContentScreen(state: AccountUiState) {
                 }
                 AccountItem(
                     accountItem,
+                    navController,
                     clipModifier
                 )
             }
@@ -140,13 +124,23 @@ private fun AccountContentScreen(state: AccountUiState) {
 }
 
 @Composable
-private fun AccountItem(item: AccountItemState, modifier: Modifier = Modifier) {
+private fun AccountItem(item: AccountItemState, navController: NavController, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
             .background(HorizonColors.Surface.cardPrimary())
-            .clickable { item.onClick() }
+            .clickable {
+                when (item.type) {
+                    is AccountItemType.Open -> navController.navigate(item.type.route.route)
+                    is AccountItemType.OpenInNew -> {
+                        // Handle open in new
+                    }
+                    is AccountItemType.LogOut -> {
+                        // Handle log out
+                    }
+                }
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

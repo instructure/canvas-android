@@ -26,12 +26,9 @@ import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,12 +36,9 @@ class AccountViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: AccountRepository,
 ): ViewModel() {
-
-    private val _events = Channel<AccountEvent>()
-    val events = _events.receiveAsFlow()
-
     private val _uiState = MutableStateFlow(AccountUiState(
         screenState = LoadingState(
+            isPullToRefreshEnabled = false,
             onErrorSnackbarDismiss = ::dismissSnackbar,
         )
     ))
@@ -72,48 +66,23 @@ class AccountViewModel @Inject constructor(
         items = listOf(
             AccountItemState(
                 title = context.getString(R.string.accountProfileLabel),
-                type = AccountItemType.Open,
-                onClick = {
-                    viewModelScope.launch{
-                        _events.send(AccountEvent.NavigateTo(AccountRoute.Profile.route))
-                    }
-                }
+                type = AccountItemType.Open(AccountRoute.Profile),
             ),
             AccountItemState(
                 title = context.getString(R.string.accountPasswordLabel),
-                type = AccountItemType.Open,
-                onClick = {
-                    viewModelScope.launch{
-                        _events.send(AccountEvent.NavigateTo(AccountRoute.Password.route))
-                    }
-                }
+                type = AccountItemType.Open(AccountRoute.Password),
             ),
             AccountItemState(
                 title = context.getString(R.string.accountNotificationsLabel),
-                type = AccountItemType.Open,
-                onClick = {
-                    viewModelScope.launch{
-                        _events.send(AccountEvent.NavigateTo(AccountRoute.Notifications.route))
-                    }
-                }
+                type = AccountItemType.Open(AccountRoute.Notifications),
             ),
             AccountItemState(
                 title = context.getString(R.string.accountCalendarFeedLabel),
-                type = AccountItemType.Open,
-                onClick = {
-                    viewModelScope.launch{
-                        _events.send(AccountEvent.NavigateTo(AccountRoute.CalendarFeed.route))
-                    }
-                }
+                type = AccountItemType.Open(AccountRoute.CalendarFeed),
             ),
             AccountItemState(
                 title = context.getString(R.string.accountAdvancedLabel),
-                type = AccountItemType.Open,
-                onClick = {
-                    viewModelScope.launch{
-                        _events.send(AccountEvent.NavigateTo(AccountRoute.Advanced.route))
-                    }
-                }
+                type = AccountItemType.Open(AccountRoute.Advanced),
             )
         )
     )
@@ -123,13 +92,11 @@ class AccountViewModel @Inject constructor(
         items = listOf(
             AccountItemState(
                 title = context.getString(R.string.accountBetaCommunityLabel),
-                type = AccountItemType.OpenInNew,
-                onClick = { /* TODO: Open beta community */ }
+                type = AccountItemType.OpenInNew(""),
             ),
             AccountItemState(
                 title = context.getString(R.string.accountGiveFeedbackLabel),
-                type = AccountItemType.OpenInNew,
-                onClick = { /* TODO: Open feedback */ }
+                type = AccountItemType.OpenInNew(""),
             )
         )
     )
@@ -140,7 +107,6 @@ class AccountViewModel @Inject constructor(
             AccountItemState(
                 title = "Log Out",
                 type = AccountItemType.LogOut,
-                onClick = { /* TODO: Log out */ }
             )
         )
     )

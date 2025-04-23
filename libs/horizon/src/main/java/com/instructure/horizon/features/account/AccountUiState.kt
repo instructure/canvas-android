@@ -18,6 +18,7 @@ package com.instructure.horizon.features.account
 
 import androidx.annotation.DrawableRes
 import com.instructure.horizon.R
+import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class AccountUiState(
@@ -35,15 +36,10 @@ data class AccountGroupState(
 data class AccountItemState(
     val title: String,
     val type: AccountItemType,
-    val onClick: () -> Unit,
 )
 
 sealed class AccountItemType(@DrawableRes val icon: Int) {
-    data object Open : AccountItemType(R.drawable.arrow_forward)
-    data object OpenInNew : AccountItemType(R.drawable.open_in_new)
+    data class Open(val route: AccountRoute) : AccountItemType(R.drawable.arrow_forward)
+    data class OpenInNew(val url: String) : AccountItemType(R.drawable.open_in_new)
     data object LogOut : AccountItemType(R.drawable.logout)
-}
-
-sealed class AccountEvent {
-    data class NavigateTo(val route: String) : AccountEvent()
 }
