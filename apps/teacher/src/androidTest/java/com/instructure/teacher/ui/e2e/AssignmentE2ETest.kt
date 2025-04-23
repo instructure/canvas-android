@@ -36,6 +36,7 @@ import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
@@ -104,10 +105,12 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG,"Refresh Assignment List Page and assert that the previously seeded ${assignment[0].name} assignment has been displayed." +
                 "Assert that the needs grading count under the corresponding assignment is 1.")
-        composeTestRule.waitForIdle()
-        assignmentListPage.refreshAssignmentList()
-        composeTestRule.waitForIdle()
-        assignmentListPage.assertHasAssignment(assignment[0])
+        retryWithIncreasingDelay(catchBlock = {
+            assignmentListPage.refreshAssignmentList()
+            composeTestRule.waitForIdle()
+        }) {
+            assignmentListPage.assertHasAssignment(assignment[0])
+        }
 
         Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert the numbers of 'Not Submitted' and 'Needs Grading' submissions.")
         assignmentListPage.clickAssignment(assignment[0])
