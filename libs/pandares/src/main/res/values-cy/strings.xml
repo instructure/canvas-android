@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Wedi methu dileu’r sgwrs</string>
     <string name="conversationUpdateFailed">Wedi methu diweddaru’r sgwrs</string>
     <string name="sendIndividualMessage">Anfon neges unigol at bob derbynnydd</string>
+    <string name="sendIndividualMessageIsMandatory">Dim ond at dros 100 o dderbynwyr y gallwch anfon negeseuon unigol</string>
     <string name="invalidRecipients">Does gennych chi ddim hawl i anfon negeseuon at o leiaf un o’r derbynwyr dan sylw.</string>
     <string name="newMessage">Neges Newydd</string>
     <string name="forwardMessage">Anfon Neges Ymlaen</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Dydy’r aseiniad hwn ddim ar gael mwyach.</string>
     <string name="editDashboardOfflineMode">Rydych chi all-lein</string>
+    <string name="editDashboardNoResults">Dim canlyniadau</string>
+    <string name="editDashboardNoResultsMessage">Heb ddod o hyd i eitemau sy’n cyfateb.</string>
     <string name="editDashboardOfflineModeMessage">Ar hyn o bryd, does gennych chi ddim cyrsiau sydd ar gael all-lein.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Cysoni Cynnwys All-lein wedi Llwyddo</string>
     <string name="offlineContentSyncFailureNotificationTitle">Cysoni Cynnwys All-lein wedi Methu</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Ychwanegu eitem calendr newydd</string>
     <string name="calendarFilterCalendars">Calendrau</string>
     <string name="calendarFilterUser">Defnyddiwr</string>
+    <string name="calendarFilterFavoriteCourse">Hoff Gyrsiau</string>
+    <string name="calendarFilterMoreCourse">Mwy o Gyrsiau</string>
     <string name="calendarFilterCourse">Cyrsiau</string>
     <string name="calendarFilterGroup">Grwpiau</string>
     <string name="calendarFilterExplanationLimited">Dewiswch y calendrau rydych chi eisiau eu gweld, hyd at %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Allgofnodi</string>
     <string name="noStudentsError">Dim Myfyrwyr</string>
     <string name="noStudentsErrorDescription">Dydych chi ddim yn arsyllu unrhyw fyfyrwyr.</string>
+    <string name="noStudentsRefresh">Adnewyddu</string>
     <string name="noGrade">Dim Gradd</string>
     <string name="errorLoadingCourses">Gwall wrth lwytho cyrsiau eich myfyriwr.</string>
     <string name="parentNoCourses">Dim Cyrsiau</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Ychwanegu myfyriwr newydd</string>
     <string name="selectStudentColor">Dewis Lliw Myfyriwr</string>
     <string name="errorSavingColor">Gwall wrth gadw eich dewis. Rhowch gynnig arall arni.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Wedi llwyddo i gadw’r lliw</string>
     <string name="changeStudentColorLabel">Newid lliw %s</string>
     <string name="studentColorContentDescriptionBlue">Trydan, Glas</string>
     <string name="studentColorContentDescriptionPurple">Eirinen, Porffor</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Meillionen, Gwyrdd</string>
     <string name="featureFlags">Fflagiau Nodwedd</string>
     <string name="addStudent">Ychwanegu Myfyriwr</string>
+    <string name="addStudentSuccessfull">Wedi llwyddo i ychwanegu’r myfyriwr</string>
     <string name="addStudentTitle">Ychwanegu myfyriwr gyda...</string>
     <string name="addStudentQrCodeTitle">Cod QR</string>
     <string name="addStudentQrCodeExplanation">Mae myfyrwyr yn gallu creu cod QR drwy ddefnyddio app Canvas Student ar eu dyfais symudol</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Canran gradd</string>
     <string name="unpairStudentTitle">Dileu</string>
     <string name="unpairStudentMessage">Bydd hyn yn dadbaru ac yn tynnu’r holl ymrestriadau ar gyfer y myfyriwr hwn o’ch cyfrif.</string>
+    <string name="unpairStudentSuccessfull">Wedi llwyddo i ddileu’r myfyriwr</string>
     <string name="alertSettingsMinThresholdError">Rhaid bod yn uwch na %d</string>
     <string name="alertSettingsMaxThresholdError">Rhaid bod yn is na %d</string>
     <string name="alertSettingsErrorMessage">Gwall wrth nôl y gosodiadau hysbysu.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Rydym yn cael trafferth llwytho graddau eich myfyriwr. Ceisiwch ail-lwytho\'r dudalen neu roi cynnig arall arni yn nes ymlaen.</string>
     <string name="errorLoadingCourse">Rydym yn cael trafferth llwytho manylion cwrs eich myfyriwr. Ceisiwch ail-lwytho\'r dudalen neu roi cynnig arall arni yn nes ymlaen.</string>
     <string name="gradesFilterContentDescription">Hidlo</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Wedi llwyddo i ddiweddaru’r dewisiadau gradd Mae’r rhestr wedi’i hadnewyddu.</string>
     <string name="courseDetailsMessageContentDescription">Anfon neges am y cwrs hwn</string>
     <string name="gradeLockedContentDescription">Gradd wedi’i chloi</string>
     <string name="gradesRefreshFailed">Wedi methu adnewyddu’r graddau</string>
     <string name="chooseACourseToMessage">Dewiswch gwrs i anfon neges ato</string>
     <string name="regardingHiddenMessage">Ynghylch: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Ynghylch: %1$s, Aseiniad - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Ynghylch: %1$s, Digwyddiad - %2$s</string>
     <string name="sendMessageAboutAssignment">“Anfon neges am yr aseiniad hwn”</string>
+    <string name="sendMessageAboutEvent">“Anfon neges am y digwyddiad hwn”</string>
     <string name="forStudentLabel">ar gyfer %1$s</string>
     <string name="view_description">Gweld Disgrifiad</string>
     <string name="a11y_contentDescription_viewDescription">Gweld Disgrifiad</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Wedi methu adnewyddu’r dudalen flaen</string>
     <string name="failed_to_load_summary">Wedi methu llwytho’r crynodeb</string>
     <string name="no_summary_items_to_display">Dim eitemau crynodeb i’w dangos</string>
+    <string name="a11y_summaryEventContentDescription">Digwyddiad</string>
+    <string name="a11y_summaryLockedContentDescription">Wedi Cloi</string>
+    <string name="a11y_summaryQuizContentDescription">Cwis</string>
+    <string name="a11y_summaryDiscussionContentDescription">Trafodaeth</string>
+    <string name="a11y_summaryAssignmentContentDescription">Aseiniad</string>
     <string name="scheduleItemNoDueDate">Dim Dyddiad Erbyn</string>
     <string name="a11y_refresh">Adnewyddu</string>
     <string name="masqueradingAs">Rydych chi’n gweithredu fel %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Wedi’i wirio’n rhannol</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Hidlyddion wedi’u diweddaru</string>
+    <string name="inboxAllRecipients">Pob Derbynnydd</string>
+    <string name="inboxSearchIn">Chwilio yn %1$s</string>
+    <string name="a11y_studentSelectorExpand">ehangu</string>
+    <string name="a11y_studentSelectorCollapse">crebachu</string>
+    <string name="a11y_studentSelectorContentDescription">Tapiwch i %s y dewisydd myfyrwyr. Y myfyriwr a ddewiswyd yw: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Dewiswch fyfyriwr %s</string>
+    <string name="inboxSettingsTitle">Blwch Derbyn</string>
+    <string name="inboxSettingsInboxSignature">Llofnod Blwch Derbyn</string>
+    <string name="inboxSignatureNotSet">Heb osod</string>
+    <string name="inboxSignatureEnabled">Wedi galluogi</string>
+    <string name="inboxSignatureScreenTitle">Llofnod Blwch Derbyn</string>
+    <string name="inboxSignatureScreenSubtitle">Bydd llofnod yn cael ei ychwanegu at ddiwedd pob neges.</string>
+    <string name="inboxSignatureSwitchLabel">Llofnod</string>
+    <string name="inboxSignatureTextfieldHeader">Testun llofnod</string>
+    <string name="due_dateTime">Erbyn: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Hidlo</string>
+    <string name="a11y_contentDescription_postPolicy">Polisi postio</string>
+    <string name="late">Yn Hwyr</string>
+    <string name="a11y_contentDescription_expand">Ehangu</string>
+    <string name="missingTag">Ar goll</string>
+    <string name="submissionFilter">Hidlydd Cyflwyno</string>
+    <string name="submissionMessageSubject">%1$s ar gyfer %2$s</string>
+    <string name="all">Y cyfan</string>
 </resources>

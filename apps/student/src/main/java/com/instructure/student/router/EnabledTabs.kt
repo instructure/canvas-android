@@ -28,6 +28,8 @@ class EnabledTabsImpl: EnabledTabs {
             pathSegments.last() == "grades" -> true
             pathSegments.last() == "discussion_topics" -> true
             pathSegments.any { it.contains("external_tools") } -> true
+            pathSegments.last() == "wiki" -> tabs.any { it.tabId == Tab.PAGES_ID }
+            pathSegments.last() == "pages" -> tabs.any { it.tabId == Tab.PAGES_ID }
             pathSegments.last() == Tab.SYLLABUS_ID -> tabs.any { relativePath == it.htmlUrl }
             pathSegments.size == 3 -> tabs.any { relativePath == it.htmlUrl }
             else -> true

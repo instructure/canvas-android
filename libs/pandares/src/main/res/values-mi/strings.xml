@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">I rahua te muku korero</string>
     <string name="conversationUpdateFailed">I rahua te whakahōu kōrero</string>
     <string name="sendIndividualMessage">Tukua te karere takitahi ki ia kaiwhiwhi</string>
+    <string name="sendIndividualMessageIsMandatory">Ka taea e koe te tuku karere takitahi neke atu i te 100 nga kaiwhiwhi</string>
     <string name="invalidRecipients">Kaore koe e whakāetia ki te tuku karere ki tētahi, neke atu rānei o ngā kaiwhiwhi kua tohua.</string>
     <string name="newMessage">Karere Hōu</string>
     <string name="forwardMessage">Whakamua te karere</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Kaore tēnei whakataunga i te wātea.</string>
     <string name="editDashboardOfflineMode">Kei te tuimotu koe</string>
+    <string name="editDashboardNoResults">Kāore he hua</string>
+    <string name="editDashboardNoResultsMessage">Karekau he tuemi rite i kitea.</string>
     <string name="editDashboardOfflineModeMessage">I tenei wa karekau he akoranga kei te waatea tuimotu.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Angitu Tukutahi Ihirangi Tuimotu</string>
     <string name="offlineContentSyncFailureNotificationTitle">I Rahua te Tukutahi Ihirangi Tuimotu</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Tāpiri tūemi maramataka hōu</string>
     <string name="calendarFilterCalendars">Ngā Maramataka</string>
     <string name="calendarFilterUser">Kaiwhakamahi</string>
+    <string name="calendarFilterFavoriteCourse">Ngā akoranga makau</string>
+    <string name="calendarFilterMoreCourse">Ētahi atu akoranga</string>
     <string name="calendarFilterCourse">Ngā Akoranga</string>
     <string name="calendarFilterGroup">Rōpū</string>
     <string name="calendarFilterExplanationLimited">Tīpakohia ngā maramataka e hiahia ana koe ki te kite, tae noa ki %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Takiputa</string>
     <string name="noStudentsError">Kāore he ākonga</string>
     <string name="noStudentsErrorDescription">Kaore koe e tirotiro ana ētahi ākonga.</string>
+    <string name="noStudentsRefresh">Whakahouhia</string>
     <string name="noGrade">Kaore he Kōeke</string>
     <string name="errorLoadingCourses">He hapa i te wā e uta ana i tō ākonga akoranga.</string>
     <string name="parentNoCourses">Kāore he Akoranga</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Tāpiri ākonga hou</string>
     <string name="selectStudentColor">Tīpakohia te Ākonga Rōpū</string>
     <string name="errorSavingColor">He hapa i puta i te wā e tiaki ana i tō tīpako. Me ngana ano.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Kua tiakina pai te tae</string>
     <string name="changeStudentColorLabel">Huria tae mō %s</string>
     <string name="studentColorContentDescriptionBlue">Hiko, Kahurangi</string>
     <string name="studentColorContentDescriptionPurple">Paramū, Waiporoporo</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Rangirua, Kākariki</string>
     <string name="featureFlags">Ngā Āhuatanga Haki</string>
     <string name="addStudent">Tapiri Ākonga</string>
+    <string name="addStudentSuccessfull">I angitu te whakaurunga a te tauira</string>
     <string name="addStudentTitle">Tapiri ākonga me...</string>
     <string name="addStudentQrCodeTitle">QR Waehere</string>
     <string name="addStudentQrCodeExplanation">Ka taea e nga akonga te whakaputa waehere QR ma te whakamahi i te taupānga Canvas Student i runga i o raatau taputapu pūkoro</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Kōeke pai hēneti</string>
     <string name="unpairStudentTitle">Muku</string>
     <string name="unpairStudentMessage">Ka wetewete tenei ka tango i nga whakaurunga katoa mo tenei akonga mai i to putea.</string>
+    <string name="unpairStudentSuccessfull">I tutuki pai te whakakore a te tauira</string>
     <string name="alertSettingsMinThresholdError">Me runga ake %d</string>
     <string name="alertSettingsMaxThresholdError">Me raro iho %d</string>
     <string name="alertSettingsErrorMessage">I puta he hapa i te tiki i nga tautuhinga matohi.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Kei te raru matou ki te uta i nga tohu a to tauira. Tena koa ngana ki te uta ano i te wharangi, tirohia ranei a muri ake nei.</string>
     <string name="errorLoadingCourse">Kei te raru matou ki te uta i nga taipitopito akoranga a to tauira. Tena koa ngana ki te uta ano i te wharangi, tirohia ranei a muri ake nei.</string>
     <string name="gradesFilterContentDescription">Tātari</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">I pai te whakahou i nga manakohanga kōeke. Kua whakahoutia te rarangi.</string>
     <string name="courseDetailsMessageContentDescription">Tukuna he karere mō tēnei akoranga</string>
     <string name="gradeLockedContentDescription">Koeke maukati</string>
     <string name="gradesRefreshFailed">I rāhua te whakahou i ngā kōeke</string>
     <string name="chooseACourseToMessage">Kōwhiri he akoranga hei karare</string>
     <string name="regardingHiddenMessage">E pā ana: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">E pā ana: %1$s, Whakataunga: %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">E pā ana: %1$s, Huihuing - %2$s</string>
     <string name="sendMessageAboutAssignment">"Tukuna he karere mo tenei taumahi"</string>
+    <string name="sendMessageAboutEvent">"Tukua he karere mo tenei huihuinga"</string>
     <string name="forStudentLabel">mo %1$s</string>
     <string name="view_description">Tirohia te whakāturanga</string>
     <string name="a11y_contentDescription_viewDescription">Tirohia te whakāturanga</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">I rahua te whakahou i te wharangi o mua</string>
     <string name="failed_to_load_summary">I rahua te uta whakarāpopototanga</string>
     <string name="no_summary_items_to_display">Karekau he tuemi whakarāpopoto hei whakaatu</string>
+    <string name="a11y_summaryEventContentDescription">Tauwhāinga</string>
+    <string name="a11y_summaryLockedContentDescription">Kua rakaina</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Kōrerorero</string>
+    <string name="a11y_summaryAssignmentContentDescription">Whakataunga</string>
     <string name="scheduleItemNoDueDate">Kaore He Rā Tika</string>
     <string name="a11y_refresh">Whakahouhia</string>
     <string name="masqueradingAs">Kei te mahi koe pēnei %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Kua takina tetahi waahanga</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Kua whakahōungia ngā tātari</string>
+    <string name="inboxAllRecipients">Nga Kaiwhiwhi Katoa</string>
+    <string name="inboxSearchIn">Rapua i roto %1$s</string>
+    <string name="a11y_studentSelectorExpand">whakawhānui</string>
+    <string name="a11y_studentSelectorCollapse">hinga</string>
+    <string name="a11y_studentSelectorContentDescription">Pato ki te %s kaitoha tauira, ko te tauira kua tohua ko: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Tīpako ākonga %s</string>
+    <string name="inboxSettingsTitle">Pouakauru</string>
+    <string name="inboxSettingsInboxSignature">Waitohu Pouakauru</string>
+    <string name="inboxSignatureNotSet">Kāore i Tautuhia</string>
+    <string name="inboxSignatureEnabled">Whakahohea</string>
+    <string name="inboxSignatureScreenTitle">Waitohu Pouakauru</string>
+    <string name="inboxSignatureScreenSubtitle">Ka taapirihia te hainatanga ki te mutunga o nga karere katoa.</string>
+    <string name="inboxSignatureSwitchLabel">Waitohu</string>
+    <string name="inboxSignatureTextfieldHeader">Kuputuhi waitohu</string>
+    <string name="due_dateTime">E tika ana: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Tātari</string>
+    <string name="a11y_contentDescription_postPolicy">Kaupapa Here Pānui</string>
+    <string name="late">Tūreiti</string>
+    <string name="a11y_contentDescription_expand">Whakawhānui</string>
+    <string name="missingTag">Ngaro</string>
+    <string name="submissionFilter">Tātari Tuku</string>
+    <string name="submissionMessageSubject">%1$s i runga i %2$s</string>
+    <string name="all">Katoa</string>
 </resources>
