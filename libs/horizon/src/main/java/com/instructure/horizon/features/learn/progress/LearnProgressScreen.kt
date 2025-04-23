@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -58,17 +59,6 @@ fun LearnProgressScreen(
     viewModel: LearnProgressViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-    val event by viewModel.events.collectAsState(null)
-
-    LaunchedEffect(event) {
-        when(event) {
-            is LearnScreenEvents.NavigateToModuleItem -> {
-                val event = event as LearnScreenEvents.NavigateToModuleItem
-                mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(event.courseId, event.moduleItemId))
-            }
-            else -> Unit
-        }
-    }
 
     LaunchedEffect(courseId) {
         viewModel.loadState(courseId)
@@ -77,7 +67,9 @@ fun LearnProgressScreen(
     LoadingStateWrapper(state.screenState) {
         LearnProgressContent(
             state,
-            modifier
+            modifier,
+            courseId,
+            mainNavController
         )
     }
 }
@@ -86,6 +78,8 @@ fun LearnProgressScreen(
 private fun LearnProgressContent(
     state: LearnProgressUiState,
     modifier: Modifier = Modifier,
+    courseId: Long,
+    mainNavController: NavController
 ) {
     Box(
         modifier = modifier
@@ -103,7 +97,9 @@ private fun LearnProgressContent(
                     moduleHeaderState.second.forEach { moduleItemState ->
                         if (moduleItemState is ModuleItemState.ModuleItemCard) {
                             ModuleItemCard(
-                                state = moduleItemState.cardState,
+                                state = moduleItemState.cardState.copy(onClick = {
+                                    mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseId, moduleItemState.moduleItemId))
+                                }),
                                 modifier = Modifier.padding(bottom = 8.dp),
                             )
                         }
@@ -148,6 +144,7 @@ private fun LearnProgressScreenPreview() {
                 ),
                 listOf(
                     ModuleItemState.ModuleItemCard(
+                        moduleItemId = 1,
                         cardState = ModuleItemCardState(
                             title = "Assignment 1",
                             learningObjectStatus = LearningObjectStatus.REQUIRED,
@@ -159,5 +156,5 @@ private fun LearnProgressScreenPreview() {
             )
         )
     )
-    LearnProgressContent(state)
+    LearnProgressContent(state, courseId = 1, mainNavController = rememberNavController())
 }

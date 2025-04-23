@@ -43,9 +43,6 @@ class LearnProgressViewModel @Inject constructor(
     private val moduleHeaderStateMapper: ModuleHeaderStateMapper,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
 ): ViewModel() {
-    private val _events = Channel<LearnScreenEvents>()
-    val events = _events.receiveAsFlow()
-
     private val _uiState = MutableStateFlow(
         LearnProgressUiState(
             screenState = LoadingState(
@@ -92,12 +89,12 @@ class LearnProgressViewModel @Inject constructor(
                     ModuleItemState.SubHeader(moduleItem.title ?: "")
                 } else {
                     val cardState = moduleItemCardStateMapper.mapModuleItemToCardState(
-                        moduleItem,
-                        ::moduleItemSelected
-                    )
+                        moduleItem
+                    ) {}
 
                     if (cardState != null) {
                         ModuleItemState.ModuleItemCard(
+                            moduleItem.id,
                             cardState
                         )
                     } else {
@@ -118,17 +115,6 @@ class LearnProgressViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(screenState = it.screenState.copy(errorSnackbar = context.getString(
                 R.string.errorOccurred), isRefreshing = false)) }
-        }
-    }
-
-    private fun moduleItemSelected(moduleItemId: Long) {
-        viewModelScope.launch {
-            _events.send(
-                LearnScreenEvents.NavigateToModuleItem(
-                    courseId = uiState.value.courseId,
-                    moduleItemId = moduleItemId
-                )
-            )
         }
     }
 

@@ -12,7 +12,7 @@ data class LearnProgressUiState(
 
 sealed class ModuleItemState {
     data class SubHeader(val subHeader: String): ModuleItemState()
-    data class ModuleItemCard(val cardState: ModuleItemCardState): ModuleItemState()
+    data class ModuleItemCard(val moduleItemId: Long, val cardState: ModuleItemCardState): ModuleItemState()
 }
 
 sealed class LearnScreenEvents {
