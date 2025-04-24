@@ -65,7 +65,7 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
             )) {
             val viewModel = hiltViewModel<LearnViewModel>()
             val uiState by viewModel.state.collectAsState()
-            LearnScreen(uiState)
+            LearnScreen(uiState, mainNavController)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             SkillspaceScreen()

@@ -49,9 +49,12 @@ fun InputDropDownPopup(
     options: List<String>,
     verticalOffsetPx: Int,
     width: Dp,
-    modifier: Modifier = Modifier,
     onMenuOpenChanged: (Boolean) -> Unit,
     onOptionSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    item: @Composable (String) -> Unit = { selectionOption ->
+        SingleSelectItem(selectionOption)
+    },
 ) {
     Popup(
         alignment = Alignment.TopStart,
@@ -96,7 +99,7 @@ fun InputDropDownPopup(
                                     onMenuOpenChanged(false)
                                 }
                         ) {
-                            SingleSelectItem(selectionOption)
+                            item(selectionOption)
                         }
                     }
                 }

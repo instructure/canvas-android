@@ -23,8 +23,10 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class LearnUiState(
     val screenState: LoadingState = LoadingState(),
-    val course: CourseWithProgress? = null,
+    val courses: List<CourseWithProgress> = emptyList(),
+    val selectedCourse: CourseWithProgress? = null,
     val availableTabs: List<LearnTab> = LearnTab.entries,
+    val onSelectedCourseChanged: ((CourseWithProgress) -> Unit) = {}
 )
 
 enum class LearnTab(@StringRes val titleRes: Int, ) {

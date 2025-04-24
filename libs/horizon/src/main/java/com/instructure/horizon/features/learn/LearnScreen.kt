@@ -15,18 +15,24 @@
  */
 package com.instructure.horizon.features.learn
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -47,10 +54,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -60,15 +70,18 @@ import com.instructure.horizon.features.learn.overview.LearnOverviewScreen
 import com.instructure.horizon.features.learn.progress.LearnProgressScreen
 import com.instructure.horizon.features.learn.score.LearnScoreScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 import com.instructure.horizon.horizonui.platform.LoadingState
 import kotlinx.coroutines.launch
 
 @Composable
-fun LearnScreen(state: LearnUiState) {
+fun LearnScreen(state: LearnUiState, mainNavController: NavController) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
     ) { padding ->
@@ -82,14 +95,14 @@ fun LearnScreen(state: LearnUiState) {
             when {
                 state.screenState.isError -> ErrorContent(state.screenState.errorMessage.orEmpty())
                 state.screenState.isLoading -> LoadingContent()
-                else -> LearnScreenWrapper(state, Modifier.fillMaxSize())
+                else -> LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
             }
         }
     }
 }
 
 @Composable
-private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifier) {
+private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavController, modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
     var appBarHeight by remember { mutableIntStateOf(0) }
@@ -111,16 +124,19 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
                     }
                 }
         ) {
-            Text(
-                text = state.course?.course?.name ?: stringResource(R.string.course),
-                style = HorizonTypography.h3,
-                color = HorizonColors.Text.title(),
-                modifier = Modifier
-                    .padding(start = 24.dp, end = 24.dp, top = 24.dp)
+            DropDownTitle(
+                courses = state.courses,
+                selectedCourse = state.selectedCourse ?: CourseWithProgress(
+                    course = Course(id = -1, name = "", syllabusBody = ""),
+                    progress = 0.0,
+                    nextUpModuleItemId = null,
+                    nextUpModuleId = null
+                ),
+                onSelect = { state.onSelectedCourseChanged(it) },
             )
 
             ProgressBar(
-                progress = state.course?.progress ?: 0.0,
+                progress = state.selectedCourse?.progress ?: 0.0,
                 modifier = Modifier
                     .padding(horizontal = 24.dp, vertical = 16.dp)
             )
@@ -142,7 +158,6 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
             HorizontalPager(
                 pagerState,
                 pageSpacing = 16.dp,
-                contentPadding = PaddingValues(horizontal = 8.dp),
                 beyondViewportPageCount = 4
             ) { index ->
                 val scaleAnimation by animateFloatAsState(
@@ -164,14 +179,18 @@ private fun LearnScreenWrapper(state: LearnUiState, modifier: Modifier = Modifie
                 ) {
                     when (index) {
                         0 -> LearnOverviewScreen(
-                            state.course?.course?.syllabusBody,
+                            state.selectedCourse?.course?.syllabusBody,
                             Modifier
                                 .clip(RoundedCornerShape(cornerAnimation))
                         )
 
-                        1 -> LearnProgressScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                        1 -> LearnProgressScreen(
+                            state.selectedCourse?.course?.id ?: -1,
+                            mainNavController,
+                            Modifier.clip(RoundedCornerShape(cornerAnimation))
+                        )
                         2 -> LearnScoreScreen(
-                            state.course?.course?.id ?: -1,
+                            state.selectedCourse?.course?.id ?: -1,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
@@ -202,6 +221,96 @@ private fun Tab(tab: LearnTab, isSelected: Boolean, modifier: Modifier = Modifie
                 .padding(top = 20.dp)
         )
     }
+}
+
+@Composable
+private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: CourseWithProgress, onSelect: (CourseWithProgress) -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(start = 24.dp, end = 24.dp, top = 24.dp)
+    ) {
+        val localDensity = LocalDensity.current
+        var heightInPx by remember { mutableIntStateOf(0) }
+        var width by remember { mutableStateOf(0.dp) }
+        var isMenuOpen by remember { mutableStateOf(false) }
+        val iconRotation by animateFloatAsState(
+            if (isMenuOpen) 180f else 0f,
+            label = "DropDownIconRotation"
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned {
+                    heightInPx = it.size.height
+                    width = with(localDensity) { it.size.width.toDp() }
+                }
+                .clickable { isMenuOpen = !isMenuOpen }
+        ) {
+            AnimatedContent(
+                selectedCourse.course.name,
+                label = "SelectedCourseName",
+                modifier = Modifier
+                    .weight(1f, fill = false)
+            ) { courseName ->
+                Text(
+                    text = courseName,
+                    style = HorizonTypography.h3,
+                    color = HorizonColors.Text.title(),
+                )
+            }
+
+            HorizonSpace(SpaceSize.SPACE_8)
+
+            Icon(
+                painter = painterResource(R.drawable.keyboard_arrow_down),
+                contentDescription = null,
+                tint = HorizonColors.Icon.default(),
+                modifier = Modifier
+                    .size(24.dp)
+                    .rotate(iconRotation)
+            )
+        }
+
+        InputDropDownPopup(
+            isMenuOpen = isMenuOpen,
+            options = courses.map { it.course.name },
+            width = width,
+            verticalOffsetPx = heightInPx,
+            onMenuOpenChanged = { isMenuOpen = it },
+            onOptionSelected = { selectedCourse ->
+                onSelect(courses.first { it.course.name == selectedCourse })
+            },
+            item = { courseName ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(horizontal = 11.dp, vertical = 6.dp)
+                ) {
+                    if (courseName == selectedCourse.course.name) {
+                        Icon(
+                            painter = painterResource(R.drawable.check),
+                            contentDescription = stringResource(R.string.a11y_selectedCourse),
+                            tint = HorizonColors.Icon.default(),
+                            modifier = Modifier
+                                .size(18.dp)
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.size(18.dp))
+                    }
+
+                    HorizonSpace(SpaceSize.SPACE_8)
+
+                    Text(
+                        text = courseName,
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.body(),
+                    )
+                }
+            },
+        )
+    }
+
 }
 
 @Composable
@@ -237,10 +346,10 @@ fun LearnScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(isLoading = true),
-        course = null,
+        selectedCourse = null,
         availableTabs = LearnTab.entries
     )
-    LearnScreen(state)
+    LearnScreen(state, rememberNavController())
 }
 
 @Composable
@@ -249,10 +358,10 @@ fun LearnScreenErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(isError = true, errorMessage = "Error loading course"),
-        course = null,
+        selectedCourse = null,
         availableTabs = LearnTab.entries
     )
-    LearnScreen(state)
+    LearnScreen(state, rememberNavController())
 }
 
 @Composable
@@ -261,7 +370,7 @@ fun LearnScreenContentPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(),
-        course = CourseWithProgress(
+        selectedCourse = CourseWithProgress(
             course = Course(
                 id = 123,
                 name = "Course Name",
@@ -273,5 +382,5 @@ fun LearnScreenContentPreview() {
         ),
         availableTabs = LearnTab.entries
     )
-    LearnScreen(state)
+    LearnScreen(state, rememberNavController())
 }
