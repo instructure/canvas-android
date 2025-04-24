@@ -16,13 +16,14 @@
 package com.instructure.horizon.features.moduleitemsequence.content.lti
 
 import android.view.ViewGroup
-import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +35,10 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.molecules.TextLink
 import com.instructure.horizon.horizonui.molecules.TextLinkIconPosition
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
@@ -43,25 +47,39 @@ import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
-import com.instructure.pandautils.views.CanvasWebView
 
 @Composable
 fun ExternalToolContentScreen(uiState: ExternalToolUiState, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val activity = context.getActivityOrNull()
+
+    LaunchedEffect(uiState.authenticatedUrl) {
+        if (!uiState.authenticatedUrl.isNullOrEmpty()) {
+            activity?.launchCustomTab(uiState.authenticatedUrl, ThemePrefs.brandColor)
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .clip(HorizonCornerRadius.level5)
             .background(HorizonColors.Surface.cardPrimary()), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextLink(
-            text = stringResource(R.string.externalTool_openInANewTab),
-            textLinkIconPosition = TextLinkIconPosition.End(R.drawable.open_in_new),
-            modifier = modifier
-                .padding(24.dp)
-        ) {
-            activity?.launchCustomTab(uiState.urlToOpen, ThemePrefs.brandColor)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (uiState.openExternallyLoading) {
+                HorizonSpace(SpaceSize.SPACE_32) // We need this space to keep the text centered when we add the loading spinner.
+            }
+            TextLink(
+                text = stringResource(R.string.externalTool_openInANewTab),
+                textLinkIconPosition = TextLinkIconPosition.End(R.drawable.open_in_new),
+                modifier = modifier
+                    .padding(24.dp),
+                onClick = uiState.onOpenExternallyClicked
+            )
+            if (uiState.openExternallyLoading) {
+                HorizonSpace(SpaceSize.SPACE_8)
+                Spinner(size = SpinnerSize.EXTRA_SMALL)
+            }
         }
         if (uiState.previewUrl.isNotEmpty() && uiState.previewState != PreviewState.ERROR) {
             Box(contentAlignment = Alignment.Center) {

@@ -162,7 +162,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
             }
             item.type == Type.Quiz.name -> ModuleItemContent.Assessment(courseId, item.contentId)
             item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.title.orEmpty(), item.externalUrl.orEmpty())
-            item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(courseId, item.url.orEmpty(), item.externalUrl.orEmpty())
+            item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(courseId, item.htmlUrl.orEmpty(), item.externalUrl.orEmpty())
             item.type == Type.File.name -> ModuleItemContent.File(item.url.orEmpty())
             else -> null
         }

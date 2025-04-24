@@ -19,6 +19,7 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
@@ -53,13 +54,25 @@ class ExternalToolViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private fun openExternally() {
-
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(openExternallyLoading = true)
+            }
+            val authUrl = externalToolRepository.authenticateUrl(url)
+            _uiState.update {
+                it.copy(authenticatedUrl = authUrl, openExternallyLoading = false)
+            }
+        } catch {
+            _uiState.update {
+                it.copy(openExternallyLoading = false)
+            }
+        }
     }
 
     private fun setPreviewError() {
         viewModelScope.launch {
             // We need a small delay here because the pageFinished callback is called just after the page error and we don't want to overwrite the error state
-            delay(50)
+            delay(20)
             _uiState.update {
                 it.copy(previewState = PreviewState.ERROR)
             }
