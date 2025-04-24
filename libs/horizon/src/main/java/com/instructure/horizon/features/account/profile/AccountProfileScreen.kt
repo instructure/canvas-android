@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.AccountScaffold
+import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
@@ -38,14 +39,22 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountProfileScreen(state: AccountProfileUiState, navController: NavController) {
+fun AccountProfileScreen(
+    state: AccountProfileUiState,
+    navController: NavController,
+    mainNavController: NavController,
+) {
     LoadingStateWrapper(state.screenState) {
-        AccountProfileContent(state, navController)
+        AccountProfileContent(state, navController, mainNavController)
     }
 }
 
 @Composable
-private fun AccountProfileContent(state: AccountProfileUiState, navController: NavController) {
+private fun AccountProfileContent(
+    state: AccountProfileUiState,
+    navController: NavController,
+    mainNavController: NavController
+) {
     val fullNameErrorMessage = stringResource(R.string.accountFullNameErrorMessage)
     val fullNameState = TextFieldState(
         value = state.fullNameTextValue,
@@ -124,7 +133,13 @@ private fun AccountProfileContent(state: AccountProfileUiState, navController: N
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         label = stringResource(R.string.accountProfileSaveChangesLabel),
-                        onClick = { state.saveChanges() }
+                        onClick = {
+                            state.saveChanges {
+                                mainNavController.currentBackStackEntry?.savedStateHandle?.set(AccountViewModel.CHANGE_USER_NAME,
+                                    it
+                                )
+                            }
+                        }
                     )
                 }
             }

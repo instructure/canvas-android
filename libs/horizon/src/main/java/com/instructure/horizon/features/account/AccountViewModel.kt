@@ -40,7 +40,8 @@ class AccountViewModel @Inject constructor(
         screenState = LoadingState(
             isPullToRefreshEnabled = false,
             onErrorSnackbarDismiss = ::dismissSnackbar,
-        )
+        ),
+        updateUserName = ::updateUserName,
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -145,5 +146,17 @@ class AccountViewModel @Inject constructor(
         _uiState.update {
             it.copy(screenState = it.screenState.copy(errorSnackbar = null))
         }
+    }
+
+    private fun updateUserName(value: String) {
+        _uiState.update {
+            it.copy(
+                userName = value
+            )
+        }
+    }
+
+    companion object {
+        const val CHANGE_USER_NAME = "changeUserName"
     }
 }

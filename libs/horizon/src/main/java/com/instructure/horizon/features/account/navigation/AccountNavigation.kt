@@ -49,13 +49,13 @@ fun AccountNavigation(
         composable(AccountRoute.Account.route) {
             val viewModel = hiltViewModel<AccountViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            AccountScreen(uiState, navController)
+            AccountScreen(uiState, navController, mainNavController)
         }
 
         composable(AccountRoute.Profile.route) {
             val viewModel = hiltViewModel<AccountProfileViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            AccountProfileScreen(uiState, navController)
+            AccountProfileScreen(uiState, navController, mainNavController)
         }
 
         composable(AccountRoute.Password.route) {

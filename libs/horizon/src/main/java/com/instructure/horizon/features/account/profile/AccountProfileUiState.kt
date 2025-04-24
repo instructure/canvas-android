@@ -39,5 +39,5 @@ data class AccountProfileUiState(
     val updateEmail: (TextFieldValue) -> Unit = {},
     val updateEmailIsFocused: (Boolean) -> Unit = {},
     val updateEmailErrorMessage: (String?) -> Unit = {},
-    val saveChanges: () -> Unit = {},
+    val saveChanges: (notifyParent: (String) -> Unit) -> Unit = {},
 )

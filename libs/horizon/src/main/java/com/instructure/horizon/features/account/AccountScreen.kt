@@ -31,6 +31,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,7 +50,20 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountScreen(
-    state: AccountUiState, navController: NavController) {
+    state: AccountUiState,
+    navController: NavController,
+    mainNavController: NavController,
+) {
+
+    val renameFlow = remember { mainNavController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(AccountViewModel.CHANGE_USER_NAME, null) }
+    val rename = renameFlow?.collectAsState()?.value
+
+    LaunchedEffect(rename) {
+        if (rename != null) {
+            state.updateUserName(rename)
+        }
+    }
+
     LoadingStateWrapper(state.screenState) {
         AccountContentScreen(state, navController)
     }

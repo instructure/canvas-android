@@ -173,7 +173,7 @@ class AccountProfileViewModel @Inject constructor(
         }
     }
 
-    private fun saveChanges() {
+    private fun saveChanges(notifyParent: (String) -> Unit) {
         viewModelScope.tryLaunch {
             repository.updateUser(
                 uiState.value.fullNameTextValue.text,
@@ -184,6 +184,7 @@ class AccountProfileViewModel @Inject constructor(
                     screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.accountProfileUpdated)),
                 )
             }
+            notifyParent(uiState.value.fullNameTextValue.text)
         } catch {
             _uiState.update {
                 it.copy(

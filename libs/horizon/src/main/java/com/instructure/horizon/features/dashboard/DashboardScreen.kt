@@ -72,7 +72,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     val parentEntry = remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry("home") }
     val savedStateHandle = parentEntry.savedStateHandle
 
-    val refreshFlow = remember { savedStateHandle.getStateFlow("shouldRefreshDashboard", false) }
+    val refreshFlow = remember { savedStateHandle.getStateFlow(SHOULD_REFRESH_DASHBOARD, false) }
 
     val shouldRefresh by refreshFlow.collectAsState()
 
