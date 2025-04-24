@@ -69,19 +69,19 @@ private fun AccountNotificationContent(
             verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
             items(state.notificationItems) { notificationItem ->
-                NotificationItem(notificationItem)
+                NotificationGroup(notificationItem, state.updateNotificationItem)
             }
         }
     }
 }
 
 @Composable
-private fun NotificationItem(item: AccountNotificationItem) {
+private fun NotificationGroup(group: AccountNotificationGroup, onItemSelected: (AccountNotificationItem, Boolean) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = item.title,
+            text = group.title,
             style = HorizonTypography.labelLargeBold,
             color = HorizonColors.Text.body(),
         )
@@ -89,27 +89,25 @@ private fun NotificationItem(item: AccountNotificationItem) {
         HorizonSpace(SpaceSize.SPACE_4)
 
         Text(
-            text = item.description,
+            text = group.description,
             style = HorizonTypography.p2,
             color = HorizonColors.Text.body(),
         )
 
         HorizonSpace(SpaceSize.SPACE_8)
 
-        val emailSwitchState = SwitchItemState(
-            controlsContentState = ControlsContentState(title = stringResource(R.string.accountNotificationEmailToggleLabel)),
-            checked = item.isEmailEnabled,
-            onCheckedChanged = {  },
-        )
-        SwitchItem(emailSwitchState, Modifier.padding(vertical = 10.dp))
-
-        HorizonSpace(SpaceSize.SPACE_4)
-
-        val pushSwitchState = SwitchItemState(
-            controlsContentState = ControlsContentState(title = stringResource(R.string.accountNotificationPushToggleLabel)),
-            checked = item.isPushEnabled,
-            onCheckedChanged = {  },
+        group.items.toList().forEach { item ->
+            val emailSwitchState = SwitchItemState(
+                controlsContentState = ControlsContentState(title = item.title),
+                checked = item.checked,
+                enabled = item.enabled,
+                onCheckedChanged = {
+                    onItemSelected(item, it)
+               },
             )
-        SwitchItem(pushSwitchState, Modifier.padding(vertical = 10.dp))
+            SwitchItem(emailSwitchState, Modifier.padding(vertical = 10.dp))
+
+            HorizonSpace(SpaceSize.SPACE_4)
+        }
     }
 }

@@ -27,6 +27,28 @@ class AccountNotificationsRepository @Inject constructor(
     private val notificationsApi: NotificationPreferencesAPI.NotificationPreferencesInterface,
     private val communicationChannelsApi: CommunicationChannelsAPI.CommunicationChannelInterface
 ) {
+    suspend fun updateNotificationPreference(
+        category: AccountNotificationCategory,
+        channelId: Long,
+        frequency: AccountNotificationFrequency
+    ) {
+        val restParams = RestParams(isForceReadFromNetwork = true)
+        notificationsApi.updatePreferenceCategory(
+            category.apiString,
+            channelId,
+            frequency.apiString,
+            restParams
+        ).dataOrThrow
+    }
+
+    suspend fun registerPushNotification() {
+
+    }
+
+    suspend fun unregisterPushNotification() {
+
+    }
+
     suspend fun getNotificationPreferences(userId: Long): List<AccountNotificationPreference> {
         val communicationChannels = getNotificationChannels(userId)
         val settings = communicationChannels.flatMap { channel ->

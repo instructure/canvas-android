@@ -134,4 +134,5 @@
     <string name="accountNotificationsTitle">Notifications</string>
     <string name="accountNotificationEmailToggleLabel">E-mail</string>
     <string name="accountNotificationPushToggleLabel">Push notification</string>
+    <string name="accountNotificationsFailedToUpdate">Failed to update notification preference</string>
 </resources>
