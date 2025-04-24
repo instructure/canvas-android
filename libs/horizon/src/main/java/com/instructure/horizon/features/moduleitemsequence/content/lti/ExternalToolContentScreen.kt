@@ -38,6 +38,8 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.TextLink
 import com.instructure.horizon.horizonui.molecules.TextLinkIconPosition
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
@@ -63,35 +65,18 @@ fun ExternalToolContentScreen(uiState: ExternalToolUiState, modifier: Modifier =
         }
         if (uiState.previewUrl.isNotEmpty() && uiState.previewState != PreviewState.ERROR) {
             Box(contentAlignment = Alignment.Center) {
-                ComposeCanvasWebView(uiState.previewUrl, modifier = modifier.padding(16.dp), applyOnWebView = {
+                ComposeCanvasWebView(
+                    uiState.previewUrl, modifier = modifier.padding(16.dp), webViewCallbacks = ComposeWebViewCallbacks(
+                    onPageFinished = { _, _ -> uiState.onPageFinished() },
+                    onReceivedError = { _, _, _, _ -> uiState.onPreviewError() },
+                ), embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                    shouldLaunchInternalWebViewFragment = { _ -> true },
+                    launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                ), applyOnWebView = {
                     layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
-                    canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-                        override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
-
-                        override fun onPageFinishedCallback(webView: WebView, url: String) {
-                            uiState.onPageFinished()
-                        }
-
-                        override fun onPageStartedCallback(webView: WebView, url: String) = Unit
-
-                        override fun canRouteInternallyDelegate(url: String): Boolean = false
-
-                        override fun routeInternallyCallback(url: String) = Unit
-
-                        override fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) {
-                            uiState.onPreviewError()
-                        }
-                    }
-                    canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-                        override fun launchInternalWebViewFragment(url: String) {
-                            activity?.launchCustomTab(url, ThemePrefs.brandColor)
-                        }
-
-                        override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-                    }
                     setInitialScale(100)
                     activity?.let { addVideoClient(it) }
                 })
