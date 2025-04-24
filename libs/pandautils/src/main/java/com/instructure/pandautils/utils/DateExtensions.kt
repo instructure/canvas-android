@@ -117,6 +117,17 @@ fun String.formatIsoDuration(context: Context): String {
     }
 }
 
+fun String.formatMinuteDuration(context: Context): String {
+    return try {
+        val duration = Duration.parse(this)
+        val minutes = duration.inWholeMinutes.toInt()
+        context.resources.getQuantityString(R.plurals.durationMins, minutes, minutes)
+    } catch (e: DateTimeParseException) {
+        FirebaseCrashlytics.getInstance().recordException(e)
+        ""
+    }
+}
+
 fun Date.formatDayMonth(): String {
     val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
     return formatter.format(this)

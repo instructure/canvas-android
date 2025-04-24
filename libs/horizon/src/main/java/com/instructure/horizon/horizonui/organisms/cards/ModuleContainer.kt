@@ -19,7 +19,12 @@ package com.instructure.horizon.horizonui.organisms.cards
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +32,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -36,6 +42,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
@@ -99,7 +106,12 @@ fun ModuleContainer(state: ModuleHeaderState, modifier: Modifier = Modifier, con
                     Text(text = state.subtitle, style = HorizonTypography.p2)
                 }
             }
-            if (state.expanded) {
+            AnimatedVisibility(
+                state.expanded,
+                label = "ModuleContainerContent",
+                enter = expandVertically(expandFrom = Alignment.Top),
+                exit = shrinkVertically(shrinkTowards = Alignment.Top)
+            ) {
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = HorizonColors.LineAndBorder.lineStroke()
@@ -114,7 +126,7 @@ fun ModuleContainer(state: ModuleHeaderState, modifier: Modifier = Modifier, con
 
 @Composable
 private fun ModuleHeader(state: ModuleHeaderState, modifier: Modifier = Modifier) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier.fillMaxWidth()) {
         val iconRotation: Float by animateFloatAsState(targetValue = if (state.expanded) 0f else 180f, label = "expandIconRotation")
         Icon(painterResource(R.drawable.keyboard_arrow_up), modifier = Modifier
             .size(24.dp)
@@ -132,12 +144,19 @@ private fun ModuleHeader(state: ModuleHeaderState, modifier: Modifier = Modifier
                 )
                 HorizonSpace(SpaceSize.SPACE_4)
             }
-            Text(
-                text = state.title,
-                style = HorizonTypography.labelLargeBold,
-                maxLines = if (state.expanded) Int.MAX_VALUE else 2,
-                overflow = TextOverflow.Ellipsis
-            )
+
+            AnimatedContent(
+                state.expanded,
+                label = "ModuleHeaderTitle",
+                transitionSpec = { expandVertically(expandFrom = Alignment.Top, initialHeight = { 100 }) togetherWith shrinkVertically(shrinkTowards = Alignment.Top, targetHeight = {100}) }
+            ) { expanded ->
+                Text(
+                    text = state.title,
+                    style = HorizonTypography.labelLargeBold,
+                    maxLines = if (expanded) Int.MAX_VALUE else 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
             HorizonSpace(SpaceSize.SPACE_4)
             FlowRow(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 ModuleItemText(text = pluralStringResource(R.plurals.moduleHeader_itemCount, state.itemCount, state.itemCount))
