@@ -75,6 +75,7 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.enterThreshold("80")
         studentAlertSettingsPage.tapThresholdSaveButton()
 
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG, "Open the Alerts Page.")
@@ -101,7 +102,7 @@ class AlertsE2ETest : ParentComposeTest() {
         alertsPage.assertAlertItemDisplayed("Assignment Grade Above 80")
         alertsPage.assertAlertItemDisplayed("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
-        Log.d(STEP_TAG, "Select the 'Assignment graded: 18 on Test Assignment in ${course.courseCode}' alert.")
+        Log.d(STEP_TAG, "Select the 'Assignment graded: 18 on Test Assignment in '${course.courseCode}' alert.")
         alertsPage.clickOnAlert("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed.")
@@ -120,7 +121,6 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.enterThreshold("20")
         studentAlertSettingsPage.tapThresholdSaveButton()
 
-        Espresso.pressBack()
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
         val testAssignmentBelow = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
@@ -135,8 +135,8 @@ class AlertsE2ETest : ParentComposeTest() {
 
         Thread.sleep(5000) // Allow the grading to propagate
 
-        Log.d(STEP_TAG, "Refresh the Alerts Page")
-        Espresso.pressBack()
+        Log.d(STEP_TAG, "Navigate back to Alerts Page and refresh it.")
+        ViewUtils.pressBackButton(2)
         alertsPage.refresh()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Assignment Grade Below 20' alert is displayed.")
