@@ -19,12 +19,23 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.MasteryPathSelectResponse
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Tag
+import retrofit2.http.Url
 
 object ModuleAPI {
 
