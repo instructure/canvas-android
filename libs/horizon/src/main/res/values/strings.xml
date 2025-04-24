@@ -124,4 +124,14 @@
     <string name="accountProfileFailedToUpdate">Failed to update user profile</string>
     <string name="modulePager_markAsDone">Mark as Done</string>
     <string name="modulePager_done">Done</string>
+    <string name="accountNoticifationsFailedToLoadMessage">Failed to load Notification Settings</string>
+    <string name="accountNotificationsAnnouncementsAndMessagesHeader">Announcements and Messages</string>
+    <string name="accountNotificationsAnnouncementsAndMessagesDescription">Get a notification anytime you receive a course announcement or a new message.</string>
+    <string name="accountNotificationsDueDatesHeader">Assignment due dates</string>
+    <string name="accountNotificationsDueDatesDescription">Get a notification anytime an assignment’s due date is added or changed.</string>
+    <string name="accountNotificationsScoresHeader">Scores</string>
+    <string name="accountNotificationsScoresDescription">Get a notification anytime an assignment is scored or the score is changed, and anytime the score weight is changed.</string>
+    <string name="accountNotificationsTitle">Notifications</string>
+    <string name="accountNotificationEmailToggleLabel">E-mail</string>
+    <string name="accountNotificationPushToggleLabel">Push notification</string>
 </resources>

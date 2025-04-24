@@ -72,6 +72,7 @@ class AccountViewModel @Inject constructor(
             AccountItemState(
                 title = context.getString(R.string.accountPasswordLabel),
                 type = AccountItemType.Open(AccountRoute.Password),
+                visible = false,
             ),
             AccountItemState(
                 title = context.getString(R.string.accountNotificationsLabel),

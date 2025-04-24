@@ -19,8 +19,14 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.NotificationPreferenceResponse
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
+import retrofit2.http.Tag
 
 object NotificationPreferencesAPI {
 
@@ -31,11 +37,25 @@ object NotificationPreferencesAPI {
                 @Path("communicationChannelId") communicationChannelId: Long
         ): Call<NotificationPreferenceResponse>
 
+        @GET("users/{userId}/communication_channels/{communicationChannelId}/notification_preferences")
+        suspend fun getNotificationPreferences(
+            @Path("userId") userId: Long,
+            @Path("communicationChannelId") communicationChannelId: Long,
+            @Tag params: RestParams
+        ): DataResult<NotificationPreferenceResponse>
+
         @PUT("users/self/communication_channels/{communicationChannelId}/notification_preferences")
         fun updateMultipleNotificationPreferences(
                 @Path("communicationChannelId") communicationChannelId: Long,
                 @QueryMap notifications: Map<String, String>
         ): Call<NotificationPreferenceResponse>
+
+        @PUT("users/self/communication_channels/{communicationChannelId}/notification_preferences")
+        suspend fun updateMultipleNotificationPreferences(
+            @Path("communicationChannelId") communicationChannelId: Long,
+            @QueryMap notifications: Map<String, String>,
+            @Tag params: RestParams
+        ): DataResult<NotificationPreferenceResponse>
 
         @PUT("users/self/communication_channels/{communicationChannelId}/notification_preferences/{category}")
         fun updatePreferenceCategory(
@@ -43,6 +63,14 @@ object NotificationPreferencesAPI {
                 @Path("communicationChannelId") communicationChannelId: Long,
                 @Query("notification_preferences[frequency]") frequency: String
         ): Call<NotificationPreferenceResponse>
+
+        @PUT("users/self/communication_channels/{communicationChannelId}/notification_preferences/{category}")
+        suspend fun updatePreferenceCategory(
+            @Path("category") categoryName: String,
+            @Path("communicationChannelId") communicationChannelId: Long,
+            @Query("notification_preferences[frequency]") frequency: String,
+            @Tag params: RestParams
+        ): DataResult<NotificationPreferenceResponse>
     }
 
     fun getNotificationPreferences(

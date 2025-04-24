@@ -37,6 +37,7 @@ data class AccountGroupState(
 data class AccountItemState(
     val title: String,
     val type: AccountItemType,
+    val visible: Boolean = true
 )
 
 sealed class AccountItemType(@DrawableRes val icon: Int) {

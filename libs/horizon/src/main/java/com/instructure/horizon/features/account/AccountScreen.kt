@@ -109,25 +109,30 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
             }
 
             itemsIndexed(accountGroup.items) { index, accountItem  ->
-                val clipModifier = when {
-                    accountGroup.items.lastIndex == 0 -> {
-                        Modifier.clip(HorizonCornerRadius.level3)
+                if (accountItem.visible) {
+                    val clipModifier = when {
+                        accountGroup.items.lastIndex == 0 -> {
+                            Modifier.clip(HorizonCornerRadius.level3)
+                        }
+
+                        index == 0 -> {
+                            Modifier.clip(HorizonCornerRadius.level3Top)
+                        }
+
+                        index == accountGroup.items.lastIndex -> {
+                            Modifier.clip(HorizonCornerRadius.level3Bottom)
+                        }
+
+                        else -> {
+                            Modifier
+                        }
                     }
-                    index == 0 -> {
-                        Modifier.clip(HorizonCornerRadius.level3Top)
-                    }
-                    index == accountGroup.items.lastIndex -> {
-                        Modifier.clip(HorizonCornerRadius.level3Bottom)
-                    }
-                    else -> {
-                        Modifier
-                    }
+                    AccountItem(
+                        accountItem,
+                        navController,
+                        clipModifier
+                    )
                 }
-                AccountItem(
-                    accountItem,
-                    navController,
-                    clipModifier
-                )
             }
 
             if (accountGroup != state.accountGroups.last()) {
@@ -152,6 +157,7 @@ private fun AccountItem(item: AccountItemState, navController: NavController, mo
                     is AccountItemType.OpenInNew -> {
                         // Handle open in new
                     }
+
                     is AccountItemType.LogOut -> {
                         // Handle log out
                     }
