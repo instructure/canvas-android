@@ -17,7 +17,7 @@
 
 package com.instructure.horizon.features.moduleitemsequence
 
-import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -48,6 +48,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,8 +62,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
@@ -70,7 +76,10 @@ import com.instructure.horizon.features.moduleitemsequence.content.DummyContentS
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.link.ExternalLinkContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.link.ExternalLinkUiState
+import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalToolContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalToolViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -91,6 +100,7 @@ import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
@@ -340,34 +350,63 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
             Spinner()
         }
     } else {
-        when (moduleItemUiState.moduleItemContent) {
-            is ModuleItemContent.Locked -> LockedContentScreen(
-                lockExplanation = moduleItemUiState.moduleItemContent.lockExplanation,
+        // TODO We only need this condition and the DummyContentScreen until we have all the content implemented.
+        if (moduleItemUiState.moduleItemContent is ModuleItemContent.Locked ||
+            moduleItemUiState.moduleItemContent is ModuleItemContent.Page ||
+            moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalLink ||
+            moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalTool
+        ) {
+            NavHost(rememberNavController(), startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
+                composable(
+                    route = ModuleItemContent.Page.ROUTE, arguments = listOf(
+                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                        navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType }
+                    )) {
+                    val viewModel = hiltViewModel<PageDetailsViewModel>()
+                    val uiState by viewModel.uiState.collectAsState()
+                    PageDetailsContentScreen(
+                        uiState = uiState,
+                        scrollState = scrollState
+                    )
+                }
+                composable(
+                    route = ModuleItemContent.ExternalLink.ROUTE, arguments = listOf(
+                        navArgument(ModuleItemContent.ExternalLink.TITLE) { type = NavType.StringType },
+                        navArgument(ModuleItemContent.ExternalLink.URL) { type = NavType.StringType }
+                    )) {
+                    val title = Uri.decode(it.arguments?.getString(ModuleItemContent.ExternalLink.TITLE).orEmpty())
+                    val url = Uri.decode(it.arguments?.getString(ModuleItemContent.ExternalLink.URL).orEmpty())
+                    val uiState = ExternalLinkUiState(title, url)
+                    ExternalLinkContentScreen(uiState)
+                }
+                composable(
+                    route = ModuleItemContent.ExternalTool.ROUTE, arguments = listOf(
+                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                        navArgument(ModuleItemContent.ExternalTool.URL) { type = NavType.StringType },
+                        navArgument(ModuleItemContent.ExternalTool.EXTERNAL_URL) { type = NavType.StringType }
+                    )) {
+                    val viewModel = hiltViewModel<ExternalToolViewModel>()
+                    val uiState by viewModel.uiState.collectAsState()
+                    ExternalToolContentScreen(uiState = uiState)
+                }
+                composable(
+                    ModuleItemContent.Locked.ROUTE, arguments = listOf(
+                        navArgument(ModuleItemContent.Locked.LOCK_EXPLANATION) { type = NavType.StringType }
+                    )) {
+                    val lockExplanation = Uri.decode(it.arguments?.getString(ModuleItemContent.Locked.LOCK_EXPLANATION).orEmpty())
+                    LockedContentScreen(
+                        lockExplanation = lockExplanation,
+                        scrollState = scrollState
+                    )
+                }
+            }
+        } else {
+            DummyContentScreen(
+                moduleItemName = moduleItemUiState.moduleItemName,
+                moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
                 scrollState = scrollState,
                 modifier = modifier
             )
-
-            is ModuleItemContent.Page -> {
-                PageDetailsContentScreen(moduleItemUiState.moduleItemContent, scrollState, modifier = modifier)
-            }
-
-            is ModuleItemContent.ExternalLink -> {
-                ExternalLinkContentScreen(
-                    ExternalLinkUiState(
-                        moduleItemUiState.moduleItemContent.title,
-                        moduleItemUiState.moduleItemContent.url
-                    ), modifier = modifier
-                )
-            }
-
-            else -> {
-                DummyContentScreen(
-                    moduleItemName = moduleItemUiState.moduleItemName,
-                    moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
-                    scrollState = scrollState,
-                    modifier = modifier
-                )
-            }
         }
     }
 }
@@ -416,7 +455,7 @@ private fun ModuleItemSequenceScreenPreview() {
                     moduleItemId = 1L,
                     detailTags = listOf("XX Mins", "Due XX/XX", "X Points Possible", "Unlimited Attempts Allowed"),
                     pillText = "Pill Text",
-                    moduleItemContent = ModuleItemContent.Assignment(assignmentId = 1L)
+                    moduleItemContent = ModuleItemContent.Assignment(courseId = 1, assignmentId = 1L)
                 )
             ), currentPosition = 0, currentItem = ModuleItemUiState(
                 moduleName = "Module Name",
@@ -424,7 +463,7 @@ private fun ModuleItemSequenceScreenPreview() {
                 moduleItemId = 1L,
                 detailTags = listOf("XX Mins", "Due XX/XX", "X Points Possible", "Unlimited Attempts Allowed"),
                 pillText = "Pill Text",
-                moduleItemContent = ModuleItemContent.Assignment(assignmentId = 1L)
+                moduleItemContent = ModuleItemContent.Assignment(courseId = 1, assignmentId = 1L)
             )
         )
     )

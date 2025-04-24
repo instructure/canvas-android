@@ -13,56 +13,62 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.moduleitemsequence.content.page
+package com.instructure.horizon.features.moduleitemsequence.content.lti
 
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PageDetailsViewModel @Inject constructor(
-    private val pageDetailsRepository: PageDetailsRepository,
-    savedStateHandle: SavedStateHandle,
+class ExternalToolViewModel @Inject constructor(
+    private val externalToolRepository: ExternalToolRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
-    private val pageUrl: String = savedStateHandle[ModuleItemContent.Page.PAGE_URL] ?: ""
+    private val url: String = Uri.decode(savedStateHandle[ModuleItemContent.ExternalTool.URL] ?: "")
+    private val externalUrl: String = Uri.decode(savedStateHandle[ModuleItemContent.ExternalTool.EXTERNAL_URL] ?: "")
 
-    private val _uiState = MutableStateFlow(PageDetailsUiState())
+    private val _uiState = MutableStateFlow(
+        ExternalToolUiState(
+            previewUrl = externalUrl,
+            urlToOpen = url,
+            onOpenExternallyClicked = ::openExternally,
+            onPreviewError = ::setPreviewError,
+            onPageFinished = ::pageFinished
+        )
+    )
+
     val uiState = _uiState.asStateFlow()
 
-    init {
-        loadData()
+    private fun openExternally() {
+
     }
 
-    private fun loadData() {
-        viewModelScope.tryLaunch {
+    private fun setPreviewError() {
+        viewModelScope.launch {
+            // We need a small delay here because the pageFinished callback is called just after the page error and we don't want to overwrite the error state
+            delay(50)
             _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = true))
+                it.copy(previewState = PreviewState.ERROR)
             }
-            val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
-            _uiState.update {
-                it.copy(
-                    loadingState = it.loadingState.copy(isLoading = false),
-                    pageHtmlContent = pageDetails.body
-                )
-            }
-            _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false))
-            }
-        } catch {
-            _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
-            }
+        }
+    }
+
+    private fun pageFinished() {
+        _uiState.update {
+            it.copy(previewState = PreviewState.SUCCESS)
         }
     }
 }
