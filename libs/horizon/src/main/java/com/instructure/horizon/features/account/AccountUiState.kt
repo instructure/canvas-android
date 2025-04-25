@@ -26,7 +26,8 @@ data class AccountUiState(
     val userName: String = "",
     val accountName: String = "",
     val accountGroups: List<AccountGroupState> = emptyList(),
-    val updateUserName: (String) -> Unit = {}
+    val updateUserName: (String) -> Unit = {},
+    val performLogout: () -> Unit = {}
 )
 
 data class AccountGroupState(

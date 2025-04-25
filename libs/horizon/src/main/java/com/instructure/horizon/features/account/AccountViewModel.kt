@@ -24,6 +24,9 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.features.reminder.AlarmScheduler
+import com.instructure.pandautils.room.offline.DatabaseProvider
+import com.instructure.pandautils.utils.LogoutHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +38,9 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: AccountRepository,
+    private val logoutHelper: LogoutHelper,
+    private val databaseProvider: DatabaseProvider,
+    private val alarmScheduler: AlarmScheduler
 ): ViewModel() {
     private val _uiState = MutableStateFlow(AccountUiState(
         screenState = LoadingState(
@@ -42,6 +48,7 @@ class AccountViewModel @Inject constructor(
             onErrorSnackbarDismiss = ::dismissSnackbar,
         ),
         updateUserName = ::updateUserName,
+        performLogout = ::performLogout,
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -94,11 +101,11 @@ class AccountViewModel @Inject constructor(
         items = listOf(
             AccountItemState(
                 title = context.getString(R.string.accountBetaCommunityLabel),
-                type = AccountItemType.OpenInNew(""),
+                type = AccountItemType.OpenInNew("https://instructure.com"),
             ),
             AccountItemState(
                 title = context.getString(R.string.accountGiveFeedbackLabel),
-                type = AccountItemType.OpenInNew(""),
+                type = AccountItemType.OpenInNew("https://instructure.com"),
             )
         )
     )
@@ -155,6 +162,10 @@ class AccountViewModel @Inject constructor(
                 userName = value
             )
         }
+    }
+
+    private fun performLogout() {
+        logoutHelper.logout(databaseProvider, alarmScheduler)
     }
 
     companion object {

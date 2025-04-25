@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -65,12 +66,12 @@ fun AccountScreen(
     }
 
     LoadingStateWrapper(state.screenState) {
-        AccountContentScreen(state, navController)
+        AccountContentScreen(state, navController, state.performLogout)
     }
 }
 
 @Composable
-private fun AccountContentScreen(state: AccountUiState, navController: NavController) {
+private fun AccountContentScreen(state: AccountUiState, navController: NavController, onLogout: () -> Unit) {
     LazyColumn(
         contentPadding = PaddingValues(24.dp)
     ) {
@@ -130,6 +131,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                     AccountItem(
                         accountItem,
                         navController,
+                        onLogout,
                         clipModifier
                     )
                 }
@@ -145,7 +147,8 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
 }
 
 @Composable
-private fun AccountItem(item: AccountItemState, navController: NavController, modifier: Modifier = Modifier) {
+private fun AccountItem(item: AccountItemState, navController: NavController, onLogout: () -> Unit, modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -155,11 +158,11 @@ private fun AccountItem(item: AccountItemState, navController: NavController, mo
                 when (item.type) {
                     is AccountItemType.Open -> navController.navigate(item.type.route.route)
                     is AccountItemType.OpenInNew -> {
-                        // Handle open in new
+                        uriHandler.openUri(item.type.url)
                     }
 
                     is AccountItemType.LogOut -> {
-                        // Handle log out
+                        onLogout()
                     }
                 }
             }
