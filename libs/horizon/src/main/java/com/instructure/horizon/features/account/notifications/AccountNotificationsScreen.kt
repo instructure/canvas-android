@@ -47,30 +47,27 @@ fun AccountNotificationsScreen(
     state: AccountNotificationsUiState,
     navController: NavController,
 ) {
-    LoadingStateWrapper(state.screenState) {
-        AccountNotificationContent(state, navController)
-    }
-}
-
-@Composable
-private fun AccountNotificationContent(
-    state: AccountNotificationsUiState,
-    navController: NavController
-) {
     AccountScaffold(
         title = stringResource(R.string.accountNotificationsTitle),
         onBackPressed = { navController.popBackStack() }
     ) {
-        LazyColumn(
-            contentPadding = PaddingValues(
-                vertical = 32.dp,
-                horizontal = 32.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(32.dp)
-        ) {
-            items(state.notificationItems) { notificationItem ->
-                NotificationGroup(notificationItem, state.updateNotificationItem)
-            }
+        LoadingStateWrapper(state.screenState) {
+            AccountNotificationContent(state)
+        }
+    }
+}
+
+@Composable
+private fun AccountNotificationContent(state: AccountNotificationsUiState) {
+    LazyColumn(
+        contentPadding = PaddingValues(
+            vertical = 32.dp,
+            horizontal = 32.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(32.dp)
+    ) {
+        items(state.notificationItems) { notificationItem ->
+            NotificationGroup(notificationItem, state.updateNotificationItem)
         }
     }
 }

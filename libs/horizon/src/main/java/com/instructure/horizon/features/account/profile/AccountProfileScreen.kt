@@ -44,15 +44,19 @@ fun AccountProfileScreen(
     navController: NavController,
     mainNavController: NavController,
 ) {
-    LoadingStateWrapper(state.screenState) {
-        AccountProfileContent(state, navController, mainNavController)
+    AccountScaffold(
+        title = stringResource(R.string.accountProfileLabel),
+        onBackPressed = { navController.popBackStack() }
+    ) {
+        LoadingStateWrapper(state.screenState) {
+            AccountProfileContent(state, mainNavController)
+        }
     }
 }
 
 @Composable
 private fun AccountProfileContent(
     state: AccountProfileUiState,
-    navController: NavController,
     mainNavController: NavController
 ) {
     val fullNameErrorMessage = stringResource(R.string.accountFullNameErrorMessage)
@@ -105,45 +109,40 @@ private fun AccountProfileContent(
         helperText = stringResource(R.string.accountEmailHelperText),
         enabled = false
     )
-    AccountScaffold(
-        title = stringResource(R.string.accountProfileLabel),
-        onBackPressed = { navController.popBackStack() }
+    LazyColumn(
+        contentPadding = PaddingValues(
+            vertical = 48.dp,
+            horizontal = 32.dp
+        ),
     ) {
-        LazyColumn(
-            contentPadding = PaddingValues(
-                vertical = 48.dp,
-                horizontal = 32.dp
-            ),
-        ) {
-            item {
-                Column {
-                    TextField(fullNameState)
+        item {
+            Column {
+                TextField(fullNameState)
 
-                    HorizonSpace(SpaceSize.SPACE_24)
+                HorizonSpace(SpaceSize.SPACE_24)
 
 
-                    TextField(displayNameState)
+                TextField(displayNameState)
 
-                    HorizonSpace(SpaceSize.SPACE_24)
+                HorizonSpace(SpaceSize.SPACE_24)
 
-                    TextField(emailState)
+                TextField(emailState)
 
-                    HorizonSpace(SpaceSize.SPACE_24)
+                HorizonSpace(SpaceSize.SPACE_24)
 
-                    Button(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        label = stringResource(R.string.accountProfileSaveChangesLabel),
-                        onClick = {
-                            state.saveChanges {
-                                mainNavController.currentBackStackEntry?.savedStateHandle?.set(AccountViewModel.CHANGE_USER_NAME,
-                                    it
-                                )
-                            }
+                Button(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    label = stringResource(R.string.accountProfileSaveChangesLabel),
+                    onClick = {
+                        state.saveChanges {
+                            mainNavController.currentBackStackEntry?.savedStateHandle?.set(AccountViewModel.CHANGE_USER_NAME,
+                                it
+                            )
                         }
-                    )
-                }
+                    }
+                )
             }
-
         }
+
     }
 }

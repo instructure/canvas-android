@@ -29,7 +29,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -116,7 +115,7 @@ class AccountNotificationsViewModel @Inject constructor(
     }
 
     private fun updateNotificationItem(item: AccountNotificationItem, checked: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
                     notificationItems = it.notificationItems.map { group ->
@@ -150,6 +149,30 @@ class AccountNotificationsViewModel @Inject constructor(
                     }
                 )
             }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    screenState = it.screenState.copy(
+                        errorSnackbar = context.getString(R.string.accountNotificationsFailedToUpdate)
+                    )
+                )
+            }
+
+            _uiState.update {
+                it.copy(
+                    notificationItems = it.notificationItems.map { groups ->
+                        groups.copy(
+                            items = groups.items.map { notificationItem ->
+                                if (notificationItem.title == item.title) {
+                                    notificationItem.copy(enabled = true, checked = !checked)
+                                } else {
+                                    notificationItem
+                                }
+                            }
+                        )
+                    }
+                )
+            }
         }
     }
 
@@ -160,24 +183,14 @@ class AccountNotificationsViewModel @Inject constructor(
             checked = filteredPreferences.isNotEmpty() && filteredPreferences.any { it.frequency == AccountNotificationFrequency.IMMEDIATELY },
             enabled = true,
             onClick = { checked ->
-                viewModelScope.tryLaunch {
-                    if (filteredPreferences.isEmpty() && type == AccountNotificationType.PUSH && checked) {
-                        repository.registerPushNotification()
-                    } else {
-                        filteredPreferences.forEach { preference ->
-                            repository.updateNotificationPreference(
-                                preference.category,
-                                preference.channelId,
-                                checked.frequency()
-                            )
-                        }
-                    }
-                } catch {
-                    _uiState.update {
-                        it.copy(
-                            screenState = it.screenState.copy(
-                                errorSnackbar = context.getString(R.string.accountNotificationsFailedToUpdate)
-                            )
+                if (filteredPreferences.isEmpty() && type == AccountNotificationType.PUSH && checked) {
+                    repository.registerPushNotification()
+                } else {
+                    filteredPreferences.forEach { preference ->
+                        repository.updateNotificationPreference(
+                            preference.category,
+                            preference.channelId,
+                            checked.frequency()
                         )
                     }
                 }

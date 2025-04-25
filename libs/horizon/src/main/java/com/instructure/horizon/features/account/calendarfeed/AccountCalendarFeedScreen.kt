@@ -51,65 +51,59 @@ fun AccountCalendarFeedScreen(
     state: AccountCalendarUiState,
     navController: NavController
 ) {
-    LoadingStateWrapper(state.screenState) {
-        AccountCalendarFeedContent(
-            state = state,
-            navController = navController
-        )
-    }
-}
-
-@Composable
-private fun AccountCalendarFeedContent(
-    state: AccountCalendarUiState,
-    navController: NavController,
-) {
     AccountScaffold(
         title = stringResource(R.string.accountCalendarFeedTitle),
         onBackPressed = { navController.popBackStack() },
     ) {
-        val context = LocalContext.current
-        val clipboardManager = LocalClipboardManager.current
+        LoadingStateWrapper(state.screenState) {
+            AccountCalendarFeedContent(state)
+        }
+    }
+}
 
-        var isFocused by remember { mutableStateOf(false) }
-        var isOpen by remember { mutableStateOf(false) }
-        val singleSelectState = SingleSelectImageState(
-            label = "Subscribe to Calendar",
-            size = SingleSelectImageInputSize.Medium,
-            placeHolderText = "Select your calendar",
-            isFocused = isFocused,
-            isMenuOpen = isOpen,
-            onFocusChanged = { isFocused = it },
-            onMenuOpenChanged = { isOpen = it },
-            onOptionSelected = { option ->
-                startActivity(context, state.calendarOptions.first { it.icon == option.first && it.name == option.second }.intent, null)
-            },
-            options = state.calendarOptions.map { Pair( it.icon, it.name) },
-            selectedOption = null
-        )
+@Composable
+private fun AccountCalendarFeedContent(state: AccountCalendarUiState) {
+    val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
 
-        LazyColumn(
-            contentPadding = PaddingValues(32.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
-        ) {
-            item {
-                SingleSelectImage(singleSelectState)
-            }
+    var isFocused by remember { mutableStateOf(false) }
+    var isOpen by remember { mutableStateOf(false) }
+    val singleSelectState = SingleSelectImageState(
+        label = "Subscribe to Calendar",
+        size = SingleSelectImageInputSize.Medium,
+        placeHolderText = "Select your calendar",
+        isFocused = isFocused,
+        isMenuOpen = isOpen,
+        onFocusChanged = { isFocused = it },
+        onMenuOpenChanged = { isOpen = it },
+        onOptionSelected = { option ->
+            startActivity(context, state.calendarOptions.first { it.icon == option.first && it.name == option.second }.intent, null)
+        },
+        options = state.calendarOptions.map { Pair( it.icon, it.name) },
+        selectedOption = null
+    )
 
-            item {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    Button(
-                        label = "Copy Link",
-                        iconPosition = ButtonIconPosition.End(R.drawable.link),
-                        onClick = {
-                            clipboardManager.setText(AnnotatedString(state.calendarUrl))
-                            state.showSnackBar("Link copied")
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                    )
-                }
+    LazyColumn(
+        contentPadding = PaddingValues(32.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp),
+    ) {
+        item {
+            SingleSelectImage(singleSelectState)
+        }
+
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ){
+                Button(
+                    label = "Copy Link",
+                    iconPosition = ButtonIconPosition.End(R.drawable.link),
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(state.calendarUrl))
+                        state.showSnackBar("Link copied")
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                )
             }
         }
     }

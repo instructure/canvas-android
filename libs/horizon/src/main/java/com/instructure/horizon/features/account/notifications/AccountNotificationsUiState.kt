@@ -32,7 +32,7 @@ data class AccountNotificationGroup(
 
 data class AccountNotificationItem(
     val title: String,
-    val onClick: (Boolean) -> Unit,
+    val onClick: suspend (Boolean) -> Unit,
     val checked: Boolean,
     val enabled: Boolean,
 )

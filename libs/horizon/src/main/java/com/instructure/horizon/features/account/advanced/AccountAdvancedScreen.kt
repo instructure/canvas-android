@@ -46,59 +46,53 @@ fun AccountAdvancedScreen(
     state: AccountAdvancedUiState,
     navController: NavController
 ) {
-    LoadingStateWrapper(state.screenState) {
-        AccountAdvancedContent(
-            state = state,
-            navController = navController
-        )
-    }
-}
-
-@Composable
-private fun AccountAdvancedContent(
-    state: AccountAdvancedUiState,
-    navController: NavController
-) {
     AccountScaffold(
         title = stringResource(R.string.accountAdvancedTitle),
         onBackPressed = { navController.popBackStack() },
     ) {
-        var isFocused by remember { mutableStateOf(false) }
-        var isOpen by remember { mutableStateOf(false) }
-        val singleSelectState = SingleSelectState(
-            label = stringResource(R.string.accountAdvancedtimeZoneSelectLabel),
-            size = SingleSelectInputSize.Medium,
-            placeHolderText = stringResource(R.string.accountAdvancedTimeZoneSelectPlaceHolder),
-            isFocused = isFocused,
-            isMenuOpen = isOpen,
-            onFocusChanged = { isFocused = it },
-            onMenuOpenChanged = { isOpen = it },
-            onOptionSelected = { option ->
-                val selectedTimeZone = state.timeZoneOptions.first { it.id == option }
-                state.updateTimeZone(selectedTimeZone)
-            },
-            options = state.timeZoneOptions.map { it.id },
-            selectedOption = state.selectedTimeZone.id,
-        )
-        LazyColumn(
-            contentPadding = PaddingValues(vertical = 32.dp, horizontal = 60.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
-        ) {
-            item {
-                SingleSelect(singleSelectState)
-            }
+        LoadingStateWrapper(state.screenState) {
+            AccountAdvancedContent(state)
+        }
+    }
+}
 
-            item {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Button(
-                        label = stringResource(R.string.accountAdvancedSaveChangesLabel),
-                        enabled = state.isButtonEnabled,
-                        onClick = { state.saveSelectedTimeZone() },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
+@Composable
+private fun AccountAdvancedContent(state: AccountAdvancedUiState) {
+    var isFocused by remember { mutableStateOf(false) }
+    var isOpen by remember { mutableStateOf(false) }
+    val singleSelectState = SingleSelectState(
+        label = stringResource(R.string.accountAdvancedtimeZoneSelectLabel),
+        size = SingleSelectInputSize.Medium,
+        placeHolderText = stringResource(R.string.accountAdvancedTimeZoneSelectPlaceHolder),
+        isFocused = isFocused,
+        isMenuOpen = isOpen,
+        onFocusChanged = { isFocused = it },
+        onMenuOpenChanged = { isOpen = it },
+        onOptionSelected = { option ->
+            val selectedTimeZone = state.timeZoneOptions.first { it.id == option }
+            state.updateTimeZone(selectedTimeZone)
+        },
+        options = state.timeZoneOptions.map { it.id },
+        selectedOption = state.selectedTimeZone.id,
+    )
+    LazyColumn(
+        contentPadding = PaddingValues(vertical = 32.dp, horizontal = 60.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp),
+    ) {
+        item {
+            SingleSelect(singleSelectState)
+        }
+
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    label = stringResource(R.string.accountAdvancedSaveChangesLabel),
+                    enabled = state.isButtonEnabled,
+                    onClick = { state.saveSelectedTimeZone() },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
             }
         }
     }
