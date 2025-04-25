@@ -69,9 +69,9 @@ private fun AccountCalendarFeedContent(state: AccountCalendarUiState) {
     var isFocused by remember { mutableStateOf(false) }
     var isOpen by remember { mutableStateOf(false) }
     val singleSelectState = SingleSelectImageState(
-        label = "Subscribe to Calendar",
+        label = stringResource(R.string.accountCalendarFeedSelectLabel),
         size = SingleSelectImageInputSize.Medium,
-        placeHolderText = "Select your calendar",
+        placeHolderText = stringResource(R.string.accountCalendarFeedSeelctPlaceholder),
         isFocused = isFocused,
         isMenuOpen = isOpen,
         onFocusChanged = { isFocused = it },
@@ -96,11 +96,11 @@ private fun AccountCalendarFeedContent(state: AccountCalendarUiState) {
                 modifier = Modifier.fillMaxWidth()
             ){
                 Button(
-                    label = "Copy Link",
+                    label = stringResource(R.string.accountCalendarFeedCopyLinkButtonLabel),
                     iconPosition = ButtonIconPosition.End(R.drawable.link),
                     onClick = {
                         clipboardManager.setText(AnnotatedString(state.calendarUrl))
-                        state.showSnackBar("Link copied")
+                        state.showSnackBar(context.getString(R.string.accountCalendarFeedCopiedLinkMessage))
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 )

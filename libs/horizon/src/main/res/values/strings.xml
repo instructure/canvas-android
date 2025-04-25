@@ -149,4 +149,8 @@
     <string name="accountAdvancedTimeZoneSelectPlaceHolder">Select your time zone</string>
     <string name="accountAdvancedtimeZoneSelectLabel">Time Zone</string>
     <string name="accountAdvancedSaveChangesLabel">Save Changes</string>
+    <string name="accountCalendarFeedSelectLabel">Subscribe to Calendar</string>
+    <string name="accountCalendarFeedSeelctPlaceholder">Select your calendar</string>
+    <string name="accountCalendarFeedCopyLinkButtonLabel">Copy Link</string>
+    <string name="accountCalendarFeedCopiedLinkMessage">Link copied</string>
 </resources>
