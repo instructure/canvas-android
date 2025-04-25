@@ -15,10 +15,13 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,17 +31,25 @@ import javax.inject.Inject
 @HiltViewModel
 class PageDetailsViewModel @Inject constructor(
     private val pageDetailsRepository: PageDetailsRepository,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
+    private val pageUrl: String = savedStateHandle[ModuleItemContent.Page.PAGE_URL] ?: ""
 
     private val _uiState = MutableStateFlow(PageDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun loadData(courseId: Long, pageId: String) {
+    init {
+        loadData()
+    }
+
+    private fun loadData() {
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
-            val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageId)
+            val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),

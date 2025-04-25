@@ -37,6 +37,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.ln
 import kotlin.math.pow
+import androidx.core.net.toUri
 
 fun Any.toJson(): String {
     return Gson().toJson(this)
@@ -127,7 +128,7 @@ suspend fun <T> poll(
 }
 
 fun Activity.launchCustomTab(url: String, @ColorInt color: Int) {
-    val uri = Uri.parse(url)
+    val uri = url.toUri()
         .buildUpon()
         .appendQueryParameter("display", "borderless")
         .appendQueryParameter("platform", "android")

@@ -108,4 +108,5 @@
     <string name="modulePager_done">Done</string>
     <string name="moduleItemCompleteAllItems">Complete all items</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>
+    <string name="externalTool_openInANewTab">Open in a New Tab</string>
 </resources>

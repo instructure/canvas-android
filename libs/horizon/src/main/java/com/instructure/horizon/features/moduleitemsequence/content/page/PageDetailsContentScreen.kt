@@ -42,18 +42,11 @@ import com.instructure.pandautils.views.CanvasWebView
 
 @Composable
 fun PageDetailsContentScreen(
-    pageDetailsContent: ModuleItemContent.Page,
+    uiState: PageDetailsUiState,
     scrollState: ScrollState,
-    modifier: Modifier = Modifier,
-    viewModel: PageDetailsViewModel = hiltViewModel()
+    modifier: Modifier = Modifier
 ) {
-    val state by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadData(pageDetailsContent.courseId, pageDetailsContent.pageUrl)
-    }
-
-    state.pageHtmlContent?.let {
+    uiState.pageHtmlContent?.let {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
