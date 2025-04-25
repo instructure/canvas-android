@@ -21,6 +21,12 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
@@ -36,25 +42,29 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.student.ui.utils.StudentComposeTest
+import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf
 import org.junit.Before
 import org.junit.FixMethodOrder
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
 import java.io.File
 
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
+class PickerSubmissionUploadInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     private val mockedFileName = "sample.jpg" // A file in our assets area
     private lateinit var activity : Activity
     private lateinit var activityResult: Instrumentation.ActivityResult
+
+    @get:Rule
+    val composeTestRule = createEmptyComposeRule()
 
     @Before
     fun setUp() {
@@ -174,7 +184,13 @@ class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
         // Navigate to submission picker page
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
-        assignmentListPage.clickAssignment(assignment)
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name!!))
+
+        composeTestRule.onNodeWithText(assignment.name!!)
+            .performClick()
+        composeTestRule.waitForIdle()
         assignmentDetailsPage.clickSubmit()
 
         return data

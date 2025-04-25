@@ -17,6 +17,12 @@
 package com.instructure.student.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
@@ -41,21 +47,52 @@ import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.student.ui.pages.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentComposeTest
+import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
-import org.junit.FixMethodOrder
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runners.MethodSorters
 import java.util.Date
 
 @HiltAndroidTest
-class AddCommentToMultipleAttemptSubmissionInteractionTest : StudentComposeTest() {
+class SubmissionDetailsInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     private lateinit var course: Course
+
+    @get:Rule
+    val composeTestRule = createEmptyComposeRule()
+
+    // Should be able to add a comment on a submission
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun test01Comments_addCommentToSingleAttemptSubmission() {
+
+        val data = getToCourse()
+        val assignment = data.addAssignment(
+            courseId =  course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL)
+        )
+
+        courseBrowserPage.selectAssignments()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name!!))
+
+        composeTestRule.onNodeWithText(assignment.name!!)
+            .performClick()
+        composeTestRule.waitForIdle()
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+        Espresso.onIdle()
+        assignmentDetailsPage.assertAssignmentSubmitted()
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.addAndSendComment("Hey!")
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+    }
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
@@ -68,7 +105,13 @@ class AddCommentToMultipleAttemptSubmissionInteractionTest : StudentComposeTest(
         )
 
         courseBrowserPage.selectAssignments()
-        assignmentListPage.clickAssignment(assignment)
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name!!))
+
+        composeTestRule.onNodeWithText(assignment.name!!)
+            .performClick()
+        composeTestRule.waitForIdle()
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
         assignmentDetailsPage.assertAssignmentSubmitted()
@@ -93,61 +136,6 @@ class AddCommentToMultipleAttemptSubmissionInteractionTest : StudentComposeTest(
         submissionDetailsPage.selectAttempt("Attempt 1")
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
         submissionDetailsPage.openComments()
-        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
-    }
-
-    private fun getToCourse(
-        studentCount: Int = 1,
-        courseCount: Int = 1): MockCanvas {
-
-        // Basic info
-        val data = MockCanvas.init(
-            studentCount = studentCount,
-            courseCount = courseCount,
-            favoriteCourseCount = courseCount)
-        course = data.courses.values.first()
-
-        // Sign in
-        val student = data.students[0]
-        val token = data.tokenFor(student)!!
-        tokenLogin(data.domain, token, student)
-        dashboardPage.waitForRender()
-
-        // Navigate to the (first) course
-        dashboardPage.selectCourse(course)
-
-        return data
-    }
-}
-
-@HiltAndroidTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class SubmissionDetailsInteractionTest : StudentComposeTest() {
-
-    override fun displaysPageObjects() = Unit // Not used for interaction tests
-
-    private lateinit var course: Course
-
-    // Should be able to add a comment on a submission
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun test01Comments_addCommentToSingleAttemptSubmission() {
-
-        val data = getToCourse()
-        val assignment = data.addAssignment(
-            courseId =  course.id,
-            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL)
-        )
-
-        courseBrowserPage.selectAssignments()
-        assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickSubmit()
-        urlSubmissionUploadPage.submitText("https://google.com")
-        Espresso.onIdle()
-        assignmentDetailsPage.assertAssignmentSubmitted()
-        assignmentDetailsPage.goToSubmissionDetails()
-        submissionDetailsPage.openComments()
-        submissionDetailsPage.addAndSendComment("Hey!")
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
 
@@ -185,7 +173,13 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
 
         // Now navigate to the assignment and its rubric
         courseBrowserPage.selectAssignments()
-        assignmentListPage.clickAssignment(assignment)
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name!!))
+
+        composeTestRule.onNodeWithText(assignment.name!!)
+            .performClick()
+        composeTestRule.waitForIdle()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openRubric()
 
@@ -251,7 +245,13 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         )
 
         courseBrowserPage.selectAssignments()
-        assignmentListPage.clickAssignment(assignment)
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name!!))
+
+        composeTestRule.onNodeWithText(assignment.name!!)
+            .performClick()
+        composeTestRule.waitForIdle()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.assertCommentDisplayed(commentText, user)
