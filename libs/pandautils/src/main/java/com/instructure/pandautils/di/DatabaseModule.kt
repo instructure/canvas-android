@@ -70,6 +70,12 @@ class DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideFileDownloadProgressDao(appDatabase: AppDatabase): FileDownloadProgressDao {
+        return appDatabase.fileDownloadProgressDao()
+    }
+
+    @Provides
+    @Singleton
     fun provideCalendarFilterDao(calendarFilterDatabase: CalendarFilterDatabase): CalendarFilterDao {
         return calendarFilterDatabase.calendarFilterDao()
     }

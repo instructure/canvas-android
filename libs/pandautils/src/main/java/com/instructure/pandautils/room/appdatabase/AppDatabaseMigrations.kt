@@ -61,5 +61,9 @@ val appDatabaseMigrations = arrayOf(
 
     createMigration(9, 10) { database ->
         database.execSQL("CREATE TABLE IF NOT EXISTS `ModuleBulkProgressEntity` (`progressId` INTEGER NOT NULL, `allModules` INTEGER NOT NULL, `skipContentTags` INTEGER NOT NULL, `action` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `affectedIds` TEXT NOT NULL, PRIMARY KEY(`progressId`))")
+    },
+
+    createMigration(10, 11) { database ->
+        database.execSQL("CREATE TABLE IF NOT EXISTS FileDownloadProgressEntity (workerId TEXT NOT NULL, fileName TEXT NOT NULL, progress INTEGER NOT NULL, progressState TEXT NOT NULL, filePath TEXT NOT NULL, PRIMARY KEY(workerId))")
     }
 )
