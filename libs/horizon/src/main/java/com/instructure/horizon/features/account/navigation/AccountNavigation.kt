@@ -29,6 +29,7 @@ import com.instructure.horizon.features.account.AccountScreen
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedScreen
+import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedViewModel
 import com.instructure.horizon.features.account.notifications.AccountNotificationsScreen
 import com.instructure.horizon.features.account.notifications.AccountNotificationsViewModel
 import com.instructure.horizon.features.account.password.AccountPasswordScreen
@@ -70,7 +71,9 @@ fun AccountNavigation(
         }
 
         composable(AccountRoute.CalendarFeed.route) {
-            AccountCalendarFeedScreen()
+            val viewModel = hiltViewModel<AccountCalendarFeedViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            AccountCalendarFeedScreen(uiState, navController)
         }
 
         composable(AccountRoute.Advanced.route) {

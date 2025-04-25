@@ -130,7 +130,8 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavContro
                     course = Course(id = -1, name = "", syllabusBody = ""),
                     progress = 0.0,
                     nextUpModuleItemId = null,
-                    nextUpModuleId = null
+                    nextUpModuleId = null,
+                    institutionName = null
                 ),
                 onSelect = { state.onSelectedCourseChanged(it) },
             )

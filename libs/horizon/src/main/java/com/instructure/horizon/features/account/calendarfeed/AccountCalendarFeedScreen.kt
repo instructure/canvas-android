@@ -16,8 +16,101 @@
  */
 package com.instructure.horizon.features.account.calendarfeed
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.NavController
+import com.instructure.horizon.R
+import com.instructure.horizon.features.account.AccountScaffold
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
+import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImage
+import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImageInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImageState
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AccountCalendarFeedScreen(
+    state: AccountCalendarUiState,
+    navController: NavController
+) {
+    LoadingStateWrapper(state.screenState) {
+        AccountCalendarFeedContent(
+            state = state,
+            navController = navController
+        )
+    }
+}
 
 @Composable
-fun AccountCalendarFeedScreen() {
+private fun AccountCalendarFeedContent(
+    state: AccountCalendarUiState,
+    navController: NavController,
+) {
+    AccountScaffold(
+        title = stringResource(R.string.accountCalendarFeedTitle),
+        onBackPressed = { navController.popBackStack() },
+    ) {
+        val context = LocalContext.current
+        val clipboardManager = LocalClipboardManager.current
+
+        var isFocused by remember { mutableStateOf(false) }
+        var isOpen by remember { mutableStateOf(false) }
+        val singleSelectState = SingleSelectImageState(
+            label = "Subscribe to Calendar",
+            size = SingleSelectImageInputSize.Medium,
+            placeHolderText = "Select your calendar",
+            isFocused = isFocused,
+            isMenuOpen = isOpen,
+            onFocusChanged = { isFocused = it },
+            onMenuOpenChanged = { isOpen = it },
+            onOptionSelected = { option ->
+                startActivity(context, state.calendarOptions.first { it.icon == option.first && it.name == option.second }.intent, null)
+            },
+            options = state.calendarOptions.map { Pair( it.icon, it.name) },
+            selectedOption = null
+        )
+
+        LazyColumn(
+            contentPadding = PaddingValues(32.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+        ) {
+            item {
+                SingleSelectImage(singleSelectState)
+            }
+
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    Button(
+                        label = "Copy Link",
+                        iconPosition = ButtonIconPosition.End(R.drawable.link),
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(state.calendarUrl))
+                            state.showSnackBar("Link copied")
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+                }
+            }
+        }
+    }
 }

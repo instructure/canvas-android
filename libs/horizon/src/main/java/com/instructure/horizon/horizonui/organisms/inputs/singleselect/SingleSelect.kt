@@ -127,6 +127,7 @@ private fun SingleSelectContent(state: SingleSelectState) {
 
         Icon(
             painter = painterResource(R.drawable.keyboard_arrow_down),
+            tint = HorizonColors.Icon.default(),
             contentDescription = null,
             modifier = Modifier
                 .rotate(iconRotation.value.toFloat())

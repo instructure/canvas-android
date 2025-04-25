@@ -44,16 +44,16 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.utils.toPx
 
 @Composable
-fun InputDropDownPopup(
+fun <T>InputDropDownPopup(
     isMenuOpen: Boolean,
-    options: List<String>,
+    options: List<T>,
     verticalOffsetPx: Int,
     width: Dp,
     onMenuOpenChanged: (Boolean) -> Unit,
-    onOptionSelected: (String) -> Unit,
+    onOptionSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    item: @Composable (String) -> Unit = { selectionOption ->
-        SingleSelectItem(selectionOption)
+    item: @Composable (T) -> Unit = { selectionOption ->
+        SingleSelectItem(selectionOption.toString())
     },
 ) {
     Popup(

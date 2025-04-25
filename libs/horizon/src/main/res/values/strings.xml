@@ -141,4 +141,6 @@
     <string name="accountNotificationsFailedToUpdate">Failed to update notification preference</string>
     <string name="moduleItemCompleteAllItems">Complete all items</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>
+    <string name="accountCalendarFeedErrorMessage">Failed to load calendar feed</string>
+    <string name="accountCalendarFeedTitle">Calendar Feed</string>
 </resources>
