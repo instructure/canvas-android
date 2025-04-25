@@ -42,10 +42,13 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
+import org.junit.runners.MethodSorters
 import java.io.File
 
 @HiltAndroidTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
@@ -55,7 +58,7 @@ class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
 
     @Before
     fun setUp() {
-        // Read this at set-up, because it may become nulled out soon thereafter
+        // Read this at set-up, because it may become null soon thereafter
         activity = activityRule.activity
 
         //Clear file upload cache dir.
@@ -103,7 +106,7 @@ class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testSubmit() {
+    fun test01Submit() {
         val data = goToSubmissionPicker()
 
         // Let's mock grabbing a file from our device
