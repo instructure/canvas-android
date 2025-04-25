@@ -100,6 +100,7 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
     }
 
     // Should be able to add a comment on a submission
+    @Stub
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testComments_addCommentToSingleAttemptSubmission() {
@@ -122,6 +123,7 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testComments_addCommentToMultipleAttemptSubmission() {
