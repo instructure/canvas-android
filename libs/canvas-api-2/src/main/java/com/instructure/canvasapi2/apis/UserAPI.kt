@@ -117,6 +117,9 @@ object UserAPI {
         suspend fun updateUserName(@Query("user[name]") name: String, @Query("user[short_name]") shortName: String, @Body body: String, @Tag params: RestParams): DataResult<User>
 
         @PUT("users/self")
+        suspend fun updateUserTimeZone(@Query("user[time_zone]") timeZone: String, @Body body: String, @Tag params: RestParams): DataResult<User>
+
+        @PUT("users/self")
         fun updateUserTermsOfUse(@Query("user[terms_of_use]") terms: Int = 1): Call<User>
 
         @GET("users/{userId}/profile")

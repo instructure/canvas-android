@@ -143,4 +143,10 @@
     <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>
     <string name="accountCalendarFeedErrorMessage">Failed to load calendar feed</string>
     <string name="accountCalendarFeedTitle">Calendar Feed</string>
+    <string name="accountAdvancedFailedToLoadMessage">Failed to load Advanced Settings</string>
+    <string name="accountAdvancedTitle">Advanced</string>
+    <string name="accountAdvancedFailedToUpdateMessage">Failed to update Advanced Settings</string>
+    <string name="accountAdvancedTimeZoneSelectPlaceHolder">Select your time zone</string>
+    <string name="accountAdvancedtimeZoneSelectLabel">Time Zone</string>
+    <string name="accountAdvancedSaveChangesLabel">Save Changes</string>
 </resources>

@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.features.account.AccountScreen
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
+import com.instructure.horizon.features.account.advanced.AccountAdvancedViewModel
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedScreen
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedViewModel
 import com.instructure.horizon.features.account.notifications.AccountNotificationsScreen
@@ -77,7 +78,9 @@ fun AccountNavigation(
         }
 
         composable(AccountRoute.Advanced.route) {
-            AccountAdvancedScreen()
+            val viewModel = hiltViewModel<AccountAdvancedViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            AccountAdvancedScreen(uiState, navController)
         }
     }
 }
