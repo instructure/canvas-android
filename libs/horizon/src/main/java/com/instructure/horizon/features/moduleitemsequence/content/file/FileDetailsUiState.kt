@@ -27,5 +27,29 @@ data class FileDetailsUiState(
     val downloadState: FileDownloadProgressState = FileDownloadProgressState.COMPLETED,
     val onCancelDownloadClicked: () -> Unit = {},
     val filePathToOpen: String? = null,
-    val onFileOpened: () -> Unit = {}
+    val onFileOpened: () -> Unit = {},
+    val filePreview: FilePreviewUiState? = null,
 )
+
+sealed class FilePreviewUiState {
+    data class Pdf(
+        val url: String,
+    ) : FilePreviewUiState()
+
+    data class Media(
+        val url: String,
+        val thumbnailUrl: String,
+        val contentType: String,
+        val displayName: String
+    ) : FilePreviewUiState()
+
+    data class Image(
+        val displayName: String,
+        val url: String,
+    ) : FilePreviewUiState()
+
+    data class Text(
+        val url: String,
+        val fileName: String
+    ) : FilePreviewUiState()
+}

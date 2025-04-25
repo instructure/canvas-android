@@ -44,7 +44,8 @@ class FileDetailsViewModel @Inject constructor(
 
     private val fileUrl = savedStateHandle[ModuleItemContent.File.FILE_URL] ?: ""
 
-    private val _uiState = MutableStateFlow(FileDetailsUiState(url = fileUrl, onDownloadClicked = ::onDownloadClicked, onFileOpened = ::onFileOpened))
+    private val _uiState =
+        MutableStateFlow(FileDetailsUiState(url = fileUrl, onDownloadClicked = ::onDownloadClicked, onFileOpened = ::onFileOpened))
 
     val uiState = _uiState.asStateFlow()
 
@@ -59,11 +60,12 @@ class FileDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             fileFolder = fileDetailsRepository.getFileFolderFromURL(fileUrl)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
-            if (fileFolder != null) {
+            fileFolder?.let { file ->
                 _uiState.update {
                     it.copy(
                         loadingState = it.loadingState.copy(isLoading = false),
-                        fileName = fileFolder?.displayName.orEmpty()
+                        fileName = file.displayName.orEmpty(),
+                        filePreview = getFilePreview(file)
                     )
                 }
             }
@@ -112,5 +114,29 @@ class FileDetailsViewModel @Inject constructor(
 
     private fun onFileOpened() {
         _uiState.update { it.copy(filePathToOpen = null) }
+    }
+
+    private fun getFilePreview(file: FileFolder): FilePreviewUiState? {
+        val url = file.url.orEmpty()
+        val displayName = file.displayName.orEmpty()
+        val contentType = file.contentType.orEmpty()
+        val thumbnailUrl = file.thumbnailUrl.orEmpty()
+
+        return when {
+            contentType == "application/pdf" -> FilePreviewUiState.Pdf(url)
+
+            contentType.startsWith("video") || contentType.startsWith("audio") -> FilePreviewUiState.Media(
+                url,
+                thumbnailUrl,
+                contentType,
+                displayName
+            )
+
+            contentType.startsWith("image") -> FilePreviewUiState.Image(displayName, url)
+
+            contentType.startsWith("text") -> FilePreviewUiState.Text(url, displayName)
+
+            else -> null
+        }
     }
 }

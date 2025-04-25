@@ -48,6 +48,7 @@ import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
+import com.instructure.pandautils.compose.composables.filedetails.ImageFileContent
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.Const
 import java.io.File
@@ -109,7 +110,7 @@ fun FileDetailsContentScreen(
                     }
                 }
             }
-            FilePreview()
+            FilePreview(uiState.filePreview)
         }
     }
 }
@@ -138,13 +139,21 @@ private fun openFile(
 }
 
 @Composable
-fun FilePreview(modifier: Modifier = Modifier) {
+fun FilePreview(filePreviewUiState: FilePreviewUiState?, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(HorizonColors.Surface.inversePrimary())
     ) {
-
+        when (filePreviewUiState) {
+            is FilePreviewUiState.Image -> ImageFileContent(
+                imageUrl = filePreviewUiState.url,
+                contentDescription = filePreviewUiState.displayName
+            )
+            is FilePreviewUiState.Media -> {}
+            is FilePreviewUiState.Pdf -> {}
+            is FilePreviewUiState.Text -> {}
+            else -> {}
+        }
     }
 }
 
