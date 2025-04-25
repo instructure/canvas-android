@@ -18,6 +18,12 @@ package com.instructure.student.ui.e2e
 
 import android.os.Environment
 import android.util.Log
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.platform.app.InstrumentationRegistry
@@ -41,22 +47,26 @@ import com.instructure.dataseeding.util.Randomizer
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentComposeTest
+import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Rule
 import org.junit.Test
 import java.io.File
 import java.io.FileWriter
 
 @HiltAndroidTest
-class FilesE2ETest: StudentComposeTest() {
+class FilesE2ETest: StudentTest() {
 
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    @get:Rule
+    val composeTestRule = createEmptyComposeRule()
 
     @E2E
     @Test
@@ -164,7 +174,13 @@ class FilesE2ETest: StudentComposeTest() {
         courseBrowserPage.selectAssignments()
 
         Log.d(STEP_TAG,"Click on '${assignment.name}' assignment.")
-        assignmentListPage.clickAssignment(assignment)
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignment.name))
+
+        composeTestRule.onNodeWithText(assignment.name)
+            .performClick()
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG,"Navigate to Submission Details Page and open Files Tab.")
         assignmentDetailsPage.goToSubmissionDetails()
