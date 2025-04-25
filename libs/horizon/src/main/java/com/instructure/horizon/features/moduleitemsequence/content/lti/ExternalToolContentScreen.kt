@@ -57,6 +57,7 @@ fun ExternalToolContentScreen(uiState: ExternalToolUiState, modifier: Modifier =
         if (!uiState.authenticatedUrl.isNullOrEmpty()) {
             activity?.launchCustomTab(uiState.authenticatedUrl, ThemePrefs.brandColor)
         }
+        uiState.onLinkOpened()
     }
 
     Column(

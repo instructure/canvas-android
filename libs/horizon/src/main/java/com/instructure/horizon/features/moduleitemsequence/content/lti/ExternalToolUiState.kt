@@ -23,7 +23,8 @@ data class ExternalToolUiState(
     val onPreviewError: () -> Unit = {},
     val onPageFinished: () -> Unit = {},
     val openExternallyLoading: Boolean = false,
-    val authenticatedUrl: String? = null
+    val authenticatedUrl: String? = null,
+    val onLinkOpened: () -> Unit = {}
 )
 
 enum class PreviewState {

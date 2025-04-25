@@ -47,7 +47,8 @@ class ExternalToolViewModel @Inject constructor(
             urlToOpen = url,
             onOpenExternallyClicked = ::openExternally,
             onPreviewError = ::setPreviewError,
-            onPageFinished = ::pageFinished
+            onPageFinished = ::pageFinished,
+            onLinkOpened = ::onLinkOpened
         )
     )
 
@@ -70,18 +71,22 @@ class ExternalToolViewModel @Inject constructor(
     }
 
     private fun setPreviewError() {
-        viewModelScope.launch {
-            // We need a small delay here because the pageFinished callback is called just after the page error and we don't want to overwrite the error state
-            delay(20)
-            _uiState.update {
-                it.copy(previewState = PreviewState.ERROR)
-            }
+        _uiState.update {
+            it.copy(previewState = PreviewState.ERROR)
         }
     }
 
     private fun pageFinished() {
+        // We need to check if the previewState is ERROR because the pageFinished callback is called after the error callback
+        if (_uiState.value.previewState == PreviewState.ERROR) return
         _uiState.update {
             it.copy(previewState = PreviewState.SUCCESS)
+        }
+    }
+
+    private fun onLinkOpened() {
+        _uiState.update {
+            it.copy(authenticatedUrl = null)
         }
     }
 }
