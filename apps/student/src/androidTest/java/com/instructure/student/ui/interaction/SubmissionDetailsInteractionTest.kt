@@ -17,12 +17,7 @@
 package com.instructure.student.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
@@ -33,6 +28,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
@@ -65,10 +61,12 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @get:Rule
     val composeTestRule = createEmptyComposeRule()
 
+    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
+
     // Should be able to add a comment on a submission
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun test01Comments_addCommentToSingleAttemptSubmission() {
+    fun testComments_addCommentToSingleAttemptSubmission() {
 
         val data = getToCourse()
         val assignment = data.addAssignment(
@@ -77,13 +75,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectAssignments()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(assignment.name!!))
-
-        composeTestRule.onNodeWithText(assignment.name!!)
-            .performClick()
-        composeTestRule.waitForIdle()
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
         Espresso.onIdle()
@@ -105,13 +97,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectAssignments()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(assignment.name!!))
-
-        composeTestRule.onNodeWithText(assignment.name!!)
-            .performClick()
-        composeTestRule.waitForIdle()
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
         assignmentDetailsPage.assertAssignmentSubmitted()
@@ -143,7 +129,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     // Also checks to see that the rubric criterion is displayed correctly, and responds to clicks correctly
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun test02Rubrics_showCriterionDescription() {
+    fun testRubrics_showCriterionDescription() {
         val data = getToCourse()
         val assignment = data.addAssignment(
                 courseId = course.id,
@@ -173,13 +159,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
         // Now navigate to the assignment and its rubric
         courseBrowserPage.selectAssignments()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(assignment.name!!))
-
-        composeTestRule.onNodeWithText(assignment.name!!)
-            .performClick()
-        composeTestRule.waitForIdle()
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openRubric()
 
@@ -193,7 +173,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     // Student can preview an assignment comment attachment
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun test03Comments_previewAttachment() {
+    fun testComments_previewAttachment() {
 
         val data = getToCourse()
         val user = data.users.values.first()
@@ -245,13 +225,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectAssignments()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(assignment.name!!))
-
-        composeTestRule.onNodeWithText(assignment.name!!)
-            .performClick()
-        composeTestRule.waitForIdle()
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.assertCommentDisplayed(commentText, user)
@@ -265,14 +239,14 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun test04Comments_videoCommentPlayback() {
+    fun testComments_videoCommentPlayback() {
         // After recording a video comment, user should be able to view a replay
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testComments05_audioCommentPlayback() {
+    fun testComments_audioCommentPlayback() {
         // After recording an audio comment, user should be able to hear an audio playback
     }
 

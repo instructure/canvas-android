@@ -18,12 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.os.Environment
 import android.util.Log
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.platform.app.InstrumentationRegistry
@@ -32,6 +27,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
@@ -67,6 +63,8 @@ class FilesE2ETest: StudentTest() {
 
     @get:Rule
     val composeTestRule = createEmptyComposeRule()
+
+    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     @E2E
     @Test
@@ -174,13 +172,7 @@ class FilesE2ETest: StudentTest() {
         courseBrowserPage.selectAssignments()
 
         Log.d(STEP_TAG,"Click on '${assignment.name}' assignment.")
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(assignment.name))
-
-        composeTestRule.onNodeWithText(assignment.name)
-            .performClick()
-        composeTestRule.waitForIdle()
+        assignmentListPage.clickAssignment(assignment)
 
         Log.d(STEP_TAG,"Navigate to Submission Details Page and open Files Tab.")
         assignmentDetailsPage.goToSubmissionDetails()

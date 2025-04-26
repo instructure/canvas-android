@@ -19,17 +19,13 @@ package com.instructure.student.ui.e2e
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
@@ -53,6 +49,8 @@ class ShareExtensionE2ETest: StudentTest() {
 
     @get:Rule
     val composeTestRule = createEmptyComposeRule()
+
+    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     @E2E
     @Test
@@ -142,14 +140,7 @@ class ShareExtensionE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Click on $testAssignmentOne assignment and refresh the Assignment Details Page." +
                 "Assert that the $testAssignmentOne assignment's status is 'Submitted'.")
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(testAssignmentOne.name))
-
-        composeTestRule.onNodeWithText(testAssignmentOne.name)
-            .performClick()
-        composeTestRule.waitForIdle()
-
+        assignmentListPage.clickAssignment(testAssignmentOne)
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertAssignmentSubmitted()
 

@@ -21,12 +21,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
@@ -38,6 +33,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
@@ -65,6 +61,8 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
 
     @get:Rule
     val composeTestRule = createEmptyComposeRule()
+
+    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     @Before
     fun setUp() {
@@ -184,13 +182,7 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         // Navigate to submission picker page
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(assignment.name!!))
-
-        composeTestRule.onNodeWithText(assignment.name!!)
-            .performClick()
-        composeTestRule.waitForIdle()
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
 
         return data
