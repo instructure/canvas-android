@@ -111,4 +111,7 @@
     <string name="externalTool_openInANewTab">Open in a New Tab</string>
     <string name="a11yNavigateBack">Navigate back</string>
     <string name="notificationsTitle">Notifications</string>
+    <string name="notificationsEmptyMessage">No notification activity yet.</string>
+    <string name="notificationsFailedToRefresh">Failed to refresh notifications</string>
+    <string name="notificationsFailedToLoad">Failed to load Notifications</string>
 </resources>

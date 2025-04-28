@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.apis.SmartSearchApi
+import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.TabAPI
@@ -358,5 +359,10 @@ class ApiModule {
     @Provides
     fun provideSectionApi(): SectionAPI.SectionsInterface {
         return RestBuilder().build(SectionAPI.SectionsInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideStreamApi(): StreamAPI.StreamInterface {
+        return RestBuilder().build(StreamAPI.StreamInterface::class.java, RestParams())
     }
 }

@@ -21,14 +21,23 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.HiddenStreamItem
 import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Tag
+import retrofit2.http.Url
 
-internal object StreamAPI {
+object StreamAPI {
 
-    internal interface StreamInterface {
+    interface StreamInterface {
         @GET("users/self/activity_stream?only_active_courses=true")
         fun getUserStream(): Call<List<StreamItem>>
+
+        @GET("users/self/activity_stream?only_active_courses=true")
+        suspend fun getUserStream(@Tag params: RestParams): DataResult<List<StreamItem>>
 
         @GET("{contextId}/activity_stream?only_active_courses=true")
         fun getContextStream(@Path("contextId") contextId: Long): Call<List<StreamItem>>
