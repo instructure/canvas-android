@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.media3.common.util.UnstableApi
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -48,11 +49,14 @@ import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
+import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.compose.composables.filedetails.ImageFileContent
+import com.instructure.pandautils.compose.composables.filedetails.MediaFileContent
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.Const
 import java.io.File
 
+@UnstableApi
 @Composable
 fun FileDetailsContentScreen(
     uiState: FileDetailsUiState,
@@ -138,8 +142,10 @@ private fun openFile(
     context.startActivity(Intent.createChooser(intent, "Open with"))
 }
 
+@UnstableApi
 @Composable
-fun FilePreview(filePreviewUiState: FilePreviewUiState?, modifier: Modifier = Modifier) {
+private fun FilePreview(filePreviewUiState: FilePreviewUiState?, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -149,7 +155,21 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState?, modifier: Modifier = Mo
                 imageUrl = filePreviewUiState.url,
                 contentDescription = filePreviewUiState.displayName
             )
-            is FilePreviewUiState.Media -> {}
+
+            is FilePreviewUiState.Media -> MediaFileContent(
+                mediaUrl = filePreviewUiState.url,
+                contentType = filePreviewUiState.contentType,
+                onFullScreenClicked = { url, contentType ->
+                    val bundle = BaseViewMediaActivity.makeBundle(
+                        url,
+                        filePreviewUiState.thumbnailUrl,
+                        contentType,
+                        filePreviewUiState.displayName,
+                        false
+                    )
+                    context.startActivity(ViewMediaActivity.createIntent(context, bundle))
+                })
+
             is FilePreviewUiState.Pdf -> {}
             is FilePreviewUiState.Text -> {}
             else -> {}
@@ -157,6 +177,7 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState?, modifier: Modifier = Mo
     }
 }
 
+@UnstableApi
 @Preview
 @Composable
 fun FileDetailsContentScreenPreview() {
