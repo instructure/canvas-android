@@ -15,8 +15,10 @@
  */
 package com.instructure.horizon.features.moduleitemsequence
 
+import android.net.Uri
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreenUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.utils.Const
 
 data class ModuleItemSequenceUiState(
     val loadingState: LoadingState = LoadingState(),
@@ -47,12 +49,70 @@ data class MarkAsDoneUiState(
     val onMarkAsNotDoneClick: () -> Unit = {},
 )
 
-sealed class ModuleItemContent {
-    data class Assignment(val assignmentId: Long) : ModuleItemContent()
-    data class Page(val courseId: Long, val pageUrl: String) : ModuleItemContent()
-    data class ExternalLink(val url: String) : ModuleItemContent()
-    data class File(val url: String) : ModuleItemContent()
-    data class ExternalTool(val url: String) : ModuleItemContent()
-    data class Assessment(val quizId: Long) : ModuleItemContent()
-    data class Locked(val lockExplanation: String) : ModuleItemContent()
+sealed class ModuleItemContent(val routeWithArgs: String) {
+    data class Assignment(val courseId: Long, val assignmentId: Long) : ModuleItemContent(
+        "courses/$courseId/assignments/$assignmentId"
+    ) {
+        companion object {
+            const val ASSIGNMENT_ID = "assignmentId"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
+        }
+    }
+
+    data class Page(val courseId: Long, val pageUrl: String) :
+        ModuleItemContent(
+            "courses/$courseId/pages/$pageUrl"
+        ) {
+            companion object {
+                const val PAGE_URL = "pageUrl"
+                const val ROUTE = "courses/{${Const.COURSE_ID}}/pages/{${PAGE_URL}}"
+            }
+        }
+
+    data class ExternalLink(val title: String, val url: String) :
+        ModuleItemContent("external_link/${Uri.encode(title)}/${Uri.encode(url)}") {
+        companion object {
+            const val TITLE = "title"
+            const val URL = "url"
+            const val ROUTE = "external_link/{${TITLE}}/{${URL}}"
+        }
+    }
+
+    data class File(val url: String) :
+        ModuleItemContent(
+            "courses/{${Const.COURSE_ID}}/files/{${FILE_ID}}"
+        ) {
+        companion object {
+            const val FILE_ID = "fileId"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/files/{${FILE_ID}}"
+        }
+    } // TODO File learning object ticket
+
+    data class ExternalTool(val courseId: Long, val url: String, val externalUrl: String) :
+        ModuleItemContent(
+            "courses/$courseId/external_tool/${Uri.encode(url)}/external_url/${Uri.encode(externalUrl)}"
+        ) {
+        companion object {
+            const val URL = "url"
+            const val EXTERNAL_URL = "externalUrl"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/external_tool/{$URL}/external_url/{$EXTERNAL_URL}"
+        }
+    }
+
+    data class Assessment(val courseId: Long, val quizId: Long) : ModuleItemContent(
+        "courses/$courseId/quizzes/$quizId"
+    ) {
+        companion object {
+            const val QUIZ_ID = "quizId"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/quizzes/{$QUIZ_ID}"
+        }
+    }
+
+    data class Locked(val lockExplanation: String) :
+        ModuleItemContent("locked/${Uri.encode(lockExplanation)}") {
+        companion object {
+            const val LOCK_EXPLANATION = "lock_explanation"
+            const val ROUTE = "locked/{$LOCK_EXPLANATION}"
+        }
+    }
 }

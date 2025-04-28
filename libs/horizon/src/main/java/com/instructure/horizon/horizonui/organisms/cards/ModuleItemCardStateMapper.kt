@@ -31,7 +31,13 @@ class ModuleItemCardStateMapper @Inject constructor(
 
     fun mapModuleItemToCardState(moduleItem: ModuleItem, onClick: (Long) -> Unit): ModuleItemCardState? {
         val learningObjectType =  when (moduleItem.type) {
-            ModuleItem.Type.Assignment.name -> LearningObjectType.ASSIGNMENT
+            ModuleItem.Type.Assignment.name -> {
+                if (moduleItem.quizLti) {
+                    LearningObjectType.ASSESSMENT
+                } else {
+                    LearningObjectType.ASSIGNMENT
+                }
+            }
             ModuleItem.Type.Page.name -> LearningObjectType.PAGE
             ModuleItem.Type.ExternalUrl.name -> LearningObjectType.EXTERNAL_URL
             ModuleItem.Type.File.name -> LearningObjectType.FILE
