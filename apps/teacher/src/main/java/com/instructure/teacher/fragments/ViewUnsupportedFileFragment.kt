@@ -24,7 +24,7 @@ import androidx.annotation.DrawableRes
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.instructure.annotations.FileCaching.FileCache
+import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
