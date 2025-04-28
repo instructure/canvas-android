@@ -16,6 +16,11 @@
  */
 package com.instructure.horizon.features.account.notifications
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,9 +31,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.AccountScaffold
@@ -36,6 +47,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.organisms.cards.NotificationCard
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItem
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItemState
@@ -59,6 +71,21 @@ fun AccountNotificationsScreen(
 
 @Composable
 private fun AccountNotificationContent(state: AccountNotificationsUiState) {
+    val context = LocalContext.current
+    var hasNotificationPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else true
+        )
+    }
+    val permissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
+        hasNotificationPermission = result
+    }
+
     LazyColumn(
         contentPadding = PaddingValues(
             vertical = 32.dp,
@@ -66,6 +93,19 @@ private fun AccountNotificationContent(state: AccountNotificationsUiState) {
         ),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
+        if (!hasNotificationPermission) {
+            item {
+                NotificationCard(
+                    message = stringResource(R.string.accountNotificationsDisabledNotificationsMessage),
+                    actionButtonLabel = stringResource(R.string.accountNotificationsEnableNotificationButtonLabel),
+                    onActionButtonClick = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        }
+                    }
+                )
+            }
+        }
         items(state.notificationItems) { notificationItem ->
             NotificationGroup(notificationItem, state.updateNotificationItem)
         }
