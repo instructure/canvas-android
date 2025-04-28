@@ -21,6 +21,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
@@ -32,30 +33,40 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.student.ui.utils.StudentComposeTest
+import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf
 import org.junit.Before
+import org.junit.FixMethodOrder
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runners.MethodSorters
 import java.io.File
 
 @HiltAndroidTest
-class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+class PickerSubmissionUploadInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     private val mockedFileName = "sample.jpg" // A file in our assets area
     private lateinit var activity : Activity
     private lateinit var activityResult: Instrumentation.ActivityResult
 
+    @get:Rule
+    val composeTestRule = createEmptyComposeRule()
+
+    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
+
     @Before
     fun setUp() {
-        // Read this at set-up, because it may become nulled out soon thereafter
+        // Read this at set-up, because it may become null soon thereafter
         activity = activityRule.activity
 
         //Clear file upload cache dir.
@@ -103,7 +114,7 @@ class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testSubmit() {
+    fun test01Submit() {
         val data = goToSubmissionPicker()
 
         // Let's mock grabbing a file from our device

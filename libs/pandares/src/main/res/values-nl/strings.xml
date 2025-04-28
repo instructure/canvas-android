@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Verwijderen gesprek mislukt</string>
     <string name="conversationUpdateFailed">Verwijderen gesprek mislukt</string>
     <string name="sendIndividualMessage">Persoonlijk bericht naar elke geadresseerde verzenden</string>
+    <string name="sendIndividualMessageIsMandatory">Je kunt slechts naar 100 ontvangers individuele berichten sturen</string>
     <string name="invalidRecipients">Je mag geen berichten verzenden naar een of meer van de geselecteerde ontvangers.</string>
     <string name="newMessage">Nieuw bericht</string>
     <string name="forwardMessage">Bericht doorsturen</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Deze opdracht is niet meer beschikbaar.</string>
     <string name="editDashboardOfflineMode">Je bent offline</string>
+    <string name="editDashboardNoResults">Geen resultaten</string>
+    <string name="editDashboardNoResultsMessage">Geen overeenkomende items gevonden.</string>
     <string name="editDashboardOfflineModeMessage">Je hebt momenteel geen cursussen die offline beschikbaar zijn.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Offline contentsynchronisatie geslaagd</string>
     <string name="offlineContentSyncFailureNotificationTitle">Offline contentsynchronisatie mislukt</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Een nieuw kalenderitem toevoegen</string>
     <string name="calendarFilterCalendars">Kalenders</string>
     <string name="calendarFilterUser">Gebruiker</string>
+    <string name="calendarFilterFavoriteCourse">Favoriete cursussen</string>
+    <string name="calendarFilterMoreCourse">Meer cursussen</string>
     <string name="calendarFilterCourse">Cursussen</string>
     <string name="calendarFilterGroup">Groepen</string>
     <string name="calendarFilterExplanationLimited">Selecteer de kalenders die je wilt zien, maximaal %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Afmelden</string>
     <string name="noStudentsError">Geen cursisten</string>
     <string name="noStudentsErrorDescription">Je observeert geen cursisten.</string>
+    <string name="noStudentsRefresh">Vernieuwen</string>
     <string name="noGrade">Geen cijfer</string>
     <string name="errorLoadingCourses">Er is een fout opgetreden bij het laden van de cursussen van je cursist.</string>
     <string name="parentNoCourses">Geen cursussen</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Nieuwe cursist toevoegen</string>
     <string name="selectStudentColor">Cursistkleur selecteren</string>
     <string name="errorSavingColor">Er is een fout opgetreden tijdens het opslaan van je selectie. Probeer het opnieuw.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Kleur opgeslagen</string>
     <string name="changeStudentColorLabel">Kleur wijzigen voor %s</string>
     <string name="studentColorContentDescriptionBlue">Elektrisch, blauw</string>
     <string name="studentColorContentDescriptionPurple">Pruim, paars</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Klaver, groen</string>
     <string name="featureFlags">Functietags</string>
     <string name="addStudent">Cursist toevoegen</string>
+    <string name="addStudentSuccessfull">Cursist toegevoegd</string>
     <string name="addStudentTitle">Cursist toevoegen met&#8230;</string>
     <string name="addStudentQrCodeTitle">QR-code</string>
     <string name="addStudentQrCodeExplanation">Cursisten kunnen een QR-code genereren met behulp van de Canvas Student-app op hun mobiele apparaat</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Cijferpercentage</string>
     <string name="unpairStudentTitle">Verwijderen</string>
     <string name="unpairStudentMessage">Dit zal alle inschrijvingen voor deze cursist van jouw account ontkoppelen en verwijderen.</string>
+    <string name="unpairStudentSuccessfull">Cursist verwijderd</string>
     <string name="alertSettingsMinThresholdError">Moet hoger zijn dan %d</string>
     <string name="alertSettingsMaxThresholdError">Moet lager zijn dan %d</string>
     <string name="alertSettingsErrorMessage">Er is een fout opgetreden tijdens het ophalen van de waarschuwingsinstellingen.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">We ondervinden problemen bij het laden van de cijfers van je student. Probeer de pagina opnieuw te laden of kom later terug.</string>
     <string name="errorLoadingCourse">We ondervinden problemen bij het laden van de cursusgegevens van je student. Probeer de pagina opnieuw te laden of kom later terug.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Cijfervoorkeuren bijgewerkt. De lijst is vernieuwd.</string>
     <string name="courseDetailsMessageContentDescription">Een bericht over deze cursus verzenden</string>
     <string name="gradeLockedContentDescription">Cijfer vergrendeld</string>
     <string name="gradesRefreshFailed">Verversen van cijfers mislukt</string>
     <string name="chooseACourseToMessage">Kies een cursus voor bericht</string>
     <string name="regardingHiddenMessage">Betreffende: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Betreffende: %1$s, opdracht - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Betreffende: %1$s, gebeurtenis - %2$s</string>
     <string name="sendMessageAboutAssignment">"Een bericht over deze opdracht verzenden"</string>
+    <string name="sendMessageAboutEvent">"Een bericht over dit evenement verzenden"</string>
     <string name="forStudentLabel">voor %1$s</string>
     <string name="view_description">Beschrijving bekijken</string>
     <string name="a11y_contentDescription_viewDescription">Beschrijving bekijken</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Vernieuwen voorpagina mislukt</string>
     <string name="failed_to_load_summary">Laden samenvatting mislukt</string>
     <string name="no_summary_items_to_display">Geen samenvattingsitems om te tonen</string>
+    <string name="a11y_summaryEventContentDescription">Evenement</string>
+    <string name="a11y_summaryLockedContentDescription">Vergrendeld</string>
+    <string name="a11y_summaryQuizContentDescription">Toets</string>
+    <string name="a11y_summaryDiscussionContentDescription">Discussie</string>
+    <string name="a11y_summaryAssignmentContentDescription">Opdracht</string>
     <string name="scheduleItemNoDueDate">Geen inleverdatum</string>
     <string name="a11y_refresh">Vernieuwen</string>
     <string name="masqueradingAs">Je treedt op als %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Gedeeltelijk gecontroleerd</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filters zijn bijgewerkt</string>
+    <string name="inboxAllRecipients">Alle ontvangers</string>
+    <string name="inboxSearchIn">Zoeken in %1$s</string>
+    <string name="a11y_studentSelectorExpand">uitvouwen</string>
+    <string name="a11y_studentSelectorCollapse">samenvouwen</string>
+    <string name="a11y_studentSelectorContentDescription">Tik voor het %s van de cursistkiezer, de geselecteerde cursist is %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Cursist selecteren %s</string>
+    <string name="inboxSettingsTitle">Inbox</string>
+    <string name="inboxSettingsInboxSignature">Inbox-handtekening</string>
+    <string name="inboxSignatureNotSet">Niet ingesteld</string>
+    <string name="inboxSignatureEnabled">Ingeschakeld</string>
+    <string name="inboxSignatureScreenTitle">Inbox-handtekening</string>
+    <string name="inboxSignatureScreenSubtitle">Handtekening wordt toegevoegd aan het eind van alle berichten.</string>
+    <string name="inboxSignatureSwitchLabel">Handtekening</string>
+    <string name="inboxSignatureTextfieldHeader">Tekst handtekening</string>
+    <string name="due_dateTime">Inleverdatum: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Beleid voor posten</string>
+    <string name="late">Te laat</string>
+    <string name="a11y_contentDescription_expand">Uitvouwen</string>
+    <string name="missingTag">Ontbrekend</string>
+    <string name="submissionFilter">Inleveringsfilter</string>
+    <string name="submissionMessageSubject">%1$s om %2$s</string>
+    <string name="all">Alles</string>
 </resources>

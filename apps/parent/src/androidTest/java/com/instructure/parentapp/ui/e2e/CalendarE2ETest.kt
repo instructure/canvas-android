@@ -281,6 +281,7 @@ class CalendarE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         val currentDate = getDateInCanvasCalendarFormat()
         calendarScreenPage.assertItemDetails(newEventTitle, parent.name, currentDate)
+        Thread.sleep(2000)
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
         calendarScreenPage.clickOnAddButton()
@@ -299,7 +300,6 @@ class CalendarE2ETest : ParentComposeTest() {
         val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }
         Log.d(STEP_TAG, "Select a date which is 2 days in the future from today and select '${course.name}' course as the canvas context.")
         calendarToDoCreateUpdatePage.selectDate(calendar)
-        Thread.sleep(2000)
         calendarToDoCreateUpdatePage.selectCanvasContext(course.name)
 
         Log.d(STEP_TAG, "Click on the 'Save' button.")

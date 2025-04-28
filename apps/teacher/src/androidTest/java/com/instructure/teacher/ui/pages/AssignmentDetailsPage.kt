@@ -42,6 +42,7 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
@@ -114,35 +115,51 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     }
 
     /**
-     * Open all submissions page (by clicking on the View All Submissions button).
+     * Open 'All Submissions Page' (by clicking on the 'All' button).
      *
      */
-    fun openAllSubmissionsPage() {
+    fun clickAllSubmissions() {
         scrollTo(R.id.viewAllSubmissions)
         viewAllSubmissions.click()
     }
 
     /**
-     * Open graded submissions
+     * Assert that the 'All' label is displayed on the 'Submissions' card.
      *
      */
-    fun openGradedSubmissions() {
+    fun assertAllSubmissionsLabel() {
+        onView(withId(R.id.allTitle) + withText(R.string.all)).assertDisplayed()
+    }
+
+    /**
+     * Assert that the 'Submissions' label is displayed on the 'Submissions' card.
+     *
+     */
+    fun assertSubmissionsLabel() {
+        onView(withText(R.string.submissions) + withAncestor(R.id.donutGroup)).assertDisplayed()
+    }
+
+    /**
+     * Open graded submissions.
+     *
+     */
+    fun clickGradedSubmissions() {
         gradedDonutWrapper.click()
     }
 
     /**
-     * Open ungraded submissions
+     * Opens the 'Needs Grading' submissions.
      *
      */
-    fun openUngradedSubmissions() {
+    fun clickNeedsGradingSubmissions() {
         ungradedDonutWrapper.click()
     }
 
     /**
-     * Open not submitted submissions
+     * Open not submitted submissions.
      *
      */
-    fun openNotSubmittedSubmissions() {
+    fun clickNotSubmittedSubmissions() {
         notSubmittedDonutWrapper.click()
     }
 
@@ -217,6 +234,7 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
      */
     fun assertSubmissionTypeOnlineTextEntry() {
         scrollToSubmissionType()
+        submissionTypesSectionLabel.assertDisplayed()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineTextEntry)
     }
 
@@ -303,14 +321,6 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
         gradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(actual, outOf))
     }
 
-    /**
-     * View all submission
-     *
-     */
-    fun viewAllSubmission() {
-        onView(withId(R.id.viewAllSubmissions)).click()
-    }
-
     private fun scrollToSubmissionType() {
         scrollTo(R.id.submissionTypesTextView)
     }
@@ -349,6 +359,7 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
      *
      */
     fun assertMultipleDueDates() {
+        dueSectionLabel.assertDisplayed()
         onView(withId(R.id.otherDueDateTextView) + withText(R.string.multiple_due_dates)).assertDisplayed()
     }
 
