@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
-import com.instructure.horizon.features.account.AccountScaffold
+import com.instructure.horizon.utils.HorizonScaffold
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -44,7 +44,7 @@ fun AccountProfileScreen(
     navController: NavController,
     mainNavController: NavController,
 ) {
-    AccountScaffold(
+    HorizonScaffold(
         title = stringResource(R.string.accountProfileLabel),
         onBackPressed = { navController.popBackStack() }
     ) {

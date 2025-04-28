@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.account
+package com.instructure.horizon.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,7 +29,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.organisms.topappbar.HorizonTopAppBar
 
 @Composable
-fun AccountScaffold(
+fun HorizonScaffold(
     title: String,
     onBackPressed: () -> Unit,
     content: @Composable () -> Unit,

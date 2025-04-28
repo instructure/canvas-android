@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.instructure.horizon.R
-import com.instructure.horizon.features.account.AccountScaffold
+import com.instructure.horizon.utils.HorizonScaffold
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImage
@@ -51,7 +51,7 @@ fun AccountCalendarFeedScreen(
     state: AccountCalendarUiState,
     navController: NavController
 ) {
-    AccountScaffold(
+    HorizonScaffold(
         title = stringResource(R.string.accountCalendarFeedTitle),
         onBackPressed = { navController.popBackStack() },
     ) {

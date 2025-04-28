@@ -33,7 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
-import com.instructure.horizon.features.account.AccountScaffold
+import com.instructure.horizon.utils.HorizonScaffold
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
@@ -46,7 +46,7 @@ fun AccountAdvancedScreen(
     state: AccountAdvancedUiState,
     navController: NavController
 ) {
-    AccountScaffold(
+    HorizonScaffold(
         title = stringResource(R.string.accountAdvancedTitle),
         onBackPressed = { navController.popBackStack() },
     ) {

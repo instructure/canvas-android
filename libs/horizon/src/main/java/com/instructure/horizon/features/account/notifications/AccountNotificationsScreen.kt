@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.instructure.horizon.R
-import com.instructure.horizon.features.account.AccountScaffold
+import com.instructure.horizon.utils.HorizonScaffold
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -59,7 +59,7 @@ fun AccountNotificationsScreen(
     state: AccountNotificationsUiState,
     navController: NavController,
 ) {
-    AccountScaffold(
+    HorizonScaffold(
         title = stringResource(R.string.accountNotificationsTitle),
         onBackPressed = { navController.popBackStack() }
     ) {
