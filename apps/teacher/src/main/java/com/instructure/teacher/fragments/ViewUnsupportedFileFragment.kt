@@ -25,7 +25,7 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.instructure.pandautils.utils.filecache.FileCache
-import com.instructure.annotations.awaitFileDownload
+import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.MasterDetailInteractions
