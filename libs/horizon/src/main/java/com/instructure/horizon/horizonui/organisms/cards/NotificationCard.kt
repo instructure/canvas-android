@@ -26,12 +26,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.TextLink
+import com.instructure.horizon.horizonui.molecules.TextLinkColor
+import com.instructure.horizon.horizonui.molecules.TextLinkIconPosition
+import com.instructure.horizon.horizonui.molecules.TextLinkSize
 
 @Composable
 fun NotificationCard(
@@ -58,7 +62,10 @@ fun NotificationCard(
             HorizonSpace(SpaceSize.SPACE_16)
 
             TextLink(
-                label = actionButtonLabel,
+                text = actionButtonLabel,
+                textLinkColor = TextLinkColor.Custom(HorizonColors.Text.body()),
+                textLinkSize = TextLinkSize.NORMAL,
+                textLinkIconPosition = TextLinkIconPosition.End(R.drawable.open_in_new),
                 onClick = onActionButtonClick,
                 modifier = Modifier.align(Alignment.End)
             )
