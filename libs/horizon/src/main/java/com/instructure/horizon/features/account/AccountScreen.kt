@@ -46,6 +46,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -128,12 +129,18 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                             Modifier
                         }
                     }
-                    AccountItem(
-                        accountItem,
-                        navController,
-                        onLogout,
-                        clipModifier
-                    )
+                    Column {
+                        AccountItem(
+                            accountItem,
+                            navController,
+                            onLogout,
+                            clipModifier
+                        )
+
+                        if (index != accountGroup.items.lastIndex) {
+                            HorizonDivider()
+                        }
+                    }
                 }
             }
 
