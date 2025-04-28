@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
-import com.instructure.horizon.utils.HorizonScaffold
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -36,6 +35,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.utils.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,9 +47,9 @@ fun AccountProfileScreen(
     HorizonScaffold(
         title = stringResource(R.string.accountProfileLabel),
         onBackPressed = { navController.popBackStack() }
-    ) {
+    ) { modifier ->
         LoadingStateWrapper(state.screenState) {
-            AccountProfileContent(state, mainNavController)
+            AccountProfileContent(state, mainNavController, modifier)
         }
     }
 }
@@ -57,7 +57,8 @@ fun AccountProfileScreen(
 @Composable
 private fun AccountProfileContent(
     state: AccountProfileUiState,
-    mainNavController: NavController
+    mainNavController: NavController,
+    modifier: Modifier,
 ) {
     val fullNameErrorMessage = stringResource(R.string.accountFullNameErrorMessage)
     val fullNameState = TextFieldState(
@@ -114,6 +115,7 @@ private fun AccountProfileContent(
             vertical = 48.dp,
             horizontal = 32.dp
         ),
+        modifier = modifier
     ) {
         item {
             Column {

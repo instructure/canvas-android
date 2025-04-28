@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.instructure.horizon.R
-import com.instructure.horizon.utils.HorizonScaffold
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -52,6 +51,7 @@ import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItem
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItemState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.utils.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,15 +62,15 @@ fun AccountNotificationsScreen(
     HorizonScaffold(
         title = stringResource(R.string.accountNotificationsTitle),
         onBackPressed = { navController.popBackStack() }
-    ) {
+    ) { modifier ->
         LoadingStateWrapper(state.screenState) {
-            AccountNotificationContent(state)
+            AccountNotificationContent(state, modifier)
         }
     }
 }
 
 @Composable
-private fun AccountNotificationContent(state: AccountNotificationsUiState) {
+private fun AccountNotificationContent(state: AccountNotificationsUiState, modifier: Modifier) {
     val context = LocalContext.current
     var hasNotificationPermission by remember {
         mutableStateOf(
@@ -91,7 +91,8 @@ private fun AccountNotificationContent(state: AccountNotificationsUiState) {
             vertical = 32.dp,
             horizontal = 32.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(32.dp)
+        verticalArrangement = Arrangement.spacedBy(32.dp),
+        modifier = modifier
     ) {
         if (!hasNotificationPermission) {
             item {

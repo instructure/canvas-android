@@ -24,7 +24,6 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class AccountUiState(
     val screenState: LoadingState = LoadingState(),
     val userName: String = "",
-    val accountName: String = "",
     val accountGroups: List<AccountGroupState> = emptyList(),
     val updateUserName: (String) -> Unit = {},
     val performLogout: () -> Unit = {}

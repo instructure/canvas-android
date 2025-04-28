@@ -100,12 +100,8 @@ class AccountViewModel @Inject constructor(
         title = context.getString(R.string.accountSupportHeading),
         items = listOf(
             AccountItemState(
-                title = context.getString(R.string.accountBetaCommunityLabel),
-                type = AccountItemType.OpenInNew("https://instructure.com"),
-            ),
-            AccountItemState(
                 title = context.getString(R.string.accountGiveFeedbackLabel),
-                type = AccountItemType.OpenInNew("https://instructure.com"),
+                type = AccountItemType.OpenInNew("https://forms.gle/R2cqoowDEUs5CWwy8"),
             )
         )
     )
@@ -140,12 +136,10 @@ class AccountViewModel @Inject constructor(
 
     private suspend fun loadData(forceRefresh: Boolean = false) {
         val user = repository.getUserDetails(forceRefresh = forceRefresh)
-        val institutionName = repository.getInstitutionName(forceRefresh = forceRefresh)
 
         _uiState.update {
             it.copy(
                 userName = user.name,
-                accountName = institutionName,
             )
         }
     }

@@ -33,12 +33,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
-import com.instructure.horizon.utils.HorizonScaffold
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.utils.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,15 +49,15 @@ fun AccountAdvancedScreen(
     HorizonScaffold(
         title = stringResource(R.string.accountAdvancedTitle),
         onBackPressed = { navController.popBackStack() },
-    ) {
+    ) { modifier ->
         LoadingStateWrapper(state.screenState) {
-            AccountAdvancedContent(state)
+            AccountAdvancedContent(state, modifier)
         }
     }
 }
 
 @Composable
-private fun AccountAdvancedContent(state: AccountAdvancedUiState) {
+private fun AccountAdvancedContent(state: AccountAdvancedUiState, modifier: Modifier) {
     var isFocused by remember { mutableStateOf(false) }
     var isOpen by remember { mutableStateOf(false) }
     val singleSelectState = SingleSelectState(
@@ -78,6 +78,7 @@ private fun AccountAdvancedContent(state: AccountAdvancedUiState) {
     LazyColumn(
         contentPadding = PaddingValues(vertical = 32.dp, horizontal = 60.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
+        modifier = modifier
     ) {
         item {
             SingleSelect(singleSelectState)

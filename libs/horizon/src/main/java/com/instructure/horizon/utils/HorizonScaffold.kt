@@ -32,7 +32,7 @@ import com.instructure.horizon.horizonui.organisms.topappbar.HorizonTopAppBar
 fun HorizonScaffold(
     title: String,
     onBackPressed: () -> Unit,
-    content: @Composable () -> Unit,
+    content: @Composable (Modifier) -> Unit,
 ) {
     Scaffold(
         topBar = { HorizonTopAppBar(title, onBackPressed) },
@@ -47,7 +47,11 @@ fun HorizonScaffold(
                 .background(HorizonColors.Surface.pageSecondary())
 
         ) {
-            content()
+            content(
+                Modifier
+                    .fillMaxSize()
+                    .background(HorizonColors.Surface.pageSecondary())
+            )
         }
     }
 }

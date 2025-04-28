@@ -18,26 +18,14 @@ package com.instructure.horizon.features.account
 
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.GetCoursesManager
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
 class AccountRepository @Inject constructor(
     private val userApi: UserAPI.UsersInterface,
-    private val courseManager: GetCoursesManager,
-    private val apiPrefs: ApiPrefs,
 ) {
     suspend fun getUserDetails(forceRefresh: Boolean): User {
         val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
         return userApi.getSelf(restParams).dataOrThrow
-    }
-
-    suspend fun getInstitutionName(forceRefresh: Boolean): String {
-        return courseManager.getCoursesWithProgress(apiPrefs.user!!.id, forceRefresh)
-            .dataOrThrow
-            .first()
-            .institutionName
-            .orEmpty()
     }
 }

@@ -84,14 +84,6 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                     color = HorizonColors.Text.title()
                 )
 
-                HorizonSpace(SpaceSize.SPACE_4)
-
-                Text(
-                    text = state.accountName,
-                    style = HorizonTypography.h3,
-                    color = HorizonColors.Surface.institution()
-                )
-
                 HorizonSpace(SpaceSize.SPACE_40)
             }
         }
