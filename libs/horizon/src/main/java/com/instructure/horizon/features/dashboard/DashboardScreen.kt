@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -87,7 +88,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
         LoadingStateWrapper(loadingState = uiState.loadingState) {
             LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
                 item {
-                    HomeScreenTopBar(uiState, modifier = Modifier.height(56.dp))
+                    HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
                     HorizonSpace(SpaceSize.SPACE_36)
                 }
                 itemsIndexed(uiState.coursesUiState) { index, courseItem ->
@@ -112,7 +113,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 }
 
 @Composable
-private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Modifier) {
+private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavController, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.Bottom, modifier = modifier) {
         GlideImage(
             model = uiState.logoUrl,
@@ -129,7 +130,9 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, modifier: Modifier = Mod
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.notifications,
-            onClick = uiState.onNotificationsClick,
+            onClick = {
+                mainNavController.navigate(MainNavigationRoute.Notification.route)
+            },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.INVERSE
         )
