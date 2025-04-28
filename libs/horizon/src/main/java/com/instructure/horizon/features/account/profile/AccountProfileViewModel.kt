@@ -81,7 +81,7 @@ class AccountProfileViewModel @Inject constructor(
                     } else {
                         null
                     },
-                    emailTextValue = TextFieldValue(user.email ?: ""),
+                    emailTextValue = TextFieldValue(user.primaryEmail ?: ""),
                 )
             }
         } catch {
