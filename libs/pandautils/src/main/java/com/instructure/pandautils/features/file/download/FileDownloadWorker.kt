@@ -100,8 +100,6 @@ class FileDownloadWorker @AssistedInject constructor(
         val filePath = downloadedFile.absolutePath
         updateProgress(0, FileDownloadProgressState.STARTING, filePath)
 
-        delay(5000)
-
         try {
             fileDownloadApi.downloadFile(fileUrl, RestParams())
                 .dataOrThrow
