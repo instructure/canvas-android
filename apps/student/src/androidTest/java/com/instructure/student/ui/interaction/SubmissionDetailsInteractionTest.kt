@@ -16,8 +16,9 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.os.SystemClock.sleep
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -27,6 +28,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
@@ -45,14 +47,83 @@ import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
+import org.junit.Rule
 import org.junit.Test
 import java.util.Date
 
 @HiltAndroidTest
 class SubmissionDetailsInteractionTest : StudentTest() {
+
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     private lateinit var course: Course
+
+    @get:Rule
+    val composeTestRule = createEmptyComposeRule()
+
+    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
+
+    // Should be able to add a comment on a submission
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testComments_addCommentToSingleAttemptSubmission() {
+
+        val data = getToCourse()
+        val assignment = data.addAssignment(
+            courseId =  course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL)
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+        Espresso.onIdle()
+        assignmentDetailsPage.assertAssignmentSubmitted()
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.addAndSendComment("Hey!")
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testComments_addCommentToMultipleAttemptSubmission() {
+        val data = getToCourse()
+        val assignment = data.addAssignment(
+            courseId =  course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL),
+            userSubmitted = true
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+        assignmentDetailsPage.assertAssignmentSubmitted()
+        assignmentDetailsPage.assertNoAttemptSpinner()
+
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+
+        assignmentDetailsPage.goToSubmissionDetails()
+
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.addAndSendComment("Hey!")
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+
+        submissionDetailsPage.selectAttempt("Attempt 2")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 2")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentNotDisplayed("Hey!", data.users.values.first())
+
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+    }
 
     // Clicking the "Description" button on a rubric criterion item should show a new page with the full description
     // Also checks to see that the rubric criterion is displayed correctly, and responds to clicks correctly
@@ -97,72 +168,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
         // Asserts that pressing the "Description" button shows a webview displaying the long description
         submissionDetailsPage.assertRubricDescriptionDisplays(rubricCriterion)
-    }
-
-    // Should be able to add a comment on a submission
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testComments_addCommentToSingleAttemptSubmission() {
-
-        val data = getToCourse()
-        val assignment = data.addAssignment(
-                courseId =  course.id,
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL)
-        )
-
-        courseBrowserPage.selectAssignments()
-        assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickSubmit()
-        urlSubmissionUploadPage.submitText("https://google.com")
-        sleep(1000) // Allow some time for the submission to propagate
-        assignmentDetailsPage.assertAssignmentSubmitted()
-        assignmentDetailsPage.goToSubmissionDetails()
-        submissionDetailsPage.openComments()
-        submissionDetailsPage.addAndSendComment("Hey!")
-        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
-    }
-
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testComments_addCommentToMultipleAttemptSubmission() {
-
-        val data = getToCourse()
-        val assignment = data.addAssignment(
-            courseId =  course.id,
-            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL),
-            userSubmitted = true
-        )
-
-        courseBrowserPage.selectAssignments()
-        assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.clickSubmit()
-        urlSubmissionUploadPage.submitText("https://google.com")
-        sleep(1000) // Allow some time for the submission to propagate
-        assignmentDetailsPage.assertAssignmentSubmitted()
-        assignmentDetailsPage.assertNoAttemptSpinner()
-
-        assignmentDetailsPage.clickSubmit()
-        urlSubmissionUploadPage.submitText("https://google.com")
-
-        assignmentDetailsPage.goToSubmissionDetails()
-
-        submissionDetailsPage.selectAttempt("Attempt 1")
-        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
-        submissionDetailsPage.openComments()
-        submissionDetailsPage.addAndSendComment("Hey!")
-        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
-
-        submissionDetailsPage.selectAttempt("Attempt 2")
-        submissionDetailsPage.assertSelectedAttempt("Attempt 2")
-        submissionDetailsPage.openComments()
-        submissionDetailsPage.assertCommentNotDisplayed("Hey!", data.users.values.first())
-
-        submissionDetailsPage.selectAttempt("Attempt 1")
-        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
-        submissionDetailsPage.openComments()
-        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
-
-
     }
 
     // Student can preview an assignment comment attachment
@@ -211,7 +216,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         )
 
         // Create/add a submission for our assignment containing our submissionComment
-        val submission = data.addSubmissionForAssignment(
+        data.addSubmissionForAssignment(
                 assignmentId = assignment.id,
                 userId = data.users.values.first().id,
                 type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,

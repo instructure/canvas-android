@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 11,
-    "identityHash": "925b2f67359768df4563d8625b4b4c15",
+    "identityHash": "a3c5b4d123bfb3545f913e98d23e0a2e",
     "entities": [
       {
         "tableName": "AttachmentEntity",
@@ -607,44 +607,56 @@
         "foreignKeys": []
       },
       {
-        "tableName": "FileDownloadProgressEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `progressState` TEXT NOT NULL, `filePath` TEXT NOT NULL, PRIMARY KEY(`workerId`))",
+        "tableName": "assignment_filter",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userDomain` TEXT NOT NULL, `userId` INTEGER NOT NULL, `contextId` INTEGER NOT NULL, `selectedAssignmentFilters` TEXT NOT NULL, `selectedAssignmentStatusFilter` TEXT, `selectedGroupByOption` TEXT NOT NULL)",
         "fields": [
           {
-            "fieldPath": "workerId",
-            "columnName": "workerId",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "fileName",
-            "columnName": "fileName",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "progress",
-            "columnName": "progress",
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "progressState",
-            "columnName": "progressState",
+            "fieldPath": "userDomain",
+            "columnName": "userDomain",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "filePath",
-            "columnName": "filePath",
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contextId",
+            "columnName": "contextId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectedAssignmentFilters",
+            "columnName": "selectedAssignmentFilters",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectedAssignmentStatusFilter",
+            "columnName": "selectedAssignmentStatusFilter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "selectedGroupByOption",
+            "columnName": "selectedGroupByOption",
             "affinity": "TEXT",
             "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "workerId"
+            "id"
           ]
         },
         "indices": [],
@@ -654,7 +666,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '925b2f67359768df4563d8625b4b4c15')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3c5b4d123bfb3545f913e98d23e0a2e')"
     ]
   }
 }

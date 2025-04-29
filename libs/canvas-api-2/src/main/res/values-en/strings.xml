@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
-  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
   ~     you may not use this file except in compliance with the License.
@@ -76,5 +76,12 @@
     <string name="enrollmentTypeTeachingAssistant">TA</string>
     <string name="enrollmentTypeDesigner">Designer</string>
     <string name="enrollmentTypeUnknown">Unknown</string>
+
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">Students</string>
+    <string name="enrollmentTypeTeachers">Teachers</string>
+    <string name="enrollmentTypeObservers">Observers</string>
+    <string name="enrollmentTypeTeachingAssistants">TAs</string>
+    <string name="enrollmentTypeDesigners">Designers</string>
 
 </resources>

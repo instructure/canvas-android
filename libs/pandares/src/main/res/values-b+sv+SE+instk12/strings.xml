@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Det gick inte att radera konversationen</string>
     <string name="conversationUpdateFailed">Det gick inte att uppdatera konversationen</string>
     <string name="sendIndividualMessage">Skicka individuella meddelanden till varje mottagare</string>
+    <string name="sendIndividualMessageIsMandatory">Du kan endast skicka individuella meddelanden till 100 mottagare</string>
     <string name="invalidRecipients">Du kan inte skicka meddelanden till en eller flera av de valda mottagarna.</string>
     <string name="newMessage">Nytt meddelande</string>
     <string name="forwardMessage">Vidarebefordra meddelande</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Denna uppgift är inte längre tillgänglig.</string>
     <string name="editDashboardOfflineMode">Du är offline</string>
+    <string name="editDashboardNoResults">Inga resultat</string>
+    <string name="editDashboardNoResultsMessage">Inga matchande objekt hittades.</string>
     <string name="editDashboardOfflineModeMessage">Du har för närvarande inte några kurser som är tillgängliga offline.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Offlineinnehåll har synkroniserats</string>
     <string name="offlineContentSyncFailureNotificationTitle">Innehållssynkronisering offline misslyckades</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Lägg till nytt kalenderobjekt</string>
     <string name="calendarFilterCalendars">Kalendrar</string>
     <string name="calendarFilterUser">Användare</string>
+    <string name="calendarFilterFavoriteCourse">Favoritkurser</string>
+    <string name="calendarFilterMoreCourse">Fler kurser</string>
     <string name="calendarFilterCourse">Kurser</string>
     <string name="calendarFilterGroup">Grupper</string>
     <string name="calendarFilterExplanationLimited">Välj de kalendrar du vill se, upp till %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Logga ut</string>
     <string name="noStudentsError">Inga elever</string>
     <string name="noStudentsErrorDescription">Du observerar inga elever.</string>
+    <string name="noStudentsRefresh">Uppdatera</string>
     <string name="noGrade">Ingen bedömning</string>
     <string name="errorLoadingCourses">Det gick inte att läsa in din elevs kurser.</string>
     <string name="parentNoCourses">Inga kurser</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Lägg till ny elev</string>
     <string name="selectStudentColor">Välj elevfärg</string>
     <string name="errorSavingColor">Ett fel inträffade när ditt val sparades. Försök igen.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Färgen sparades</string>
     <string name="changeStudentColorLabel">Ändra färg för %s</string>
     <string name="studentColorContentDescriptionBlue">Elektrisk, blå</string>
     <string name="studentColorContentDescriptionPurple">Plommon, lila</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Klöver, grön</string>
     <string name="featureFlags">Funktionsflaggor</string>
     <string name="addStudent">Lägg till elev</string>
+    <string name="addStudentSuccessfull">Elev lades till</string>
     <string name="addStudentTitle">Lägg till elev med...</string>
     <string name="addStudentQrCodeTitle">QR-kod</string>
     <string name="addStudentQrCodeExplanation">Elever kan generera en QR-kod i Canvas Elev-app på sin mobila enhet.</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Bedömningsprocent</string>
     <string name="unpairStudentTitle">Ta bort</string>
     <string name="unpairStudentMessage">Detta kommer att koppla från och ta bort alla registreringar för den här eleven från ditt konto.</string>
+    <string name="unpairStudentSuccessfull">Elev raderades</string>
     <string name="alertSettingsMinThresholdError">Måste vara över %d</string>
     <string name="alertSettingsMaxThresholdError">Måste vara under %d</string>
     <string name="alertSettingsErrorMessage">Ett fel inträffade när notisinställningarna skulle hämtas.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Vi har problem med att läsa in din elevs bedömningar. Försök läsa in sidan igen eller försök igen senare.</string>
     <string name="errorLoadingCourse">Vi har problem med att läsa in din elevs kursinformation. Försök läsa in sidan igen eller försök igen senare.</string>
     <string name="gradesFilterContentDescription">Filtrera</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Bedömningsinställningar uppdaterade Listan har uppdaterats.</string>
     <string name="courseDetailsMessageContentDescription">Skicka ett meddelande om den här kursen</string>
     <string name="gradeLockedContentDescription">Bedömningen är låst</string>
     <string name="gradesRefreshFailed">Det gick inte att uppdatera bedömningar</string>
     <string name="chooseACourseToMessage">Välj en kurs att skicka meddelande till</string>
     <string name="regardingHiddenMessage">Angående : %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Angående : %1$s, uppgift – %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Angående : %1$s, händelse – %2$s</string>
     <string name="sendMessageAboutAssignment">”Skicka ett meddelande om den här uppgiften”</string>
+    <string name="sendMessageAboutEvent">”Skicka ett meddelande om den här händelsen”</string>
     <string name="forStudentLabel">för %1$s</string>
     <string name="view_description">Visa beskrivning</string>
     <string name="a11y_contentDescription_viewDescription">Visa beskrivning</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Det gick inte att uppdatera förstasidan</string>
     <string name="failed_to_load_summary">Det gick inte att läsa in sammanfattningen</string>
     <string name="no_summary_items_to_display">Inga sammanfattningsobjekt att visa</string>
+    <string name="a11y_summaryEventContentDescription">Händelse</string>
+    <string name="a11y_summaryLockedContentDescription">Låst</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Diskussion</string>
+    <string name="a11y_summaryAssignmentContentDescription">Uppgift</string>
     <string name="scheduleItemNoDueDate">Inget inlämningsdatum</string>
     <string name="a11y_refresh">Uppdatera</string>
     <string name="masqueradingAs">Du agerar som %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Delvis kontrollerad</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filtren har uppdaterats</string>
+    <string name="inboxAllRecipients">Alla mottagare</string>
+    <string name="inboxSearchIn">Sök i %1$s</string>
+    <string name="a11y_studentSelectorExpand">visa</string>
+    <string name="a11y_studentSelectorCollapse">dölj</string>
+    <string name="a11y_studentSelectorContentDescription">Tryck för %s elevväljare, vald elev är: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Välj elev %s</string>
+    <string name="inboxSettingsTitle">Inkorg</string>
+    <string name="inboxSettingsInboxSignature">Inkorgssignatur</string>
+    <string name="inboxSignatureNotSet">Inte inställd</string>
+    <string name="inboxSignatureEnabled">Aktiverad</string>
+    <string name="inboxSignatureScreenTitle">Inkorgssignatur</string>
+    <string name="inboxSignatureScreenSubtitle">Signaturen läggs till i slutet av alla meddelanden.</string>
+    <string name="inboxSignatureSwitchLabel">Signatur</string>
+    <string name="inboxSignatureTextfieldHeader">Signaturtext</string>
+    <string name="due_dateTime">Inlämningsdatum: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filtrera</string>
+    <string name="a11y_contentDescription_postPolicy">Publicera policy</string>
+    <string name="late">Sen</string>
+    <string name="a11y_contentDescription_expand">Expandera</string>
+    <string name="missingTag">Saknad</string>
+    <string name="submissionFilter">Inlämningsfilter</string>
+    <string name="submissionMessageSubject">%1$s på %2$s</string>
+    <string name="all">Alla</string>
 </resources>

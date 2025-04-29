@@ -173,7 +173,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
         val mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType)
         val course = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, assignment.courseId, Const.COURSE)
 
-        val params = RestParams(domain = ApiPrefs.overrideDomains[course.id])
+        val params = RestParams(domain = ApiPrefs.overrideDomains[course.id], shouldLoginOnTokenError = false)
         val postMediaSubmissionCommentResult = submissionApi.postMediaSubmissionComment(
             courseId = course.id,
             assignmentId = assignment.id,

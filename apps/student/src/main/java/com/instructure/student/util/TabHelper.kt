@@ -24,10 +24,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.grades.GradesListFragment
@@ -97,7 +97,7 @@ object TabHelper {
         }
 
         return when (tabId.lowercase(Locale.getDefault())) {
-            Tab.ASSIGNMENTS_ID -> AssignmentListFragment.makeRoute(canvasContext)
+            Tab.ASSIGNMENTS_ID -> AssignmentListFragment.makeRoute(canvasContext.id)
             Tab.MODULES_ID -> ModuleListFragment.makeRoute(canvasContext)
             Tab.PAGES_ID -> PageListFragment.makeRoute(canvasContext, false)
             Tab.FRONT_PAGE_ID -> PageDetailsFragment.makeFrontPageRoute(canvasContext)

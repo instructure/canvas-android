@@ -54,7 +54,7 @@ class PageViewUploadWorker @AssistedInject constructor(
 
             if (apiPrefs.pandataInfo?.isValid != true) {
                 apiPrefs.pandataInfo =
-                    pandataApi.getPandataToken(appKey.key, RestParams()).dataOrThrow
+                    pandataApi.getPandataToken(appKey.key, RestParams(shouldLoginOnTokenError = false)).dataOrThrow
             }
 
             val orphanDate = Date(System.currentTimeMillis() - MAX_ORPHAN_AGE)
@@ -101,7 +101,7 @@ class PageViewUploadWorker @AssistedInject constructor(
                         url,
                         it.authToken,
                         PageViewUploadList(event),
-                        RestParams(shouldIgnoreToken = true)
+                        RestParams(shouldIgnoreToken = true, shouldLoginOnTokenError = false)
                     ).dataOrThrow
                     Logger.d("PageViewUploadService: ${event.size} events uploaded. Performing cleanup...")
                 }

@@ -77,10 +77,10 @@ class FileDownloadWorker @AssistedInject constructor(
         } else {
             val (courseId, fileId) = getCourseAndFileId(fileUrl)
             if (courseId != -1L && fileId != -1L) {
-                val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams())
+                val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams(shouldLoginOnTokenError = false))
                 file.dataOrNull?.displayName ?: FALLBACK_FILE_NAME
             } else if (fileId != -1L) {
-                val file = fileFolderApi.getUserFile(fileId, RestParams())
+                val file = fileFolderApi.getUserFile(fileId, RestParams(shouldLoginOnTokenError = false))
                 file.dataOrNull?.displayName ?: FALLBACK_FILE_NAME
             } else {
                 FALLBACK_FILE_NAME
@@ -101,7 +101,7 @@ class FileDownloadWorker @AssistedInject constructor(
         updateProgress(0, FileDownloadProgressState.STARTING, filePath)
 
         try {
-            fileDownloadApi.downloadFile(fileUrl, RestParams())
+            fileDownloadApi.downloadFile(fileUrl, RestParams(shouldLoginOnTokenError = false))
                 .dataOrThrow
                 .saveFile(downloadedFile)
                 .collect { downloadState ->
@@ -210,7 +210,8 @@ class FileDownloadWorker @AssistedInject constructor(
     }
 
     private fun getCourseAndFileId(fileUrl: String): Pair<Long, Long> {
-        val courseId = fileUrl.substringAfter("courses/", missingDelimiterValue = "-1").substringBefore("/files", missingDelimiterValue = "-1").toLong()
+        val courseId =
+            fileUrl.substringAfter("courses/", missingDelimiterValue = "-1").substringBefore("/files", missingDelimiterValue = "-1").toLong()
         val fileId = fileUrl.substringAfter("files/", missingDelimiterValue = "-1").takeWhile { it.isDigit() }.toLong()
         return Pair(courseId, fileId)
     }
