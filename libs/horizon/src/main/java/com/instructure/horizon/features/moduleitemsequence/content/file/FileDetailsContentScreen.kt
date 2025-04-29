@@ -152,7 +152,9 @@ private fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifi
         when (filePreviewUiState) {
             is FilePreviewUiState.Image -> ImageFileContent(
                 imageUrl = filePreviewUiState.url,
-                contentDescription = filePreviewUiState.displayName
+                contentDescription = filePreviewUiState.displayName,
+                modifier = Modifier.fillMaxWidth(),
+                loadingIndicator = { Spinner() }
             )
 
             is FilePreviewUiState.Media -> MediaFileContent(

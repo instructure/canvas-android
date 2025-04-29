@@ -18,24 +18,31 @@
 package com.instructure.pandautils.compose.composables.filedetails
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 
 @Composable
 fun ImageFileContent(
     imageUrl: String,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    contentScale: ContentScale = ContentScale.Fit
+    contentScale: ContentScale = ContentScale.Fit,
+    loadingIndicator: @Composable () -> Unit = {},
 ) {
     GlideImage(
         model = imageUrl,
         contentDescription = contentDescription,
         modifier = modifier,
-        contentScale = contentScale
+        contentScale = contentScale,
+        alignment = Alignment.TopCenter,
+        loading = placeholder {
+            loadingIndicator()
+        }
     )
 }
 

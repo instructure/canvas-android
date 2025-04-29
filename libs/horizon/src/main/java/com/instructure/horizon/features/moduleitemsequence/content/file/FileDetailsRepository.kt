@@ -26,8 +26,7 @@ class FileDetailsRepository @Inject constructor(
     private val oAuthApi: OAuthAPI.OAuthInterface
 ) {
     suspend fun getFileFolderFromURL(url: String): FileFolder? {
-        val restParams = RestParams(isForceReadFromNetwork = false)
-        return fileFolderApi.getFileFolderFromURL(url, restParams).dataOrNull
+        return fileFolderApi.getFileFolderFromURL(url, RestParams()).dataOrNull
     }
 
     suspend fun getAuthenticatedFileUrl(fileUrl: String): String {

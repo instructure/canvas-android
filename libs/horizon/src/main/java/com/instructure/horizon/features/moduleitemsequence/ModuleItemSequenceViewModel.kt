@@ -168,7 +168,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
             }
             item.type == Type.Quiz.name -> ModuleItemContent.Assessment(courseId, item.contentId)
             item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.title.orEmpty(), item.externalUrl.orEmpty())
-            item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(courseId, item.htmlUrl.orEmpty(), item.externalUrl.orEmpty())
+            item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(
+                courseId,
+                item.htmlUrl.orEmpty(),
+                item.externalUrl.orEmpty()
+            )
+
             item.type == Type.File.name -> ModuleItemContent.File(courseId, item.moduleId, item.id, item.url.orEmpty())
             else -> null
         }
@@ -243,7 +248,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun loadModuleItem(position: Int, moduleItemId: Long) {
         viewModelScope.tryLaunch {
-            val moduleItem = repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            val moduleItem =
+                repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
             markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
                 if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules) else it
@@ -270,7 +276,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val currentModuleItemId = _uiState.value.currentItem?.moduleItemId ?: -1L
         val progressPosition = getProgressPosition(currentModuleItemId)
         _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(isLoading = true),
+            it.copy(
+                loadingState = it.loadingState.copy(isLoading = true),
                 progressScreenState = it.progressScreenState.copy(
                     visible = true,
                     currentPosition = progressPosition,
@@ -427,9 +434,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val completionRequirement = item.completionRequirement
         if (completionRequirement?.type == ModuleItem.MUST_VIEW && !completionRequirement.completed && !item.isLocked()) {
             viewModelScope.launch {
-                async {
-                    repository.markAsRead(courseId, item.moduleId, item.id)
-                }
+                repository.markAsRead(courseId, item.moduleId, item.id)
             }
         }
     }

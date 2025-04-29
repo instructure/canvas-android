@@ -91,8 +91,8 @@ class ModuleItemSequenceRepository @Inject constructor(private val moduleApi: Mo
         return moduleApi.markModuleItemAsDone(CanvasContext.Type.COURSE.apiString, courseId, moduleItem.moduleId, moduleItem.id, RestParams())
     }
 
-    suspend fun markAsRead(courseId: Long, moduleId: Long, itemId: Long): ResponseBody? {
+    suspend fun markAsRead(courseId: Long, moduleId: Long, itemId: Long): Unit {
         val restParams = RestParams(isForceReadFromNetwork = true)
-        return moduleApi.markModuleItemRead(CanvasContext.Type.COURSE.apiString, courseId, moduleId, itemId, restParams).dataOrNull
+        moduleApi.markModuleItemRead(CanvasContext.Type.COURSE.apiString, courseId, moduleId, itemId, restParams)
     }
 }
