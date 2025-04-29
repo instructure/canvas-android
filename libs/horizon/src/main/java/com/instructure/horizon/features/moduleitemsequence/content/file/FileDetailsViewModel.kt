@@ -82,10 +82,10 @@ class FileDetailsViewModel @Inject constructor(
             workManager.enqueue(workRequest)
             val workerId = workRequest.id.toString()
             viewModelScope.tryLaunch {
-                val progress = fileDownloadProgressDao.findByWorkerIdLiveData(workerId) // TODO remove observe, change to flow
-                progress.observeForever {
-                    updateProgress(it)
-                }
+                fileDownloadProgressDao.findByWorkerIdFlow(workerId)
+                    .collect { progress ->
+                        updateProgress(progress)
+                    }
             } catch {
                 _uiState.update {
                     it.copy(downloadState = FileDownloadProgressState.ERROR)

@@ -15,7 +15,6 @@
  */
 package com.instructure.pandautils.room.appdatabase.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -23,6 +22,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FileDownloadProgressDao {
@@ -40,7 +40,7 @@ interface FileDownloadProgressDao {
     suspend fun findByWorkerId(workerId: String): FileDownloadProgressEntity?
 
     @Query("SELECT * FROM FileDownloadProgressEntity WHERE workerId=:workerId")
-    fun findByWorkerIdLiveData(workerId: String): LiveData<FileDownloadProgressEntity?>
+    fun findByWorkerIdFlow(workerId: String): Flow<FileDownloadProgressEntity?>
 
     @Query("DELETE FROM FileDownloadProgressEntity WHERE workerId = :workerId")
     suspend fun deleteByWorkerId(workerId: String)
