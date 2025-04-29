@@ -18,6 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.os.Bundle
 import com.instructure.pandautils.utils.filecache.FileCache
+import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -31,7 +32,6 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
-import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import com.instructure.teacher.R
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
