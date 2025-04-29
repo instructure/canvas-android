@@ -252,5 +252,4 @@ dependencies {
     debugImplementation Libs.COMPOSE_UI_TEST_MANIFEST
 
     implementation Libs.LOTTIE_COMPOSE
-    implementation Libs.DISK_LRU_CACHE
 }

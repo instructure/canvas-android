@@ -15,17 +15,18 @@
  *
  */
 
-package com.instructure.pandautils.utils.filecache
+package com.instructure.annotations.FileCaching
 
 import android.os.AsyncTask
 import android.util.Log
 import android.webkit.CookieManager
-import com.instructure.pandautils.utils.filecache.FetchFileAsyncTask.FetchFileCallback
+import com.instructure.annotations.FileCaching.FetchFileAsyncTask.FetchFileCallback
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.validOrNull
 import okhttp3.Request
+import okio.Okio
 import okio.buffer
 import okio.sink
 import java.io.File
@@ -42,9 +43,9 @@ import java.net.ProtocolException
  * wherever possible.
  */
 class FetchFileAsyncTask private constructor(
-    private val mCache: SimpleDiskCache,
-    private val mUrl: String,
-    private val mCallback: FetchFileAsyncTask.FetchFileCallback
+        private val mCache: SimpleDiskCache,
+        private val mUrl: String,
+        private val mCallback: FetchFileAsyncTask.FetchFileCallback
 ) : AsyncTask<Void, Void, File>() {
 
     interface FetchFileCallback {

@@ -17,7 +17,7 @@
 package com.instructure.student.fragment
 
 import android.os.Bundle
-import com.instructure.pandautils.utils.filecache.FileCache
+import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave

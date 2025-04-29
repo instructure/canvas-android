@@ -34,6 +34,7 @@ import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
 import com.instructure.annotations.AnnotationDialogs.AnnotationErrorDialog
 import com.instructure.annotations.AnnotationDialogs.FreeTextDialog
+import com.instructure.annotations.FileCaching.DocumentListenerSimpleDelegate
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.DocSession
@@ -47,7 +48,6 @@ import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -494,7 +494,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             handler.postDelayed(showLoadingRunner, jitterThreshold)
 
             // If we don't have a url we'll display an error
-            val tempFile: File? = FileCache.awaitFileDownload(url!!) {
+            val tempFile: File? = com.instructure.annotations.FileCaching.FileCache.awaitFileDownload(url!!) {
                 onUI {
                     progressBar.setColor(teacherYellow)
                     progressBar.setProgress(it)

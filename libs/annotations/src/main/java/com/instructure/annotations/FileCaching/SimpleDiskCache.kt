@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.pandautils.utils.filecache
+package com.instructure.annotations.FileCaching
 
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.jakewharton.disklrucache.DiskLruCache

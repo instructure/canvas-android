@@ -16,8 +16,8 @@
 package com.instructure.annotations
 
 import android.graphics.RectF
-import com.instructure.pandautils.utils.filecache.FetchFileAsyncTask
-import com.instructure.pandautils.utils.filecache.FileCache
+import com.instructure.annotations.FileCaching.FetchFileAsyncTask
+import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.canvasapi2.utils.weave.resumeSafely
 import com.instructure.canvasapi2.utils.weave.resumeSafelyWithException
 import com.pspdfkit.annotations.Annotation

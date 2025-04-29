@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.annotations
+package com.instructure.annotations.FileCaching
 
 import android.graphics.PointF
 import android.view.MotionEvent
