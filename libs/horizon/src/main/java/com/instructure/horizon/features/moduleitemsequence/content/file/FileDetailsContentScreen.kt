@@ -68,7 +68,7 @@ fun FileDetailsContentScreen(
     val context = LocalContext.current
     LaunchedEffect(uiState.filePathToOpen) {
         if (uiState.filePathToOpen != null) {
-            openFile(uiState.filePathToOpen, context)
+            openFile(uiState.filePathToOpen, uiState.mimeType, context)
             uiState.onFileOpened()
         }
     }
@@ -126,25 +126,18 @@ fun FileDetailsContentScreen(
 
 private fun openFile(
     filePathToOpen: String,
+    mimeType: String,
     context: Context
 ) {
     val file = File(filePathToOpen)
     val uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
-
-    val mimeType = when (file.extension.lowercase()) {
-        "pdf" -> "application/pdf"
-        "txt" -> "text/plain"
-        "jpg", "jpeg" -> "image/jpeg"
-        "png" -> "image/png"
-        else -> "*/*"
-    }
 
     val intent = Intent(Intent.ACTION_VIEW).apply {
         setDataAndType(uri, mimeType)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
-    context.startActivity(Intent.createChooser(intent, "Open with"))
+    context.startActivity(Intent.createChooser(intent, context.getString(R.string.fileDetails_openWith)))
 }
 
 @UnstableApi

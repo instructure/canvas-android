@@ -29,6 +29,7 @@ data class FileDetailsUiState(
     val filePathToOpen: String? = null,
     val onFileOpened: () -> Unit = {},
     val filePreview: FilePreviewUiState? = null,
+    val mimeType: String = "*/*",
 )
 
 sealed class FilePreviewUiState {

@@ -65,7 +65,8 @@ class FileDetailsViewModel @Inject constructor(
                     it.copy(
                         loadingState = it.loadingState.copy(isLoading = false),
                         fileName = file.displayName.orEmpty(),
-                        filePreview = getFilePreview(file, authUrl)
+                        filePreview = getFilePreview(file, authUrl),
+                        mimeType = file.contentType ?: "*/*",
                     )
                 }
             }
