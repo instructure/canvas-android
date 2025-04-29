@@ -74,13 +74,15 @@ private fun NotificationContent(state: NotificationUiState) {
                 }
             } else {
                 items(state.pagedNotificationItems[state.currentPageIndex]) { item ->
-                    NotificationItemContent(
-                        categoryLabel = item.categoryLabel,
-                        title = item.title,
-                        date = item.date
-                    )
+                    Column {
+                        NotificationItemContent(
+                            categoryLabel = item.categoryLabel,
+                            title = item.title,
+                            date = item.date
+                        )
 
-                    HorizonDivider()
+                        HorizonDivider()
+                    }
                 }
             }
         }
@@ -132,8 +134,6 @@ private fun NotificationItemContent(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
-        HorizonSpace(SpaceSize.SPACE_16)
-
         Text(
             text = categoryLabel,
             style = HorizonTypography.labelSmallBold,
