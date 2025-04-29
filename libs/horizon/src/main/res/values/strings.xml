@@ -114,4 +114,11 @@
     <string name="notificationsEmptyMessage">No notification activity yet.</string>
     <string name="notificationsFailedToRefresh">Failed to refresh notifications</string>
     <string name="notificationsFailedToLoad">Failed to load Notifications</string>
+    <string name="notificationsScoredItemTitle">%1$s\'s score is now available</string>
+    <string name="notificationsAssignmentScoredCategoryLabel">Assignment Scored</string>
+    <string name="notificationsDueDateChangedCategoryLabel">Due Date Changed</string>
+    <string name="notificationsScoringWeightChangedCategoryLabel">Scoring Weight Changed</string>
+    <string name="notificationsAnnouncementFromCetegoryLabel">Announcement from %1$s</string>
+    <string name="notificationsScoreWeightChangedTitle">%1$s\'s score weight was changed</string>
+    <string name="notificationsDueOnTitle">%1$s is due on %2$s</string>
 </resources>

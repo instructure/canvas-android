@@ -17,17 +17,21 @@
 package com.instructure.horizon.features.notification
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
@@ -36,6 +40,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.utils.HorizonScaffold
 
@@ -54,26 +60,55 @@ fun NotificationScreen(state: NotificationUiState, mainNavController: NavControl
 
 @Composable
 private fun NotificationContent(state: NotificationUiState) {
-    LazyColumn(
-        contentPadding = PaddingValues(top = 16.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .background(HorizonColors.Surface.pageSecondary())
+    Column(
+        modifier = Modifier.background(HorizonColors.Surface.pageSecondary())
     ) {
-        if (state.notificationItems.isEmpty()) {
-            item {
-                EmptyNotificationItemContent()
-            }
-        } else {
-            itemsIndexed(state.notificationItems) { index, item ->
-                NotificationItemContent(
-                    categoryLabel = item.categoryLabel,
-                    title = item.title,
-                    date = item.date
-                )
+        LazyColumn(
+            contentPadding = PaddingValues(top = 16.dp),
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            if (state.allNotificationItems.isEmpty()) {
+                item {
+                    EmptyNotificationItemContent()
+                }
+            } else {
+                items(state.pagedNotificationItems[state.currentPageIndex]) { item ->
+                    NotificationItemContent(
+                        categoryLabel = item.categoryLabel,
+                        title = item.title,
+                        date = item.date
+                    )
 
-                HorizonDivider()
+                    HorizonDivider()
+                }
             }
+        }
+
+        HorizonDivider()
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        ) {
+            IconButton(
+                iconRes = R.drawable.chevron_left,
+                onClick = state.decreasePageIndex,
+                color = IconButtonColor.BLACK,
+                enabled = state.currentPageIndex > 0 && state.pagedNotificationItems.size > 1
+            )
+
+            HorizonSpace(SpaceSize.SPACE_8)
+
+            IconButton(
+                iconRes = R.drawable.chevron_right,
+                onClick = state.increasePageIndex,
+                color = IconButtonColor.BLACK,
+                enabled = state.currentPageIndex < state.pagedNotificationItems.lastIndex
+            )
         }
     }
 }
@@ -110,7 +145,9 @@ private fun NotificationItemContent(
         Text(
             text = title,
             style = HorizonTypography.p1,
-            color = HorizonColors.Text.body()
+            color = HorizonColors.Text.body(),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
         )
 
         HorizonSpace(SpaceSize.SPACE_4)
@@ -121,6 +158,4 @@ private fun NotificationItemContent(
             color = HorizonColors.Text.timestamp()
         )
     }
-
-
 }

@@ -16,16 +16,24 @@
  */
 package com.instructure.horizon.features.notification
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import javax.inject.Inject
 
 class NotificationRepository @Inject constructor(
     private val streamApi: StreamAPI.StreamInterface,
+    private val courseApi: CourseAPI.CoursesInterface
 ) {
     suspend fun getNotifications(forceRefresh: Boolean): List<StreamItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return streamApi.getUserStream(restParams).dataOrThrow
+    }
+
+    suspend fun getCourse(courseId: Long): Course {
+        val restParams = RestParams()
+        return courseApi.getCourse(courseId, restParams).dataOrThrow
     }
 }
