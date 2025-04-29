@@ -58,15 +58,15 @@ class NotificationViewModel @Inject constructor(
     private fun initData() {
         viewModelScope.tryLaunch {
             _uiState.update {
-                it.copy(screenState = LoadingState(isLoading = true))
+                it.copy(screenState = it.screenState.copy(isLoading = true))
             }
             loadData()
             _uiState.update {
-                it.copy(screenState = LoadingState(isLoading = false))
+                it.copy(screenState = it.screenState.copy(isLoading = false))
             }
         } catch {
             _uiState.update {
-                it.copy(screenState = LoadingState(isLoading = false, isError = true, errorMessage = context.getString(
+                it.copy(screenState = it.screenState.copy(isLoading = false, isError = true, errorMessage = context.getString(
                     R.string.notificationsFailedToLoad
                 )))
             }
@@ -93,15 +93,15 @@ class NotificationViewModel @Inject constructor(
     private fun refresh() {
         viewModelScope.tryLaunch {
             _uiState.update {
-                it.copy(screenState = LoadingState(isRefreshing = true))
+                it.copy(screenState = it.screenState.copy(isRefreshing = true))
             }
             loadData(true)
             _uiState.update {
-                it.copy(screenState = LoadingState(isRefreshing = false))
+                it.copy(screenState = it.screenState.copy(isRefreshing = false))
             }
         } catch {
             _uiState.update {
-                it.copy(screenState = LoadingState(isRefreshing = false, errorSnackbar = context.getString(
+                it.copy(screenState = it.screenState.copy(isRefreshing = false, errorSnackbar = context.getString(
                     R.string.notificationsFailedToRefresh
                 )))
             }
@@ -160,7 +160,7 @@ class NotificationViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = LoadingState(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
         }
     }
 
